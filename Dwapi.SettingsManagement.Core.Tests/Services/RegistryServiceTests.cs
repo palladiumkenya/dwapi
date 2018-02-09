@@ -10,20 +10,20 @@ namespace Dwapi.SettingsManagement.Core.Tests.Services
     [TestFixture]
     public class RegistryServiceTests
     {
-        private IRegistryService _registryService;
+        private IRegistryManagerService _registryManagerService;
         private CentralRegistry _centralRegistry;
 
         [SetUp]
         public void Setup()
         {
-            _registryService=new RegistryService();
-            _centralRegistry=new CentralRegistry("http://52.178.24.227:4747/api/cohorts/lists");
+            _registryManagerService=new RegistryManagerService(null);
+            _centralRegistry=new CentralRegistry("hAPI","http://52.178.24.227:4747/api/cohorts/lists");
         }
 
         [Test]
         public void should_Verify()
         {
-            var verified = _registryService.Verify(_centralRegistry).Result;
+            var verified = _registryManagerService.Verify(_centralRegistry).Result;
             Assert.True(verified);
             Console.WriteLine(_centralRegistry);
         }

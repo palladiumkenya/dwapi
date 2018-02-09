@@ -29,9 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.In
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TransmissionManagement", "TransmissionManagement", "{C154FD88-2CE9-4744-B3DB-FC8C2E449C79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.TransmissionManagement.Core", "Dwapi.TransmissionManagement.Core\Dwapi.TransmissionManagement.Core.csproj", "{7AB7048C-C113-40DE-9628-3CA84415B96F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.TransmissionManagement.Core", "Dwapi.TransmissionManagement.Core\Dwapi.TransmissionManagement.Core.csproj", "{7AB7048C-C113-40DE-9628-3CA84415B96F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.TransmissionManagement.Core.Tests", "Dwapi.TransmissionManagement.Core.Tests\Dwapi.TransmissionManagement.Core.Tests.csproj", "{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.TransmissionManagement.Core.Tests", "Dwapi.TransmissionManagement.Core.Tests\Dwapi.TransmissionManagement.Core.Tests.csproj", "{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.Tests", "Dwapi.Tests\Dwapi.Tests.csproj", "{984EF8AC-7A8F-4021-B071-0D9573ED0A74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{984EF8AC-7A8F-4021-B071-0D9573ED0A74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{984EF8AC-7A8F-4021-B071-0D9573ED0A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{984EF8AC-7A8F-4021-B071-0D9573ED0A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{984EF8AC-7A8F-4021-B071-0D9573ED0A74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
