@@ -21,6 +21,5 @@ namespace Dwapi.SettingsManagement.Core.Tests.Model
             Assert.False(string.IsNullOrWhiteSpace(_iqcaredbProtocol.GetConnectionString()));
             Console.WriteLine(_iqcaredbProtocol);
         }
-        
     }
 }
