@@ -6,11 +6,11 @@ using Dwapi.SettingsManagement.Core.Model;
 
 namespace Dwapi.SettingsManagement.Core.Services
 {
-    public class RegistryService:IRegistryService
+    public class RegistryManagerService:IRegistryManagerService
     {
         private HttpClient _client;
 
-        public RegistryService()
+        public RegistryManagerService()
         {
             _client=new HttpClient();
         }

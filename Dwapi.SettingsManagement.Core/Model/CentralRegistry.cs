@@ -7,6 +7,8 @@ namespace Dwapi.SettingsManagement.Core.Model
     public class CentralRegistry:Entity<Guid>
     {
         [MaxLength(100)]
+        public string Name { get; set; }
+        [MaxLength(100)]
         public string Url { get; set; }
         [MaxLength(100)]
         public string AuthToken { get; set; }
@@ -15,14 +17,20 @@ namespace Dwapi.SettingsManagement.Core.Model
         {
         }
 
-        public CentralRegistry(string url)
+        public CentralRegistry(string name,string url)
         {
             Url = url;
+            Name = name;
         }
 
-        public CentralRegistry(string url, string authToken):this(url)
+        public CentralRegistry(string name, string url, string authToken):this(name,url)
         {
             AuthToken = authToken;
+        }
+
+        public bool RequiresAuthentication()
+        {
+            return !string.IsNullOrWhiteSpace(AuthToken.Trim());
         }
 
         public override string ToString()

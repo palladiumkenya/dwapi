@@ -12,9 +12,10 @@ using System;
 namespace Dwapi.SettingsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(SettingsContext))]
-    partial class SettingsContextModelSnapshot : ModelSnapshot
+    [Migration("20180209103753_Settings2018FEB09003")]
+    partial class Settings2018FEB09003
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
