@@ -17,12 +17,9 @@ namespace Dwapi.Controller
     {
 
         private readonly IRegistryManagerService _registryManagerService;
-        private readonly ICentralRegistryRepository _centralRegistryRepository;
-
-        public RegistryManagerController(IRegistryManagerService registryManagerService, ICentralRegistryRepository centralRegistryRepository)
+        public RegistryManagerController(IRegistryManagerService registryManagerService)
         {
             _registryManagerService = registryManagerService;
-            _centralRegistryRepository = centralRegistryRepository;
         }
 
         // GET: api/RegistryManager/default
@@ -31,7 +28,7 @@ namespace Dwapi.Controller
         {
             try
             {
-                var centralRegistry = _centralRegistryRepository.GetAll().FirstOrDefault();
+                var centralRegistry = _registryManagerService.GetDefault();
 
                 if (null == centralRegistry)
                     return NotFound();
@@ -56,8 +53,7 @@ namespace Dwapi.Controller
 
             try
             {
-                _centralRegistryRepository.SaveDefault(entity);
-                _centralRegistryRepository.SaveChanges();
+                _registryManagerService.SaveDefault(entity);
                 return Ok();
             }
             catch (Exception e)

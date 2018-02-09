@@ -31,7 +31,6 @@ namespace Dwapi.SettingsManagement.Core.Model
         public DatabaseProtocol()
         {
         }
-
         public DatabaseProtocol(DatabaseType databaseType, string host, string username, string password, string databaseName)
         {
             DatabaseType = databaseType;
@@ -39,6 +38,20 @@ namespace Dwapi.SettingsManagement.Core.Model
             Username = username;
             Password = password;
             DatabaseName = databaseName;
+        }
+        public DatabaseProtocol(DatabaseType databaseType, string host, string username, string password, string databaseName, Guid emrSystemId)
+        :this(databaseType,host,username,password,databaseName)
+        {
+            EmrSystemId = emrSystemId;
+        }
+
+        public void UpdateTo(DatabaseProtocol emrSystem)
+        {
+            DatabaseType = emrSystem.DatabaseType;
+            Host = emrSystem.Host;
+            Username = emrSystem.Username;
+            Password = emrSystem.Password;
+            DatabaseName = emrSystem.DatabaseName;
         }
 
         public string GetConnectionString()

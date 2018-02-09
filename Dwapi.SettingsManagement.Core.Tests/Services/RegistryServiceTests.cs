@@ -16,7 +16,7 @@ namespace Dwapi.SettingsManagement.Core.Tests.Services
         [SetUp]
         public void Setup()
         {
-            _registryManagerService=new RegistryManagerService();
+            _registryManagerService=new RegistryManagerService(null);
             _centralRegistry=new CentralRegistry("hAPI","http://52.178.24.227:4747/api/cohorts/lists");
         }
 

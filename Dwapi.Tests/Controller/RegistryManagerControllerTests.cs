@@ -40,7 +40,7 @@ namespace Dwapi.Tests.Controller
         {
             _context = new SettingsContext(_options);
             _centralRegistryRepository = new CentralRegistryRepository(_context);
-            _registryManagerController=new RegistryManagerController(new RegistryManagerService(), _centralRegistryRepository);
+            _registryManagerController=new RegistryManagerController(new RegistryManagerService(_centralRegistryRepository));
 
             _centralRegistry = Builder<CentralRegistry>.CreateNew()
                 .With(x => x.Url = "http://52.178.24.227:4747/api/cohorts/lists")
