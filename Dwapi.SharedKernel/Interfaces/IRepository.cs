@@ -11,11 +11,13 @@ namespace Dwapi.SharedKernel.Interfaces
 //        T Get(TId id);
 
         IEnumerable<T> GetAll();
+
 //        IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate);
 //       
 //        int GetCount();
 //        
-//        void Create(T entity);
+        void Create(T entity);
+
 //        void Create(IEnumerable<T> entities);
 //
 //        void Update(T entity);
@@ -27,6 +29,6 @@ namespace Dwapi.SharedKernel.Interfaces
 //        void Delete(IEnumerable<T> entities);
 //
 //
-//        void Save();
+        void SaveChanges();
     }
 }

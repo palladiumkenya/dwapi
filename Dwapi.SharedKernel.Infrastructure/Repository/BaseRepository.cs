@@ -51,15 +51,13 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 //            return DbSet.AsNoTracking().Select(x => x.Id).Count();
 //        }
 //
-//        public virtual void Create(T entity, string createdBy = "sys")
-//        {
-//            if (null != entity)
-//            {
-//                entity.CreatedDate = DateTime.Now;
-//                entity.CreatedBy = createdBy;
-//                Context.Add(entity);
-//            }
-//        }
+        public virtual void Create(T entity)
+        {
+            if (null != entity)
+            {
+                Context.Add(entity);
+            }
+        }
 //
 //        public virtual void Create(IEnumerable<T> entities, string createdBy = "sys")
 //        {
@@ -195,9 +193,9 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 //            return nameExisits.ToList().Count > 0;
 //        }
 //
-//        public virtual void Save()
-//        {
-//            Context.SaveChanges();
-//        }
+        public virtual void SaveChanges()
+        {
+            Context.SaveChanges();
+        }
     }
 }

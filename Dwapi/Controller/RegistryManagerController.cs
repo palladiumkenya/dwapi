@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
+using Dwapi.SettingsManagement.Core.Interfaces.Services;
+using Dwapi.SettingsManagement.Core.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Dwapi.Controller
 {
@@ -11,36 +15,79 @@ namespace Dwapi.Controller
     [Route("api/RegistryManager")]
     public class RegistryManagerController : Microsoft.AspNetCore.Mvc.Controller
     {
-        // GET: api/RegistryManager
-        [HttpGet]
-        public IEnumerable<string> Get()
+
+        private readonly IRegistryManagerService _registryManagerService;
+        private readonly ICentralRegistryRepository _centralRegistryRepository;
+
+        public RegistryManagerController(IRegistryManagerService registryManagerService, ICentralRegistryRepository centralRegistryRepository)
         {
-            return new string[] { "value1", "value2" };
+            _registryManagerService = registryManagerService;
+            _centralRegistryRepository = centralRegistryRepository;
         }
 
-        // GET: api/RegistryManager/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        // GET: api/RegistryManager/default
+        [HttpGet("default")]
+        public IActionResult Default()
         {
-            return "value";
+            try
+            {
+                var centralRegistry = _centralRegistryRepository.GetAll().FirstOrDefault();
+
+                if (null == centralRegistry)
+                    return NotFound();
+
+                return Ok(centralRegistry);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(CentralRegistry)}";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
         }
-        
+
         // POST: api/RegistryManager
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody]CentralRegistry entity)
         {
+            if (null == entity)
+                return BadRequest();
+
+            try
+            {
+                _centralRegistryRepository.SaveDefault(entity);
+                _centralRegistryRepository.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error saving {nameof(CentralRegistry)}";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
         }
-        
-        // PUT: api/RegistryManager/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+
+        // POST: api/RegistryManager/verify
+        [HttpPost("verify")]
+        public async Task<IActionResult> Verify([FromBody]CentralRegistry entity)
         {
-        }
-        
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            if (null == entity)
+                return BadRequest();
+
+            try
+            {
+                var verified =await _registryManagerService.Verify(entity);
+                return Ok(verified);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error veryfying {nameof(CentralRegistry)}";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
         }
     }
 }

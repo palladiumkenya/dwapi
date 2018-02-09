@@ -35,7 +35,7 @@ namespace Dwapi.SettingsManagement.Core.Model
 
         public override string ToString()
         {
-            return Url;
+            return $"{Name} {Url}";
         }
     }
 }
