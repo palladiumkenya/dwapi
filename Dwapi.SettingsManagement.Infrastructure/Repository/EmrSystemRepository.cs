@@ -9,7 +9,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 {
     public class EmrSystemRepository: BaseRepository<EmrSystem,Guid>, IEmrSystemRepository
     {
-        public EmrSystemRepository(DbContext context) : base(context)
+        public EmrSystemRepository(SettingsContext context) : base(context)
         {
            
         }
