@@ -9,13 +9,13 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 {
     public class CentralRegistryRepository : BaseRepository<CentralRegistry, Guid>, ICentralRegistryRepository
     {
-        public CentralRegistryRepository(DbContext context) : base(context)
+        public CentralRegistryRepository(SettingsContext context) : base(context)
         {
         }
 
         public CentralRegistry GetDefault()
         {
-            return GetAll().FirstOrDefault();
+           return GetAll().FirstOrDefault();
         }
 
         public void SaveDefault(CentralRegistry centralRegistry)

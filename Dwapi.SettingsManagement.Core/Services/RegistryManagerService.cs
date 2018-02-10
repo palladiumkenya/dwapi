@@ -32,6 +32,7 @@ namespace Dwapi.SettingsManagement.Core.Services
         public void SaveDefault(CentralRegistry centralRegistry)
         {
             _centralRegistryRepository.SaveDefault(centralRegistry);
+            _centralRegistryRepository.SaveChanges();
         }
     }
 }

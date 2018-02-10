@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
+using Dwapi.SharedKernel.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -50,6 +51,9 @@ namespace Dwapi.Controller
         {
             if (null == entity)
                 return BadRequest();
+
+            if (entity.Id.IsNullOrEmpty())
+                entity.Id = LiveGuid.NewGuid();
 
             try
             {

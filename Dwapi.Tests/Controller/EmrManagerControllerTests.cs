@@ -81,6 +81,19 @@ namespace Dwapi.Tests.Controller
         }
 
         [Test]
+        public void should_Get_Emr_Count()
+        {
+            var response = _emrManagerController.GetCount();
+            var result = response as OkObjectResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(200, result.StatusCode);
+
+            Assert.True(Convert.ToInt32(result.Value)>0);
+
+        }
+
+        [Test]
         public void should_Post_Emr()
         {
             var emr=new EmrSystem("Test","v3");

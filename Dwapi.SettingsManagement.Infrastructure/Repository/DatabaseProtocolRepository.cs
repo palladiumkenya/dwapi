@@ -8,7 +8,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 {
     public class DatabaseProtocolRepository : BaseRepository<DatabaseProtocol, Guid>, IDatabaseProtocolRepository
     {
-        public DatabaseProtocolRepository(DbContext context) : base(context)
+        public DatabaseProtocolRepository(SettingsContext context) : base(context)
         {
         }
     }

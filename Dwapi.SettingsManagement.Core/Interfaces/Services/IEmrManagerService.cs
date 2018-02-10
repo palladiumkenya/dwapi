@@ -7,10 +7,12 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Services
     public interface IEmrManagerService
     {
         IEnumerable<EmrSystem> GetAllEmrs();
+        int GetEmrCount();
         void SaveEmr(EmrSystem emrSystem);
         void DeleteEmr(Guid emrId);
         void SaveProtocol(DatabaseProtocol protocol);
         void DeleteProtocol(Guid protocolId);
         bool VerifyConnection(DatabaseProtocol databaseProtocol);
+        string GetConnectionError();
     }
 }

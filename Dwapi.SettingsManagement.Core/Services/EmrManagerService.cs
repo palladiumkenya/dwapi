@@ -27,6 +27,11 @@ namespace Dwapi.SettingsManagement.Core.Services
             return _emrSystemRepository.GetAll();
         }
 
+        public int GetEmrCount()
+        {
+            return _emrSystemRepository.Count();
+        }
+
         public void SaveEmr(EmrSystem emrSystem)
         {
             _emrSystemRepository.CreateOrUpdate(emrSystem);
@@ -54,6 +59,11 @@ namespace Dwapi.SettingsManagement.Core.Services
         public bool VerifyConnection(DatabaseProtocol databaseProtocol)
         {
             return _databaseManager.VerifyConnection(databaseProtocol);
+        }
+
+        public string GetConnectionError()
+        {
+            return _databaseManager.ConnectionError;
         }
     }
 }

@@ -1,0 +1,11 @@
+export interface DatabaseProtocol {
+    id?: string;
+    databaseType?: number;
+    host?: string;
+    port?: number;
+    username?: string;
+    password?: string;
+    databaseName?: string;
+    advancedProperties?: string;
+    emrSystemId?: string;
+}

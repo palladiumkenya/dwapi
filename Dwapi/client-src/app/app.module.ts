@@ -3,7 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {LocationStrategy, HashLocationStrategy} from '@angular/common';
+import {LocationStrategy, HashLocationStrategy, CommonModule} from '@angular/common';
 import {AppRoutes} from './app.routes';
 import 'rxjs/add/operator/toPromise';
 
@@ -85,13 +85,21 @@ import { AppSubmenuComponent } from './app-submenu/app-submenu.component';
 import { AppBreadcrumbComponent } from './app-breadcrumb/app-breadcrumb.component';
 import {BreadcrumbService} from './breadcrumb.service';
 import { DashboardComponent } from '../dashboard/dashboard.component';
+import {MessageService} from 'primeng/components/common/messageservice';
+import {ConfirmationService} from 'primeng/api';
+import {RegistryConfigService} from '../settings/services/registry-config.service';
+import {HttpClientModule} from '@angular/common/http';
+import {MessageModule} from 'primeng/message';
+import {EmrConfigService} from '../settings/services/emr-config.service';
 
 @NgModule({
     imports: [
+        CommonModule,
         BrowserModule,
         FormsModule,
         AppRoutes,
         HttpModule,
+        HttpClientModule,
         BrowserAnimationsModule,
         AccordionModule,
         AutoCompleteModule,
@@ -129,6 +137,7 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
         MegaMenuModule,
         MenuModule,
         MenubarModule,
+        MessageModule,
         MessagesModule,
         MultiSelectModule,
         OrderListModule,
@@ -173,7 +182,8 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
         DashboardComponent
     ],
     providers: [
-        {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService
+        {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
+        MessageService, ConfirmationService, RegistryConfigService, EmrConfigService
     ],
     bootstrap: [AppComponent]
 })

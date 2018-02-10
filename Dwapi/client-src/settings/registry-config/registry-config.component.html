@@ -1,7 +1,53 @@
-<div class="ui-g">
-    <div class="ui-g-12">
-        <div class="card">
+
+<div class="ui-g ui-fluid">
+
+    <div class="ui-g-12 ui-lg-6">
+        <!-- Left Side -->
+        <div class="card card-w-title">
+
             <h1>Registry Settings</h1>
+
+            <p-messages [(value)]="errorMessage"></p-messages>
+            <p-growl [(value)]="otherMessage"></p-growl>
+            <form #regForm="ngForm" novalidate>
+                <div class="ui-g form-group">
+
+
+                    <div class="ui-g-12 ui-lg-12">
+                    <span class="md-inputfield md-inputfield-fill">
+                       <input type="text" id="url1" name="name"  required pInputText [(ngModel)]="centralRegistry.name" />
+                        <label>Name</label>
+                    </span>
+                    </div>
+                    <div class="ui-g-12 ui-lg-12">
+                    <span class="md-inputfield md-inputfield-fill">
+                         <input type="text" id="url" name="url"  required pInputText [(ngModel)]="centralRegistry.url" required/>
+                        <label>Url</label>
+                    </span>
+                    </div>
+                    <div class="ui-g-12 ui-lg-12">
+                    <span class="md-inputfield md-inputfield-fill">
+                         <input type="text" id="authToken" name="authToken"  pInputText [(ngModel)]="centralRegistry.authToken"/>
+                        <label>Auth Token</label>
+                    </span>
+                    </div>
+
+                    <div class="ui-g-12 ui-lg-12">
+                        <div class="ui-g-12 ui-md-3">
+                            <button pButton  type="submit" (click)="saveDefault()" label="Save" pButton
+                                    icon="ui-icon-save" [disabled]="!regForm.form.valid"></button>
+                        </div>
+                        <div class="ui-g-12 ui-md-3">
+                            <button  pButton type="submit" (click)="verfiy()" label="Verify" pButton
+                                    icon="ui-icon-check" [disabled]="!regForm.form.valid"></button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
         </div>
+
     </div>
+
 </div>

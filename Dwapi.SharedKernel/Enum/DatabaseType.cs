@@ -2,7 +2,7 @@
 {
     public enum DatabaseType
     {
-        MicrosoftSQL,
-        MySQL
+        MicrosoftSQL=1,
+        MySQL=2
     }
 }
