@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {BreadcrumbService} from '../../app/breadcrumb.service';
+import {BreadcrumbService} from '../../../app/breadcrumb.service';
 import {Subscription} from 'rxjs/Subscription';
 import {ConfirmationService, Message} from 'primeng/api';
-import {EmrSystem} from '../model/emr-system';
-import {EmrConfigService} from '../services/emr-config.service';
-import {DatabaseProtocol} from '../model/database-protocol';
+import {EmrSystem} from '../../model/emr-system';
+import {EmrConfigService} from '../../services/emr-config.service';
 
 @Component({
   selector: 'liveapp-emr-config',
@@ -12,7 +11,6 @@ import {DatabaseProtocol} from '../model/database-protocol';
   styleUrls: ['./emr-config.component.scss']
 })
 export class EmrConfigComponent implements OnInit, OnDestroy {
-
 
     private _confirmationService: ConfirmationService;
     private _emrConfigService: EmrConfigService;
@@ -22,30 +20,18 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
     public get$: Subscription;
     public getCount$: Subscription;
     public save$: Subscription;
-    public saveProtocol$: Subscription;
     public delete$: Subscription;
-
-    public verifyProtocol$: Subscription;
 
     public recordCount: number;
 
     public errorMessage: Message[];
-    public protocolErrorMessage: Message[];
     public otherMessage: Message[];
 
     public emrs: EmrSystem[];
     public selectedEmr: EmrSystem;
-    public selectedDatabase: DatabaseProtocol;
     public emrDialog: EmrSystem;
-    public databaseTypes = [
-        {label: 'Select Type', value: null},
-        {label: 'Microsoft SQL', value: 1},
-        {label: 'MySQL', value: 2}
-    ];
-
     public protocolTitle: string;
     public displayDialog: boolean;
-    public isVerfied: boolean;
 
     public constructor(public breadcrumbService: BreadcrumbService,
                        confirmationService: ConfirmationService, emrConfigService: EmrConfigService) {
@@ -101,7 +87,7 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
     }
 
     public newEmr(): void {
-        this.emrDialog = {}
+        this.emrDialog = {};
         this.displayDialog = true;
     }
 
@@ -128,7 +114,7 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
     }
 
     public editEmr(emr: EmrSystem): void {
-        this.emrDialog = {}
+        this.emrDialog = {};
         this.displayDialog = true;
     }
 
@@ -170,70 +156,11 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
 
     onRowSelect(event) {
         this.protocolTitle = `${event.data.name} Protcols`;
-        this.showProtocols();
+        // this.showProtocols();
     }
 
     onRowUnselect(event) {
         this.protocolTitle = 'Protcols';
-    }
-
-    private showProtocols(): void {
-        this.protocolErrorMessage = [];
-        if (!this.selectedEmr) {
-            return;
-        }
-
-        if (this.selectedEmr.databaseProtocols.length === 0) {
-            this.selectedDatabase = {};
-            this.selectedDatabase.emrSystemId = this.selectedEmr.id;
-        } else {
-            this.selectedDatabase = this.selectedEmr.databaseProtocols[0];
-        }
-    }
-
-    public saveProtocol(): void {
-        this.protocolErrorMessage = [];
-        // update
-        this.saveProtocol$ = this._emrConfigService.saveProtocol(this.selectedDatabase)
-            .subscribe(
-                p => {
-                    this.selectedDatabase = p;
-                },
-                e => {
-                    this.protocolErrorMessage = [];
-                    this.protocolErrorMessage.push({severity: 'error', summary: 'Error saving ', detail: <any>e});
-                },
-                () => {
-                    this.otherMessage = [];
-                    this.otherMessage.push({severity: 'success', detail: 'Saved successfully '});
-                    this.loadData();
-                }
-            );
-    }
-
-    public verfiyProtocol(): void {
-        this.protocolErrorMessage = [];
-        this.otherMessage = [];
-        this.verifyProtocol$ = this._emrConfigService.verifyProtocol(this.selectedDatabase)
-            .subscribe(
-                p => {
-                    this.isVerfied = p;
-                },
-                e => {
-                    this.protocolErrorMessage = [];
-                    this.protocolErrorMessage.push({severity: 'error', summary: 'Error verifying ', detail: <any>e});
-                },
-                () => {
-                    this.protocolErrorMessage = [];
-                    this.otherMessage = [];
-                    if (this.isVerfied) {
-                        this.otherMessage.push({severity: 'success', detail: 'connection was successful !'});
-                        this.protocolErrorMessage.push({severity: 'success', summary: 'connection was successful '});
-                    } else {
-                        this.protocolErrorMessage.push({severity: 'error', summary: 'url cannot be verfied '});
-                    }
-                }
-            );
     }
 
     public ngOnDestroy(): void {

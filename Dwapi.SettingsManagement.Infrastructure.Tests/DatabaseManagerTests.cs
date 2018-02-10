@@ -2,9 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
+using FizzWare.NBuilder;
 using NUnit.Framework;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Tests
@@ -38,8 +40,34 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
             Console.WriteLine($"connection OK:[{databaseProtocol}] | {databaseProtocol.DatabaseType}");
         }
 
-      
-       public static List<DatabaseProtocol> DatabaseProtocols()
+       [Test]
+       public void should_Verify_MSSQL_Query()
+       {
+           var extract = Builder<Extract>.CreateNew().Build();
+           extract.ExtractSql = @"SELECT * FROM [AppAdmin]";
+
+           var databaseProtocol = DatabaseProtocols().First(x=>x.DatabaseType==DatabaseType.MicrosoftSQL);
+           var verified = _databaseManager.VerifyQuery(extract,databaseProtocol);
+           Assert.True(verified);
+
+           Console.WriteLine($"{extract} query [{extract.ExtractSql}] OK | {databaseProtocol.DatabaseType}");
+       }
+
+       [Test]
+       public void should_Verify_MySQL_Query()
+       {
+           var extract = Builder<Extract>.CreateNew().Build();
+           extract.ExtractSql = @"SELECT * FROM psmart";
+
+           var databaseProtocol = DatabaseProtocols().First(x => x.DatabaseType == DatabaseType.MySQL);
+            var verified = _databaseManager.VerifyQuery(extract, databaseProtocol);
+           Assert.True(verified);
+
+           Console.WriteLine($"{extract} query [{extract.ExtractSql}] OK | {databaseProtocol.DatabaseType}");
+       }
+
+
+        public static List<DatabaseProtocol> DatabaseProtocols()
        {
            return new List<DatabaseProtocol>
            {

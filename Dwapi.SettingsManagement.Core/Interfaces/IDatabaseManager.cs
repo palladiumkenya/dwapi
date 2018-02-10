@@ -8,5 +8,6 @@ namespace Dwapi.SettingsManagement.Core.Interfaces
         string ConnectionError { get; }
         IDbConnection GetConnection(DatabaseProtocol databaseProtocol);
         bool VerifyConnection(DatabaseProtocol databaseProtocol);
+        bool VerifyQuery(Extract extract,DatabaseProtocol databaseProtocol);
     }
 }

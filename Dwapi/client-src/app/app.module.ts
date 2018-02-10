@@ -75,7 +75,7 @@ import {TreeTableModule} from 'primeng/primeng';
 
 import {AppComponent} from './app.component';
 import {RegistryConfigComponent} from '../settings/registry-config/registry-config.component';
-import {EmrConfigComponent} from '../settings/emr-config/emr-config.component';
+import {EmrConfigComponent} from '../settings/emrs/emr-config/emr-config.component';
 import { TopbarComponent } from './topbar/topbar.component';
 import { InlineProfileComponent } from './inline-profile/inline-profile.component';
 import { FooterComponent } from './footer/footer.component';
@@ -91,6 +91,11 @@ import {RegistryConfigService} from '../settings/services/registry-config.servic
 import {HttpClientModule} from '@angular/common/http';
 import {MessageModule} from 'primeng/message';
 import {EmrConfigService} from '../settings/services/emr-config.service';
+import { DatabaseProtocolConfigComponent } from '../settings/emrs/database-protocol-config/database-protocol-config.component';
+import { RestProtocolConfigComponent } from '../settings/emrs/rest-protocol-config/rest-protocol-config.component';
+import {ProtocolConfigService} from '../settings/services/protocol-config.service';
+import { ExtractConfigComponent } from '../settings/emrs/extract-config/extract-config.component';
+import {ExtractConfigService} from '../settings/services/extract-config.service';
 
 @NgModule({
     imports: [
@@ -179,11 +184,14 @@ import {EmrConfigService} from '../settings/services/emr-config.service';
         AppMenuComponent,
         AppSubmenuComponent,
         AppBreadcrumbComponent,
-        DashboardComponent
+        DashboardComponent,
+        DatabaseProtocolConfigComponent,
+        RestProtocolConfigComponent,
+        ExtractConfigComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
-        MessageService, ConfirmationService, RegistryConfigService, EmrConfigService
+        MessageService, ConfirmationService, RegistryConfigService, EmrConfigService, ProtocolConfigService, ExtractConfigService
     ],
     bootstrap: [AppComponent]
 })

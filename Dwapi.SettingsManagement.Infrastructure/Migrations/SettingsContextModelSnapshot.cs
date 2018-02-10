@@ -76,10 +76,28 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.ToTable("DatabaseProtocols");
                 });
 
+            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Docket", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Dockets");
+                });
+
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.EmrSystem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("IsDefault");
+
+                    b.Property<bool>("IsMiddleware");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100);
@@ -90,6 +108,39 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EmrSystems");
+                });
+
+            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Extract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Destination");
+
+                    b.Property<string>("Display")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("DocketId");
+
+                    b.Property<Guid>("EmrSystemId");
+
+                    b.Property<string>("ExtractSql")
+                        .HasMaxLength(8000);
+
+                    b.Property<bool>("IsPriority");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100);
+
+                    b.Property<decimal>("Rank");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocketId");
+
+                    b.HasIndex("EmrSystemId");
+
+                    b.ToTable("Extracts");
                 });
 
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.RestProtocol", b =>
@@ -116,6 +167,18 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                 {
                     b.HasOne("Dwapi.SettingsManagement.Core.Model.EmrSystem")
                         .WithMany("DatabaseProtocols")
+                        .HasForeignKey("EmrSystemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Extract", b =>
+                {
+                    b.HasOne("Dwapi.SettingsManagement.Core.Model.Docket")
+                        .WithMany("Extracts")
+                        .HasForeignKey("DocketId");
+
+                    b.HasOne("Dwapi.SettingsManagement.Core.Model.EmrSystem")
+                        .WithMany("Extracts")
                         .HasForeignKey("EmrSystemId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

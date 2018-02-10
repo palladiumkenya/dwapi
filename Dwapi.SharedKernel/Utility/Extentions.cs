@@ -4,6 +4,12 @@ namespace Dwapi.SharedKernel.Utility
 {
    public static class Extentions
     {
+
+        public static bool IsSameAs(this string value, string other)
+        {
+            return value.Trim().ToLower() == other.Trim().ToLower();
+        }
+
         public static string HasToEndsWith(this string value, string end)
         {
             return value.EndsWith(end) ? value : $"{value}{end}";
