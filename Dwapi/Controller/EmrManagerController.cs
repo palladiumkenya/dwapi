@@ -163,7 +163,7 @@ namespace Dwapi.Controller
             }
             catch (Exception e)
             {
-                var msg = $"Error veryfying {nameof(DatabaseProtocol)}";
+                var msg = $"Error veryfying {nameof(DatabaseProtocol)} {_emrManagerService.GetConnectionError()}";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

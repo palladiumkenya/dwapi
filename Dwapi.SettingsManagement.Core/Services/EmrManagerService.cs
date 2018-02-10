@@ -60,5 +60,10 @@ namespace Dwapi.SettingsManagement.Core.Services
         {
             return _databaseManager.VerifyConnection(databaseProtocol);
         }
+
+        public string GetConnectionError()
+        {
+            return _databaseManager.ConnectionError;
+        }
     }
 }

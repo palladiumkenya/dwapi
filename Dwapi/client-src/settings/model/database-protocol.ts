@@ -2,7 +2,7 @@ export interface DatabaseProtocol {
     id?: string;
     databaseType?: number;
     host?: string;
-    Port?: number;
+    port?: number;
     username?: string;
     password?: string;
     databaseName?: string;

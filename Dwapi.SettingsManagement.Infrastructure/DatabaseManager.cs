@@ -12,6 +12,13 @@ namespace Dwapi.SettingsManagement.Infrastructure
 {
     public class DatabaseManager : IDatabaseManager
     {
+        private string _connectionError;
+
+        public string ConnectionError
+        {
+            get { return _connectionError; }
+        }
+       
         public IDbConnection GetConnection(DatabaseProtocol databaseProtocol)
         {
             var connectionString = databaseProtocol.GetConnectionString();
@@ -40,7 +47,12 @@ namespace Dwapi.SettingsManagement.Infrastructure
                 }
                 catch (Exception e)
                 {
-                   Log.Debug($"{e}");
+                    if (e is DbException)
+                    {
+                        _connectionError = e.Message;
+                    }
+                    Log.Debug($"{e}");
+                    throw;
                 }
             }
 
