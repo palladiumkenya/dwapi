@@ -12,9 +12,10 @@ using System;
 namespace Dwapi.SettingsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(SettingsContext))]
-    partial class SettingsContextModelSnapshot : ModelSnapshot
+    [Migration("20180210170319_Settings2018FEB10001")]
+    partial class Settings2018FEB10001
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,22 +77,6 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.ToTable("DatabaseProtocols");
                 });
 
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Docket", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Code")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(100);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Dockets");
-                });
-
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.EmrSystem", b =>
                 {
                     b.Property<Guid>("Id")
@@ -106,52 +91,6 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EmrSystems");
-                });
-
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Extract", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Display")
-                        .HasMaxLength(100);
-
-                    b.Property<Guid>("DocketId");
-
-                    b.Property<string>("ExtractSql")
-                        .HasMaxLength(8000);
-
-                    b.Property<bool>("IsPriority");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(100);
-
-                    b.Property<decimal>("Rank");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocketId");
-
-                    b.ToTable("Extracts");
-                });
-
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.ExtractDestination", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("ExtractId");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(100);
-
-                    b.Property<decimal>("Rank");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExtractId");
-
-                    b.ToTable("ExtractDestinations");
                 });
 
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.RestProtocol", b =>
@@ -179,22 +118,6 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.HasOne("Dwapi.SettingsManagement.Core.Model.EmrSystem")
                         .WithMany("DatabaseProtocols")
                         .HasForeignKey("EmrSystemId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Extract", b =>
-                {
-                    b.HasOne("Dwapi.SettingsManagement.Core.Model.Docket")
-                        .WithMany("Extracts")
-                        .HasForeignKey("DocketId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.ExtractDestination", b =>
-                {
-                    b.HasOne("Dwapi.SettingsManagement.Core.Model.Extract")
-                        .WithMany("Destinations")
-                        .HasForeignKey("ExtractId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

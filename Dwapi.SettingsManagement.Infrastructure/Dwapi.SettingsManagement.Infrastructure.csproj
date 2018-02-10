@@ -5,7 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Seed\CentralRegistries.csv" />
+    <None Remove="Seed\DatabaseProtocols.csv" />
+    <None Remove="Seed\Dockets.csv" />
+    <None Remove="Seed\EmrSystems.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Seed\DatabaseProtocols.csv" />
+    <EmbeddedResource Include="Seed\CentralRegistries.csv" />
+    <EmbeddedResource Include="Seed\EmrSystems.csv" />
+    <EmbeddedResource Include="Seed\Dockets.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="1.50.4" />
+    <PackageReference Include="EFCore.Seeder" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" />
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="6.10.6" />
