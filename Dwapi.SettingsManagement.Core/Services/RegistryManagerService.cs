@@ -20,6 +20,11 @@ namespace Dwapi.SettingsManagement.Core.Services
         public async Task<bool> Verify(CentralRegistry centralRegistry)
         {
             var client=new HttpClient();
+            client.DefaultRequestHeaders.Add("SubscriberId", $"{centralRegistry.SubscriberId}");
+            if (centralRegistry.RequiresAuthentication())
+            {
+                client.DefaultRequestHeaders.Add("Token", $"{centralRegistry.AuthToken}");
+            }
             var result = await client.GetAsync(centralRegistry.Url);
             return result.IsSuccessStatusCode;
         }

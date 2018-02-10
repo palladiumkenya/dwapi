@@ -3,4 +3,5 @@ export interface CentralRegistry {
     name?: string;
     url?: string;
     authToken?: string;
+    subscriberId: string;
 }

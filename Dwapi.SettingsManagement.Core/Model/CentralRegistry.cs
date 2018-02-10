@@ -13,6 +13,10 @@ namespace Dwapi.SettingsManagement.Core.Model
         [MaxLength(100)]
         public string AuthToken { get; set; }
 
+        [MaxLength(50)]
+        public string SubscriberId { get; set; } = "DWAPI";
+        
+
         public CentralRegistry()
         {
         }
@@ -30,7 +34,7 @@ namespace Dwapi.SettingsManagement.Core.Model
 
         public bool RequiresAuthentication()
         {
-            return !string.IsNullOrWhiteSpace(AuthToken.Trim());
+            return !string.IsNullOrWhiteSpace(AuthToken);
         }
 
         public override string ToString()

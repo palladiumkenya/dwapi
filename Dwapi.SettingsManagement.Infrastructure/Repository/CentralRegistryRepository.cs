@@ -20,12 +20,11 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 
         public void SaveDefault(CentralRegistry centralRegistry)
         {
-            if (!GetAll().Any())
-                Create(centralRegistry);
-
-            Context.RemoveRange(GetAll());
-            Context.SaveChanges();
-        
+            if (GetAll().Any())
+            {
+                Context.RemoveRange(GetAll());
+                Context.SaveChanges();
+            }
             Create(centralRegistry);
         }
     }

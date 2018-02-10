@@ -20,7 +20,7 @@ export class RegistryConfigComponent implements OnInit, OnDestroy {
     public saveDefault$: Subscription;
     public verfiy$: Subscription;
 
-    public centralRegistry: CentralRegistry = {};
+    public centralRegistry: CentralRegistry = {subscriberId: 'DWAPI'};
     public canSave: boolean;
     public canVerfiy: boolean;
     public isVerfied: boolean;
@@ -44,7 +44,7 @@ export class RegistryConfigComponent implements OnInit, OnDestroy {
     }
 
     public loadData(): void {
-        this.centralRegistry = {};
+        this.centralRegistry = {subscriberId: 'DWAPI'};
         this.getDefault$ = this._registryConfigService.getDefault()
             .subscribe(
                 p => {
