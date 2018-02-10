@@ -60,5 +60,12 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests.Repository
                 Console.WriteLine($" Rest API > {restProtocol}");
             }
         }
+
+        [Test]
+        public void should_Get_All_Emrs_Count()
+        {
+            var emr = _emrRepository.Count();
+            Assert.True(emr>0);
+        }
     }
 }
