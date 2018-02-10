@@ -27,6 +27,11 @@ namespace Dwapi.SettingsManagement.Core.Services
             return _emrSystemRepository.GetAll();
         }
 
+        public int GetEmrCount()
+        {
+            return _emrSystemRepository.Count();
+        }
+
         public void SaveEmr(EmrSystem emrSystem)
         {
             _emrSystemRepository.CreateOrUpdate(emrSystem);

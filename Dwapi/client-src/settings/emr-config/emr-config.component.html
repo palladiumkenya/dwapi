@@ -1,7 +1,74 @@
 <div class="ui-g">
+    <p-messages [(value)]="errorMessage"></p-messages>
+    <p-growl [(value)]="otherMessage"></p-growl>
+    <p-confirmDialog #cd>
+        <p-footer>
+            <button type="button" pButton icon="fa-check" label="Yes" (click)="cd.accept()"
+                    class="ui-button-danger"></button>
+            <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+        </p-footer>
+    </p-confirmDialog>
     <div class="ui-g-12">
-        <div class="card">
-            <h1>EMR Settings</h1>
+        <div class="ui-g-3">
+            <div class="card">
+                <h1>EMR Settings</h1>
+                <div class="content-section implementation">
+                    <p-dataTable [value]="emrs">
+                        <p-header>EMR Systems</p-header>
+                        <p-footer>There are {{recordCount}} emrs</p-footer>
+                        <p-column field="name" header="Name"></p-column>
+                        <p-column field="version" header="Version"></p-column>
+                        <p-column styleClass="col-button">
+                            <ng-template let-emr="rowData" pTemplate="body">
+                                <button type="button" pButton (click)="confirmDelete(emr)" icon="ui-icon-close" class="pink-btn"></button>
+                            </ng-template>
+                        </p-column>
+                    </p-dataTable>
+                </div>
+                <br>
+                <!--<div class="ui-g">-->
+                    <button type="button" label="Add" icon="ui-icon-add" pButton (click)="newEmr()"></button>
+                <!--</div>-->
+            </div>
+
+        </div>
+
+        <p-dialog header="EMR" [(visible)]="displayDialog" width="400px"
+                  [responsive]="true" showEffect="fade" [modal]="true" [responsive]="true">
+            <form #emrForm="ngForm" novalidate>
+                <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="emrDialog">
+                    <p-messages [(value)]="errorMessage"></p-messages>
+                    <div class="ui-g ui-g-12 ui-g-nopad">
+                        <div class="ui-g-12 ui-md-3 ui-label">
+                            <label for="name">Name</label>
+                        </div>
+                        <div class="ui-g-12 ui-md-9">
+                            <input pInputText id="name" name="name" required
+                                   [(ngModel)]="emrDialog.name"/>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-g-12 ui-g-nopad">
+                        <div class="ui-g-12 ui-md-3 ui-label">
+                            <label for="description">Version</label>
+                        </div>
+                        <div class="ui-g-12 ui-md-9">
+              <textarea  pInputTextarea id="description" name="description" required
+                         [(ngModel)]="emrDialog.version"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                    <button type="submit" pButton icon="ui-icon-save" (click)="saveRecord()"
+                            label="Save" [disabled]="!emrForm.form.valid"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+        <div class="ui-g-9">
+            <div class="card">
+                <h1>Protocols</h1>
+            </div>
         </div>
     </div>
 </div>

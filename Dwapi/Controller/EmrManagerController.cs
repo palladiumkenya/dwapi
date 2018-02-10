@@ -24,7 +24,7 @@ namespace Dwapi.Controller
 
         // GET: api/EmrManager
         [HttpGet]
-        public virtual IActionResult Get()
+        public IActionResult Get()
         {
             try
             {
@@ -40,13 +40,34 @@ namespace Dwapi.Controller
             }
         }
 
+        // GET: api/EmrManager/count
+        [HttpGet("count")]
+        public IActionResult GetCount()
+        {
+            try
+            {
+                var count = _emrManagerService.GetEmrCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(EmrSystem)}(s) count";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
         // POST: api/EmrManager
         [HttpPost]
         public IActionResult SaveEmr([FromBody] EmrSystem entity)
         {
             if (null == entity)
                 return BadRequest();
-            
+
+            if (entity.Id.IsNullOrEmpty())
+                entity.Id = LiveGuid.NewGuid();
+
             try
             {
                 _emrManagerService.SaveEmr(entity);
@@ -88,6 +109,9 @@ namespace Dwapi.Controller
         {
             if (null == entity)
                 return BadRequest();
+
+            if (entity.Id.IsNullOrEmpty())
+                entity.Id = LiveGuid.NewGuid();
 
             try
             {

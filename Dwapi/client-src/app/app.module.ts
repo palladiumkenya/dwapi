@@ -90,6 +90,7 @@ import {ConfirmationService} from 'primeng/api';
 import {RegistryConfigService} from '../settings/services/registry-config.service';
 import {HttpClientModule} from '@angular/common/http';
 import {MessageModule} from 'primeng/message';
+import {EmrConfigService} from '../settings/services/emr-config.service';
 
 @NgModule({
     imports: [
@@ -182,7 +183,7 @@ import {MessageModule} from 'primeng/message';
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
-        MessageService, ConfirmationService, RegistryConfigService
+        MessageService, ConfirmationService, RegistryConfigService, EmrConfigService
     ],
     bootstrap: [AppComponent]
 })
