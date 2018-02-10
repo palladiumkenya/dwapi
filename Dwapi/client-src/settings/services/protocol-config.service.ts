@@ -6,7 +6,7 @@ import {EmrSystem} from '../model/emr-system';
 import {DatabaseProtocol} from '../model/database-protocol';
 
 @Injectable()
-export class EmrConfigService {
+export class ProtocolConfigService {
 
     private _url: string = './api/EmrManager';
     private _http: HttpClient;
@@ -15,21 +15,13 @@ export class EmrConfigService {
         this._http = http;
     }
 
-    public getAll(): Observable<EmrSystem[]> {
-        return this._http.get<EmrSystem[]>(this._url)
-            .catch(this.handleError);
-    }
-    public getCount(): Observable<number> {
-        return this._http.get<number>(this._url + '/count')
-            .catch(this.handleError);
-    }
-    public save(entity: EmrSystem): Observable<EmrSystem> {
-        return this._http.post<EmrSystem>(this._url, entity)
+    public saveProtocol(entity: DatabaseProtocol): Observable<DatabaseProtocol> {
+        return this._http.post<DatabaseProtocol>(this._url + '/protocol', entity)
             .catch(this.handleError);
     }
 
-    public delete(id: string): Observable<number> {
-        return this._http.delete<number>(this._url + '/' + id)
+    public verifyProtocol(entity: DatabaseProtocol): Observable<boolean> {
+        return this._http.post<boolean>(this._url + '/verify', entity)
             .catch(this.handleError);
     }
 
@@ -39,4 +31,5 @@ export class EmrConfigService {
         }
         return Observable.throw(err.error);
     }
+
 }

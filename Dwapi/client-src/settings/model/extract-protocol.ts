@@ -1,11 +1,7 @@
-export interface Extract {
-    id?: string;
-    name?: string;
-    display?: string;
-    extractSql?: string;
-    destination?: string;
-    rank?: string;
-    isPriority?: string;
-    docketId?: string;
-    emrSystemId?: string;
+import {Extract} from './extract';
+import {DatabaseProtocol} from './database-protocol';
+
+export interface ExtractDatabaseProtocol {
+    extract?: Extract;
+    databaseProtocol?: DatabaseProtocol;
 }

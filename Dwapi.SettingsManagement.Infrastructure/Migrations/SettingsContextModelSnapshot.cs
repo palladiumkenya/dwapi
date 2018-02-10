@@ -78,10 +78,8 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Docket", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Code")
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50);
 
                     b.Property<string>("Name")
@@ -96,6 +94,10 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("IsDefault");
+
+                    b.Property<bool>("IsMiddleware");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100);
@@ -113,10 +115,14 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Destination");
+
                     b.Property<string>("Display")
                         .HasMaxLength(100);
 
-                    b.Property<Guid>("DocketId");
+                    b.Property<string>("DocketId");
+
+                    b.Property<Guid>("EmrSystemId");
 
                     b.Property<string>("ExtractSql")
                         .HasMaxLength(8000);
@@ -132,26 +138,9 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
 
                     b.HasIndex("DocketId");
 
+                    b.HasIndex("EmrSystemId");
+
                     b.ToTable("Extracts");
-                });
-
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.ExtractDestination", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("ExtractId");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(100);
-
-                    b.Property<decimal>("Rank");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExtractId");
-
-                    b.ToTable("ExtractDestinations");
                 });
 
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.RestProtocol", b =>
@@ -186,15 +175,11 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                 {
                     b.HasOne("Dwapi.SettingsManagement.Core.Model.Docket")
                         .WithMany("Extracts")
-                        .HasForeignKey("DocketId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
+                        .HasForeignKey("DocketId");
 
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.ExtractDestination", b =>
-                {
-                    b.HasOne("Dwapi.SettingsManagement.Core.Model.Extract")
-                        .WithMany("Destinations")
-                        .HasForeignKey("ExtractId")
+                    b.HasOne("Dwapi.SettingsManagement.Core.Model.EmrSystem")
+                        .WithMany("Extracts")
+                        .HasForeignKey("EmrSystemId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

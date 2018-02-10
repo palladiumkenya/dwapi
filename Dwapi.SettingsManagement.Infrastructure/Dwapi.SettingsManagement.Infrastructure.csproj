@@ -9,11 +9,13 @@
     <None Remove="Seed\DatabaseProtocols.csv" />
     <None Remove="Seed\Dockets.csv" />
     <None Remove="Seed\EmrSystems.csv" />
+    <None Remove="Seed\Extracts.csv" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Seed\DatabaseProtocols.csv" />
     <EmbeddedResource Include="Seed\CentralRegistries.csv" />
+    <EmbeddedResource Include="Seed\Extracts.csv" />
     <EmbeddedResource Include="Seed\EmrSystems.csv" />
     <EmbeddedResource Include="Seed\Dockets.csv" />
   </ItemGroup>

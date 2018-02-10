@@ -4,8 +4,8 @@ using Dwapi.SharedKernel.Interfaces;
 
 namespace Dwapi.SettingsManagement.Core.Interfaces.Repositories
 {
-    public interface IDocketRepository : IRepository<Docket,Guid>
+    public interface IDocketRepository : IRepository<Docket,string>
     {
-        Docket GetByCode(string code);
+      
     }
 }

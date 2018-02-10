@@ -15,7 +15,13 @@ namespace Dwapi.SettingsManagement.Core.Model
         public string ExtractSql { get; set; }
         public decimal Rank { get; set; }
         public bool IsPriority { get; set; }
-        public ICollection<ExtractDestination> Destinations { get; set; }=new List<ExtractDestination>();
-        public Guid DocketId { get; set; }
+        public string Destination { get; set; }
+        public Guid EmrSystemId { get; set; }
+        public string DocketId { get; set; }
+
+        public override string ToString()
+        {
+            return Display;
+        }
     }
 }

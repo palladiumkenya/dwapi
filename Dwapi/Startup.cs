@@ -42,11 +42,14 @@ namespace Dwapi
             services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly("Dwapi.SettingsManagement.Infrastructure")));
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
             services.AddScoped<IEmrSystemRepository, EmrSystemRepository>();
+            services.AddScoped<IDocketRepository, DocketRepository>();
             services.AddScoped<IDatabaseProtocolRepository, DatabaseProtocolRepository>();
+            services.AddScoped<IExtractRepository, ExtractRepository>();
 
             services.AddScoped<IDatabaseManager, DatabaseManager>();
             services.AddScoped<IRegistryManagerService, RegistryManagerService>();
             services.AddScoped<IEmrManagerService, EmrManagerService>();
+            services.AddScoped<IExtractManagerService, ExtractManagerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

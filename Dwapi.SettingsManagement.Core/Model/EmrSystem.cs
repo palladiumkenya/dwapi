@@ -16,17 +16,23 @@ namespace Dwapi.SettingsManagement.Core.Model
         [MaxLength(50)]
         public string Version { get; set; }
 
+        public bool IsMiddleware { get; set; }
+        public bool IsDefault { get; set; }
+
         public ICollection<DatabaseProtocol> DatabaseProtocols { get; set; } = new List<DatabaseProtocol>();
         public ICollection<RestProtocol> RestProtocols { get; set; } = new List<RestProtocol>();
+        public ICollection<Extract> Extracts { get; set; } = new List<Extract>();
 
         public EmrSystem()
         {
         }
 
-        public EmrSystem(string name, string version)
+        public EmrSystem(string name, string version, bool isMiddleware = false, bool isDefault = false)
         {
             Name = name;
             Version = version;
+            IsMiddleware = isMiddleware;
+            IsDefault = isDefault;
         }
 
         public void UpdateTo(EmrSystem emrSystem)
@@ -45,6 +51,12 @@ namespace Dwapi.SettingsManagement.Core.Model
         {
             protocol.EmrSystemId = Id;
             RestProtocols.Add(protocol);
+        }
+
+        public void AddExtract(Extract extract)
+        {
+            extract.EmrSystemId = Id;
+            Extracts.Add(extract);
         }
 
         public override string ToString()

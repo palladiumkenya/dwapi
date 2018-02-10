@@ -1,0 +1,17 @@
+<p-accordion>
+    <p-accordionTab header="PSMART" [selected]="true">
+        <p-dataTable [value]="emrs" selectionMode="single" [(selection)]="selectedEmr" dataKey="id">
+            <p-header>Extract Settings</p-header>
+            <p-column field="name" header="Name"></p-column>
+            <p-column field="display" header="Display"></p-column>
+            <p-column field="extractSql" header="SQL"></p-column>
+            <p-column field="destination" header="Destination"></p-column>
+        </p-dataTable>
+    </p-accordionTab>
+    <p-accordionTab header="National Data Warehouse" *ngIf="!selectedEmr.isMiddleware" [disabled]="true">
+        Not supported !
+    </p-accordionTab>
+    <p-accordionTab header="Case-based Surveillance" *ngIf="!selectedEmr.isMiddleware" [disabled]="true">
+        Not supported !
+    </p-accordionTab>
+</p-accordion>

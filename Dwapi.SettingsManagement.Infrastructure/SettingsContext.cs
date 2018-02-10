@@ -20,8 +20,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
         public DbSet<Docket> Dockets { get; set; }
         public DbSet<Extract> Extracts { get; set; }
-        public DbSet<ExtractDestination> ExtractDestinations { get; set; }
-
+ 
         public SettingsContext(DbContextOptions<SettingsContext> options) : base(options)
         {
         }
@@ -37,10 +36,13 @@ namespace Dwapi.SettingsManagement.Infrastructure
                 WillThrowOnMissingField = false
             };
             SeederConfiguration.ResetConfiguration(csvConfig, null, typeof(SettingsContext).GetTypeInfo().Assembly);
+
             CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
             EmrSystems.SeedDbSetIfEmpty($"{nameof(EmrSystems)}");
             DatabaseProtocols.SeedDbSetIfEmpty($"{nameof(DatabaseProtocols)}");
             Dockets.SeedDbSetIfEmpty($"{nameof(Dockets)}");
+            Extracts.SeedDbSetIfEmpty($"{nameof(Extracts)}");
+
             SaveChanges();
         }
     }
