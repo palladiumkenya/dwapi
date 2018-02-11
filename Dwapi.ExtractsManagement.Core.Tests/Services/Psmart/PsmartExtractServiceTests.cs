@@ -65,5 +65,20 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Services.Psmart
                 Console.WriteLine(psmartStage);
             }
         }
+
+        [Test]
+        public void should_Load_MySQL()
+        {
+            var psmartSources = _psmartExtractService.Extract(_mysql, _extractB).ToList();
+            Assert.True(psmartSources.Count > 0);
+            _psmartExtractService.Load(psmartSources, false);
+
+            Assert.True(_context.PsmartStages.Any());
+
+            foreach (var psmartStage in _context.PsmartStages)
+            {
+                Console.WriteLine(psmartStage);
+            }
+        }
     }
 }
