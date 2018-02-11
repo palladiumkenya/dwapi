@@ -16,6 +16,17 @@ namespace Dwapi.ExtractsManagement.Core.Stage.Psmart
         [MaxLength(50)]
         public string Emr { get; set; }
         public int? FacilityCode { get; set; }
+        public DateTime? DateExtracted { get; set; }
         public DateTime DateStaged { get; set; }
+
+        public PsmartStage()
+        {
+            DateStaged=DateTime.Now;
+        }
+
+        public override string ToString()
+        {
+            return $"{Id},{Serial} ({DateExtracted:F} >> {DateStaged:F})";
+        }
     }
 }

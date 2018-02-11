@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.2.1" />
+    <PackageReference Include="AutoMapper.Data" Version="1.0.1" />
     <PackageReference Include="Dapper" Version="1.50.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
@@ -21,6 +23,13 @@
   <ItemGroup>
     <ProjectReference Include="..\Dwapi.ExtractsManagement.Core\Dwapi.ExtractsManagement.Core.csproj" />
     <ProjectReference Include="..\Dwapi.ExtractsManagement.Infrastructure\Dwapi.ExtractsManagement.Infrastructure.csproj" />
+    <ProjectReference Include="..\Dwapi.SharedKernel.Infrastructure.Tests\Dwapi.SharedKernel.Infrastructure.Tests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="FizzWare.NBuilder">
+      <HintPath>C:\Users\Koske\.nuget\packages\nbuilder\5.0.0\lib\netstandard1.6\FizzWare.NBuilder.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
