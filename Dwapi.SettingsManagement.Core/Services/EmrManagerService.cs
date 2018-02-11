@@ -21,7 +21,17 @@ namespace Dwapi.SettingsManagement.Core.Services
             _databaseProtocolRepository = databaseProtocolRepository;
         }
 
-       
+
+        public EmrSystem GetDefault()
+        {
+            return _emrSystemRepository.GetDefault();
+        }
+
+        public EmrSystem GetMiddleware()
+        {
+            return _emrSystemRepository.GetMiddleware();
+        }
+
         public IEnumerable<EmrSystem> GetAllEmrs()
         {
             return _emrSystemRepository.GetAll();

@@ -1,4 +1,4 @@
 Id|DatabaseName|DatabaseType|EmrSystemId|Host|Password|Port|Username|AdvancedProperties
-a6221e00-0e85-11e8-ba89-0ed5f89f718b|psmart|2|a6221cde-0e85-11e8-ba89-0ed5f89f718b|localhost|root|3306|root|
+a6221e00-0e85-11e8-ba89-0ed5f89f718b|middleware|2|a6221cde-0e85-11e8-ba89-0ed5f89f718b|localhost|root|3306|root|
 a6221982-0e85-11e8-ba89-0ed5f89f718b|IQTools_KeHMIS|1|a62216ee-0e85-11e8-ba89-0ed5f89f718b|.\koske14|maun||sa|
 a6221aa4-0e85-11e8-ba89-0ed5f89f718b|testemr|2|a6221856-0e85-11e8-ba89-0ed5f89f718b|localhost|root|3306|root|

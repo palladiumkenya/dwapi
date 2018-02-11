@@ -8,4 +8,5 @@ export interface Extract {
     isPriority?: string;
     docketId?: string;
     emrSystemId?: string;
+    emr?: string;
 }

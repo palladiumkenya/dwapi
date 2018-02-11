@@ -6,6 +6,8 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Services
 {
     public interface IEmrManagerService
     {
+        EmrSystem GetDefault();
+        EmrSystem GetMiddleware();
         IEnumerable<EmrSystem> GetAllEmrs();
         int GetEmrCount();
         void SaveEmr(EmrSystem emrSystem);

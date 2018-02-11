@@ -23,6 +23,50 @@ namespace Dwapi.Controller
         }
 
         // GET: api/EmrManager
+        [HttpGet("default")]
+        public IActionResult GetDefault()
+        {
+            try
+            {
+                var emrSystem = _emrManagerService.GetDefault();
+
+                if (null == emrSystem)
+                    return NotFound();
+
+                return Ok(emrSystem);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(EmrSystem)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        // GET: api/EmrManager
+        [HttpGet("middleware")]
+        public IActionResult GetMiddleWare()
+        {
+            try
+            {
+                var middleware = _emrManagerService.GetMiddleware();
+
+                if (null == middleware)
+                    return NotFound();
+
+                return Ok(middleware);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(EmrSystem)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        // GET: api/EmrManager
         [HttpGet]
         public IActionResult Get()
         {

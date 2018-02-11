@@ -26,5 +26,23 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
         {
             return DbSet.Select(x => x.Id).Count();
         }
+
+        public EmrSystem GetDefault()
+        {
+            return DbSet.AsNoTracking()
+                .Include(x => x.DatabaseProtocols)
+                .Include(r => r.RestProtocols)
+                .Include(e=>e.Extracts)
+                .FirstOrDefault(x=>x.IsDefault);
+        }
+
+        public EmrSystem GetMiddleware()
+        {
+            return DbSet.AsNoTracking()
+                .Include(x => x.DatabaseProtocols)
+                .Include(r => r.RestProtocols)
+                .Include(e => e.Extracts)
+                .FirstOrDefault(x => x.IsMiddleware);
+        }
     }
 }

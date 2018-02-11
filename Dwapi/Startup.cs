@@ -1,5 +1,14 @@
 using System;
 using System.IO;
+using System.Reflection;
+using Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart;
+using Dwapi.ExtractsManagement.Core.Interfaces.Source.Psmart.Reader;
+using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Repository;
+using Dwapi.ExtractsManagement.Core.Services.Psmart;
+using Dwapi.ExtractsManagement.Infrastructure;
+using Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader;
+using Dwapi.ExtractsManagement.Infrastructure.Stage.Psmart.Repository;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
@@ -40,16 +49,22 @@ namespace Dwapi
 
             var connectionString = Startup.Configuration["connectionStrings:DwapiConnection"];
             services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly("Dwapi.SettingsManagement.Infrastructure")));
+            services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
             services.AddScoped<IEmrSystemRepository, EmrSystemRepository>();
             services.AddScoped<IDocketRepository, DocketRepository>();
             services.AddScoped<IDatabaseProtocolRepository, DatabaseProtocolRepository>();
             services.AddScoped<IExtractRepository, ExtractRepository>();
+            services.AddScoped<IPsmartStageRepository, PsmartStageRepository>();
 
             services.AddScoped<IDatabaseManager, DatabaseManager>();
             services.AddScoped<IRegistryManagerService, RegistryManagerService>();
             services.AddScoped<IEmrManagerService, EmrManagerService>();
             services.AddScoped<IExtractManagerService, ExtractManagerService>();
+
+            services.AddScoped<IPsmartExtractService, PsmartExtractService>();
+            services.AddScoped<IPsmartSourceReader, PsmartSourceReader>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,7 +95,7 @@ namespace Dwapi
             Log.Debug(@"initializing Database...");
 
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);
-           
+            EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
 
             Log.Debug(@"initializing Database [Complete]");
             Log.Debug(@"---------------------------------------------------------------------------------------------------");

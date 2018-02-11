@@ -1,18 +1,18 @@
 ﻿using System;
-using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Model;
 using NUnit.Framework;
 
-namespace Dwapi.SettingsManagement.Core.Tests.Model
+namespace Dwapi.SharedKernel.Tests.Model
 {
     [TestFixture]
-    public class DatabaseProtocolTests
+    public class DbProtocolTests
     {
-        private DatabaseProtocol _iqcaredbProtocol;
+        private DbProtocol _iqcaredbProtocol;
         [SetUp]
         public void SetUp()
         {
-            _iqcaredbProtocol=new DatabaseProtocol(DatabaseType.MicrosoftSQL,@".\koske14","sa","maun","iqcare");
+            _iqcaredbProtocol=new DbProtocol(DatabaseType.MicrosoftSQL,@".\koske14","sa","maun","iqcare");
         }
 
         [Test]

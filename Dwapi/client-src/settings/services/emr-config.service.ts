@@ -33,6 +33,16 @@ export class EmrConfigService {
             .catch(this.handleError);
     }
 
+    public getDefault(): Observable<EmrSystem> {
+        return this._http.get<EmrSystem>(this._url + '/default')
+            .catch(this.handleError);
+    }
+
+    public getMiddleware(): Observable<EmrSystem> {
+        return this._http.get<EmrSystem>(this._url + '/middleware')
+            .catch(this.handleError);
+    }
+
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {
             return Observable.throw('no record(s) found');

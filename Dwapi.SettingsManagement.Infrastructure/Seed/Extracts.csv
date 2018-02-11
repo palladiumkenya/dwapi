@@ -1,2 +1,4 @@
 Id|Display|DocketId|EmrSystemId|ExtractSql|Destination|IsPriority|Name|Rank
-a6222210-0e85-11e8-ba89-0ed5f89f718b|pSmart Card details|PSMART|a62216ee-0e85-11e8-ba89-0ed5f89f718b|SELECT *  FROM [dbo].[aa_CustomReports]|PSmartStage|1|pSmart|1.00
+a6222210-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a62216ee-0e85-11e8-ba89-0ed5f89f718b|SELECT [Serial],[Demographics],[Encounters]  FROM [dbo].[psmart]|PSmartStage|1|pSmart|1.00
+a6226eb4-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a6221856-0e85-11e8-ba89-0ed5f89f718b|select serial,demographics,encounters FROM psmart|PSmartStage|1|pSmart|1.00
+a62269b4-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a6221cde-0e85-11e8-ba89-0ed5f89f718b|select serial,demographics,encounters FROM psmart|PSmartStage|1|pSmart|1.00

@@ -1,0 +1,25 @@
+<div class="card card-w-title">
+    <h1>PSMART | {{emrName}} <span style="font-size:13px ">{{emrVersion}}</span></h1>
+    <p-toolbar>
+        <div class="ui-toolbar-group-left">
+            <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr()" label="Load from EMR"
+                    icon="ui-icon-file-download" class="green-btn"></button>
+        </div>
+
+        <div class="ui-toolbar-group-right">
+            <button pButton type="button" [disabled]="!canSend" label="Send to Registry" icon="ui-icon-cloud-upload"
+                    class="blue-btn"></button>
+        </div>
+    </p-toolbar>
+
+    <p-dataTable [value]="extracts" selectionMode="single">
+        <p-column field="display" header="Extract"></p-column>
+        <p-column field="" header="Status"></p-column>
+        <p-column field="" header="Loaded"></p-column>
+        <p-column field="" header="Queued"></p-column>
+        <p-column field="" header="Sent"></p-column>
+    </p-dataTable>
+    <p-messages [(value)]="errorMessage"></p-messages>
+    <p-growl [(value)]="otherMessage"></p-growl>
+</div>
+
