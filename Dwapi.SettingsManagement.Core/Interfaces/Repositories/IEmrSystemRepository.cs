@@ -7,5 +7,7 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Repositories
     public interface IEmrSystemRepository : IRepository<EmrSystem,Guid>
     {
         int Count();
+        EmrSystem GetDefault();
+        EmrSystem GetMiddleware();
     }
 }
