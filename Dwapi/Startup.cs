@@ -95,7 +95,7 @@ namespace Dwapi
             Log.Debug(@"initializing Database...");
 
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);
-           
+            EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
 
             Log.Debug(@"initializing Database [Complete]");
             Log.Debug(@"---------------------------------------------------------------------------------------------------");

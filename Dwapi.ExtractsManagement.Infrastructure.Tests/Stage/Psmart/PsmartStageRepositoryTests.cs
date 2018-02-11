@@ -16,7 +16,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Stage.Psmart
         private IPsmartStageRepository _psmartStageRepository;
         private DbContextOptions<ExtractsContext> _options;
         private ExtractsContext _context;
-
+       
 
         [OneTimeSetUp]
         public void Init()
@@ -25,7 +25,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Stage.Psmart
             var context = new ExtractsContext(_options);
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
-            var psmartStages = Builder<PsmartStage>.CreateListOfSize(2).Build().ToList();
+            var psmartStages = Builder<PsmartStage>.CreateListOfSize(2).All().With(x=>x.Emr="iqcare").Build().ToList();
             context.AddRange(psmartStages);
             context.SaveChanges();
         }
@@ -35,7 +35,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Stage.Psmart
         {
             _context = new ExtractsContext(_options);
             _psmartStageRepository = new PsmartStageRepository(_context);
-            var psmartStages = Builder<PsmartStage>.CreateListOfSize(2).Build().ToList();
+            var psmartStages = Builder<PsmartStage>.CreateListOfSize(2).All().With(x => x.Emr = "iqcare").Build().ToList();
             _context.AddRange(psmartStages);
             _context.SaveChanges();
         }
@@ -46,7 +46,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Stage.Psmart
      
         public void should_Clear()
         {
-            _psmartStageRepository.Clear();
+            _psmartStageRepository.Clear("iqcare");
             Assert.False(_context.PsmartStages.Any());
         }
     }

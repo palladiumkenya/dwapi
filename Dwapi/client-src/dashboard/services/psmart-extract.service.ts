@@ -10,28 +10,18 @@ export class PsmartExtractService {
 
     private _url: string = './api/ExtractLoader';
     private _http: HttpClient;
-    private _extractDatabaseProtocol: ExtractDatabaseProtocol;
 
     public constructor(http: HttpClient) {
         this._http = http;
     }
 
-
-    public getStatus(extract: Extract, databaseProtocol: DatabaseProtocol): Observable<boolean> {
-        this._extractDatabaseProtocol = {
-            extract: extract,
-            databaseProtocol: databaseProtocol
-        };
-        return this._http.post<boolean>(this._url + '/verify', this._extractDatabaseProtocol)
+    public getStatus(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
+        return this._http.post<boolean>(this._url + '/status', extracts)
             .catch(this.handleError);
     }
 
-    public load(extract: Extract, databaseProtocol: DatabaseProtocol): Observable<boolean> {
-        this._extractDatabaseProtocol = {
-            extract: extract,
-            databaseProtocol: databaseProtocol
-        };
-        return this._http.post<boolean>(this._url + '/verify', this._extractDatabaseProtocol)
+    public load(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
+        return this._http.post<boolean>(this._url + '/load', extracts)
             .catch(this.handleError);
     }
 

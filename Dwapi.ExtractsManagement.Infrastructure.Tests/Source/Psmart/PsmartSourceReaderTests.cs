@@ -22,9 +22,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Source.Psmart
         public void SetUp()
         {
            _mssql = new DbProtocol(DatabaseType.MicrosoftSQL, @".\koske14", "sa", "maun", "IQTools_KeHMIS");
-            _extractA = new DbExtract {ExtractSql = @" SELECT [Serial],[Demographics],[Encounters] FROM [psmart]"};
+            _extractA = new DbExtract {ExtractSql = @" SELECT [Serial],[Demographics],[Encounters] FROM [psmart]",Emr = "IQCare"};
             _mysql = new DbProtocol(DatabaseType.MySQL, @"localhost", "root", "root", "testemr");
-            _extractB = new DbExtract { ExtractSql = @" select serial,demographics,encounters FROM psmart" };
+            _extractB = new DbExtract { ExtractSql = @" select serial,demographics,encounters FROM psmart",Emr = "KenyaEMR"};
             _psmartSourceReader = new PsmartSourceReader();
         }
 

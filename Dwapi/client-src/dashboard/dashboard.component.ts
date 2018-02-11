@@ -17,9 +17,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     public getEmr$: Subscription;
     public getMiddleware$: Subscription;
-
-    public emrName: string;
-    public emrVersion: string;
     public emrSystem: EmrSystem;
     public middlewareSystem: EmrSystem;
     public errorMessage: Message[];
@@ -36,8 +33,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.emrName = 'EMR Information';
-        this.emrVersion = '';
         this.loadData();
     }
 
@@ -56,10 +51,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     this.loadingData = false;
                 },
                 () => {
-                    if (this.emrSystem) {
-                        this.emrName = this.emrSystem.name;
-                        this.emrVersion = `(Ver. ${this.emrSystem.version})`;
-                    }
+
                 }
             );
 
@@ -75,9 +67,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 },
                 () => {
                     this.loadingData = false;
-                    if (this.middlewareSystem) {
-
-                    }
+                    console.log(this.middlewareSystem);
                 }
             );
     }

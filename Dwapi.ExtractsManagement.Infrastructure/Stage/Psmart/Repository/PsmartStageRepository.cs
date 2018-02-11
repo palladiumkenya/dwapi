@@ -16,9 +16,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Stage.Psmart.Repository
             _context = context;
         }
 
-        public void Clear()
+        public void Clear(string emr)
         {
-            _context.Database.GetDbConnection().Execute($"DELETE FROM {nameof(PsmartStage)}s");
+            _context.Database.GetDbConnection().Execute($"DELETE FROM {nameof(PsmartStage)}s WHERE Emr='{emr}'");
         }
 
         public void Load(PsmartStage entity)

@@ -1,12 +1,8 @@
 <div class="ui-g">
-    <div class="ui-g-12">
-        <div class="card">
-            <h1>{{emrName}} <span style="font-size:13px ">{{emrVersion}}</span></h1>
-        </div>
-    </div>
-</div>
-<div class="ui-g">
     <div class="ui-g-6">
         <liveapp-psmart-console [emr]="emrSystem"></liveapp-psmart-console>
+    </div>
+    <div class="ui-g-6">
+        <liveapp-psmart-middleware-console [middleware]="middlewareSystem"></liveapp-psmart-middleware-console>
     </div>
 </div>

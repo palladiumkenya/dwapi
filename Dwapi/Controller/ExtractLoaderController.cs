@@ -7,6 +7,7 @@ using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
+using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,11 +25,15 @@ namespace Dwapi.Controller
             _psmartExtractService = psmartExtractService;
         }
 
-        // GET: api/ExtractManager/id/dockedtId
-        [HttpGet("{id}")]
-        public IActionResult GetStatus(Guid id)
+        // GET: api/ExtractLoader/id/dockedtId
+        [HttpGet("status")]
+        public IActionResult GetStatus([FromBody]DbExtractProtocolDTO[] entity)
         {
-            if (id.IsNullOrEmpty())
+            if (null == entity)
+                return BadRequest();
+
+
+            if (entity.Any(x => !x.IsValid()))
                 return BadRequest();
 
             try
@@ -47,24 +52,27 @@ namespace Dwapi.Controller
             }
         }
 
-       // POST: api/ExtractManager/load
+        // POST: api/ExtractLoader/load
         [HttpPost("load")]
-        public IActionResult Load([FromBody]ExtractDbProtocolDTO entity)
+        public IActionResult Load([FromBody]DbExtractProtocolDTO[] entity)
         {
             if (null == entity)
                 return BadRequest();
 
-            if (!entity.IsValid())
+
+            if (entity.Any(x=>!x.IsValid()))
                 return BadRequest();
 
             try
             {
-                //var verified = _psmartExtractService.Verfiy(entity.Extract, entity.DatabaseProtocol);
+                //check if busy
+
+                _psmartExtractService.Sync(entity);
                 return Ok();
             }
             catch (Exception e)
             {
-                var msg = $"Error parsing {nameof(Extract)}";
+                var msg = $"Error parsing {nameof(Extract)} {_psmartExtractService.GetLoadError()}";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

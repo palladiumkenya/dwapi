@@ -7,27 +7,27 @@ import {Subscription} from 'rxjs/Subscription';
 import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
 
 @Component({
-  selector: 'liveapp-psmart-console',
-  templateUrl: './psmart-console.component.html',
-  styleUrls: ['./psmart-console.component.scss']
+  selector: 'liveapp-psmart-middleware-console',
+  templateUrl: './psmart-middleware-console.component.html',
+  styleUrls: ['./psmart-middleware-console.component.scss']
 })
-export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
+export class PsmartMiddlewareConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
-    @Input() emr: EmrSystem;
-
-    public emrName: string;
-    public emrVersion: string;
+    @Input() middleware: EmrSystem;
 
     private _confirmationService: ConfirmationService;
     private _psmartExtractService: PsmartExtractService;
 
-    public load$: Subscription;
+    public emrName: string;
+    public emrVersion: string;
+
+    public loadMiddleware$: Subscription;
 
     public loadingData: boolean;
     public extracts: Extract[];
     public recordCount: number;
 
-    public canLoadFromEmr: boolean;
+    public canLoadFromMiddleware: boolean;
     public canSend: boolean;
 
     public errorMessage: Message[];
@@ -47,20 +47,20 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public loadData(): void {
-        this.canLoadFromEmr = this.canSend = false;
-        if (this.emr) {
-            this.canLoadFromEmr = this.canSend = true;
+        this.canLoadFromMiddleware = this.canSend = false;
+        if (this.middleware) {
+            this.canLoadFromMiddleware =  this.canSend = true;
             this.loadingData = true;
             this.recordCount = 0;
-            this.extracts = this.emr.extracts.filter(x => x.docketId === 'PSMART');
-            this.emrName = this.emr.name;
-            this.emrVersion = `(Ver. ${this.emr.version})`;
+            this.extracts = this.middleware.extracts.filter(x => x.docketId === 'PSMART');
+            this.emrName = this.middleware.name;
+            this.emrVersion = `(Ver. ${this.middleware.version})`;
         }
     }
 
-    public loadFromEmr(): void {
+    public loadFromMiddleware(): void {
         this.errorMessage = [];
-        this.load$ = this._psmartExtractService.load(this.getExtractProtocols(this.emr))
+        this.loadMiddleware$ = this._psmartExtractService.load(this.getExtractProtocols(this.middleware))
             .subscribe(
                 p => {
                     // this.isVerfied = p;
@@ -89,8 +89,9 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        if (this.load$) {
-            this.load$.unsubscribe();
+        if (this.loadMiddleware$) {
+            this.loadMiddleware$.unsubscribe();
         }
     }
+
 }

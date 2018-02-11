@@ -91,31 +91,5 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
-
-
-        // POST: api/ExtractManager/load
-        [HttpPost("load")]
-        public IActionResult Load([FromBody]ExtractDbProtocolDTO entity)
-        {
-            if (null == entity)
-                return BadRequest();
-
-            if (!entity.IsValid())
-                return BadRequest();
-
-            try
-            {
-                var verified = _extractManagerService.Verfiy(entity.Extract, entity.DatabaseProtocol);
-                return Ok(verified);
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error parsing {nameof(Extract)} {_extractManagerService.GetDatabaseError()}";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
     }
 }

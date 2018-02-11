@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dwapi.SharedKernel.Model
 {
@@ -13,8 +14,10 @@ namespace Dwapi.SharedKernel.Model
         public string ExtractSql { get; set; }
         public decimal Rank { get; set; }
         public bool IsPriority { get; set; }
-  
-    
+        [NotMapped]
+        public string Emr { get; set; }
+
+
         public override string ToString()
         {
             return Display;

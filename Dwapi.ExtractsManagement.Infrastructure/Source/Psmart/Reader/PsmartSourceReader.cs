@@ -16,30 +16,17 @@ using Serilog;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
 {
-    public class PsmartSourceReader: IPsmartSourceReader
+    public class PsmartSourceReader : IPsmartSourceReader
     {
-        private readonly ReadSummary _summary;
-        private readonly IMapper _mapper;
+        private readonly ReadSummary _summary = new ReadSummary();
+        private IMapper _mapper;
 
-        public PsmartSourceReader()
-        {
-            _summary = new ReadSummary();
-            var config = new MapperConfiguration(cfg => {
-                cfg.AddDataReaderMapping();
-                cfg.CreateMissingTypeMaps = false;
-                cfg.AllowNullCollections = true;
-                cfg.CreateMap<IDataReader, PsmartSource>()
-                    .ForMember(x => x.Id, opt => opt.Ignore())
-                    .ForMember(x => x.Emr, opt => opt.Ignore())
-                    .ForMember(x => x.FacilityCode, opt => opt.Ignore())
-                    .ForMember(x => x.DateExtracted, opt => opt.Ignore());
-            });
 
-            _mapper=new Mapper(config);
-        }
         public ReadSummary Summary => _summary;
+
         public IEnumerable<PsmartSource> Read(DbProtocol protocol, DbExtract extract)
         {
+            _mapper = GetMapper(extract.Emr);
             IEnumerable<PsmartSource> extracts = new List<PsmartSource>();
             var connection = GetConnection(protocol);
 
@@ -56,6 +43,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
                 {
                     //Extract SQL
                     command.CommandText = extract.ExtractSql;
+
                     extracts = _mapper.Map<IDataReader, IEnumerable<PsmartSource>>(command.ExecuteReader());
                 }
             }
@@ -76,6 +64,22 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
                 return new MySqlConnection(connectionString);
 
             return null;
+        }
+
+        private IMapper GetMapper(string emr)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddDataReaderMapping();
+                cfg.CreateMissingTypeMaps = false;
+                cfg.AllowNullCollections = true;
+                cfg.CreateMap<IDataReader, PsmartSource>()
+                    .ForMember(x => x.Id, opt => opt.Ignore())
+                    .ForMember(x => x.Emr, opt => opt.UseValue(emr))
+                    .ForMember(x => x.FacilityCode, opt => opt.Ignore())
+                    .ForMember(x => x.DateExtracted, opt => opt.Ignore());
+            });
+            return new Mapper(config);
         }
     }
 }
