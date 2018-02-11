@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Reflection;
+using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
@@ -40,6 +42,8 @@ namespace Dwapi
 
             var connectionString = Startup.Configuration["connectionStrings:DwapiConnection"];
             services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly("Dwapi.SettingsManagement.Infrastructure")));
+            services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
             services.AddScoped<IEmrSystemRepository, EmrSystemRepository>();
             services.AddScoped<IDocketRepository, DocketRepository>();

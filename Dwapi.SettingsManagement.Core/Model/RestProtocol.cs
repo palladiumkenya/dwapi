@@ -11,7 +11,7 @@ namespace Dwapi.SettingsManagement.Core.Model
 
         [MaxLength(100)]
         public string AuthToken { get; set; }
-
+    
         public Guid EmrSystemId { get; set; }
 
         public RestProtocol()
