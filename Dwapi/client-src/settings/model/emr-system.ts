@@ -1,5 +1,6 @@
 import {DatabaseProtocol} from './database-protocol';
 import {RestProtocol} from './rest-protocol';
+import {Extract} from './extract';
 
 export interface EmrSystem {
     id?: string;
@@ -9,4 +10,5 @@ export interface EmrSystem {
     isDefault?: boolean;
     databaseProtocols?: DatabaseProtocol[];
     restProtocols?: RestProtocol[];
+    extracts?: Extract[];
 }

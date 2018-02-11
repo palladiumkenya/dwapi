@@ -37,15 +37,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.Tests", "Dwapi.Tests\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExtractsManagement", "ExtractsManagement", "{F3891226-78C8-4D3D-B618-3F357AC464AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.ExtractsManagement.Core", "Dwapi.ExtractsManagement.Core\Dwapi.ExtractsManagement.Core.csproj", "{F7891A41-C863-4072-B048-CE6EA693CA32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Core", "Dwapi.ExtractsManagement.Core\Dwapi.ExtractsManagement.Core.csproj", "{F7891A41-C863-4072-B048-CE6EA693CA32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.ExtractsManagement.Core.Tests", "Dwapi.ExtractsManagement.Core.Tests\Dwapi.ExtractsManagement.Core.Tests.csproj", "{05A115C7-AB3A-47AF-8391-81F4D2751370}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Core.Tests", "Dwapi.ExtractsManagement.Core.Tests\Dwapi.ExtractsManagement.Core.Tests.csproj", "{05A115C7-AB3A-47AF-8391-81F4D2751370}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{608002F3-8E7B-417B-BFC5-B8B472A5961E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.ExtractsManagement.Infrastructure", "Dwapi.ExtractsManagement.Infrastructure\Dwapi.ExtractsManagement.Infrastructure.csproj", "{D0A5473D-1098-447A-B80F-FFD54D6613A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Infrastructure", "Dwapi.ExtractsManagement.Infrastructure\Dwapi.ExtractsManagement.Infrastructure.csproj", "{D0A5473D-1098-447A-B80F-FFD54D6613A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.ExtractsManagement.Infrastructure.Tests", "Dwapi.ExtractsManagement.Infrastructure.Tests\Dwapi.ExtractsManagement.Infrastructure.Tests.csproj", "{08BBF52F-6D22-43C0-8EDD-24B553E4F79C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Infrastructure.Tests", "Dwapi.ExtractsManagement.Infrastructure.Tests\Dwapi.ExtractsManagement.Infrastructure.Tests.csproj", "{08BBF52F-6D22-43C0-8EDD-24B553E4F79C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

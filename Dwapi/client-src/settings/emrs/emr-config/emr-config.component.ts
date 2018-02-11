@@ -33,9 +33,11 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
     public protocolTitle: string;
     public displayDialog: boolean;
 
+    public canMakeDefault: boolean;
+
     public constructor(public breadcrumbService: BreadcrumbService,
                        confirmationService: ConfirmationService, emrConfigService: EmrConfigService) {
-        this.breadcrumbService.setItems([
+            this.breadcrumbService.setItems([
             {label: 'Configuration'},
             {label: 'EMR', routerLink: ['/emrconfig']}
         ]);

@@ -96,6 +96,7 @@ import { RestProtocolConfigComponent } from '../settings/emrs/rest-protocol-conf
 import {ProtocolConfigService} from '../settings/services/protocol-config.service';
 import { ExtractConfigComponent } from '../settings/emrs/extract-config/extract-config.component';
 import {ExtractConfigService} from '../settings/services/extract-config.service';
+import { PsmartConsoleComponent } from '../dashboard/psmart-console/psmart-console.component';
 
 @NgModule({
     imports: [
@@ -187,7 +188,8 @@ import {ExtractConfigService} from '../settings/services/extract-config.service'
         DashboardComponent,
         DatabaseProtocolConfigComponent,
         RestProtocolConfigComponent,
-        ExtractConfigComponent
+        ExtractConfigComponent,
+        PsmartConsoleComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
