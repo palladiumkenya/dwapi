@@ -14,4 +14,10 @@
     <ProjectReference Include="..\Dwapi.TransmissionManagement.Core\Dwapi.TransmissionManagement.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="FizzWare.NBuilder">
+      <HintPath>C:\Users\Koske\.nuget\packages\nbuilder\5.0.0\lib\netstandard1.6\FizzWare.NBuilder.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

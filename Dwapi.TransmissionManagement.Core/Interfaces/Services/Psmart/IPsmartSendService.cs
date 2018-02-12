@@ -5,8 +5,8 @@ using Dwapi.TransmissionManagement.Core.Model;
 
 namespace Dwapi.TransmissionManagement.Core.Interfaces.Services.Psmart
 {
-    public interface PsmartSendService
+    public interface IPsmartSendService
     {
-        Task<IEnumerable<SendResponse>> SendAsync(IEnumerable<PsmartStageDTO> message);
+        Task<IEnumerable<SendResponse>> SendAsync(string endpoint,IEnumerable<PsmartStageDTO> message);
     }
 }
