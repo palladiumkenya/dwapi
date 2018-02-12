@@ -43,7 +43,7 @@ namespace Dwapi.Tests.Controller
             _registryManagerController=new RegistryManagerController(new RegistryManagerService(_centralRegistryRepository));
 
             _centralRegistry = Builder<CentralRegistry>.CreateNew()
-                .With(x => x.Url = "http://52.178.24.227:4747/api/cohorts/lists")
+                .With(x => x.Url = "http://52.178.24.227:5757")
                 .Build();
         }
 
@@ -85,7 +85,11 @@ namespace Dwapi.Tests.Controller
             Assert.IsNotNull(result);
             Assert.AreEqual(200, result.StatusCode);
 
-            Assert.True(Convert.ToBoolean(result.Value));
+            var verifyResponse = result.Value as VerificationResponse;
+
+            Assert.True(verifyResponse.Verified);
+            Assert.False(string.IsNullOrWhiteSpace(verifyResponse.RegistryName));
+            Console.WriteLine(verifyResponse);
         }
     }
 }

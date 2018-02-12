@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Dwapi.SettingsManagement.Core.Tests.Services
 {
     [TestFixture]
-    public class RegistryServiceTests
+    public class RegistryManagerServiceTests
     {
         private IRegistryManagerService _registryManagerService;
         private CentralRegistry _centralRegistry;
@@ -17,15 +17,16 @@ namespace Dwapi.SettingsManagement.Core.Tests.Services
         public void Setup()
         {
             _registryManagerService=new RegistryManagerService(null);
-            _centralRegistry=new CentralRegistry("hAPI","http://52.178.24.227:4747/api/cohorts/lists");
+            _centralRegistry=new CentralRegistry("hAPI","http://localhost:5757");
         }
 
         [Test]
         public void should_Verify()
         {
             var verified = _registryManagerService.Verify(_centralRegistry).Result;
-            Assert.True(verified);
-            Console.WriteLine(_centralRegistry);
+            Assert.True(verified.Verified);
+            Assert.False(string.IsNullOrEmpty(verified.RegistryName));
+            Console.WriteLine(verified);
         }
 
         

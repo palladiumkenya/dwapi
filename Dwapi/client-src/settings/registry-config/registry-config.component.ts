@@ -4,6 +4,7 @@ import {RegistryConfigService} from '../services/registry-config.service';
 import {Subscription} from 'rxjs/Subscription';
 import {CentralRegistry} from '../model/central-registry';
 import {ConfirmationService, Message} from 'primeng/primeng';
+import {VerificationResponse} from '../model/verification-response';
 
 @Component({
   selector: 'liveapp-registry-config',
@@ -23,7 +24,7 @@ export class RegistryConfigComponent implements OnInit, OnDestroy {
     public centralRegistry: CentralRegistry = {subscriberId: 'DWAPI'};
     public canSave: boolean;
     public canVerfiy: boolean;
-    public isVerfied: boolean;
+    public isVerfied: VerificationResponse;
 
     public errorMessage: Message[];
     public otherMessage: Message[];
@@ -88,6 +89,9 @@ export class RegistryConfigComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.isVerfied = p;
+                    if (this.isVerfied) {
+                        this.centralRegistry.name = this.isVerfied.registryName;
+                    }
                 },
                 e => {
                     this.errorMessage = [];
@@ -96,7 +100,7 @@ export class RegistryConfigComponent implements OnInit, OnDestroy {
                 () => {
                     this.errorMessage = [];
                     this.otherMessage = [];
-                    if (this.isVerfied) {
+                    if (this.isVerfied.verified) {
                         this.otherMessage.push({severity: 'success', detail: 'url has been successfull verified !'});
                         this.errorMessage.push({severity: 'success', summary: 'connection was successful '});
                     } else {
