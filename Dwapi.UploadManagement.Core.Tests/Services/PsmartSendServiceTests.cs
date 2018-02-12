@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using Dwapi.SharedKernel.DTOs;
-using Dwapi.TransmissionManagement.Core.Interfaces.Services.Psmart;
-using Dwapi.TransmissionManagement.Core.Model;
-using Dwapi.TransmissionManagement.Core.Services.Psmart;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Psmart;
+using Dwapi.UploadManagement.Core.Services.Psmart;
 using FizzWare.NBuilder;
 using NUnit.Framework;
 
-namespace Dwapi.TransmissionManagement.Core.Tests.Services
+namespace Dwapi.UploadManagement.Core.Tests.Services
 {
     [TestFixture]
     public class PsmartSendServiceTests
@@ -30,12 +27,9 @@ namespace Dwapi.TransmissionManagement.Core.Tests.Services
         [Test]
         public void should_SendAsync()
         {
-            var responses = _psmartSendService.SendAsync(url, _psmartStageDtos).Result.ToList();
-            Assert.True(responses.Count>0);
-            foreach (var sendResponse in responses)
-            {
-                Console.WriteLine(sendResponse);
-            }
+            var responses = _psmartSendService.SendAsync(url, _psmartStageDtos).Result;
+            Assert.NotNull(responses);
+            Console.WriteLine(responses);
         }
     }
 }

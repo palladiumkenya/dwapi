@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Dwapi.TransmissionManagement.Core.Model
+﻿namespace Dwapi.UploadManagement.Core.Model
 {
     public class SendResponse
     {

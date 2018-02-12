@@ -27,12 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.Infrastructure.Tests", "Dwapi.SettingsManagement.Infrastructure.Tests\Dwapi.SettingsManagement.Infrastructure.Tests.csproj", "{EE0FA3F7-F571-44CF-B662-E1133CA1B947}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TransmissionManagement", "TransmissionManagement", "{C154FD88-2CE9-4744-B3DB-FC8C2E449C79}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.TransmissionManagement.Core", "Dwapi.TransmissionManagement.Core\Dwapi.TransmissionManagement.Core.csproj", "{7AB7048C-C113-40DE-9628-3CA84415B96F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.TransmissionManagement.Core.Tests", "Dwapi.TransmissionManagement.Core.Tests\Dwapi.TransmissionManagement.Core.Tests.csproj", "{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.Tests", "Dwapi.Tests\Dwapi.Tests.csproj", "{984EF8AC-7A8F-4021-B071-0D9573ED0A74}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExtractsManagement", "ExtractsManagement", "{F3891226-78C8-4D3D-B618-3F357AC464AE}"
@@ -46,6 +40,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Infrastructure", "Dwapi.ExtractsManagement.Infrastructure\Dwapi.ExtractsManagement.Infrastructure.csproj", "{D0A5473D-1098-447A-B80F-FFD54D6613A3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Infrastructure.Tests", "Dwapi.ExtractsManagement.Infrastructure.Tests\Dwapi.ExtractsManagement.Infrastructure.Tests.csproj", "{08BBF52F-6D22-43C0-8EDD-24B553E4F79C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UploadManagement", "UploadManagement", "{A5FF5E21-9524-4ADD-91E5-66C61FCA2767}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.UploadManagement.Core", "Dwapi.UploadManagement.Core\Dwapi.UploadManagement.Core.csproj", "{C8481F4C-40C6-4C02-8A44-AC448D92653C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.UploadManagement.Core.Tests", "Dwapi.UploadManagement.Core.Tests\Dwapi.UploadManagement.Core.Tests.csproj", "{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,14 +89,6 @@ Global
 		{EE0FA3F7-F571-44CF-B662-E1133CA1B947}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE0FA3F7-F571-44CF-B662-E1133CA1B947}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE0FA3F7-F571-44CF-B662-E1133CA1B947}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7AB7048C-C113-40DE-9628-3CA84415B96F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7AB7048C-C113-40DE-9628-3CA84415B96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7AB7048C-C113-40DE-9628-3CA84415B96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7AB7048C-C113-40DE-9628-3CA84415B96F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{984EF8AC-7A8F-4021-B071-0D9573ED0A74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{984EF8AC-7A8F-4021-B071-0D9573ED0A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{984EF8AC-7A8F-4021-B071-0D9573ED0A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -117,6 +109,14 @@ Global
 		{08BBF52F-6D22-43C0-8EDD-24B553E4F79C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08BBF52F-6D22-43C0-8EDD-24B553E4F79C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08BBF52F-6D22-43C0-8EDD-24B553E4F79C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8481F4C-40C6-4C02-8A44-AC448D92653C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8481F4C-40C6-4C02-8A44-AC448D92653C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8481F4C-40C6-4C02-8A44-AC448D92653C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8481F4C-40C6-4C02-8A44-AC448D92653C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,13 +131,13 @@ Global
 		{CE1B29DE-9CA2-46CA-A7ED-86A31577E3E9} = {E6AA4090-73F4-4790-8D7C-4184B81F11B3}
 		{4C9B459E-EB24-42B3-BDAD-ECE0E31482EA} = {CE1B29DE-9CA2-46CA-A7ED-86A31577E3E9}
 		{EE0FA3F7-F571-44CF-B662-E1133CA1B947} = {CE1B29DE-9CA2-46CA-A7ED-86A31577E3E9}
-		{7AB7048C-C113-40DE-9628-3CA84415B96F} = {C154FD88-2CE9-4744-B3DB-FC8C2E449C79}
-		{B6BDEB3C-0A86-421B-9FF4-27B123ABDE4F} = {C154FD88-2CE9-4744-B3DB-FC8C2E449C79}
 		{F7891A41-C863-4072-B048-CE6EA693CA32} = {F3891226-78C8-4D3D-B618-3F357AC464AE}
 		{05A115C7-AB3A-47AF-8391-81F4D2751370} = {F3891226-78C8-4D3D-B618-3F357AC464AE}
 		{608002F3-8E7B-417B-BFC5-B8B472A5961E} = {F3891226-78C8-4D3D-B618-3F357AC464AE}
 		{D0A5473D-1098-447A-B80F-FFD54D6613A3} = {608002F3-8E7B-417B-BFC5-B8B472A5961E}
 		{08BBF52F-6D22-43C0-8EDD-24B553E4F79C} = {608002F3-8E7B-417B-BFC5-B8B472A5961E}
+		{C8481F4C-40C6-4C02-8A44-AC448D92653C} = {A5FF5E21-9524-4ADD-91E5-66C61FCA2767}
+		{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21} = {A5FF5E21-9524-4ADD-91E5-66C61FCA2767}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E11F9C16-45D7-4C0D-B672-1F72F0A3A625}

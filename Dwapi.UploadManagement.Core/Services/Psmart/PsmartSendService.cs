@@ -4,11 +4,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
-using Dwapi.TransmissionManagement.Core.Interfaces.Services.Psmart;
-using Dwapi.TransmissionManagement.Core.Model;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Psmart;
+using Dwapi.UploadManagement.Core.Model;
 using Serilog;
 
-namespace Dwapi.TransmissionManagement.Core.Services.Psmart
+namespace Dwapi.UploadManagement.Core.Services.Psmart
 {
     public class PsmartSendService: IPsmartSendService
     {
@@ -19,15 +19,15 @@ namespace Dwapi.TransmissionManagement.Core.Services.Psmart
             _client=new HttpClient();
         }
 
-        public async Task<IEnumerable<SendResponse>> SendAsync(string endpoint, IEnumerable<PsmartStageDTO> message)
+        public async Task<SendResponse> SendAsync(string endpoint, IEnumerable<PsmartStageDTO> message)
         {
             var response = await _client.PostAsJsonAsync(endpoint, message);
-            IEnumerable<SendResponse> content = null;
+            SendResponse content = null;
             if (null != response)
             {
                 try
                 {
-                    content = await response.Content.ReadAsJsonAsync<IEnumerable<SendResponse>>();
+                    content = await response.Content.ReadAsJsonAsync<SendResponse>();
                 }
                 catch (Exception e)
                 {
