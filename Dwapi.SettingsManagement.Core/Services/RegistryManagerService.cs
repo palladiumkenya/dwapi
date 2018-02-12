@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
+using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.SettingsManagement.Core.Services
 {
@@ -17,17 +18,18 @@ namespace Dwapi.SettingsManagement.Core.Services
             _centralRegistryRepository = centralRegistryRepository;
         }
 
-        public async Task<VerificationResponse> Verify(CentralRegistry centralRegistry)
+        public async Task<VerificationResponse> Verify(CentralRegistry centralRegistry, string endpoint = "api/test")
         {
-            var verificationResponse=new VerificationResponse(string.Empty,false);
+            var verificationResponse = new VerificationResponse(string.Empty, false);
 
-            var client=new HttpClient();
+            var client = new HttpClient();
             client.DefaultRequestHeaders.Add("SubscriberId", $"{centralRegistry.SubscriberId}");
             if (centralRegistry.RequiresAuthentication())
             {
                 client.DefaultRequestHeaders.Add("Token", $"{centralRegistry.AuthToken}");
             }
-            var response = await client.GetAsync($"{centralRegistry.Url}/api/psmart/test");
+
+            var response = await client.GetAsync($"{centralRegistry.Url.HasToEndsWith("/")}{endpoint}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -36,6 +38,7 @@ namespace Dwapi.SettingsManagement.Core.Services
             }
 
             return verificationResponse;
+
         }
 
         public CentralRegistry GetDefault()

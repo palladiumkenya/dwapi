@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {CentralRegistry} from '../model/central-registry';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import {VerificationResponse} from '../model/verification-response';
 
 
 @Injectable()
@@ -26,8 +27,8 @@ export class RegistryConfigService {
             .catch(this.handleError);
     }
 
-    public verify(entity: CentralRegistry): Observable<boolean> {
-        return this._http.post<boolean>(this._url + '/verify', entity)
+    public verify(entity: CentralRegistry): Observable<VerificationResponse> {
+        return this._http.post<VerificationResponse>(this._url + '/verify', entity)
             .catch(this.handleError);
     }
 

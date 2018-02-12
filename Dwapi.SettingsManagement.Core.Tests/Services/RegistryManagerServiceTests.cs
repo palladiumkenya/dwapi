@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Dwapi.SettingsManagement.Core.Tests.Services
 {
     [TestFixture]
-    public class RegistryServiceTests
+    public class RegistryManagerServiceTests
     {
         private IRegistryManagerService _registryManagerService;
         private CentralRegistry _centralRegistry;
