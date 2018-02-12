@@ -17,16 +17,25 @@ namespace Dwapi.SettingsManagement.Core.Services
             _centralRegistryRepository = centralRegistryRepository;
         }
 
-        public async Task<bool> Verify(CentralRegistry centralRegistry)
+        public async Task<VerificationResponse> Verify(CentralRegistry centralRegistry)
         {
+            var verificationResponse=new VerificationResponse(string.Empty,false);
+
             var client=new HttpClient();
             client.DefaultRequestHeaders.Add("SubscriberId", $"{centralRegistry.SubscriberId}");
             if (centralRegistry.RequiresAuthentication())
             {
                 client.DefaultRequestHeaders.Add("Token", $"{centralRegistry.AuthToken}");
             }
-            var result = await client.GetAsync(centralRegistry.Url);
-            return result.IsSuccessStatusCode;
+            var response = await client.GetAsync($"{centralRegistry.Url}/api/psmart/test");
+
+            if (response.IsSuccessStatusCode)
+            {
+                verificationResponse.Verified = true;
+                verificationResponse.RegistryName = await response.Content.ReadAsStringAsync();
+            }
+
+            return verificationResponse;
         }
 
         public CentralRegistry GetDefault()

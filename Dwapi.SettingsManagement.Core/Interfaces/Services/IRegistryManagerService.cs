@@ -5,7 +5,7 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Services
 {
     public interface IRegistryManagerService
     {
-        Task<bool> Verify(CentralRegistry centralRegistry);
+        Task<VerificationResponse> Verify(CentralRegistry centralRegistry);
         CentralRegistry GetDefault();
         void SaveDefault(CentralRegistry centralRegistry);
     }
