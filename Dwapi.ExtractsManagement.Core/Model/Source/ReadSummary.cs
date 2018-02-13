@@ -1,4 +1,4 @@
-﻿namespace Dwapi.ExtractsManagement.Core.Source
+﻿namespace Dwapi.ExtractsManagement.Core.Model.Source
 {
     public class ReadSummary
     {

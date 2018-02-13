@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Interfaces.Source.Psmart.Reader;
+using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source.Psmart.Reader;
 using Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;

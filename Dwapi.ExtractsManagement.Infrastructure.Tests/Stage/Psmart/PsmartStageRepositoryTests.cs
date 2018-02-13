@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart.Repository;
-using Dwapi.ExtractsManagement.Core.Stage.Psmart;
+using Dwapi.ExtractsManagement.Core.Model.Stage.Psmart;
 using Dwapi.ExtractsManagement.Infrastructure.Stage.Psmart.Repository;
 using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
 using FizzWare.NBuilder;

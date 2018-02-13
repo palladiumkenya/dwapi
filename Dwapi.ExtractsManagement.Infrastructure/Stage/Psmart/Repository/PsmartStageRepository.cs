@@ -2,7 +2,7 @@
 using System.Linq;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart.Repository;
-using Dwapi.ExtractsManagement.Core.Stage.Psmart;
+using Dwapi.ExtractsManagement.Core.Model.Stage.Psmart;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Stage.Psmart.Repository

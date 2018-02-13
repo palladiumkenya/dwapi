@@ -1,4 +1,4 @@
-﻿namespace Dwapi.ExtractsManagement.Core.Interfaces.Source.Psmart
+﻿namespace Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source.Psmart
 {
     public interface IPsmartSource:ISource
     {

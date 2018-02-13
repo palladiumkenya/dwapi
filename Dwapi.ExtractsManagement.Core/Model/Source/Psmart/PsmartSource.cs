@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Xml;
-using Dwapi.ExtractsManagement.Core.Interfaces.Source.Psmart;
-using Dwapi.SharedKernel.Model;
+using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source.Psmart;
 using Dwapi.SharedKernel.Utility;
 
-namespace Dwapi.ExtractsManagement.Core.Source.Psmart
+namespace Dwapi.ExtractsManagement.Core.Model.Source.Psmart
 {
     public class PsmartSource : IPsmartSource
     {

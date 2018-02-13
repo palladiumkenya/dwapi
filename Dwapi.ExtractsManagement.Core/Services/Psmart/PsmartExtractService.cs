@@ -4,10 +4,10 @@ using System.Data;
 using System.Linq;
 using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart;
-using Dwapi.ExtractsManagement.Core.Interfaces.Source.Psmart.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart.Repository;
-using Dwapi.ExtractsManagement.Core.Source.Psmart;
-using Dwapi.ExtractsManagement.Core.Stage.Psmart;
+using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source.Psmart.Reader;
+using Dwapi.ExtractsManagement.Core.Model.Source.Psmart;
+using Dwapi.ExtractsManagement.Core.Model.Stage.Psmart;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Model;
 

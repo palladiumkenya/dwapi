@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Dwapi.ExtractsManagement.Core.Source.Psmart;
+using Dwapi.ExtractsManagement.Core.Model.Source.Psmart;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Model;
 using Serilog;
