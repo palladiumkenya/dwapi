@@ -261,4 +261,4 @@ __pycache__/
 *.pyc
 
 # DWAPI Logs
-/Dwapi/logs/*
+Dwapi/logs
