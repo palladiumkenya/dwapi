@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using CsvHelper.Configuration;
-using Dwapi.ExtractsManagement.Core.Stage.Psmart;
+using Dwapi.ExtractsManagement.Core.Model.Stage.Psmart;
 using Dwapi.SharedKernel.Infrastructure;
 using EFCore.Seeder.Configuration;
 using EFCore.Seeder.Extensions;

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Source;
-using Dwapi.SharedKernel.Enum;
+using Dwapi.ExtractsManagement.Core.Model.Source;
 using Dwapi.SharedKernel.Model;
 
-namespace Dwapi.ExtractsManagement.Core.Interfaces.Source
+namespace Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source
 {
     public interface ISourceReader<T>
     {

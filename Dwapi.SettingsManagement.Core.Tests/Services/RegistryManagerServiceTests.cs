@@ -10,6 +10,7 @@ namespace Dwapi.SettingsManagement.Core.Tests.Services
     [TestFixture]
     public class RegistryManagerServiceTests
     {
+        private readonly string _authToken = @"268DFA3EB92BC53FAE94A048E23112A1";
         private IRegistryManagerService _registryManagerService;
         private CentralRegistry _centralRegistry;
 
@@ -17,7 +18,8 @@ namespace Dwapi.SettingsManagement.Core.Tests.Services
         public void Setup()
         {
             _registryManagerService=new RegistryManagerService(null);
-            _centralRegistry=new CentralRegistry("hAPI", "http://52.178.24.227:5757");
+            _centralRegistry=new CentralRegistry("hAPI", "http://52.178.24.227:8026",_authToken);
+
         }
 
         [Test]
@@ -28,7 +30,5 @@ namespace Dwapi.SettingsManagement.Core.Tests.Services
             Assert.False(string.IsNullOrEmpty(verified.RegistryName));
             Console.WriteLine(verified);
         }
-
-        
     }
 }

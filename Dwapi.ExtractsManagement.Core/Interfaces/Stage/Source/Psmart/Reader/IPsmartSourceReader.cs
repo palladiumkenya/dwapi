@@ -1,6 +1,6 @@
-﻿using Dwapi.ExtractsManagement.Core.Source.Psmart;
+﻿using Dwapi.ExtractsManagement.Core.Model.Source.Psmart;
 
-namespace Dwapi.ExtractsManagement.Core.Interfaces.Source.Psmart.Reader
+namespace Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source.Psmart.Reader
 {
     public interface IPsmartSourceReader : ISourceReader<PsmartSource>
     {

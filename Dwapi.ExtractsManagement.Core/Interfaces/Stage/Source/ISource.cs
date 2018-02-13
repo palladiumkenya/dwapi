@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dwapi.ExtractsManagement.Core.Interfaces.Source
+namespace Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source
 {
     public interface ISource
     {

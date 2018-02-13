@@ -17,6 +17,7 @@ namespace Dwapi.Tests.Controller
     [TestFixture]
     public class RegistryManagerControllerTests
     {
+        private readonly string _authToken = @"268DFA3EB92BC53FAE94A048E23112A1";
         private RegistryManagerController _registryManagerController;
         private ICentralRegistryRepository _centralRegistryRepository;
         private DbContextOptions<SettingsContext> _options;
@@ -45,6 +46,7 @@ namespace Dwapi.Tests.Controller
             _centralRegistry = Builder<CentralRegistry>.CreateNew()
                 .With(x => x.Url = "http://52.178.24.227:5757")
                 .Build();
+            _centralRegistry.AuthToken = _authToken;
         }
 
         [Test]

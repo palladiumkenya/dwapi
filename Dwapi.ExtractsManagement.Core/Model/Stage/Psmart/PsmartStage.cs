@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart;
 using Dwapi.SharedKernel.Model;
 
-namespace Dwapi.ExtractsManagement.Core.Stage.Psmart
+namespace Dwapi.ExtractsManagement.Core.Model.Stage.Psmart
 {
     public class PsmartStage : Entity<Guid>, IPsmartStage
     {
