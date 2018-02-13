@@ -7,6 +7,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Psmart
 {
     public interface IPsmartSendService
     {
-        Task<SendResponse> SendAsync(string endpoint,IEnumerable<PsmartStageDTO> message);
+     Task<SendResponse> SendAsync(SendPackageDTO sendTo,IEnumerable<PsmartStageDTO> message);
     }
 }

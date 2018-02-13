@@ -7,7 +7,7 @@
         </div>
 
         <div class="ui-toolbar-group-right">
-            <button pButton type="button" [disabled]="!canSend" label="Send to Registry" icon="ui-icon-cloud-upload"
+            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Registry" icon="ui-icon-cloud-upload"
                     class="blue-btn"></button>
         </div>
     </p-toolbar>

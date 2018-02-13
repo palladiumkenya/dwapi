@@ -4,42 +4,24 @@ using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.SettingsManagement.Core.Model
 {
-    public class CentralRegistry:Entity<Guid>
+    public class CentralRegistry:Registry
     {
-        [MaxLength(100)]
-        public string Name { get; set; }
-        [MaxLength(100)]
-        public string Url { get; set; }
-        [MaxLength(100)]
-        public string AuthToken { get; set; }
-
-        [MaxLength(50)]
-        public string SubscriberId { get; set; } = "DWAPI";
-        
+        public override string SubscriberId { get; set; } = "DWAPI";
 
         public CentralRegistry()
         {
         }
 
-        public CentralRegistry(string name,string url)
+        public CentralRegistry(string url) : base(url)
         {
-            Url = url;
-            Name = name;
         }
 
-        public CentralRegistry(string name, string url, string authToken):this(name,url)
+        public CentralRegistry(string name, string url) : base(name, url)
         {
-            AuthToken = authToken;
         }
 
-        public bool RequiresAuthentication()
+        public CentralRegistry(string name, string url, string authToken) : base(name, url, authToken)
         {
-            return !string.IsNullOrWhiteSpace(AuthToken);
-        }
-
-        public override string ToString()
-        {
-            return $"{Name} {Url}";
         }
     }
 }

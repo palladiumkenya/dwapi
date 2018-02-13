@@ -12,16 +12,24 @@ namespace Dwapi.UploadManagement.Core.Services.Psmart
 {
     public class PsmartSendService: IPsmartSendService
     {
-        private HttpClient _client;
+        private readonly string _endPoint;
 
         public PsmartSendService()
         {
-            _client=new HttpClient();
+            _endPoint = "api/inbound";
         }
 
-        public async Task<SendResponse> SendAsync(string endpoint, IEnumerable<PsmartStageDTO> message)
+      
+        public async Task<SendResponse> SendAsync(SendPackageDTO sendTo, IEnumerable<PsmartStageDTO> message)
         {
-            var response = await _client.PostAsJsonAsync(endpoint, message);
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("SubscriberId", $"{sendTo.Destination.SubscriberId}");
+            if (sendTo.Destination.RequiresAuthentication())
+            {
+                client.DefaultRequestHeaders.Add("Token", $"{sendTo.Destination.AuthToken}");
+            }
+
+            var response = await client.PostAsJsonAsync(sendTo.GetUrl(_endPoint), message);
             SendResponse content = null;
             if (null != response)
             {

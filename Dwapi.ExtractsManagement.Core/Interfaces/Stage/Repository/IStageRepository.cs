@@ -9,5 +9,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Stage.Repository
         void Load(T entity);
         void Load(IEnumerable<T> entities);
         void SaveChanges();
+        IEnumerable<T> GetAll();
     }
 }
