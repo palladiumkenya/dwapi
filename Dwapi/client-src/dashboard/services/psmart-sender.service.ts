@@ -4,29 +4,22 @@ import {Extract} from '../../settings/model/extract';
 import {DatabaseProtocol} from '../../settings/model/database-protocol';
 import {Observable} from 'rxjs/Observable';
 import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
+import {CentralRegistry} from '../../settings/model/central-registry';
+import {SendResponse} from '../../settings/model/send-response';
+import {SendPackage} from '../../settings/model/send-package';
 
 @Injectable()
-export class PsmartExtractService {
+export class PsmartSenderService {
 
-    private _url: string = './api/ExtractLoader';
+    private _url: string = './api/ExtractSender';
     private _http: HttpClient;
 
     public constructor(http: HttpClient) {
         this._http = http;
     }
 
-    public getStatus(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
-        return this._http.post<boolean>(this._url + '/status', extracts)
-            .catch(this.handleError);
-    }
-
-    public load(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
-        return this._http.post<boolean>(this._url + '/load', extracts)
-            .catch(this.handleError);
-    }
-
-    public send(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
-        return this._http.post<boolean>(this._url + '/load', extracts)
+    public send(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<SendResponse>(this._url, sendPackage)
             .catch(this.handleError);
     }
 

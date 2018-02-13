@@ -18,6 +18,11 @@ namespace Dwapi.SharedKernel.Utility
             return value.EndsWith(end) ? value : $"{value}{end}";
         }
 
+        public static string HasToStartWith(this string value, string start)
+        {
+            return value.StartsWith(start) ? value : $"{start}{value}";
+        }
+
         /// <summary>
         /// Determines if a nullable Guid (Guid?) is null or Guid.Empty
         /// </summary>

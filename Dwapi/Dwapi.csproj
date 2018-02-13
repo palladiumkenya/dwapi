@@ -30,6 +30,7 @@
     <ProjectReference Include="..\Dwapi.SettingsManagement.Infrastructure\Dwapi.SettingsManagement.Infrastructure.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel.Infrastructure\Dwapi.SharedKernel.Infrastructure.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
+    <ProjectReference Include="..\Dwapi.UploadManagement.Core\Dwapi.UploadManagement.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

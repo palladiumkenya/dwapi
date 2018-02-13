@@ -1,11 +1,13 @@
 using System;
 using System.IO;
 using System.Reflection;
+using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart;
 using Dwapi.ExtractsManagement.Core.Interfaces.Source.Psmart.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Repository;
 using Dwapi.ExtractsManagement.Core.Services.Psmart;
+using Dwapi.ExtractsManagement.Core.Stage.Psmart;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader;
 using Dwapi.ExtractsManagement.Infrastructure.Stage.Psmart.Repository;
@@ -15,7 +17,10 @@ using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Services;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
+using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Infrastructure;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Psmart;
+using Dwapi.UploadManagement.Core.Services.Psmart;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -65,6 +70,8 @@ namespace Dwapi
 
             services.AddScoped<IPsmartExtractService, PsmartExtractService>();
             services.AddScoped<IPsmartSourceReader, PsmartSourceReader>();
+            services.AddScoped<IPsmartSendService, PsmartSendService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -113,6 +120,11 @@ namespace Dwapi
 ");
             Log.Debug(@"---------------------------------------------------------------------------------------------------");
             Log.Debug("Dwapi started !");
+
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<PsmartStage,PsmartStageDTO>();
+                
+            });
         }
 
         public static void EnsureMigrationOfContext<T>(IServiceProvider app) where T : BaseContext

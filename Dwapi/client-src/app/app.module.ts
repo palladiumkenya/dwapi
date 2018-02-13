@@ -99,6 +99,7 @@ import {ExtractConfigService} from '../settings/services/extract-config.service'
 import { PsmartConsoleComponent } from '../dashboard/psmart-console/psmart-console.component';
 import {PsmartExtractService} from '../dashboard/services/psmart-extract.service';
 import { PsmartMiddlewareConsoleComponent } from '../dashboard/psmart-middleware-console/psmart-middleware-console.component';
+import {PsmartSenderService} from '../dashboard/services/psmart-sender.service';
 
 @NgModule({
     imports: [
@@ -196,7 +197,8 @@ import { PsmartMiddlewareConsoleComponent } from '../dashboard/psmart-middleware
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
-        MessageService, ConfirmationService, RegistryConfigService, EmrConfigService, ProtocolConfigService, ExtractConfigService, PsmartExtractService
+        MessageService, ConfirmationService, RegistryConfigService, EmrConfigService, ProtocolConfigService,
+        ExtractConfigService, PsmartExtractService , PsmartSenderService
     ],
     bootstrap: [AppComponent]
 })

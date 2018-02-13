@@ -35,5 +35,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Stage.Psmart.Repository
         {
             _context.SaveChanges();
         }
+
+        public IEnumerable<PsmartStage> GetAll()
+        {
+            return _context.PsmartStages.AsNoTracking();
+        }
     }
 }
