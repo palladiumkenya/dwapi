@@ -24,6 +24,34 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
 
         public ReadSummary Summary => _summary;
 
+        public int Find(DbProtocol protocol, DbExtract extract)
+        {
+            _mapper = GetMapper(extract.Emr);
+            int extractCount = 0;
+            var connection = GetConnection(protocol);
+
+
+            _summary.Status = $"Analyzing {nameof(PsmartSource)}...";
+
+
+            using (connection)
+            {
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    //Extract SQL
+                    command.CommandText = extract.GetCountSQL();
+                    int.TryParse(command.ExecuteScalar().ToString(),out extractCount);
+                }
+            }
+
+            _summary.Status = $"Analyzing {nameof(PsmartSource)} Completed";
+
+            return extractCount;
+        }
+
         public IEnumerable<PsmartSource> Read(DbProtocol protocol, DbExtract extract)
         {
             _mapper = GetMapper(extract.Emr);

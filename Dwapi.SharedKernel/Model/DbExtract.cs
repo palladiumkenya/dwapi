@@ -18,6 +18,11 @@ namespace Dwapi.SharedKernel.Model
         public string Emr { get; set; }
 
 
+        public string GetCountSQL()
+        {
+            return $@"select count(*) from ({ExtractSql.ToLower()})xt".ToLower();
+        }
+
         public override string ToString()
         {
             return Display;

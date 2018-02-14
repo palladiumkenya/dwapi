@@ -7,6 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source
     public interface ISourceReader<T>
     {
         ReadSummary Summary { get; }
+        int Find(DbProtocol protocol, DbExtract extract);
         IEnumerable<T> Read(DbProtocol protocol,DbExtract extract);
     }
 }

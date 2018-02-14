@@ -29,6 +29,22 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Source.Psmart
         }
 
         [Test]
+        public void should_Find_Psmart_MSSQL()
+        {
+            var psmartSources = _psmartSourceReader.Find(_mssql, _extractA);
+            Assert.True(psmartSources > 0);
+            Console.WriteLine($"Found:{psmartSources}");
+        }
+
+        [Test]
+        public void should_Find_Psmart_MySQL()
+        {
+            var psmartSources = _psmartSourceReader.Find(_mysql, _extractB);
+            Assert.True(psmartSources > 0);
+            Console.WriteLine($"Found:{psmartSources}");
+        }
+
+        [Test]
         public void should_Read_Psmart_MSSQL()
         {
             var psmartSources = _psmartSourceReader.Read(_mssql, _extractA).ToList();

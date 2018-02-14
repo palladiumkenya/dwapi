@@ -9,9 +9,10 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart
 {
     public interface IPsmartExtractService
     {
+        void Find(DbProtocol protocol, DbExtract extract);
 
         IEnumerable<PsmartSource> Extract(DbProtocol protocol, DbExtract extract);
-
+        
         void Load(IEnumerable<PsmartSource> sources,bool clearFirst=true);
         void Sync(IEnumerable<DbExtractProtocolDTO> extracts);
         string GetLoadError();

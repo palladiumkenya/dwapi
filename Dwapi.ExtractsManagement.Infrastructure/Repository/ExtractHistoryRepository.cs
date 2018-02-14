@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,46 +10,19 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 {
     public class ExtractHistoryRepository :BaseRepository<ExtractHistory,Guid>, IExtractHistoryRepository
     {
-        public ExtractHistoryRepository(DbContext context) : base(context)
+        public ExtractHistoryRepository(ExtractsContext context) : base(context)
         {
         }
 
-        public void Analyze(ExtractHistory extractHistory)
+        public void UpdateStatus(Guid extractId, ExtractStatus status,int? stats, string statusInfo = "")
         {
-            throw new NotImplementedException();
-        }
+            var started= DbSet.Any(x => x.ExtractId == extractId&&x.Status==status);
 
-        public void Load(Guid extractId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Validate(Guid extractId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Send(Guid extractId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reset(Guid extractId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateStatus(ExtractHistory extractHistory, int stats)
-        {
-            var history = Get(extractHistory.Id);
-                
-            if (null == history)
+            if (!started)
             {
-                //CreateOrUpdate(ExtractHistory.InitializeHistory());
-                return;
+                var history=new ExtractHistory(status, stats,statusInfo);
+                Create(history);
             }
-
-            //CreateOrUpdate(ExtractHistory.UpdateEvent(history,stats));
 
         }
     }

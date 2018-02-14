@@ -13,6 +13,7 @@ namespace Dwapi.ExtractsManagement.Core.Model
     {
         public ExtractStatus Status { get; set; } = ExtractStatus.Idle;
         public DateTime? StatusDate { get; set; }
+        public int? Stats { get; set; }
         public string StatusInfo { get; set; }
         public Guid ExtractId { get; set; }
 
@@ -20,6 +21,14 @@ namespace Dwapi.ExtractsManagement.Core.Model
         {
         }
 
+        public ExtractHistory(ExtractStatus status, int? stats, string statusInfo)
+        {
+            Status = status;
+            StatusDate=DateTime.Now;
+            Stats = stats;
+            StatusInfo = statusInfo;
+        }
+        
         public override string ToString()
         {
             var dateInfo = StatusDate.HasValue ? $"[{StatusDate:F}]" : string.Empty;
