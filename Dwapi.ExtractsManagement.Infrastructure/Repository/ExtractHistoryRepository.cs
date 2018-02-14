@@ -47,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
                 return;
             }
 
-            //CreateOrUpdate(ExtractHistory.UpdateHistory(history,stats));
+            //CreateOrUpdate(ExtractHistory.UpdateEvent(history,stats));
 
         }
     }
