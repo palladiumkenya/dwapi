@@ -47,7 +47,22 @@ namespace Dwapi.UploadManagement.Core.Tests.Services
         [Test]
         public void should_SendToRegistryAsync()
         {
-            var responses = _psmartSendService.SendAsync(_sendPackageDTO, _psmartMessage).Result;
+
+            var smartMessages = Builder<SmartMessage>.CreateListOfSize(10).Build().ToList();
+            var bag=new PsmartBag(smartMessages);
+
+            var responses = _psmartSendService.SendAsync(_sendPackageDTO, bag).Result;
+            Assert.NotNull(responses);
+            Console.WriteLine(responses);
+        }
+        [Test]
+        public void should_SendToRegistryAsync_MUltiple()
+        {
+
+            var smartMessages = Builder<SmartMessage>.CreateListOfSize(10).Build().ToList();
+            var bag2 = new PsmartBag(smartMessages.Take(5).ToList());
+            var bag = new PsmartBag(smartMessages.TakeLast(5).ToList());
+                        var responses = _psmartSendService.SendAsync(_sendPackageDTO, new List<PsmartBag>{bag2,bag}).Result;
             Assert.NotNull(responses);
             Console.WriteLine(responses);
         }

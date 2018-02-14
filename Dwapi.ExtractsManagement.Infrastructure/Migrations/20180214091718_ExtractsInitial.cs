@@ -8,18 +8,20 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-//            migrationBuilder.CreateTable(
-//                name: "Extracts",
-//                columns: table => new
-//                {
-//                    Id = table.Column<Guid>(nullable: false),
-//                    Display = table.Column<string>(maxLength: 100, nullable: true),
-//                    Name = table.Column<string>(maxLength: 100, nullable: true)
-//                },
-//                constraints: table =>
-//                {
-//                    table.PrimaryKey("PK_Extracts", x => x.Id);
-//                });
+            /*
+            migrationBuilder.CreateTable(
+                name: "Extracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Display = table.Column<string>(maxLength: 100, nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Extracts", x => x.Id);
+                });
+            */
 
             migrationBuilder.CreateTable(
                 name: "PsmartStages",
@@ -44,17 +46,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    DateFound = table.Column<DateTime>(nullable: false),
-                    DateLoaded = table.Column<DateTime>(nullable: false),
-                    DateQueued = table.Column<DateTime>(nullable: false),
-                    DateSent = table.Column<DateTime>(nullable: false),
+                    Accepted = table.Column<int>(nullable: true),
+                    DateFound = table.Column<DateTime>(nullable: true),
+                    DateLoaded = table.Column<DateTime>(nullable: true),
+                    DateSent = table.Column<DateTime>(nullable: true),
+                    DateValidated = table.Column<DateTime>(nullable: true),
                     ExtractId = table.Column<Guid>(nullable: false),
-                    Found = table.Column<int>(nullable: false),
-                    Loaded = table.Column<int>(nullable: false),
-                    Queued = table.Column<int>(nullable: false),
-                    Rejected = table.Column<int>(nullable: false),
-                    Sent = table.Column<int>(nullable: false),
-                    Status = table.Column<string>(maxLength: 100, nullable: true)
+                    Found = table.Column<int>(nullable: true),
+                    Loaded = table.Column<int>(nullable: true),
+                    Queued = table.Column<int>(nullable: true),
+                    Rejected = table.Column<int>(nullable: true),
+                    Sent = table.Column<int>(nullable: true),
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,9 +83,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "PsmartStages");
-
+            /*
             migrationBuilder.DropTable(
                 name: "Extracts");
+            */
         }
     }
 }

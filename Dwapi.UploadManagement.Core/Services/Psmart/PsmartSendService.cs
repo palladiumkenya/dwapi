@@ -19,6 +19,66 @@ namespace Dwapi.UploadManagement.Core.Services.Psmart
             _endPoint = "api/v1/inbound";
         }
 
+        /// <summary>
+        /// USE THIS
+        /// </summary>
+        /// <param name="sendTo"></param>
+        /// <param name="psmartBag"></param>
+        /// <returns></returns>
+        public  async Task<SendResponse> SendAsync(SendPackageDTO sendTo, PsmartBag psmartBag)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("SubscriberId", $"{sendTo.Destination.SubscriberId}");
+            if (sendTo.Destination.RequiresAuthentication())
+            {
+                client.DefaultRequestHeaders.Add("Token", $"{sendTo.Destination.AuthToken}");
+            }
+
+            var response = await client.PostAsJsonAsync(sendTo.GetUrl(_endPoint), psmartBag);
+            SendResponse content = null;
+            if (null != response && response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    var st = await response.Content.ReadAsStringAsync();
+                    content = await response.Content.ReadAsJsonAsync<SendResponse>();
+                }
+                catch (Exception e)
+                {
+                    // send error
+                    Log.Debug($"{e}");
+                }
+            }
+            return content;
+        }
+
+        public async Task<SendResponse> SendAsync(SendPackageDTO sendTo, IEnumerable<PsmartBag> psmartBag)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("SubscriberId", $"{sendTo.Destination.SubscriberId}");
+            if (sendTo.Destination.RequiresAuthentication())
+            {
+                client.DefaultRequestHeaders.Add("Token", $"{sendTo.Destination.AuthToken}");
+            }
+
+            var response = await client.PostAsJsonAsync(sendTo.GetUrl(_endPoint), psmartBag);
+            SendResponse content = null;
+            if (null != response && response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    var st = await response.Content.ReadAsStringAsync();
+                    content = await response.Content.ReadAsJsonAsync<SendResponse>();
+                }
+                catch (Exception e)
+                {
+                    // send error
+                    Log.Debug($"{e}");
+                }
+            }
+            return content;
+        }
+
         public async Task<SendResponse> SendAsync(SendPackageDTO sendTo, PsmartMessage psmartMessage)
         {
             var client = new HttpClient();

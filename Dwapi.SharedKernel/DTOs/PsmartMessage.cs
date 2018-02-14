@@ -32,8 +32,18 @@ namespace Dwapi.SharedKernel.DTOs
     }
 }
 
-public class smartMessage
+public class SmartMessage
 {
     public Guid Id { get; set; }
     public string PayLoad { get; set; }
+}
+
+public class PsmartBag
+{
+    public List<SmartMessage> Messages { get; set; }
+
+    public PsmartBag(List<SmartMessage> messages)
+    {
+        Messages = messages;
+    }
 }

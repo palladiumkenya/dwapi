@@ -11,6 +11,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart
     {
 
         IEnumerable<PsmartSource> Extract(DbProtocol protocol, DbExtract extract);
+
         void Load(IEnumerable<PsmartSource> sources,bool clearFirst=true);
         void Sync(IEnumerable<DbExtractProtocolDTO> extracts);
         string GetLoadError();
