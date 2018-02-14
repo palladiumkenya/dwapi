@@ -53,7 +53,7 @@ namespace Dwapi
               .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             var connectionString = Startup.Configuration["connectionStrings:DwapiConnection"];
-            services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly("Dwapi.SettingsManagement.Infrastructure")));
+            services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
             services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
 
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();

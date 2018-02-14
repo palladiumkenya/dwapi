@@ -14,6 +14,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services
     public class PsmartSendServiceTests
     {
         private readonly string _authToken = @"268DFA3EB92BC53FAE94A048E23112A1";
+        private readonly string _subId = "DWAPI";
         private readonly string url = "http://52.178.24.227:8026";
         private Registry _registry;
         private SendPackageDTO _sendPackageDTO;
@@ -21,12 +22,14 @@ namespace Dwapi.UploadManagement.Core.Tests.Services
         private IPsmartSendService _psmartSendService;
         private List<PsmartStageDTO> _psmartStageDtos = new List<PsmartStageDTO>();
         private PsmartMessage _psmartMessage;
+   
 
         [SetUp]
         public void SetUp()
         {
             _registry=new Registry(url);
             _registry.AuthToken = _authToken;
+            _registry.SubscriberId = _subId;
             _psmartSendService = new PsmartSendService();
             _psmartStageDtos = Builder<PsmartStageDTO>.CreateListOfSize(2).Build().ToList();
             _sendPackageDTO = Builder<SendPackageDTO>.CreateNew().With(x=>x.Destination=_registry).Build();

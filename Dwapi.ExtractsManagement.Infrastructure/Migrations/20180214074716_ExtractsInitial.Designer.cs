@@ -11,9 +11,10 @@ using System;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20180214074716_ExtractsInitial")]
+    partial class ExtractsInitial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

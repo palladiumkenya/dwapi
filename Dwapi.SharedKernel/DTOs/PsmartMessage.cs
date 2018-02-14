@@ -6,6 +6,9 @@ namespace Dwapi.SharedKernel.DTOs
 {
     public class PsmartMessage
     {
+       
+        //public string PayLoad { get; set; }
+
         public List<string> Message { get; set; }=new List<string>();
 
         public PsmartMessage()
@@ -27,4 +30,10 @@ namespace Dwapi.SharedKernel.DTOs
             Message.AddRange(messages);
         }
     }
+}
+
+public class smartMessage
+{
+    public Guid Id { get; set; }
+    public string PayLoad { get; set; }
 }

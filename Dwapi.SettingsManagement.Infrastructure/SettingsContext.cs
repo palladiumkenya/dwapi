@@ -20,8 +20,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
         public DbSet<Docket> Dockets { get; set; }
         public DbSet<Extract> Extracts { get; set; }
-        public DbSet<ExtractHistory> ExtractHistories { get; set; }
-
+      
         public SettingsContext(DbContextOptions<SettingsContext> options) : base(options)
         {
         }

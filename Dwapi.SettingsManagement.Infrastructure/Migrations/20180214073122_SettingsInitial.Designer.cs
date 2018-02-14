@@ -12,8 +12,8 @@ using System;
 namespace Dwapi.SettingsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(SettingsContext))]
-    [Migration("20180213181449_Settings13FEB2018001")]
-    partial class Settings13FEB2018001
+    [Migration("20180214073122_SettingsInitial")]
+    partial class SettingsInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -144,41 +144,6 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.ToTable("Extracts");
                 });
 
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.ExtractHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("DateFound");
-
-                    b.Property<DateTime>("DateLoaded");
-
-                    b.Property<DateTime>("DateQueued");
-
-                    b.Property<DateTime>("DateSent");
-
-                    b.Property<Guid>("ExtractId");
-
-                    b.Property<int>("Found");
-
-                    b.Property<int>("Loaded");
-
-                    b.Property<int>("Queued");
-
-                    b.Property<int>("Rejected");
-
-                    b.Property<int>("Sent");
-
-                    b.Property<string>("Status")
-                        .HasMaxLength(100);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExtractId");
-
-                    b.ToTable("ExtractHistories");
-                });
-
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.RestProtocol", b =>
                 {
                     b.Property<Guid>("Id")
@@ -216,14 +181,6 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.HasOne("Dwapi.SettingsManagement.Core.Model.EmrSystem")
                         .WithMany("Extracts")
                         .HasForeignKey("EmrSystemId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.ExtractHistory", b =>
-                {
-                    b.HasOne("Dwapi.SettingsManagement.Core.Model.Extract")
-                        .WithMany("ExtractHistories")
-                        .HasForeignKey("ExtractId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
