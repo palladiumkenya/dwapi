@@ -10,5 +10,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Stage.Repository
         void Load(IEnumerable<T> entities);
         void SaveChanges();
         IEnumerable<T> GetAll();
+        int Count(string emr);
     }
 }

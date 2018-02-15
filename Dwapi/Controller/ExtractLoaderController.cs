@@ -66,6 +66,7 @@ namespace Dwapi.Controller
             try
             {
                 //check if busy
+                
 
                 _psmartExtractService.Sync(entity);
                 return Ok();

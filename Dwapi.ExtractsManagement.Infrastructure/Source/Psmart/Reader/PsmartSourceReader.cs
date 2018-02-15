@@ -26,6 +26,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
 
         public int Find(DbProtocol protocol, DbExtract extract)
         {
+            Log.Debug($"Finding {nameof(PsmartSource)}...");
+
             _mapper = GetMapper(extract.Emr);
             int extractCount = 0;
             var connection = GetConnection(protocol);
@@ -49,6 +51,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
 
             _summary.Status = $"Analyzing {nameof(PsmartSource)} Completed";
 
+            Log.Debug($"Finding {nameof(PsmartSource)} Completed");
             return extractCount;
         }
 

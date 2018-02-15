@@ -7,6 +7,8 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
 {
     public interface IExtractHistoryRepository : IRepository<ExtractHistory,Guid>
     {
-        void UpdateStatus(Guid extractId, ExtractStatus status,int? stats,string statusInfo="");
+        void ClearHistory(Guid extractId);
+        ExtractHistory GetLatest(Guid extractId);
+        void UpdateStatus(Guid extractId, ExtractStatus status,int? stats=null,string statusInfo="");
     }
 }

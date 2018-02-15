@@ -21,18 +21,25 @@ namespace Dwapi.ExtractsManagement.Core.Model
         {
         }
 
-        public ExtractHistory(ExtractStatus status, int? stats, string statusInfo)
+        public ExtractHistory(ExtractStatus status, int? stats, string statusInfo,Guid extractId)
         {
             Status = status;
             StatusDate=DateTime.Now;
             Stats = stats;
             StatusInfo = statusInfo;
+            ExtractId = extractId;
         }
         
         public override string ToString()
         {
             var dateInfo = StatusDate.HasValue ? $"[{StatusDate:F}]" : string.Empty;
-            return $"{Status} {dateInfo} {StatusInfo}";
+            var statsInfo=Stats.HasValue? $"[{Stats}]" : string.Empty;
+            return $"{Status} {statsInfo} {dateInfo} {StatusInfo}";
+        }
+
+        public bool IsStarted()
+        {
+            return Status != ExtractStatus.Idle;
         }
     }
 }

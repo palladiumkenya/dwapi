@@ -12,8 +12,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure
     public class ExtractsContext : BaseContext
     {
         public DbSet<PsmartStage> PsmartStages { get; set; }
-        public DbSet<Extract> Extracts { get; set; }
         public DbSet<ExtractHistory> ExtractHistories { get; set; }
+        
+        /// <summary>
+        /// //  Reference Table Only
+        /// </summary>
+        public DbSet<Extract> Extracts { get; set; }
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
