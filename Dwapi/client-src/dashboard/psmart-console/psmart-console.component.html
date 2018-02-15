@@ -14,10 +14,12 @@
 
     <p-dataTable [value]="extracts" selectionMode="single">
         <p-column field="display" header="Extract"></p-column>
-        <p-column field="" header="Status"></p-column>
-        <p-column field="" header="Loaded"></p-column>
-        <p-column field="" header="Queued"></p-column>
-        <p-column field="" header="Sent"></p-column>
+        <p-column field="extractEvent.lastStatus" header="Status"></p-column>
+        <p-column field="extractEvent.found" header="Found"></p-column>
+        <p-column field="extractEvent.loaded" header="Loaded"></p-column>
+        <p-column field="extractEvent.rejected" header="Rejected"></p-column>
+        <p-column field="extractEvent.queued" header="Queued"></p-column>
+        <p-column field="extractEvent.sent" header="Sent"></p-column>
     </p-dataTable>
     <p-messages [(value)]="errorMessage"></p-messages>
     <p-growl [(value)]="otherMessage"></p-growl>

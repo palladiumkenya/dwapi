@@ -20,7 +20,12 @@ namespace Dwapi.ExtractsManagement.Core.Model
         public ExtractHistory()
         {
         }
-
+        public ExtractHistory(ExtractStatus status, Guid extractId)
+        {
+            Status = status;
+            StatusDate = DateTime.Now;
+            ExtractId = extractId;
+        }
         public ExtractHistory(ExtractStatus status, int? stats, string statusInfo,Guid extractId)
         {
             Status = status;

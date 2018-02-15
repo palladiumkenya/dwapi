@@ -55,23 +55,45 @@ namespace Dwapi.ExtractsManagement.Core.Services.Psmart
             return history;
         }
 
+        public void Find(DbExtractProtocolDTO dbExtractProtocolDTO)
+        {
+            var extract = dbExtractProtocolDTO.Extract;
+            var protocol = dbExtractProtocolDTO.DatabaseProtocol;
+
+            _extractHistoryRepository.ClearHistory(extract.Id);
+
+            _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Idle);
+            _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Finding);
+
+            var found = _psmartSourceReader.Find(protocol, extract);
+
+            _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Found, found);
+        }
+
+        public void Sync(DbExtractProtocolDTO extract)
+        {
+            try
+            {
+                _extractHistoryRepository.UpdateStatus(extract.Extract.Id, ExtractStatus.Loading);
+
+                var count = Load(Extract(extract.DatabaseProtocol, extract.Extract));
+
+                _extractHistoryRepository.UpdateStatus(extract.Extract.Id, ExtractStatus.Loaded, count);
+                //_extractHistoryRepository.UpdateStatus(extract.Extract.Id, ExtractStatus.Idle);
+            }
+            catch (Exception e)
+            {
+                errorList.Add(e.Message);
+                throw;
+            }
+        }
+
         public void Find(IEnumerable<DbExtractProtocolDTO> extracts)
         {
             foreach (var dbExtractProtocolDTO in extracts)
             {
-                var extract = dbExtractProtocolDTO.Extract;
-                var protocol = dbExtractProtocolDTO.DatabaseProtocol;
-
-                _extractHistoryRepository.ClearHistory(extract.Id);
-
-                _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Idle);
-                _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Finding);
-
-                var found = _psmartSourceReader.Find(protocol, extract);
-
-                _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Found, found);
+                Find(dbExtractProtocolDTO);
             }
-          
         }
 
         public ExtractEventDTO GetStatus(Guid extractId)
@@ -99,25 +121,16 @@ namespace Dwapi.ExtractsManagement.Core.Services.Psmart
             return _psmartStageRepository.Count(_emr);
         }
 
+        public void Complete(Guid extractId)
+        {
+            _extractHistoryRepository.Complete(extractId);
+        }
+
         public void Sync(IEnumerable<DbExtractProtocolDTO> extracts)
         {
             foreach (var extract in extracts)
             {
-                try
-                {
-                    _extractHistoryRepository.UpdateStatus(extract.Extract.Id, ExtractStatus.Loading);
-
-                   var count= Load(Extract(extract.DatabaseProtocol, extract.Extract));
-
-                    _extractHistoryRepository.UpdateStatus(extract.Extract.Id, ExtractStatus.Loaded,count);
-                    //_extractHistoryRepository.UpdateStatus(extract.Extract.Id, ExtractStatus.Idle);
-                }
-                catch (Exception e)
-                {
-                   errorList.Add(e.Message);
-                    throw;
-                }
-               
+                Sync(extract);
             }
         }
 

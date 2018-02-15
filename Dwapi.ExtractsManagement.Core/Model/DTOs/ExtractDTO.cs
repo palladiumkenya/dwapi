@@ -22,8 +22,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.DTOs
             LastStatus = lastStatus;
             Found = found;
             Loaded = loaded;
-            //Rejected = Found - loaded;
+            Rejected = Found - loaded;
             Sent = sent;
+            Queued = Loaded - Sent;
         }
 
         public static ExtractEventDTO Generate(List<ExtractHistory> extractHistories)
@@ -31,7 +32,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.DTOs
             if(extractHistories.Count==0)
                 return new ExtractEventDTO();
 
-            var last = extractHistories.OrderByDescending(x => x.StatusDate).FirstOrDefault();
+            var last = extractHistories.OrderByDescending(x => x.StatusDate).FirstOrDefault(x=>x.Status!=ExtractStatus.Idle);
 
             var eventDTO = new ExtractEventDTO();
 

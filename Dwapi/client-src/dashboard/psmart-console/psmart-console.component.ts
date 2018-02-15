@@ -30,6 +30,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public load$: Subscription;
     public loadRegistry$: Subscription;
     public send$: Subscription;
+    public getStatus$: Subscription;
 
     public loadingData: boolean;
     public extracts: Extract[];
@@ -40,6 +41,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public errorMessage: Message[];
     public otherMessage: Message[];
+    private _extractDbProtocol: ExtractDatabaseProtocol;
     private _extractDbProtocols: ExtractDatabaseProtocol[];
     public centralRegistry: CentralRegistry;
 
@@ -68,6 +70,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.loadingData = true;
             this.recordCount = 0;
             this.extracts = this.emr.extracts.filter(x => x.docketId === 'PSMART');
+            this.updateEvent();
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
         }
@@ -88,7 +91,8 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.errorMessage.push({severity: 'error', summary: 'Error verifying ', detail: <any>e});
                 },
                 () => {
-                    this.errorMessage.push({severity: 'success', summary: 'connection was successful '});
+                    this.errorMessage.push({severity: 'success', summary: 'load was successful '});
+                    this.updateEvent();
                 }
             );
     }
@@ -105,9 +109,33 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.errorMessage.push({severity: 'error', summary: 'Error loading regisrty ', detail: <any>e});
                 },
                 () => {
+                    console.log(this.centralRegistry.name);
                 }
             );
     }
+
+    public updateEvent(): void {
+
+        this.extracts.forEach((extract) => {
+            this.getStatus$ = this._psmartExtractService.getStatus(extract.id)
+                .subscribe(
+                    p => {
+                        extract.extractEvent = p;
+                    },
+                    e => {
+                        this.errorMessage = [];
+                        this.errorMessage.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
+                    },
+                    () => {
+                        // console.log(extract);
+                    }
+                );
+        });
+
+
+    }
+
+
 
     public send(): void {
         this.errorMessage = [];

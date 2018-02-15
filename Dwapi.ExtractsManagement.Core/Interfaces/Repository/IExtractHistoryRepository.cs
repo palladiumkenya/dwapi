@@ -12,5 +12,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
         ExtractHistory GetLatest(Guid extractId);
        IEnumerable<ExtractHistory> GetAllExtractStatus(Guid extractId);
         void UpdateStatus(Guid extractId, ExtractStatus status,int? stats=null,string statusInfo="");
+        void Complete(Guid extractId);
     }
 }

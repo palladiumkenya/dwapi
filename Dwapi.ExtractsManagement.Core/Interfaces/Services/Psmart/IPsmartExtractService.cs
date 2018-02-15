@@ -13,12 +13,15 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart
     public interface IPsmartExtractService
     {
         ExtractHistory HasStarted(Guid extractId);
+        void Find(DbExtractProtocolDTO extract);
+        void Sync(DbExtractProtocolDTO extract);
         void Find(IEnumerable<DbExtractProtocolDTO> extracts);
         void Sync(IEnumerable<DbExtractProtocolDTO> extracts);
         ExtractEventDTO GetStatus(Guid extractId);
         IEnumerable<PsmartSource> Extract(DbProtocol protocol, DbExtract extract);
         
         int Load(IEnumerable<PsmartSource> sources,bool clearFirst=true);
+        void Complete(Guid extractId);
     
         string GetLoadError();
     }

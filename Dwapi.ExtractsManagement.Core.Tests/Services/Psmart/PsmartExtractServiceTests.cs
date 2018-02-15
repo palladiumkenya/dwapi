@@ -51,9 +51,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Services.Psmart
 
             _dbExtractProtocolDtos=new List<DbExtractProtocolDTO>();
             _mssql = new DbProtocol(DatabaseType.MicrosoftSQL, @".\koske14", "sa", "maun", "IQTools_KeHMIS");
-            _extractA = new DbExtract {Id=_iqcareId, ExtractSql = @" SELECT [Serial],[Demographics],[Encounters] FROM [psmart]"};
+            _extractA = new DbExtract {Id=_iqcareId, Emr = "IQCare",ExtractSql = @" SELECT [Serial],[Demographics],[Encounters] FROM [psmart]"};
             _mysql = new DbProtocol(DatabaseType.MySQL, @"localhost", "root", "root", "testemr");
-            _extractB = new DbExtract {Id=_kenyaEmrId,ExtractSql = @" select serial,demographics,encounters FROM psmart"};
+            _extractB = new DbExtract {Id=_kenyaEmrId, Emr = "KenyaEMR",ExtractSql = @" select serial,demographics,encounters FROM psmart"};
             _dbExtractProtocolDtos.Add(new DbExtractProtocolDTO(_extractA,_mssql));
             _dbExtractProtocolDtos.Add(new DbExtractProtocolDTO(_extractB, _mysql));
             _extractHistoryRepository =new ExtractHistoryRepository(_context);
@@ -133,9 +133,14 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Services.Psmart
         public void should_Get_events()
         {
             _psmartExtractService.Find(_dbExtractProtocolDtos);
-            var eventDto = _psmartExtractService.GetStatus(_extractA.Id);
-            Assert.NotNull(eventDto);
-            Console.WriteLine(eventDto);
+            var eventFound = _psmartExtractService.GetStatus(_extractA.Id);
+            Assert.NotNull(eventFound);
+            _psmartExtractService.Sync(_dbExtractProtocolDtos);
+            var eventSync = _psmartExtractService.GetStatus(_extractA.Id);
+            Assert.NotNull(eventSync);
+
+            Console.WriteLine(eventFound);
+            Console.WriteLine(eventSync);
         }
     }
 }

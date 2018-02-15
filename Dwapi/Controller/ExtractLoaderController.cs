@@ -25,23 +25,23 @@ namespace Dwapi.Controller
             _psmartExtractService = psmartExtractService;
         }
 
-        // GET: api/ExtractLoader/id/dockedtId
-        [HttpGet("status")]
-        public IActionResult GetStatus([FromBody]DbExtractProtocolDTO[] entity)
+        // GET: api/ExtractLoader/status/id
+        [HttpGet("status/{id}")]
+        public IActionResult GetStatus(Guid id)
         {
-            if (null == entity)
+            if (id.IsNullOrEmpty())
                 return BadRequest();
 
 
-            if (entity.Any(x => !x.IsValid()))
-                return BadRequest();
+        
 
             try
             {
-//                var extracts = _psmartExtractService.GetAllByEmr(id, docketId).ToList();
-//                return Ok(extracts);
+                var eventExtract = _psmartExtractService.GetStatus(id);
+                if (null == eventExtract)
+                    return NotFound();
 
-                return Ok();
+                return Ok(eventExtract);
             }
             catch (Exception e)
             {
@@ -54,22 +54,47 @@ namespace Dwapi.Controller
 
         // POST: api/ExtractLoader/load
         [HttpPost("load")]
-        public IActionResult Load([FromBody]DbExtractProtocolDTO[] entity)
+        public IActionResult Load([FromBody]DbExtractProtocolDTO entity)
         {
             if (null == entity)
                 return BadRequest();
-
-
-            if (entity.Any(x=>!x.IsValid()))
+            
+            if (!entity.IsValid())
                 return BadRequest();
 
             try
             {
                 //check if busy
-                
 
+               var extractHistory= _psmartExtractService.HasStarted(entity.Extract.Id);
+
+                if (extractHistory.IsStarted())
+                {
+                    var eventHistory = _psmartExtractService.GetStatus(entity.Extract.Id);
+                    if (null != eventHistory)
+                        return Ok(new
+                        {
+                            IsComplete = false,
+                            IsStarted =true,
+                            eEvent=eventHistory
+                        });
+                }
+
+                _psmartExtractService.Find(entity);
                 _psmartExtractService.Sync(entity);
-                return Ok();
+                _psmartExtractService.Complete(entity.Extract.Id);
+
+                var history = _psmartExtractService.GetStatus(entity.Extract.Id);
+            
+                if (null != history)
+                    return Ok(new
+                    {
+                        IsComplete = true,
+                        IsStarted = false,
+                        eEvent = history
+                    });
+
+               throw new ArgumentException("Server could not processs your");
             }
             catch (Exception e)
             {

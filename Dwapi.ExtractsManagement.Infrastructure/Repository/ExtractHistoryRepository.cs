@@ -51,5 +51,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
             }
 
         }
+
+        public void Complete(Guid extractId)
+        {
+            var history = new ExtractHistory(ExtractStatus.Idle,extractId);
+            Create(history);
+            SaveChanges();
+        }
     }
 }
