@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Model;
@@ -31,6 +32,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
                 .Where(x => x.ExtractId == extractId)
                 .OrderByDescending(x => x.StatusDate)
                 .FirstOrDefault();
+        }
+
+        public IEnumerable<ExtractHistory> GetAllExtractStatus(Guid extractId)
+        {
+            return GetAll().Where(x => x.ExtractId == extractId);
         }
 
         public void UpdateStatus(Guid extractId, ExtractStatus status,int? stats, string statusInfo = "")

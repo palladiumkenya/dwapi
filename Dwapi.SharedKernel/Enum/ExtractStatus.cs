@@ -5,7 +5,7 @@
         Idle,
         Finding,Found,
         Loading,Loaded,
-        Validating,Validated,
+        //Validating,Validated,
         Sending,Sent
     }
 }

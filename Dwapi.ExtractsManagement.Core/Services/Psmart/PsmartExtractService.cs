@@ -8,6 +8,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart;
 using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source.Psmart.Reader;
 using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.ExtractsManagement.Core.Model.DTOs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Psmart;
 using Dwapi.ExtractsManagement.Core.Model.Stage.Psmart;
 using Dwapi.SharedKernel.DTOs;
@@ -71,6 +72,12 @@ namespace Dwapi.ExtractsManagement.Core.Services.Psmart
                 _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Found, found);
             }
           
+        }
+
+        public ExtractEventDTO GetStatus(Guid extractId)
+        {
+            var histories = _extractHistoryRepository.GetAllExtractStatus(extractId).ToList();
+            return ExtractEventDTO.Generate(histories);
         }
 
         public IEnumerable<PsmartSource> Extract(DbProtocol protocol, DbExtract extract)

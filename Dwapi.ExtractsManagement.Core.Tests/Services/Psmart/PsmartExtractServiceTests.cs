@@ -128,5 +128,14 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Services.Psmart
                 Console.WriteLine(psmartStage);
             }
         }
+
+        [Test]
+        public void should_Get_events()
+        {
+            _psmartExtractService.Find(_dbExtractProtocolDtos);
+            var eventDto = _psmartExtractService.GetStatus(_extractA.Id);
+            Assert.NotNull(eventDto);
+            Console.WriteLine(eventDto);
+        }
     }
 }
