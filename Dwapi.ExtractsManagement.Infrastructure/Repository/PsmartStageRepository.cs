@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Dapper;
-using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart.Repository;
-using Dwapi.ExtractsManagement.Core.Model.Stage.Psmart;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Stage.Psmart.Repository
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 {
     public class PsmartStageRepository: IPsmartStageRepository
     {
@@ -22,7 +21,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Stage.Psmart.Repository
             var stages = _context.PsmartStages.Where(x => x.Emr.IsSameAs(emr));
             _context.RemoveRange(stages);
             _context.SaveChanges();
-            //_context.Database.GetDbConnection().Execute($"DELETE FROM {nameof(PsmartStage)}s WHERE Emr='{emr}'");
         }
 
         public void Load(PsmartStage entity)

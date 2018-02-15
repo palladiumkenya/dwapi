@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using Dwapi.ExtractsManagement.Core.DTOs;
 using Dwapi.ExtractsManagement.Core.Model;
-using Dwapi.ExtractsManagement.Core.Model.DTOs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Psmart;
+using Dwapi.ExtractsManagement.Core.Model.Source;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Model;
-using Serilog;
 
-namespace Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart
+namespace Dwapi.ExtractsManagement.Core.Interfaces.Services
 {
     public interface IPsmartExtractService
     {

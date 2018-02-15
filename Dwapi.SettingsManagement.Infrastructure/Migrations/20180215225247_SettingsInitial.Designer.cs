@@ -12,7 +12,7 @@ using System;
 namespace Dwapi.SettingsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(SettingsContext))]
-    [Migration("20180215094722_SettingsInitial")]
+    [Migration("20180215225247_SettingsInitial")]
     partial class SettingsInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

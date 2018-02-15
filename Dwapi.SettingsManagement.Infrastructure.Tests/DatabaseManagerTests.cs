@@ -44,7 +44,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
        public void should_Verify_MSSQL_Query()
        {
            var extract = Builder<Extract>.CreateNew().Build();
-           extract.ExtractSql = @"SELECT * FROM [AppAdmin]";
+           extract.ExtractSql = @"SELECT * FROM psmart_store";
 
            var databaseProtocol = DatabaseProtocols().First(x=>x.DatabaseType==DatabaseType.MicrosoftSQL);
            var verified = _databaseManager.VerifyQuery(extract,databaseProtocol);
@@ -57,7 +57,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
        public void should_Verify_MySQL_Query()
        {
            var extract = Builder<Extract>.CreateNew().Build();
-           extract.ExtractSql = @"SELECT * FROM psmart";
+           extract.ExtractSql = @"SELECT * FROM psmart_store";
 
            var databaseProtocol = DatabaseProtocols().First(x => x.DatabaseType == DatabaseType.MySQL);
             var verified = _databaseManager.VerifyQuery(extract, databaseProtocol);
@@ -71,8 +71,8 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
        {
            return new List<DatabaseProtocol>
            {
-               new DatabaseProtocol(DatabaseType.MicrosoftSQL, @".\koske14", "sa", "maun", "iqcare"),
-               new DatabaseProtocol(DatabaseType.MySQL, @"localhost", "root", "root", "testemr")
+               new DatabaseProtocol(DatabaseType.MicrosoftSQL, @".\koske14", "sa", "maun", "IQTools_KeHMIS"),
+               new DatabaseProtocol(DatabaseType.MySQL, @"localhost", "root", "test", "openmrs")
            };
        }
    }

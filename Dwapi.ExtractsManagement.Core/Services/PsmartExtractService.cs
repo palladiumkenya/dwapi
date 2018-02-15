@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.DTOs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
-using Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart;
-using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart.Repository;
-using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source.Psmart.Reader;
+using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Model;
-using Dwapi.ExtractsManagement.Core.Model.DTOs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Psmart;
-using Dwapi.ExtractsManagement.Core.Model.Stage.Psmart;
+using Dwapi.ExtractsManagement.Core.Model.Source;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 
-namespace Dwapi.ExtractsManagement.Core.Services.Psmart
+namespace Dwapi.ExtractsManagement.Core.Services
 {
     public class PsmartExtractService:IPsmartExtractService
     {

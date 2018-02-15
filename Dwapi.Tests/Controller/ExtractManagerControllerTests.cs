@@ -54,7 +54,7 @@ namespace Dwapi.Tests.Controller
             _mssql =
                 new DatabaseProtocol(DatabaseType.MicrosoftSQL, @".\koske14", "sa", "maun", "iqcare");
             _mysql =
-                new DatabaseProtocol(DatabaseType.MySQL, @"localhost", "root", "root", "testemr");
+                new DatabaseProtocol(DatabaseType.MySQL, @"localhost", "root", "root", "openmrs");
 
             context.Add(_docket);
             context.AddRange(_emrs);

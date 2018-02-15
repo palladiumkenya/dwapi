@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
 
-namespace Dwapi.ExtractsManagement.Core.Model.DTOs
+namespace Dwapi.ExtractsManagement.Core.DTOs
 {
     public class ExtractEventDTO
     {

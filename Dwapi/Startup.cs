@@ -2,17 +2,14 @@ using System;
 using System.IO;
 using System.Reflection;
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
-using Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart;
-using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart.Repository;
-using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Repository;
-using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source.Psmart.Reader;
-using Dwapi.ExtractsManagement.Core.Model.Stage.Psmart;
-using Dwapi.ExtractsManagement.Core.Services.Psmart;
+using Dwapi.ExtractsManagement.Core.Interfaces.Services;
+using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
+using Dwapi.ExtractsManagement.Infrastructure.Reader;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
-using Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader;
-using Dwapi.ExtractsManagement.Infrastructure.Stage.Psmart.Repository;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
@@ -124,10 +121,7 @@ namespace Dwapi
             Log.Debug(@"---------------------------------------------------------------------------------------------------");
             Log.Debug("Dwapi started !");
 
-            Mapper.Initialize(cfg => {
-                cfg.CreateMap<PsmartStage,PsmartStageDTO>();
-                
-            });
+       
         }
 
         public static void EnsureMigrationOfContext<T>(IServiceProvider app) where T : BaseContext

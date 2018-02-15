@@ -2,27 +2,20 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Data;
-using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source.Psmart.Reader;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Model.Source;
-using Dwapi.ExtractsManagement.Core.Model.Source.Psmart;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
-using Dwapi.SharedKernel.Utility;
 using MySql.Data.MySqlClient;
 using Serilog;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
+namespace Dwapi.ExtractsManagement.Infrastructure.Reader
 {
     public class PsmartSourceReader : IPsmartSourceReader
     {
-        private readonly ReadSummary _summary = new ReadSummary();
         private IMapper _mapper;
-
-
-        public ReadSummary Summary => _summary;
 
         public int Find(DbProtocol protocol, DbExtract extract)
         {
@@ -31,9 +24,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
             _mapper = GetMapper(extract.Emr);
             int extractCount = 0;
             var connection = GetConnection(protocol);
-
-
-            _summary.Status = $"Analyzing {nameof(PsmartSource)}...";
 
 
             using (connection)
@@ -45,11 +35,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
                 {
                     //Extract SQL
                     command.CommandText = extract.GetCountSQL();
-                    int.TryParse(command.ExecuteScalar().ToString(),out extractCount);
+                    int.TryParse(command.ExecuteScalar().ToString(), out extractCount);
                 }
             }
-
-            _summary.Status = $"Analyzing {nameof(PsmartSource)} Completed";
 
             Log.Debug($"Finding {nameof(PsmartSource)} Completed");
             return extractCount;
@@ -60,10 +48,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
             _mapper = GetMapper(extract.Emr);
             IEnumerable<PsmartSource> extracts = new List<PsmartSource>();
             var connection = GetConnection(protocol);
-
-
-            _summary.Status = $"Reading {nameof(PsmartSource)}...";
-
 
             using (connection)
             {
@@ -78,8 +62,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
                     extracts = _mapper.Map<IDataReader, IEnumerable<PsmartSource>>(command.ExecuteReader());
                 }
             }
-
-            _summary.Status = $"Reading {nameof(PsmartSource)} Completed";
 
             return extracts;
         }
@@ -105,12 +87,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader
                 cfg.CreateMissingTypeMaps = false;
                 cfg.AllowNullCollections = true;
                 cfg.CreateMap<IDataReader, PsmartSource>()
-                    .ForMember(x => x.Id, opt => opt.Ignore())
+                    .ForMember(x=>x.Uuid,opt => opt.MapFrom(src =>src.GetValue(src.GetOrdinal("uuid")).ToString()))
+                    .ForMember(x => x.EId, opt => opt.Ignore())
                     .ForMember(x => x.Emr, opt => opt.UseValue(emr))
-                    .ForMember(x => x.FacilityCode, opt => opt.Ignore())
                     .ForMember(x => x.DateExtracted, opt => opt.Ignore());
             });
             return new Mapper(config);
         }
     }
+
+  
 }

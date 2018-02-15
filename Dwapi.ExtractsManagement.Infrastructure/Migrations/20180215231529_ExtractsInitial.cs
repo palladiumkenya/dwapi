@@ -8,9 +8,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
-            //  Reference Table
-
             /*
             migrationBuilder.CreateTable(
                 name: "Extracts",
@@ -29,18 +26,22 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 name: "PsmartStages",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    EId = table.Column<Guid>(nullable: false),
                     DateExtracted = table.Column<DateTime>(nullable: true),
+                    DateSent = table.Column<DateTime>(nullable: true),
                     DateStaged = table.Column<DateTime>(nullable: false),
-                    Demographics = table.Column<string>(maxLength: 100, nullable: true),
-                    Emr = table.Column<string>(maxLength: 50, nullable: true),
-                    Encounters = table.Column<string>(maxLength: 100, nullable: true),
-                    FacilityCode = table.Column<int>(nullable: true),
-                    Serial = table.Column<string>(maxLength: 50, nullable: true)
+                    Date_Created = table.Column<DateTime>(nullable: true),
+                    Emr = table.Column<string>(nullable: true),
+                    Id = table.Column<int>(nullable: true),
+                    RequestId = table.Column<string>(nullable: true),
+                    Shr = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(maxLength: 100, nullable: true),
+                    Status_Date = table.Column<DateTime>(nullable: true),
+                    Uuid = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PsmartStages", x => x.Id);
+                    table.PrimaryKey("PK_PsmartStages", x => x.EId);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,9 +79,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "PsmartStages");
-
-            //  Reference Table
-
             /*
             migrationBuilder.DropTable(
                 name: "Extracts");

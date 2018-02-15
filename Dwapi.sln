@@ -43,9 +43,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.In
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UploadManagement", "UploadManagement", "{A5FF5E21-9524-4ADD-91E5-66C61FCA2767}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.UploadManagement.Core", "Dwapi.UploadManagement.Core\Dwapi.UploadManagement.Core.csproj", "{C8481F4C-40C6-4C02-8A44-AC448D92653C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.UploadManagement.Core", "Dwapi.UploadManagement.Core\Dwapi.UploadManagement.Core.csproj", "{C8481F4C-40C6-4C02-8A44-AC448D92653C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.UploadManagement.Core.Tests", "Dwapi.UploadManagement.Core.Tests\Dwapi.UploadManagement.Core.Tests.csproj", "{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.UploadManagement.Core.Tests", "Dwapi.UploadManagement.Core.Tests\Dwapi.UploadManagement.Core.Tests.csproj", "{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

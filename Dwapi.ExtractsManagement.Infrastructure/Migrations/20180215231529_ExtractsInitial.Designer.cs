@@ -12,7 +12,7 @@ using System;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20180215094423_ExtractsInitial")]
+    [Migration("20180215231529_ExtractsInitial")]
     partial class ExtractsInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,30 +60,35 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("ExtractHistories");
                 });
 
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Stage.Psmart.PsmartStage", b =>
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.PsmartStage", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("EId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime?>("DateExtracted");
 
+                    b.Property<DateTime?>("DateSent");
+
                     b.Property<DateTime>("DateStaged");
 
-                    b.Property<string>("Demographics")
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("Id");
+
+                    b.Property<string>("RequestId");
+
+                    b.Property<string>("Shr");
+
+                    b.Property<string>("Status")
                         .HasMaxLength(100);
 
-                    b.Property<string>("Emr")
-                        .HasMaxLength(50);
+                    b.Property<DateTime?>("Status_Date");
 
-                    b.Property<string>("Encounters")
-                        .HasMaxLength(100);
+                    b.Property<string>("Uuid");
 
-                    b.Property<int?>("FacilityCode");
-
-                    b.Property<string>("Serial")
-                        .HasMaxLength(50);
-
-                    b.HasKey("Id");
+                    b.HasKey("EId");
 
                     b.ToTable("PsmartStages");
                 });

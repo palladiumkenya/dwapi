@@ -41,9 +41,9 @@ namespace Dwapi.Tests.Controller
             _iqcareEmr =new EmrSystem("IQCare","v1");
             _iqcareEmr.AddProtocol(new DatabaseProtocol(DatabaseType.MicrosoftSQL, @".\koske14", "sa", "maun", "iqcare"));
             _kenyaEmr = new EmrSystem("KenyaEMR", "v1");
-            _kenyaEmr.AddProtocol(new DatabaseProtocol(DatabaseType.MySQL, @"localhost", "root", "root", "testemr"));
+            _kenyaEmr.AddProtocol(new DatabaseProtocol(DatabaseType.MySQL, @"localhost", "root", "root", "openmrs"));
             _otherEmr=new EmrSystem("xEmr","1");
-            _otherEmr.AddProtocol(new DatabaseProtocol(DatabaseType.MySQL, @"localhost", "root", "root", "othertestemr"));
+            _otherEmr.AddProtocol(new DatabaseProtocol(DatabaseType.MySQL, @"localhost", "root", "root", "otheropenmrs"));
             context.AddRange(new List<EmrSystem>{_iqcareEmr,_kenyaEmr,_otherEmr});
             context.SaveChanges();
         }
