@@ -34,7 +34,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public getStatus$: Subscription;
 
     public loadingData: boolean;
-    public extracts: Extract[];
+    public extracts: Extract[] = [];
     public recordCount: number;
 
     public canLoadFromEmr: boolean;
@@ -123,6 +123,9 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 .subscribe(
                     p => {
                         extract.extractEvent = p;
+                        if (extract.extractEvent) {
+                            this.canSend = extract.extractEvent.queued > 0;
+                        }
                     },
                     e => {
                         this.errorMessage = [];
@@ -152,15 +155,15 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 () => {
                     console.log(this.sendResponse);
+                    this.updateEvent();
                     if (this.sendResponse) {
-                        if (this.sendResponse.IsSending) {
+                        if (this.sendResponse.isSending) {
                             this.errorMessage.push({severity: 'warning', summary: 'sending has already started '});
                         }
-                        if (this.sendResponse.IsComplete) {
-                            this.errorMessage.push({severity: 'success', summary: 'sent successfu '});
+                        if (this.sendResponse.isComplete) {
+                            this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
                         }
                     }
-                    this.updateEvent();
                     // this.errorMessage.push({severity: 'success', summary: 'sent successful '});
                 }
             );

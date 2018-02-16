@@ -61,6 +61,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
                 psmartStage.DateSent = DateTime.Now;
                 psmartStage.RequestId = requestId;
             }
+
+            _context.SaveChanges();
         }
     }
 }
