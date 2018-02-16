@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Dwapi.ExtractsManagement.Core.Interfaces.Services.Psmart;
-using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Psmart.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Psmart;
 using Microsoft.AspNetCore.Http;
@@ -44,10 +44,14 @@ namespace Dwapi.Controller
                 if (packageDTO.Docket.IsSameAs("PSMART"))
                 {
                     var psmartdata = _psmartStageRepository.GetAll().ToList();
-                    var psmartDTO = Mapper.Map<IEnumerable<PsmartStageDTO>>(psmartdata);
-                    var response = await _psmartSendService.SendAsync(packageDTO, psmartDTO);
-
-                    return Ok(response);
+                    if (psmartdata.Count > 0)
+                    {
+                        var psmartDTO = psmartdata.Select(x => new SmartMessage {Id = x.Uuid, PayLoad = x.Shr}).ToList()
+                            .ToList();
+                        var bag = new SmartMessageBag(psmartDTO);
+                        var response = await _psmartSendService.SendAsync(packageDTO, bag);
+                        return Ok(response);
+                    }
                 }
 
                 return BadRequest();

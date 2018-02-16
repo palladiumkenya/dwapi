@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Interfaces.Stage.Source.Psmart.Reader;
-using Dwapi.ExtractsManagement.Infrastructure.Source.Psmart.Reader;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
+using Dwapi.ExtractsManagement.Infrastructure.Reader;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using NUnit.Framework;
@@ -22,10 +22,26 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Source.Psmart
         public void SetUp()
         {
            _mssql = new DbProtocol(DatabaseType.MicrosoftSQL, @".\koske14", "sa", "maun", "IQTools_KeHMIS");
-            _extractA = new DbExtract {ExtractSql = @" SELECT [Serial],[Demographics],[Encounters] FROM [psmart]",Emr = "IQCare"};
-            _mysql = new DbProtocol(DatabaseType.MySQL, @"localhost", "root", "root", "testemr");
-            _extractB = new DbExtract { ExtractSql = @" select serial,demographics,encounters FROM psmart",Emr = "KenyaEMR"};
+            _extractA = new DbExtract {ExtractSql = @"select [Id],[shr],[date_created],[status],[status_date],[uuid] FROM psmart_store", Emr = "IQCare"};
+            _mysql = new DbProtocol(DatabaseType.MySQL, @"localhost", "root", "test", "openmrs");
+            _extractB = new DbExtract { ExtractSql = @"select id,shr,date_created,status,status_date,uuid FROM psmart_store", Emr = "KenyaEMR"};
             _psmartSourceReader = new PsmartSourceReader();
+        }
+
+        [Test]
+        public void should_Find_Psmart_MSSQL()
+        {
+            var psmartSources = _psmartSourceReader.Find(_mssql, _extractA);
+            Assert.True(psmartSources > 0);
+            Console.WriteLine($"Found:{psmartSources}");
+        }
+
+        [Test]
+        public void should_Find_Psmart_MySQL()
+        {
+            var psmartSources = _psmartSourceReader.Find(_mysql, _extractB);
+            Assert.True(psmartSources > 0);
+            Console.WriteLine($"Found:{psmartSources}");
         }
 
         [Test]

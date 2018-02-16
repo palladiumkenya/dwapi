@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Dwapi.SharedKernel.DTOs
 {
     public class PsmartMessage
     {
+    
         public List<string> Message { get; set; }=new List<string>();
 
         public PsmartMessage()

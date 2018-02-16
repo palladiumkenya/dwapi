@@ -1,3 +1,5 @@
+import {ExtractEvent} from './extract-event';
+
 export interface Extract {
     id?: string;
     name?: string;
@@ -9,4 +11,5 @@ export interface Extract {
     docketId?: string;
     emrSystemId?: string;
     emr?: string;
+    extractEvent?: ExtractEvent;
 }

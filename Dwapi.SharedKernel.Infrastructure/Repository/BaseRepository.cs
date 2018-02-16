@@ -48,6 +48,9 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public virtual void CreateOrUpdate(T entity)
         {
+            if (null == entity)
+                return;
+
             var exists =DbSet.AsNoTracking().FirstOrDefault(x=>Equals(x.Id, entity.Id));
             if (null != exists)
             {

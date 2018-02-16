@@ -18,7 +18,7 @@ namespace Dwapi.SettingsManagement.Core.Services
             _centralRegistryRepository = centralRegistryRepository;
         }
 
-        public async Task<VerificationResponse> Verify(CentralRegistry centralRegistry, string endpoint = "api/test")
+        public async Task<VerificationResponse> Verify(CentralRegistry centralRegistry, string endpoint = "api/v1/test")
         {
             var verificationResponse = new VerificationResponse(string.Empty, false);
 

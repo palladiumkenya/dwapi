@@ -4,6 +4,7 @@ import {Extract} from '../../settings/model/extract';
 import {DatabaseProtocol} from '../../settings/model/database-protocol';
 import {Observable} from 'rxjs/Observable';
 import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
+import {ExtractEvent} from '../../settings/model/extract-event';
 
 @Injectable()
 export class PsmartExtractService {
@@ -15,13 +16,13 @@ export class PsmartExtractService {
         this._http = http;
     }
 
-    public getStatus(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
-        return this._http.post<boolean>(this._url + '/status', extracts)
+    public getStatus(extractId: string): Observable<ExtractEvent> {
+        return this._http.get<ExtractEvent>(this._url + '/status/' + extractId)
             .catch(this.handleError);
     }
 
     public load(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
-        return this._http.post<boolean>(this._url + '/load', extracts)
+        return this._http.post<boolean>(this._url + '/load', extracts[0])
             .catch(this.handleError);
     }
 

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using CsvHelper.Configuration;
-using Dwapi.ExtractsManagement.Core.Model.Stage.Psmart;
+using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Infrastructure;
 using EFCore.Seeder.Configuration;
 using EFCore.Seeder.Extensions;
@@ -11,6 +11,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure
     public class ExtractsContext : BaseContext
     {
         public DbSet<PsmartStage> PsmartStages { get; set; }
+        public DbSet<ExtractHistory> ExtractHistories { get; set; }
+        
+        /// <summary>
+        /// //  Reference Table Only
+        /// </summary>
+        public DbSet<Extract> Extracts { get; set; }
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {

@@ -44,7 +44,7 @@ namespace Dwapi.Tests.Controller
             _registryManagerController=new RegistryManagerController(new RegistryManagerService(_centralRegistryRepository));
 
             _centralRegistry = Builder<CentralRegistry>.CreateNew()
-                .With(x => x.Url = "http://52.178.24.227:5757")
+                .With(x => x.Url = "http://52.178.24.227:8026")
                 .Build();
             _centralRegistry.AuthToken = _authToken;
         }
