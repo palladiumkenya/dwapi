@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -51,7 +51,7 @@ namespace Dwapi
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .UseSerilog()
-                //.UseUrls("http://0.0.0.0:4747")
+                .UseUrls("http://0.0.0.0:5757")
                 .Build();
             return host;
         }

@@ -4,11 +4,11 @@ namespace Dwapi.SharedKernel.Model
 {
     public class SmartMessageBag
     {
-        public List<SmartMessage> Messages { get; set; }
+        public List<SmartMessage> Message { get; set; }
 
-        public SmartMessageBag(List<SmartMessage> messages)
+        public SmartMessageBag(List<SmartMessage> message)
         {
-            Messages = messages;
+            Message = message;
         }
     }
 }
