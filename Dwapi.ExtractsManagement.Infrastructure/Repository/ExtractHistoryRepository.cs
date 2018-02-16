@@ -34,6 +34,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
                 .FirstOrDefault();
         }
 
+        public ExtractHistory GetLatest(Guid extractId, ExtractStatus status, ExtractStatus otherStatus)
+        {
+            return DbSet
+                .Where(x => x.ExtractId == extractId && (x.Status == status || x.Status == otherStatus))
+                .OrderByDescending(x => x.StatusDate)
+                .FirstOrDefault();
+        }
+
         public IEnumerable<ExtractHistory> GetAllExtractStatus(Guid extractId)
         {
             return GetAll().Where(x => x.ExtractId == extractId);

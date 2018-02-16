@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Utility;
+using Dwapi.UploadManagement.Core.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 {
-    public class PsmartStageRepository: IPsmartStageRepository
+    public class PsmartStageRepository : IPsmartStageRepository
     {
         private readonly ExtractsContext _context;
 
@@ -30,7 +32,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 
         public void Load(IEnumerable<PsmartStage> entities)
         {
-           _context.AddRange(entities);
+            _context.AddRange(entities);
         }
 
         public void SaveChanges()
@@ -46,6 +48,19 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
         public int Count(string emr)
         {
             return _context.PsmartStages.Select(x => x.Id).Count();
+        }
+
+        public void UpdateStatus(IEnumerable<Guid> eids, bool sent, string requestId)
+        {
+            if (!sent)
+                return;
+
+            var toUodate = _context.PsmartStages.Where(x => eids.Contains(x.EId)).ToList();
+            foreach (var psmartStage in toUodate)
+            {
+                psmartStage.DateSent = DateTime.Now;
+                psmartStage.RequestId = requestId;
+            }
         }
     }
 }

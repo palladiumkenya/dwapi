@@ -1,3 +1,7 @@
+import {ExtractEvent} from './extract-event';
+
 export interface SendResponse {
-    status?: string;
+    IsComplete?: boolean;
+    IsSending?: boolean;
+    eEvent?: ExtractEvent;
 }

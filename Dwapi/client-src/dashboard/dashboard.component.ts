@@ -55,6 +55,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 }
             );
 
+
+    }
+
+    public loadMiddleware(){
         this.getMiddleware$ = this._emrConfigService.getMiddleware()
             .subscribe(
                 p => {
@@ -70,8 +74,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 }
             );
     }
-
-
     public ngOnDestroy(): void {
         if (this.getEmr$) {
             this.getEmr$.unsubscribe();

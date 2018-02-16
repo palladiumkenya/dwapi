@@ -9,6 +9,7 @@ import {RegistryConfigService} from '../../settings/services/registry-config.ser
 import {CentralRegistry} from '../../settings/model/central-registry';
 import {PsmartSenderService} from '../services/psmart-sender.service';
 import {SendPackage} from '../../settings/model/send-package';
+import {SendResponse} from '../../settings/model/send-response';
 
 @Component({
   selector: 'liveapp-psmart-console',
@@ -44,6 +45,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private _extractDbProtocol: ExtractDatabaseProtocol;
     private _extractDbProtocols: ExtractDatabaseProtocol[];
     public centralRegistry: CentralRegistry;
+    public sendResponse: SendResponse;
 
     public constructor(confirmationService: ConfirmationService, emrConfigService: PsmartExtractService,
                        registryConfigService: RegistryConfigService,
@@ -142,14 +144,24 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.send$ = this._psmartSenderService.send(this.getSendPackage('PSMART'))
             .subscribe(
                 p => {
-                    // this.isVerfied = p;
+                    this.sendResponse = p;
                 },
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                 },
                 () => {
-                    this.errorMessage.push({severity: 'success', summary: 'sent successful '});
+                    console.log(this.sendResponse);
+                    if (this.sendResponse) {
+                        if (this.sendResponse.IsSending) {
+                            this.errorMessage.push({severity: 'warning', summary: 'sending has already started '});
+                        }
+                        if (this.sendResponse.IsComplete) {
+                            this.errorMessage.push({severity: 'success', summary: 'sent successfu '});
+                        }
+                    }
+                    this.updateEvent();
+                    // this.errorMessage.push({severity: 'success', summary: 'sent successful '});
                 }
             );
     }
@@ -169,6 +181,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     private getSendPackage(docketId: string): SendPackage {
         return {
+            extractId: this.extracts[0].id,
             destination: this.centralRegistry,
             docket: docketId,
             endpoint: ''
