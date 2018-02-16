@@ -46,5 +46,13 @@ namespace Dwapi.ExtractsManagement.Core.Model
         {
             return Status != ExtractStatus.Idle;
         }
+        public bool IsSending()
+        {
+            return Status == ExtractStatus.Sending;
+        }
+        public bool IsSent()
+        {
+            return Status == ExtractStatus.Sent;
+        }
     }
 }

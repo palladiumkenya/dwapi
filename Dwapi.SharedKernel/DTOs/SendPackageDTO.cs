@@ -9,11 +9,12 @@ namespace Dwapi.SharedKernel.DTOs
     {
         public Registry Destination { get; set; }
         public string Docket { get; set; }
+        public Guid? ExtractId { get; set; }
         public string Endpoint { get; set; }
 
         public bool IsValid()
         {
-            return null != Destination && !string.IsNullOrWhiteSpace(Docket);
+            return null != Destination && !string.IsNullOrWhiteSpace(Docket) && !ExtractId.IsNullOrEmpty();
         }
 
         public string GetUrl(string endPoint="")

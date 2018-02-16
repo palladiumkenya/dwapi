@@ -10,7 +10,8 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
     {
         void ClearHistory(Guid extractId);
         ExtractHistory GetLatest(Guid extractId);
-       IEnumerable<ExtractHistory> GetAllExtractStatus(Guid extractId);
+        ExtractHistory GetLatest(Guid extractId,ExtractStatus status,ExtractStatus otherStatus);
+        IEnumerable<ExtractHistory> GetAllExtractStatus(Guid extractId);
         void UpdateStatus(Guid extractId, ExtractStatus status,int? stats=null,string statusInfo="");
         void Complete(Guid extractId);
     }

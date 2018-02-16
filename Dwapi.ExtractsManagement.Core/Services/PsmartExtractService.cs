@@ -52,6 +52,12 @@ namespace Dwapi.ExtractsManagement.Core.Services
             return history;
         }
 
+        public ExtractHistory HasStarted(Guid extractId, ExtractStatus status, ExtractStatus otherStatus)
+        {
+            var history = _extractHistoryRepository.GetLatest(extractId, status,otherStatus);
+            return history;
+        }
+
         public void Find(DbExtractProtocolDTO dbExtractProtocolDTO)
         {
             var extract = dbExtractProtocolDTO.Extract;
