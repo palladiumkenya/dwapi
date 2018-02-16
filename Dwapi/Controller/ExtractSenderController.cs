@@ -104,9 +104,9 @@ namespace Dwapi.Controller
                             if (response.IsValid())
                             {
                                 // update sent
-                                _extractHistoryRepository.UpdateStatus(packageDTO.ExtractId.Value, ExtractStatus.Sent,bag.Messages.Count);
+                                _extractHistoryRepository.UpdateStatus(packageDTO.ExtractId.Value, ExtractStatus.Sent,bag.Message.Count);
                                 _psmartExtractService.Complete(packageDTO.ExtractId.Value);
-                                _psmartStageRepository.UpdateStatus(bag.Messages.Select(x=>x.Eid),response.IsValid(),response.RequestId);
+                                _psmartStageRepository.UpdateStatus(bag.Message.Select(x=>x.Eid),response.IsValid(),response.RequestId);
 
                                 var history = _psmartExtractService.GetStatus(packageDTO.ExtractId.Value);
 
