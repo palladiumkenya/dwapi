@@ -44,5 +44,20 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
                 .Include(e => e.Extracts)
                 .FirstOrDefault(x => x.IsMiddleware);
         }
+
+        public override void CreateOrUpdate(EmrSystem entity)
+        {
+            if (null == entity)
+                return;
+
+            var exists = DbSet.AsNoTracking().FirstOrDefault(x => Equals(x.Id, entity.Id));
+            if (null != exists)
+            {
+                Update(entity);
+                return;
+            }
+            entity.Extracts.Add(Extract.CreatePsmart(entity.Id));
+            Create(entity);
+        }
     }
 }

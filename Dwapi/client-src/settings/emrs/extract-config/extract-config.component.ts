@@ -20,10 +20,14 @@ export class ExtractConfigComponent implements OnInit, OnChanges, OnDestroy {
     public loadingData: boolean;
     public get$: Subscription;
     public verify$: Subscription;
-    public emrs: Extract[];
+    public update$: Subscription;
+    public extracts: Extract[];
+    public extractDialog: Extract;
+    public selectedExtract: Extract;
 
     public errorMessage: Message[];
     public otherMessage: Message[];
+    public displayDialog: boolean = false;
 
     public constructor(confirmationService: ConfirmationService, emrConfigService: ExtractConfigService) {
 
@@ -50,16 +54,41 @@ export class ExtractConfigComponent implements OnInit, OnChanges, OnDestroy {
         this.get$ = this._emrConfigService.getAll(this.selectedEmr.id, 'PSMART')
             .subscribe(
                 p => {
-                    this.emrs = p;
+                    this.extracts = p;
                 },
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
                     this.loadingData = false;
-                    this.emrs = null;
+                    this.extracts = null;
                 },
                 () => {
                     this.loadingData = false;
+                }
+            );
+    }
+
+    public editExtract(extract: Extract): void {
+        console.log(extract);
+        this.displayDialog = true;
+        this.extractDialog = {...extract};
+    }
+    public updateExtract(): void {
+        this.update$ = this._emrConfigService.updateExtract(this.extractDialog)
+            .subscribe(
+                p => {
+                    this.displayDialog = false;
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error updating ', detail: <any>e});
+                    this.loadingData = false;
+                    this.extracts = null;
+                },
+                () => {
+                    this.otherMessage = [];
+                    this.otherMessage.push({severity: 'success', detail: 'Updated successfully '});
+                    this.loadData();
                 }
             );
     }

@@ -10,5 +10,6 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Services
         void Save(Extract extract);
         bool Verfiy(Extract extract, DatabaseProtocol databaseProtocol);
         string GetDatabaseError();
+        Extract Update(Extract extract);
     }
 }

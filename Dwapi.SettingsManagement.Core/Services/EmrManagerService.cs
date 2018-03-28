@@ -75,5 +75,18 @@ namespace Dwapi.SettingsManagement.Core.Services
         {
             return _databaseManager.ConnectionError;
         }
+
+        public void SetDefault(Guid id)
+        {
+            var defaultEmr = _emrSystemRepository.GetDefault();
+            defaultEmr.IsDefault = false;
+            _emrSystemRepository.Update(defaultEmr);
+
+            var emr = _emrSystemRepository.Get(id);
+            emr.IsDefault = true;
+            _emrSystemRepository.Update(emr);
+
+            _emrSystemRepository.SaveChanges();
+        }
     }
 }
