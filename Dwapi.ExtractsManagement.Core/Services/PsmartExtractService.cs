@@ -152,5 +152,10 @@ namespace Dwapi.ExtractsManagement.Core.Services
                 return errorList.First();
             return string.Empty;
         }
+
+        public void Clear()
+        {
+            _psmartStageRepository.Clear();
+        }
     }
 }

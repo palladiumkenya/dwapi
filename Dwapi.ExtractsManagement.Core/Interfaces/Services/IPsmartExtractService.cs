@@ -22,6 +22,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Services
         
         int Load(IEnumerable<PsmartSource> sources,bool clearFirst=true);
         void Complete(Guid extractId);
+        void Clear();
     
         string GetLoadError();
     }

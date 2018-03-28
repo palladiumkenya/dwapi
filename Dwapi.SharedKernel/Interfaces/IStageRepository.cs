@@ -5,7 +5,7 @@ namespace Dwapi.SharedKernel.Interfaces
 {
     public interface IStageRepository<T>
     {
-        void Clear(string emr);
+        void Clear(string emr="");
         void Load(T entity);
         void Load(IEnumerable<T> entities);
         void SaveChanges();
