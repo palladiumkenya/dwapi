@@ -213,5 +213,26 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+        [HttpPost("setdefault")]
+        public IActionResult SetDefault([FromBody]EmrSystem emrSystem)
+        {
+            try
+            {
+                if (emrSystem == null)
+                    return BadRequest();
+
+                _emrManagerService.SetDefault(emrSystem.Id);
+                return Ok(true);
+            }
+
+            catch(Exception ex)
+            {
+                var msg = $"Error setting Emr {emrSystem.Name} as default";
+                Log.Error(msg);
+                Log.Error($"{ex}");
+                return StatusCode(500, msg);
+            }
+        }
     }
 }

@@ -38,5 +38,12 @@ namespace Dwapi.SettingsManagement.Core.Services
         {
             return _databaseManager.ConnectionError;
         }
+
+        public Extract Update(Extract extract)
+        {
+            _extractRepository.Update(extract);
+            _extractRepository.SaveChanges();
+            return extract;
+        }
     }
 }

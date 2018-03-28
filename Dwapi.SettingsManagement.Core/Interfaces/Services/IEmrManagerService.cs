@@ -16,5 +16,6 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Services
         void DeleteProtocol(Guid protocolId);
         bool VerifyConnection(DatabaseProtocol databaseProtocol);
         string GetConnectionError();
+        void SetDefault(Guid id);
     }
 }

@@ -31,10 +31,6 @@ namespace Dwapi.Controller
         {
             if (id.IsNullOrEmpty())
                 return BadRequest();
-
-
-        
-
             try
             {
                 var eventExtract = _psmartExtractService.GetStatus(id);
@@ -65,7 +61,6 @@ namespace Dwapi.Controller
             try
             {
                 //check if busy
-
                var extractHistory= _psmartExtractService.HasStarted(entity.Extract.Id);
 
                 if (extractHistory.IsStarted())
@@ -80,6 +75,7 @@ namespace Dwapi.Controller
                         });
                 }
 
+                _psmartExtractService.Clear();
                 _psmartExtractService.Find(entity);
                 _psmartExtractService.Sync(entity);
                 _psmartExtractService.Complete(entity.Extract.Id);

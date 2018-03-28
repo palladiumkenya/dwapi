@@ -83,6 +83,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public loadFromEmr(): void {
         this.errorMessage = [];
+        console.log(this.emr);
         this.load$ = this._psmartExtractService.load(this.getExtractProtocols(this.emr))
             .subscribe(
                 p => {

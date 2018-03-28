@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
@@ -46,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
         public IEnumerable<PsmartSource> Read(DbProtocol protocol, DbExtract extract)
         {
             _mapper = GetMapper(extract.Emr);
-            IEnumerable<PsmartSource> extracts = new List<PsmartSource>();
+            IList<PsmartSource> extracts = new List<PsmartSource>();
             var connection = GetConnection(protocol);
 
             using (connection)
@@ -59,11 +60,34 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
                     //Extract SQL
                     command.CommandText = extract.ExtractSql;
 
-                    extracts = _mapper.Map<IDataReader, IEnumerable<PsmartSource>>(command.ExecuteReader());
+                    extracts = _mapper.Map<IDataReader, IList<PsmartSource>>(command.ExecuteReader());
                 }
             }
 
+            if (extracts.Count > 0)
+            {
+                using (connection = GetConnection(protocol))
+                {
+                    if (connection.State != ConnectionState.Open)
+                        connection.Open();
+
+                    using (var updateCommand = connection.CreateCommand())
+                    {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < extracts.Count; i++)
+                        {
+                            if (i == extracts.Count - 1)
+                                stringBuilder.Append($"'{extracts[i].Uuid}'");
+                            else
+                                stringBuilder.Append($"'{extracts[i].Uuid}',");
+                        }
+                        updateCommand.CommandText = $"update psmart_store set Status = 'Collected', Status_date = '{DateTime.Now}' where UUID in ({stringBuilder.ToString()})";
+                        updateCommand.ExecuteNonQuery();
+                    }
+                }
+            }
             return extracts;
+
         }
 
         public IDbConnection GetConnection(DbProtocol databaseProtocol)

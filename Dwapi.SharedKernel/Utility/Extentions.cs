@@ -11,6 +11,8 @@ namespace Dwapi.SharedKernel.Utility
     {
         public static bool IsSameAs(this string value, string other)
         {
+            if (value == null)
+                return false;
             return value.Trim().ToLower() == other.Trim().ToLower();
         }
 

@@ -91,5 +91,15 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+        [HttpPost("update")]
+        public IActionResult Update([FromBody] Extract extract)
+        {
+            if (extract == null)
+                return BadRequest();
+
+            _extractManagerService.Save(extract);
+            return Ok(extract);
+        }
     }
 }

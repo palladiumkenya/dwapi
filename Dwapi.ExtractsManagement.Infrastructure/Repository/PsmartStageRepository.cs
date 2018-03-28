@@ -18,11 +18,21 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
             _context = context;
         }
 
-        public void Clear(string emr)
+        public void Clear(string emr="")
         {
-            var stages = _context.PsmartStages.Where(x => x.Emr.IsSameAs(emr));
-            _context.RemoveRange(stages);
-            _context.SaveChanges();
+            if (!string.IsNullOrWhiteSpace(emr))
+            {
+                var stages = _context.PsmartStages.Where(x => x.Emr.IsSameAs(emr));
+                _context.RemoveRange(stages);
+                _context.SaveChanges();
+            }
+
+            else
+            {
+                var stages = _context.PsmartStages.ToList();
+                _context.RemoveRange(stages);
+                _context.SaveChanges();
+            }
         }
 
         public void Load(PsmartStage entity)

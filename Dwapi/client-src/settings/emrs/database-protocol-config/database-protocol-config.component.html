@@ -1,6 +1,7 @@
 <form #dbForm="ngForm" novalidate>
     <div class="ui-grid ui-grid-responsive ui-fluid">
         <p-messages [(value)]="protocolErrorMessage"></p-messages>
+        <p-growl [(value)]="otherMessage"></p-growl>
         <div class="ui-g ui-g-12 ui-g-nopad">
             <div class="ui-g-12 ui-md-3 ui-label">
                 <label for="databaseType">DBMS</label>
@@ -15,7 +16,7 @@
             </div>
             <div class="ui-g-12 ui-md-9">
                 <input pInputText id="host" name="host" required
-                       [(ngModel)]="selectedDatabase.host"/>
+                       [(ngModel)]="selectedDatabase.host" />
             </div>
         </div>
         <div class="ui-g ui-g-12 ui-g-nopad">
@@ -23,7 +24,7 @@
                 <label for="host">Port</label>
             </div>
             <div class="ui-g-12 ui-md-9">
-                <input pInputText id="port" name="port" [(ngModel)]="selectedDatabase.port"/>
+                <input pInputText id="port" name="port" [(ngModel)]="selectedDatabase.port" />
             </div>
         </div>
         <div class="ui-g ui-g-12 ui-g-nopad">
@@ -32,7 +33,7 @@
             </div>
             <div class="ui-g-12 ui-md-9">
                 <input pInputText id="username" name="username" required
-                       [(ngModel)]="selectedDatabase.username"/>
+                       [(ngModel)]="selectedDatabase.username" />
             </div>
         </div>
         <div class="ui-g ui-g-12 ui-g-nopad">
@@ -40,8 +41,8 @@
                 <label for="password">Password</label>
             </div>
             <div class="ui-g-12 ui-md-9">
-                <input pInputText id="password" name="password"
-                       [(ngModel)]="selectedDatabase.password"/>
+                <input pInputText id="password" type="password" name="password"
+                       [(ngModel)]="selectedDatabase.password" />
             </div>
         </div>
         <div class="ui-g ui-g-12 ui-g-nopad">
@@ -50,7 +51,7 @@
             </div>
             <div class="ui-g-12 ui-md-9">
                 <input pInputText id="databaseName" name="databaseName" required
-                       [(ngModel)]="selectedDatabase.databaseName"/>
+                       [(ngModel)]="selectedDatabase.databaseName" />
             </div>
         </div>
         <div class="ui-g ui-g-12 ui-g-nopad">
@@ -59,17 +60,21 @@
             </div>
             <div class="ui-g-12 ui-md-9">
                 <input pInputText id="advancedProperties" name="advancedProperties"
-                       [(ngModel)]="selectedDatabase.advancedProperties"/>
+                       [(ngModel)]="selectedDatabase.advancedProperties" />
             </div>
         </div>
         <div class="ui-g-12 ui-lg-12">
             <div class="ui-g-12 ui-md-3">
-                <button pButton  type="submit" (click)="saveProtocol()" label="Save" pButton
+                <button pButton type="submit" (click)="saveProtocol()" label="Save" pButton
                         icon="ui-icon-save" [disabled]="!dbForm.form.valid"></button>
             </div>
             <div class="ui-g-12 ui-md-3">
-                <button  pButton type="submit" (click)="verfiyProtocol()" label="Verify" pButton
-                         icon="ui-icon-check" [disabled]="!dbForm.form.valid"></button>
+                <button pButton type="submit" (click)="verfiyProtocol()" label="Verify" pButton
+                        icon="ui-icon-check" [disabled]="!dbForm.form.valid"></button>
+            </div>
+            <div class="ui-g-12 ui-md-3">
+                <button pButton type="submit" (click)="confirmDefault()" label="Make default" pButton
+                        icon="ui-icon-done-all" [disabled]="!dbForm.form.valid"></button>
             </div>
         </div>
     </div>

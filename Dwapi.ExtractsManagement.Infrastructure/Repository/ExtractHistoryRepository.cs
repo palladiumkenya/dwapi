@@ -47,8 +47,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
             return GetAll().Where(x => x.ExtractId == extractId);
         }
 
-        public void UpdateStatus(Guid extractId, ExtractStatus status,int? stats, string statusInfo = "")
+        public void UpdateStatus(Guid extractId, ExtractStatus status,int? stats, string statusInfo = "", bool express = false)
         {
+            if(express)
+            {
+                var history = new ExtractHistory(status, stats, statusInfo, extractId);
+                Create(history);
+                SaveChanges();
+                return;
+            }
+
             var started= DbSet.Any(x => x.ExtractId == extractId&&x.Status==status);
 
             if (!started)
@@ -57,8 +65,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
                 Create(history);
                 SaveChanges();
             }
-
         }
+
+
 
         public void Complete(Guid extractId)
         {

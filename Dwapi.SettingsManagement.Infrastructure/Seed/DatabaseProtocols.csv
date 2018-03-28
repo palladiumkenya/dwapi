@@ -1,3 +1,3 @@
 Id|DatabaseName|DatabaseType|EmrSystemId|Host|Password|Port|Username|AdvancedProperties
-a6221982-0e85-11e8-ba89-0ed5f89f718b|IQTools_KeHMIS|1|a62216ee-0e85-11e8-ba89-0ed5f89f718b|.\koske14|maun||sa|
-a6221aa4-0e85-11e8-ba89-0ed5f89f718b|openmrs|2|a6221856-0e85-11e8-ba89-0ed5f89f718b|localhost|test|3306|root|
+a6221982-0e85-11e8-ba89-0ed5f89f718b|IQCarePalladium|1|a62216ee-0e85-11e8-ba89-0ed5f89f718b|192.168.1.235\sqlexpress|c0nstella||sa|
+a6221aa4-0e85-11e8-ba89-0ed5f89f718b|openmrs|2|a6221856-0e85-11e8-ba89-0ed5f89f718b|192.168.1.45|thisistest|3306|dwapi|

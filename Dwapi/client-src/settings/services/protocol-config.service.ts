@@ -25,6 +25,11 @@ export class ProtocolConfigService {
             .catch(this.handleError);
     }
 
+    public makeEmrDefault(emr: EmrSystem): Observable<boolean> {
+        return this._http.post<boolean>(this._url + '/setDefault', emr)
+            .catch(this.handleError);
+    }
+
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {
             return Observable.throw('no record(s) found');

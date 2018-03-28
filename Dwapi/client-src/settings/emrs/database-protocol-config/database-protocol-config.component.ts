@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange} from '@angular/core';
 import {BreadcrumbService} from '../../../app/breadcrumb.service';
 import {Subscription} from 'rxjs/Subscription';
 import {ConfirmationService, Message} from 'primeng/api';
@@ -16,6 +16,7 @@ import {ProtocolConfigService} from '../../services/protocol-config.service';
 export class DatabaseProtocolConfigComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() selectedEmr: EmrSystem;
+    @Output() settingSavedChange = new EventEmitter();
 
     private _confirmationService: ConfirmationService;
     private _protocolConfigService: ProtocolConfigService;
@@ -24,6 +25,7 @@ export class DatabaseProtocolConfigComponent implements OnInit, OnChanges, OnDes
 
     public saveProtocol$: Subscription;
     public verifyProtocol$: Subscription;
+    public makeDefault$: Subscription;
 
     public protocolErrorMessage: Message[];
     public otherMessage: Message[];
@@ -38,6 +40,8 @@ export class DatabaseProtocolConfigComponent implements OnInit, OnChanges, OnDes
     ];
 
     public isVerfied: boolean;
+    public isMadeDefault: boolean;
+
 
     public constructor(public breadcrumbService: BreadcrumbService,
                        confirmationService: ConfirmationService, protocolConfigService: ProtocolConfigService) {
@@ -84,7 +88,8 @@ export class DatabaseProtocolConfigComponent implements OnInit, OnChanges, OnDes
                 },
                 () => {
                     this.otherMessage = [];
-                    this.otherMessage.push({severity: 'success', detail: 'Saved successfully '});
+                    this.otherMessage.push({severity: 'success', detail: 'Saved successfully '})
+                    this.settingSavedChange.emit();
                 }
             );
     }
@@ -112,6 +117,59 @@ export class DatabaseProtocolConfigComponent implements OnInit, OnChanges, OnDes
                     }
                 }
             );
+    }
+
+    public makeDefault(): void {
+        console.log(this.selectedEmr);
+        this.protocolErrorMessage = [];
+        this.otherMessage = [];
+        this.makeDefault$ = this._protocolConfigService.makeEmrDefault(this.selectedEmr)
+            .subscribe(
+                p => {
+                    this.isMadeDefault = p;
+                },
+
+                e => {
+                    this.protocolErrorMessage = [];
+                    this.protocolErrorMessage.push({
+                        severity: 'error',
+                        summary: `Error setting ${this.selectedEmr.name} as default `,
+                        detail: <any>e
+                    });
+                },
+
+                () => {
+                    this.protocolErrorMessage = [];
+                    this.otherMessage = [];
+                    if (this.isMadeDefault) {
+                        this.otherMessage.push({severity: 'success', detail: `${this.selectedEmr.name} was set as default successfully`});
+                        this.protocolErrorMessage.push({
+                            severity: 'success',
+                            summary: `${this.selectedEmr.name} was set as default successfully`
+                        });
+                    } else {
+                        this.protocolErrorMessage.push({
+                            severity: 'error', summary: `${this.selectedEmr.name}cannot be set as default `
+                        });
+                    }
+                }
+            );
+    }
+
+    public confirmDefault() {
+        console.log(this.selectedEmr.id);
+        this._confirmationService.confirm({
+
+            message: `Do you want to set ${this.selectedEmr.name} as default?`,
+            header: 'Confirmation',
+            icon: 'ui-icon-done-all',
+            accept: () => {
+                this.makeDefault();
+            },
+            reject: () => {
+
+            }
+        });
     }
 
     public ngOnDestroy(): void {
