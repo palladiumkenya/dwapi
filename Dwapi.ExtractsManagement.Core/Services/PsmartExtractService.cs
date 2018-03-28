@@ -68,9 +68,17 @@ namespace Dwapi.ExtractsManagement.Core.Services
             _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Idle);
             _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Finding);
 
-            var found = _psmartSourceReader.Find(protocol, extract);
+            try
+            {
+                var found = _psmartSourceReader.Find(protocol, extract);
+                _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Found, found);
+            }
 
-            _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Found, found);
+            catch(Exception ex)
+            {
+                _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Idle, express:true);
+                throw ex;
+            }
         }
 
         public void Sync(DbExtractProtocolDTO extract)
@@ -87,6 +95,7 @@ namespace Dwapi.ExtractsManagement.Core.Services
             catch (Exception e)
             {
                 errorList.Add(e.Message);
+                _extractHistoryRepository.UpdateStatus(extract.Extract.Id, ExtractStatus.Idle, express: true);
                 throw;
             }
         }
