@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Dwapi.Domain\Dwapi.Domain.csproj" />
     <ProjectReference Include="..\Dwapi.ExtractsManagement.Core\Dwapi.ExtractsManagement.Core.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel.Infrastructure\Dwapi.SharedKernel.Infrastructure.csproj" />
   </ItemGroup>

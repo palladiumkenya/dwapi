@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using AutoMapper;
@@ -20,6 +21,7 @@ using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Services;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -47,6 +49,17 @@ namespace Dwapi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // -------------NEW---------------
+            var assemblyNames = Assembly.GetEntryAssembly().GetReferencedAssemblies();
+            List<Assembly> assemblies = new List<Assembly>();
+            foreach (var assemblyName in assemblyNames)
+            {
+                assemblies.Add(Assembly.Load(assemblyName));
+            }
+            services.AddMediatR(assemblies);
+            services.AddHangfireIntegration(Configuration);
+            // -------------------------------
+
             services.AddMvc()
               .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()))
               .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
