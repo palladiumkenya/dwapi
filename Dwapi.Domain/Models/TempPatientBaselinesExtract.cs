@@ -1,16 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Dwapi.Domain
 {
-    public class TempPatientBaselinesExtract : TempExtract
+    public class TempPatientBaselinesExtract
     {
 
         public override string ToString()
         {
             return $"{SiteCode}-{PatientID}";
         }
+
+        [Key]
+        public Guid Id { get; set; }
+        
+        //[DoNotRead]
+        [NotMapped]
+        public bool HasError { get; set; }
 
         public int? bCD4 { get; set; }
         public DateTime? bCD4Date { get; set; }
@@ -36,5 +45,14 @@ namespace Dwapi.Domain
         public DateTime? m6CD4Date { get; set; }
         public string Emr { get; set; }
         public string Project { get; set; }
+        public int? PatientPK { get; set; }
+        public string PatientID { get; set; }
+        public int? FacilityId { get; set; }
+        public int? SiteCode { get; set; }
+        //[DoNotRead]
+        public DateTime DateExtracted { get; set; }
+        //[DoNotRead]
+        public bool CheckError { get; set; }
+
     }
 }

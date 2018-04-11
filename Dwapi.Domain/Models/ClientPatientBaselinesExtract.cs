@@ -7,10 +7,19 @@ using System.Text;
 namespace Dwapi.Domain
 {
     [Table("PatientBaselinesExtract")]
-    public class ClientPatientBaselinesExtract : ClientExtract
+    public class ClientPatientBaselinesExtract
     {
         [Key]
-        public override Guid Id { get; set; }
+        public Guid Id { get; set; }
+        public int PatientPK { get; set; }
+        public string PatientID { get; set; }
+        public int SiteCode { get; set; }
+        public string Emr { get; set; }
+        public string Project { get; set; }
+        public bool? Processed { get; set; }
+        public string QueueId { get; set; }
+        public string Status { get; set; }
+        public DateTime? StatusDate { get; set; }
         public int? bCD4 { get; set; }
         public DateTime? bCD4Date { get; set; }
         public int? bWAB { get; set; }
@@ -101,4 +110,6 @@ namespace Dwapi.Domain
 
         }
     }
+
+
 }

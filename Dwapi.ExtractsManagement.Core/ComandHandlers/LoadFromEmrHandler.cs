@@ -13,134 +13,44 @@ using Dwapi.SharedKernel.Enum;
 using Dwapi.Domain;
 using Hangfire;
 using System.Linq;
+using Dwapi.ExtractsManagement.Core.Extractors;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 {
     public class LoadFromEmrCommandHandler : IRequestHandler<LoadFromEmrCommand, LoadFromEmrResponse>
     {
-        private readonly IExtractUnitOfWork _unitOfWork;
         private readonly IBackgroundJobInit _backgroundJob;
-        private Func<IDatabase> _databaseFactory;
+        private readonly ExtractorAdapter _extractorAdapter;
 
-        public LoadFromEmrCommandHandler(IExtractUnitOfWork unitOfWork, IBackgroundJobInit backgroundJobInit)
+        public LoadFromEmrCommandHandler(IBackgroundJobInit backgroundJobInit, ExtractorAdapter extractorAdapter)
         {
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _backgroundJob = backgroundJobInit ?? throw new ArgumentNullException(nameof(backgroundJobInit));
+            _extractorAdapter = extractorAdapter ?? throw new ArgumentNullException(nameof(extractorAdapter));
         }
 
         public async Task<LoadFromEmrResponse> Handle(LoadFromEmrCommand request, CancellationToken cancellationToken)
         {
-            switch (request.DatabaseProtocol.DatabaseType)
+            var extracts = request.Extracts.ToHashSet()
+                .OrderBy(e => e.Rank).ToHashSet();
+
+            foreach(var extract in extracts)
             {
-                case SharedKernel.Enum.DatabaseType.MicrosoftSQL:
-                    _databaseFactory = () 
-                        => new Database(request.DatabaseProtocol.GetConnectionString(), NPoco.DatabaseType.SqlServer2012, SqlClientFactory.Instance);
-                    break;
-
-                case SharedKernel.Enum.DatabaseType.MySQL:
-                    _databaseFactory = () 
-                        => new Database(request.DatabaseProtocol.GetConnectionString(), NPoco.DatabaseType.MySQL, SqlClientFactory.Instance);
-                    break;
-
-                default:
-                    throw new InvalidOperationException();
+                var extractJob = _extractorAdapter.GetExtractor(extract.ExtractType);
+                _backgroundJob.EnqueueJob(() => extractJob.Extract(extract, request.DatabaseProtocol));
             }
-
-            var extracts = request.Extracts.ToHashSet().OrderBy(e => e.Rank).ToHashSet();
-            _backgroundJob.EnqueueJob(
-                () => ExtractPatientExtracts(extracts.Where(x => x.ExtractType == ExtractType.Patient)
-                .First())
-                .Wait());
-            
 
             return new LoadFromEmrResponse();
         }
 
-        public async Task ExtractPatientExtracts(DwhExtract extract)
+        public async Task EnqueueJobsPatientFirst(IOrderedEnumerable<DwhExtract> orderedExtracts)
         {
-            try
-            {
-                IList<ClientPatientExtract> clientPatientExtracts;
-                using (var database = _databaseFactory())
-                    clientPatientExtracts = await database.FetchAsync<ClientPatientExtract>(extract.SqlQuery);
-                
-                await _unitOfWork.Repository<ClientPatientExtract>().AddRangeAsync(clientPatientExtracts);
-                await _unitOfWork.SaveAsync();
-                
-            }
+            if (orderedExtracts == null)
+                throw new ArgumentNullException(nameof(orderedExtracts));
 
-            catch(Exception ex)
-            {
-                
-            }
-        }
+            if (orderedExtracts.FirstOrDefault().ExtractType != ExtractType.Patient)
+                throw new InvalidOperationException();
 
-        public async Task ExtractPatientLabExtract(DwhExtract extract)
-        {
-            try
-            {
-                IList<ClientPatientLaboratoryExtract> patientLabExtracts;
-                using(var database = _databaseFactory())
-                    patientLabExtracts = await database.FetchAsync<ClientPatientLaboratoryExtract>(extract.SqlQuery);
-                await _unitOfWork.Repository<ClientPatientLaboratoryExtract>().AddRangeAsync(patientLabExtracts);
-                await _unitOfWork.SaveAsync();
-            }
-
-            catch(Exception ex)
-            {
-
-            }
-        }
-        
-        public async Task ExtractPatientBaselineExtract(DwhExtract extract)
-        {
-            try
-            {
-                IList<ClientPatientBaselinesExtract> patientBaselinesExtracts;
-                using (var database = _databaseFactory())
-                    patientBaselinesExtracts = await database.FetchAsync<ClientPatientBaselinesExtract>(extract.SqlQuery);
-                await _unitOfWork.Repository<ClientPatientBaselinesExtract>().AddRangeAsync(patientBaselinesExtracts);
-                await _unitOfWork.SaveAsync();
-            }
-
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        public async Task ExtractPatientStatusExtract(DwhExtract extract)
-        {
-            try
-            {
-                IList<ClientPatientStatusExtract> patientStatusExtracts;
-                using (var database = _databaseFactory())
-                    patientStatusExtracts = await database.FetchAsync<ClientPatientStatusExtract>(extract.SqlQuery);
-                await _unitOfWork.Repository<ClientPatientStatusExtract>().AddRangeAsync(patientStatusExtracts);
-                await _unitOfWork.SaveAsync();
-            }
-
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        public async Task ExtractPatientVisitExtract(DwhExtract extract)
-        {
-            try
-            {
-                IList<ClientPatientVisitExtract> patientVisitExtracts;
-                using (var database = _databaseFactory())
-                    patientVisitExtracts = await database.FetchAsync<ClientPatientVisitExtract>(extract.SqlQuery);
-                await _unitOfWork.Repository<ClientPatientVisitExtract>().AddRangeAsync(patientVisitExtracts);
-                await _unitOfWork.SaveAsync();
-            }
-
-            catch (Exception ex)
-            {
-
-            }
+            var patientExtract = orderedExtracts.FirstOrDefault();
         }
     }
 }

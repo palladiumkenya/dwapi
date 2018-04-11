@@ -24,7 +24,12 @@ namespace Dwapi.ExtractsManagement.Core.Commands
     public enum ExtractType
     {
         Patient,
-        PatientBaseline
+        PatientArt,
+        PatientBaseline,
+        PatientLab,
+        PatientPharmacy,
+        PatientStatus,
+        PatientVisit
     }
 
     public class LoadFromEmrResponse

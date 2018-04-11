@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dwapi.Domain.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,10 +8,28 @@ using System.Text;
 namespace Dwapi.Domain
 {
     [Table("PatientPharmacyExtract")]
-    public class ClientPatientPharmacyExtract : ClientExtract
+    public class ClientPatientPharmacyExtract
     {
         [Key]
-        public override Guid Id { get; set; }
+        public Guid Id { get; set; }
+        public int PatientPK { get; set; }
+        public string PatientID { get; set; }
+        public int SiteCode { get; set; }
+        [Column(Order = 100)]
+        public string Emr { get; set; }
+        [Column(Order = 101)]
+        public string Project { get; set; }
+        [DoNotRead]
+        [Column(Order = 102)]
+        public bool? Processed { get; set; }
+        [DoNotRead]
+        public string QueueId { get; set; }
+        [DoNotRead]
+        public string Status { get; set; }
+        [DoNotRead]
+        public DateTime? StatusDate { get; set; }
+
+        
         public int? VisitID { get; set; }
         public string Drug { get; set; }
         public string Provider { get; set; }

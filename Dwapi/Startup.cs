@@ -21,6 +21,8 @@ using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Services;
+using Hangfire;
+using Hangfire.Dashboard;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +31,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Dwapi
 {
@@ -57,7 +60,18 @@ namespace Dwapi
                 assemblies.Add(Assembly.Load(assemblyName));
             }
             services.AddMediatR(assemblies);
+            services.AddDatabase(Configuration);
             services.AddHangfireIntegration(Configuration);
+            services.AddExtractorAdaptor();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Title = "Dwapi API",
+                    Version = "v1",
+                    Description = "Dwapi API. Exposes endpoints used in datawarehouse operations"
+                });
+            });
             // -------------------------------
 
             services.AddMvc()
@@ -95,6 +109,7 @@ namespace Dwapi
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
+            
 
             app.Use(async (context, next) =>
             {
@@ -110,7 +125,11 @@ namespace Dwapi
 
             app.UseMvcWithDefaultRoute();
             app.UseDefaultFiles();
-            app.UseStaticFiles();
+
+            app.UseStaticFiles()
+                .UseSwaggerUi();
+            
+            app.UseHangfire();
 
             Log.Debug(@"initializing Database...");
 
@@ -155,5 +174,6 @@ namespace Dwapi
             }
 
         }
+        
     }
 }
