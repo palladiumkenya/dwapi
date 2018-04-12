@@ -25,21 +25,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
         {
             try
             {
-                switch (dbProtocol.DatabaseType)
-                {
-                    case SharedKernel.Enum.DatabaseType.MicrosoftSQL:
-                        _databaseFactory = ()
-                            => new Database(dbProtocol.GetConnectionString(), NPoco.DatabaseType.SqlServer2012, SqlClientFactory.Instance);
-                        break;
-
-                    case SharedKernel.Enum.DatabaseType.MySQL:
-                        _databaseFactory = ()
-                            => new Database(dbProtocol.GetConnectionString(), NPoco.DatabaseType.MySQL, SqlClientFactory.Instance);
-                        break;
-
-                    default:
-                        throw new InvalidOperationException();
-                }
+                _databaseFactory = ExtractorHelper.NPocoDataFactory(dbProtocol);
 
                 IList<TempPatientPharmacyExtract> tempPatientPharmacyExtracts;
                 using (var database = _databaseFactory())

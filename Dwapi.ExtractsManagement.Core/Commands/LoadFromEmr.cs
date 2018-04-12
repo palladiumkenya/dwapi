@@ -17,7 +17,9 @@ namespace Dwapi.ExtractsManagement.Core.Commands
     {
         public string Emr { get; set; }
         public string SqlQuery { get; set; }
-        public ExtractType ExtractType { get; set; }
+        public ExtractType ExtractType => 
+            (ExtractType)Enum.Parse(typeof(ExtractType), this.ExtractName.Trim());
+        public string ExtractName { get; set; }
         public int Rank => (int)this.ExtractType;
     }
 

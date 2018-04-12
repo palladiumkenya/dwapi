@@ -72,6 +72,7 @@ namespace Dwapi
                     Description = "Dwapi API. Exposes endpoints used in datawarehouse operations"
                 });
             });
+            services.AddSignalR();
             // -------------------------------
 
             services.AddMvc()

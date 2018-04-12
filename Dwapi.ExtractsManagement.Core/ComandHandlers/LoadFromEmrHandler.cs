@@ -35,8 +35,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
             foreach(var extract in extracts)
             {
-                var extractJob = _extractorAdapter.GetExtractor(extract.ExtractType);
-                _backgroundJob.EnqueueJob(() => extractJob.Extract(extract, request.DatabaseProtocol));
+                var extractor = _extractorAdapter.GetExtractor(extract.ExtractType);
+                _backgroundJob.EnqueueJob(() => extractor.Extract(extract, request.DatabaseProtocol));
             }
 
             return new LoadFromEmrResponse();
