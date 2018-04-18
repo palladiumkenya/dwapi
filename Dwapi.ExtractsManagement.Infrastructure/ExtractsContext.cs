@@ -29,6 +29,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempPatientPharmacyExtract> TempPatientPharmacyExtracts { get; set; }
         public DbSet<TempPatientStatusExtract> TempPatientStatusExtracts { get; set; }
         public DbSet<TempPatientVisitExtract> TempPatientVisitExtracts { get; set; }
+        public DbSet<ValidationError> ValidationErrors { get; set; }
+        public DbSet<Validator> Validators { get; set; }
 
         //public DbSet<TempPatientArtExtractError> TempPatientArtExtractErrors { get; set; }
         //public DbSet<TempPatientArtExtractErrorSummary> TempPatientArtExtractErrorSummaries { get; set; }

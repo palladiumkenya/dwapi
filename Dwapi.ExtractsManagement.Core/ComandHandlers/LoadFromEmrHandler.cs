@@ -14,6 +14,7 @@ using Dwapi.Domain;
 using Hangfire;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Extractors;
+using System.Linq.Expressions;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 {
@@ -21,24 +22,33 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
     {
         private readonly IBackgroundJobInit _backgroundJob;
         private readonly ExtractorAdapter _extractorAdapter;
+        private readonly ExtractorValidatorAdapter _extractorValidatorAdapter;
 
-        public LoadFromEmrCommandHandler(IBackgroundJobInit backgroundJobInit, ExtractorAdapter extractorAdapter)
+        public LoadFromEmrCommandHandler(IBackgroundJobInit backgroundJobInit, ExtractorAdapter extractorAdapter, 
+            ExtractorValidatorAdapter extractorValidatorAdapter)
         {
             _backgroundJob = backgroundJobInit ?? throw new ArgumentNullException(nameof(backgroundJobInit));
             _extractorAdapter = extractorAdapter ?? throw new ArgumentNullException(nameof(extractorAdapter));
+            _extractorValidatorAdapter = extractorValidatorAdapter ?? throw new ArgumentNullException(nameof(extractorValidatorAdapter));
         }
 
         public async Task<LoadFromEmrResponse> Handle(LoadFromEmrCommand request, CancellationToken cancellationToken)
         {
+            // Rank jobs
             var extracts = request.Extracts.ToHashSet()
-                .OrderBy(e => e.Rank).ToHashSet();
+                .OrderBy(e => e.Rank);
 
-            foreach(var extract in extracts)
+            IList<Expression<Action>> methodCalls = new List<Expression<Action>>();
+
+            // initialize the jobs
+            extracts.ToList().ForEach(e =>
             {
-                var extractor = _extractorAdapter.GetExtractor(extract.ExtractType);
-                _backgroundJob.EnqueueJob(() => extractor.Extract(extract, request.DatabaseProtocol));
-            }
+                var extractor = _extractorValidatorAdapter.GetExtractorValidator(e.ExtractType);
+                methodCalls.Add(() => extractor.ExtractAndValidateAsync(e, request.DatabaseProtocol));
+            });
 
+            // chain jobs
+            _backgroundJob.ChainJobsAfterFirst(methodCalls);
             return new LoadFromEmrResponse();
         }
 

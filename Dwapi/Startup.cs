@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
-using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader;
@@ -22,7 +20,6 @@ using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Services;
 using Hangfire;
-using Hangfire.Dashboard;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,6 +56,7 @@ namespace Dwapi
             {
                 assemblies.Add(Assembly.Load(assemblyName));
             }
+            
             services.AddMediatR(assemblies);
             services.AddDatabase(Configuration);
             services.AddHangfireIntegration(Configuration);

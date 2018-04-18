@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Dwapi.Domain
 {
-    public class TempPatientArtExtract
+    public class TempPatientArtExtract : IValidatable
     {
 
         public override string ToString()

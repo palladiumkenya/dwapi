@@ -34,6 +34,25 @@ namespace Dwapi.ExtractsManagement.Core.Commands
         PatientVisit
     }
 
+    public class ExtractTypeMapping
+    {
+        private IDictionary<ExtractType, Type> _dict
+            => new Dictionary<ExtractType, Type>();
+
+        public void RegisterMapping(ExtractType extractType, Type type)
+        {
+            _dict.Add(extractType, type);
+        }
+
+        public Type GetMappingFor(ExtractType extractType)
+        {
+            if (_dict.TryGetValue(extractType, out Type type))
+                return type;
+            throw new InvalidOperationException();
+        }
+
+    }
+
     public class LoadFromEmrResponse
     {
 

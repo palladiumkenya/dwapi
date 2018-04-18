@@ -10,6 +10,13 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
 {
     public interface IExtractor
     {
-        Task Extract(DwhExtract extrac, DbProtocol dbProtocol);
+        Task ExtractAsync(DwhExtract extract, DbProtocol dbProtocol);
     }
+
+    public interface IExtractorValidator
+    {
+        Task ExtractAndValidateAsync(DwhExtract extract, DbProtocol dbProtocol);
+    }
+
+    
 }

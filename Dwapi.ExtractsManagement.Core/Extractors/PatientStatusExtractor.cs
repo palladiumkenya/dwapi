@@ -21,7 +21,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
             _unitOfWork = unitOfWork;
         }
 
-        public async Task Extract(DwhExtract extract, DbProtocol dbProtocol)
+        public async Task ExtractAsync(DwhExtract extract, DbProtocol dbProtocol)
         {
             try
             {

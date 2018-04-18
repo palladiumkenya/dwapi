@@ -12,9 +12,10 @@ using System;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20180416123822_AddValidationModels")]
+    partial class AddValidationModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -745,6 +746,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DatePreviousARTStart");
 
+                    b.Property<DateTime?>("DateRegistered");
+
+                    b.Property<DateTime?>("DateRegistrationAtCCC");
+
+                    b.Property<DateTime?>("DateRegistrationAtPMTCT");
+
+                    b.Property<DateTime?>("DateRegistrationAtTBClinic");
+
                     b.Property<string>("District");
 
                     b.Property<string>("EducationLevel");
@@ -770,14 +779,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Project");
 
                     b.Property<string>("Region");
-
-                    b.Property<DateTime?>("RegistrationAtCCC");
-
-                    b.Property<DateTime?>("RegistrationAtPMTCT");
-
-                    b.Property<DateTime?>("RegistrationAtTBClinic");
-
-                    b.Property<DateTime?>("RegistrationDate");
 
                     b.Property<int?>("SiteCode");
 

@@ -16,27 +16,28 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
     {
         private readonly IExtractUnitOfWork _unitOfWork;
         private Func<IDatabase> _databaseFactory;
+        private readonly ProgressHub _progressHub;
 
-        public PatientArtExtractor(IExtractUnitOfWork unitOfWork)
+        public PatientArtExtractor(IExtractUnitOfWork unitOfWork, ProgressHub progressHub)
         {
-            _unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _progressHub = progressHub ?? throw new ArgumentNullException(nameof(progressHub));
         }
 
-        public async Task Extract(DwhExtract extract, DbProtocol dbProtocol)
+        public async Task ExtractAsync(DwhExtract extract, DbProtocol dbProtocol)
         {
             try
             {
                 _databaseFactory = ExtractorHelper.NPocoDataFactory(dbProtocol);
-
                 IList<TempPatientArtExtract> tempPatientArtExtracts;
+
+                await _progressHub.Send(new LoadProgress { Extract = extract.ExtractName, Status = LoadStatus.Fetching });
+                
                 using (var database = _databaseFactory())
-                {
                     tempPatientArtExtracts = await database.FetchAsync<TempPatientArtExtract>(extract.SqlQuery);
-                }
 
                 await _unitOfWork.Repository<TempPatientArtExtract>().AddRangeAsync(tempPatientArtExtracts);
                 await _unitOfWork.SaveAsync();
-
             }
 
             catch (Exception ex)

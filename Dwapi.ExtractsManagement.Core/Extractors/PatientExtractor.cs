@@ -13,24 +13,17 @@ using NPoco;
 namespace Dwapi.ExtractsManagement.Core.Extractors
 {
 
-    public interface IPatientExtractor
-    {
-        Task ExtractInChain(IOrderedEnumerable<DwhExtract> extracts);
-    }
-
     public class PatientExtractor : IExtractor
     {
         private readonly IExtractUnitOfWork _unitOfWork;
-        private readonly IBackgroundJobInit _backgroundJob;
         private Func<IDatabase> _databaseFactory;
 
-        public PatientExtractor(IExtractUnitOfWork unitOfWork, IBackgroundJobInit backgroundJob)
+        public PatientExtractor(IExtractUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _backgroundJob = backgroundJob;
         }
 
-        public async Task Extract(DwhExtract extract, DbProtocol dbProtocol)
+        public async Task ExtractAsync(DwhExtract extract, DbProtocol dbProtocol)
         {
             try
             {
@@ -50,5 +43,6 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
                 throw;
             }
         }
+        
     }
 }
