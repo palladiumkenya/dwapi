@@ -12,8 +12,8 @@ using System;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20180411061512_DwhExtracts")]
-    partial class DwhExtracts
+    [Migration("20180419104726_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -654,7 +654,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempPatientArtExtracts");
+                    b.ToTable("TempPatientArtExtract");
                 });
 
             modelBuilder.Entity("Dwapi.Domain.TempPatientBaselinesExtract", b =>
@@ -724,7 +724,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempPatientBaselinesExtracts");
+                    b.ToTable("TempPatientBaselinesExtract");
                 });
 
             modelBuilder.Entity("Dwapi.Domain.TempPatientExtract", b =>
@@ -742,29 +742,19 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime>("DateExtracted");
 
-                    b.Property<DateTime?>("DateLastVisit");
-
-                    b.Property<DateTime?>("DatePreviousARTStart");
-
-                    b.Property<DateTime?>("DateRegistered");
-
-                    b.Property<DateTime?>("DateRegistrationAtCCC");
-
-                    b.Property<DateTime?>("DateRegistrationAtPMTCT");
-
-                    b.Property<DateTime?>("DateRegistrationAtTBClinic");
-
                     b.Property<string>("District");
 
-                    b.Property<string>("EducationLevel");
+                    b.Property<string>("EMR");
 
-                    b.Property<string>("Emr");
+                    b.Property<string>("EducationLevel");
 
                     b.Property<int?>("FacilityId");
 
                     b.Property<string>("FacilityName");
 
                     b.Property<string>("Gender");
+
+                    b.Property<DateTime?>("LastVisit");
 
                     b.Property<string>("MaritalStatus");
 
@@ -776,9 +766,21 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("PreviousARTExposure");
 
+                    b.Property<DateTime?>("PreviousARTStartDate");
+
                     b.Property<string>("Project");
 
                     b.Property<string>("Region");
+
+                    b.Property<DateTime?>("RegistrationAtCCC");
+
+                    b.Property<DateTime?>("RegistrationAtPMTCT");
+
+                    b.Property<DateTime?>("RegistrationAtTBClinic");
+
+                    b.Property<DateTime?>("RegistrationDate");
+
+                    b.Property<string>("SatelliteName");
 
                     b.Property<int?>("SiteCode");
 
@@ -792,7 +794,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempPatientExtracts");
+                    b.ToTable("TempPatientExtract");
                 });
 
             modelBuilder.Entity("Dwapi.Domain.TempPatientLaboratoryExtract", b =>
@@ -834,7 +836,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempPatientLaboratoryExtracts");
+                    b.ToTable("TempPatientLaboratoryExtract");
                 });
 
             modelBuilder.Entity("Dwapi.Domain.TempPatientPharmacyExtract", b =>
@@ -880,7 +882,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempPatientPharmacyExtracts");
+                    b.ToTable("TempPatientPharmacyExtract");
                 });
 
             modelBuilder.Entity("Dwapi.Domain.TempPatientStatusExtract", b =>
@@ -914,7 +916,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempPatientStatusExtracts");
+                    b.ToTable("TempPatientStatusExtract");
                 });
 
             modelBuilder.Entity("Dwapi.Domain.TempPatientVisitExtract", b =>
@@ -994,7 +996,49 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempPatientVisitExtracts");
+                    b.ToTable("TempPatientVisitExtract");
+                });
+
+            modelBuilder.Entity("Dwapi.Domain.ValidationError", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("EntityName");
+
+                    b.Property<string>("ErrorMessage");
+
+                    b.Property<string>("FieldName");
+
+                    b.Property<string>("ReferencedEntityId");
+
+                    b.Property<Guid>("ValidatorId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ValidatorId");
+
+                    b.ToTable("ValidationError");
+                });
+
+            modelBuilder.Entity("Dwapi.Domain.Validator", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Extract");
+
+                    b.Property<string>("Field");
+
+                    b.Property<string>("Logic");
+
+                    b.Property<string>("Summary");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Validator");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Extract", b =>
@@ -1131,6 +1175,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasOne("Dwapi.Domain.EMR")
                         .WithMany("ExtractSettings")
                         .HasForeignKey("EmrId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.Domain.ValidationError", b =>
+                {
+                    b.HasOne("Dwapi.Domain.Validator")
+                        .WithMany("ValidationErrors")
+                        .HasForeignKey("ValidatorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

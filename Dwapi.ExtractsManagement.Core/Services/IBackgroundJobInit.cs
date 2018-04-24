@@ -55,12 +55,14 @@ namespace Dwapi.ExtractsManagement.Core.Services
         public void ChainJobsAfterFirst(IList<Expression<Action>> methodCalls)
         {
             if (!methodCalls.Any()) return;
-            
             var jobId = BackgroundJob.Enqueue(methodCalls.First());
+
             if (string.IsNullOrWhiteSpace(jobId)) return;
             methodCalls.Remove(methodCalls.First());
+
             foreach (var methodCall in methodCalls)
-                BackgroundJob.ContinueWith(jobId, methodCall, JobContinuationOptions.OnlyOnSucceededState);
+                BackgroundJob.ContinueWith(jobId, methodCall, 
+                    JobContinuationOptions.OnlyOnSucceededState);
         }
     }
 }

@@ -21,14 +21,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
     public class LoadFromEmrCommandHandler : IRequestHandler<LoadFromEmrCommand, LoadFromEmrResponse>
     {
         private readonly IBackgroundJobInit _backgroundJob;
-        private readonly ExtractorAdapter _extractorAdapter;
         private readonly ExtractorValidatorAdapter _extractorValidatorAdapter;
 
-        public LoadFromEmrCommandHandler(IBackgroundJobInit backgroundJobInit, ExtractorAdapter extractorAdapter, 
-            ExtractorValidatorAdapter extractorValidatorAdapter)
+        public LoadFromEmrCommandHandler(IBackgroundJobInit backgroundJobInit, ExtractorValidatorAdapter extractorValidatorAdapter)
         {
             _backgroundJob = backgroundJobInit ?? throw new ArgumentNullException(nameof(backgroundJobInit));
-            _extractorAdapter = extractorAdapter ?? throw new ArgumentNullException(nameof(extractorAdapter));
             _extractorValidatorAdapter = extractorValidatorAdapter ?? throw new ArgumentNullException(nameof(extractorValidatorAdapter));
         }
 
@@ -51,16 +48,6 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             _backgroundJob.ChainJobsAfterFirst(methodCalls);
             return new LoadFromEmrResponse();
         }
-
-        public async Task EnqueueJobsPatientFirst(IOrderedEnumerable<DwhExtract> orderedExtracts)
-        {
-            if (orderedExtracts == null)
-                throw new ArgumentNullException(nameof(orderedExtracts));
-
-            if (orderedExtracts.FirstOrDefault().ExtractType != ExtractType.Patient)
-                throw new InvalidOperationException();
-
-            var patientExtract = orderedExtracts.FirstOrDefault();
-        }
+        
     }
 }

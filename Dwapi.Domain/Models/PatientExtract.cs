@@ -7,10 +7,9 @@ using System.Text;
 
 namespace Dwapi.Domain
 {
-    [Table("PatientExtract")]
-    public class ClientPatientExtract
+    public class PatientExtract
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public int PatientPK { get; set; }
         public string PatientID { get; set; }
         public int SiteCode { get; set; }
@@ -32,16 +31,16 @@ namespace Dwapi.Domain
         public string FacilityName { get; set; }
         public string Gender { get; set; }
         public DateTime? DOB { get; set; }
-        public DateTime? DateRegistered { get; set; }
-        public DateTime? DateRegistrationAtCCC { get; set; }
-        public DateTime? DateRegistrationAtPMTCT { get; set; }
-        public DateTime? DateRegistrationAtTBClinic { get; set; }
+        public DateTime? RegistrationDate { get; set; }
+        public DateTime? RegistrationAtCCC { get; set; }
+        public DateTime? RegistrationATPMTCT { get; set; }
+        public DateTime? RegistrationAtTBClinic { get; set; }
         public string PatientSource { get; set; }
         public string Region { get; set; }
         public string District { get; set; }
         public string Village { get; set; }
         public string ContactRelation { get; set; }
-        public DateTime? DateLastVisit { get; set; }
+        public DateTime? LastVisit { get; set; }
         public string MaritalStatus { get; set; }
         public string EducationLevel { get; set; }
         public DateTime? DateConfirmedHIVPositive { get; set; }
@@ -52,19 +51,19 @@ namespace Dwapi.Domain
         public string StatusAtTBClinic { get; set; }
 
         [DoNotRead]
-        public virtual ICollection<ClientPatientArtExtract> ClientPatientArtExtracts { get; set; } = new List<ClientPatientArtExtract>();
+        public virtual ICollection<PatientArtExtract> ClientPatientArtExtracts { get; set; } = new List<PatientArtExtract>();
         [DoNotRead]
-        public virtual ICollection<ClientPatientBaselinesExtract> ClientPatientBaselinesExtracts { get; set; } = new List<ClientPatientBaselinesExtract>();
+        public virtual ICollection<PatientBaselinesExtract> ClientPatientBaselinesExtracts { get; set; } = new List<PatientBaselinesExtract>();
         [DoNotRead]
-        public virtual ICollection<ClientPatientLaboratoryExtract> ClientPatientLaboratoryExtracts { get; set; } = new List<ClientPatientLaboratoryExtract>();
+        public virtual ICollection<PatientLaboratoryExtract> ClientPatientLaboratoryExtracts { get; set; } = new List<PatientLaboratoryExtract>();
         [DoNotRead]
-        public virtual ICollection<ClientPatientPharmacyExtract> ClientPatientPharmacyExtracts { get; set; } = new List<ClientPatientPharmacyExtract>();
+        public virtual ICollection<PatientPharmacyExtract> ClientPatientPharmacyExtracts { get; set; } = new List<PatientPharmacyExtract>();
         [DoNotRead]
-        public virtual ICollection<ClientPatientStatusExtract> ClientPatientStatusExtracts { get; set; } = new List<ClientPatientStatusExtract>();
+        public virtual ICollection<PatientStatusExtract> ClientPatientStatusExtracts { get; set; } = new List<PatientStatusExtract>();
         [DoNotRead]
-        public virtual ICollection<ClientPatientVisitExtract> ClientPatientVisitExtracts { get; set; } = new List<ClientPatientVisitExtract>();
+        public virtual ICollection<PatientVisitExtract> ClientPatientVisitExtracts { get; set; } = new List<PatientVisitExtract>();
 
-        public ClientPatientExtract()
+        public PatientExtract()
         {
         }
 

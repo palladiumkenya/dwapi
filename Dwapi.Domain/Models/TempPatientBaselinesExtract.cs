@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dwapi.Domain.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,9 +16,11 @@ namespace Dwapi.Domain
         }
 
         [Key]
-        public Guid Id { get; set; }
-        
-        //[DoNotRead]
+        [DoNotRead]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [DoNotRead]
         [NotMapped]
         public bool HasError { get; set; }
 
@@ -49,9 +52,9 @@ namespace Dwapi.Domain
         public string PatientID { get; set; }
         public int? FacilityId { get; set; }
         public int? SiteCode { get; set; }
-        //[DoNotRead]
+        [DoNotRead]
         public DateTime DateExtracted { get; set; }
-        //[DoNotRead]
+        [DoNotRead]
         public bool CheckError { get; set; }
 
     }

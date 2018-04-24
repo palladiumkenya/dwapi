@@ -99,9 +99,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Services.Psmart
             Assert.True(history.Stats.HasValue);
             Console.WriteLine(history);
 
-            Assert.True(_context.PsmartStages.Any());
+            Assert.True(_context.Set<PsmartStage>().Any());
 
-            foreach (var psmartStage in _context.PsmartStages)
+            foreach (var psmartStage in _context.Set<PsmartStage>())
             {
                 Console.WriteLine(psmartStage);
             }
@@ -120,9 +120,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Services.Psmart
             Assert.True(history.Stats.HasValue);
             Console.WriteLine(history);
 
-            Assert.True(_context.PsmartStages.Any());
+            Assert.True(_context.Set<PsmartStage>().Any());
 
-            foreach (var psmartStage in _context.PsmartStages)
+            foreach (var psmartStage in _context.Set<PsmartStage>())
             {
                 Console.WriteLine(psmartStage);
             }
