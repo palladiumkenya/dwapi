@@ -1,81 +1,85 @@
-<form #dbForm="ngForm" novalidate>
-    <div class="ui-grid ui-grid-responsive ui-fluid">
-        <p-messages [(value)]="protocolErrorMessage"></p-messages>
-        <p-growl [(value)]="otherMessage"></p-growl>
-        <div class="ui-g ui-g-12 ui-g-nopad">
-            <div class="ui-g-12 ui-md-3 ui-label">
-                <label for="databaseType">DBMS</label>
-            </div>
-            <div class="ui-g-12 ui-md-9">
-                <p-dropdown [options]="databaseTypes" id="databaseType" name="databaseType" required [(ngModel)]="selectedDatabase.databaseType"></p-dropdown>
-            </div>
-        </div>
-        <div class="ui-g ui-g-12 ui-g-nopad">
-            <div class="ui-g-12 ui-md-3 ui-label">
-                <label for="host">Host</label>
-            </div>
-            <div class="ui-g-12 ui-md-9">
-                <input pInputText id="host" name="host" required
-                       [(ngModel)]="selectedDatabase.host" />
-            </div>
-        </div>
-        <div class="ui-g ui-g-12 ui-g-nopad">
-            <div class="ui-g-12 ui-md-3 ui-label">
-                <label for="host">Port</label>
-            </div>
-            <div class="ui-g-12 ui-md-9">
-                <input pInputText id="port" name="port" [(ngModel)]="selectedDatabase.port" />
-            </div>
-        </div>
-        <div class="ui-g ui-g-12 ui-g-nopad">
-            <div class="ui-g-12 ui-md-3 ui-label">
-                <label for="username">User</label>
-            </div>
-            <div class="ui-g-12 ui-md-9">
-                <input pInputText id="username" name="username" required
-                       [(ngModel)]="selectedDatabase.username" />
-            </div>
-        </div>
-        <div class="ui-g ui-g-12 ui-g-nopad">
-            <div class="ui-g-12 ui-md-3 ui-label">
-                <label for="password">Password</label>
-            </div>
-            <div class="ui-g-12 ui-md-9">
-                <input pInputText id="password" type="password" name="password"
-                       [(ngModel)]="selectedDatabase.password" />
-            </div>
-        </div>
-        <div class="ui-g ui-g-12 ui-g-nopad">
-            <div class="ui-g-12 ui-md-3 ui-label">
-                <label for="databaseName">Database</label>
-            </div>
-            <div class="ui-g-12 ui-md-9">
-                <input pInputText id="databaseName" name="databaseName" required
-                       [(ngModel)]="selectedDatabase.databaseName" />
-            </div>
-        </div>
-        <div class="ui-g ui-g-12 ui-g-nopad">
-            <div class="ui-g-12 ui-md-3 ui-label">
-                <label for="advancedProperties">Advanced Properties</label>
-            </div>
-            <div class="ui-g-12 ui-md-9">
-                <input pInputText id="advancedProperties" name="advancedProperties"
-                       [(ngModel)]="selectedDatabase.advancedProperties" />
-            </div>
-        </div>
-        <div class="ui-g-12 ui-lg-12">
-            <div class="ui-g-12 ui-md-3">
-                <button pButton type="submit" (click)="saveProtocol()" label="Save" pButton
-                        icon="ui-icon-save" [disabled]="!dbForm.form.valid"></button>
-            </div>
-            <div class="ui-g-12 ui-md-3">
-                <button pButton type="submit" (click)="verfiyProtocol()" label="Verify" pButton
-                        icon="ui-icon-check" [disabled]="!dbForm.form.valid"></button>
-            </div>
-            <div class="ui-g-12 ui-md-3">
-                <button pButton type="submit" (click)="confirmDefault()" label="Make default" pButton
-                        icon="ui-icon-done-all" [disabled]="!dbForm.form.valid"></button>
-            </div>
-        </div>
-    </div>
-</form>
+<p-accordion>
+    <p-accordionTab  header="Database Connection" [selected]="true">
+            <form #dbForm="ngForm" novalidate>
+                    <div class="ui-grid ui-grid-responsive ui-fluid">
+                        <p-messages [(value)]="protocolErrorMessage"></p-messages>
+                        <p-growl [(value)]="otherMessage"></p-growl>
+                        <div class="ui-g ui-g-12 ui-g-nopad">
+                            <div class="ui-g-12 ui-md-3 ui-label">
+                                <label for="databaseType">DBMS</label>
+                            </div>
+                            <div class="ui-g-12 ui-md-9">
+                                <p-dropdown [options]="databaseTypes" id="databaseType" name="databaseType" required [(ngModel)]="selectedDatabase.databaseType"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="ui-g ui-g-12 ui-g-nopad">
+                            <div class="ui-g-12 ui-md-3 ui-label">
+                                <label for="host">Host</label>
+                            </div>
+                            <div class="ui-g-12 ui-md-9">
+                                <input pInputText id="host" name="host" required
+                                       [(ngModel)]="selectedDatabase.host" />
+                            </div>
+                        </div>
+                        <div class="ui-g ui-g-12 ui-g-nopad">
+                            <div class="ui-g-12 ui-md-3 ui-label">
+                                <label for="host">Port</label>
+                            </div>
+                            <div class="ui-g-12 ui-md-9">
+                                <input pInputText id="port" name="port" [(ngModel)]="selectedDatabase.port" />
+                            </div>
+                        </div>
+                        <div class="ui-g ui-g-12 ui-g-nopad">
+                            <div class="ui-g-12 ui-md-3 ui-label">
+                                <label for="username">User</label>
+                            </div>
+                            <div class="ui-g-12 ui-md-9">
+                                <input pInputText id="username" name="username" required
+                                       [(ngModel)]="selectedDatabase.username" />
+                            </div>
+                        </div>
+                        <div class="ui-g ui-g-12 ui-g-nopad">
+                            <div class="ui-g-12 ui-md-3 ui-label">
+                                <label for="password">Password</label>
+                            </div>
+                            <div class="ui-g-12 ui-md-9">
+                                <input pInputText id="password" type="password" name="password"
+                                       [(ngModel)]="selectedDatabase.password" />
+                            </div>
+                        </div>
+                        <div class="ui-g ui-g-12 ui-g-nopad">
+                            <div class="ui-g-12 ui-md-3 ui-label">
+                                <label for="databaseName">Database</label>
+                            </div>
+                            <div class="ui-g-12 ui-md-9">
+                                <input pInputText id="databaseName" name="databaseName" required
+                                       [(ngModel)]="selectedDatabase.databaseName" />
+                            </div>
+                        </div>
+                        <div class="ui-g ui-g-12 ui-g-nopad">
+                            <div class="ui-g-12 ui-md-3 ui-label">
+                                <label for="advancedProperties">Advanced Properties</label>
+                            </div>
+                            <div class="ui-g-12 ui-md-9">
+                                <input pInputText id="advancedProperties" name="advancedProperties"
+                                       [(ngModel)]="selectedDatabase.advancedProperties" />
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-lg-12">
+                            <div class="ui-g-12 ui-md-3">
+                                <button pButton type="submit" (click)="saveProtocol()" label="Save" pButton
+                                        icon="ui-icon-save" [disabled]="!dbForm.form.valid"></button>
+                            </div>
+                            <div class="ui-g-12 ui-md-3">
+                                <button pButton type="submit" (click)="verfiyProtocol()" label="Verify" pButton
+                                        icon="ui-icon-check" [disabled]="!dbForm.form.valid"></button>
+                            </div>
+                            <div class="ui-g-12 ui-md-3">
+                                <button pButton type="submit" (click)="confirmDefault()" label="Make default" pButton
+                                        icon="ui-icon-done-all" [disabled]="!dbForm.form.valid"></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+    </p-accordionTab>   
+</p-accordion>

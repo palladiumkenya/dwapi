@@ -88,7 +88,7 @@ export class DatabaseProtocolConfigComponent implements OnInit, OnChanges, OnDes
                 },
                 () => {
                     this.otherMessage = [];
-                    this.otherMessage.push({severity: 'success', detail: 'Saved successfully '})
+                    this.otherMessage.push({severity: 'success', detail: 'Saved successfully '});
                     this.settingSavedChange.emit();
                 }
             );

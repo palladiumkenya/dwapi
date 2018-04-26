@@ -23,7 +23,7 @@ namespace Dwapi.Controller
             _extractManagerService = extractManagerService;
         }
 
-        // GET: api/ExtractManager/id/dockedtId
+        // GET: api/ExtractManager/id/docketId
         [HttpGet("{id}/{docketId}")]
         public IActionResult Get(Guid id,string docketId)
         {

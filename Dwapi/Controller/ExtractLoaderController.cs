@@ -90,7 +90,7 @@ namespace Dwapi.Controller
                         eEvent = history
                     });
 
-               throw new ArgumentException("Server could not processs your");
+               throw new ArgumentException("Server could not precess your");
             }
             catch (Exception e)
             {
