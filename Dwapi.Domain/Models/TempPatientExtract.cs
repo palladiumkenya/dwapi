@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dwapi.Domain.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,23 +10,24 @@ namespace Dwapi.Domain
     public class TempPatientExtract
     {
         [Key]
-        //[DoNotRead]
-        public Guid Id { get; set; }
+        [DoNotRead]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         public int? PatientPK { get; set; }
         public string PatientID { get; set; }
         public int? FacilityId { get; set; }
         public int? SiteCode { get; set; }
 
-        //[DoNotRead]
+        [DoNotRead]
         public DateTime DateExtracted { get; set; }
-        //[DoNotRead]
+        [DoNotRead]
         public bool CheckError { get; set; }
 
-        //[DoNotRead]
+        [DoNotRead]
         [NotMapped]
         public bool HasError { get; set; }
 
-        public string Emr { get; set; }
+        public string EMR { get; set; }
         public string Project { get; set; }
         public string FacilityName { get; set; }
         public string Gender { get; set; }
@@ -44,10 +46,10 @@ namespace Dwapi.Domain
         public string EducationLevel { get; set; }
         public DateTime? DateConfirmedHIVPositive { get; set; }
         public string PreviousARTExposure { get; set; }
-        public DateTime? DatePreviousARTStart { get; set; }
+        public DateTime? PreviousARTStartDate { get; set; }
         public string StatusAtCCC { get; set; }
         public string StatusAtPMTCT { get; set; }
         public string StatusAtTBClinic { get; set; }
-
+        public string SatelliteName { get; set; }
     }
 }

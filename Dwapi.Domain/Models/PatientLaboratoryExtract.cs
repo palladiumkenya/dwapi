@@ -6,8 +6,8 @@ using System.Text;
 
 namespace Dwapi.Domain
 {
-    [Table("PatientLaboratoryExtract")]
-    public class ClientPatientLaboratoryExtract : ClientExtract
+    //[Table("PatientLaboratoryExtract")]
+    public class PatientLaboratoryExtract : ClientExtract
     {
         [Key]
         public override Guid Id { get; set; }
@@ -18,11 +18,11 @@ namespace Dwapi.Domain
         public int? EnrollmentTest { get; set; }
         public string TestResult { get; set; }
 
-        public ClientPatientLaboratoryExtract()
+        public PatientLaboratoryExtract()
         {
         }
 
-        public ClientPatientLaboratoryExtract(int patientPk, string patientId, int siteCode, int? visitId, DateTime? orderedByDate, DateTime? reportedByDate, string testName, int? enrollmentTest, string testResult, string emr, string project)
+        public PatientLaboratoryExtract(int patientPk, string patientId, int siteCode, int? visitId, DateTime? orderedByDate, DateTime? reportedByDate, string testName, int? enrollmentTest, string testResult, string emr, string project)
         {
             PatientPK = patientPk;
             PatientID = patientId;
@@ -37,7 +37,7 @@ namespace Dwapi.Domain
             Project = project;
         }
 
-        public ClientPatientLaboratoryExtract(TempPatientLaboratoryExtract extract)
+        public PatientLaboratoryExtract(TempPatientLaboratoryExtract extract)
         {
             PatientPK = extract.PatientPK.Value;
             PatientID = extract.PatientID;

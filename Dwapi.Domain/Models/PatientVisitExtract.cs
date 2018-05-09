@@ -7,8 +7,8 @@ using System.Text;
 
 namespace Dwapi.Domain
 {
-    [Table("PatientVisitExtract")]
-    public class ClientPatientVisitExtract
+    //[Table("PatientVisitExtract")]
+    public class PatientVisitExtract
     {
         [Key]
         public Guid Id { get; set; }
@@ -56,11 +56,11 @@ namespace Dwapi.Domain
         public decimal? GestationAge { get; set; }
         public DateTime? NextAppointmentDate { get; set; }
 
-        public ClientPatientVisitExtract()
+        public PatientVisitExtract()
         {
         }
 
-        public ClientPatientVisitExtract(int patientPk, string patientId, int siteCode, int? visitId, DateTime? visitDate, string service, string visitType, int? whoStage, string wabStage, string pregnant, DateTime? lmp, DateTime? edd, decimal? height, decimal? weight, string bp, string oi, DateTime? oiDate, DateTime? substitutionFirstlineRegimenDate, string substitutionFirstlineRegimenReason, DateTime? substitutionSecondlineRegimenDate, string substitutionSecondlineRegimenReason, DateTime? secondlineRegimenChangeDate, string secondlineRegimenChangeReason, string adherence, string adherenceCategory, string familyPlanningMethod, string pwP, decimal? gestationAge, DateTime? nextAppointmentDate, string emr, string project)
+        public PatientVisitExtract(int patientPk, string patientId, int siteCode, int? visitId, DateTime? visitDate, string service, string visitType, int? whoStage, string wabStage, string pregnant, DateTime? lmp, DateTime? edd, decimal? height, decimal? weight, string bp, string oi, DateTime? oiDate, DateTime? substitutionFirstlineRegimenDate, string substitutionFirstlineRegimenReason, DateTime? substitutionSecondlineRegimenDate, string substitutionSecondlineRegimenReason, DateTime? secondlineRegimenChangeDate, string secondlineRegimenChangeReason, string adherence, string adherenceCategory, string familyPlanningMethod, string pwP, decimal? gestationAge, DateTime? nextAppointmentDate, string emr, string project)
         {
             PatientPK = patientPk;
             PatientID = patientId;
@@ -95,7 +95,7 @@ namespace Dwapi.Domain
             Project = project;
         }
 
-        public ClientPatientVisitExtract(TempPatientVisitExtract extract)
+        public PatientVisitExtract(TempPatientVisitExtract extract)
         {
             PatientPK = extract.PatientPK.Value;
             PatientID = extract.PatientID;

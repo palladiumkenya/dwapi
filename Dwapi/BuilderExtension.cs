@@ -5,13 +5,17 @@ using Dwapi.ExtractsManagement.Core.ExtractValidators;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NPoco;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire.MySql.Core;
+using System.Data;
 
 namespace Dwapi
 {
@@ -19,6 +23,21 @@ namespace Dwapi
     {
         public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
+            var mysqlconnectionString = configuration["connectionStrings:MysqlDwapiConnection"];
+            
+            services.AddDbContext<SettingsManagement.Infrastructure.SettingsContext>(e => e.UseMySql(mysqlconnectionString, action =>
+            {
+                action.CommandTimeout(3600);
+            }));
+
+            services.AddDbContext<ExtractsContext>(opt =>
+            {
+                opt.UseMySql(mysqlconnectionString, act =>
+                {
+                    act.CommandTimeout(3600);
+                });
+            });
+
             services.AddScoped(typeof(IGenericExtractRepository<>), typeof(GenericExtractRepository<>));
             services.AddScoped<IExtractUnitOfWork>(c => new ExtractUnitOfWork(c.GetRequiredService<ExtractsContext>()));
             return services;
@@ -26,7 +45,17 @@ namespace Dwapi
 
         public static IServiceCollection AddHangfireIntegration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddHangfire(c => c.UseSqlServerStorage(configuration.GetConnectionString("DwapiConnection")));
+            services.AddHangfire(c => c.UseStorage(new MySqlStorage(configuration.GetConnectionString("MysqlDwapiConnection"), new MySqlStorageOptions
+            {
+                TransactionIsolationLevel = IsolationLevel.ReadCommitted,
+                QueuePollInterval = TimeSpan.FromSeconds(15),
+                JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                PrepareSchemaIfNecessary = true,
+                DashboardJobListLimit = 50000,
+                TransactionTimeout = TimeSpan.FromMinutes(1),
+            })));
+
             services.AddScoped<IBackgroundJobInit, BackgroundJobInit>();
             return services;
         }

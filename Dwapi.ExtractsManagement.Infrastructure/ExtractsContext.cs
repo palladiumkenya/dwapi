@@ -11,26 +11,25 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 {
     public class ExtractsContext : BaseContext
     {
-        public DbSet<Project> Projects { get; set; }
-        public DbSet<PsmartStage> PsmartStages { get; set; }
-        public DbSet<ExtractHistory> ExtractHistories { get; set; }
-        public DbSet<ExtractSetting> ExtractSettings { get; set; }
-        public DbSet<ClientPatientBaselinesExtract> ClientPatientBaselinesExtracts { get; set; }
-        public DbSet<ClientPatientExtract> ClientPatientExtracts { get; set; }
-        public DbSet<ClientPatientLaboratoryExtract> ClientPatientLaboratoryExtracts { get; set; }
-        public DbSet<ClientPatientStatusExtract> ClientPatientStatusExtracts { get; set; }
-        public DbSet<ClientPatientVisitExtract> ClientPatientVisitExtracts { get; set; }
-        public DbSet<ClientPatientArtExtract> ClientPatientArtExtracts { get; set; }
-        public DbSet<ClientPatientPharmacyExtract> ClientPatientPharmacyExtracts { get; set; }
-        public DbSet<TempPatientArtExtract> TempPatientArtExtracts { get; set; }
-        public DbSet<TempPatientBaselinesExtract> TempPatientBaselinesExtracts { get; set; }
-        public DbSet<TempPatientExtract> TempPatientExtracts { get; set; }
-        public DbSet<TempPatientLaboratoryExtract> TempPatientLaboratoryExtracts { get; set; }
-        public DbSet<TempPatientPharmacyExtract> TempPatientPharmacyExtracts { get; set; }
-        public DbSet<TempPatientStatusExtract> TempPatientStatusExtracts { get; set; }
-        public DbSet<TempPatientVisitExtract> TempPatientVisitExtracts { get; set; }
-        public DbSet<ValidationError> ValidationErrors { get; set; }
-        public DbSet<Validator> Validators { get; set; }
+        // ----------------------------------------------------------------------------------------
+        //public DbSet<ClientPatientBaselinesExtract> ClientPatientBaselinesExtract { get; set; }
+        //public DbSet<ClientPatientExtract> ClientPatientExtract { get; set; }
+        //public DbSet<ClientPatientLaboratoryExtract> ClientPatientLaboratoryExtract { get; set; }
+        //public DbSet<ClientPatientStatusExtract> ClientPatientStatusExtract { get; set; }
+        //public DbSet<ClientPatientVisitExtract> ClientPatientVisitExtract { get; set; }
+        //public DbSet<ClientPatientArtExtract> ClientPatientArtExtract { get; set; }
+        //public DbSet<ClientPatientPharmacyExtract> ClientPatientPharmacyExtract { get; set; }
+        //public DbSet<TempPatientArtExtract> TempPatientArtExtract { get; set; }
+        //public DbSet<TempPatientBaselinesExtract> TempPatientBaselinesExtract { get; set; }
+        //public DbSet<TempPatientExtract> TempPatientExtract { get; set; }
+        //public DbSet<TempPatientLaboratoryExtract> TempPatientLaboratoryExtract { get; set; }
+        //public DbSet<TempPatientPharmacyExtract> TempPatientPharmacyExtract { get; set; }
+        //public DbSet<TempPatientStatusExtract> TempPatientStatusExtract { get; set; }
+        //public DbSet<TempPatientVisitExtract> TempPatientVisitExtract { get; set; }
+        //public DbSet<ValidationError> ValidationError { get; set; }
+        //public DbSet<Validator> Validator { get; set; }
+
+        // ------------------------------------------------------------------------------------
 
         //public DbSet<TempPatientArtExtractError> TempPatientArtExtractErrors { get; set; }
         //public DbSet<TempPatientArtExtractErrorSummary> TempPatientArtExtractErrorSummaries { get; set; }
@@ -50,15 +49,80 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         /// <summary>
         /// //  Reference Table Only
         /// </summary>
-        public DbSet<Extract> Extracts { get; set; }
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.Entity<Project>().ToTable(nameof(Project).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<PsmartStage>().ToTable(nameof(PsmartStage).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<ExtractHistory>().ToTable(nameof(ExtractHistory).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<ExtractSetting>().ToTable(nameof(ExtractSetting).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<Extract>().ToTable(nameof(Extract).ToLower())
+                .HasKey(e => e.Id);
+
+            //-------------DWH EXTRACTS
+
+            modelBuilder.Entity<PatientExtract>().ToTable(nameof(PatientExtract).ToLower())
+                .HasKey(e => new { e.PatientPK, e.SiteCode });
+
+            modelBuilder.Entity<PatientArtExtract>().ToTable(nameof(PatientArtExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<PatientBaselinesExtract>().ToTable(nameof(PatientBaselinesExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<PatientLaboratoryExtract>().ToTable(nameof(PatientLaboratoryExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<PatientPharmacyExtract>().ToTable(nameof(PatientPharmacyExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<PatientStatusExtract>().ToTable(nameof(PatientStatusExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<PatientVisitExtract>().ToTable(nameof(PatientVisitExtract).ToLower())
+                .HasKey(e => e.Id);
+
+
+            // ----------------TEMP----
+
+            modelBuilder.Entity<TempPatientExtract>().ToTable(nameof(TempPatientExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<TempPatientArtExtract>().ToTable(nameof(TempPatientArtExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<TempPatientBaselinesExtract>().ToTable(nameof(TempPatientBaselinesExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<TempPatientPharmacyExtract>().ToTable(nameof(TempPatientPharmacyExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<TempPatientLaboratoryExtract>().ToTable(nameof(TempPatientLaboratoryExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<TempPatientStatusExtract>().ToTable(nameof(TempPatientStatusExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<TempPatientVisitExtract>().ToTable(nameof(TempPatientVisitExtract).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<Validator>().ToTable(nameof(Validator).ToLower())
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<ValidationError>().ToTable(nameof(ValidationError).ToLower())
+                .HasKey(e => e.Id);
         }
 
         public override void EnsureSeeded()

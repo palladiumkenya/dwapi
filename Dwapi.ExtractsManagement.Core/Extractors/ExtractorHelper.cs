@@ -1,7 +1,9 @@
 ﻿using Dwapi.SharedKernel.Model;
+using Microsoft.EntityFrameworkCore;
 using NPoco;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
 
@@ -9,7 +11,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
 {
     internal static class ExtractorHelper
     {
-        internal static Func<IDatabase> NPocoDataFactory(DbProtocol dbProtocol)
+        internal static Func<IDatabase> NPocoEmrDataFactory(DbProtocol dbProtocol)
         {
             Func<IDatabase> _databaseFactory;
             switch (dbProtocol.DatabaseType)
@@ -29,5 +31,17 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
             }
             return _databaseFactory;
         }
+
+        internal static Func<IDatabase> NpocoDwapiDataFactory(DbConnection dbConnection)
+        {
+            Func<IDatabase> _databaseFactory;
+            _databaseFactory = () 
+                => new Database(dbConnection, NPoco.DatabaseType.SqlServer2012) { CommandTimeout = 3600};
+            return _databaseFactory;
+        }
+
+        internal static DbConnection GetDbConnection(DbProtocol dbProtocol)
+            => new SqlConnection(dbProtocol.GetConnectionString());
+
     }
 }

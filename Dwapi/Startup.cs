@@ -35,6 +35,7 @@ namespace Dwapi
     public class Startup
     {
         public static IConfiguration Configuration;
+        public IServiceCollection Service;
 
         public Startup(IHostingEnvironment env)
         {
@@ -59,13 +60,13 @@ namespace Dwapi
             
             services.AddMediatR(assemblies);
             services.AddDatabase(Configuration);
-            services.AddHangfireIntegration(Configuration);
+            
             services.AddExtractorAdaptor();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
                 {
-                    Title = "Dwapi API",
+                    Title = "Dwapi API Test",
                     Version = "v1",
                     Description = "Dwapi API. Exposes endpoints used in datawarehouse operations"
                 });
@@ -78,9 +79,12 @@ namespace Dwapi
               .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             var connectionString = Startup.Configuration["connectionStrings:DwapiConnection"];
-            services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
-            services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+            
 
+            //services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
+            //services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+
+            
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
             services.AddScoped<IEmrSystemRepository, EmrSystemRepository>();
             services.AddScoped<IDocketRepository, DocketRepository>();
@@ -97,6 +101,7 @@ namespace Dwapi
             services.AddScoped<IPsmartExtractService, PsmartExtractService>();
             services.AddScoped<IPsmartSourceReader, PsmartSourceReader>();
             services.AddScoped<IPsmartSendService, PsmartSendService>();
+            services.AddHangfireIntegration(Configuration);
 
         }
 
@@ -128,12 +133,15 @@ namespace Dwapi
             app.UseStaticFiles()
                 .UseSwaggerUi();
             
-            app.UseHangfire();
+            
 
             Log.Debug(@"initializing Database...");
 
-            EnsureMigrationOfContext<SettingsContext>(serviceProvider);
-            EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
+            //EnsureMigrationOfContext<SettingsContext>(serviceProvider);
+            //EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
+
+            
+            app.UseHangfire();
 
             Log.Debug(@"initializing Database [Complete]");
             Log.Debug(@"---------------------------------------------------------------------------------------------------");

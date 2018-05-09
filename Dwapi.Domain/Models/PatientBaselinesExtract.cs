@@ -6,8 +6,7 @@ using System.Text;
 
 namespace Dwapi.Domain
 {
-    [Table("PatientBaselinesExtract")]
-    public class ClientPatientBaselinesExtract
+    public class PatientBaselinesExtract
     {
         [Key]
         public Guid Id { get; set; }
@@ -43,11 +42,11 @@ namespace Dwapi.Domain
         public int? m6CD4 { get; set; }
         public DateTime? m6CD4Date { get; set; }
 
-        public ClientPatientBaselinesExtract()
+        public PatientBaselinesExtract()
         {
         }
 
-        public ClientPatientBaselinesExtract(int patientPk, string patientId, int siteCode, int? bCd4, DateTime? bCd4Date, int? bWab, DateTime? bWabDate, int? bWho, DateTime? bWhoDate, int? eWab, DateTime? eWabDate, int? eCd4, DateTime? eCd4Date, int? eWho, DateTime? eWhoDate, int? lastWho, DateTime? lastWhoDate, int? lastCd4, DateTime? lastCd4Date, int? lastWab, DateTime? lastWabDate, int? m12Cd4, DateTime? m12Cd4Date, int? m6Cd4, DateTime? m6Cd4Date, string emr, string project)
+        public PatientBaselinesExtract(int patientPk, string patientId, int siteCode, int? bCd4, DateTime? bCd4Date, int? bWab, DateTime? bWabDate, int? bWho, DateTime? bWhoDate, int? eWab, DateTime? eWabDate, int? eCd4, DateTime? eCd4Date, int? eWho, DateTime? eWhoDate, int? lastWho, DateTime? lastWhoDate, int? lastCd4, DateTime? lastCd4Date, int? lastWab, DateTime? lastWabDate, int? m12Cd4, DateTime? m12Cd4Date, int? m6Cd4, DateTime? m6Cd4Date, string emr, string project)
         {
             PatientPK = patientPk;
             PatientID = patientId;
@@ -78,7 +77,7 @@ namespace Dwapi.Domain
             Project = project;
         }
 
-        public ClientPatientBaselinesExtract(TempPatientBaselinesExtract extract)
+        public PatientBaselinesExtract(TempPatientBaselinesExtract extract)
         {
             PatientPK = extract.PatientPK.Value;
             PatientID = extract.PatientID;

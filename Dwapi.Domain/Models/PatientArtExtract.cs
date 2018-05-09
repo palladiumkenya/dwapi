@@ -7,8 +7,8 @@ using System.Text;
 
 namespace Dwapi.Domain
 {
-    [Table("PatientArtExtract")]
-    public class ClientPatientArtExtract
+    //[Table("PatientArtExtract")]
+    public class PatientArtExtract
     {
         [Key]
         public Guid Id { get; set; }
@@ -52,11 +52,11 @@ namespace Dwapi.Domain
         public string ExitReason { get; set; }
         public DateTime? ExitDate { get; set; }
 
-        public ClientPatientArtExtract()
+        public PatientArtExtract()
         {
         }
 
-        public ClientPatientArtExtract(int patientPk, string patientId, int siteCode, DateTime? dob, decimal? ageEnrollment, decimal? ageArtStart,
+        public PatientArtExtract(int patientPk, string patientId, int siteCode, DateTime? dob, decimal? ageEnrollment, decimal? ageArtStart,
             decimal? ageLastVisit, DateTime? registrationDate, string gender, string patientSource,
             DateTime? startArtDate, DateTime? previousArtStartDate, string previousArtRegimen,
             DateTime? startArtAtThisFacility, string startRegimen, string startRegimenLine, DateTime? lastArtDate,
@@ -92,7 +92,7 @@ namespace Dwapi.Domain
             Project = project;
         }
 
-        public ClientPatientArtExtract(TempPatientArtExtract extract)
+        public PatientArtExtract(TempPatientArtExtract extract)
         {
             PatientPK = extract.PatientPK.Value;
             PatientID = extract.PatientID;

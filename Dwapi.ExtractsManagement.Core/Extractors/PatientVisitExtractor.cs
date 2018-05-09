@@ -26,7 +26,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
         {
             try
             {
-                _databaseFactory = ExtractorHelper.NPocoDataFactory(dbProtocol);
+                _databaseFactory = ExtractorHelper.NPocoEmrDataFactory(dbProtocol);
                 IList<TempPatientVisitExtract> tempPatientVisitExtracts;
 
                 var fetchingStart = DateTime.Now;

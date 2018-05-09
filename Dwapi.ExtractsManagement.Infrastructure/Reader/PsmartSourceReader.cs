@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Text;
 using AutoMapper;
 using AutoMapper.Data;
@@ -95,7 +94,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
             var connectionString = databaseProtocol.GetConnectionString();
 
             if (databaseProtocol.DatabaseType == DatabaseType.MicrosoftSQL)
-                return new SqlConnection(connectionString);
+                return new System.Data.SqlClient.SqlConnection(connectionString);
 
             if (databaseProtocol.DatabaseType == DatabaseType.MySQL)
                 return new MySqlConnection(connectionString);
