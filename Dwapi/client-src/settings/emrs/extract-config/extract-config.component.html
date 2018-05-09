@@ -34,8 +34,8 @@
             </p-footer>
         </p-dialog>
     </p-accordionTab>
-    <p-accordionTab header="National Data Warehouse" *ngIf="!selectedEmr.isMiddleware">
-        <p-dataTable [value]="" selectionMode="single" [(selection)]="selectedExtract" dataKey="id">
+    <p-accordionTab header="National Data Warehouse" >
+        <p-dataTable [value]="dwhExtracts" selectionMode="single" [(selection)]="selectedExtract" dataKey="id">
             <p-header>Extracts Settings</p-header>
             <p-column field="name" header="Name"></p-column>
             <p-column field="display" header="Display"></p-column>
@@ -47,7 +47,7 @@
                 </ng-template>
             </p-column>
         </p-dataTable>
-        <p-dialog header="PSmart Extract" [(visible)]="displayDialog" [width]="500" [responsive]="true" showEffect="fade" [modal]="true"
+        <p-dialog header="DWH Extract" [(visible)]="displayDialog" [width]="500" [responsive]="true" showEffect="fade" [modal]="true"
             [responsive]="true">
             <form #emrForm="ngForm" novalidate>
                 <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="extractDialog">

@@ -66,6 +66,25 @@ export class ExtractConfigComponent implements OnInit, OnChanges, OnDestroy {
                     this.loadingData = false;
                 }
             );
+
+            this.loadingData = true;
+
+
+        this.get$ = this._emrConfigService.getAll(this.selectedEmr.id, 'PSMART')
+            .subscribe(
+                p => {
+                    this.extracts = p;
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
+                    this.loadingData = false;
+                    this.extracts = null;
+                },
+                () => {
+                    this.loadingData = false;
+                }
+            );
     }
 
     public editExtract(extract: Extract): void {

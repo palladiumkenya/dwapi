@@ -1,3 +1,10 @@
 Id|Display|DocketId|EmrSystemId|ExtractSql|Destination|IsPriority|Name|Rank
 a6222210-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a62216ee-0e85-11e8-ba89-0ed5f89f718b|select [Id],[shr],[date_created],[status],[status_date],[uuid] FROM [psmart_store] WHERE UPPER(Status) = 'PENDING'|PSmartStage|1|pSmart|1.00
 a6226eb4-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a6221856-0e85-11e8-ba89-0ed5f89f718b|select id,shr,date_created,status,status_date,uuid FROM psmart_store where upper(status) = 'PENDING'|PSmartStage|1|pSmart|1.00
+329bfbf4-d404-4dfd-88eb-6fb398c64249|All Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"
+SELECT 
+	PatientID, PatientPK, FacilityID, SiteCode, FacilityName, SatelliteName, Gender, DOB, RegistrationDate, RegistrationAtCCC, RegistrationAtPMTCT, RegistrationAtTBClinic, PatientSource, Region, District, Village, 
+	ContactRelation, LastVisit, MaritalStatus, EducationLevel, DateConfirmedHIVPositive, PreviousARTExposure, PreviousARTStartDate, StatusAtCCC, StatusAtPMTCT, StatusAtTBClinic, 'IQCare' AS EMR, 
+	'Kenya HMIS II' AS Project, CAST(GETDATE() AS DATE) AS DateExtracted,newid() as ID
+FROM            
+	tmp_PatientMaster AS a WHERE a.RegistrationAtCCC IS NOT NULL"|dwhstage|1|PatientExtract|1.00|
