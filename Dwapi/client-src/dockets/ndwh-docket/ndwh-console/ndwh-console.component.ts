@@ -1,15 +1,15 @@
 import { Component, OnInit, OnChanges, OnDestroy, SimpleChange, Input } from '@angular/core';
-import {Extract} from '../../settings/model/extract';
-import {EmrSystem} from '../../settings/model/emr-system';
+import {Extract} from '../../../settings/model/extract';
+import {EmrSystem} from '../../../settings/model/emr-system';
 import {ConfirmationService, Message} from 'primeng/api';
-import {NdwhExtractService} from '../services/ndwh-extract.service';
+import {NdwhExtractService} from '../../services/ndwh-extract.service';
 import {Subscription} from 'rxjs/Subscription';
-import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
-import {RegistryConfigService} from '../../settings/services/registry-config.service';
-import {CentralRegistry} from '../../settings/model/central-registry';
-import {NdwhSenderService} from '../services/ndwh-sender.service';
-import {SendPackage} from '../../settings/model/send-package';
-import {SendResponse} from '../../settings/model/send-response';
+import {ExtractDatabaseProtocol} from '../../../settings/model/extract-protocol';
+import {RegistryConfigService} from '../../../settings/services/registry-config.service';
+import {CentralRegistry} from '../../../settings/model/central-registry';
+import {NdwhSenderService} from '../../services/ndwh-sender.service';
+import {SendPackage} from '../../../settings/model/send-package';
+import {SendResponse} from '../../../settings/model/send-response';
 
 @Component({
   selector: 'liveapp-ndwh-console',

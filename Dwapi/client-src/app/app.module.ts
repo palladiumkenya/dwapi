@@ -96,13 +96,16 @@ import { RestProtocolConfigComponent } from '../settings/emrs/rest-protocol-conf
 import {ProtocolConfigService} from '../settings/services/protocol-config.service';
 import { ExtractConfigComponent } from '../settings/emrs/extract-config/extract-config.component';
 import {ExtractConfigService} from '../settings/services/extract-config.service';
-import { PsmartConsoleComponent } from '../dashboard/psmart-console/psmart-console.component';
-import {PsmartExtractService} from '../dashboard/services/psmart-extract.service';
-import { PsmartMiddlewareConsoleComponent } from '../dashboard/psmart-middleware-console/psmart-middleware-console.component';
-import {PsmartSenderService} from '../dashboard/services/psmart-sender.service';
-import { NdwhConsoleComponent } from '../dashboard/ndwh-console/ndwh-console.component';
-import { NdwhExtractService } from '../dashboard/services/ndwh-extract.service';
-import { NdwhSenderService } from '../dashboard/services/ndwh-sender.service';
+import { PsmartConsoleComponent } from '../dockets/psmart-docket/psmart-console/psmart-console.component';
+import {PsmartExtractService} from '../dockets/services/psmart-extract.service';
+import { PsmartMiddlewareConsoleComponent } from '../dockets/psmart-docket/psmart-middleware-console/psmart-middleware-console.component';
+import {PsmartSenderService} from '../dockets/services/psmart-sender.service';
+import { NdwhConsoleComponent } from '../dockets/ndwh-docket/ndwh-console/ndwh-console.component';
+import { NdwhExtractService } from '../dockets/services/ndwh-extract.service';
+import { NdwhSenderService } from '../dockets/services/ndwh-sender.service';
+import { NdwhDocketComponent } from '../dockets/ndwh-docket/ndwh-docket.component';
+import { PsmartDocketComponent } from '../dockets/psmart-docket/psmart-docket.component';
+import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
 
 @NgModule({
     imports: [
@@ -197,7 +200,10 @@ import { NdwhSenderService } from '../dashboard/services/ndwh-sender.service';
         ExtractConfigComponent,
         PsmartConsoleComponent,
         PsmartMiddlewareConsoleComponent,
-        NdwhConsoleComponent
+        NdwhConsoleComponent,
+        NdwhDocketComponent,
+        PsmartDocketComponent,
+        CbsDocketComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,

@@ -1,14 +1,14 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange} from '@angular/core';
-import {Extract} from '../../settings/model/extract';
-import {EmrSystem} from '../../settings/model/emr-system';
+import {Extract} from '../../../settings/model/extract';
+import {EmrSystem} from '../../../settings/model/emr-system';
 import {ConfirmationService, Message} from 'primeng/api';
-import {PsmartExtractService} from '../services/psmart-extract.service';
+import {PsmartExtractService} from '../../services/psmart-extract.service';
 import {Subscription} from 'rxjs/Subscription';
-import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
-import {PsmartSenderService} from '../services/psmart-sender.service';
-import {RegistryConfigService} from '../../settings/services/registry-config.service';
-import {CentralRegistry} from '../../settings/model/central-registry';
-import {SendPackage} from '../../settings/model/send-package';
+import {ExtractDatabaseProtocol} from '../../../settings/model/extract-protocol';
+import {PsmartSenderService} from '../../services/psmart-sender.service';
+import {RegistryConfigService} from '../../../settings/services/registry-config.service';
+import {CentralRegistry} from '../../../settings/model/central-registry';
+import {SendPackage} from '../../../settings/model/send-package';
 
 @Component({
   selector: 'liveapp-psmart-middleware-console',
