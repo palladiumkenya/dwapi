@@ -35,6 +35,10 @@
     <None Remove="Scripts\0\027_AM_Create_ValidatorTable.sql" />
     <None Remove="Scripts\0\028_AM_Create_ValidationErrorTable.sql" />
     <None Remove="Scripts\0\029_AM_Insert_Dockets.sql" />
+    <None Remove="Scripts\0\030_AM_Insert_CentralRegistry.sql" />
+    <None Remove="Scripts\0\031_AM_Insert_EmrSystems.sql" />
+    <None Remove="Scripts\0\032_AM_Insert_DatabaseProtocals.sql" />
+    <None Remove="Scripts\0\033_AM_Insert_Extracts.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,7 +70,11 @@
     <EmbeddedResource Include="Scripts\0\026_AM_Create_TempPatientVisitExtractTable.sql" />
     <EmbeddedResource Include="Scripts\0\027_AM_Create_ValidatorTable.sql" />
     <EmbeddedResource Include="Scripts\0\028_AM_Create_ValidationErrorTable.sql" />
+    <EmbeddedResource Include="Scripts\0\030_AM_Insert_CentralRegistry.sql" />
+    <EmbeddedResource Include="Scripts\0\032_AM_Insert_DatabaseProtocals.sql" />
     <EmbeddedResource Include="Scripts\0\029_AM_Insert_Dockets.sql" />
+    <EmbeddedResource Include="Scripts\0\031_AM_Insert_EmrSystems.sql" />
+    <EmbeddedResource Include="Scripts\0\033_AM_Insert_Extracts.sql" />
   </ItemGroup>
 
   <ItemGroup>

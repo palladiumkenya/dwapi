@@ -1,0 +1,1 @@
+INSERT INTO centralregistry (Id, AuthToken, Name, SubscriberId, Url) values ('cf167292-bb8f-4cdd-ba6d-ac0a83fbde95', '268DFA3EB92BC53FAE94A048E23112A1', 'Card Registry', 'DWAPI', 'http://52.178.24.227:8026');

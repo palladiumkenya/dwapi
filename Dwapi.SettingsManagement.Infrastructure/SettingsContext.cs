@@ -36,5 +36,37 @@ namespace Dwapi.SettingsManagement.Infrastructure
             modelBuilder.Entity<Extract>().ToTable(nameof(Extract).ToLower())
                 .HasKey(e => e.Id);
         }
+
+        public DbSet<CentralRegistry> CentralRegistries { get; set; }
+
+        public DbSet<EmrSystem> EmrSystems { get; set; }
+        public DbSet<DatabaseProtocol> DatabaseProtocols { get; set; }
+        public DbSet<RestProtocol> RestProtocols { get; set; }
+
+        public DbSet<Docket> Dockets { get; set; }
+        public DbSet<Extract> Extracts { get; set; }
+
+        public override void EnsureSeeded()
+        {
+            var csvConfig = new CsvConfiguration
+            {
+                Delimiter = "|",
+                SkipEmptyRecords = true,
+                TrimFields = true,
+                TrimHeaders = true,
+                WillThrowOnMissingField = false
+            };
+            SeederConfiguration.ResetConfiguration(csvConfig, null, typeof(SettingsContext).GetTypeInfo().Assembly);
+
+            CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
+            EmrSystems.SeedDbSetIfEmpty($"{nameof(EmrSystems)}");
+            DatabaseProtocols.SeedDbSetIfEmpty($"{nameof(DatabaseProtocols)}");
+            Dockets.SeedDbSetIfEmpty($"{nameof(Dockets)}");
+            Extracts.SeedDbSetIfEmpty($"{nameof(Extracts)}");
+
+            SaveChanges();
+        }
+
+
     }
 }

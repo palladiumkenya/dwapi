@@ -1,0 +1,1 @@
+﻿INSERT INTO emrsystem (Id, IsDefault, IsMiddleware, Name, Version) values ('a62216ee-0e85-11e8-ba89-0ed5f89f718b', 1, 0, 'IQCare', 1), ('67bce17d-bcb8-4a50-8959-b559cd078f23', 0, 0, 'KenyaEmr', 1);
