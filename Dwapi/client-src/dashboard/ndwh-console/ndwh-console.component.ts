@@ -1,32 +1,32 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange} from '@angular/core';
+import { Component, OnInit, OnChanges, OnDestroy, SimpleChange, Input } from '@angular/core';
 import {Extract} from '../../settings/model/extract';
 import {EmrSystem} from '../../settings/model/emr-system';
 import {ConfirmationService, Message} from 'primeng/api';
-import {PsmartExtractService} from '../services/psmart-extract.service';
+import {NdwhExtractService} from '../services/ndwh-extract.service';
 import {Subscription} from 'rxjs/Subscription';
 import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
 import {RegistryConfigService} from '../../settings/services/registry-config.service';
 import {CentralRegistry} from '../../settings/model/central-registry';
-import {PsmartSenderService} from '../services/psmart-sender.service';
+import {NdwhSenderService} from '../services/ndwh-sender.service';
 import {SendPackage} from '../../settings/model/send-package';
 import {SendResponse} from '../../settings/model/send-response';
 
 @Component({
-  selector: 'liveapp-psmart-console',
-  templateUrl: './psmart-console.component.html',
-  styleUrls: ['./psmart-console.component.scss']
+  selector: 'liveapp-ndwh-console',
+  templateUrl: './ndwh-console.component.html',
+  styleUrls: ['./ndwh-console.component.scss']
 })
-export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
+export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
-    @Input() emr: EmrSystem;
+  @Input() emr: EmrSystem;
 
     public emrName: string;
     public emrVersion: string;
 
     private _confirmationService: ConfirmationService;
-    private _psmartExtractService: PsmartExtractService;
+    private _ndwhExtractService: NdwhExtractService;
     private _registryConfigService: RegistryConfigService;
-    private _psmartSenderService: PsmartSenderService;
+    private _ndwhSenderService: NdwhSenderService;
 
     public load$: Subscription;
     public loadRegistry$: Subscription;
@@ -47,13 +47,13 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public centralRegistry: CentralRegistry;
     public sendResponse: SendResponse;
 
-    public constructor(confirmationService: ConfirmationService, emrConfigService: PsmartExtractService,
+    public constructor(confirmationService: ConfirmationService, emrConfigService: NdwhExtractService,
                        registryConfigService: RegistryConfigService,
-                       psmartSenderService: PsmartSenderService) {
+                       psmartSenderService: NdwhSenderService) {
         this._confirmationService = confirmationService;
-        this._psmartExtractService = emrConfigService;
+        this._ndwhExtractService = emrConfigService;
         this._registryConfigService = registryConfigService;
-        this._psmartSenderService = psmartSenderService;
+        this._ndwhSenderService = psmartSenderService;
     }
 
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -71,7 +71,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.canLoadFromEmr = true;
             this.loadingData = true;
             this.recordCount = 0;
-            this.extracts = this.emr.extracts.filter(x => x.docketId === 'PSMART');
+            this.extracts = this.emr.extracts.filter(x => x.docketId === 'NDWH');
             this.updateEvent();
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
@@ -84,7 +84,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadFromEmr(): void {
         this.errorMessage = [];
         console.log(this.emr);
-        this.load$ = this._psmartExtractService.load(this.getExtractProtocols(this.emr))
+        this.load$ = this._ndwhExtractService.load(this.getExtractProtocols(this.emr))
             .subscribe(
                 p => {
                     // this.isVerfied = p;
@@ -120,7 +120,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public updateEvent(): void {
 
         this.extracts.forEach((extract) => {
-            this.getStatus$ = this._psmartExtractService.getStatus(extract.id)
+            this.getStatus$ = this._ndwhExtractService.getStatus(extract.id)
                 .subscribe(
                     p => {
                         extract.extractEvent = p;
@@ -145,7 +145,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public send(): void {
         this.errorMessage = [];
-        this.send$ = this._psmartSenderService.send(this.getSendPackage('PSMART'))
+        this.send$ = this._ndwhSenderService.send(this.getSendPackage('PSMART'))
             .subscribe(
                 p => {
                     this.sendResponse = p;
@@ -203,4 +203,5 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.send$.unsubscribe();
         }
     }
+
 }

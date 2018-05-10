@@ -100,6 +100,9 @@ import { PsmartConsoleComponent } from '../dashboard/psmart-console/psmart-conso
 import {PsmartExtractService} from '../dashboard/services/psmart-extract.service';
 import { PsmartMiddlewareConsoleComponent } from '../dashboard/psmart-middleware-console/psmart-middleware-console.component';
 import {PsmartSenderService} from '../dashboard/services/psmart-sender.service';
+import { NdwhConsoleComponent } from '../dashboard/ndwh-console/ndwh-console.component';
+import { NdwhExtractService } from '../dashboard/services/ndwh-extract.service';
+import { NdwhSenderService } from '../dashboard/services/ndwh-sender.service';
 
 @NgModule({
     imports: [
@@ -193,12 +196,13 @@ import {PsmartSenderService} from '../dashboard/services/psmart-sender.service';
         RestProtocolConfigComponent,
         ExtractConfigComponent,
         PsmartConsoleComponent,
-        PsmartMiddlewareConsoleComponent
+        PsmartMiddlewareConsoleComponent,
+        NdwhConsoleComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
         MessageService, ConfirmationService, RegistryConfigService, EmrConfigService, ProtocolConfigService,
-        ExtractConfigService, PsmartExtractService , PsmartSenderService
+        ExtractConfigService, PsmartExtractService , PsmartSenderService, NdwhExtractService, NdwhSenderService
     ],
     bootstrap: [AppComponent]
 })
