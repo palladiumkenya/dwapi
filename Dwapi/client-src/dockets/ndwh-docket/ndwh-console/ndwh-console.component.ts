@@ -10,6 +10,8 @@ import {CentralRegistry} from '../../../settings/model/central-registry';
 import {NdwhSenderService} from '../../services/ndwh-sender.service';
 import {SendPackage} from '../../../settings/model/send-package';
 import {SendResponse} from '../../../settings/model/send-response';
+import { LoadFromEmrCommand } from '../../../settings/model/load-from-emr-command';
+import { DwhExtract } from '../../../settings/model/dwh-extract';
 
 @Component({
   selector: 'liveapp-ndwh-console',
@@ -35,6 +37,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public loadingData: boolean;
     public extracts: Extract[] = [];
+    private dwhExtract: DwhExtract;
+    private dwhExtracts: DwhExtract[] = [];
     public recordCount: number;
 
     public canLoadFromEmr: boolean;
@@ -44,6 +48,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public otherMessage: Message[];
     private _extractDbProtocol: ExtractDatabaseProtocol;
     private _extractDbProtocols: ExtractDatabaseProtocol[];
+    private _extractLoadCommand: LoadFromEmrCommand;
     public centralRegistry: CentralRegistry;
     public sendResponse: SendResponse;
 
@@ -84,7 +89,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadFromEmr(): void {
         this.errorMessage = [];
         console.log(this.emr);
-        this.load$ = this._ndwhExtractService.load(this.getExtractProtocols(this.emr))
+        this.load$ = this._ndwhExtractService.load(this.generateExtractLoadCommand(this.emr))
             .subscribe(
                 p => {
                     // this.isVerfied = p;
@@ -181,6 +186,31 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             );
         });
         return this._extractDbProtocols;
+    }
+
+    private generateExtractLoadCommand(currentEmr: EmrSystem): LoadFromEmrCommand {
+        this.extracts.forEach((e) => {
+            this.dwhExtract = {
+                destination: e.destination,
+                display: e.display,
+                docketId: e.docketId,
+                emr: e.emr,
+                emrSystemId: e.emrSystemId,
+                extractEvent: e.extractEvent,
+                extractName: e.name,
+                id: e.id,
+                isPriority: e.isPriority,
+                rank: e.rank,
+                sqlquery: e.extractSql
+            };
+            this.dwhExtracts.push(this.dwhExtract);
+        });
+        this._extractLoadCommand =  {
+            databaseProtocol: currentEmr.databaseProtocols[0],
+            extracts: this.dwhExtracts
+        };
+        console.log(this._extractLoadCommand);
+        return this._extractLoadCommand;
     }
 
     private getSendPackage(docketId: string): SendPackage {

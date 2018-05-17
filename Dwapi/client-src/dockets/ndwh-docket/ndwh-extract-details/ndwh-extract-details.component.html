@@ -1,0 +1,26 @@
+<div class="ui-g">
+  <div class="ui-g-2">
+      <div class="card">
+          <div class="ui-g" style="width:250px;margin-bottom:10px">
+              <div class="ui-g-12"><p-radioButton name="group2" value="Option 1" label="Option 1" [(ngModel)]="val2" inputId="preopt1"></p-radioButton></div>
+              <div class="ui-g-12"><p-radioButton name="group2" value="Option 2" label="Option 2" [(ngModel)]="val2" inputId="preopt2"></p-radioButton></div>
+              <div class="ui-g-12"><p-radioButton name="group2" value="Option 3" label="Option 3" [(ngModel)]="val2" inputId="preopt3"></p-radioButton></div>
+          </div>
+      </div>
+  </div>
+  <div class="ui-g-10">
+    <p-tabView>
+      <p-tabPanel header="All Records" [selected]="true">
+
+          <p-messages [(value)]="errorMessage"></p-messages>
+          <p-growl [(value)]="otherMessage"></p-growl>
+      </p-tabPanel>
+      <p-tabPanel header="Validation Summary">
+          
+      </p-tabPanel>
+      <p-tabPanel header="Send Summary">
+              
+      </p-tabPanel>
+  </p-tabView>
+  </div>
+</div>

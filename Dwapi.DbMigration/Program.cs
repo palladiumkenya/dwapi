@@ -20,6 +20,7 @@ namespace Dwapi.DbMigration
                 interactive = value;
 
             var schemaName = GetDatabaseName(connectionString);
+
             var upgrader =
                 DeployChanges.To.MySqlDatabase(connectionString, schemaName)
                     .LogToConsole()
