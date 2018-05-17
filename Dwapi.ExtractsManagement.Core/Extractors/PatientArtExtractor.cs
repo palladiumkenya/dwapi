@@ -42,7 +42,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
 
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
     }
