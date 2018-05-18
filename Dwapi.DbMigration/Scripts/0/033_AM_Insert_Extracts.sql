@@ -8,7 +8,7 @@ VALUES
 	ContactRelation, LastVisit, MaritalStatus, EducationLevel, DateConfirmedHIVPositive, PreviousARTExposure, PreviousARTStartDate, StatusAtCCC, StatusAtPMTCT, StatusAtTBClinic, ''IQCare'' AS EMR, 
 	''Kenya HMIS II'' AS Project, CAST(GETDATE() AS DATE) AS DateExtracted,newid() as Id
 FROM            
-	tmp_PatientMaster AS a WHERE a.RegistrationAtCCC IS NOT NULL',1,'PatientExtract',1.00),
+	tmp_PatientMaster AS a WHERE a.RegistrationAtCCC IS NOT NULL',1,'Patient',1.00),
 
 ('41742EB0-5856-E811-8E16-9CB6D0DA773C','dwhStage','ART Patients','NDWH',(SELECT Id FROM emrsystem WHERE Name = 'IQCare'),'SELECT   
 	a.PatientPK, a.PatientID, c.FacilityID, c.SiteCode, a.FacilityName, a.DOB, a.AgeEnrollment, a.AgeARTStart, a.AgeLastVisit, a.RegistrationDate, a.PatientSource, a.Gender, a.StartARTDate, a.PreviousARTStartDate, 
@@ -16,7 +16,7 @@ FROM
 	a.ExitDate, CAST(GETDATE() AS DATE) AS DateExtracted
 FROM            
 	tmp_ARTPatients AS a INNER JOIN
-	tmp_PatientMaster AS c ON a.PatientPK = c.PatientPK',0,'PatientArtExtract',2.00),
+	tmp_PatientMaster AS c ON a.PatientPK = c.PatientPK',0,'PatientArt',2.00),
 
 
 	
@@ -37,7 +37,7 @@ FROM
     IQC_eCD4 ON tmp_PatientMaster.PatientPK = IQC_eCD4.PatientPK LEFT OUTER JOIN
     IQC_lastWHO ON tmp_PatientMaster.PatientPK = IQC_lastWHO.PatientPK LEFT OUTER JOIN
     IQC_m12CD4 ON tmp_PatientMaster.PatientPK = IQC_m12CD4.PatientPK LEFT OUTER JOIN
-    IQC_m6CD4 ON tmp_PatientMaster.PatientPK = IQC_m6CD4.PatientPK;' ,0,'PatientBaselinesExtract',3.00), 	
+    IQC_m6CD4 ON tmp_PatientMaster.PatientPK = IQC_m6CD4.PatientPK;' ,0,'PatientBaseline',3.00), 	
 
 
 	('43742EB0-5856-E811-8E16-9CB6D0DA773C','dwhStage','Patient Status','NDWH',(SELECT Id FROM emrsystem WHERE Name = 'IQCare'),'SELECT   
@@ -45,7 +45,7 @@ FROM
 	CAST(GETDATE() AS DATE) AS DateExtracted
 FROM            
 	tmp_LastStatus INNER JOIN
-	tmp_PatientMaster ON tmp_LastStatus.PatientPK = tmp_PatientMaster.PatientPK', 0,'PatientStatusExtract',4.00),
+	tmp_PatientMaster ON tmp_LastStatus.PatientPK = tmp_PatientMaster.PatientPK', 0,'PatientStatus',4.00),
 
 
 	('44742EB0-5856-E811-8E16-9CB6D0DA773C','dwhStage','Patient Labs','NDWH',(SELECT Id FROM emrsystem WHERE Name = 'IQCare'),'SELECT   
@@ -61,7 +61,7 @@ FROM
 	tmp_Pharmacy.ProphylaxisType, CAST(GETDATE() AS DATE) AS DateExtracted
 FROM            
 	tmp_Pharmacy INNER JOIN
-    tmp_PatientMaster ON tmp_Pharmacy.PatientPK = tmp_PatientMaster.PatientPK', 0,'PatientPharmacyExtract',6.00), 
+    tmp_PatientMaster ON tmp_Pharmacy.PatientPK = tmp_PatientMaster.PatientPK', 0,'PatientPharmacy',6.00), 
 
 	
 	('47742EB0-5856-E811-8E16-9CB6D0DA773C','dwhStage','Patient Visits','NDWH',(SELECT Id FROM emrsystem WHERE Name = 'IQCare'),
@@ -75,7 +75,7 @@ FROM
 	AS DateExtracted
 FROM            
 	tmp_ClinicalEncounters INNER JOIN
-	tmp_PatientMaster ON tmp_PatientMaster.PatientPK = tmp_ClinicalEncounters.PatientPK', 0,'PatientVisitExtract',7.00 ),
+	tmp_PatientMaster ON tmp_PatientMaster.PatientPK = tmp_ClinicalEncounters.PatientPK', 0,'PatientVisit',7.00 ),
 
 
 ('3B742EB0-5856-E811-8E16-9CB6D0DA773C','PSmartStage','Smart Card','PSMART',(SELECT Id FROM emrsystem WHERE Name = 'KenyaEMR'),
@@ -136,7 +136,7 @@ left outer join concept_name cn on cn.concept_id=hiv.entry_point  and cn.concept
 and cn.locale=''en''
 where unique_patient_no is not null
 group by d.patient_id
-order by d.patient_id;',1,'PatientExtract',1.00), 
+order by d.patient_id;',1,'Patient',1.00), 
 
 
 ('39742EB0-5856-E811-8E16-9CB6D0DA773C','dwhStage','ART Patients','NDWH',(SELECT Id FROM emrsystem WHERE Name = 'KenyaEMR'),
@@ -210,7 +210,7 @@ and dis_rsn.locale=''en''
 left outer join concept_name cn on cn.concept_id=hiv.entry_point  and cn.concept_name_type=''FULLY_SPECIFIED''
 and cn.locale=''en''
 where d.unique_patient_no is not null
-group by d.patient_id;',0,'PatientArtExtract',2.00),
+group by d.patient_id;',0,'PatientArt',2.00),
 
 
 ('3C742EB0-5856-E811-8E16-9CB6D0DA773C','dwhStage','Patient Baselines','NDWH',(SELECT Id FROM emrsystem WHERE Name = 'KenyaEMR'),
@@ -280,7 +280,7 @@ date_add(date_add(min(e.visit_date), interval 12 month),interval 1 day) as twelv
 from kenyaemr_etl.etl_hiv_enrollment e
 group by e.patient_id) p_dates on p_dates.patient_id=fup.patient_id
 left outer join kenyaemr_etl.etl_laboratory_extract l on l.patient_id=fup.patient_id and l.lab_test in (5497,730)
-group by fup.patient_id',0,'PatientBaselinesExtract',3.00),
+group by fup.patient_id',0,'PatientBaseline',3.00),
 
 
 ('38742EB0-5856-E811-8E16-9CB6D0DA773C','dwhStage','Patient Status','NDWH',(SELECT Id FROM emrsystem WHERE Name = 'KenyaEMR'),'select d.unique_patient_no as PatientID, d.patient_id as PatientPK,(select value_reference from location_attribute
@@ -299,7 +299,7 @@ from kenyaemr_etl.etl_patient_program_discontinuation disc
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=disc.patient_id
 left outer join concept_name cn on cn.concept_id=disc.discontinuation_reason  and cn.concept_name_type=''FULLY_SPECIFIED''
 and cn.locale=''en''
-where d.unique_patient_no is not null;',0,'PatientStatusExtract',4.00),
+where d.unique_patient_no is not null;',0,'PatientStatus',4.00),
 
 
 ('3D742EB0-5856-E811-8E16-9CB6D0DA773C','dwhStage','Patient Labs','NDWH',(SELECT Id FROM emrsystem WHERE Name = 'KenyaEMR'),
@@ -363,7 +363,7 @@ and cn.locale=''en''
 left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph.encounter_id
 and fup.patient_id=ph.patient_id
 where unique_patient_no is not null
-order by ph.patient_id,ph.visit_date',0,'PatientPharmacyExtract',6.00),
+order by ph.patient_id,ph.visit_date',0,'PatientPharmacy',6.00),
 
 
 ('40742EB0-5856-E811-8E16-9CB6D0DA773C','dwhStage','Patient Visit','NDWH',(SELECT Id FROM emrsystem WHERE Name = 'KenyaEMR'),
@@ -440,7 +440,7 @@ CAST(now() as Date) AS DateExtracted
 from kenyaemr_etl.etl_patient_demographics d
 join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=d.patient_id
 where d.unique_patient_no is not null
-order by d.patient_id,fup.visit_date;',0,'PatientVisitExtract',7.00)
+order by d.patient_id,fup.visit_date;',0,'PatientVisit',7.00)
 
 
 

@@ -79,8 +79,11 @@ namespace Dwapi.SettingsManagement.Core.Services
         public void SetDefault(Guid id)
         {
             var defaultEmr = _emrSystemRepository.GetDefault();
-            defaultEmr.IsDefault = false;
-            _emrSystemRepository.Update(defaultEmr);
+            if (defaultEmr != null)
+            {
+                defaultEmr.IsDefault = false;
+                _emrSystemRepository.Update(defaultEmr);
+            }         
 
             var emr = _emrSystemRepository.Get(id);
             emr.IsDefault = true;
