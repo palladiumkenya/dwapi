@@ -106,6 +106,7 @@ import { NdwhSenderService } from '../dockets/services/ndwh-sender.service';
 import { NdwhDocketComponent } from '../dockets/ndwh-docket/ndwh-docket.component';
 import { PsmartDocketComponent } from '../dockets/psmart-docket/psmart-docket.component';
 import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
+import { NdwhExtractDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
 
 @NgModule({
     imports: [
@@ -203,7 +204,8 @@ import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
         NdwhConsoleComponent,
         NdwhDocketComponent,
         PsmartDocketComponent,
-        CbsDocketComponent
+        CbsDocketComponent,
+        NdwhExtractDetailsComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,

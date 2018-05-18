@@ -5,11 +5,12 @@ import {DatabaseProtocol} from '../../settings/model/database-protocol';
 import {Observable} from 'rxjs/Observable';
 import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
 import {ExtractEvent} from '../../settings/model/extract-event';
+import { LoadFromEmrCommand } from '../../settings/model/load-from-emr-command';
 
 @Injectable()
 export class NdwhExtractService {
 
-  private _url: string = './api/ExtractLoader';
+  private _url: string = './api/DwhExtracts';
     private _http: HttpClient;
 
     public constructor(http: HttpClient) {
@@ -21,9 +22,9 @@ export class NdwhExtractService {
             .catch(this.handleError);
     }
 
-    public load(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
+    public load(extracts: LoadFromEmrCommand): Observable<boolean> {
         console.log(extracts);
-        return this._http.post<boolean>(this._url + '/load', extracts[0])
+        return this._http.post<boolean>(this._url + '/load', extracts)
             .catch(this.handleError);
     }
 
