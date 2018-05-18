@@ -53,7 +53,7 @@ FROM
 	tmp_Labs.OrderedbyDate, tmp_Labs.ReportedbyDate, tmp_Labs.TestName, tmp_Labs.EnrollmentTest, tmp_Labs.TestResult, CAST(GETDATE() AS DATE) AS DateExtracted
 FROM           
 	tmp_Labs INNER JOIN
-	tmp_PatientMaster ON tmp_Labs.PatientPK = tmp_PatientMaster.PatientPK', 0,'PatientLaboratoryExtract',5.00), 
+	tmp_PatientMaster ON tmp_Labs.PatientPK = tmp_PatientMaster.PatientPK', 0,'PatientLab',5.00), 
 
 	('46742EB0-5856-E811-8E16-9CB6D0DA773C','dwhStage','Patient Pharmacy','NDWH',(SELECT Id FROM emrsystem WHERE Name = 'IQCare'),'SELECT   
 	tmp_PatientMaster.PatientID, tmp_PatientMaster.FacilityID, tmp_PatientMaster.SiteCode, tmp_Pharmacy.PatientPK, tmp_Pharmacy.VisitID, tmp_Pharmacy.Drug, tmp_Pharmacy.Provider, 
@@ -331,7 +331,7 @@ join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type=''FULL
 and cn.locale=''en''
 join concept c on c.concept_id = l.lab_test
 left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type=''FULLY_SPECIFIED''
-and cn2.locale=''en'';',0,'PatientLaboratoryExtract',5.00),
+and cn2.locale=''en'';',0,'PatientLab',5.00),
 
 
 
