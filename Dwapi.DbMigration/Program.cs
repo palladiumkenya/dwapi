@@ -75,5 +75,7 @@ namespace Dwapi.DbMigration
                 return (string)value;
             throw new ArgumentException($"Unable to find db name, checked for [initial catalog], [database] & [schema] variables");
         }
+
+
     }
 }
