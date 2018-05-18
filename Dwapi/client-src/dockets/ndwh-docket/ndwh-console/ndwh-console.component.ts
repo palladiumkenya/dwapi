@@ -143,14 +143,13 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 );
         });
 
-
     }
 
 
 
     public send(): void {
         this.errorMessage = [];
-        this.send$ = this._ndwhSenderService.send(this.getSendPackage('PSMART'))
+        this.send$ = this._ndwhSenderService.send(this.getSendPackage('NDWH'))
             .subscribe(
                 p => {
                     this.sendResponse = p;
@@ -194,7 +193,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 destination: e.destination,
                 display: e.display,
                 docketId: e.docketId,
-                emr: e.emr,
+                emr: this.emrName,
                 emrSystemId: e.emrSystemId,
                 extractEvent: e.extractEvent,
                 extractName: e.name,

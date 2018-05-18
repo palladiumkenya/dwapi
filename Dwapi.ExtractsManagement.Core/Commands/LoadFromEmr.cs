@@ -17,6 +17,7 @@ namespace Dwapi.ExtractsManagement.Core.Commands
 
     public class DwhExtract
     {
+        public Guid Id { get; set; }
         public string Emr { get; set; }
         public string SqlQuery { get; set; }
         public ExtractType ExtractType => 

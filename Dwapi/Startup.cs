@@ -99,6 +99,7 @@ namespace Dwapi
             services.AddScoped<IExtractManagerService, ExtractManagerService>();
 
             services.AddScoped<IPsmartExtractService, PsmartExtractService>();
+            services.AddScoped<IExtractStatusService, ExtractStatusService>();
             services.AddScoped<IPsmartSourceReader, PsmartSourceReader>();
             services.AddScoped<IPsmartSendService, PsmartSendService>();
             services.AddHangfireIntegration(Configuration);

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Dwapi.Domain;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.ExtractValidators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors
@@ -19,8 +20,8 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
         //    _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         //}
 
-        public PatientExtractorAndValidator(IExtractUnitOfWork unitOfWork)
-            : base(unitOfWork)
+        public PatientExtractorAndValidator(IExtractUnitOfWork unitOfWork, IExtractStatusService extractStatusService)
+            : base(unitOfWork, extractStatusService)
         {
             _validator = new GenericValidator(unitOfWork, nameof(TempPatientExtract));
         }

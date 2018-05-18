@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands;
+using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Utility;
 using MediatR;
@@ -16,10 +17,12 @@ namespace Dwapi.Controller
     public class DwhExtractsController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly IMediator _mediator;
+        private readonly IExtractStatusService _extractStatusService;
 
-        public DwhExtractsController(IMediator mediator)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _extractStatusService = extractStatusService;
         }
 
         [HttpPost("load")]
@@ -38,11 +41,11 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-                /*var eventExtract = _mediator.GetStatus(id);
+                var eventExtract = _extractStatusService.GetStatus(id);
                 if (null == eventExtract)
-                    return NotFound();*/
+                    return NotFound();
 
-                return Ok();
+                return Ok(eventExtract);
             }
             catch (Exception e)
             {

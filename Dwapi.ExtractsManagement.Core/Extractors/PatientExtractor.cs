@@ -15,6 +15,7 @@ using Dwapi.Domain.Utils;
 using System.IO;
 using MySql.Data.MySqlClient;
 using System.Data;
+using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors
 {
@@ -23,10 +24,12 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
     {
         private readonly IExtractUnitOfWork _unitOfWork;
         private Func<IDatabase> _emrDatabaseFactory;
+        private readonly IExtractStatusService _extractStatusService;
 
-        public PatientExtractor(IExtractUnitOfWork unitOfWork)
+        public PatientExtractor(IExtractUnitOfWork unitOfWork, IExtractStatusService extractStatusService)
         {
             _unitOfWork = unitOfWork;
+            _extractStatusService = extractStatusService;
         }
 
         //public async Task ExtractAsync(DwhExtract extract, DbProtocol dbProtocol)
@@ -158,7 +161,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
         // to do: map sql server dates to mysql correctly
         public async Task ExtractAsync(DwhExtract extract, DbProtocol dbProtocol)
         {
-            
+            int rowCount;
             var sourceConnection = ExtractorHelper.GetDbConnection(dbProtocol);
             sourceConnection.Open();
 
@@ -173,7 +176,8 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
                 var filePath = "patientExtractDump.csv";
 
                 using (StreamWriter streamWriter = new StreamWriter(filePath))
-                    WriteDataTable(datatable, streamWriter, GetColumnNames(destinationConnection));
+                    rowCount = WriteDataTable(datatable, streamWriter, GetColumnNames(destinationConnection));
+                _extractStatusService.Found(extract, rowCount);
 
                
                 var columns = GetColumnNames(destinationConnection);
@@ -233,8 +237,9 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
             return result;
         }
 
-        private void WriteDataTable(DataTable sourceTable, TextWriter writer, List<string> columns, bool includeHeaders = false)
+        private int WriteDataTable(DataTable sourceTable, TextWriter writer, List<string> columns, bool includeHeaders = false)
         {
+            int count = 0;
             int ordinal = 0;
             foreach(var columnName in columns)
             {
@@ -256,9 +261,11 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
             {
                 items = row.ItemArray.Select(o => QuoteValue(o?.ToString() ?? String.Empty));
                 writer.WriteLine(String.Join(",", items));
+                count++;
             }
 
             writer.Flush();
+            return count;
         }
 
         private static string QuoteValue(string value)

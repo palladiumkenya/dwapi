@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire.MySql.Core;
 using System.Data;
+using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 
 namespace Dwapi
 {
@@ -68,11 +69,12 @@ namespace Dwapi
             services.AddScoped(typeof(ExtractorAdapter), sp =>
             {
                 var unitOfWork = sp.GetRequiredService<IExtractUnitOfWork>();
+                var extractStatusService = sp.GetRequiredService<IExtractStatusService>();
                 var progressHub = sp.GetRequiredService<ProgressHub>();
 
                 var extractorAdapter = new ExtractorAdapter();
 
-                extractorAdapter.RegisterExtractor(ExtractType.Patient, new PatientExtractor(unitOfWork));
+                extractorAdapter.RegisterExtractor(ExtractType.Patient, new PatientExtractor(unitOfWork, extractStatusService));
                 extractorAdapter.RegisterExtractor(ExtractType.PatientArt, new PatientArtExtractor(unitOfWork, progressHub));
                 extractorAdapter.RegisterExtractor(ExtractType.PatientBaseline, new PatientBaselineExtractor(unitOfWork));
                 extractorAdapter.RegisterExtractor(ExtractType.PatientLab, new PatientLabExtractor(unitOfWork));
@@ -86,10 +88,11 @@ namespace Dwapi
             services.AddScoped(typeof(ExtractorValidatorAdapter), sp =>
             {
                 var unitOfWork = sp.GetRequiredService<IExtractUnitOfWork>();
+                var extractStatusService = sp.GetRequiredService<IExtractStatusService>();
                 var progressHub = sp.GetRequiredService<ProgressHub>();
                 var extractorValidatorAdapter = new ExtractorValidatorAdapter();
 
-                extractorValidatorAdapter.RegisterExtractorValidator(ExtractType.Patient, new PatientExtractorAndValidator(unitOfWork));
+                extractorValidatorAdapter.RegisterExtractorValidator(ExtractType.Patient, new PatientExtractorAndValidator(unitOfWork, extractStatusService));
                 extractorValidatorAdapter.RegisterExtractorValidator(ExtractType.PatientArt, new PatientArtExtractorAndValidator(unitOfWork, progressHub));
                 extractorValidatorAdapter.RegisterExtractorValidator(ExtractType.PatientBaseline, new PatientBaselineExtractorAndValidator(unitOfWork));
                 extractorValidatorAdapter.RegisterExtractorValidator(ExtractType.PatientLab, new PatientLabExtractorAndValidator(unitOfWork));
