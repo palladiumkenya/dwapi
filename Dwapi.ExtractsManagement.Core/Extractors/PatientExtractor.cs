@@ -176,7 +176,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors
                 var filePath = "patientExtractDump.csv";
 
                 using (StreamWriter streamWriter = new StreamWriter(filePath))
-                    rowCount = WriteDataTable(datatable, streamWriter, GetColumnNames(destinationConnection));
+                rowCount = WriteDataTable(datatable, streamWriter, GetColumnNames(destinationConnection));
                 _extractStatusService.Found(extract, rowCount);
 
                

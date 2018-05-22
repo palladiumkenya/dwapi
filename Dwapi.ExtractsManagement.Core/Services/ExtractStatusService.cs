@@ -59,10 +59,25 @@ namespace Dwapi.ExtractsManagement.Core.Services
                 _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Found, found);
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Idle, express: true);
-                throw ex;
+                throw;
+            }
+        }
+
+        public void Sync(DwhExtract extract, int count)
+        {
+            try
+            {
+                _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Loading);
+
+                _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Loaded, count);
+            }
+            catch (Exception)
+            {
+                _extractHistoryRepository.UpdateStatus(extract.Id, ExtractStatus.Idle, express: true);
+                throw;
             }
         }
 

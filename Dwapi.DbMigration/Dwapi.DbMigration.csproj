@@ -39,6 +39,9 @@
     <None Remove="Scripts\0\031_AM_Insert_EmrSystems.sql" />
     <None Remove="Scripts\0\032_AM_Insert_DatabaseProtocals.sql" />
     <None Remove="Scripts\0\033_AM_Insert_Extracts.sql" />
+    <None Remove="Scripts\0\034_AM_Create_ReportAuditLog.sql" />
+    <None Remove="Scripts\0\035_AM_Create_MPI_Variables_Table.sql" />
+    <None Remove="Scripts\0\036_AM_Insert_validators.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -75,6 +78,9 @@
     <EmbeddedResource Include="Scripts\0\029_AM_Insert_Dockets.sql" />
     <EmbeddedResource Include="Scripts\0\031_AM_Insert_EmrSystems.sql" />
     <EmbeddedResource Include="Scripts\0\033_AM_Insert_Extracts.sql" />
+    <EmbeddedResource Include="Scripts\0\034_AM_Create_ReportAuditLog.sql" />
+    <EmbeddedResource Include="Scripts\0\035_AM_Create_MPI_Variables_Table.sql" />
+    <EmbeddedResource Include="Scripts\0\036_AM_Insert_validators.sql" />
   </ItemGroup>
 
   <ItemGroup>

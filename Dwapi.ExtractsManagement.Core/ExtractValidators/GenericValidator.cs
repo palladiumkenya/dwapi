@@ -37,12 +37,12 @@ namespace Dwapi.ExtractsManagement.Core.ExtractValidators
                 {
                     using(var command = _unitOfWork.Context.Database.GetDbConnection().CreateCommand())
                     {
-                        command.CommandText = $"select Id from dbo.{validation.Extract}s where {validation.Logic}";
+                        command.CommandText = $"select Id from {validation.Extract} where {validation.Logic}";
                         command.CommandTimeout = 3600;
                         _unitOfWork.Context.Database.OpenConnection();
-                        using (SqlDataReader result = (SqlDataReader)await command.ExecuteReaderAsync())
+                        using (SqlDataReader result = await command.ExecuteReaderAsync() as SqlDataReader)
                         {
-                            while(result.Read())
+                            while(result != null && result.Read())
                             {
                                 var id = result.GetGuid(0);
                                 var validationError = new ValidationError
@@ -56,7 +56,6 @@ namespace Dwapi.ExtractsManagement.Core.ExtractValidators
                                 };
                                 validationErrors.Add(validationError);
                             }
-
                             //validationErrors.AddRange(ids.Select(x => new ValidationError
                             //{
                             //    Id = LiveGuid.NewGuid(),
