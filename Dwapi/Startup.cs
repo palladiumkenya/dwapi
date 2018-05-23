@@ -26,6 +26,7 @@ using Dwapi.SettingsManagement.Core.Services;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Services;
@@ -180,6 +181,8 @@ namespace Dwapi
                     cfg.AddProfile<TempExtractProfile>();
                 }
             );
+
+            DomainEvents.Init();
 
             Log.Debug(@"initializing Database [Complete]");
             Log.Debug(

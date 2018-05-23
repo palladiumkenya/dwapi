@@ -14,6 +14,8 @@ import { LoadFromEmrCommand } from '../../../settings/model/load-from-emr-comman
 import { DwhExtract } from '../../../settings/model/dwh-extract';
 import {ExtractPatient} from '../model/extract-patient';
 import {HubConnection, HubConnectionBuilder, LogLevel} from '@aspnet/signalr';
+import {EmrConfigService} from '../../../settings/services/emr-config.service';
+import {ExtractEvent} from '../../../settings/model/extract-event';
 
 @Component({
   selector: 'liveapp-ndwh-console',
@@ -41,8 +43,11 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public loadingData: boolean;
     public extracts: Extract[] = [];
+    public currentExtract: Extract;
+    public currentextract: Extract;
     private dwhExtract: DwhExtract;
     private dwhExtracts: DwhExtract[] = [];
+    private extractEvent: ExtractEvent;
     public recordCount: number;
 
     public canLoadFromEmr: boolean;
@@ -56,10 +61,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private _extractPatient: ExtractPatient;
     public centralRegistry: CentralRegistry;
     public sendResponse: SendResponse;
+    public getEmr$: Subscription;
 
     public constructor(confirmationService: ConfirmationService, emrConfigService: NdwhExtractService,
                        registryConfigService: RegistryConfigService,
-                       psmartSenderService: NdwhSenderService) {
+                       psmartSenderService: NdwhSenderService,
+                        private emrService: EmrConfigService) {
         this._confirmationService = confirmationService;
         this._ndwhExtractService = emrConfigService;
         this._registryConfigService = registryConfigService;
@@ -73,6 +80,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public ngOnInit() {
         this.loadRegisrty();
         this.liveOnInit();
+        this.loadData();
     }
 
     public loadData(): void {
@@ -89,11 +97,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.centralRegistry) {
             this.canSend = true;
-        }
-        if (this.emr) {
-            if (this.emr.extracts) {
-                console.log(this.emr.extracts);
-            }
         }
     }
 
@@ -139,7 +142,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.getStatus$ = this._ndwhExtractService.getStatus(extract.id)
                 .subscribe(
                     p => {
-                        extract.extractEvent = p;
+                        // extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
                         }
@@ -193,7 +196,16 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
         this._hubConnection.on('ShowProgress', (dwhProgress: any) => {
-            console.log(dwhProgress);
+            this.currentExtract = this.extracts.find(x => x.name === 'PatientExtract');
+            if (this.currentExtract) {
+                this.extractEvent = {
+                    lastStatus: `${dwhProgress.status}`, loaded: dwhProgress.count
+                };
+                this.currentExtract.extractEvent = {};
+                this.currentExtract.extractEvent = this.extractEvent;
+                const newWithoutPatientExtract = this.extracts.filter(x => x.name !== 'PatientExtract');
+                this.extracts = [...newWithoutPatientExtract, this.currentExtract];
+            }
         });
     }
 

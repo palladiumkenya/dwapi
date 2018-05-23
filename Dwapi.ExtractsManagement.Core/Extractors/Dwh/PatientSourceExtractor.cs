@@ -8,6 +8,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using MediatR;
 using Serilog;
@@ -55,12 +56,13 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                         count = 0;
                         Log.Debug("saved batch");
                     }
+
                     // TODO: Notify progress...
 
-                    await _mediator.Publish(
+                    DomainEvents.Dispatch(
                         new ExtractActivityNotification(new DwhProgress(
                             nameof(PatientExtract),
-                            "loading",
+                            "loading...",
                             list.Count)));
                 }
 

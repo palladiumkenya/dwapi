@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.SharedKernel.Model;
 using Microsoft.AspNetCore.SignalR;
+using Serilog;
 
 namespace Dwapi.Hubs.Dwh
 {

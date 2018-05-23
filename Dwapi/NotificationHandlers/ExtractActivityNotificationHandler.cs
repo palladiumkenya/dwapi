@@ -5,13 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.Hubs.Dwh;
+using Dwapi.SharedKernel.Events;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dwapi.NotificationHandlers
 {
-    public class ExtractActivityNotificationHandler : INotificationHandler<ExtractActivityNotification>
+    public class ExtractActivityNotificationHandler : IHandler<ExtractActivityNotification>
     {
         private readonly IHubContext<ExtractActivity> _hubContext;
 
@@ -19,10 +20,9 @@ namespace Dwapi.NotificationHandlers
         {
             _hubContext = Startup.ServiceProvider.GetService<IHubContext<ExtractActivity>>();
         }
-
-        public async Task Handle(ExtractActivityNotification notification, CancellationToken cancellationToken)
+        public async void Handle(ExtractActivityNotification domainEvent)
         {
-            await _hubContext.Clients.All.SendAsync("ShowProgress", notification.Progress);
+            await _hubContext.Clients.All.SendAsync("ShowProgress", domainEvent.Progress);
         }
     }
 }
