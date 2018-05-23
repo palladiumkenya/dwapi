@@ -9,15 +9,15 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     {
         [Key]
         [DoNotRead]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }=LiveGuid.NewGuid();
         public int? PatientPK { get; set; }
         public string PatientID { get; set; }
         public int? FacilityId { get; set; }
         public int? SiteCode { get; set; }
 
         [DoNotRead]
-        public DateTime DateExtracted { get; set; }
+        public DateTime DateExtracted { get; set; }= DateTime.Now;
         [DoNotRead]
         public bool CheckError { get; set; }
 
