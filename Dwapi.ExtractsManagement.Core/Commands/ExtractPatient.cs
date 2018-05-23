@@ -4,9 +4,9 @@ using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.Commands
 {
-    public class ExtractPatient : IRequest
+    public class ExtractPatient : IRequest<bool>
     {
-        public DwhExtract Extract { get; set; }
+        public DbExtract Extract { get; set; }
         public DbProtocol DatabaseProtocol { get; set; }
     }
 }

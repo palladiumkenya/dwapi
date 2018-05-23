@@ -6,6 +6,7 @@ import {Observable} from 'rxjs/Observable';
 import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
 import {ExtractEvent} from '../../settings/model/extract-event';
 import { LoadFromEmrCommand } from '../../settings/model/load-from-emr-command';
+import {ExtractPatient} from '../ndwh-docket/model/extract-patient';
 
 @Injectable()
 export class NdwhExtractService {
@@ -25,6 +26,11 @@ export class NdwhExtractService {
     public load(extracts: LoadFromEmrCommand): Observable<boolean> {
         console.log(extracts);
         return this._http.post<boolean>(this._url + '/load', extracts)
+            .catch(this.handleError);
+    }
+    public extract(extract: ExtractPatient): Observable<boolean> {
+        console.log(extract);
+        return this._http.post<boolean>(this._url + '/extract', extract)
             .catch(this.handleError);
     }
 

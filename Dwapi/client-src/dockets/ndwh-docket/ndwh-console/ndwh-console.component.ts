@@ -12,6 +12,7 @@ import {SendPackage} from '../../../settings/model/send-package';
 import {SendResponse} from '../../../settings/model/send-response';
 import { LoadFromEmrCommand } from '../../../settings/model/load-from-emr-command';
 import { DwhExtract } from '../../../settings/model/dwh-extract';
+import {ExtractPatient} from '../model/extract-patient';
 
 @Component({
   selector: 'liveapp-ndwh-console',
@@ -49,6 +50,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private _extractDbProtocol: ExtractDatabaseProtocol;
     private _extractDbProtocols: ExtractDatabaseProtocol[];
     private _extractLoadCommand: LoadFromEmrCommand;
+    private _extractPatient: ExtractPatient;
     public centralRegistry: CentralRegistry;
     public sendResponse: SendResponse;
 
@@ -89,7 +91,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadFromEmr(): void {
         this.errorMessage = [];
         console.log(this.emr);
-        this.load$ = this._ndwhExtractService.load(this.generateExtractLoadCommand(this.emr))
+        this.load$ = this._ndwhExtractService.load(this.generateExtractPatient(this.emr))
             .subscribe(
                 p => {
                     // this.isVerfied = p;
@@ -210,6 +212,15 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         };
         console.log(this._extractLoadCommand);
         return this._extractLoadCommand;
+    }
+
+    private generateExtractPatient(currentEmr: EmrSystem): LoadFromEmrCommand {
+        this._extractPatient = {
+            databaseProtocol: currentEmr.databaseProtocols[0],
+            extract: this.extracts.find(x => x.isPriority === '1')
+    };
+        console.log(this._extractPatient);
+        return this._extractPatient;
     }
 
     private getSendPackage(docketId: string): SendPackage {

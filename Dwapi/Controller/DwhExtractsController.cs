@@ -33,6 +33,16 @@ namespace Dwapi.Controller
             return Ok(result);
         }
 
+
+        [HttpPost("extract")]
+        public async Task<IActionResult> Load([FromBody]ExtractPatient request)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+            var result = await _mediator.Send(request, HttpContext.RequestAborted);
+            return Ok(result);
+        }
+
+
         // GET: api/DwhExtracts/status/id
         [HttpGet("status/{id}")]
         public IActionResult GetStatus(Guid id)
