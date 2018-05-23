@@ -2,6 +2,7 @@
 using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dwapi.Domain.Utils;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
@@ -9,6 +10,7 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Model;
 using MediatR;
+using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 {
@@ -42,7 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                     count++;        
                     // AutoMapper profiles
                     var extractRecord = Mapper.Map<IDataRecord, TempPatientExtract>(rdr);
-
+                    extractRecord.Id = LiveGuid.NewGuid();
                     list.Add(extractRecord);
 
                     if (count == batch)
@@ -51,6 +53,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                         _extractRepository.BatchInsert(list);
 
                         count = 0;
+                        Log.Debug("saved batch");
                     }
                     // TODO: Notify progress...
 
@@ -66,6 +69,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                     // save remaining list;
                     _extractRepository.BatchInsert(list);
                 }
+                _extractRepository.CloseConnection();
             }
 
             // TODO: Notify Completed;

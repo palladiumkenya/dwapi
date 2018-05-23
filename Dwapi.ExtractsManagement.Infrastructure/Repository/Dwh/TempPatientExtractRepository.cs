@@ -17,13 +17,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
 
         public void BatchInsert(IEnumerable<TempPatientExtract> extracts)
         {
-            using (var con=GetConnection())
-            {
-                if(con.State!=ConnectionState.Open)
-                    con.Open();
-
-                con.BulkInsert(extracts);
-            }
+            GetConnection().BulkInsert(extracts);
         }
     }
 }
