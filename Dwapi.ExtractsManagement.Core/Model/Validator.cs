@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Dwapi.Domain.Utils;
 
-namespace Dwapi.Domain
+namespace Dwapi.ExtractsManagement.Core.Model
 {
     public class Validator
     {

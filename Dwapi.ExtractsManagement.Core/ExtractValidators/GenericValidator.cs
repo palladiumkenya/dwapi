@@ -2,10 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dwapi.Domain.Utils;
+using Dwapi.ExtractsManagement.Core.Model;
 
 namespace Dwapi.ExtractsManagement.Core.ExtractValidators
 {
@@ -28,23 +31,25 @@ namespace Dwapi.ExtractsManagement.Core.ExtractValidators
         {
             try
             {
-                var validations = await _unitOfWork.Repository<Domain.Validator>().Get(
+                var validations = await _unitOfWork.Repository<Validator>().Get(
                     filter: e => e.Extract == _type).ToListAsync();
 
                 List<ValidationError> validationErrors = new List<ValidationError>();
 
-                foreach (var validation in validations)
+
+                using (var command = _unitOfWork.Context.Database.GetDbConnection().CreateCommand())
                 {
-                    using(var command = _unitOfWork.Context.Database.GetDbConnection().CreateCommand())
+                    foreach (var validation in validations)
                     {
                         command.CommandText = $"select Id from {validation.Extract} where {validation.Logic}";
                         command.CommandTimeout = 3600;
                         _unitOfWork.Context.Database.OpenConnection();
-                        using (SqlDataReader result = await command.ExecuteReaderAsync() as SqlDataReader)
+                        using (DbDataReader reader = command.ExecuteReader())
                         {
-                            while(result != null && result.Read())
+                            //SqlDataReader result = reader as SqlDataReader;
+                            while (reader.Read() && reader.HasRows)
                             {
-                                var id = result.GetGuid(0);
+                                var id = reader.GetGuid(0);
                                 var validationError = new ValidationError
                                 {
                                     Id = LiveGuid.NewGuid(),
@@ -56,6 +61,7 @@ namespace Dwapi.ExtractsManagement.Core.ExtractValidators
                                 };
                                 validationErrors.Add(validationError);
                             }
+
                             //validationErrors.AddRange(ids.Select(x => new ValidationError
                             //{
                             //    Id = LiveGuid.NewGuid(),

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Dwapi.Domain
+namespace Dwapi.ExtractsManagement.Core.Model
 {
     public class ValidationError
     {

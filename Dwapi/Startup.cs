@@ -59,7 +59,7 @@ namespace Dwapi
             }
             
             services.AddMediatR(assemblies);
-            services.AddDatabase(Configuration);
+            //services.AddDatabase(Configuration);
             
             services.AddExtractorAdaptor();
             services.AddSwaggerGen(c =>
@@ -81,8 +81,8 @@ namespace Dwapi
             var connectionString = Startup.Configuration["connectionStrings:DwapiConnection"];
             
 
-            //services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
-            //services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+            services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
+            services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
 
             
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
@@ -102,7 +102,7 @@ namespace Dwapi
             services.AddScoped<IExtractStatusService, ExtractStatusService>();
             services.AddScoped<IPsmartSourceReader, PsmartSourceReader>();
             services.AddScoped<IPsmartSendService, PsmartSendService>();
-            services.AddHangfireIntegration(Configuration);
+            //services.AddHangfireIntegration(Configuration);
 
         }
 
@@ -138,11 +138,11 @@ namespace Dwapi
 
             Log.Debug(@"initializing Database...");
 
-            //EnsureMigrationOfContext<SettingsContext>(serviceProvider);
-            //EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
+            EnsureMigrationOfContext<SettingsContext>(serviceProvider);
+            EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
 
             
-            app.UseHangfire();
+            //app.UseHangfire();
 
             Log.Debug(@"initializing Database [Complete]");
             Log.Debug(@"---------------------------------------------------------------------------------------------------");

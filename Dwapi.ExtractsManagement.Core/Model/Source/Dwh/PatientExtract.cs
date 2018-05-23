@@ -1,15 +1,15 @@
-﻿using Dwapi.Domain.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using Dwapi.Domain;
+using Dwapi.Domain.Models;
+using Dwapi.Domain.Utils;
 
-namespace Dwapi.Domain
+namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
     public class PatientExtract
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public int PatientPK { get; set; }
         public string PatientID { get; set; }
         public int SiteCode { get; set; }

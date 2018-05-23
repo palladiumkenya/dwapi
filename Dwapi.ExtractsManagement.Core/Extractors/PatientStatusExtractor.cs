@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 using Dwapi.Domain;
+using Dwapi.Domain.Models;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.SharedKernel.Model;

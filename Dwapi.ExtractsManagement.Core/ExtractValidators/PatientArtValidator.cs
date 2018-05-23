@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dwapi.Domain.Models;
+using Dwapi.Domain.Utils;
+using Dwapi.ExtractsManagement.Core.Model;
+using ValidationError = Dwapi.ExtractsManagement.Core.Model.ValidationError;
 
 namespace Dwapi.ExtractsManagement.Core.ExtractValidators
 {
@@ -22,7 +26,7 @@ namespace Dwapi.ExtractsManagement.Core.ExtractValidators
         {
             try
             {
-                var validations = await _unitOfWork.Repository<Domain.Validator>().Get(
+                var validations = await _unitOfWork.Repository<Validator>().Get(
                     filter: e => e.Extract == _extractName).ToListAsync();
 
                 List<ValidationError> validationErrors = new List<ValidationError>();

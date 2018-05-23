@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Dwapi.Domain;
+using Dwapi.Domain.Models;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.ExtractValidators;
 using Dwapi.SharedKernel.Model;

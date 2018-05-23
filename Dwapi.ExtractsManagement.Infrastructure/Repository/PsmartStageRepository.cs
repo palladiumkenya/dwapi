@@ -4,7 +4,6 @@ using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Utility;
-using Dwapi.UploadManagement.Core.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository
