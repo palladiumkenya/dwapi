@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml;
@@ -65,6 +66,11 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         {
             var entity = DbSet.Find(id);
             Delete(entity);
+        }
+
+        public IDbConnection GetConnection()
+        {
+            return Context.Database.GetDbConnection();
         }
 
         public virtual void Delete(T entity)

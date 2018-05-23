@@ -7,6 +7,7 @@ using Dwapi.SharedKernel.Infrastructure;
 using EFCore.Seeder.Configuration;
 using EFCore.Seeder.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure
 {
@@ -57,6 +58,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            DapperPlusManager.Entity<TempPatientExtract>().Identity(x => x.Id);
         }
 
         public override void EnsureSeeded()

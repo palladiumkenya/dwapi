@@ -2,15 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.Domain.Utils;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
-    public class TempPatientExtract
+    public class TempPatientExtract:Entity<Guid>
     {
-        [Key]
-        [DoNotRead]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
         public int? PatientPK { get; set; }
         public string PatientID { get; set; }
         public int? FacilityId { get; set; }

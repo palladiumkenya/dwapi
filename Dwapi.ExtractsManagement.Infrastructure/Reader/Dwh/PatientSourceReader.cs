@@ -37,10 +37,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh
             if (null == extract)
                 throw new Exception($"{nameof(TempPatientExtract)} settings not configured");
 
-
             if (sourceConnection.State != ConnectionState.Open)
                 sourceConnection.Open();
-
 
             var commandDefinition = new CommandDefinition(extract.ExtractSql, null, null, 0);
             return sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection);

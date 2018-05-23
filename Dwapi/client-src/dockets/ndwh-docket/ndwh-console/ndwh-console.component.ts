@@ -72,6 +72,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public ngOnInit() {
         this.loadRegisrty();
+        this.liveOnInit();
     }
 
     public loadData(): void {
@@ -185,14 +186,14 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5757/extract')
+            .withUrl('http://localhost:5757/ExtractActivity')
             .configureLogging(LogLevel.Information)
             .build();
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
-        this._hubConnection.on('ShowProgress', (data: any) => {
-            // this.total = data;
+        this._hubConnection.on('ShowProgress', (dwhProgress: any) => {
+            console.log(dwhProgress);
         });
     }
 

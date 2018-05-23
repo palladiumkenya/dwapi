@@ -9,6 +9,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
@@ -16,6 +17,7 @@ using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
 using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
@@ -44,6 +46,7 @@ namespace Dwapi
     {
         public static IConfiguration Configuration;
         public IServiceCollection Service;
+        public static IServiceProvider ServiceProvider;
 
         public Startup(IHostingEnvironment env)
         {
@@ -100,6 +103,7 @@ namespace Dwapi
             services.AddScoped<IExtractRepository, ExtractRepository>();
             services.AddScoped<IPsmartStageRepository, PsmartStageRepository>();
             services.AddScoped<IExtractHistoryRepository, ExtractHistoryRepository>();
+            services.AddScoped<ITempPatientExtractRepository, TempPatientExtractRepository>();
 
             services.AddScoped<IDatabaseManager, DatabaseManager>();
             services.AddScoped<IRegistryManagerService, RegistryManagerService>();
@@ -121,6 +125,8 @@ namespace Dwapi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
+            ServiceProvider = serviceProvider;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
