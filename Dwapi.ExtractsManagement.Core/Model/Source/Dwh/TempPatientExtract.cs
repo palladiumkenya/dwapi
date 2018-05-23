@@ -14,7 +14,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public int? SiteCode { get; set; }
 
         [DoNotRead]
-        public DateTime DateExtracted { get; set; }
+        public DateTime DateExtracted { get; set; }= DateTime.Now;
         [DoNotRead]
         public bool CheckError { get; set; }
 
