@@ -47,6 +47,7 @@ namespace Dwapi.Controller
         [HttpGet("status/{id}")]
         public IActionResult GetStatus(Guid id)
         {
+            return Ok();
             if (id.IsNullOrEmpty())
                 return BadRequest();
             try
