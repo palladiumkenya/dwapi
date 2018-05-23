@@ -10,8 +10,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
         public TempExtractProfile()
         {
             CreateMap<IDataRecord, TempPatientExtract>()
-                .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientExtract.PatientPK))))
-                .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.FacilityName))))
+                .ForMember(x => x.PatientPK,o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientExtract.PatientPK))))
+                .ForMember(x => x.FacilityName,o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.FacilityName))))
                 .ForMember(x => x.DOB, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientExtract.DOB))));
         }
     }

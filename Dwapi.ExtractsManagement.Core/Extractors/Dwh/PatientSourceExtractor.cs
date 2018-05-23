@@ -20,7 +20,9 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
         public async Task<bool> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
+
             // TODO: Notify started...
+
 
             var list = new List<TempPatientExtract>();
 

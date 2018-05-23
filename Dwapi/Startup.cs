@@ -2,17 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using AutoMapper;
+using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
+using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
+using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
@@ -61,10 +65,10 @@ namespace Dwapi
             {
                 assemblies.Add(Assembly.Load(assemblyName));
             }
-            
+
             services.AddMediatR(assemblies);
             //services.AddDatabase(Configuration);
-            
+
             services.AddExtractorAdaptor();
             services.AddSwaggerGen(c =>
             {
@@ -83,12 +87,12 @@ namespace Dwapi
               .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             var connectionString = Startup.Configuration["connectionStrings:DwapiConnection"];
-            
+
 
             services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
             services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
 
-            
+
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
             services.AddScoped<IEmrSystemRepository, EmrSystemRepository>();
             services.AddScoped<IDocketRepository, DocketRepository>();
@@ -122,7 +126,14 @@ namespace Dwapi
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
-            
+
+            app.UseCors(
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials())
+                .UseStaticFiles()
+                .UseWebSockets();
 
             app.Use(async (context, next) =>
             {
@@ -141,35 +152,49 @@ namespace Dwapi
 
             app.UseStaticFiles()
                 .UseSwaggerUi();
-            
-            
+
+
 
             Log.Debug(@"initializing Database...");
 
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);
             EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
 
-            
+
             //app.UseHangfire();
 
-            Log.Debug(@"initializing Database [Complete]");
-            Log.Debug(@"---------------------------------------------------------------------------------------------------");
-            Log.Debug
-      (@"
 
-                                          _____                      _ 
+            app.UseSignalR(routes => { routes.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}"); }
+            );
+
+
+            Mapper.Initialize(cfg =>
+                {
+                    cfg.AddDataReaderMapping();
+                    cfg.AddProfile<TempExtractProfile>();
+                }
+            );
+
+            Log.Debug(@"initializing Database [Complete]");
+            Log.Debug(
+                @"---------------------------------------------------------------------------------------------------");
+            Log.Debug
+            (@"
+
+                                          _____                      _
                                          |  __ \                    (_)
-                                         | |  | |_      ____ _ _ __  _ 
+                                         | |  | |_      ____ _ _ __  _
                                          | |  | \ \ /\ / / _` | '_ \| |
                                          | |__| |\ V  V / (_| | |_) | |
                                          |_____/  \_/\_/ \__,_| .__/|_|
-                                                              | |      
-                                                              |_|      
+                                                              | |
+                                                              |_|
 ");
-            Log.Debug(@"---------------------------------------------------------------------------------------------------");
+            Log.Debug(
+                @"---------------------------------------------------------------------------------------------------");
             Log.Debug("Dwapi started !");
 
-       
+
         }
 
         public static void EnsureMigrationOfContext<T>(IServiceProvider app) where T : BaseContext
@@ -190,6 +215,6 @@ namespace Dwapi
             }
 
         }
-        
+
     }
 }

@@ -13,6 +13,7 @@ import {SendResponse} from '../../../settings/model/send-response';
 import { LoadFromEmrCommand } from '../../../settings/model/load-from-emr-command';
 import { DwhExtract } from '../../../settings/model/dwh-extract';
 import {ExtractPatient} from '../model/extract-patient';
+import {HubConnection, HubConnectionBuilder, LogLevel} from '@aspnet/signalr';
 
 @Component({
   selector: 'liveapp-ndwh-console',
@@ -22,6 +23,8 @@ import {ExtractPatient} from '../model/extract-patient';
 export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() emr: EmrSystem;
+    private _hubConnection: HubConnection | undefined;
+    public async: any;
 
     public emrName: string;
     public emrVersion: string;
@@ -179,6 +182,18 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     // this.errorMessage.push({severity: 'success', summary: 'sent successful '});
                 }
             );
+    }
+    private liveOnInit() {
+        this._hubConnection = new HubConnectionBuilder()
+            .withUrl('http://localhost:5757/extract')
+            .configureLogging(LogLevel.Information)
+            .build();
+
+        this._hubConnection.start().catch(err => console.error(err.toString()));
+
+        this._hubConnection.on('ShowProgress', (data: any) => {
+            // this.total = data;
+        });
     }
 
     private getExtractProtocols(currentEmr: EmrSystem): ExtractDatabaseProtocol[] {
