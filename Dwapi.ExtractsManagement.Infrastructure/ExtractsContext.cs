@@ -58,7 +58,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            DapperPlusManager.Entity<TempPatientExtract>().Identity(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
+            DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
         }
 
         public override void EnsureSeeded()

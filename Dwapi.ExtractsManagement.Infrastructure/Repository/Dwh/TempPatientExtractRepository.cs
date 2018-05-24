@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Infrastructure.Repository;
-using Microsoft.EntityFrameworkCore;
 using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
@@ -17,7 +15,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
 
         public void BatchInsert(IEnumerable<TempPatientExtract> extracts)
         {
-            GetConnection().BulkInsert(extracts);
+            try
+            {
+                GetConnection().BulkInsert(extracts);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
     }
 }
