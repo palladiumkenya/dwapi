@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.Domain.Utils;
 
-namespace Dwapi.Domain.Abstract
+namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
     public abstract class TempExtract
     {

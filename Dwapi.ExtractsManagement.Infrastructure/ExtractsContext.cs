@@ -28,8 +28,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         //public DbSet<TempPatientPharmacyExtract> TempPatientPharmacyExtract { get; set; }
         //public DbSet<TempPatientStatusExtract> TempPatientStatusExtract { get; set; }
         //public DbSet<TempPatientVisitExtract> TempPatientVisitExtract { get; set; }
-        //public DbSet<ValidationError> ValidationError { get; set; }
-        //public DbSet<Validator> Validator { get; set; }
+        public DbSet<ValidationError> ValidationError { get; set; }
+        public DbSet<Validator> Validator { get; set; }
 
         // ------------------------------------------------------------------------------------
 
@@ -37,8 +37,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         //public DbSet<TempPatientArtExtractErrorSummary> TempPatientArtExtractErrorSummaries { get; set; }
         //public DbSet<TempPatientBaselinesExtractError> TempPatientBaselinesExtractErrors { get; set; }
         //public DbSet<TempPatientBaselinesExtractErrorSummary> TempPatientBaselinesExtractErrorSummaries { get; set; }
-        public DbSet<TempPatientExtractError> TempPatientExtractErrors { get; set; }
-        //public DbSet<TempPatientExtractErrorSummary> TempPatientExtractErrorSummaries { get; set; }
+        public DbSet<TempPatientExtractError> TempPatientExtractError { get; set; }
+        public DbSet<TempPatientExtractErrorSummary> TempPatientExtractErrorSummary { get; set; }
         //public DbSet<TempPatientLaboratoryExtractError> TempPatientLaboratoryExtractErrors { get; set; }
         //public DbSet<TempPatientLaboratoryExtractErrorSummary> TempPatientLaboratoryExtractErrorSummaries { get; set; }
         //public DbSet<TempPatientPharmacyExtractError> TempPatientPharmacyExtractErrors { get; set; }
@@ -59,11 +59,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
+            DapperPlusManager.Entity<PatientExtract>().Key(x => x.Id).Table($"{nameof(PatientExtracts)}");
         }
 
         public override void EnsureSeeded()
         {
-            /*
             var csvConfig = new CsvConfiguration
             {
                 Delimiter = "|",
@@ -75,11 +75,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 
             SeederConfiguration.ResetConfiguration(csvConfig, null, typeof(ExtractsContext).GetTypeInfo().Assembly);
 
-            PsmartStages.SeedDbSetIfEmpty($"{nameof(PsmartStages)}");
-          
-
+            //PsmartStages.SeedDbSetIfEmpty($"{nameof(PsmartStages)}");
+            Validator.SeedDbSetIfEmpty($"{nameof(Validator)}");
             SaveChanges();
-            */
         }
     }
 }

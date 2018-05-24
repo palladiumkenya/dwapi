@@ -1,10 +1,7 @@
-﻿using Dwapi.Domain.Abstract;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
-namespace Dwapi.Domain
+namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
     [Table("vTempPatientExtractErrorSummary")]
     public class TempPatientExtractErrorSummary : TempExtractErrorSummary

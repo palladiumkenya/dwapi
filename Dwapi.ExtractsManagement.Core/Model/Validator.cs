@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Dwapi.Domain.Utils;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Model
 {
-    public class Validator
+    public class Validator: Entity<Guid>
     {
-        public Guid Id { get; set; }
         public string Extract { get; set; }
         public string Field { get; set; }
         public string Type { get; set; }

@@ -1,0 +1,57 @@
+Id|Extract|Field|Type|Logic|Summary
+61bbda3e-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|DOB|Logical|DOB >= LastVisit AND LastVisit IS NOT NULL|DoB After LastVisit
+61bbe4f2-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|DOB|Logical|DOB > = PreviousARTStartDate AND PreviousARTStartDate IS NOT NULL|DOB after PreviousARTStartDate
+61bbed08-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|DOB|Logical|DOB > StartARTDate|DOB greater than StartARTDate
+61bbf0a0-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|DOB|Logical|DOB >=ExitDate AND ExitDate IS NOT NULL|DoB After ExitDate
+61bc2d9a-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|DOB|Logical|DOB >=ExpectedReturn AND ExpectedReturn IS NOT NULL|DoB After ExpectedReturn
+61bbd912-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|ExitReason|Logical|ExitReason IS NULL AND ExitDate IS NOT NULL|Missing Exit Reason
+61bc219c-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|ExpectedReturn|Required|ExpectedReturn IS NULL|ExpectedReturn is Required
+61bc32fe-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|LastRegimen|Required|LastARTDate IS NOT NULL AND LastRegimen IS NULL|LastRegimen details missing
+61bbe1be-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|LastRegimenLine|Required|LastARTDate IS NOT NULL AND LastRegimenLine IS NULL|LastRegimenLine details missing
+61bbe402-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|LastVisit|Logical|LastVisit < RegistrationDate|Last visit date before registration date
+61bc1d96-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|LastVisit|Required|LastVisit IS NULL|LastVisit is Required
+6c5c63e4-2a95-11e7-93ae-92361f002671|TempPatientArtExtract|PatientID|Required|PatientID IS NULL|PatientID Required
+6c5c6100-2a95-11e7-93ae-92361f002671|TempPatientArtExtract|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+61bbefba-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|PreviousARTStartDate|Required|PatientSource='Transfer-in' AND PreviousARTStartDate IS NULL|Transfer-in Patient missing Previous Start ART Date
+61bc253e-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|PreviousARTStartDate|Required|PatientSource='Transfer-in' AND PreviousARTRegimen IS NULL|Transfer-in Patient missing Previous Start ART Date
+6c5c64fc-2a95-11e7-93ae-92361f002671|TempPatientArtExtract|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+ce7b5db8-160f-11e7-93ae-92361f002671|TempPatientArtExtract|StartARTDate|Required|StartARTDate IS NULL|StartARTDate Required
+61bc1c9c-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|StartARTDate|Logical|StartARTDate > ExitDate|StartARTDate after Exit Date
+61bc228c-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|StartARTDate|Logical|StartARTDate< 1997-01-01|StartARTDate out of expected range
+61bc2372-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|StartARTDate|Logical|StartARTDate > LastVisit|StartARTDate after last visit date
+61bc2624-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|StartARTDate|Required|StartARTDate=''|StartARTDate Required
+61bc2b92-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|StartARTDate|Logical|StartARTDate < RegistrationDate AND PatientSource <> 'Transfer In'|StartARTDate before patient registered
+ce7b5f34-160f-11e7-93ae-92361f002671|TempPatientArtExtract|StartRegimen|Required|StartRegimen IS NULL|StartRegimen Required
+61bbd7c8-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtract|StartRegimenLine|Required|StartRegimenLine IS NULL|StartRegimenLine is Required
+6c5c66fa-2a95-11e7-93ae-92361f002671|TempPatientBaselinesExtract|PatientID|Required|PatientID IS NULL|PatientID Required
+6c5c6600-2a95-11e7-93ae-92361f002671|TempPatientBaselinesExtract|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+6c5c6812-2a95-11e7-93ae-92361f002671|TempPatientBaselinesExtract|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+61bbd49e-35a1-11e7-a919-92ebcb67fe33|TempPatientExtract|DOB|Logical|DOB >= RegistrationAtCCC AND RegistrationAtCCC IS NOT Null|DoB After Date of Registration
+ce7b5c1e-160f-11e7-93ae-92361f002671|TempPatientExtract|DOB|Required|DOB IS NULL|DOB Required
+ce7b571e-160f-11e7-93ae-92361f002671|TempPatientExtract|Gender|Required|Gender IS NULL|Gender Required
+61bbe6d2-35a1-11e7-a919-92ebcb67fe33|TempPatientExtract|LastVisit|Required|LastVisit IS NULL|LastVisit is Required
+6c5c6c40-2a95-11e7-93ae-92361f002671|TempPatientExtract|PatientID|Required|PatientID IS NULL|PatientID Required
+6c5c6b28-2a95-11e7-93ae-92361f002671|TempPatientExtract|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+61bc2f52-35a1-11e7-a919-92ebcb67fe33|TempPatientExtract|PatientSource|Required|PatientSource IS NULL|PatientSource is required
+61bbf186-35a1-11e7-a919-92ebcb67fe33|TempPatientExtract|RegistrationAtCCC|Required|RegistrationAtCCC IS NULL|RegistrationAtCCC is Required
+6c5c70be-2a95-11e7-93ae-92361f002671|TempPatientExtract|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+61bbedee-35a1-11e7-a919-92ebcb67fe33|TempPatientLaboratoryExtract|OrderedByDate|Required|OrderedByDate IS NULL|OrderedByDate is required
+6c5c73e8-2a95-11e7-93ae-92361f002671|TempPatientLaboratoryExtract|PatientID|Required|PatientID IS NULL|PatientID Required
+6c5c72b2-2a95-11e7-93ae-92361f002671|TempPatientLaboratoryExtract|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+6c5c780c-2a95-11e7-93ae-92361f002671|TempPatientLaboratoryExtract|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+61bbeed4-35a1-11e7-a919-92ebcb67fe33|TempPatientLaboratoryExtract|TestName|Required|TestName IS NULL|TestName is Required
+61bbebc8-35a1-11e7-a919-92ebcb67fe33|TempPatientPharmacyExtract|DispenseDate|Required|DispenseDate IS NULL|DispenseDate is required
+61bc2a52-35a1-11e7-a919-92ebcb67fe33|TempPatientPharmacyExtract|Drug|Required|Drug IS NULL|Drug Name is required
+6c5c7a0a-2a95-11e7-93ae-92361f002671|TempPatientPharmacyExtract|PatientID|Required|PatientID IS NULL|PatientID Required
+6c5c791a-2a95-11e7-93ae-92361f002671|TempPatientPharmacyExtract|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+6c5c7afa-2a95-11e7-93ae-92361f002671|TempPatientPharmacyExtract|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+61bc30ec-35a1-11e7-a919-92ebcb67fe33|TempPatientStatusExtract|ExitDate|Required|ExitDate IS NULL|ExitDate is required
+61bc2458-35a1-11e7-a919-92ebcb67fe33|TempPatientStatusExtract|ExitReason|Logical|ExitReason IS NULL AND ExitDate IS NOT NULL|Missing Exit Reason
+61bc3204-35a1-11e7-a919-92ebcb67fe33|TempPatientStatusExtract|ExitReason|Required|ExitReason IS NULL|ExitReason is required
+6c5c7cc6-2a95-11e7-93ae-92361f002671|TempPatientStatusExtract|PatientID|Required|PatientID IS NULL|PatientID Required
+6c5c7bea-2a95-11e7-93ae-92361f002671|TempPatientStatusExtract|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+6c5c7db6-2a95-11e7-93ae-92361f002671|TempPatientStatusExtract|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+6c5c82d4-2a95-11e7-93ae-92361f002671|TempPatientVisitExtract|PatientID|Required|PatientID IS NULL|PatientID Required
+6c5c81b2-2a95-11e7-93ae-92361f002671|TempPatientVisitExtract|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+6c5c83b0-2a95-11e7-93ae-92361f002671|TempPatientVisitExtract|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+61bbe02e-35a1-11e7-a919-92ebcb67fe33|TempPatientVisitExtract|VisitDate|Required|VisitDate IS NULL|VisitDate is required

@@ -91,44 +91,19 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "vTempPatientExtractError",
+                name: "Validator",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    CheckError = table.Column<bool>(nullable: false),
-                    ContactRelation = table.Column<string>(nullable: true),
-                    DOB = table.Column<DateTime>(nullable: true),
-                    DateConfirmedHIVPositive = table.Column<DateTime>(nullable: true),
-                    DateExtracted = table.Column<DateTime>(nullable: false),
-                    District = table.Column<string>(nullable: true),
-                    EducationLevel = table.Column<string>(nullable: true),
-                    Emr = table.Column<string>(nullable: true),
-                    FacilityId = table.Column<int>(nullable: true),
-                    FacilityName = table.Column<string>(nullable: true),
-                    Gender = table.Column<string>(nullable: true),
-                    LastVisit = table.Column<DateTime>(nullable: true),
-                    MaritalStatus = table.Column<string>(nullable: true),
-                    PatientID = table.Column<string>(nullable: true),
-                    PatientPK = table.Column<int>(nullable: true),
-                    PatientSource = table.Column<string>(nullable: true),
-                    PreviousARTExposure = table.Column<string>(nullable: true),
-                    PreviousARTStartDate = table.Column<DateTime>(nullable: true),
-                    Project = table.Column<string>(nullable: true),
-                    Region = table.Column<string>(nullable: true),
-                    RegistrationATPMTCT = table.Column<DateTime>(nullable: true),
-                    RegistrationAtCCC = table.Column<DateTime>(nullable: true),
-                    RegistrationAtTBClinic = table.Column<DateTime>(nullable: true),
-                    RegistrationDate = table.Column<DateTime>(nullable: true),
-                    SatelliteName = table.Column<string>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: true),
-                    StatusAtCCC = table.Column<string>(nullable: true),
-                    StatusAtPMTCT = table.Column<string>(nullable: true),
-                    StatusAtTBClinic = table.Column<string>(nullable: true),
-                    Village = table.Column<string>(nullable: true)
+                    Extract = table.Column<string>(nullable: true),
+                    Field = table.Column<string>(nullable: true),
+                    Logic = table.Column<string>(nullable: true),
+                    Summary = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_vTempPatientExtractError", x => x.Id);
+                    table.PrimaryKey("PK_Validator", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -383,42 +358,25 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "vTempPatientExtractErrorSummary",
+                name: "ValidationError",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    DOB = table.Column<DateTime>(nullable: true),
-                    DateConfirmedHIVPositive = table.Column<DateTime>(nullable: true),
-                    DateGenerated = table.Column<DateTime>(nullable: true),
-                    EducationLevel = table.Column<string>(nullable: true),
-                    FacilityId = table.Column<int>(nullable: true),
-                    FacilityName = table.Column<string>(nullable: true),
-                    Field = table.Column<string>(nullable: true),
-                    Gender = table.Column<string>(nullable: true),
-                    LastVisit = table.Column<DateTime>(nullable: true),
-                    MaritalStatus = table.Column<string>(nullable: true),
-                    PatientID = table.Column<string>(nullable: true),
-                    PatientPK = table.Column<int>(nullable: true),
-                    PatientSource = table.Column<string>(nullable: true),
-                    PreviousARTExposure = table.Column<string>(nullable: true),
-                    PreviousARTStartDate = table.Column<DateTime>(nullable: true),
-                    RecordId = table.Column<Guid>(nullable: false),
-                    RegistrationAtCCC = table.Column<DateTime>(nullable: true),
-                    RegistrationDate = table.Column<DateTime>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: true),
-                    Summary = table.Column<string>(nullable: true),
-                    TempPatientExtractErrorId = table.Column<Guid>(nullable: true),
-                    Type = table.Column<string>(nullable: true)
+                    EntityName = table.Column<string>(nullable: true),
+                    ErrorMessage = table.Column<string>(nullable: true),
+                    FieldName = table.Column<string>(nullable: true),
+                    ReferencedEntityId = table.Column<string>(nullable: true),
+                    ValidatorId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_vTempPatientExtractErrorSummary", x => x.Id);
+                    table.PrimaryKey("PK_ValidationError", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_vTempPatientExtractErrorSummary_vTempPatientExtractError_TempPatientExtractErrorId",
-                        column: x => x.TempPatientExtractErrorId,
-                        principalTable: "vTempPatientExtractError",
+                        name: "FK_ValidationError_Validator_ValidatorId",
+                        column: x => x.ValidatorId,
+                        principalTable: "Validator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -452,9 +410,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 column: "PatientExtractId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_vTempPatientExtractErrorSummary_TempPatientExtractErrorId",
-                table: "vTempPatientExtractErrorSummary",
-                column: "TempPatientExtractErrorId");
+                name: "IX_ValidationError_ValidatorId",
+                table: "ValidationError",
+                column: "ValidatorId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -481,13 +439,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 name: "TempPatientExtracts");
 
             migrationBuilder.DropTable(
-                name: "vTempPatientExtractErrorSummary");
+                name: "ValidationError");
 
             migrationBuilder.DropTable(
                 name: "PatientExtracts");
 
             migrationBuilder.DropTable(
-                name: "vTempPatientExtractError");
+                name: "Validator");
         }
     }
 }
