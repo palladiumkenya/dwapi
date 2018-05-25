@@ -7,12 +7,14 @@ using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.ExtractValidators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Loader;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
@@ -108,6 +110,8 @@ namespace Dwapi
             services.AddScoped<IPsmartStageRepository, PsmartStageRepository>();
             services.AddScoped<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddScoped<ITempPatientExtractRepository, TempPatientExtractRepository>();
+            services.AddScoped<IValidatorRepository, ValidatorRepository>();
+            services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
 
             services.AddScoped<IDatabaseManager, DatabaseManager>();
             services.AddScoped<IRegistryManagerService, RegistryManagerService>();
@@ -122,7 +126,8 @@ namespace Dwapi
             services.AddScoped<IPatientSourceReader, PatientSourceReader>();
             services.AddScoped<IPatientSourceExtractor, PatientSourceExtractor>();
             services.AddScoped<IPatientValidator, PatientValidator>();
-            services.AddScoped<IValidatorRepository, ValidatorRepository>();
+            services.AddScoped<IPatientLoader, PatientLoader>();
+
             //services.AddHangfireIntegration(Configuration);
 
         }
@@ -183,6 +188,7 @@ namespace Dwapi
                 {
                     cfg.AddDataReaderMapping();
                     cfg.AddProfile<TempExtractProfile>();
+                    cfg.AddProfile<PatientExtractProfile>();
                 }
             );
 
