@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Serilog;
 using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
@@ -13,16 +17,23 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
         {
         }
 
-        public void BatchInsert(IEnumerable<TempPatientExtract> extracts)
+        public bool BatchInsert(IEnumerable<TempPatientExtract> extracts)
         {
+            var cn = GetConnectionString();
             try
             {
-                GetConnection().BulkInsert(extracts);
+                using (var connection = new SqlConnection(cn))
+                {
+                    connection.BulkInsert(extracts);
+                    return true;
+                }
+                
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw;
+                Log.Error(e, "Failed batch insert");
+                return false;
             }
         }
     }

@@ -13,7 +13,7 @@ namespace Dwapi.SharedKernel.Utility
                 return columnValue.ToString();
             }
 
-            return string.Empty;
+            return null;
         }
 
         public static int? GetNullIntOrDefault(this IDataRecord reader, string columnName)

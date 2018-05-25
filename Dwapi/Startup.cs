@@ -122,7 +122,7 @@ namespace Dwapi
             services.AddScoped<IPatientSourceReader, PatientSourceReader>();
             services.AddScoped<IPatientSourceExtractor, PatientSourceExtractor>();
             services.AddScoped<IPatientValidator, PatientValidator>();
-
+            services.AddScoped<IValidatorRepository, ValidatorRepository>();
             //services.AddHangfireIntegration(Configuration);
 
         }

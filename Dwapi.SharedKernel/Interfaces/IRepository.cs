@@ -17,6 +17,7 @@ namespace Dwapi.SharedKernel.Interfaces
         
         void Delete(TId id);
         IDbConnection GetConnection();
+        string GetConnectionString();
         void CloseConnection();
         void SaveChanges();
 

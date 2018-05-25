@@ -82,6 +82,11 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             return _connection;
         }
 
+        public string GetConnectionString()
+        {
+            return Context.Database.GetDbConnection().ConnectionString;
+        }
+
         public void CloseConnection()
         {
             if (null != _connection)
