@@ -28,7 +28,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
             _extractRepository = extractRepository;
         }
 
-        public async Task<bool> Extract(DbExtract extract, DbProtocol dbProtocol)
+        public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
             int batch = 500;
             // TODO: Notify started...
@@ -63,7 +63,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                         new ExtractActivityNotification(new DwhProgress(
                             nameof(PatientExtract),
                             "loading...",
-                            list.Count)));
+                            list.Count,0,0,0,0)));
                 }
 
                 if (count > 0)
@@ -75,8 +75,13 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
             }
 
             // TODO: Notify Completed;
+            DomainEvents.Dispatch(
+                new ExtractActivityNotification(new DwhProgress(
+                    nameof(PatientExtract),
+                    "loaded",
+                    list.Count, 0, 0, 0, 0)));
 
-            return true;
+            return list.Count;
         }
     }
 }

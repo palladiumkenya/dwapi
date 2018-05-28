@@ -6,7 +6,10 @@ using Dwapi.Domain.Models;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
+using Dwapi.SharedKernel.Events;
+using Dwapi.SharedKernel.Model;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Utilities
@@ -23,6 +26,13 @@ namespace Dwapi.ExtractsManagement.Core.Utilities
         public async Task<int> Clear()
         {
             Log.Debug($"Executing ClearExtracts command...");
+
+            DomainEvents.Dispatch(
+                new ExtractActivityNotification(new DwhProgress(
+                    nameof(PatientExtract),
+                    "Clearing...",
+                     0, 0, 0, 0, 0)));
+
             int totalCount = 0;
             var truncates = new List<string>
             {  $"{nameof(TempPatientExtract)}s",

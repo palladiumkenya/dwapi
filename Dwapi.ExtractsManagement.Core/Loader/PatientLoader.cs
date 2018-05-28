@@ -26,7 +26,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader
             _tempPatientExtractRepository = tempPatientExtractRepository;
         }
 
-        public async Task<bool> Load()
+        public async Task<int> Load()
         {
             try
             {
@@ -41,13 +41,14 @@ namespace Dwapi.ExtractsManagement.Core.Loader
                 _patientExtractRepository.BatchInsert(extractRecords);
                 Log.Debug("saved batch");
 
-                return true;
+
+                return tempPatientExtracts.Count;
 
             }
             catch (Exception e)
             {
                 Log.Error(e, $"Extract {nameof(PatientExtract)} not Loaded");
-                return false;
+                return 0;
             }
         }
     }

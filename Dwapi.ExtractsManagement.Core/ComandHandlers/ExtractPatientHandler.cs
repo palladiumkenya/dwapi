@@ -7,6 +7,9 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SharedKernel.Events;
+using Dwapi.SharedKernel.Model;
 using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers
@@ -32,13 +35,28 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             int count = await _clearExtracts.Clear();
 
             //Extract
-            await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
             await _patientValidator.Validate();
 
+            //notify rejected
+            int rejected = await _patientValidator.GetRejectedCount();
+            DomainEvents.Dispatch(
+                new ExtractActivityNotification(new DwhProgress(
+                    nameof(PatientExtract),
+                    "loaded",
+                    found, 0, rejected, 0, 0)));
+
             //Load
-            await _patientLoader.Load();
+            int loaded = await _patientLoader.Load();
+
+            //notify loaded
+            DomainEvents.Dispatch(
+                new ExtractActivityNotification(new DwhProgress(
+                    nameof(PatientExtract),
+                    "loaded",
+                    found, loaded, rejected, 0, 0)));
 
             return true;
         }

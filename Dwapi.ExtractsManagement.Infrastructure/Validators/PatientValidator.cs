@@ -12,10 +12,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators
     public class PatientValidator : IPatientValidator
     {
         private readonly IValidatorRepository _validatorRepository;
+        private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
 
-        public PatientValidator(IValidatorRepository validatorRepository)
+        public PatientValidator(IValidatorRepository validatorRepository, ITempPatientExtractRepository tempPatientExtractRepository)
         {
             _validatorRepository = validatorRepository;
+            _tempPatientExtractRepository = tempPatientExtractRepository;
         }
 
         public async Task<bool> Validate()
@@ -51,6 +53,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators
                 Console.WriteLine(e);
                 return false;
             }
+        }
+
+        public Task<int> GetRejectedCount()
+        {
+            return Task.Run(() => _tempPatientExtractRepository.GetAll().Count(a => a.CheckError));
         }
 
         private Task<int> GetTask(IDbCommand command)
