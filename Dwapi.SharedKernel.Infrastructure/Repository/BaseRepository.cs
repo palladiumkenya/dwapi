@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml;
@@ -13,6 +15,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
     {
         protected internal DbContext Context;
         protected internal DbSet<T> DbSet;
+        private IDbConnection _connection;
 
         protected BaseRepository(DbContext context)
         {
@@ -65,6 +68,35 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         {
             var entity = DbSet.Find(id);
             Delete(entity);
+        }
+
+        public IDbConnection GetConnection()
+        {
+            if (null == _connection)
+            {
+                _connection = Context.Database.GetDbConnection();
+                if(_connection.State!=ConnectionState.Open)
+                    _connection.Open();
+            }
+
+            return _connection;
+        }
+
+        public string GetConnectionString()
+        {
+            return Context.Database.GetDbConnection().ConnectionString;
+        }
+
+        public void CloseConnection()
+        {
+            if (null != _connection)
+            {
+                try
+                {
+                    _connection.Close();
+                }
+                catch { }
+            }
         }
 
         public virtual void Delete(T entity)

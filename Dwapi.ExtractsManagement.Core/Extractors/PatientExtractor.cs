@@ -16,6 +16,7 @@ using System.IO;
 using MySql.Data.MySqlClient;
 using System.Data;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors
 {

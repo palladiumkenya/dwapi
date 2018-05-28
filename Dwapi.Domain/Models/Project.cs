@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Dwapi.Domain
+namespace Dwapi.Domain.Models
 {
     public class Project
     {

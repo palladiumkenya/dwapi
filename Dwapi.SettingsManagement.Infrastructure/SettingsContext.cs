@@ -18,23 +18,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CentralRegistry>().ToTable(nameof(CentralRegistry).ToLower())
-                .HasKey(e => e.Id);
 
-            modelBuilder.Entity<EmrSystem>().ToTable(nameof(EmrSystem).ToLower())
-                .HasKey(e => e.Id);
-
-            modelBuilder.Entity<DatabaseProtocol>().ToTable(nameof(DatabaseProtocol).ToLower())
-                .HasKey(e => e.Id);
-
-            modelBuilder.Entity<RestProtocol>().ToTable(nameof(RestProtocol).ToLower())
-                .HasKey(e => e.Id);
-
-            modelBuilder.Entity<Docket>().ToTable(nameof(Docket).ToLower())
-                .HasKey(e => e.Id);
-
-            modelBuilder.Entity<Extract>().ToTable(nameof(Extract).ToLower())
-                .HasKey(e => e.Id);
         }
 
         public DbSet<CentralRegistry> CentralRegistries { get; set; }

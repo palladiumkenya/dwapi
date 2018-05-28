@@ -9,7 +9,6 @@ namespace Dwapi.ExtractsManagement.Core.Commands
     public class LoadFromEmrCommand : IRequest<LoadFromEmrResponse>
     {
         public IList<DwhExtract> Extracts { get; set; }
-
         //public Guid DbProtocolId { get; set; }
         public DbProtocol DatabaseProtocol { get; set; }
 

@@ -1,4 +1,4 @@
-﻿namespace Dwapi.UploadManagement.Core.Model
+﻿namespace Dwapi.SharedKernel.Model
 {
     public class SendResponse
     {

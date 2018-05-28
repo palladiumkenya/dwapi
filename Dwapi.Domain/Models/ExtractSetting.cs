@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
-namespace Dwapi.Domain
+namespace Dwapi.Domain.Models
 {
     public class ExtractSetting
     {

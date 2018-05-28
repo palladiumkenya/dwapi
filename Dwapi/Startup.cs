@@ -2,13 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using AutoMapper;
+using AutoMapper.Data;
+using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
+using Dwapi.ExtractsManagement.Core.ExtractValidators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Loader;
+using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
+using Dwapi.ExtractsManagement.Infrastructure.Validators;
+using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
@@ -16,6 +31,7 @@ using Dwapi.SettingsManagement.Core.Services;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Services;
@@ -36,6 +52,7 @@ namespace Dwapi
     {
         public static IConfiguration Configuration;
         public IServiceCollection Service;
+        public static IServiceProvider ServiceProvider;
 
         public Startup(IHostingEnvironment env)
         {
@@ -57,10 +74,10 @@ namespace Dwapi
             {
                 assemblies.Add(Assembly.Load(assemblyName));
             }
-            
+
             services.AddMediatR(assemblies);
-            services.AddDatabase(Configuration);
-            
+            //services.AddDatabase(Configuration);
+
             services.AddExtractorAdaptor();
             services.AddSwaggerGen(c =>
             {
@@ -79,12 +96,12 @@ namespace Dwapi
               .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             var connectionString = Startup.Configuration["connectionStrings:DwapiConnection"];
-            
 
-            //services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
-            //services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
 
-            
+            services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
+            services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+
+
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
             services.AddScoped<IEmrSystemRepository, EmrSystemRepository>();
             services.AddScoped<IDocketRepository, DocketRepository>();
@@ -92,6 +109,9 @@ namespace Dwapi
             services.AddScoped<IExtractRepository, ExtractRepository>();
             services.AddScoped<IPsmartStageRepository, PsmartStageRepository>();
             services.AddScoped<IExtractHistoryRepository, ExtractHistoryRepository>();
+            services.AddScoped<ITempPatientExtractRepository, TempPatientExtractRepository>();
+            services.AddScoped<IValidatorRepository, ValidatorRepository>();
+            services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
 
             services.AddScoped<IDatabaseManager, DatabaseManager>();
             services.AddScoped<IRegistryManagerService, RegistryManagerService>();
@@ -102,19 +122,34 @@ namespace Dwapi
             services.AddScoped<IExtractStatusService, ExtractStatusService>();
             services.AddScoped<IPsmartSourceReader, PsmartSourceReader>();
             services.AddScoped<IPsmartSendService, PsmartSendService>();
-            services.AddHangfireIntegration(Configuration);
+
+            services.AddScoped<IPatientSourceReader, PatientSourceReader>();
+            services.AddScoped<IPatientSourceExtractor, PatientSourceExtractor>();
+            services.AddScoped<IPatientValidator, PatientValidator>();
+            services.AddScoped<IPatientLoader, PatientLoader>();
+
+            //services.AddHangfireIntegration(Configuration);
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
+            ServiceProvider = serviceProvider;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
-            
+
+            app.UseCors(
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials())
+                .UseStaticFiles()
+                .UseWebSockets();
 
             app.Use(async (context, next) =>
             {
@@ -133,35 +168,52 @@ namespace Dwapi
 
             app.UseStaticFiles()
                 .UseSwaggerUi();
-            
-            
+
+
 
             Log.Debug(@"initializing Database...");
 
-            //EnsureMigrationOfContext<SettingsContext>(serviceProvider);
-            //EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
+            EnsureMigrationOfContext<SettingsContext>(serviceProvider);
+            EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
 
-            
-            app.UseHangfire();
+
+            //app.UseHangfire();
+
+
+            app.UseSignalR(routes => { routes.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}"); }
+            );
+
+
+            Mapper.Initialize(cfg =>
+                {
+                    cfg.AddDataReaderMapping();
+                    cfg.AddProfile<TempExtractProfile>();
+                    cfg.AddProfile<PatientExtractProfile>();
+                }
+            );
+
+            DomainEvents.Init();
 
             Log.Debug(@"initializing Database [Complete]");
-            Log.Debug(@"---------------------------------------------------------------------------------------------------");
+            Log.Debug(
+                @"---------------------------------------------------------------------------------------------------");
             Log.Debug
-      (@"
+            (@"
 
-                                          _____                      _ 
+                                          _____                      _
                                          |  __ \                    (_)
-                                         | |  | |_      ____ _ _ __  _ 
+                                         | |  | |_      ____ _ _ __  _
                                          | |  | \ \ /\ / / _` | '_ \| |
                                          | |__| |\ V  V / (_| | |_) | |
                                          |_____/  \_/\_/ \__,_| .__/|_|
-                                                              | |      
-                                                              |_|      
+                                                              | |
+                                                              |_|
 ");
-            Log.Debug(@"---------------------------------------------------------------------------------------------------");
+            Log.Debug(
+                @"---------------------------------------------------------------------------------------------------");
             Log.Debug("Dwapi started !");
 
-       
+
         }
 
         public static void EnsureMigrationOfContext<T>(IServiceProvider app) where T : BaseContext
@@ -182,6 +234,6 @@ namespace Dwapi
             }
 
         }
-        
+
     }
 }

@@ -6,6 +6,7 @@ using Dwapi.Domain;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.ExtractValidators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors

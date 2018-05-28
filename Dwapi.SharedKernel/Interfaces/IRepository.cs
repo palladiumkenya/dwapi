@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using System.Xml;
 using Dwapi.SharedKernel.Model;
@@ -13,7 +14,12 @@ namespace Dwapi.SharedKernel.Interfaces
         void Create(T entity);
         void Update(T entity);
         void CreateOrUpdate(T entity);
+        
         void Delete(TId id);
+        IDbConnection GetConnection();
+        string GetConnectionString();
+        void CloseConnection();
         void SaveChanges();
+
     }
 }

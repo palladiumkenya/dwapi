@@ -1,10 +1,10 @@
-﻿using Dwapi.Domain.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using Dwapi.Domain.Utils;
 
-namespace Dwapi.Domain
+namespace Dwapi.Domain.Abstract
 {
     public abstract class ClientExtract
     {

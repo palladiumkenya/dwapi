@@ -3,6 +3,7 @@ using Dwapi.SettingsManagement.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Dwapi.SettingsManagement.Core.Interfaces;
 
 namespace Dwapi.SettingsManagement.Infrastructure
 {

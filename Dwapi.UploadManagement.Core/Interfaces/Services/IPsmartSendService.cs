@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Model;
-using Dwapi.UploadManagement.Core.Model;
 
 namespace Dwapi.UploadManagement.Core.Interfaces.Services
 {

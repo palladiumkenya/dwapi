@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
@@ -87,6 +88,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
             }
             return extracts;
 
+        }
+
+        public Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract)
+        {
+            throw new NotImplementedException();
         }
 
         public IDbConnection GetConnection(DbProtocol databaseProtocol)

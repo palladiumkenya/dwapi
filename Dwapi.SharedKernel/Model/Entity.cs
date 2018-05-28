@@ -7,7 +7,7 @@ namespace Dwapi.SharedKernel.Model
 {
     public abstract class Entity<TId>
     {
-        [Key, Column(Order = 0, TypeName = "char(38)")]
+        [Key, Column(Order = 0)]
         public virtual TId Id { get; set; }
 
         protected Entity()
