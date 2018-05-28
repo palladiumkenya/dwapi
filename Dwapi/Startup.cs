@@ -13,10 +13,12 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
+using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Loader;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
+using Dwapi.ExtractsManagement.Core.Utilities;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
@@ -128,6 +130,7 @@ namespace Dwapi
             services.AddScoped<IPatientSourceExtractor, PatientSourceExtractor>();
             services.AddScoped<IPatientValidator, PatientValidator>();
             services.AddScoped<IPatientLoader, PatientLoader>();
+            services.AddScoped<IClearExtracts, ClearExtracts>();
 
             //services.AddHangfireIntegration(Configuration);
 
