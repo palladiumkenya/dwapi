@@ -413,7 +413,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.PsmartStage", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("EId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime?>("DateExtracted");
@@ -424,9 +424,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("Date_Created");
 
-                    b.Property<Guid>("EId");
-
                     b.Property<string>("Emr");
+
+                    b.Property<int?>("Id");
 
                     b.Property<string>("RequestId");
 
@@ -439,7 +439,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Uuid");
 
-                    b.HasKey("Id");
+                    b.HasKey("EId");
 
                     b.ToTable("PsmartStage");
                 });

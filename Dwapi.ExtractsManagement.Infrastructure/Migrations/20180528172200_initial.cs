@@ -69,13 +69,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 name: "PsmartStage",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    EId = table.Column<Guid>(nullable: false),
                     DateExtracted = table.Column<DateTime>(nullable: true),
                     DateSent = table.Column<DateTime>(nullable: true),
                     DateStaged = table.Column<DateTime>(nullable: false),
                     Date_Created = table.Column<DateTime>(nullable: true),
-                    EId = table.Column<Guid>(nullable: false),
                     Emr = table.Column<string>(nullable: true),
+                    Id = table.Column<int>(nullable: true),
                     RequestId = table.Column<string>(nullable: true),
                     Shr = table.Column<string>(nullable: true),
                     Status = table.Column<string>(maxLength: 100, nullable: true),
@@ -84,7 +84,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PsmartStage", x => x.Id);
+                    table.PrimaryKey("PK_PsmartStage", x => x.EId);
                 });
 
             migrationBuilder.CreateTable(

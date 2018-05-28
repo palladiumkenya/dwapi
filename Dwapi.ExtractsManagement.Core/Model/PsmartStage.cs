@@ -1,12 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Dwapi.SharedKernel.Model;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Dwapi.ExtractsManagement.Core.Model
 {
-    public class PsmartStage : Entity<Guid>
+    public class PsmartStage 
     {
+        [Key]
         public Guid EId { get; set; }
+        public int? Id { get; set; }
         public string Shr { get; set; }
         public DateTime? Date_Created { get; set; }
         [MaxLength(100)]
