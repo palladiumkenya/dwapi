@@ -12,7 +12,7 @@ using System;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20180528142635_initialViews")]
+    [Migration("20180528143621_initialViews")]
     partial class initialViews
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
