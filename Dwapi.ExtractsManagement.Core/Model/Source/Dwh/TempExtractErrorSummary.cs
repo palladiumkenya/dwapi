@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
-    public abstract class TempExtractErrorSummary
+    public abstract class TempExtractErrorSummary : Entity<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
+        public string Extract { get; set; }
         public string Field { get; set; }
         public string Type { get; set; }
         public string Summary { get; set; }

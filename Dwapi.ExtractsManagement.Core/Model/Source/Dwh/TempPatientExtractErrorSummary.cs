@@ -1,21 +1,33 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Dwapi.Domain.Utils;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
     [Table("vTempPatientExtractErrorSummary")]
     public class TempPatientExtractErrorSummary : TempExtractErrorSummary
     {
+        [NotMapped]
         public string Gender { get; set; }
+        [NotMapped]
         public DateTime? DOB { get; set; }
+        [NotMapped]
         public DateTime? RegistrationDate { get; set; }
+        [NotMapped]
         public DateTime? RegistrationAtCCC { get; set; }
+        [NotMapped]
         public string PatientSource { get; set; }
+        [NotMapped]
         public string MaritalStatus { get; set; }
+        [NotMapped]
         public string EducationLevel { get; set; }
+        [NotMapped]
         public DateTime? DateConfirmedHIVPositive { get; set; }
+        [NotMapped]
         public string PreviousARTExposure { get; set; }
+        [NotMapped]
         public DateTime? PreviousARTStartDate { get; set; }
+        [NotMapped]
         public DateTime? LastVisit { get; set; }
 
         //public override void AddHeader(Row row)

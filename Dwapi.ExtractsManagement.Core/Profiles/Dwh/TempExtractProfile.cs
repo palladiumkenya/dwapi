@@ -38,6 +38,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.StatusAtTBClinic, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.StatusAtTBClinic))))
                 .ForMember(x => x.EMR, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.EMR))))
                 .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.Project))));
+
+            CreateMap<TempPatientExtract, PatientExtract>()
+               .ForMember(x => x.DatePreviousARTStart, o => o.MapFrom(s => s.PreviousARTStartDate));
         }
     }
 }

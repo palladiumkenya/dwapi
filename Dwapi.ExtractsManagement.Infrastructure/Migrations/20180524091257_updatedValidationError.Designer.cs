@@ -646,13 +646,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Summary");
 
-                    b.Property<Guid?>("TempPatientExtractErrorId");
-
                     b.Property<string>("Type");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TempPatientExtractErrorId");
 
                     b.ToTable("vTempPatientExtractErrorSummary");
                 });
@@ -740,8 +736,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientExtractErrorSummary", b =>
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientExtractError")
-                        .WithMany("TempPatientExtractErrorSummaries")
-                        .HasForeignKey("TempPatientExtractErrorId");
+                        .WithMany("TempPatientExtractErrorSummaries");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.ValidationError", b =>

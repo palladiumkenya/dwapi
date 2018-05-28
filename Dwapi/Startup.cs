@@ -112,6 +112,7 @@ namespace Dwapi
             services.AddScoped<ITempPatientExtractRepository, TempPatientExtractRepository>();
             services.AddScoped<IValidatorRepository, ValidatorRepository>();
             services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
+            services.AddScoped<ITempPatientExtractErrorSummaryRepository, TempPatientExtractErrorSummaryRepository>();
 
             services.AddScoped<IDatabaseManager, DatabaseManager>();
             services.AddScoped<IRegistryManagerService, RegistryManagerService>();
@@ -188,7 +189,6 @@ namespace Dwapi
                 {
                     cfg.AddDataReaderMapping();
                     cfg.AddProfile<TempExtractProfile>();
-                    cfg.AddProfile<PatientExtractProfile>();
                 }
             );
 
