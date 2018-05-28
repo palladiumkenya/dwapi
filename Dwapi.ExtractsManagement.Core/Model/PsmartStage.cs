@@ -4,11 +4,9 @@ using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Model
 {
-    public class PsmartStage
+    public class PsmartStage : Entity<Guid>
     {
-        [Key]
         public Guid EId { get; set; }
-        public int? Id { get; set; }
         public string Shr { get; set; }
         public DateTime? Date_Created { get; set; }
         [MaxLength(100)]

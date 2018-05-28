@@ -2,7 +2,6 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using Dwapi.Domain.Models;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;

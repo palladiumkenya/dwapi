@@ -30,6 +30,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         //public DbSet<TempPatientVisitExtract> TempPatientVisitExtract { get; set; }
         public DbSet<ValidationError> ValidationError { get; set; }
         public DbSet<Validator> Validator { get; set; }
+        public DbSet<ExtractHistory> ExtractHistory { get; set; }
+        public DbSet<PsmartStage> PsmartStage { get; set; }
+
 
         // ------------------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
-    public partial class initialExtractViews : Migration
+    public partial class initialViews : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
