@@ -42,6 +42,7 @@ namespace Dwapi
         public static IWebHost BuildWebHost(string[] args)
         {
             var config = new ConfigurationBuilder()
+                .AddJsonFile("hosting.json", optional: true)
                 .AddCommandLine(args)
                 .Build();
 
