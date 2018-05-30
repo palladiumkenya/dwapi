@@ -189,7 +189,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5757/ExtractActivity')
+            .withUrl(`http://${document.location.hostname}:5757/ExtractActivity`)
             .configureLogging(LogLevel.Information)
             .build();
 
@@ -207,6 +207,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 this.extracts = [...newWithoutPatientExtract, this.currentExtract];
             }
         });
+        console.log('im done', this.extracts);
     }
 
     private getExtractProtocols(currentEmr: EmrSystem): ExtractDatabaseProtocol[] {
