@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Dwapi.ExtractsManagement.Core.Services
+﻿namespace Dwapi.ExtractsManagement.Core.Services
 {
     public class EmrExtractService
     {

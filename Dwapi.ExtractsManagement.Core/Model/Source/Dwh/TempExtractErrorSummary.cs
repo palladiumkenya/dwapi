@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh

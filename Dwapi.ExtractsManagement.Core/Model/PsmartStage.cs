@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Dwapi.SharedKernel.Model;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Dwapi.ExtractsManagement.Core.Model
 {

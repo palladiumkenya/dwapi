@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Dwapi.ExtractsManagement.Core.DTOs;
 using Dwapi.ExtractsManagement.Core.Model;
-using Dwapi.ExtractsManagement.Core.Model.Source;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;

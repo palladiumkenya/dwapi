@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Z.Dapper.Plus;
 

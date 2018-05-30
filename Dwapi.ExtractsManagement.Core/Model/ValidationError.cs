@@ -1,7 +1,7 @@
 ﻿using System;
-using Dwapi.Domain.Utils;
 using Dwapi.ExtractsManagement.Core.Interfaces;
 using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.ExtractsManagement.Core.Model
 {

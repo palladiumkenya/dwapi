@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.Data;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
-using Dwapi.ExtractsManagement.Core.Model.Source;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using MySql.Data.MySqlClient;
-using Serilog;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh
 {
