@@ -3,7 +3,6 @@ using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
 using System;
 using Dwapi.ExtractsManagement.Core.Commands;
-using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Services
 {

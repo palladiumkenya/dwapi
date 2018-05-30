@@ -4,8 +4,8 @@ using System.IO;
 using System.Reflection;
 using AutoMapper;
 using AutoMapper.Data;
+using Dwapi.Custom;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
-using Dwapi.ExtractsManagement.Core.ExtractValidators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
@@ -32,12 +32,10 @@ using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Services;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
-using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Services;
-using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -69,7 +67,7 @@ namespace Dwapi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // -------------NEW---------------
+            
             var assemblyNames = Assembly.GetEntryAssembly().GetReferencedAssemblies();
             List<Assembly> assemblies = new List<Assembly>();
             foreach (var assemblyName in assemblyNames)
@@ -78,9 +76,9 @@ namespace Dwapi
             }
 
             services.AddMediatR(assemblies);
-            //services.AddDatabase(Configuration);
+            
 
-            services.AddExtractorAdaptor();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
@@ -91,7 +89,7 @@ namespace Dwapi
                 });
             });
             services.AddSignalR();
-            // -------------------------------
+            
 
             services.AddMvc()
               .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()))
@@ -132,7 +130,7 @@ namespace Dwapi
             services.AddScoped<IPatientLoader, PatientLoader>();
             services.AddScoped<IClearExtracts, ClearExtracts>();
 
-            //services.AddHangfireIntegration(Configuration);
+            
 
         }
 
@@ -181,7 +179,7 @@ namespace Dwapi
             EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
 
 
-            //app.UseHangfire();
+            
 
 
             app.UseSignalR(routes => { routes.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}"); }

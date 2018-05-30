@@ -1,11 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
-using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.ExtractsManagement.Core.Model
 {

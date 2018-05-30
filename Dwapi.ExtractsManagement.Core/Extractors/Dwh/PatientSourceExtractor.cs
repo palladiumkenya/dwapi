@@ -2,7 +2,6 @@
 using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
-using Dwapi.Domain.Utils;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
@@ -10,6 +9,7 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
 using MediatR;
 using Serilog;
 

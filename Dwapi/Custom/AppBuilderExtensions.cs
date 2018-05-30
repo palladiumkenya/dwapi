@@ -1,12 +1,9 @@
+using System.Collections.Generic;
 using Hangfire;
 using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Builder;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Dwapi
+namespace Dwapi.Custom
 {
     public static class AppBuilderExtensions
     {

@@ -1,5 +1,4 @@
-﻿using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
-using Dwapi.SharedKernel.Model;
+﻿using Dwapi.SharedKernel.Model;
 using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.Commands

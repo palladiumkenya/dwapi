@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Dwapi.Domain;
-using Dwapi.Domain.Abstract;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {

@@ -51,6 +51,5 @@ namespace Dwapi.SettingsManagement.Infrastructure
             SaveChanges();
         }
 
-
     }
 }
