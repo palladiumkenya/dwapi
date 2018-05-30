@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
 {
-    public class TempPatientExtractRepository:BaseRepository<TempPatientExtract,Guid> ,ITempPatientExtractRepository
+    public class PatientExtractRepository : BaseRepository<PatientExtract, Guid>,IPatientExtractRepository
     {
-        public TempPatientExtractRepository(ExtractsContext context) : base(context)
+        public PatientExtractRepository(ExtractsContext context) : base(context)
         {
         }
 
-        public bool BatchInsert(IEnumerable<TempPatientExtract> extracts)
+        public bool BatchInsert(IEnumerable<PatientExtract> extracts)
         {
             var cn = GetConnectionString();
             try
@@ -27,7 +26,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
                     connection.BulkInsert(extracts);
                     return true;
                 }
-                
+
             }
             catch (Exception e)
             {

@@ -8,7 +8,12 @@ namespace Dwapi.SharedKernel.Model
     {
         public string Extract { get; set; }
         public string Status { get; set; }
-        public int Count { get; set; }
+        public int Found { get; set; }
+        public int Loaded { get; set; }
+        public int Rejected { get; set; }
+        public int Queued { get; set; }
+        public int Sent { get; set; }
+
 
         public DwhProgress(string extract, string status)
         {
@@ -16,9 +21,13 @@ namespace Dwapi.SharedKernel.Model
             Status = status;
         }
 
-        public DwhProgress(string extract, string status, int count):this(extract,status)
+        public DwhProgress(string extract, string status, int found,int loaded,int rejected,int queued,int sent):this(extract,status)
         {
-            Count = count;
+            Found = found;
+            Loaded = loaded;
+            Rejected = rejected;
+            Queued = queued;
+            Sent = sent;
         }
     }
 }

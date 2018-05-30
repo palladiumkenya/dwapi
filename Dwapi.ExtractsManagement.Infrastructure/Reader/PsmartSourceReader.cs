@@ -81,7 +81,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
                             else
                                 stringBuilder.Append($"'{extracts[i].Uuid}',");
                         }
-                        updateCommand.CommandText = $"update psmart_store set Status = 'Collected', Status_date = '{DateTime.Now}' where UUID in ({stringBuilder.ToString()})";
+                        updateCommand.CommandText = $"update psmart_store set Status = 'Collected', Status_date = '{DateTime.Now.Date:yyyy-MM-dd HH:mm:ss}' where UUID in ({stringBuilder.ToString()})";
                         updateCommand.ExecuteNonQuery();
                     }
                 }

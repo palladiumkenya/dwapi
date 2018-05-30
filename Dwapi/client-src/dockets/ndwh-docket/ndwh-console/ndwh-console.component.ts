@@ -199,7 +199,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.currentExtract = this.extracts.find(x => x.name === 'PatientExtract');
             if (this.currentExtract) {
                 this.extractEvent = {
-                    lastStatus: `${dwhProgress.status}`, loaded: dwhProgress.count
+                    lastStatus: `${dwhProgress.status}`, found: dwhProgress.found, loaded: dwhProgress.loaded,
+                    rejected: dwhProgress.rejected, queued: dwhProgress.queued, sent: dwhProgress.sent
                 };
                 this.currentExtract.extractEvent = {};
                 this.currentExtract.extractEvent = this.extractEvent;

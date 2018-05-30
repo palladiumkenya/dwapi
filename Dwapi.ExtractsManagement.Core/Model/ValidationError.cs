@@ -1,14 +1,19 @@
 ﻿using System;
+using Dwapi.Domain.Utils;
+using Dwapi.ExtractsManagement.Core.Interfaces;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Model
 {
-    public class ValidationError
+    public class ValidationError: Entity<Guid>, IValidationError
     {
-        public Guid Id { get; set; }
         public Guid ValidatorId { get; set; }
-        public string EntityName { get; set; }
-        public string FieldName { get; set; }
-        public string ReferencedEntityId { get; set; }
-        public string ErrorMessage { get; set; }
+        public Guid RecordId { get; set; }
+        public DateTime DateGenerated { get; set; }
+
+        public ValidationError()
+        {
+            Id = LiveGuid.NewGuid();
+        }
     }
 }

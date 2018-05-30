@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.Domain;
 using Dwapi.Domain.Models;
 using Dwapi.Domain.Utils;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
-    public class PatientExtract
+    public class PatientExtract : Entity<Guid>
     {
-        public Guid Id { get; set; }
         public int PatientPK { get; set; }
         public string PatientID { get; set; }
         public int SiteCode { get; set; }

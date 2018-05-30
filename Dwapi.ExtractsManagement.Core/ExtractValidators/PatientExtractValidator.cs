@@ -38,10 +38,10 @@ namespace Dwapi.ExtractsManagement.Core.ExtractValidators
                     {
                         Id = LiveGuid.NewGuid(),
                         ValidatorId = validation.Id,
-                        ReferencedEntityId = x.Id.ToString(),
+                        /*ReferencedEntityId = x.Id.ToString(),
                         EntityName = validation.Extract,
                         FieldName = validation.Field,
-                        ErrorMessage = validation.Summary
+                        ErrorMessage = validation.Summary*/
                     }));
                 }
 

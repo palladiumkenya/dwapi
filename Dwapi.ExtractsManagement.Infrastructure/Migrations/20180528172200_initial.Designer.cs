@@ -12,9 +12,10 @@ using System;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20180528172200_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -584,112 +585,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("TempPatientExtracts");
                 });
 
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientExtractError", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("CheckError");
-
-                    b.Property<string>("ContactRelation");
-
-                    b.Property<DateTime?>("DOB");
-
-                    b.Property<DateTime?>("DateConfirmedHIVPositive");
-
-                    b.Property<DateTime>("DateExtracted");
-
-                    b.Property<string>("District");
-
-                    b.Property<string>("EducationLevel");
-
-                    b.Property<string>("Emr");
-
-                    b.Property<int?>("FacilityId");
-
-                    b.Property<string>("FacilityName");
-
-                    b.Property<string>("Gender");
-
-                    b.Property<DateTime?>("LastVisit");
-
-                    b.Property<string>("MaritalStatus");
-
-                    b.Property<string>("PatientID");
-
-                    b.Property<int?>("PatientPK");
-
-                    b.Property<string>("PatientSource");
-
-                    b.Property<string>("PreviousARTExposure");
-
-                    b.Property<DateTime?>("PreviousARTStartDate");
-
-                    b.Property<string>("Project");
-
-                    b.Property<string>("Region");
-
-                    b.Property<DateTime?>("RegistrationATPMTCT");
-
-                    b.Property<DateTime?>("RegistrationAtCCC");
-
-                    b.Property<DateTime?>("RegistrationAtTBClinic");
-
-                    b.Property<DateTime?>("RegistrationDate");
-
-                    b.Property<string>("SatelliteName");
-
-                    b.Property<int?>("SiteCode");
-
-                    b.Property<string>("StatusAtCCC");
-
-                    b.Property<string>("StatusAtPMTCT");
-
-                    b.Property<string>("StatusAtTBClinic");
-
-                    b.Property<string>("Village");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("vTempPatientExtractError");
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientExtractErrorSummary", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime?>("DateGenerated");
-
-                    b.Property<string>("Extract");
-
-                    b.Property<int?>("FacilityId");
-
-                    b.Property<string>("FacilityName");
-
-                    b.Property<string>("Field");
-
-                    b.Property<string>("PatientID");
-
-                    b.Property<int?>("PatientPK");
-
-                    b.Property<Guid>("RecordId");
-
-                    b.Property<int?>("SiteCode");
-
-                    b.Property<string>("Summary");
-
-                    b.Property<Guid?>("TempPatientExtractErrorId");
-
-                    b.Property<string>("Type");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TempPatientExtractErrorId");
-
-                    b.ToTable("vTempPatientExtractErrorSummary");
-                });
-
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.ValidationError", b =>
                 {
                     b.Property<Guid>("Id")
@@ -768,13 +663,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.PatientExtract")
                         .WithMany("ClientPatientVisitExtracts")
                         .HasForeignKey("PatientExtractId");
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientExtractErrorSummary", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientExtractError")
-                        .WithMany("TempPatientExtractErrorSummaries")
-                        .HasForeignKey("TempPatientExtractErrorId");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.ValidationError", b =>

@@ -5,19 +5,26 @@ using System.Reflection;
 using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
+using Dwapi.ExtractsManagement.Core.ExtractValidators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
+using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Loader;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
+using Dwapi.ExtractsManagement.Core.Utilities;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
+using Dwapi.ExtractsManagement.Infrastructure.Validators;
 using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
@@ -105,6 +112,9 @@ namespace Dwapi
             services.AddScoped<IPsmartStageRepository, PsmartStageRepository>();
             services.AddScoped<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddScoped<ITempPatientExtractRepository, TempPatientExtractRepository>();
+            services.AddScoped<IValidatorRepository, ValidatorRepository>();
+            services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
+            services.AddScoped<ITempPatientExtractErrorSummaryRepository, TempPatientExtractErrorSummaryRepository>();
 
             services.AddScoped<IDatabaseManager, DatabaseManager>();
             services.AddScoped<IRegistryManagerService, RegistryManagerService>();
@@ -118,6 +128,9 @@ namespace Dwapi
 
             services.AddScoped<IPatientSourceReader, PatientSourceReader>();
             services.AddScoped<IPatientSourceExtractor, PatientSourceExtractor>();
+            services.AddScoped<IPatientValidator, PatientValidator>();
+            services.AddScoped<IPatientLoader, PatientLoader>();
+            services.AddScoped<IClearExtracts, ClearExtracts>();
 
             //services.AddHangfireIntegration(Configuration);
 
