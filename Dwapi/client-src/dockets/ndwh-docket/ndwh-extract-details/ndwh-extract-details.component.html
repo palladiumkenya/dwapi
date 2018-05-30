@@ -4,9 +4,8 @@
       <p-tabPanel [header]="item.display" *ngFor="let item of extracts; let i = index" [selected]="i == 0">
           <p-tabView>
               <p-tabPanel [header]="item.display + ' Records'">
-                <p-dataTable [value]="validPatientExtracts" [lazy]="true" selectionMode="single" [paginator]="true">
-                        <p-column field="district" header="district"></p-column>
-                    <!-- <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header"></p-column> -->
+                <p-dataTable [value]="validPatientExtracts" columnResizeMode="expand" selectionMode="single" [paginator]="true">
+                    <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header"></p-column>
                 </p-dataTable>
               </p-tabPanel>
               <p-tabPanel [header]="item.display + ' Validation Summary'">

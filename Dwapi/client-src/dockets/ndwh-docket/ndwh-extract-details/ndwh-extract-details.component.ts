@@ -23,12 +23,13 @@ export class NdwhExtractDetailsComponent implements OnInit {
     private _emrConfigService: EmrConfigService;
     private _patientExtractsService: NdwhPatientsExtractService;
     public getEmr$: Subscription;
+    public getValid$: Subscription;
+    public getInvalid$: Subscription;
     public extracts: Extract[] = [];
-    public validPatientExtracts: PatientExtract[];
-    public invalidPatientExtracts: PatientExtract[];
+    public validPatientExtracts: PatientExtract[] = [];
+    public invalidPatientExtracts: PatientExtract[] = [];
     public errorMessage: Message[];
     public otherMessage: Message[];
-    private patExtract: PatientExtract;
     public cols: any[];
 
     public constructor(emrConfigService: EmrConfigService, patientExtractsService: NdwhPatientsExtractService) {
@@ -40,7 +41,7 @@ export class NdwhExtractDetailsComponent implements OnInit {
         this.getColumns();
         this.getValidExtracts();
         this.getInalidExtracts();
-       // console.log(this.validPatientExtracts);
+
     }
 
     public getExtract(): Extract[] {
@@ -55,14 +56,13 @@ export class NdwhExtractDetailsComponent implements OnInit {
                   this.errorMessage.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
               },
               () => {
-
               }
           );
           return this.extracts;
     }
 
     public getValidExtracts(): void {
-        this._patientExtractsService.loadValid()
+        this.getValid$ = this._patientExtractsService.loadValid()
           .subscribe(
               p => {
                 this.validPatientExtracts = p;
@@ -72,13 +72,13 @@ export class NdwhExtractDetailsComponent implements OnInit {
                   this.errorMessage.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
               },
               () => {
-                  console.log('this.validPatientExtracts', this.validPatientExtracts );
+                console.log(this.validPatientExtracts);
               }
           );
     }
 
     public getInalidExtracts(): void {
-        this._patientExtractsService.loadErrors()
+        this.getInvalid$ = this._patientExtractsService.loadErrors()
           .subscribe(
               p => {
                 this.invalidPatientExtracts = p;
