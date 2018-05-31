@@ -16,10 +16,6 @@ namespace Dwapi.SettingsManagement.Infrastructure
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-
-        }
 
         public DbSet<CentralRegistry> CentralRegistries { get; set; }
 

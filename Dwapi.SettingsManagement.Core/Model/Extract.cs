@@ -11,7 +11,7 @@ namespace Dwapi.SettingsManagement.Core.Model
         public string Destination { get; set; }
         public Guid EmrSystemId { get; set; }
         public string DocketId { get; set; }
-        //public ICollection<ExtractHistory> ExtractHistories { get; set; }=new List<ExtractHistory>();
+        public Guid DatabaseProtocolId { get; set; }
 
         public static Extract CreatePsmart(Guid emrSystemId, string docketId = "PSMART")
         {
@@ -24,7 +24,5 @@ namespace Dwapi.SettingsManagement.Core.Model
             extract.ExtractSql = "select id,shr,date_created,status,status_date,uuid FROM psmart_store where upper(status) = 'PENDING'";
             return extract;
         }
-
-
     }
 }

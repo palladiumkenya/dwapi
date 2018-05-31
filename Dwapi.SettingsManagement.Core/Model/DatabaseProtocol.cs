@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
@@ -9,6 +10,7 @@ namespace Dwapi.SettingsManagement.Core.Model
     public class DatabaseProtocol : DbProtocol
     {
         public Guid EmrSystemId { get; set; }
+        public ICollection<Extract> Extracts { get; set; }=new List<Extract>();
 
         public DatabaseProtocol()
         {
