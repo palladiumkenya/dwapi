@@ -72,6 +72,7 @@ import {ToolbarModule} from 'primeng/primeng';
 import {TooltipModule} from 'primeng/primeng';
 import {TreeModule} from 'primeng/primeng';
 import {TreeTableModule} from 'primeng/primeng';
+import {TableModule} from 'primeng/table';
 
 import {AppComponent} from './app.component';
 import {RegistryConfigComponent} from '../settings/registry-config/registry-config.component';
@@ -183,7 +184,8 @@ import { NdwhPatientsExtractService } from '../dockets/services/ndwh-patients-ex
         ToolbarModule,
         TooltipModule,
         TreeModule,
-        TreeTableModule
+        TreeTableModule,
+        TableModule
     ],
     declarations: [
         AppComponent,
