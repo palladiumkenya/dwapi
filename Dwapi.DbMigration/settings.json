@@ -1,9 +1,0 @@
-﻿{
-  "ConnectionStrings": {
-    "dwapi": "server=127.0.0.1; Port=3306; Uid=root; Pwd=mysql; SslMode=none"
-  },
-
-  "runner": {
-    "interactive": true
-  }
-}
