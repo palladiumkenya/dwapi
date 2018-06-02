@@ -109,6 +109,7 @@ import { PsmartDocketComponent } from '../dockets/psmart-docket/psmart-docket.co
 import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
 import { NdwhExtractDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
 import { NdwhPatientsExtractService } from '../dockets/services/ndwh-patients-extract.service';
+import { DbProtocolComponent } from '../settings/db-protocol/db-protocol.component';
 
 @NgModule({
     imports: [
@@ -208,7 +209,8 @@ import { NdwhPatientsExtractService } from '../dockets/services/ndwh-patients-ex
         NdwhDocketComponent,
         PsmartDocketComponent,
         CbsDocketComponent,
-        NdwhExtractDetailsComponent
+        NdwhExtractDetailsComponent,
+        DbProtocolComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,

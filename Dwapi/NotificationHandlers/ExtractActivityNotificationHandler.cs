@@ -14,15 +14,11 @@ namespace Dwapi.NotificationHandlers
 {
     public class ExtractActivityNotificationHandler : IHandler<ExtractActivityNotification>
     {
-        private readonly IHubContext<ExtractActivity> _hubContext;
-
-        public ExtractActivityNotificationHandler()
-        {
-            _hubContext = Startup.ServiceProvider.GetService<IHubContext<ExtractActivity>>();
-        }
+       
         public async void Handle(ExtractActivityNotification domainEvent)
         {
-            await _hubContext.Clients.All.SendAsync("ShowProgress", domainEvent.Progress);
+
+            await Startup.HubContext.Clients.All.SendAsync("ShowProgress", domainEvent.Progress);
         }
     }
 }

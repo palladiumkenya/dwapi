@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
@@ -90,6 +92,13 @@ namespace Dwapi.SettingsManagement.Core.Services
             _emrSystemRepository.Update(emr);
 
             _emrSystemRepository.SaveChanges();
+        }
+
+        public IEnumerable<DatabaseProtocol> GetByEmr(Guid emrId)
+        {
+            return _databaseProtocolRepository
+                .GetAll()
+                .Where(x=>x.EmrSystemId==emrId);
         }
     }
 }

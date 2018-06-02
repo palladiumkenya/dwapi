@@ -190,12 +190,14 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(`http://${document.location.hostname}:5757/ExtractActivity`)
-            .configureLogging(LogLevel.Information)
+            .configureLogging(LogLevel.Trace)
             .build();
+        this._hubConnection.serverTimeoutInMilliseconds = 120000;
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
         this._hubConnection.on('ShowProgress', (dwhProgress: any) => {
+           // console.log(dwhProgress);
             this.currentExtract = this.extracts.find(x => x.name === 'PatientExtract');
             if (this.currentExtract) {
                 this.extractEvent = {
@@ -208,7 +210,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 this.extracts = [...newWithoutPatientExtract, this.currentExtract];
             }
         });
-        console.log('im done', this.extracts);
+       // console.log('im done', this.extracts);
     }
 
     private getExtractProtocols(currentEmr: EmrSystem): ExtractDatabaseProtocol[] {

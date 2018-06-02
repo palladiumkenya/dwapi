@@ -4,10 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.Hubs.Dwh;
+using Dwapi.NotificationHandlers;
 using Dwapi.SettingsManagement.Core.Model;
+using Dwapi.SharedKernel.Events;
+using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Serilog;
 
 namespace Dwapi.Controller
@@ -18,11 +25,13 @@ namespace Dwapi.Controller
     {
         private readonly IMediator _mediator;
         private readonly IExtractStatusService _extractStatusService;
+        private readonly IHubContext<ExtractActivity> _hubContext;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
+            Startup.HubContext= _hubContext = hubContext;
         }
 
     

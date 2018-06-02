@@ -54,16 +54,18 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                         _extractRepository.BatchInsert(list);
 
                         count = 0;
-                        Log.Debug("saved batch");
+                   
+
+                        DomainEvents.Dispatch(
+                            new ExtractActivityNotification(new DwhProgress(
+                                nameof(PatientExtract),
+                                "loading...",
+                                list.Count, 0, 0, 0, 0)));
                     }
 
                     // TODO: Notify progress...
 
-                    DomainEvents.Dispatch(
-                        new ExtractActivityNotification(new DwhProgress(
-                            nameof(PatientExtract),
-                            "loading...",
-                            list.Count,0,0,0,0)));
+                   
                 }
 
                 if (count > 0)

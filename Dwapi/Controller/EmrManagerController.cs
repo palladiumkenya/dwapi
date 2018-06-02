@@ -147,6 +147,26 @@ namespace Dwapi.Controller
             }
         }
 
+        // GET: api/EmrManager/protocol/5
+        [HttpGet("protocol/{id}")]
+        public IActionResult GetDbProtocolsByEmr(Guid id)
+        {
+            if (id.IsNullOrEmpty())
+                return BadRequest("Emr missing");
+            try
+            {
+                var list = _emrManagerService.GetAllEmrs().Where(x=>x.Id==id).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(EmrSystem)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
         // POST: api/EmrManager/protocol
         [HttpPost("protocol")]
         public IActionResult SaveProtocol([FromBody] DatabaseProtocol entity)

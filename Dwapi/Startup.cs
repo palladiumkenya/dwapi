@@ -40,10 +40,12 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using StructureMap;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Dwapi
@@ -53,6 +55,7 @@ namespace Dwapi
         public static IConfiguration Configuration;
         public IServiceCollection Service;
         public static IServiceProvider ServiceProvider;
+        public static IHubContext<ExtractActivity> HubContext;
 
         public Startup(IHostingEnvironment env)
         {
@@ -88,6 +91,7 @@ namespace Dwapi
                     Description = "Dwapi API. Exposes endpoints used in datawarehouse operations"
                 });
             });
+
             services.AddSignalR();
             
 
@@ -129,13 +133,16 @@ namespace Dwapi
             services.AddScoped<IPatientValidator, PatientValidator>();
             services.AddScoped<IPatientLoader, PatientLoader>();
             services.AddScoped<IClearExtracts, ClearExtracts>();
-            ServiceProvider = services.BuildServiceProvider();
+
+            var container = new Container();
+            container.Populate(services);
+            ServiceProvider = container.GetInstance<IServiceProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
-           
+            //ServiceProvider = serviceProvider;
 
             if (env.IsDevelopment())
             {
@@ -180,7 +187,11 @@ namespace Dwapi
             
 
 
-            app.UseSignalR(routes => { routes.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}"); }
+            app.UseSignalR(
+                routes =>
+                {
+                    routes.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}");
+                }
             );
 
 

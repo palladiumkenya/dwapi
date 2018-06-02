@@ -56,7 +56,6 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
                 Update(entity);
                 return;
             }
-            entity.Extracts.Add(Extract.CreatePsmart(entity.Id));
             Create(entity);
         }
     }
