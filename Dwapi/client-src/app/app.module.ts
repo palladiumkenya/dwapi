@@ -114,6 +114,8 @@ import { DbProtocolComponent } from '../settings/db-protocol/db-protocol.compone
 import { ValidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/valid-record-details/valid-record-details.component';
 // tslint:disable-next-line:max-line-length
 import { InvalidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/invalid-record-details/invalid-record-details.component';
+import {EmrDocketComponent} from '../settings/emr-docket/emr-docket.component';
+import {EmrSettingsComponent} from '../settings/emr-settings/emr-settings.component';
 
 @NgModule({
     imports: [
@@ -216,7 +218,9 @@ import { InvalidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extra
         NdwhExtractDetailsComponent,
         DbProtocolComponent,
         ValidRecordDetailsComponent,
-        InvalidRecordDetailsComponent
+        InvalidRecordDetailsComponent,
+        EmrSettingsComponent,
+        EmrDocketComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
