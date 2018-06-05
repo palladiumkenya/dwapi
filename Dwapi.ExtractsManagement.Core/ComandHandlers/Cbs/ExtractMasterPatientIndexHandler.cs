@@ -40,7 +40,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
-            await _patientValidator.Validate();
+            await _patientValidator.Validate(found);
 
             //notify rejected
             int rejected = await _patientValidator.GetRejectedCount();
@@ -51,7 +51,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs
                     found, 0, rejected, 0, 0)));
 
             //Load
-            int loaded = await _patientLoader.Load();
+            int loaded = await _patientLoader.Load(found);
 
             //notify loaded
             DomainEvents.Dispatch(
