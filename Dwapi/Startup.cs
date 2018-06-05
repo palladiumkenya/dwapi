@@ -19,6 +19,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
+using Dwapi.ExtractsManagement.Core.Interfaces.Utilities.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader;
@@ -35,6 +36,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Utilities;
+using Dwapi.ExtractsManagement.Infrastructure.Utilities.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.Hubs.Dwh;
@@ -153,6 +155,7 @@ namespace Dwapi
             services.AddScoped<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>();
             services.AddScoped<IMasterPatientIndexValidator,MasterPatientIndexValidator>();
             services.AddScoped<IMasterPatientIndexLoader, MasterPatientIndexLoader>();
+            services.AddScoped<IClearCbsExtracts, ClearCbsExtracts>();
 
             var container = new Container();
             container.Populate(services);
