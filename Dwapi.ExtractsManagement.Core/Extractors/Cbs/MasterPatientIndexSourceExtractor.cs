@@ -77,7 +77,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
                             
                         }
 
-
+                        list=new List<TempMasterPatientIndex>();
                     }
 
                     // TODO: Notify progress...
