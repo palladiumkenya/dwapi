@@ -110,6 +110,8 @@ import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
 import { NdwhExtractDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
 import { NdwhPatientsExtractService } from '../dockets/services/ndwh-patients-extract.service';
 import { DbProtocolComponent } from '../settings/db-protocol/db-protocol.component';
+import { EmrSettingsComponent } from '../settings/emr-settings/emr-settings.component';
+import { EmrDocketComponent } from '../settings/emr-docket/emr-docket.component';
 
 @NgModule({
     imports: [
@@ -210,7 +212,9 @@ import { DbProtocolComponent } from '../settings/db-protocol/db-protocol.compone
         PsmartDocketComponent,
         CbsDocketComponent,
         NdwhExtractDetailsComponent,
-        DbProtocolComponent
+        DbProtocolComponent,
+        EmrSettingsComponent,
+        EmrDocketComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,

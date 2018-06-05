@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
 using CsvHelper.Configuration;
 using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Infrastructure;
 using EFCore.Seeder.Configuration;
@@ -21,6 +23,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<PsmartStage> PsmartStage { get; set; }
         public DbSet<TempPatientExtractError> TempPatientExtractError { get; set; }
         public DbSet<TempPatientExtractErrorSummary> TempPatientExtractErrorSummary { get; set; }
+
+        public DbSet<MasterPatientIndex> MasterPatientIndices { get; set; }
+        public DbSet<TempMasterPatientIndex> TempMasterPatientIndices { get; set; }
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {

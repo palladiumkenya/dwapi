@@ -19,6 +19,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
         {
             return DbSet.AsNoTracking()
                 .Include(x => x.DatabaseProtocols)
+                .Include(e => e.Extracts)
                 .Include(r => r.RestProtocols);
         }
 

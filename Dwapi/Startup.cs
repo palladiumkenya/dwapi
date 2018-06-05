@@ -16,6 +16,8 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Loader;
+using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
+using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
@@ -199,6 +201,7 @@ namespace Dwapi
                 {
                     cfg.AddDataReaderMapping();
                     cfg.AddProfile<TempExtractProfile>();
+                    cfg.AddProfile<TempMasterPatientIndexProfile>();
                 }
             );
 
