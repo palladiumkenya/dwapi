@@ -110,8 +110,10 @@ import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
 import { NdwhExtractDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
 import { NdwhPatientsExtractService } from '../dockets/services/ndwh-patients-extract.service';
 import { DbProtocolComponent } from '../settings/db-protocol/db-protocol.component';
-import { EmrSettingsComponent } from '../settings/emr-settings/emr-settings.component';
-import { EmrDocketComponent } from '../settings/emr-docket/emr-docket.component';
+// tslint:disable-next-line:max-line-length
+import { ValidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/valid-record-details/valid-record-details.component';
+// tslint:disable-next-line:max-line-length
+import { InvalidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/invalid-record-details/invalid-record-details.component';
 
 @NgModule({
     imports: [
@@ -213,8 +215,8 @@ import { EmrDocketComponent } from '../settings/emr-docket/emr-docket.component'
         CbsDocketComponent,
         NdwhExtractDetailsComponent,
         DbProtocolComponent,
-        EmrSettingsComponent,
-        EmrDocketComponent
+        ValidRecordDetailsComponent,
+        InvalidRecordDetailsComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
