@@ -1,43 +1,13 @@
 <div class="ui-g">
   <div class="ui-g-12">
-    <p-tabView orientation="left">
+    <p-tabView orientation="left" (onChange)="onChange($event)" [activeIndex]="selectedIndex">
       <p-tabPanel [header]="item.display" *ngFor="let item of extracts; let i = index" [selected]="i == 0">
           <p-tabView>
               <p-tabPanel [header]="item.display + ' Records'">
-                <p-table [value]="validPatientExtracts"autoLayout="true" [paginator]="true" [rows]="5">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th *ngFor="let col of cols">
-                                {{col.header}}
-                            </th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-valid>
-                        <tr>
-                            <td *ngFor="let col of cols">
-                                    {{valid[col.field]}}
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
+                <liveapp-valid-record-details [extract]="extractName"></liveapp-valid-record-details>
               </p-tabPanel>
               <p-tabPanel [header]="item.display + ' Validation Summary'">
-                <p-table [value]="invalidPatientExtracts"autoLayout="true" [paginator]="true" [rows]="10">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th *ngFor="let col of cols">
-                                {{col.header}}
-                            </th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-invalid>
-                        <tr>
-                            <td *ngFor="let col of cols">
-                                    {{invalid[col.field]}}
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
+                <liveapp-invalid-record-details [extract]="extractName"></liveapp-invalid-record-details>
               </p-tabPanel>
               <p-tabPanel [header]="item.display + ' Send Summary'">
                   

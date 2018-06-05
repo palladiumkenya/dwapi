@@ -110,6 +110,10 @@ import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
 import { NdwhExtractDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
 import { NdwhPatientsExtractService } from '../dockets/services/ndwh-patients-extract.service';
 import { DbProtocolComponent } from '../settings/db-protocol/db-protocol.component';
+// tslint:disable-next-line:max-line-length
+import { ValidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/valid-record-details/valid-record-details.component';
+// tslint:disable-next-line:max-line-length
+import { InvalidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/invalid-record-details/invalid-record-details.component';
 
 @NgModule({
     imports: [
@@ -210,7 +214,9 @@ import { DbProtocolComponent } from '../settings/db-protocol/db-protocol.compone
         PsmartDocketComponent,
         CbsDocketComponent,
         NdwhExtractDetailsComponent,
-        DbProtocolComponent
+        DbProtocolComponent,
+        ValidRecordDetailsComponent,
+        InvalidRecordDetailsComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
