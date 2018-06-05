@@ -13,6 +13,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
         ExtractHistory GetLatest(Guid extractId,ExtractStatus status,ExtractStatus otherStatus);
         IEnumerable<ExtractHistory> GetAllExtractStatus(Guid extractId);
         void UpdateStatus(Guid extractId, ExtractStatus status,int? stats=null,string statusInfo="", bool express = false);
+        void DwhUpdateStatus(Guid extractId, ExtractStatus status, int? stats = null, string statusInfo = "");
         void Complete(Guid extractId);
     }
 }

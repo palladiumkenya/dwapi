@@ -6,6 +6,11 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Events;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Validators
 {
@@ -20,8 +25,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators
             _tempPatientExtractRepository = tempPatientExtractRepository;
         }
 
-        public async Task<bool> Validate()
+        public async Task<bool> Validate(int extracted)
         {
+            DomainEvents.Dispatch(
+                new ExtractActivityNotification(new DwhProgress(
+                    nameof(PatientExtract),
+                    nameof(ExtractStatus.Validating),
+                    extracted, 0, 0, 0, 0)));
             try
             {
                 var validators = _validatorRepository.GetByExtract($"{nameof(TempPatientExtract)}s");
@@ -46,10 +56,20 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators
                         count++;
                     }
                 }
+                DomainEvents.Dispatch(
+                    new ExtractActivityNotification(new DwhProgress(
+                        nameof(PatientExtract),
+                        nameof(ExtractStatus.Validated),
+                        extracted, 0, 0, 0, 0)));
                 return true;
             }
             catch (Exception e)
             {
+                DomainEvents.Dispatch(
+                    new ExtractActivityNotification(new DwhProgress(
+                        nameof(PatientExtract),
+                        nameof(ExtractStatus.Idle),
+                        extracted, 0, 0, 0, 0)));
                 Console.WriteLine(e);
                 return false;
             }

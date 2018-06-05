@@ -16,6 +16,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Loader;
+using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
@@ -26,6 +27,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Utilities;
 using Dwapi.ExtractsManagement.Infrastructure.Validators;
 using Dwapi.Hubs.Dwh;
+using Dwapi.NotificationHandlers;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
@@ -133,6 +135,7 @@ namespace Dwapi
             services.AddScoped<IPatientValidator, PatientValidator>();
             services.AddScoped<IPatientLoader, PatientLoader>();
             services.AddScoped<IClearExtracts, ClearExtracts>();
+            services.AddScoped<IHandler<ExtractActivityNotification>, ExtractActivityNotificationHandler>();
 
             var container = new Container();
             container.Populate(services);

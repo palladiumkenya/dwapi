@@ -5,9 +5,11 @@ using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -32,8 +34,6 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
             int batch = 500;
-            // TODO: Notify started...
-
 
             var list = new List<TempPatientExtract>();
 
@@ -60,7 +60,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                         DomainEvents.Dispatch(
                             new ExtractActivityNotification(new DwhProgress(
                                 nameof(PatientExtract),
-                                "loading...",
+                                nameof(ExtractStatus.Finding),
                                 list.Count, 0, 0, 0, 0)));
                     }
 
@@ -79,9 +79,9 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
             // TODO: Notify Completed;
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(new DwhProgress(
+                new ExtractActivityNotification(extract.Id, new DwhProgress(
                     nameof(PatientExtract),
-                    "loaded",
+                    nameof(ExtractStatus.Found),
                     list.Count, 0, 0, 0, 0)));
 
             return list.Count;

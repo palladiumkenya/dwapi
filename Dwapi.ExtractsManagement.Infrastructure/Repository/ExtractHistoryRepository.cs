@@ -66,6 +66,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
             }
         }
 
+        public void DwhUpdateStatus(Guid extractId, ExtractStatus status, int? stats, string statusInfo = "")
+        {
+                var history = new ExtractHistory(status, stats, statusInfo, extractId);
+                Create(history);
+                SaveChanges();
+        }
+
 
 
         public void Complete(Guid extractId)

@@ -8,6 +8,7 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Serilog;
@@ -30,7 +31,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Utilities
             DomainEvents.Dispatch(
                 new ExtractActivityNotification(new DwhProgress(
                     nameof(PatientExtract),
-                    "Clearing...",
+                    nameof(ExtractStatus.Clearing),
                      0, 0, 0, 0, 0)));
 
             int totalCount = 0;
@@ -48,6 +49,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Utilities
                $"{nameof(PatientPharmacyExtract)}s",
                $"{nameof(TempPatientVisitExtract)}s",
                $"{nameof(PatientVisitExtract)}s",*/
+                nameof(ExtractHistory),
                 nameof(ValidationError)
             };
 
@@ -82,6 +84,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Utilities
                     totalCount += await t;
                 }
             }
+            DomainEvents.Dispatch(
+                new ExtractActivityNotification(new DwhProgress(
+                    nameof(PatientExtract),
+                    nameof(ExtractStatus.Cleared),
+                    0, 0, 0, 0, 0)));
             return totalCount;
         }
 
