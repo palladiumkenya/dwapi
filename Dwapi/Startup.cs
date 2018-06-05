@@ -5,28 +5,38 @@ using System.Reflection;
 using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.Custom;
+using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader;
+using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Utilities;
 using Dwapi.ExtractsManagement.Infrastructure.Validators;
+using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
@@ -120,6 +130,9 @@ namespace Dwapi
             services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
             services.AddScoped<ITempPatientExtractErrorSummaryRepository, TempPatientExtractErrorSummaryRepository>();
 
+            services.AddScoped<IMasterPatientIndexRepository, MasterPatientIndexRepository>();
+            services.AddScoped<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>();
+
             services.AddScoped<IDatabaseManager, DatabaseManager>();
             services.AddScoped<IRegistryManagerService, RegistryManagerService>();
             services.AddScoped<IEmrManagerService, EmrManagerService>();
@@ -135,6 +148,11 @@ namespace Dwapi
             services.AddScoped<IPatientValidator, PatientValidator>();
             services.AddScoped<IPatientLoader, PatientLoader>();
             services.AddScoped<IClearExtracts, ClearExtracts>();
+
+            services.AddScoped<IMasterPatientIndexReader, MasterPatientIndexReader>();
+            services.AddScoped<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>();
+            services.AddScoped<IMasterPatientIndexValidator,MasterPatientIndexValidator>();
+            services.AddScoped<IMasterPatientIndexLoader, MasterPatientIndexLoader>();
 
             var container = new Container();
             container.Populate(services);

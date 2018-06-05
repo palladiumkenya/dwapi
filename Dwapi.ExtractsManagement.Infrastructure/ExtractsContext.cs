@@ -35,6 +35,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         {
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
             DapperPlusManager.Entity<PatientExtract>().Key(x => x.Id).Table($"{nameof(PatientExtracts)}");
+            DapperPlusManager.Entity<MasterPatientIndex>().Key(x => x.Id).Table("MasterPatientIndices");
+            DapperPlusManager.Entity<TempMasterPatientIndex>().Key(x => x.Id).Table("TempMasterPatientIndices");
         }
 
         public override void EnsureSeeded()

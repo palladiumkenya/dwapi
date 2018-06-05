@@ -8,14 +8,18 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using MediatR;
+using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
 {
@@ -23,9 +27,9 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
     {
         private readonly IMasterPatientIndexReader _reader;
         private readonly IMediator _mediator;
-        private readonly ITempPatientExtractRepository _extractRepository;
+        private readonly ITempMasterPatientIndexRepository _extractRepository;
 
-        public MasterPatientIndexSourceExtractor(IMasterPatientIndexReader reader, IMediator mediator, ITempPatientExtractRepository extractRepository)
+        public MasterPatientIndexSourceExtractor(IMasterPatientIndexReader reader, IMediator mediator, ITempMasterPatientIndexRepository extractRepository)
         {
             _reader = reader;
             _mediator = mediator;
@@ -38,7 +42,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
             // TODO: Notify started...
 
 
-            var list = new List<TempPatientExtract>();
+            var list = new List<TempMasterPatientIndex>();
 
             int count = 0;
 
@@ -48,7 +52,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
                 {
                     count++;
                     // AutoMapper profiles
-                    var extractRecord = Mapper.Map<IDataRecord, TempPatientExtract>(rdr);
+                    var extractRecord = Mapper.Map<IDataRecord, TempMasterPatientIndex>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
                     list.Add(extractRecord);
 
@@ -59,12 +63,21 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
 
                         count = 0;
 
+                        try
+                        {
+                            DomainEvents.Dispatch(
+                                new ExtractActivityNotification(new DwhProgress(
+                                    nameof(MasterPatientIndex),
+                                    "loading...",
+                                    list.Count, 0, 0, 0, 0)));
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(e,"Notification error");
+                            
+                        }
 
-                        DomainEvents.Dispatch(
-                            new ExtractActivityNotification(new DwhProgress(
-                                nameof(PatientExtract),
-                                "loading...",
-                                list.Count, 0, 0, 0, 0)));
+
                     }
 
                     // TODO: Notify progress...
@@ -74,18 +87,25 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
 
                 if (count > 0)
                 {
-                    // save remaining list;
                     _extractRepository.BatchInsert(list);
                 }
                 _extractRepository.CloseConnection();
             }
 
-            // TODO: Notify Completed;
-            DomainEvents.Dispatch(
-                new ExtractActivityNotification(new DwhProgress(
-                    nameof(PatientExtract),
-                    "loaded",
-                    list.Count, 0, 0, 0, 0)));
+            try
+            {
+                // TODO: Notify Completed;
+                DomainEvents.Dispatch(
+                    new ExtractActivityNotification(new DwhProgress(
+                        nameof(MasterPatientIndex),
+                        "loaded",
+                        list.Count, 0, 0, 0, 0)));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Notification error");
+
+            }
 
             return list.Count;
         }

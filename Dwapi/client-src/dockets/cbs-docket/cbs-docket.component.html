@@ -1,3 +1,26 @@
 <div class="card card-w-title">
-    <h1>Not yet supported!</h1>
-  </div>
+    <h1>Case Based Surveillance <span style="color: lightgray">|</span> {{emrSystem?.name}} <span style="font-size:13px ">{{emrSystem?.version}}</span></h1>
+    <p-toolbar>
+        <div class="ui-toolbar-group-left">
+            <button pButton type="button" [disabled]="!canLoad" (click)="loadFromEmr()" label="Load from EMR"
+                    icon="ui-icon-file-download" class="green-btn"></button>
+        </div>
+
+        <div class="ui-toolbar-group-right">
+            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Registry" icon="ui-icon-cloud-upload"
+                    class="blue-btn"></button>
+        </div>
+    </p-toolbar>
+
+    <p-dataTable [value]="extracts" selectionMode="single"  autoLayout="true" resizableColumns="true">
+        <p-column field="display" header="Extract"></p-column>
+        <p-column field="extractEvent.lastStatus" header="Status"></p-column>
+        <p-column field="extractEvent.found" header="Found"></p-column>
+        <p-column field="extractEvent.loaded" header="Loaded"></p-column>
+        <p-column field="extractEvent.rejected" header="Rejected"></p-column>
+        <p-column field="extractEvent.queued" header="Queued"></p-column>
+        <p-column field="extractEvent.sent" header="Sent"></p-column>
+    </p-dataTable>
+    <p-messages [(value)]="messages"></p-messages>
+</div>
+

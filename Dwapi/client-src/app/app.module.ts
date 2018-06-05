@@ -116,6 +116,7 @@ import { ValidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract
 import { InvalidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/invalid-record-details/invalid-record-details.component';
 import {EmrDocketComponent} from '../settings/emr-docket/emr-docket.component';
 import {EmrSettingsComponent} from '../settings/emr-settings/emr-settings.component';
+import {CbsService} from '../dockets/services/cbs.service';
 
 @NgModule({
     imports: [
@@ -225,7 +226,8 @@ import {EmrSettingsComponent} from '../settings/emr-settings/emr-settings.compon
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
         MessageService, ConfirmationService, RegistryConfigService, EmrConfigService, ProtocolConfigService,
-        ExtractConfigService, PsmartExtractService , PsmartSenderService, NdwhExtractService, NdwhSenderService, NdwhPatientsExtractService
+        ExtractConfigService, PsmartExtractService , PsmartSenderService, NdwhExtractService, NdwhSenderService, NdwhPatientsExtractService,
+        CbsService
     ],
     bootstrap: [AppComponent]
 })

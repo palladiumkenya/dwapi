@@ -7,6 +7,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
@@ -34,19 +35,20 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs
         public async Task<bool> Handle(ExtractMasterPatientIndex request, CancellationToken cancellationToken)
         {
             //clear
-            int count = await _clearExtracts.Clear();
+          //  int count = await _clearExtracts.Clear();
 
             //Extract
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
-            await _patientValidator.Validate();
+          //  await _patientValidator.Validate();
 
+            /*
             //notify rejected
             int rejected = await _patientValidator.GetRejectedCount();
             DomainEvents.Dispatch(
                 new ExtractActivityNotification(new DwhProgress(
-                    nameof(PatientExtract),
+                    nameof(MasterPatientIndex),
                     "loaded",
                     found, 0, rejected, 0, 0)));
 
@@ -56,10 +58,10 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs
             //notify loaded
             DomainEvents.Dispatch(
                 new ExtractActivityNotification(new DwhProgress(
-                    nameof(PatientExtract),
+                    nameof(MasterPatientIndex),
                     "loaded",
                     found, loaded, rejected, 0, 0)));
-
+                    */
             return true;
         }
     }
