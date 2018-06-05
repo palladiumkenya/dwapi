@@ -4,7 +4,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Validators
 {
     public interface IPatientValidator
     {
-        Task<bool> Validate();
+        Task<bool> Validate(int extracted);
         Task<int> GetRejectedCount();
     }
 }

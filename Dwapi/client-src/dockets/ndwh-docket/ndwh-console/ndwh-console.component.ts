@@ -142,7 +142,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.getStatus$ = this._ndwhExtractService.getStatus(extract.id)
                 .subscribe(
                     p => {
-                        // extract.extractEvent = p;
+                            extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
                         }
@@ -158,8 +158,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         });
 
     }
-
-
 
     public send(): void {
         this.errorMessage = [];

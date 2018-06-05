@@ -52,5 +52,10 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
                 return 0;
             }
         }
+
+        public Task<int> Load(int found)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

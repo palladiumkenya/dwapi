@@ -7,6 +7,10 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Events;
+using Dwapi.SharedKernel.Model;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader
@@ -22,10 +26,15 @@ namespace Dwapi.ExtractsManagement.Core.Loader
             _tempPatientExtractRepository = tempPatientExtractRepository;
         }
 
-        public async Task<int> Load()
+        public async Task<int> Load(int found)
         {
             try
             {
+                DomainEvents.Dispatch(
+                    new ExtractActivityNotification(new DwhProgress(
+                        nameof(PatientExtract),
+                        nameof(ExtractStatus.Loading),
+                        found, 0, 0, 0, 0)));
 
                 //load temp extracts without errors
                 var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false).ToList();
