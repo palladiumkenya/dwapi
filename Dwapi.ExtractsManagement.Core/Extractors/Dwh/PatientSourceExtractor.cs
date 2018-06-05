@@ -51,7 +51,6 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
                     if (count == batch)
                     {
-                        // TODO: batch and save
                         _extractRepository.BatchInsert(list);
 
                         count = 0;
@@ -62,11 +61,8 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                                 nameof(PatientExtract),
                                 nameof(ExtractStatus.Finding),
                                 list.Count, 0, 0, 0, 0)));
+                        list = new List<TempPatientExtract>();
                     }
-
-                    // TODO: Notify progress...
-
-                   
                 }
 
                 if (count > 0)
