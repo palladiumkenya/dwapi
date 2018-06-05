@@ -5,9 +5,11 @@ using Dwapi.ExtractsManagement.Core.Commands.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
@@ -21,11 +23,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs
     public class ExtractMasterPatientIndexHandler : IRequestHandler<ExtractMasterPatientIndex,bool>
     {
         private readonly IMasterPatientIndexSourceExtractor _patientSourceExtractor;
-        private readonly IPatientValidator _patientValidator;
-        private readonly IPatientLoader _patientLoader;
+        private readonly IMasterPatientIndexValidator _patientValidator;
+        private readonly IMasterPatientIndexLoader _patientLoader;
         private readonly IClearCbsExtracts _clearExtracts;
 
-        public ExtractMasterPatientIndexHandler(IMasterPatientIndexSourceExtractor patientSourceExtractor, IPatientValidator patientValidator, IPatientLoader patientLoader, IClearCbsExtracts clearExtracts)
+        public ExtractMasterPatientIndexHandler(IMasterPatientIndexSourceExtractor patientSourceExtractor, IMasterPatientIndexValidator patientValidator, IMasterPatientIndexLoader patientLoader, IClearCbsExtracts clearExtracts)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _patientValidator = patientValidator;
@@ -44,25 +46,13 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs
             //Validate
           //  await _patientValidator.Validate();
 
-            /*
+            
             //notify rejected
-            int rejected = await _patientValidator.GetRejectedCount();
-            DomainEvents.Dispatch(
-                new ExtractActivityNotification(new DwhProgress(
-                    nameof(MasterPatientIndex),
-                    "loaded",
-                    found, 0, rejected, 0, 0)));
-
+         
             //Load
-            int loaded = await _patientLoader.Load();
+            int loaded = await _patientLoader.Load(0);
 
             //notify loaded
-            DomainEvents.Dispatch(
-                new ExtractActivityNotification(new DwhProgress(
-                    nameof(MasterPatientIndex),
-                    "loaded",
-                    found, loaded, rejected, 0, 0)));
-                    */
             return true;
         }
     }

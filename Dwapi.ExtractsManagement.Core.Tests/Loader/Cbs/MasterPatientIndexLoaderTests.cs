@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Configuration;
 using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs;
@@ -12,9 +11,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
-using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
@@ -30,12 +27,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
+namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Cbs
 {
     [TestFixture]
-    public class MasterPatientIndexSourceExtractorTests
+    public class MasterPatientIndexLoaderTests
     {
         private IMasterPatientIndexSourceExtractor _extractor;
+        private IMasterPatientIndexLoader _loader;
         private IServiceProvider _serviceProvider;
         private Dwapi.SettingsManagement.Infrastructure.SettingsContext _settingsContext;
         private ExtractsContext _extractsContext;
@@ -67,10 +65,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
                 .BuildServiceProvider();
 
             Mapper.Initialize(cfg =>
-                {
-                    cfg.AddDataReaderMapping();
-                    cfg.AddProfile<TempMasterPatientIndexProfile>();
-                }
+            {
+                cfg.AddDataReaderMapping();
+                cfg.AddProfile<TempMasterPatientIndexProfile>();
+            }
             );
 
 
@@ -92,16 +90,18 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
             _extract = _settingsContext.Extracts.First(x => x.EmrSystemId == _emrSystem.Id && x.DocketId == "CBS");
             _extractor = _serviceProvider.GetService<IMasterPatientIndexSourceExtractor>();
             _clearCbsExtracts = _serviceProvider.GetService<IClearCbsExtracts>();
+            _loader = _serviceProvider.GetService<IMasterPatientIndexLoader>();
         }
 
         [Test]
-        public void should_Exract_From_Reader()
+        public void should_Load_From_Temp()
         {
             _clearCbsExtracts.Clear().Wait();
-            Assert.False(_extractsContext.TempMasterPatientIndices.Any());
-            var recordcount=_extractor.Extract(_extract, _protocol).Result;
-            Assert.True(_extractsContext.TempMasterPatientIndices.Any());
-            Console.WriteLine($"extracted {_extractsContext.TempMasterPatientIndices.Count()}");
+            Assert.False(_extractsContext.MasterPatientIndices.Any());
+            var recordcount = _extractor.Extract(_extract, _protocol).Result;
+           var loadCount=  _loader.Load(0).Result;
+            Assert.True(_extractsContext.MasterPatientIndices.Any());
+            Console.WriteLine($"extracted {_extractsContext.MasterPatientIndices.Count()}");
         }
     }
 }

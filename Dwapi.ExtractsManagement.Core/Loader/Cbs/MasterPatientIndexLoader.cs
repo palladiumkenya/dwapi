@@ -31,7 +31,6 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
         {
             try
             {
-
                 //load temp extracts without errors
                 var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false).ToList();
 
@@ -49,13 +48,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
             catch (Exception e)
             {
                 Log.Error(e, $"Extract {nameof(PatientExtract)} not Loaded");
-                return 0;
+                throw;
             }
         }
 
         public Task<int> Load(int found)
         {
-            throw new NotImplementedException();
+            return Load();
         }
     }
 }

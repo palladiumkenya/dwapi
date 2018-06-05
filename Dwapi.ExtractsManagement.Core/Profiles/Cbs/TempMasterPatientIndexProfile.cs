@@ -55,6 +55,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Cbs
                 .ForMember(x => x.sxPKValueDoB, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMasterPatientIndex.sxPKValueDoB))))
                 .ForMember(x => x.dmPKValueDoB, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMasterPatientIndex.dmPKValueDoB))))
                 .ForMember(x => x.sxdmPKValueDoB, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMasterPatientIndex.sxdmPKValueDoB))));
+
+            CreateMap<TempMasterPatientIndex, MasterPatientIndex>();
         }
     }
 }
