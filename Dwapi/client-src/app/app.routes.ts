@@ -6,11 +6,12 @@ import {EmrConfigComponent} from '../settings/emrs/emr-config/emr-config.compone
 import { NdwhDocketComponent } from '../dockets/ndwh-docket/ndwh-docket.component';
 import { PsmartDocketComponent } from '../dockets/psmart-docket/psmart-docket.component';
 import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
+import {EmrSettingsComponent} from '../settings/emr-settings/emr-settings.component';
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent},
     {path: 'registryconfig', component: RegistryConfigComponent},
-    {path: 'emrconfig', component: EmrConfigComponent},
+    {path: 'emrconfig', component: EmrSettingsComponent},
     {path: 'datawarehouse', component: NdwhDocketComponent},
     {path: 'psmart', component: PsmartDocketComponent},
     {path: 'cbs', component: CbsDocketComponent},
