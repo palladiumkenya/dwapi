@@ -1,16 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
-using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.Hubs.Dwh;
-using Dwapi.NotificationHandlers;
 using Dwapi.SettingsManagement.Core.Model;
-using Dwapi.SharedKernel.Events;
-using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

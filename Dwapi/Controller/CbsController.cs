@@ -1,17 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Commands.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
-using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.Hubs.Dwh;
-using Dwapi.NotificationHandlers;
 using Dwapi.SettingsManagement.Core.Model;
-using Dwapi.SharedKernel.Events;
-using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -26,13 +18,13 @@ namespace Dwapi.Controller
     {
         private readonly IMediator _mediator;
         private readonly IExtractStatusService _extractStatusService;
-        private readonly IHubContext<ExtractActivity> _hubContext;
+        private readonly IHubContext<CbsActivity> _hubContext;
 
-        public CbsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext)
+        public CbsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<CbsActivity> hubContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
-            Startup.HubContext= _hubContext = hubContext;
+            Startup.CbsHubContext= _hubContext = hubContext;
         }
 
     
@@ -49,7 +41,6 @@ namespace Dwapi.Controller
         [HttpGet("status/{id}")]
         public IActionResult GetStatus(Guid id)
         {
-            return Ok();
             if (id.IsNullOrEmpty())
                 return BadRequest();
             try

@@ -35,7 +35,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
-            var connectionString = config["ConnectionStrings:DwapiConnection"];
+            var connectionString = config["ConnectionStrings:DwapiConnectionDevData"];
 
             _serviceProvider = new ServiceCollection()
                 .AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(o => o.UseSqlServer(connectionString))
@@ -47,7 +47,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
 
 
             _settingsContext = _serviceProvider.GetService<SettingsContext>();
+            _settingsContext.Database.EnsureDeleted();
+            _settingsContext.Database.Migrate();
+            _settingsContext.EnsureSeeded();
             _extractsContext = _serviceProvider.GetService<ExtractsContext>();
+            _extractsContext.Database.Migrate();
+            _extractsContext.EnsureSeeded();
         }
 
 
@@ -60,6 +65,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
             _reader = _serviceProvider.GetService<IMasterPatientIndexReader>();
         }
 
+
+     
         [Test]
         public void should_Execute_Reade()
         {

@@ -5,8 +5,10 @@ using System.Reflection;
 using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.Custom;
+using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
@@ -19,12 +21,10 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
-using Dwapi.ExtractsManagement.Core.Interfaces.Utilities.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
@@ -36,7 +36,6 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Utilities;
-using Dwapi.ExtractsManagement.Infrastructure.Utilities.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.Hubs.Dwh;
@@ -70,6 +69,8 @@ namespace Dwapi
         public IServiceCollection Service;
         public static IServiceProvider ServiceProvider;
         public static IHubContext<ExtractActivity> HubContext;
+        public static IHubContext<CbsActivity> CbsHubContext;
+
 
         public Startup(IHostingEnvironment env)
         {
@@ -118,8 +119,7 @@ namespace Dwapi
 
             services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
             services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
-
-
+          
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
             services.AddScoped<IEmrSystemRepository, EmrSystemRepository>();
             services.AddScoped<IDocketRepository, DocketRepository>();
@@ -155,7 +155,7 @@ namespace Dwapi
             services.AddScoped<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>();
             services.AddScoped<IMasterPatientIndexValidator,MasterPatientIndexValidator>();
             services.AddScoped<IMasterPatientIndexLoader, MasterPatientIndexLoader>();
-            services.AddScoped<IClearCbsExtracts, ClearCbsExtracts>();
+            services.AddScoped<ICleanCbsExtracts, CleanCbsExtracts>();
 
             var container = new Container();
             container.Populate(services);
@@ -214,6 +214,7 @@ namespace Dwapi
                 routes =>
                 {
                     routes.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}");
+                    routes.MapHub<CbsActivity>($"/{nameof(CbsActivity).ToLower()}");
                 }
             );
 

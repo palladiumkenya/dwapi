@@ -15,6 +15,7 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -39,17 +40,20 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
             int batch = 500;
-            // TODO: Notify started...
 
+            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracting...")));
+            DomainEvents.Dispatch(new CbsStatusNotification(extract.Id,ExtractStatus.Loading));
 
             var list = new List<TempMasterPatientIndex>();
 
             int count = 0;
+            int totalCount = 0;
 
             using (var rdr = await _reader.ExecuteReader(dbProtocol, extract))
             {
                 while (rdr.Read())
                 {
+                    totalCount++;
                     count++;
                     // AutoMapper profiles
                     var extractRecord = Mapper.Map<IDataRecord, TempMasterPatientIndex>(rdr);
@@ -61,23 +65,17 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
                         // TODO: batch and save
                         _extractRepository.BatchInsert(list);
 
-                        count = 0;
-
                         try
                         {
-                            DomainEvents.Dispatch(
-                                new ExtractActivityNotification(new DwhProgress(
-                                    nameof(MasterPatientIndex),
-                                    "loading...",
-                                    list.Count, 0, 0, 0, 0)));
+                            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracting...",totalCount,count,0,0,0)));
                         }
                         catch (Exception e)
                         {
                             Log.Error(e,"Notification error");
                             
                         }
-
-                        list=new List<TempMasterPatientIndex>();
+                        count = 0;
+                        list =new List<TempMasterPatientIndex>();
                     }
 
                     // TODO: Notify progress...
@@ -94,12 +92,10 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
 
             try
             {
-                // TODO: Notify Completed;
-                DomainEvents.Dispatch(
-                    new ExtractActivityNotification(new DwhProgress(
-                        nameof(MasterPatientIndex),
-                        "loaded",
-                        list.Count, 0, 0, 0, 0)));
+        
+                DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracted", totalCount, totalCount, 0, 0, 0)));
+                DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
+                DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Loaded,totalCount));
             }
             catch (Exception e)
             {

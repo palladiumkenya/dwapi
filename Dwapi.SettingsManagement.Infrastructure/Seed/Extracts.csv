@@ -552,4 +552,4 @@ FROM [dbo].[tmp_PatientMaster] a
 
 )Y
 ON 
-Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial"|MPI|1|stg_MasterPatientIndex|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
+Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial"|MPI|1|MasterPatientIndex|1|a6221983-0e85-11e8-ba89-0ed5f89f718b

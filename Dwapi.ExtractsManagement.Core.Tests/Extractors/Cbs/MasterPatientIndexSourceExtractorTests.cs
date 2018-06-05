@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Linq;
-using System.Configuration;
 using AutoMapper;
 using AutoMapper.Data;
+using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Utilities.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
-using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
-using Dwapi.ExtractsManagement.Infrastructure.Utilities.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
@@ -42,7 +39,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
         private DbProtocol _protocol;
         private DbExtract _extract;
         private EmrSystem _emrSystem;
-        private IClearCbsExtracts _clearCbsExtracts;
+        private ICleanCbsExtracts _clearCbsExtracts;
 
         [OneTimeSetUp]
         public void Init()
@@ -62,7 +59,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
                 .AddTransient<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>()
                 .AddTransient<IMasterPatientIndexValidator, MasterPatientIndexValidator>()
                 .AddTransient<IMasterPatientIndexLoader, MasterPatientIndexLoader>()
-                .AddTransient<IClearCbsExtracts, ClearCbsExtracts>()
+                .AddTransient<ICleanCbsExtracts, CleanCbsExtracts>()
                 .AddMediatR(typeof(ExtractMasterPatientIndexHandler))
                 .BuildServiceProvider();
 
@@ -91,13 +88,13 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
             _protocol = _settingsContext.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools") && x.EmrSystemId == _emrSystem.Id);
             _extract = _settingsContext.Extracts.First(x => x.EmrSystemId == _emrSystem.Id && x.DocketId == "CBS");
             _extractor = _serviceProvider.GetService<IMasterPatientIndexSourceExtractor>();
-            _clearCbsExtracts = _serviceProvider.GetService<IClearCbsExtracts>();
+            _clearCbsExtracts = _serviceProvider.GetService<ICleanCbsExtracts>();
         }
 
         [Test]
         public void should_Exract_From_Reader()
         {
-            _clearCbsExtracts.Clear().Wait();
+            _clearCbsExtracts.Clean(_extract.Id).Wait();
             Assert.False(_extractsContext.TempMasterPatientIndices.Any());
             var recordcount=_extractor.Extract(_extract, _protocol).Result;
             Assert.True(_extractsContext.TempMasterPatientIndices.Any());
