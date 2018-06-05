@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using CsvHelper.Configuration;
 using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Infrastructure;
 using EFCore.Seeder.Configuration;
