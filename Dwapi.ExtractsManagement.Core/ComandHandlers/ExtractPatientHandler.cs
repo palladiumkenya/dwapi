@@ -18,14 +18,14 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
     public class ExtractPatientHandler :IRequestHandler<ExtractPatient,bool>
     {
         private readonly IPatientSourceExtractor _patientSourceExtractor;
-        private readonly IPatientValidator _patientValidator;
+        private readonly IExtractValidator _extractValidator;
         private readonly IPatientLoader _patientLoader;
         private readonly IClearExtracts _clearExtracts;
 
-        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IPatientValidator patientValidator, IPatientLoader patientLoader, IClearExtracts clearExtracts)
+        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearExtracts clearExtracts)
         {
             _patientSourceExtractor = patientSourceExtractor;
-            _patientValidator = patientValidator;
+            _extractValidator = extractValidator;
             _patientLoader = patientLoader;
             _clearExtracts = clearExtracts;
         }
@@ -39,11 +39,12 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
-            await _patientValidator.Validate(found);
+            await _extractValidator.Validate(found, nameof(PatientExtract), $"{nameof(TempPatientExtract)}s");
 
-            int rejected = await _patientValidator.GetRejectedCount();
             //Load
             int loaded = await _patientLoader.Load(found);
+
+            int rejected = found - loaded;
 
             //notify loaded
             DomainEvents.Dispatch(

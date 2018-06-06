@@ -3,7 +3,7 @@ using Dwapi.SharedKernel.Interfaces;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh
 {
-    public interface IPatientSourceReader : ISourceReader<TempPatientExtract>
+    public interface IExtractSourceReader : ISourceReader
     {
     }
 }

@@ -38,6 +38,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Utilities;
 using Dwapi.ExtractsManagement.Infrastructure.Validators;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
+using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
 using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
@@ -157,9 +158,9 @@ namespace Dwapi
             services.AddScoped<IPsmartSourceReader, PsmartSourceReader>();
             services.AddScoped<IPsmartSendService, PsmartSendService>();
 
-            services.AddScoped<IPatientSourceReader, PatientSourceReader>();
+            services.AddScoped<IExtractSourceReader, ExtractSourceReader>();
             services.AddScoped<IPatientSourceExtractor, PatientSourceExtractor>();
-            services.AddScoped<IPatientValidator, PatientValidator>();
+            services.AddScoped<IExtractValidator, ExtractValidator>();
             services.AddScoped<IPatientLoader, PatientLoader>();
             services.AddScoped<IClearExtracts, ClearExtracts>();
 

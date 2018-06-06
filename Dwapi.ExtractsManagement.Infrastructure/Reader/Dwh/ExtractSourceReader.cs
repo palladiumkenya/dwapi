@@ -1,24 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using MySql.Data.MySqlClient;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh
 {
-    public class PatientSourceReader : IPatientSourceReader
+    public class ExtractSourceReader : IExtractSourceReader
     {
         public int Find(DbProtocol protocol, DbExtract extract)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Core.Model.Source.Dwh.TempPatientExtract> Read(DbProtocol protocol, DbExtract extract)
         {
             throw new NotImplementedException();
         }
@@ -30,7 +24,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh
                 throw new Exception("Data connection not initialized");
 
             if (null == extract)
-                throw new Exception($"{nameof(TempPatientExtract)} settings not configured");
+                throw new Exception("Extract settings not configured");
 
             if (sourceConnection.State != ConnectionState.Open)
                 sourceConnection.Open();

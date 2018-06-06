@@ -49,6 +49,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Utilities
                $"{nameof(PatientPharmacyExtract)}s",
                $"{nameof(TempPatientVisitExtract)}s",
                $"{nameof(PatientVisitExtract)}s",
+                //todo specfy clean for dw extracts only
                 nameof(ExtractHistory),
                 nameof(ValidationError)
             };
