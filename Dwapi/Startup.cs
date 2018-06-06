@@ -128,8 +128,20 @@ namespace Dwapi
             services.AddScoped<IPsmartStageRepository, PsmartStageRepository>();
             services.AddScoped<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddScoped<ITempPatientExtractRepository, TempPatientExtractRepository>();
+            services.AddScoped<ITempPatientArtExtractRepository, TempPatientArtExtractRepository>();
+            services.AddScoped<ITempPatientBaselinesExtractRepository, TempPatientBaselinesExtractRepository>();
+            services.AddScoped<ITempPatientLaboratoryExtractRepository, TempPatientLaboratoryExtractRepository>();
+            services.AddScoped<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>();
+            services.AddScoped<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>();
+            services.AddScoped<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>();
             services.AddScoped<IValidatorRepository, ValidatorRepository>();
             services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
+            services.AddScoped<IPatientArtExtractRepository, PatientArtExtractRepository>();
+            services.AddScoped<IPatientBaselinesExtractRepository, PatientBaselinesExtractRepository>();
+            services.AddScoped<IPatientLaboratoryExtractRepository, PatientLaboratoryExtractRepository>();
+            services.AddScoped<IPatientPharmacyExtractRepository, PatientPharmacyExtractRepository>();
+            services.AddScoped<IPatientStatusExtractRepository, PatientStatusExtractRepository>();
+            services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
             services.AddScoped<ITempPatientExtractErrorSummaryRepository, TempPatientExtractErrorSummaryRepository>();
 
             services.AddScoped<IMasterPatientIndexRepository, MasterPatientIndexRepository>();

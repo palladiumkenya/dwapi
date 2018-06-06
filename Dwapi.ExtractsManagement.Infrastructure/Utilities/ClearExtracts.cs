@@ -37,7 +37,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Utilities
             int totalCount = 0;
             var truncates = new List<string>
             {  $"{nameof(TempPatientExtract)}s",
-               /*$"{nameof(TempPatientArtExtract)}s",
+               $"{nameof(TempPatientArtExtract)}s",
                $"{nameof(PatientArtExtract)}s",
                $"{nameof(TempPatientBaselinesExtract)}s",
                $"{nameof(PatientBaselinesExtract)}s",
@@ -48,7 +48,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Utilities
                $"{nameof(TempPatientPharmacyExtract)}s",
                $"{nameof(PatientPharmacyExtract)}s",
                $"{nameof(TempPatientVisitExtract)}s",
-               $"{nameof(PatientVisitExtract)}s",*/
+               $"{nameof(PatientVisitExtract)}s",
                 nameof(ExtractHistory),
                 nameof(ValidationError)
             };
