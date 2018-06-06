@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Z.Dapper.Plus;
 
@@ -33,6 +34,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs
                 Log.Error(e, "Failed batch insert");
                 return false;
             }
+        }
+
+        public IEnumerable<MasterPatientIndex> GetView()
+        {
+            var ctx = Context as ExtractsContext;
+            return ctx.MasterPatientIndices.FromSql("select * from vMasterPatientIndices");
         }
     }
 }
