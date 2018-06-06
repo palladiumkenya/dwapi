@@ -46,9 +46,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string StatusAtCCC { get; set; }
         public string StatusAtPMTCT { get; set; }
         public string StatusAtTBClinic { get; set; }
-
-        public PatientExtract()
-        {
-        }
     }
 }
