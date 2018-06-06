@@ -7,7 +7,7 @@
         </div>
 
         <div class="ui-toolbar-group-right">
-            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Registry" icon="ui-icon-cloud-upload"
+            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
                     class="blue-btn"></button>
         </div>
     </p-toolbar>
@@ -27,11 +27,13 @@
 
 <div class="card card-w-title">
     <h1>Extract Details</h1>
+    <button type="button" pButton icon="fa-file-o" iconPos="left" label="Export All" (click)="persons.exportCSV()"></button>
     <p-dataTable [value]="extractDetails" selectionMode="single"  autoLayout="true" resizableColumns="true"
                  [loading]="loading"  loadingIcon="fa-spinner fa-pulse"
                  [reorderableColumns]="true" columnResizeMode="fit" [resizableColumns]="true" [paginator]="true" [rows]="200"
                  [totalRecords]="recordCount"
-    >
+                 exportFilename="Dwapi"
+                 #persons>
         <p-column field="serial" header="Serial" [filter]="true"></p-column>
         <p-column field="firstName_Normalized" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
         <p-column field="middleName_Normalized" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
