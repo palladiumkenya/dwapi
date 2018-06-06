@@ -5,6 +5,7 @@ import {Observable} from 'rxjs/Observable';
 import {ExtractPatient} from '../ndwh-docket/model/extract-patient';
 import {LoadFromEmrCommand} from '../../settings/model/load-from-emr-command';
 import {ExtractEvent} from '../../settings/model/extract-event';
+import {MasterPatientIndex} from '../models/master-patient-index';
 
 @Injectable()
 export class CbsService {
@@ -24,6 +25,10 @@ export class CbsService {
     public extract(extract: ExtractPatient): Observable<boolean> {
         console.log(extract);
         return this._http.post<boolean>(this._url + '/extract', extract)
+            .catch(this.handleError);
+    }
+    public getDetails(): Observable<MasterPatientIndex[]> {
+        return this._http.get<MasterPatientIndex[]>(this._url)
             .catch(this.handleError);
     }
 

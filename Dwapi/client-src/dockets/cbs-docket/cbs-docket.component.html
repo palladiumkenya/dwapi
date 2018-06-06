@@ -12,7 +12,7 @@
         </div>
     </p-toolbar>
 
-    <p-dataTable [value]="extracts" selectionMode="single"  autoLayout="true" resizableColumns="true">
+    <p-dataTable [value]="extracts" selectionMode="single"   resizableColumns="true">
         <p-column field="display" header="Extract"></p-column>
         <p-column field="extractEvent.lastStatus" header="Status"></p-column>
         <p-column field="extractEvent.found" header="Found"></p-column>
@@ -22,5 +22,19 @@
         <p-column field="extractEvent.sent" header="Sent"></p-column>
     </p-dataTable>
     <p-messages [(value)]="messages"></p-messages>
+
 </div>
 
+<div class="card card-w-title">
+    <h1>Extract Details</h1>
+    <p-dataTable [value]="extractDetails" selectionMode="single"  autoLayout="true" resizableColumns="true">
+        <p-column field="serial" header="Serial"></p-column>
+        <p-column field="firstName_Normalized" header="First Name"></p-column>
+        <p-column field="middleName_Normalized" header="Middle Name"></p-column>
+        <p-column field="lastName_Normalized" header="Last Name"></p-column>
+        <p-column field="patientPhoneNumber" header="Phone"></p-column>
+        <p-column field="gender" header="Gender"></p-column>
+        <p-column field="dob" header="Birth Date"></p-column>
+
+    </p-dataTable>
+</div>

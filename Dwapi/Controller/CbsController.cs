@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Model;
@@ -19,11 +21,12 @@ namespace Dwapi.Controller
         private readonly IMediator _mediator;
         private readonly IExtractStatusService _extractStatusService;
         private readonly IHubContext<CbsActivity> _hubContext;
-
-        public CbsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<CbsActivity> hubContext)
+        private readonly IMasterPatientIndexRepository _masterPatientIndexRepository;
+        public CbsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<CbsActivity> hubContext, IMasterPatientIndexRepository masterPatientIndexRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
+            _masterPatientIndexRepository = masterPatientIndexRepository;
             Startup.CbsHubContext= _hubContext = hubContext;
         }
 
@@ -49,6 +52,24 @@ namespace Dwapi.Controller
                 if (null == eventExtract)
                     return NotFound();
 
+                return Ok(eventExtract);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(Extract)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        // GET: api/DwhExtracts/status/id
+        [HttpGet]
+        public IActionResult GetExtracts()
+        {
+            try
+            {
+                var eventExtract = _masterPatientIndexRepository.GetAll().ToList().OrderBy(x => x.sxFirstName);
                 return Ok(eventExtract);
             }
             catch (Exception e)

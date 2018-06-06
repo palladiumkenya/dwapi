@@ -11,6 +11,7 @@ import {DatabaseProtocol} from '../../settings/model/database-protocol';
 import {ExtractPatient} from '../ndwh-docket/model/extract-patient';
 import {HubConnection, HubConnectionBuilder, LogLevel} from '@aspnet/signalr';
 import {ExtractEvent} from '../../settings/model/extract-event';
+import {MasterPatientIndex} from '../models/master-patient-index';
 
 @Component({
   selector: 'liveapp-cbs-docket',
@@ -28,13 +29,14 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public getEmr$: Subscription;
     public load$: Subscription;
     public getStatus$: Subscription;
-
+    public get$: Subscription;
     public emrSystem: EmrSystem;
     public extracts: Extract[];
     public dbProtocol: DatabaseProtocol;
     public extract: Extract;
     public extractPatient: ExtractPatient;
     private extractEvent: ExtractEvent;
+    public extractDetails: MasterPatientIndex[] = [];
 
     public messages: Message[];
     public canLoad: boolean = false;
@@ -51,8 +53,8 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.loadData();
-
         this.liveOnInit();
+        this.loadDetails();
     }
 
     private liveOnInit() {
@@ -125,6 +127,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     this.messages = [];
                     this.messages.push({severity: 'success', summary: 'load was successful '});
                     this.updateEvent();
+                    this.loadDetails();
                 }
             );
 
@@ -142,9 +145,9 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.extract.extractEvent = p;
-                    if (this.extract.extractEvent) {
-                        this.canLoad = this.extract.extractEvent.queued > 0;
-                    }
+                    // if (this.extract.extractEvent) {
+                    //     this.canLoad = this.extract.extractEvent.queued > 0;
+                    // }
                 },
                 e => {
                     this.messages = [];
@@ -157,6 +160,21 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
 
     }
 
+    private loadDetails(): void {
+        this.get$ = this.cbsService.getDetails()
+            .subscribe(
+                p => {
+                    this.extractDetails = p;
+                },
+                e => {
+                    this.messages = [];
+                    this.messages.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
+                },
+                () => {
+                }
+            );
+    }
+
     public ngOnDestroy(): void {
         if (this.getEmr$) {
             this.getEmr$.unsubscribe();
@@ -166,6 +184,9 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
         }
         if (this.load$) {
             this.load$.unsubscribe();
+        }
+        if (this.get$) {
+            this.get$.unsubscribe();
         }
     }
 }

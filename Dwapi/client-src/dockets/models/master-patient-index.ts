@@ -1,4 +1,4 @@
-export interface Interface {
+export interface MasterPatientIndex {
     rowId: number;
     serial: string;
     firstName: string;
