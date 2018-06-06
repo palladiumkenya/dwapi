@@ -27,14 +27,22 @@
 
 <div class="card card-w-title">
     <h1>Extract Details</h1>
-    <p-dataTable [value]="extractDetails" selectionMode="single"  autoLayout="true" resizableColumns="true">
-        <p-column field="serial" header="Serial"></p-column>
-        <p-column field="firstName_Normalized" header="First Name"></p-column>
-        <p-column field="middleName_Normalized" header="Middle Name"></p-column>
-        <p-column field="lastName_Normalized" header="Last Name"></p-column>
+    <p-dataTable [value]="extractDetails" selectionMode="single"  autoLayout="true" resizableColumns="true"
+                 [loading]="loading"  loadingIcon="fa-spinner fa-pulse"
+                 [reorderableColumns]="true" columnResizeMode="fit" [resizableColumns]="true" [paginator]="true" [rows]="200"
+                 [totalRecords]="recordCount"
+    >
+        <p-column field="serial" header="Serial" [filter]="true"></p-column>
+        <p-column field="firstName_Normalized" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
+        <p-column field="middleName_Normalized" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="lastName_Normalized" header="Last Name"  sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
         <p-column field="patientPhoneNumber" header="Phone"></p-column>
-        <p-column field="gender" header="Gender"></p-column>
-        <p-column field="dob" header="Birth Date"></p-column>
+        <p-column field="gender" header="Gender" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
+        <p-column field="dob" header="Birth Date" sortable="true">
+            <ng-template let-col let-detail="rowData" pTemplate="body">
+                {{detail.dob | date: 'dd MMM yyyy'}}
+            </ng-template>
+        </p-column>
 
     </p-dataTable>
 </div>

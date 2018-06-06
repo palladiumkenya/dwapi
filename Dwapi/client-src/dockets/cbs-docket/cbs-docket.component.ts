@@ -30,6 +30,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public load$: Subscription;
     public getStatus$: Subscription;
     public get$: Subscription;
+    public getCount$: Subscription;
     public emrSystem: EmrSystem;
     public extracts: Extract[];
     public dbProtocol: DatabaseProtocol;
@@ -40,6 +41,8 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
 
     public messages: Message[];
     public canLoad: boolean = false;
+    public loading: boolean = false;
+    public recordCount = 0;
 
     public constructor(public breadcrumbService: BreadcrumbService,
                        confirmationService: ConfirmationService, emrConfigService: EmrConfigService, private cbsService: CbsService ) {
@@ -141,6 +144,20 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
         if (!this.extract) {
             return;
         }
+
+        this.getCount$ = this.cbsService.getDetailCount()
+            .subscribe(
+                p => {
+                    this.recordCount = p;
+                },
+                e => {
+                    this.messages = [];
+                    this.messages.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
+                },
+                () => {
+                    // console.log(extract);
+                }
+            );
         this.getStatus$ = this.cbsService.getStatus(this.extract.id)
             .subscribe(
                 p => {
@@ -161,6 +178,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     }
 
     private loadDetails(): void {
+        this.loading = true;
         this.get$ = this.cbsService.getDetails()
             .subscribe(
                 p => {
@@ -171,6 +189,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     this.messages.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
                 },
                 () => {
+                    this.loading = false;
                 }
             );
     }

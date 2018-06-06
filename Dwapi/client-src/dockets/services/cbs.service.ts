@@ -27,6 +27,11 @@ export class CbsService {
         return this._http.post<boolean>(this._url + '/extract', extract)
             .catch(this.handleError);
     }
+
+    public getDetailCount(): Observable<number> {
+        return this._http.get<number>(this._url + '/count')
+            .catch(this.handleError);
+    }
     public getDetails(): Observable<MasterPatientIndex[]> {
         return this._http.get<MasterPatientIndex[]>(this._url)
             .catch(this.handleError);

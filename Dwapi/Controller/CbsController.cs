@@ -63,7 +63,22 @@ namespace Dwapi.Controller
             }
         }
 
-        // GET: api/DwhExtracts/status/id
+        [HttpGet("count")]
+        public IActionResult GetExtractCount()
+        {
+            try
+            {
+                var count = _masterPatientIndexRepository.GetAll().ToList().Count;
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(Extract)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
         [HttpGet]
         public IActionResult GetExtracts()
         {
