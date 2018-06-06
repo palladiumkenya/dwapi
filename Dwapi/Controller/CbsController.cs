@@ -68,7 +68,7 @@ namespace Dwapi.Controller
         {
             try
             {
-                var count = _masterPatientIndexRepository.GetAll().Select(x => x.Id).Count();
+                var count = _masterPatientIndexRepository.GetView().Select(x => x.Id).Count();
                 return Ok(count);
             }
             catch (Exception e)
