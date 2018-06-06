@@ -250,8 +250,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private generateExtractPatient(currentEmr: EmrSystem): LoadFromEmrCommand {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PatientExtract').databaseProtocolId;
         this._extractPatient = {
-            databaseProtocol: currentEmr.databaseProtocols[0],
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'PatientExtract')
     };
         console.log(this._extractPatient);

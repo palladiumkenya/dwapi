@@ -68,7 +68,7 @@ namespace Dwapi.Controller
         {
             try
             {
-                var count = _masterPatientIndexRepository.GetAll().ToList().Count;
+                var count = _masterPatientIndexRepository.GetAll().Select(x => x.Id).Count();
                 return Ok(count);
             }
             catch (Exception e)
@@ -84,7 +84,7 @@ namespace Dwapi.Controller
         {
             try
             {
-                var eventExtract = _masterPatientIndexRepository.GetAll().ToList().OrderBy(x => x.sxFirstName);
+                var eventExtract = _masterPatientIndexRepository.GetView().ToList().OrderBy(x => x.sxdmPKValueDoB);
                 return Ok(eventExtract);
             }
             catch (Exception e)

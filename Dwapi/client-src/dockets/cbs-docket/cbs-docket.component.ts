@@ -115,6 +115,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     }
 
     public loadFromEmr(): void {
+        this.extractDetails = [];
         this.messages = [];
         this.extractPatient = {extract: this.extract, databaseProtocol: this.dbProtocol};
         this.load$ = this.cbsService.extract(this.extractPatient)
