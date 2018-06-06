@@ -43,6 +43,9 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public canLoad: boolean = false;
     public loading: boolean = false;
     public recordCount = 0;
+    private sdk: string[] = [];
+public colorMappings: any[] = [];
+    rowStyleMap: {[key: string]: string};
 
     public constructor(public breadcrumbService: BreadcrumbService,
                        confirmationService: ConfirmationService, emrConfigService: EmrConfigService, private cbsService: CbsService ) {
@@ -177,6 +180,12 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
             );
 
     }
+    private isEven(value: number): boolean {
+            if ((value % 2) !== 0) {
+                return false;
+            }
+            return true;
+    }
 
     private loadDetails(): void {
         this.loading = true;
@@ -191,8 +200,22 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                 },
                 () => {
                     this.loading = false;
+
+                    this.sdk = Array.from(new Set(this.extractDetails.map(extract => extract.sxdmPKValueDoB)))
+                    this.colorMappings = this.sdk.map((sd, idx) => ({sxdmPKValueDoB: sd, color: this.isEven(idx) ? 'white' : 'pink'}))
+                    // this.colorMappings.forEach(value => {
+                    //     this.rowStyleMap[value.sxdmPKValueDoB] = value.color;
+                    //     console.log(this.rowStyleMap);
+                    // });
+
                 }
             );
+    }
+
+    lookupRowStyleClass(rowData: MasterPatientIndex) {
+       // console.log(rowData);
+        return rowData.sxdmPKValueDoB === 'FA343ALPS19730615' ? 'disabled-account-row' : '';
+
     }
 
     public ngOnDestroy(): void {

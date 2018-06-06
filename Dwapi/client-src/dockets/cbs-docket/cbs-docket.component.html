@@ -7,8 +7,7 @@
         </div>
 
         <div class="ui-toolbar-group-right">
-            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Registry" icon="ui-icon-cloud-upload"
-                    class="blue-btn"></button>
+            <button pButton type="button" [disabled]="true" label="Send Warehouse" icon="ui-icon-cloud-upload" class="blue-btn"></button>
         </div>
     </p-toolbar>
 
@@ -45,6 +44,7 @@
             </ng-template>
         </p-column>
         <p-column field="jaroWinklerScore" header="JaroWinklerScore" sortable="true"></p-column>
+        <p-column field="sxdmPKValueDoB" header="sxdmPKValueDoB" sortable="true"></p-column>
 
     </p-dataTable>
 </div>
