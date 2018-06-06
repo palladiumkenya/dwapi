@@ -1,5 +1,5 @@
 <p-accordion>
-    <p-accordionTab header="PSMART" [selected]="true">
+    <p-accordionTab header="PSMART">
         <p-dataTable [value]="extracts" selectionMode="single" [(selection)]="selectedExtract" dataKey="id">
             <p-header>Extract Settings</p-header>
             <p-column field="name" header="Name"></p-column>
@@ -12,39 +12,64 @@
                 </ng-template>
             </p-column>
         </p-dataTable>
-    </p-accordionTab>
-
-    <p-dialog header="PSmart Extract" [(visible)]="displayDialog" [width]="500"
-              [responsive]="true" showEffect="fade" [modal]="true" [responsive]="true">
-        <form #emrForm="ngForm" novalidate>
-            <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="extractDialog">
-                <p-messages [(value)]="errorMessage"></p-messages>
-                <div class="ui-g ui-g-12 ui-g-nopad">
-                    <div class="ui-g-12 ui-md-3 ui-label">
-                        <label for="name">SQL</label>
-                    </div>
-                    <div class="ui-g-12">
-                        <textarea pInputText id="name" name="name" required
-                                  [(ngModel)]="extractDialog.extractSql" ></textarea>
+        <p-dialog header="PSmart Extract" [(visible)]="displayDialog" [width]="500" [responsive]="true" showEffect="fade" [modal]="true"
+            [responsive]="true">
+            <form #emrForm="ngForm" novalidate>
+                <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="extractDialog">
+                    <p-messages [(value)]="errorMessage"></p-messages>
+                    <div class="ui-g ui-g-12 ui-g-nopad">
+                        <div class="ui-g-12 ui-md-3 ui-label">
+                            <label for="name">SQL</label>
+                        </div>
+                        <div class="ui-g-12">
+                            <textarea pInputText id="name" name="name" required [(ngModel)]="extractDialog.extractSql"></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
-        <p-footer>
-            <div class="ui-dialog-buttonpane ui-helper-clearfix">
-                <button type="submit" pButton icon="ui-icon-save" (click)="updateExtract()"
-                        label="Save" [disabled]="!emrForm.form.valid"></button>
-            </div>
-        </p-footer>
-    </p-dialog>
-
-    <p-accordionTab header="National Data Warehouse" *ngIf="!selectedEmr.isMiddleware" [disabled]="true">
+            </form>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                    <button type="submit" pButton icon="ui-icon-save" (click)="updateExtract()" label="Save" [disabled]="!emrForm.form.valid"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+    </p-accordionTab>
+    <p-accordionTab header="National Data Warehouse" >
+        <p-dataTable [value]="dwhExtracts" selectionMode="single" [(selection)]="selectedExtract" dataKey="id">
+            <p-header>Extracts Settings</p-header>
+            <p-column field="name" header="Name"></p-column>
+            <p-column field="display" header="Display"></p-column>
+            <p-column field="extractSql" header="SQL"></p-column>
+            <p-column field="destination" header="Destination"></p-column>
+            <p-column styleClass="col-button" header="Action">
+                <ng-template let-extract="rowData" pTemplate="body">
+                    <button type="button" pButton (click)="editExtract(extract)" icon="ui-icon-edit" class="green-btn"></button>
+                </ng-template>
+            </p-column>
+        </p-dataTable>
+        <p-dialog header="DWH Extract" [(visible)]="displayDialog" [width]="500" [responsive]="true" showEffect="fade" [modal]="true"
+            [responsive]="true">
+            <form #emrForm="ngForm" novalidate>
+                <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="extractDialog">
+                    <p-messages [(value)]="errorMessage"></p-messages>
+                    <div class="ui-g ui-g-12 ui-g-nopad">
+                        <div class="ui-g-12 ui-md-3 ui-label">
+                            <label for="name">SQL</label>
+                        </div>
+                        <div class="ui-g-12">
+                            <textarea pInputText id="name" name="name" required [(ngModel)]="extractDialog.extractSql"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                    <button type="submit" pButton icon="ui-icon-save" (click)="updateExtract()" label="Save" [disabled]="!emrForm.form.valid"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+    </p-accordionTab>
+    <p-accordionTab header="Case-based Surveillance" *ngIf="!selectedEmr.isMiddleware">
         Not supported !
     </p-accordionTab>
-    <p-accordionTab header="Case-based Surveillance" *ngIf="!selectedEmr.isMiddleware" [disabled]="true">
-        Not supported !
-    </p-accordionTab>
-
 </p-accordion>
-
-

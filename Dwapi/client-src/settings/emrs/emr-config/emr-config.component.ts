@@ -157,7 +157,7 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
     }
 
     onRowSelect(event) {
-        this.protocolTitle = `${event.data.name} Protcols`;
+        this.protocolTitle = `${event.data.name} Protocols`;
         // this.showProtocols();
     }
 

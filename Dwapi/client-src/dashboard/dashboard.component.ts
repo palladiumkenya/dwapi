@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     }
 
-    public loadMiddleware(){
+    public loadMiddleware() {
         this.getMiddleware$ = this._emrConfigService.getMiddleware()
             .subscribe(
                 p => {

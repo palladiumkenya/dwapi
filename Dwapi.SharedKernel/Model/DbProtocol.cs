@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Utility;
@@ -25,6 +26,9 @@ namespace Dwapi.SharedKernel.Model
         public string DatabaseName { get; set; }
         [MaxLength(100)]
         public string AdvancedProperties { get; set; }
+
+        [NotMapped] public string DatabaseTypeName => $"{DatabaseType}";
+        
 
         public DbProtocol()
         {

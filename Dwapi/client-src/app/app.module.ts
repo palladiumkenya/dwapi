@@ -72,6 +72,7 @@ import {ToolbarModule} from 'primeng/primeng';
 import {TooltipModule} from 'primeng/primeng';
 import {TreeModule} from 'primeng/primeng';
 import {TreeTableModule} from 'primeng/primeng';
+import {TableModule} from 'primeng/table';
 
 import {AppComponent} from './app.component';
 import {RegistryConfigComponent} from '../settings/registry-config/registry-config.component';
@@ -96,10 +97,26 @@ import { RestProtocolConfigComponent } from '../settings/emrs/rest-protocol-conf
 import {ProtocolConfigService} from '../settings/services/protocol-config.service';
 import { ExtractConfigComponent } from '../settings/emrs/extract-config/extract-config.component';
 import {ExtractConfigService} from '../settings/services/extract-config.service';
-import { PsmartConsoleComponent } from '../dashboard/psmart-console/psmart-console.component';
-import {PsmartExtractService} from '../dashboard/services/psmart-extract.service';
-import { PsmartMiddlewareConsoleComponent } from '../dashboard/psmart-middleware-console/psmart-middleware-console.component';
-import {PsmartSenderService} from '../dashboard/services/psmart-sender.service';
+import { PsmartConsoleComponent } from '../dockets/psmart-docket/psmart-console/psmart-console.component';
+import {PsmartExtractService} from '../dockets/services/psmart-extract.service';
+import { PsmartMiddlewareConsoleComponent } from '../dockets/psmart-docket/psmart-middleware-console/psmart-middleware-console.component';
+import {PsmartSenderService} from '../dockets/services/psmart-sender.service';
+import { NdwhConsoleComponent } from '../dockets/ndwh-docket/ndwh-console/ndwh-console.component';
+import { NdwhExtractService } from '../dockets/services/ndwh-extract.service';
+import { NdwhSenderService } from '../dockets/services/ndwh-sender.service';
+import { NdwhDocketComponent } from '../dockets/ndwh-docket/ndwh-docket.component';
+import { PsmartDocketComponent } from '../dockets/psmart-docket/psmart-docket.component';
+import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
+import { NdwhExtractDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
+import { NdwhPatientsExtractService } from '../dockets/services/ndwh-patients-extract.service';
+import { DbProtocolComponent } from '../settings/db-protocol/db-protocol.component';
+// tslint:disable-next-line:max-line-length
+import { ValidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/valid-record-details/valid-record-details.component';
+// tslint:disable-next-line:max-line-length
+import { InvalidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/invalid-record-details/invalid-record-details.component';
+import {EmrDocketComponent} from '../settings/emr-docket/emr-docket.component';
+import {EmrSettingsComponent} from '../settings/emr-settings/emr-settings.component';
+import {CbsService} from '../dockets/services/cbs.service';
 
 @NgModule({
     imports: [
@@ -175,7 +192,8 @@ import {PsmartSenderService} from '../dashboard/services/psmart-sender.service';
         ToolbarModule,
         TooltipModule,
         TreeModule,
-        TreeTableModule
+        TreeTableModule,
+        TableModule
     ],
     declarations: [
         AppComponent,
@@ -193,12 +211,23 @@ import {PsmartSenderService} from '../dashboard/services/psmart-sender.service';
         RestProtocolConfigComponent,
         ExtractConfigComponent,
         PsmartConsoleComponent,
-        PsmartMiddlewareConsoleComponent
+        PsmartMiddlewareConsoleComponent,
+        NdwhConsoleComponent,
+        NdwhDocketComponent,
+        PsmartDocketComponent,
+        CbsDocketComponent,
+        NdwhExtractDetailsComponent,
+        DbProtocolComponent,
+        ValidRecordDetailsComponent,
+        InvalidRecordDetailsComponent,
+        EmrSettingsComponent,
+        EmrDocketComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
         MessageService, ConfirmationService, RegistryConfigService, EmrConfigService, ProtocolConfigService,
-        ExtractConfigService, PsmartExtractService , PsmartSenderService
+        ExtractConfigService, PsmartExtractService , PsmartSenderService, NdwhExtractService, NdwhSenderService, NdwhPatientsExtractService,
+        CbsService
     ],
     bootstrap: [AppComponent]
 })

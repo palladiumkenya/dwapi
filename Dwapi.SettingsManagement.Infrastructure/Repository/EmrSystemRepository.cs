@@ -19,6 +19,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
         {
             return DbSet.AsNoTracking()
                 .Include(x => x.DatabaseProtocols)
+                .Include(e => e.Extracts)
                 .Include(r => r.RestProtocols);
         }
 
@@ -56,7 +57,6 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
                 Update(entity);
                 return;
             }
-            entity.Extracts.Add(Extract.CreatePsmart(entity.Id));
             Create(entity);
         }
     }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Interfaces;
-using Dwapi.UploadManagement.Core.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
 {

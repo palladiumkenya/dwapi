@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Dwapi.SettingsManagement.Core.DTOs;
-using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Utility;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -23,7 +19,7 @@ namespace Dwapi.Controller
             _extractManagerService = extractManagerService;
         }
 
-        // GET: api/ExtractManager/id/dockedtId
+        // GET: api/ExtractManager/id/docketId
         [HttpGet("{id}/{docketId}")]
         public IActionResult Get(Guid id,string docketId)
         {

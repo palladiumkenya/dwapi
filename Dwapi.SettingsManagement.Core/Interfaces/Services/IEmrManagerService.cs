@@ -17,5 +17,6 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Services
         bool VerifyConnection(DatabaseProtocol databaseProtocol);
         string GetConnectionError();
         void SetDefault(Guid id);
+        IEnumerable<DatabaseProtocol> GetByEmr(Guid emrId);
     }
 }

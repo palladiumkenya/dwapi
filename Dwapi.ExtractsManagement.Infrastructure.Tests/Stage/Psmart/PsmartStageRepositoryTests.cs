@@ -47,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Stage.Psmart
         public void should_Clear()
         {
             _psmartStageRepository.Clear("iqcare");
-            Assert.False(_context.PsmartStages.Any());
+            Assert.False(_context.Set<PsmartStage>().Any());
         }
     }
 }

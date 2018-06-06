@@ -4,7 +4,6 @@ using System.Linq;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
-using Dwapi.UploadManagement.Core.Model;
 using Dwapi.UploadManagement.Core.Services;
 using FizzWare.NBuilder;
 using NUnit.Framework;

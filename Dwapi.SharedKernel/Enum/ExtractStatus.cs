@@ -3,9 +3,10 @@
     public enum ExtractStatus
     {
         Idle,
+        Clearing, Cleared,
         Finding,Found,
         Loading,Loaded,
-        //Validating,Validated,
+        Validating,Validated,
         Sending,Sent
     }
 }

@@ -5,7 +5,6 @@ using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
-using Dwapi.UploadManagement.Core.Model;
 using Serilog;
 
 namespace Dwapi.UploadManagement.Core.Services

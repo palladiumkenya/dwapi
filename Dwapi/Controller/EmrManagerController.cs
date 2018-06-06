@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Utility;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -141,6 +137,26 @@ namespace Dwapi.Controller
             catch (Exception e)
             {
                 var msg = $"Error Deleteing {nameof(EmrSystem)}";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        // GET: api/EmrManager/protocol/5
+        [HttpGet("protocol/{id}")]
+        public IActionResult GetDbProtocolsByEmr(Guid id)
+        {
+            if (id.IsNullOrEmpty())
+                return BadRequest("Emr missing");
+            try
+            {
+                var list = _emrManagerService.GetAllEmrs().Where(x=>x.Id==id).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(EmrSystem)}(s)";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
@@ -81,7 +81,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
                             else
                                 stringBuilder.Append($"'{extracts[i].Uuid}',");
                         }
-                        updateCommand.CommandText = $"update psmart_store set Status = 'Collected', Status_date = '{DateTime.Now}' where UUID in ({stringBuilder.ToString()})";
+                        updateCommand.CommandText = $"update psmart_store set Status = 'Collected', Status_date = '{DateTime.Now.Date:yyyy-MM-dd HH:mm:ss}' where UUID in ({stringBuilder.ToString()})";
                         updateCommand.ExecuteNonQuery();
                     }
                 }
@@ -90,12 +90,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
 
         }
 
+        public Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract)
+        {
+            throw new NotImplementedException();
+        }
+
         public IDbConnection GetConnection(DbProtocol databaseProtocol)
         {
             var connectionString = databaseProtocol.GetConnectionString();
 
             if (databaseProtocol.DatabaseType == DatabaseType.MicrosoftSQL)
-                return new SqlConnection(connectionString);
+                return new System.Data.SqlClient.SqlConnection(connectionString);
 
             if (databaseProtocol.DatabaseType == DatabaseType.MySQL)
                 return new MySqlConnection(connectionString);

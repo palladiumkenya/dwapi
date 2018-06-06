@@ -15,6 +15,15 @@ export class ProtocolConfigService {
         this._http = http;
     }
 
+    public getAll(id: string): Observable<DatabaseProtocol[]> {
+        return this._http.get<DatabaseProtocol[]>(`${this._url}/protocol/${id}`)
+            .catch(this.handleError);
+    }
+    public getCount(): Observable<number> {
+        return this._http.get<number>(this._url + '/count')
+            .catch(this.handleError);
+    }
+
     public saveProtocol(entity: DatabaseProtocol): Observable<DatabaseProtocol> {
         return this._http.post<DatabaseProtocol>(this._url + '/protocol', entity)
             .catch(this.handleError);

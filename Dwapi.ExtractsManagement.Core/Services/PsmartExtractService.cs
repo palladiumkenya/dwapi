@@ -85,10 +85,14 @@ namespace Dwapi.ExtractsManagement.Core.Services
         {
             try
             {
+                int count = 0;
                 _extractHistoryRepository.UpdateStatus(extract.Extract.Id, ExtractStatus.Loading);
 
-                var count = Load(Extract(extract.DatabaseProtocol, extract.Extract));
-
+                var psmartSource = Extract(extract.DatabaseProtocol, extract.Extract).ToList();
+                if (psmartSource.Any())
+                {
+                    count = Load(psmartSource);
+                }
                 _extractHistoryRepository.UpdateStatus(extract.Extract.Id, ExtractStatus.Loaded, count);
                 //_extractHistoryRepository.UpdateStatus(extract.Extract.Id, ExtractStatus.Idle);
             }

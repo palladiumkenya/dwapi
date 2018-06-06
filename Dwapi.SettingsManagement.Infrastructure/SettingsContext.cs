@@ -12,6 +12,11 @@ namespace Dwapi.SettingsManagement.Infrastructure
 {
     public class SettingsContext : BaseContext
     {
+        public SettingsContext(DbContextOptions<SettingsContext> options) : base(options)
+        {
+        }
+
+
         public DbSet<CentralRegistry> CentralRegistries { get; set; }
 
         public DbSet<EmrSystem> EmrSystems { get; set; }
@@ -20,10 +25,6 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
         public DbSet<Docket> Dockets { get; set; }
         public DbSet<Extract> Extracts { get; set; }
-      
-        public SettingsContext(DbContextOptions<SettingsContext> options) : base(options)
-        {
-        }
 
         public override void EnsureSeeded()
         {
@@ -45,5 +46,6 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
             SaveChanges();
         }
+
     }
 }

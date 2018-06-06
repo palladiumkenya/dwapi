@@ -12,4 +12,5 @@ export interface Extract {
     emrSystemId?: string;
     emr?: string;
     extractEvent?: ExtractEvent;
+    databaseProtocolId?: string;
 }
