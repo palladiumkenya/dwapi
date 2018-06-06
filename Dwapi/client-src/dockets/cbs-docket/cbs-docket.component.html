@@ -7,7 +7,7 @@
         </div>
 
         <div class="ui-toolbar-group-right">
-            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
+            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Registry" icon="ui-icon-cloud-upload"
                     class="blue-btn"></button>
         </div>
     </p-toolbar>
@@ -27,25 +27,67 @@
 
 <div class="card card-w-title">
     <h1>Extract Details</h1>
-    <button type="button" pButton icon="fa-file-o" iconPos="left" label="Export All" (click)="persons.exportCSV()"></button>
-    <p-dataTable [value]="extractDetails" selectionMode="single"  autoLayout="true" resizableColumns="true"
-                 [loading]="loading"  loadingIcon="fa-spinner fa-pulse"
+    <p-dataTable [value]="extractDetails" selectionMode="single" autoLayout="true" resizableColumns="true"
+                 [loading]="loading" loadingIcon="fa-spinner fa-pulse"
                  [reorderableColumns]="true" columnResizeMode="fit" [resizableColumns]="true" [paginator]="true" [rows]="200"
-                 [totalRecords]="recordCount"
-                 exportFilename="Dwapi"
-                 #persons>
+                 [totalRecords]="recordCount">
+
+        <p-column field="sxdmPKValueDoB" header="Patient Key Value" sortable="true"></p-column>
         <p-column field="serial" header="Serial" [filter]="true"></p-column>
-        <p-column field="firstName_Normalized" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
-        <p-column field="middleName_Normalized" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-        <p-column field="lastName_Normalized" header="Last Name"  sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-        <p-column field="patientPhoneNumber" header="Phone"></p-column>
-        <p-column field="gender" header="Gender" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
-        <p-column field="dob" header="Birth Date" sortable="true">
+        <p-column field="firstName" header="Patient First Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="middleName" header="Patient Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="lastName" header="Patient Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="gender" header="Gender" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="dob" header="Date Of Birth" sortable="true">
             <ng-template let-col let-detail="rowData" pTemplate="body">
                 {{detail.dob | date: 'dd MMM yyyy'}}
             </ng-template>
         </p-column>
         <p-column field="jaroWinklerScore" header="JaroWinklerScore" sortable="true"></p-column>
+
+        <p-column field="patientPhoneNumber" header="Patient Phone Number" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="patientAlternatePhoneNumber" header="Alt Phone Number" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="maritalStatus" header="Marital Status" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+
+        <p-column field="contactName" header="Contact Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="contactRelation" header="Contact Relation" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="contactPhoneNumber" header="Contact PhoneNumber" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="contactAddress" header="Contact Address" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+
+        
+        <p-column field="ccC_Number" header="CCC Number" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="tB_Number" header="TB Number" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="national_ID" header="National ID" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+
+        <p-column field="dateConfirmedHIVPositive" header="Date Confirmed HIV Positive" sortable="true" [filter]="true" filterMatchMode="contains">
+            <ng-template let-col let-detail="rowData" pTemplate="body">
+                {{detail.dateConfirmedHIVPositive | date: 'dd MMM yyyy'}}
+            </ng-template>
+        </p-column>
+        <p-column field="startARTDate" header="Date Started ART" sortable="true" [filter]="true" filterMatchMode="contains">
+            <ng-template let-col let-detail="rowData" pTemplate="body">
+                {{detail.startARTDate | date: 'dd MMM yyyy'}}
+            </ng-template>
+        </p-column>
+        <p-column field="startARTRegimenCode" header="Start ART Regimen" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="startARTRegimenDesc" header="Start ART Regimen Line" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="national_ID" header="National ID" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+
+        <!--<p-column field="patientCounty" header="Patient County" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="patientSubCounty" header="Patient Sub County" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="patientVillage" header="Patient Village" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="patientCounty" header="Patient County" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+
+        <p-column field="national_ID" header="National ID" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="nhiF_Number" header="NHIF Number" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="birth_Certificate" header="Birth Cert" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>-->
+
+        <!--<p-column field="firstName_Normalized" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+    <p-column field="middleName_Normalized" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+    <p-column field="lastName_Normalized" header="Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>-->
+
+
+
 
     </p-dataTable>
 </div>
