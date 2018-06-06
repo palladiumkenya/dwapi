@@ -48,4 +48,5 @@ export interface MasterPatientIndex {
     status?: any;
     statusDate?: any;
     id?: string;
+    jaroWinklerScore?: number;
 }

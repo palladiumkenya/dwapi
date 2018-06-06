@@ -95,6 +95,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Cbs
         public string dmPKValueDoB { get; set; }
 
         public string sxdmPKValueDoB { get; set; }
+
+        public double? JaroWinklerScore { get; set; }
         [DoNotRead]
         public DateTime DateExtracted { get; set; }=DateTime.Now;
         [DoNotRead]
