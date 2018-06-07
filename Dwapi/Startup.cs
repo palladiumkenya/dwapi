@@ -223,6 +223,7 @@ namespace Dwapi
             app.UseStaticFiles()
                 .UseSwaggerUi();
 
+            app.UseHangfire();
 
 
             Log.Debug(@"initializing Database...");

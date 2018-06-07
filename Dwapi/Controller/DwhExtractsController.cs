@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Dwh;
@@ -30,6 +31,14 @@ namespace Dwapi.Controller
     
         [HttpPost("extract")]
         public async Task<IActionResult> Load([FromBody]ExtractPatient request)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+            var result = await _mediator.Send(request, HttpContext.RequestAborted);
+            return Ok(result);
+        }
+
+        [HttpPost("extractAll")]
+        public async Task<IActionResult> Load([FromBody]LoadFromEmrCommand request)
         {
             if (!ModelState.IsValid) return BadRequest();
             var result = await _mediator.Send(request, HttpContext.RequestAborted);
