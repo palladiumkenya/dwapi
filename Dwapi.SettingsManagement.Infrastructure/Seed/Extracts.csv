@@ -64,7 +64,7 @@ FROM
    'IQCare' AS EMR, 'Kenya HMIS II' AS Project
 FROM           
  tmp_Labs INNER JOIN
- tmp_PatientMaster ON tmp_Labs.PatientPK = tmp_PatientMaster.PatientPK"|dwhstage|0|PatientLabExtractExtract|5|a6221982-0e85-11e8-ba89-0ed5f89f718b
+ tmp_PatientMaster ON tmp_Labs.PatientPK = tmp_PatientMaster.PatientPK"|dwhstage|0|PatientLabExtract|5|a6221982-0e85-11e8-ba89-0ed5f89f718b
 46742eb0-5856-e811-8e16-9cb6d0da773c|Patient Pharmacy|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT   
 
  tmp_PatientMaster.PatientID, tmp_PatientMaster.FacilityID, tmp_PatientMaster.SiteCode, tmp_Pharmacy.PatientPK, tmp_Pharmacy.VisitID, tmp_Pharmacy.Drug, tmp_Pharmacy.Provider, 

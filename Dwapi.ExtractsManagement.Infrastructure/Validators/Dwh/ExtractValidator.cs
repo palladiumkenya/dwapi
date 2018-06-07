@@ -42,6 +42,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh
 
                         try
                         {
+                            if(command.Connection.State!=ConnectionState.Open)
+                                command.Connection.Open();
                             await GetTask(command);
                         }
                         catch (Exception e)

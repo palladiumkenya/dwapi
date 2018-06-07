@@ -69,7 +69,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.StartARTAtThisFacility, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientArtExtract.StartARTAtThisFacility))))
                 .ForMember(x => x.StartRegimen, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientArtExtract.StartRegimen))))
                 .ForMember(x => x.StartRegimenLine, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientArtExtract.StartRegimenLine))))
-                .ForMember(x => x.LastARTDate, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientArtExtract.LastARTDate))))
+                .ForMember(x => x.LastARTDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientArtExtract.LastARTDate))))
                 .ForMember(x => x.LastRegimen, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientArtExtract.LastRegimen))))
                 .ForMember(x => x.LastRegimenLine, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientArtExtract.LastRegimenLine))))
                 .ForMember(x => x.Duration, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientArtExtract.Duration))))

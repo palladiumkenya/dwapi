@@ -1,29 +1,36 @@
-import { Component, OnInit, OnChanges, OnDestroy, SimpleChange, Input } from '@angular/core';
-import {Extract} from '../../../settings/model/extract';
-import {EmrSystem} from '../../../settings/model/emr-system';
-import {ConfirmationService, Message} from 'primeng/api';
-import {NdwhExtractService} from '../../services/ndwh-extract.service';
-import {Subscription} from 'rxjs/Subscription';
-import {ExtractDatabaseProtocol} from '../../../settings/model/extract-protocol';
-import {RegistryConfigService} from '../../../settings/services/registry-config.service';
-import {CentralRegistry} from '../../../settings/model/central-registry';
-import {NdwhSenderService} from '../../services/ndwh-sender.service';
-import {SendPackage} from '../../../settings/model/send-package';
-import {SendResponse} from '../../../settings/model/send-response';
+import {
+    Component,
+    OnInit,
+    OnChanges,
+    OnDestroy,
+    SimpleChange,
+    Input
+} from '@angular/core';
+import { Extract } from '../../../settings/model/extract';
+import { EmrSystem } from '../../../settings/model/emr-system';
+import { ConfirmationService, Message } from 'primeng/api';
+import { NdwhExtractService } from '../../services/ndwh-extract.service';
+import { Subscription } from 'rxjs/Subscription';
+import { ExtractDatabaseProtocol } from '../../../settings/model/extract-protocol';
+import { RegistryConfigService } from '../../../settings/services/registry-config.service';
+import { CentralRegistry } from '../../../settings/model/central-registry';
+import { NdwhSenderService } from '../../services/ndwh-sender.service';
+import { SendPackage } from '../../../settings/model/send-package';
+import { SendResponse } from '../../../settings/model/send-response';
 import { LoadFromEmrCommand } from '../../../settings/model/load-from-emr-command';
 import { DwhExtract } from '../../../settings/model/dwh-extract';
-import {ExtractPatient} from '../model/extract-patient';
-import {HubConnection, HubConnectionBuilder, LogLevel} from '@aspnet/signalr';
-import {EmrConfigService} from '../../../settings/services/emr-config.service';
-import {ExtractEvent} from '../../../settings/model/extract-event';
+import { ExtractPatient } from '../model/extract-patient';
+import { ExtractProfile } from '../model/extract-profile';
+import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
+import { EmrConfigService } from '../../../settings/services/emr-config.service';
+import { ExtractEvent } from '../../../settings/model/extract-event';
 
 @Component({
-  selector: 'liveapp-ndwh-console',
-  templateUrl: './ndwh-console.component.html',
-  styleUrls: ['./ndwh-console.component.scss']
+    selector: 'liveapp-ndwh-console',
+    templateUrl: './ndwh-console.component.html',
+    styleUrls: ['./ndwh-console.component.scss']
 })
 export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
-
     @Input() emr: EmrSystem;
     private _hubConnection: HubConnection | undefined;
     public async: any;
@@ -57,16 +64,27 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public otherMessage: Message[];
     private _extractDbProtocol: ExtractDatabaseProtocol;
     private _extractDbProtocols: ExtractDatabaseProtocol[];
-    private _extractLoadCommand: LoadFromEmrCommand;
-    private _extractPatient: ExtractPatient;
+    private extractLoadCommand: LoadFromEmrCommand;
+    private extractPatient: ExtractProfile;
+    private extractPatientArt: ExtractProfile;
+    private extractPatientBaseline: ExtractProfile;
+    private extractPatientLaboratory: ExtractProfile;
+    private extractPatientPharmacy: ExtractProfile;
+    private extractPatientStatus: ExtractProfile;
+    private extractPatientVisit: ExtractProfile;
+    private extractProfile: ExtractProfile;
+    private extractProfiles: ExtractProfile[] = [];
     public centralRegistry: CentralRegistry;
     public sendResponse: SendResponse;
     public getEmr$: Subscription;
 
-    public constructor(confirmationService: ConfirmationService, emrConfigService: NdwhExtractService,
-                       registryConfigService: RegistryConfigService,
-                       psmartSenderService: NdwhSenderService,
-                        private emrService: EmrConfigService) {
+    public constructor(
+        confirmationService: ConfirmationService,
+        emrConfigService: NdwhExtractService,
+        registryConfigService: RegistryConfigService,
+        psmartSenderService: NdwhSenderService,
+        private emrService: EmrConfigService
+    ) {
         this._confirmationService = confirmationService;
         this._ndwhExtractService = emrConfigService;
         this._registryConfigService = registryConfigService;
@@ -90,7 +108,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.canLoadFromEmr = true;
             this.loadingData = true;
             this.recordCount = 0;
-            this.extracts = this.emr.extracts.filter(x => x.docketId === 'NDWH');
+            this.extracts = this.emr.extracts.filter(
+                x => x.docketId === 'NDWH'
+            );
             this.updateEvent();
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
@@ -103,17 +123,25 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadFromEmr(): void {
         this.errorMessage = [];
         console.log(this.emr);
-        this.load$ = this._ndwhExtractService.extract(this.generateExtractPatient(this.emr))
+        this.load$ = this._ndwhExtractService
+            .extractAll(this.generateExtractLoadCommand(this.emr))
             .subscribe(
                 p => {
                     // this.isVerfied = p;
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error verifying ', detail: <any>e});
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error verifying ',
+                        detail: <any>e
+                    });
                 },
                 () => {
-                    this.errorMessage.push({severity: 'success', summary: 'load was successful '});
+                    this.errorMessage.push({
+                        severity: 'success',
+                        summary: 'load was successful '
+                    });
                     this.updateEvent();
                 }
             );
@@ -121,64 +149,81 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public loadRegisrty(): void {
         this.errorMessage = [];
-        this.loadRegistry$ = this._registryConfigService.getDefault()
-            .subscribe(
-                p => {
-                    this.centralRegistry = p;
-                },
-                e => {
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error loading regisrty ', detail: <any>e});
-                },
-                () => {
-                    console.log(this.centralRegistry.name);
-                }
-            );
+        this.loadRegistry$ = this._registryConfigService.getDefault().subscribe(
+            p => {
+                this.centralRegistry = p;
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error loading regisrty ',
+                    detail: <any>e
+                });
+            },
+            () => {
+                console.log(this.centralRegistry.name);
+            }
+        );
     }
 
     public updateEvent(): void {
-
-        this.extracts.forEach((extract) => {
-            this.getStatus$ = this._ndwhExtractService.getStatus(extract.id)
+        this.extracts.forEach(extract => {
+            this.getStatus$ = this._ndwhExtractService
+                .getStatus(extract.id)
                 .subscribe(
                     p => {
-                            extract.extractEvent = p;
+                        extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
                         }
                     },
                     e => {
                         this.errorMessage = [];
-                        this.errorMessage.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
+                        this.errorMessage.push({
+                            severity: 'error',
+                            summary: 'Error loading status ',
+                            detail: <any>e
+                        });
                     },
                     () => {
                         // console.log(extract);
                     }
                 );
         });
-
     }
 
     public send(): void {
         this.errorMessage = [];
-        this.send$ = this._ndwhSenderService.send(this.getSendPackage('NDWH'))
+        this.send$ = this._ndwhSenderService
+            .send(this.getSendPackage('NDWH'))
             .subscribe(
                 p => {
                     this.sendResponse = p;
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error sending ',
+                        detail: <any>e
+                    });
                 },
                 () => {
                     console.log(this.sendResponse);
                     this.updateEvent();
                     if (this.sendResponse) {
                         if (this.sendResponse.isSending) {
-                            this.errorMessage.push({severity: 'warning', summary: 'sending has already started '});
+                            this.errorMessage.push({
+                                severity: 'warning',
+                                summary: 'sending has already started '
+                            });
                         }
                         if (this.sendResponse.isComplete) {
-                            this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
+                            this.errorMessage.push({
+                                severity: 'success',
+                                summary: 'sent successfully '
+                            });
                         }
                     }
                     // this.errorMessage.push({severity: 'success', summary: 'sent successful '});
@@ -187,7 +232,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
-            .withUrl(`http://${document.location.hostname}:5757/ExtractActivity`)
+            .withUrl(
+                `http://${document.location.hostname}:5757/ExtractActivity`
+            )
             .configureLogging(LogLevel.Trace)
             .build();
         this._hubConnection.serverTimeoutInMilliseconds = 120000;
@@ -195,68 +242,121 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
         this._hubConnection.on('ShowProgress', (dwhProgress: any) => {
-           // console.log(dwhProgress);
-            this.currentExtract = this.extracts.find(x => x.name === 'PatientExtract');
+            // console.log(dwhProgress);
+            this.currentExtract = this.extracts.find(
+                x => x.name === 'PatientExtract'
+            );
             if (this.currentExtract) {
                 this.extractEvent = {
-                    lastStatus: `${dwhProgress.status}`, found: dwhProgress.found, loaded: dwhProgress.loaded,
-                    rejected: dwhProgress.rejected, queued: dwhProgress.queued, sent: dwhProgress.sent
+                    lastStatus: `${dwhProgress.status}`,
+                    found: dwhProgress.found,
+                    loaded: dwhProgress.loaded,
+                    rejected: dwhProgress.rejected,
+                    queued: dwhProgress.queued,
+                    sent: dwhProgress.sent
                 };
                 this.currentExtract.extractEvent = {};
                 this.currentExtract.extractEvent = this.extractEvent;
-                const newWithoutPatientExtract = this.extracts.filter(x => x.name !== 'PatientExtract');
-                this.extracts = [...newWithoutPatientExtract, this.currentExtract];
+                const newWithoutPatientExtract = this.extracts.filter(
+                    x => x.name !== 'PatientExtract'
+                );
+                this.extracts = [
+                    ...newWithoutPatientExtract,
+                    this.currentExtract
+                ];
             }
         });
-       // console.log('im done', this.extracts);
+        // console.log('im done', this.extracts);
     }
 
-    private getExtractProtocols(currentEmr: EmrSystem): ExtractDatabaseProtocol[] {
+    private getExtractProtocols(
+        currentEmr: EmrSystem
+    ): ExtractDatabaseProtocol[] {
         this._extractDbProtocols = [];
-        this.extracts.forEach((e) => {
+        this.extracts.forEach(e => {
             e.emr = currentEmr.name;
             this._extractDbProtocols.push({
-                    extract: e,
-                    databaseProtocol: currentEmr.databaseProtocols[0]
-                }
-            );
+                extract: e,
+                databaseProtocol: currentEmr.databaseProtocols[0]
+            });
         });
         return this._extractDbProtocols;
     }
 
     private generateExtractLoadCommand(currentEmr: EmrSystem): LoadFromEmrCommand {
-        this.extracts.forEach((e) => {
-            this.dwhExtract = {
-                destination: e.destination,
-                display: e.display,
-                docketId: e.docketId,
-                emr: this.emrName,
-                emrSystemId: e.emrSystemId,
-                extractEvent: e.extractEvent,
-                extractName: e.name,
-                id: e.id,
-                isPriority: e.isPriority,
-                rank: e.rank,
-                sqlquery: e.extractSql
-            };
-            this.dwhExtracts.push(this.dwhExtract);
-        });
-        this._extractLoadCommand =  {
-            databaseProtocol: currentEmr.databaseProtocols[0],
-            extracts: this.dwhExtracts
+        this.extractProfiles.push(this.generateExtractPatient(currentEmr));
+        this.extractProfiles.push(this.generateExtractPatientArt(currentEmr));
+        this.extractProfiles.push(this.generateExtractPatientBaseline(currentEmr));
+        this.extractProfiles.push(this.generateExtractPatientLaboratory(currentEmr));
+        this.extractProfiles.push(this.generateExtractPatientPharmacy(currentEmr));
+        this.extractProfiles.push(this.generateExtractPatientStatus(currentEmr));
+        this.extractProfiles.push(this.generateExtractPatientVisit(currentEmr));
+
+        this.extractLoadCommand = {
+            extracts: this.extractProfiles
         };
-        console.log(this._extractLoadCommand);
-        return this._extractLoadCommand;
+        return this.extractLoadCommand;
     }
 
-    private generateExtractPatient(currentEmr: EmrSystem): LoadFromEmrCommand {
+    private generateExtractPatient(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'PatientExtract').databaseProtocolId;
-        this._extractPatient = {
+        this.extractPatient = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'PatientExtract')
-    };
-        console.log(this._extractPatient);
-        return this._extractPatient;
+        };
+        return this.extractPatient;
+    }
+
+    private generateExtractPatientArt(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PatientArtExtract').databaseProtocolId;
+        this.extractPatientArt = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'PatientArtExtract')
+        };
+        return this.extractPatientArt;
+    }
+
+    private generateExtractPatientBaseline(currentEmr: EmrSystem): ExtractProfile {
+        // tslint:disable-next-line:no-debugger
+        debugger;
+        const selectedProtocal = this.extracts.find(x => x.name === 'PatientBaselineExtract').databaseProtocolId;
+        this.extractPatientBaseline = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'PatientBaselineExtract')
+        };
+        return this.extractPatientBaseline;
+    }
+
+    private generateExtractPatientLaboratory(currentEmr: EmrSystem): ExtractProfile {
+        // tslint:disable-next-line:no-debugger
+        debugger;
+        const selectedProtocal = this.extracts.find(x => x.name === 'PatientLabExtract').databaseProtocolId;
+        this.extractPatientLaboratory = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'PatientLabExtract')
+        };
+        return this.extractPatientLaboratory;
+    }
+
+    private generateExtractPatientPharmacy(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PatientPharmacyExtract').databaseProtocolId;
+        this.extractPatientPharmacy = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'PatientPharmacyExtract')
+        };
+        return this.extractPatientPharmacy;
+    }
+
+    private generateExtractPatientStatus(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PatientStatusExtract').databaseProtocolId;
+        this.extractPatientStatus = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'PatientStatusExtract')
+        };
+        return this.extractPatientStatus;
+    }
+
+    private generateExtractPatientVisit(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PatientVisitExtract').databaseProtocolId;
+        this.extractPatientVisit = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'PatientVisitExtract')
+        };
+        return this.extractPatientVisit;
     }
 
     private getSendPackage(docketId: string): SendPackage {
@@ -279,5 +379,4 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.send$.unsubscribe();
         }
     }
-
 }

@@ -33,6 +33,11 @@ export class NdwhExtractService {
             .catch(this.handleError);
     }
 
+    public extractAll(extracts: LoadFromEmrCommand): Observable<boolean> {
+        return this._http.post<boolean>(this._url + '/extractAll', extracts)
+            .catch(this.handleError);
+    }
+
     public send(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
         return this._http.post<boolean>(this._url + '/load', extracts)
             .catch(this.handleError);
