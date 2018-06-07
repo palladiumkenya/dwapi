@@ -6,13 +6,14 @@ using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.Custom;
 using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
+using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
 using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
@@ -23,8 +24,8 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
-using Dwapi.ExtractsManagement.Core.Loader;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
+using Dwapi.ExtractsManagement.Core.Loader.Dwh;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
@@ -35,9 +36,8 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
-using Dwapi.ExtractsManagement.Infrastructure.Utilities;
-using Dwapi.ExtractsManagement.Infrastructure.Validators;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
+using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
 using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
@@ -128,8 +128,20 @@ namespace Dwapi
             services.AddScoped<IPsmartStageRepository, PsmartStageRepository>();
             services.AddScoped<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddScoped<ITempPatientExtractRepository, TempPatientExtractRepository>();
+            services.AddScoped<ITempPatientArtExtractRepository, TempPatientArtExtractRepository>();
+            services.AddScoped<ITempPatientBaselinesExtractRepository, TempPatientBaselinesExtractRepository>();
+            services.AddScoped<ITempPatientLaboratoryExtractRepository, TempPatientLaboratoryExtractRepository>();
+            services.AddScoped<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>();
+            services.AddScoped<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>();
+            services.AddScoped<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>();
             services.AddScoped<IValidatorRepository, ValidatorRepository>();
             services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
+            services.AddScoped<IPatientArtExtractRepository, PatientArtExtractRepository>();
+            services.AddScoped<IPatientBaselinesExtractRepository, PatientBaselinesExtractRepository>();
+            services.AddScoped<IPatientLaboratoryExtractRepository, PatientLaboratoryExtractRepository>();
+            services.AddScoped<IPatientPharmacyExtractRepository, PatientPharmacyExtractRepository>();
+            services.AddScoped<IPatientStatusExtractRepository, PatientStatusExtractRepository>();
+            services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
             services.AddScoped<ITempPatientExtractErrorSummaryRepository, TempPatientExtractErrorSummaryRepository>();
 
             services.AddScoped<IMasterPatientIndexRepository, MasterPatientIndexRepository>();
@@ -145,11 +157,23 @@ namespace Dwapi
             services.AddScoped<IPsmartSourceReader, PsmartSourceReader>();
             services.AddScoped<IPsmartSendService, PsmartSendService>();
 
-            services.AddScoped<IPatientSourceReader, PatientSourceReader>();
+            services.AddScoped<IExtractSourceReader, ExtractSourceReader>();
             services.AddScoped<IPatientSourceExtractor, PatientSourceExtractor>();
-            services.AddScoped<IPatientValidator, PatientValidator>();
+            services.AddScoped<IPatientArtSourceExtractor, PatientArtSourceExtractor>();
+            services.AddScoped<IPatientBaselinesSourceExtractor, PatientBaselinesSourceExtractor>();
+            services.AddScoped<IPatientLaboratorySourceExtractor, PatientLaboratorySourceExtractor>();
+            services.AddScoped<IPatientPharmacySourceExtractor, PatientPharmacySourceExtractor>();
+            services.AddScoped<IPatientStatusSourceExtractor, PatientStatusSourceExtractor>();
+            services.AddScoped<IPatientVisitSourceExtractor, PatientVisitSourceExtractor>();
+            services.AddScoped<IExtractValidator, ExtractValidator>();
             services.AddScoped<IPatientLoader, PatientLoader>();
-            services.AddScoped<IClearExtracts, ClearExtracts>();
+            services.AddScoped<IPatientArtLoader, PatientArtLoader>();
+            services.AddScoped<IPatientBaselinesLoader, PatientBaselinesLoader>();
+            services.AddScoped<IPatientLaboratoryLoader, PatientLaboratoryLoader>();
+            services.AddScoped<IPatientPharmacyLoader, PatientPharmacyLoader>();
+            services.AddScoped<IPatientStatusLoader, PatientStatusLoader>();
+            services.AddScoped<IPatientVisitLoader, PatientVisitLoader>();
+            services.AddScoped<IClearDwhExtracts, ClearDwhExtracts>();
 
             services.AddScoped<IMasterPatientIndexReader, MasterPatientIndexReader>();
             services.AddScoped<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>();
@@ -199,6 +223,7 @@ namespace Dwapi
             app.UseStaticFiles()
                 .UseSwaggerUi();
 
+            app.UseHangfire();
 
 
             Log.Debug(@"initializing Database...");

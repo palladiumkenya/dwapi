@@ -16,7 +16,21 @@ namespace Dwapi.ExtractsManagement.Infrastructure
     public class ExtractsContext : BaseContext
     {
         public DbSet<PatientExtract> PatientExtracts { get; set; }
+        public DbSet<PatientArtExtract> PatientArtExtracts { get; set; }
+        public DbSet<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; }
+        public DbSet<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; }
+        public DbSet<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; }
+        public DbSet<PatientStatusExtract> PatientStatusExtracts { get; set; }
+        public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
+
         public DbSet<TempPatientExtract> TempPatientExtracts { get; set; }
+        public DbSet<TempPatientArtExtract> TempPatientArtExtracts { get; set; }
+        public DbSet<TempPatientBaselinesExtract> TempPatientBaselinesExtracts { get; set; }
+        public DbSet<TempPatientLaboratoryExtract> TempPatientLaboratoryExtracts { get; set; }
+        public DbSet<TempPatientPharmacyExtract> TempPatientPharmacyExtracts { get; set; }
+        public DbSet<TempPatientStatusExtract> TempPatientStatusExtracts { get; set; }
+        public DbSet<TempPatientVisitExtract> TempPatientVisitExtracts { get; set; }
+
         public DbSet<ValidationError> ValidationError { get; set; }
         public DbSet<Validator> Validator { get; set; }
         public DbSet<ExtractHistory> ExtractHistory { get; set; }
@@ -34,6 +48,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
+            DapperPlusManager.Entity<TempPatientArtExtract>().Key(x => x.Id).Table($"{nameof(TempPatientArtExtracts)}");
+            DapperPlusManager.Entity<TempPatientBaselinesExtract>().Key(x => x.Id).Table($"{nameof(TempPatientBaselinesExtracts)}");
+            DapperPlusManager.Entity<TempPatientLaboratoryExtract>().Key(x => x.Id).Table($"{nameof(TempPatientLaboratoryExtracts)}");
+            DapperPlusManager.Entity<TempPatientPharmacyExtract>().Key(x => x.Id).Table($"{nameof(TempPatientPharmacyExtracts)}");
+            DapperPlusManager.Entity<TempPatientStatusExtract>().Key(x => x.Id).Table($"{nameof(TempPatientStatusExtracts)}");
+            DapperPlusManager.Entity<TempPatientVisitExtract>().Key(x => x.Id).Table($"{nameof(TempPatientVisitExtracts)}");
+            DapperPlusManager.Entity<PatientArtExtract>().Key(x => x.Id).Table($"{nameof(PatientArtExtracts)}");
+            DapperPlusManager.Entity<PatientBaselinesExtract>().Key(x => x.Id).Table($"{nameof(PatientBaselinesExtracts)}");
+            DapperPlusManager.Entity<PatientLaboratoryExtract>().Key(x => x.Id).Table($"{nameof(PatientLaboratoryExtracts)}");
+            DapperPlusManager.Entity<PatientPharmacyExtract>().Key(x => x.Id).Table($"{nameof(PatientPharmacyExtracts)}");
+            DapperPlusManager.Entity<PatientStatusExtract>().Key(x => x.Id).Table($"{nameof(PatientStatusExtracts)}");
+            DapperPlusManager.Entity<PatientVisitExtract>().Key(x => x.Id).Table($"{nameof(PatientVisitExtracts)}");
             DapperPlusManager.Entity<PatientExtract>().Key(x => x.Id).Table($"{nameof(PatientExtracts)}");
             DapperPlusManager.Entity<MasterPatientIndex>().Key(x => x.Id).Table("MasterPatientIndices");
             DapperPlusManager.Entity<TempMasterPatientIndex>().Key(x => x.Id).Table("TempMasterPatientIndices");

@@ -6,7 +6,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs
     public interface IMasterPatientIndexValidator
     {
 
-        Task<bool> Validate();
-        Task<int> GetRejectedCount();
+        Task<bool> Validate(string sourceTable);
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using MySql.Data.MySqlClient;
@@ -19,11 +17,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TempMasterPatientIndex> Read(DbProtocol protocol, DbExtract extract)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract)
         {
             var sourceConnection = GetConnection(protocol);
@@ -31,7 +24,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs
                 throw new Exception("Data connection not initialized");
 
             if (null == extract)
-                throw new Exception($"{nameof(TempPatientExtract)} settings not configured");
+                throw new Exception("Extract settings not configured");
 
             if (sourceConnection.State != ConnectionState.Open)
                 sourceConnection.Open();
