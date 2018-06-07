@@ -20,20 +20,20 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
         private readonly IPatientSourceExtractor _patientSourceExtractor;
         private readonly IExtractValidator _extractValidator;
         private readonly IPatientLoader _patientLoader;
-        private readonly IClearExtracts _clearExtracts;
+        private readonly IClearDwhExtracts _clearDwhExtracts;
 
-        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearExtracts clearExtracts)
+        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
             _patientLoader = patientLoader;
-            _clearExtracts = clearExtracts;
+            _clearDwhExtracts = clearDwhExtracts;
         }
 
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
         {
             //clear
-            int count = await _clearExtracts.Clear();
+            int count = await _clearDwhExtracts.Clear();
 
             //Extract
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);

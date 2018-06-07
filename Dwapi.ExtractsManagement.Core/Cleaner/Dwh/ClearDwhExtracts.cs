@@ -13,20 +13,20 @@ using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Serilog;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Utilities
+namespace Dwapi.ExtractsManagement.Core.Cleaner.Dwh
 {
-    public class ClearExtracts : IClearExtracts
+    public class ClearDwhExtracts : IClearDwhExtracts
     {
         private readonly SqlConnection _connection;
 
-        public ClearExtracts(IEmrSystemRepository emrSystemRepository)
+        public ClearDwhExtracts(IEmrSystemRepository emrSystemRepository)
         {
             _connection = new SqlConnection(emrSystemRepository.GetConnectionString());
         }
 
         public async Task<int> Clear()
         {
-            Log.Debug($"Executing ClearExtracts command...");
+            Log.Debug($"Executing ClearDwhExtracts command...");
 
             DomainEvents.Dispatch(
                 new ExtractActivityNotification(new DwhProgress(

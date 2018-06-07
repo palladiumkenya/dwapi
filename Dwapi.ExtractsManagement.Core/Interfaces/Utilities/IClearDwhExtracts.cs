@@ -2,7 +2,7 @@
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Utilities
 {
-    public interface IClearExtracts
+    public interface IClearDwhExtracts
     {
         Task<int> Clear();
     }

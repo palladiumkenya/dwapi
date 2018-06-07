@@ -6,6 +6,7 @@ using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.Custom;
 using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
+using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
 using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
@@ -35,7 +36,6 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
-using Dwapi.ExtractsManagement.Infrastructure.Utilities;
 using Dwapi.ExtractsManagement.Infrastructure.Validators;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
@@ -162,7 +162,7 @@ namespace Dwapi
             services.AddScoped<IPatientSourceExtractor, PatientSourceExtractor>();
             services.AddScoped<IExtractValidator, ExtractValidator>();
             services.AddScoped<IPatientLoader, PatientLoader>();
-            services.AddScoped<IClearExtracts, ClearExtracts>();
+            services.AddScoped<IClearDwhExtracts, ClearDwhExtracts>();
 
             services.AddScoped<IMasterPatientIndexReader, MasterPatientIndexReader>();
             services.AddScoped<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>();
