@@ -64,6 +64,11 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             Create(entity);
         }
 
+        public IEnumerable<T> GetFromSql(string query)
+        {
+            return DbSet.FromSql(query);
+        }
+
         public virtual void Delete(TId id)
         {
             var entity = DbSet.Find(id);

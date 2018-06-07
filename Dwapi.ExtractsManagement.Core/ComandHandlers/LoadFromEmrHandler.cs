@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Dwapi.ExtractsManagement.Core.Commands;
+using Dwapi.ExtractsManagement.Core.Commands.Dwh;
+using MediatR;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Commands;
-using Dwapi.ExtractsManagement.Core.Commands.Dwh;
-using Hangfire;
-using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 {
@@ -26,7 +23,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             var extractPatient = new ExtractPatient()
             {
                 //todo check if extracts from all emrs are loaded
-                Extract = request.Extracts.FirstOrDefault(x=>x.IsPriority),
+                Extract = request.Extracts.FirstOrDefault(x => x.IsPriority),
                 DatabaseProtocol = request.DatabaseProtocol
             };
 
@@ -39,10 +36,10 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             return await ExtractAll(request, cancellationToken);
         }
 
-        private async Task<bool> ExtractAll (LoadFromEmrCommand request, CancellationToken cancellationToken)
+        private async Task<bool> ExtractAll(LoadFromEmrCommand request, CancellationToken cancellationToken)
         {
             var protocal = request.DatabaseProtocol;
-            
+
             // ExtractPatientART
             var patientArtCommand = new ExtractPatientArt()
             {
@@ -85,40 +82,18 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 DatabaseProtocol = request.DatabaseProtocol
             };
 
-            IList<Expression<Action>> methodCalls = new List<Expression<Action>>();
+            var t1 = _mediator.Send(patientStatusCommand, cancellationToken);
+            var t2 = _mediator.Send(patientPharmacyCommand, cancellationToken);
+            var t3 = _mediator.Send(patientLaboratoryCommand, cancellationToken);
+            var t4 = _mediator.Send(patientBaselinesCommand, cancellationToken);
+            var t5 = _mediator.Send(patientArtCommand, cancellationToken);
+            var t6 = _mediator.Send(patientVisitCommand, cancellationToken);
 
-            methodCalls.Add(() => _mediator.Send(patientStatusCommand, cancellationToken));
+            var ts = new List<Task<bool>> { t1, t2, t3, t4, t5, t6 };
 
-            methodCalls.Add(() => _mediator.Send(patientStatusCommand, cancellationToken));
+            var tresult = await Task.WhenAll(ts);
 
-            methodCalls.Add(() => _mediator.Send(patientPharmacyCommand, cancellationToken));
-
-            methodCalls.Add(() => _mediator.Send(patientLaboratoryCommand, cancellationToken));
-
-            methodCalls.Add(() => _mediator.Send(patientBaselinesCommand, cancellationToken));
-
-            methodCalls.Add(() => _mediator.Send(patientArtCommand, cancellationToken));
-
-            methodCalls.Add(() => _mediator.Send(patientVisitCommand, cancellationToken));
-            
-            ChainJobs(methodCalls);
-
-            return true;
-        }
-
-        public void ChainJobs(IList<Expression<Action>> methodCalls)
-        {
-            string jobId = null;
-            foreach (var methodCall in methodCalls)
-            {
-                if (string.IsNullOrWhiteSpace(jobId))
-                {
-                    jobId = BackgroundJob.Enqueue(methodCall);
-                    continue;
-                }
-
-                jobId = BackgroundJob.ContinueWith(jobId, methodCall);
-            }
+            return tresult.All(x=>x);
         }
     }
 }

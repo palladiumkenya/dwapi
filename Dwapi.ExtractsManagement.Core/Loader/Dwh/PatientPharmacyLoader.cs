@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
@@ -37,7 +38,14 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         found, 0, 0, 0, 0)));
 
                 //load temp extracts without errors
-                var tempPatientPharmacyExtracts = _tempPatientPharmacyExtractRepository.GetAll().Where(a=>a.CheckError == false).ToList();
+                StringBuilder query = new StringBuilder();
+                query.Append($" SELECT * FROM {nameof(TempPatientPharmacyExtract)}s");
+                query.Append($" INNER JOIN PatientExtracts p ON ");
+                query.Append($" s.PatientPK = p.PatientPK AND ");
+                query.Append($" s.SiteCode = p.SiteCode ");
+                query.Append($" WHERE s.CheckError = 0");
+
+                var tempPatientPharmacyExtracts = _tempPatientPharmacyExtractRepository.GetFromSql(query.ToString()).ToList();
 
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempPatientPharmacyExtract>, List<PatientPharmacyExtract>>(tempPatientPharmacyExtracts);

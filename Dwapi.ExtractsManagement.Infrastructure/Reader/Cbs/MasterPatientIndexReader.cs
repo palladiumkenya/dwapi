@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using MySql.Data.MySqlClient;
