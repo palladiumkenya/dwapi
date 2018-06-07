@@ -9,6 +9,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Cbs
     public class MasterPatientIndex: Entity<Guid>
     {
         public int RowId { get; set; }
+        public int PatientPk { get; set; }
+        public int SiteCode { get; set; }
 
         public string Serial { get; set; }
 
