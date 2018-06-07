@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
@@ -13,7 +13,7 @@ using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Serilog;
 
-namespace Dwapi.ExtractsManagement.Core.Loader
+namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 {
     public class PatientLoader : IPatientLoader
     {

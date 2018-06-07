@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Commands;
+using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Model;

@@ -1,7 +1,7 @@
 ﻿using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Interfaces;
 
-namespace Dwapi.ExtractsManagement.Core.Interfaces.Extratcors
+namespace Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh
 {
     public interface IPatientSourceExtractor : ISourceExtractor<TempPatientExtract>
     {

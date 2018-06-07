@@ -1,8 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Commands;
+using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
-using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -13,7 +14,7 @@ using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using MediatR;
 
-namespace Dwapi.ExtractsManagement.Core.ComandHandlers
+namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
 {
     public class ExtractPatientHandler :IRequestHandler<ExtractPatient,bool>
     {

@@ -17,13 +17,13 @@ using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 {
-    public class PatientSourceExtractor : IPatientSourceExtractor
+    public class PatientBaselinesSourceExtractor : IPatientBaselinesSourceExtractor
     {
         private readonly IExtractSourceReader _reader;
         private readonly IMediator _mediator;
-        private readonly ITempPatientExtractRepository _extractRepository;
+        private readonly ITempPatientBaselinesExtractRepository _extractRepository;
 
-        public PatientSourceExtractor(IExtractSourceReader reader, IMediator mediator, ITempPatientExtractRepository extractRepository)
+        public PatientBaselinesSourceExtractor(IExtractSourceReader reader, IMediator mediator, ITempPatientBaselinesExtractRepository extractRepository)
         {
             _reader = reader;
             _mediator = mediator;
@@ -34,7 +34,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
         {
             int batch = 500;
 
-            var list = new List<TempPatientExtract>();
+            var list = new List<TempPatientBaselinesExtract>();
 
             int count = 0;
 
@@ -44,7 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                 {
                     count++;        
                     // AutoMapper profiles
-                    var extractRecord = Mapper.Map<IDataRecord, TempPatientExtract>(rdr);
+                    var extractRecord = Mapper.Map<IDataRecord, TempPatientBaselinesExtract>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
                     list.Add(extractRecord);
 
@@ -57,10 +57,10 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
                         DomainEvents.Dispatch(
                             new ExtractActivityNotification(new DwhProgress(
-                                nameof(PatientExtract),
+                                nameof(PatientBaselinesExtract),
                                 nameof(ExtractStatus.Finding),
                                 list.Count, 0, 0, 0, 0)));
-                        list = new List<TempPatientExtract>();
+                        list = new List<TempPatientBaselinesExtract>();
                     }
                 }
 
@@ -75,7 +75,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
             // TODO: Notify Completed;
             DomainEvents.Dispatch(
                 new ExtractActivityNotification(extract.Id, new DwhProgress(
-                    nameof(PatientExtract),
+                    nameof(PatientBaselinesExtract),
                     nameof(ExtractStatus.Found),
                     list.Count, 0, 0, 0, 0)));
 

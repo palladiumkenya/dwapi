@@ -1,0 +1,61 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Events;
+using Dwapi.SharedKernel.Model;
+using Serilog;
+
+namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
+{
+    public class PatientLaboratoryLoader : IPatientLaboratoryLoader
+    {
+        private readonly IPatientLaboratoryExtractRepository _patientLaboratoryExtractRepository;
+        private readonly ITempPatientLaboratoryExtractRepository _tempPatientLaboratoryExtractRepository;
+
+        public PatientLaboratoryLoader(IPatientLaboratoryExtractRepository patientLaboratoryExtractRepository, ITempPatientLaboratoryExtractRepository tempPatientLaboratoryExtractRepository)
+        {
+            _patientLaboratoryExtractRepository = patientLaboratoryExtractRepository;
+            _tempPatientLaboratoryExtractRepository = tempPatientLaboratoryExtractRepository;
+        }
+
+        public async Task<int> Load(int found)
+        {
+            try
+            {
+                DomainEvents.Dispatch(
+                    new ExtractActivityNotification(new DwhProgress(
+                        nameof(PatientLaboratoryExtract),
+                        nameof(ExtractStatus.Loading),
+                        found, 0, 0, 0, 0)));
+
+                //load temp extracts without errors
+                var tempPatientLaboratoryExtracts = _tempPatientLaboratoryExtractRepository.GetAll().Where(a=>a.CheckError == false).ToList();
+
+                //Auto mapper
+                var extractRecords = Mapper.Map<List<TempPatientLaboratoryExtract>, List<PatientLaboratoryExtract>>(tempPatientLaboratoryExtracts);
+
+                //Batch Insert
+                _patientLaboratoryExtractRepository.BatchInsert(extractRecords);
+                Log.Debug("saved batch");
+
+
+                return tempPatientLaboratoryExtracts.Count;
+
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, $"Extract {nameof(PatientLaboratoryExtract)} not Loaded");
+                return 0;
+            }
+        }
+    }
+}
