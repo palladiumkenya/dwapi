@@ -14,7 +14,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     @Input() extract: string;
     private _patientExtractsService: NdwhPatientsExtractService;
-    public invalidPatientExtracts: PatientExtract[] = [];
+    public invalidExtracts: any[] = [];
     public cols: any[];
     public getInvalid$: Subscription;
     public errorMessage: Message[];
@@ -37,7 +37,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     public getInalidExtracts(): void {
         this.getInvalid$ = this._patientExtractsService.loadErrors().subscribe(
             p => {
-                this.invalidPatientExtracts = p;
+                this.invalidExtracts = p;
             },
             e => {
                 this.errorMessage = [];

@@ -117,6 +117,12 @@ import { InvalidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extra
 import {EmrDocketComponent} from '../settings/emr-docket/emr-docket.component';
 import {EmrSettingsComponent} from '../settings/emr-settings/emr-settings.component';
 import {CbsService} from '../dockets/services/cbs.service';
+import { NdwhPatientArtService } from '../dockets/services/ndwh-patient-art.service';
+import { NdwhPatientBaselineService } from '../dockets/services/ndwh-patient-baseline.service';
+import { NdwhPatientLaboratoryService } from '../dockets/services/ndwh-patient-laboratory.service';
+import { NdwhPatientPharmacyService } from '../dockets/services/ndwh-patient-pharmacy.service';
+import { NdwhPatientStatusService } from '../dockets/services/ndwh-patient-status.service';
+import { NdwhPatientVisitService } from '../dockets/services/ndwh-patient-visit.service';
 
 @NgModule({
     imports: [
@@ -227,7 +233,8 @@ import {CbsService} from '../dockets/services/cbs.service';
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
         MessageService, ConfirmationService, RegistryConfigService, EmrConfigService, ProtocolConfigService,
         ExtractConfigService, PsmartExtractService , PsmartSenderService, NdwhExtractService, NdwhSenderService, NdwhPatientsExtractService,
-        CbsService
+        CbsService, NdwhPatientArtService, NdwhPatientBaselineService, NdwhPatientLaboratoryService, NdwhPatientPharmacyService,
+        NdwhPatientStatusService, NdwhPatientVisitService
     ],
     bootstrap: [AppComponent]
 })
