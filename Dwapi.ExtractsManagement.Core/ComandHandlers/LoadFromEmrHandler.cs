@@ -59,7 +59,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             };
 
             // ExtractPatientLaboratory
-            var patientLaboratoryProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientLaboratoryExtract");
+            var patientLaboratoryProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientLabExtract");
             var patientLaboratoryCommand = new ExtractPatientLaboratory()
             {
                 Extract = patientLaboratoryProfile?.Extract,
@@ -68,7 +68,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
             // ExtractPatientPharmacy
             var patientPharmacyProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientPharmacyExtract");
-            var patientPharmacyCommand = new ExtractPatientBaselines()
+            var patientPharmacyCommand = new ExtractPatientPharmacy()
             {
                 Extract = patientPharmacyProfile?.Extract,
                 DatabaseProtocol = patientPharmacyProfile?.DatabaseProtocol
@@ -76,7 +76,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
             // ExtractPatientStatus
             var patientStatusProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientStatusExtract");
-            var patientStatusCommand = new ExtractPatientBaselines()
+            var patientStatusCommand = new ExtractPatientStatus()
             {
                 Extract = patientStatusProfile?.Extract,
                 DatabaseProtocol = patientStatusProfile?.DatabaseProtocol
@@ -90,11 +90,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 DatabaseProtocol = patientVisitProfile?.DatabaseProtocol
             };
 
-            var t1 = _mediator.Send(patientStatusCommand, cancellationToken);
-            var t2 = _mediator.Send(patientPharmacyCommand, cancellationToken);
+            var t1 = _mediator.Send(patientArtCommand, cancellationToken);
+            var t2 = _mediator.Send(patientBaselinesCommand, cancellationToken);
             var t3 = _mediator.Send(patientLaboratoryCommand, cancellationToken);
-            var t4 = _mediator.Send(patientBaselinesCommand, cancellationToken);
-            var t5 = _mediator.Send(patientArtCommand, cancellationToken);
+            var t4 = _mediator.Send(patientPharmacyCommand, cancellationToken);
+            var t5 = _mediator.Send(patientStatusCommand, cancellationToken);
             var t6 = _mediator.Send(patientVisitCommand, cancellationToken);
 
             var ts = new List<Task<bool>> { t1, t2, t3, t4, t5, t6 };

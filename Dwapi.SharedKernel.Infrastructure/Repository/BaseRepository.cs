@@ -1,13 +1,12 @@
-﻿using System;
+﻿using AutoMapper;
+using Dwapi.SharedKernel.Interfaces;
+using Dwapi.SharedKernel.Model;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Xml;
-using Dwapi.SharedKernel.Interfaces;
-using Dwapi.SharedKernel.Model;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Dwapi.SharedKernel.Infrastructure.Repository
 {
@@ -27,7 +26,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         {
             return DbSet.Find(id);
         }
-        
+
         public virtual IEnumerable<T> GetAll()
         {
             return DbSet.AsNoTracking();
@@ -54,7 +53,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             if (null == entity)
                 return;
 
-            var exists =DbSet.AsNoTracking().FirstOrDefault(x=>Equals(x.Id, entity.Id));
+            var exists = DbSet.AsNoTracking().FirstOrDefault(x => Equals(x.Id, entity.Id));
             if (null != exists)
             {
                 Update(entity);
@@ -64,9 +63,22 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             Create(entity);
         }
 
-        public IEnumerable<T> GetFromSql(string query)
+        public async Task<List<T>> GetFromSql(string query)
         {
-            return DbSet.FromSql(query);
+            SqlConnection sqlConnection = new SqlConnection(GetConnectionString());
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            var reader = await sqlCommand.ExecuteReaderAsync();
+            var result = new List<T>();
+            while (reader.Read())
+            {
+                var resultItem = Mapper.Map<IDataRecord, T>(reader);
+                result.Add(resultItem);
+            }
+            sqlConnection.Close();
+            reader.Dispose();
+            return result;
         }
 
         public virtual void Delete(TId id)
@@ -80,7 +92,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             if (null == _connection)
             {
                 _connection = Context.Database.GetDbConnection();
-                if(_connection.State!=ConnectionState.Open)
+                if (_connection.State != ConnectionState.Open)
                     _connection.Open();
             }
 
@@ -109,6 +121,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             if (null != entity)
                 DbSet.Remove(entity);
         }
+
         public virtual void SaveChanges()
         {
             Context.SaveChanges();

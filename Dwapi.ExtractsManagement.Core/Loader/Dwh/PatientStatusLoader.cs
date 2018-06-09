@@ -39,13 +39,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                 //load temp extracts without errors
                 StringBuilder query = new StringBuilder();
-                query.Append($" SELECT * FROM {nameof(TempPatientStatusExtract)}s");
+                query.Append($" SELECT * FROM {nameof(TempPatientStatusExtract)}s s");
                 query.Append($" INNER JOIN PatientExtracts p ON ");
                 query.Append($" s.PatientPK = p.PatientPK AND ");
                 query.Append($" s.SiteCode = p.SiteCode ");
                 query.Append($" WHERE s.CheckError = 0");
 
-                var tempPatientStatusExtracts = _tempPatientStatusExtractRepository.GetFromSql(query.ToString()).ToList();
+                var tempPatientStatusExtracts = await _tempPatientStatusExtractRepository.GetFromSql(query.ToString());
 
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempPatientStatusExtract>, List<PatientStatusExtract>>(tempPatientStatusExtracts);
