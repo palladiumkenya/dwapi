@@ -1,4 +1,5 @@
-﻿using Dwapi.SharedKernel.Interfaces;
+﻿using System;
+using Dwapi.SharedKernel.Interfaces;
 using Dwapi.SharedKernel.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
