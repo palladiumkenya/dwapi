@@ -30,7 +30,7 @@ namespace Dwapi.Controller
 
             try
             {
-                var appDatabase = _appDatabaseManager.ReadConnection(_options.Value.SpotConnection, _options.Value.Provider);
+                var appDatabase = _appDatabaseManager.ReadConnection(_options.Value.DwapiConnection, _options.Value.Provider);
 
                 if (null == appDatabase)
                     return NotFound();
@@ -100,7 +100,7 @@ namespace Dwapi.Controller
                 _options.Update(opt =>
                 {
                     opt.Provider = appDatabase.Provider;
-                    opt.SpotConnection = _appDatabaseManager.BuildConncetion(appDatabase);
+                    opt.DwapiConnection = _appDatabaseManager.BuildConncetion(appDatabase);
                 });
 
                 return Ok(true);

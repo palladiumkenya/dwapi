@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Configuration;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using myspot.Custom;
-using myspot.Data;
-using myspot.Model;
+using Dwapi.SettingsManagement.Core.Interfaces;
+using Dwapi.SharedKernel.Enum;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NuGet.Frameworks;
 using NUnit.Framework;
-using Remotion.Linq.Clauses.ResultOperators;
 
-namespace myspot.Tests
+namespace Dwapi.SettingsManagement.Infrastructure.Tests
 {
     [TestFixture]
     public class DbManagerTests
@@ -22,32 +15,32 @@ namespace myspot.Tests
 
         private IServiceProvider _serviceProvider;
         private IServiceProvider _serviceProviderMysql;
-        private IDbManager _dbManager;
-        private const string MssqlConnection= "Data Source=209.97.129.83;Initial Catalog=myspotdev;Persist Security Info=True;User ID=sa;Password=M@un4747;MultipleActiveResultSets=True";
-        private const string MysqlConnection= "server=209.97.129.83;port=3306;database=myspotdev;user=root;password=root";
+        private IAppDatabaseManager _dbManager;
+        private const string MssqlConnection= "Data Source=.\\koske14;Initial Catalog=dwapidev;Persist Security Info=True;User ID=sa;Password=maun;MultipleActiveResultSets=True";
+        private const string MysqlConnection= "server=127.0.0.1;port=3306;database=dwapidev;user=root;password=root";
 
         [OneTimeSetUp]
         public void Init()
         {
             _serviceProvider = new ServiceCollection()
-                .AddDbContext<MySpotContext>(x=>x.UseSqlServer(MssqlConnection))
-                .AddTransient<IDbManager, DbManager>()
+                .AddDbContext<SettingsContext>(x=>x.UseSqlServer(MssqlConnection))
+                .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
                 .BuildServiceProvider();
 
             _serviceProviderMysql = new ServiceCollection()
-                .AddDbContext<MySpotContext>(x => x.UseMySql(MysqlConnection))
-                .AddTransient<IDbManager, DbManager>()
+                .AddDbContext<SettingsContext>(x => x.UseMySql(MysqlConnection))
+                .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
                 .BuildServiceProvider();
-            var ctx = _serviceProvider.GetService<MySpotContext>();
+            var ctx = _serviceProvider.GetService<SettingsContext>();
             ctx.Database.Migrate();
-            var ctxMysql = _serviceProviderMysql.GetService<MySpotContext>();
+            var ctxMysql = _serviceProviderMysql.GetService<SettingsContext>();
             ctxMysql.Database.Migrate();
         }
 
         [SetUp]
         public void SetUp()
         {
-            _dbManager = _serviceProvider.GetService<IDbManager>();
+            _dbManager = _serviceProvider.GetService<IAppDatabaseManager>();
         }
 
         [TestCase(MssqlConnection,DatabaseProvider.MsSql)]
@@ -113,22 +106,22 @@ namespace myspot.Tests
             Assert.NotNull(dbprotocol);
 
             var cn = _dbManager.BuildConncetion(dbprotocol);
-            var optionsBuilder = new DbContextOptionsBuilder<MySpotContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<SettingsContext>();
             if(provider == DatabaseProvider.MsSql)
             optionsBuilder.UseSqlServer(connection);
             if(provider == DatabaseProvider.MySql)
                 optionsBuilder.UseMySql(connection);
             
-            using (var context = new MySpotContext(optionsBuilder.Options))
+            using (var context = new SettingsContext(optionsBuilder.Options))
             {
-                var facilities = context.Facilities.Include(x => x.Clinics).ToList();
+                var facilities = context.EmrSystems.Include(x => x.Extracts).ToList();
                 Assert.True(facilities.Any());
-                Assert.True(facilities.First().Clinics.Any());
+                Assert.True(facilities.First().Extracts.Any());
 
                 foreach (var facility in facilities)
                 {
                     Console.WriteLine(facility);
-                    foreach (var clinic in facility.Clinics)
+                    foreach (var clinic in facility.Extracts)
                     {
                         Console.WriteLine($" > {clinic}");
                     }

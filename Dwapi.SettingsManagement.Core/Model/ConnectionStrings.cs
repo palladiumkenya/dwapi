@@ -5,16 +5,16 @@ namespace Dwapi.SettingsManagement.Core.Model
     public class ConnectionStrings
     {
         public DatabaseProvider Provider { get; set; }
-        public string SpotConnection { get; set; }
+        public string DwapiConnection { get; set; }
         
         public ConnectionStrings()
         {
         }
 
-        public ConnectionStrings(string spotConnection, DatabaseProvider provider=0)
+        public ConnectionStrings(string dwapiConnection, DatabaseProvider provider=0)
         {
             Provider = provider;
-            SpotConnection = spotConnection;
+            DwapiConnection = dwapiConnection;
         }
     }
 }

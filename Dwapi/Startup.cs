@@ -120,11 +120,26 @@ namespace Dwapi
             services.ConfigureWritable<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             var connectionString = Startup.Configuration["ConnectionStrings:DwapiConnection"];
             DatabaseProvider provider = (DatabaseProvider)Convert.ToInt32(Configuration["ConnectionStrings:Provider"]);
-            
 
+            try
+            {
+                if (provider == DatabaseProvider.MySql)
+                {
+                    services.AddDbContext<SettingsContext>(o => o.UseMySql(connectionString,x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
+                    services.AddDbContext<ExtractsContext>(o => o.UseMySql(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+                }
 
-            services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
-            services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+                if (provider == DatabaseProvider.MsSql)
+                {
+                    services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString,x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
+                    services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Connections not Initialized");
+            }
+
 
             services.AddTransient<ExtractsContext>();
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();

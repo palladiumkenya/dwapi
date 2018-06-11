@@ -141,7 +141,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
             if (provider == DatabaseProvider.MsSql)
             {
                 var sb = new SqlConnectionStringBuilder(connectionString);
-                return new AppDatabase(sb.DataSource, sb.InitialCatalog, sb.UserID, sb.Password, provider);
+                return new AppDatabase(sb.DataSource, sb.InitialCatalog, sb.UserID, sb.Password, provider,1433);
             }
 
             if (provider == DatabaseProvider.MySql)
