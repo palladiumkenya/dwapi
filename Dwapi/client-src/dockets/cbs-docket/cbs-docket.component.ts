@@ -12,6 +12,8 @@ import {ExtractPatient} from '../ndwh-docket/model/extract-patient';
 import {HubConnection, HubConnectionBuilder, LogLevel} from '@aspnet/signalr';
 import {ExtractEvent} from '../../settings/model/extract-event';
 import {MasterPatientIndex} from '../models/master-patient-index';
+import {RegistryConfigService} from '../../settings/services/registry-config.service';
+import {CentralRegistry} from '../../settings/model/central-registry';
 
 @Component({
   selector: 'liveapp-cbs-docket',
@@ -31,6 +33,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public getStatus$: Subscription;
     public get$: Subscription;
     public getCount$: Subscription;
+    public loadRegistry$: Subscription;
     public emrSystem: EmrSystem;
     public extracts: Extract[];
     public dbProtocol: DatabaseProtocol;
@@ -46,9 +49,11 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     private sdk: string[] = [];
 public colorMappings: any[] = [];
     rowStyleMap: {[key: string]: string};
+    public centralRegistry: CentralRegistry;
 
     public constructor(public breadcrumbService: BreadcrumbService,
-                       confirmationService: ConfirmationService, emrConfigService: EmrConfigService, private cbsService: CbsService ) {
+                       confirmationService: ConfirmationService, emrConfigService: EmrConfigService, private cbsService: CbsService,
+                        private _registryConfigService: RegistryConfigService  ) {
         this.breadcrumbService.setItems([
             {label: 'Dockets'},
             {label: 'Case Based Surveillance', routerLink: ['/cbs']}
@@ -58,6 +63,7 @@ public colorMappings: any[] = [];
     }
 
     public ngOnInit() {
+        this.loadRegisrty();
         this.loadData();
         this.liveOnInit();
         this.loadDetails();
@@ -115,6 +121,26 @@ public colorMappings: any[] = [];
                     }
                 }
             );
+    }
+
+    public loadRegisrty(): void {
+        this.messages = [];
+        this.loadRegistry$ = this._registryConfigService.get('CBS').subscribe(
+            p => {
+                this.centralRegistry = p;
+            },
+            e => {
+                this.messages = [];
+                this.messages.push({
+                    severity: 'error',
+                    summary: 'Error loading regisrty ',
+                    detail: <any>e
+                });
+            },
+            () => {
+                console.log(this.centralRegistry.name);
+            }
+        );
     }
 
     public loadFromEmr(): void {
@@ -201,8 +227,8 @@ public colorMappings: any[] = [];
                 () => {
                     this.loading = false;
 
-                    this.sdk = Array.from(new Set(this.extractDetails.map(extract => extract.sxdmPKValueDoB)))
-                    this.colorMappings = this.sdk.map((sd, idx) => ({sxdmPKValueDoB: sd, color: this.isEven(idx) ? 'white' : 'pink'}))
+                    this.sdk = Array.from(new Set(this.extractDetails.map(extract => extract.sxdmPKValueDoB)));
+                    this.colorMappings = this.sdk.map((sd, idx) => ({sxdmPKValueDoB: sd, color: this.isEven(idx) ? 'white' : 'pink'}));
                     // this.colorMappings.forEach(value => {
                     //     this.rowStyleMap[value.sxdmPKValueDoB] = value.color;
                     //     console.log(this.rowStyleMap);
@@ -230,6 +256,9 @@ public colorMappings: any[] = [];
         }
         if (this.get$) {
             this.get$.unsubscribe();
+        }
+        if (this.loadRegistry$) {
+            this.loadRegistry$.unsubscribe();
         }
     }
 }

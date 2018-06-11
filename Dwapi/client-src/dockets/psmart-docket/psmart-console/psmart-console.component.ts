@@ -102,7 +102,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public loadRegisrty(): void {
         this.errorMessage = [];
-        this.loadRegistry$ = this._registryConfigService.getDefault()
+        this.loadRegistry$ = this._registryConfigService.get('PSMART')
             .subscribe(
                 p => {
                     this.centralRegistry = p;

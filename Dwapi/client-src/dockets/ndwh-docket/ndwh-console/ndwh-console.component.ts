@@ -149,7 +149,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public loadRegisrty(): void {
         this.errorMessage = [];
-        this.loadRegistry$ = this._registryConfigService.getDefault().subscribe(
+        this.loadRegistry$ = this._registryConfigService.get('NDWH').subscribe(
             p => {
                 this.centralRegistry = p;
             },
