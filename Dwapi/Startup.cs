@@ -42,9 +42,11 @@ using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
+using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SettingsManagement.Core.Services;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
@@ -85,7 +87,7 @@ namespace Dwapi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             var assemblyNames = Assembly.GetEntryAssembly().GetReferencedAssemblies();
             List<Assembly> assemblies = new List<Assembly>();
             foreach (var assemblyName in assemblyNames)
@@ -114,11 +116,30 @@ namespace Dwapi
               .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()))
               .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            var connectionString = Startup.Configuration["connectionStrings:DwapiConnection"];
 
+            services.ConfigureWritable<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
+            var connectionString = Startup.Configuration["ConnectionStrings:DwapiConnection"];
+            DatabaseProvider provider = (DatabaseProvider)Convert.ToInt32(Configuration["ConnectionStrings:Provider"]);
 
-            services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
-            services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+            try
+            {
+                if (provider == DatabaseProvider.MySql)
+                {
+                    services.AddDbContext<SettingsContext>(o => o.UseMySql(connectionString,x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
+                    services.AddDbContext<ExtractsContext>(o => o.UseMySql(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+                }
+
+                if (provider == DatabaseProvider.MsSql)
+                {
+                    services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString,x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
+                    services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Connections not Initialized");
+            }
+
 
             services.AddTransient<ExtractsContext>();
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
@@ -181,6 +202,8 @@ namespace Dwapi
             services.AddScoped<IMasterPatientIndexValidator,MasterPatientIndexValidator>();
             services.AddScoped<IMasterPatientIndexLoader, MasterPatientIndexLoader>();
             services.AddScoped<ICleanCbsExtracts, CleanCbsExtracts>();
+
+            services.AddScoped<IAppDatabaseManager, AppDatabaseManager>();
 
             var container = new Container();
             container.Populate(services);

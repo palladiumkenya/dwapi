@@ -12,8 +12,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Cbs
         public TempMasterPatientIndexProfile()
         {
             CreateMap<IDataRecord, TempMasterPatientIndex>()
-//                .ForMember(x => x.RowId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMasterPatientIndex.RowId))))
+                .ForMember(x => x.PatientPk, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMasterPatientIndex.PatientPk))))
+                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMasterPatientIndex.SiteCode))))
                 .ForMember(x => x.Serial, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMasterPatientIndex.Serial))))
+                .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMasterPatientIndex.FacilityName))))
                 .ForMember(x => x.FirstName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMasterPatientIndex.FirstName))))
                 .ForMember(x => x.MiddleName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMasterPatientIndex.MiddleName))))
                 .ForMember(x => x.LastName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMasterPatientIndex.LastName))))

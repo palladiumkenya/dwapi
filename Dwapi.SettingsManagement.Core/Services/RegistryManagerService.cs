@@ -40,6 +40,26 @@ namespace Dwapi.SettingsManagement.Core.Services
             return verificationResponse;
 
         }
+        public async Task<VerificationResponse> VerifyDocket(CentralRegistry centralRegistry)
+        {
+            var verificationResponse = new VerificationResponse(string.Empty, false);
+
+            var client = new HttpClient();
+         
+            string endpoint = $"api/{centralRegistry.DocketId}/Verify";
+            
+         
+            var response = await client.PostAsJsonAsync($"{centralRegistry.Url.HasToEndsWith("/")}{endpoint}",centralRegistry);
+
+            if (response.IsSuccessStatusCode)
+            {
+                verificationResponse.Verified = true;
+                verificationResponse.RegistryName = await response.Content.ReadAsStringAsync();
+            }
+
+            return verificationResponse;
+
+        }
 
         public CentralRegistry GetDefault()
         {

@@ -39,7 +39,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs
         public IEnumerable<MasterPatientIndex> GetView()
         {
             var ctx = Context as ExtractsContext;
-            return ctx.MasterPatientIndices.FromSql("select * from vMasterPatientIndicesJaroV2");
+            return ctx.MasterPatientIndices.FromSql("select * from vMasterPatientIndicesJaroV3");
         }
     }
 }
