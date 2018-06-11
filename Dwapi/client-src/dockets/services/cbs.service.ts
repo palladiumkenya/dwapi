@@ -6,6 +6,8 @@ import {ExtractPatient} from '../ndwh-docket/model/extract-patient';
 import {LoadFromEmrCommand} from '../../settings/model/load-from-emr-command';
 import {ExtractEvent} from '../../settings/model/extract-event';
 import {MasterPatientIndex} from '../models/master-patient-index';
+import {SendResponse} from '../../settings/model/send-response';
+import {SendPackage} from '../../settings/model/send-package';
 
 @Injectable()
 export class CbsService {
@@ -39,6 +41,11 @@ export class CbsService {
 
     public send(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
         return this._http.post<boolean>(this._url + '/load', extracts)
+            .catch(this.handleError);
+    }
+
+    public sendExtract(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<SendResponse>(this._url, sendPackage)
             .catch(this.handleError);
     }
 

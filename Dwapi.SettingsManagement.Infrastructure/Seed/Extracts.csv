@@ -487,7 +487,7 @@ FROM
 (
 SELECT  
    -------Demographics
-   Ptn_Pk,a.PatientPK,a.SiteCode,
+   Ptn_Pk,a.PatientPK,a.SiteCode,a.FacilityName,
     a.[PatientID]Serial
 
       ,UPPER([dFirstName]) FirstName
