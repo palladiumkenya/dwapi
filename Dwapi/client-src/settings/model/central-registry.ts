@@ -4,4 +4,5 @@ export interface CentralRegistry {
     url?: string;
     authToken?: string;
     subscriberId: string;
+    docketId?: string;
 }

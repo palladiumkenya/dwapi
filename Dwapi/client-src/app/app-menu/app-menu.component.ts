@@ -28,7 +28,12 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Configuration', icon: 'settings_application',
                 items: [
-                    {label: 'Registry', icon: 'cloud', routerLink: ['/registry']},
+                    {label: 'Registry', icon: 'cloud', items: [
+                            {label: 'Data Warehouse', icon: 'cloud', routerLink: ['/registry', 'NDWH']},
+                            {label: 'PSmart', icon: 'credit_card', routerLink: ['/registry', 'PSMART']},
+                            {label: 'Case Based Surveillance', icon: 'search', routerLink: ['/registry', 'CBS']}
+                        ]
+                    },
                     {label: 'EMR Settings', icon: 'dvr', routerLink: ['/emrconfig']}
                 ]
             }
