@@ -8,37 +8,42 @@ namespace Dwapi.SharedKernel.Model
 {
     public class Manifest
     {
-        public Guid Id { get; set; } = LiveGuid.NewGuid();
-        public DateTime DateLogged { get; set; }=DateTime.Now;
         public int SiteCode { get; set; }
-        public string SiteName { get; set; }
+        public string Name { get; set; }
+        public Guid Id { get; set; } = LiveGuid.NewGuid();
+        public DateTime DateLogged { get; set; } = DateTime.Now;
         public List<Cargo> Cargoes { get; set; } = new List<Cargo>();
 
         public void AddCargo(List<int> patienPks, CargoType type = CargoType.Patient)
         {
-            var items = string.Join(',',patienPks);
-            Cargoes.Add(new Cargo(type, items,Id));
+            var items = string.Join(',', patienPks);
+            Cargoes.Add(new Cargo(type, items, Id));
         }
 
-        private   Manifest(int siteCode, string siteName)
+        public Manifest()
+        {
+        }
+
+        private Manifest(int siteCode, string name)
         {
             SiteCode = siteCode;
-            SiteName = siteName;
+            Name = name;
         }
 
-        public static IEnumerable<Manifest> Create(IEnumerable<SitePatientProfile> profiles, CargoType type = CargoType.Patient)
+        public static IEnumerable<Manifest> Create(IEnumerable<SitePatientProfile> profiles,
+            CargoType type = CargoType.Patient)
         {
-            var manifests=new List<Manifest>();
+            var manifests = new List<Manifest>();
             var p = profiles.ToList();
-            var m=new Manifest(p.First().SiteCode, p.First().SiteName);
-            m.AddCargo(p.Select(x=>x.PatientPk).ToList());
+            var m = new Manifest(p.First().SiteCode, p.First().SiteName);
+            m.AddCargo(p.Select(x => x.PatientPk).ToList());
             manifests.Add(m);
             return manifests;
         }
 
         public override string ToString()
         {
-            return $"{SiteCode}-{SiteName}";
+            return $"{SiteCode}-{Name}";
         }
     }
 }
