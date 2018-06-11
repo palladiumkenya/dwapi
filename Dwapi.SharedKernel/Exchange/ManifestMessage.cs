@@ -16,7 +16,7 @@ namespace Dwapi.SharedKernel.Exchange
             Manifest = manifest;
         }
 
-        public static IEnumerable<ManifestMessage> Create(IEnumerable<Manifest> manifests)
+        public static List<ManifestMessage> Create(List<Manifest> manifests)
         {
             var list=new List<ManifestMessage>();
             foreach (var manifest in manifests)

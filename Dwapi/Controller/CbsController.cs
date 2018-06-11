@@ -119,7 +119,7 @@ namespace Dwapi.Controller
             try
             {
 
-                var manifests = _cbsPackager.Generate();
+                var manifests = _cbsPackager.Generate().ToList();
                 await _cbsSendService.SendManifestAsync(packageDTO, ManifestMessageBag.Create(manifests));
                 return Ok();
             }
@@ -141,7 +141,7 @@ namespace Dwapi.Controller
             try
             {
 
-                var mpi = _cbsPackager.GenerateMpi();
+                var mpi = _cbsPackager.GenerateMpi().ToList();
                 await _cbsSendService.SendMpiAsync(packageDTO, MpiMessageBag.Create(mpi));
                 return Ok();
             }

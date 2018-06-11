@@ -5,18 +5,18 @@ namespace Dwapi.SharedKernel.Model
 {
     public class ManifestMessageBag
     {
-        public IEnumerable<ManifestMessage> Messages { get; set; }=new List<ManifestMessage>();
+        public List<ManifestMessage> Messages { get; set; }=new List<ManifestMessage>();
 
         public ManifestMessageBag()
         {
         }
 
-        public ManifestMessageBag(IEnumerable<ManifestMessage> messages)
+        public ManifestMessageBag(List<ManifestMessage> messages)
         {
             Messages = messages;
         }
 
-        public static ManifestMessageBag Create(IEnumerable<Manifest> manifests)
+        public static ManifestMessageBag Create(List<Manifest> manifests)
         {
             return new ManifestMessageBag(ManifestMessage.Create(manifests));
         }

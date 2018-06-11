@@ -7,18 +7,18 @@ namespace Dwapi.UploadManagement.Core.Exchange.Cbs
 {
     public class MpiMessage
     {
-        public IEnumerable<MasterPatientIndex> MasterPatientIndices { get; set; }
+        public List<MasterPatientIndex> MasterPatientIndices { get; set; }
 
         public MpiMessage()
         {
         }
 
-        public MpiMessage(IEnumerable<MasterPatientIndex> masterPatientIndices)
+        public MpiMessage(List<MasterPatientIndex> masterPatientIndices)
         {
             MasterPatientIndices = masterPatientIndices;
         }
 
-        public static IEnumerable<MpiMessage> Create(IEnumerable<MasterPatientIndex> masterPatientIndices)
+        public static List<MpiMessage> Create(List<MasterPatientIndex> masterPatientIndices)
         {
             var list=new List<MpiMessage>();
             var chunks = masterPatientIndices.ToList().ChunkBy(500);
