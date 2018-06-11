@@ -52,7 +52,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
             }
         }
 
-        public Task<int> Load(int found)
+        public Task<int> Load(Guid extractId, int found)
         {
             return Load();
         }

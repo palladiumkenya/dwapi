@@ -34,16 +34,16 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
         {
             //clear
-            int count = await _clearDwhExtracts.Clear();
+            int count = await _clearDwhExtracts.Clear(request.Extract.Id);
 
             //Extract
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
-            await _extractValidator.Validate(found, nameof(PatientExtract), $"{nameof(TempPatientExtract)}s");
+            await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientExtract), $"{nameof(TempPatientExtract)}s");
 
             //Load
-            int loaded = await _patientLoader.Load(found);
+            int loaded = await _patientLoader.Load(request.Extract.Id, found);
 
             int rejected = found - loaded;
 

@@ -36,10 +36,10 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             int found = await _patientStatusSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
-            await _extractValidator.Validate(found, nameof(PatientStatusExtract), $"{nameof(TempPatientStatusExtract)}s");
+            await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientStatusExtract), $"{nameof(TempPatientStatusExtract)}s");
 
             //Load
-            int loaded = await _patientStatusLoader.Load(found);
+            int loaded = await _patientStatusLoader.Load(request.Extract.Id, found);
 
             int rejected = found - loaded;
 

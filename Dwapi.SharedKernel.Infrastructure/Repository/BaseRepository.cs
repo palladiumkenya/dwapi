@@ -65,19 +65,23 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public async Task<List<T>> GetFromSql(string query)
         {
-            SqlConnection sqlConnection = new SqlConnection(GetConnectionString());
-            sqlConnection.Open();
-            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-            sqlCommand.CommandType = CommandType.Text;
-            var reader = await sqlCommand.ExecuteReaderAsync();
             var result = new List<T>();
-            while (reader.Read())
+            using (SqlConnection sqlConnection = new SqlConnection(GetConnectionString()))
             {
-                var resultItem = Mapper.Map<IDataRecord, T>(reader);
-                result.Add(resultItem);
+                sqlConnection.Open();
+                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlCommand.CommandType = CommandType.Text;
+                    using (var reader = await sqlCommand.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            var resultItem = Mapper.Map<IDataRecord, T>(reader);
+                            result.Add(resultItem);
+                        }
+                    }
+                }
             }
-            sqlConnection.Close();
-            reader.Dispose();
             return result;
         }
 

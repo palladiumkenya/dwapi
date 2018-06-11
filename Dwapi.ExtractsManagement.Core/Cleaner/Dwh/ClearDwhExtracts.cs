@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -24,12 +25,12 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Dwh
             _connection = new SqlConnection(emrSystemRepository.GetConnectionString());
         }
 
-        public async Task<int> Clear()
+        public async Task<int> Clear(Guid extractId)
         {
             Log.Debug($"Executing ClearDwhExtracts command...");
 
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(new DwhProgress(
+                new ExtractActivityNotification(extractId, new DwhProgress(
                     nameof(PatientExtract),
                     nameof(ExtractStatus.Clearing),
                      0, 0, 0, 0, 0)));
@@ -86,7 +87,7 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Dwh
                 }
             }
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(new DwhProgress(
+                new ExtractActivityNotification(extractId, new DwhProgress(
                     nameof(PatientExtract),
                     nameof(ExtractStatus.Cleared),
                     0, 0, 0, 0, 0)));

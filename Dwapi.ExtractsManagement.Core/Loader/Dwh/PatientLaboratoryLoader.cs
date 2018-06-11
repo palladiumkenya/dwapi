@@ -28,12 +28,12 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
             _tempPatientLaboratoryExtractRepository = tempPatientLaboratoryExtractRepository;
         }
 
-        public async Task<int> Load(int found)
+        public async Task<int> Load(Guid extractId, int found)
         {
             try
             {
                 DomainEvents.Dispatch(
-                    new ExtractActivityNotification(new DwhProgress(
+                    new ExtractActivityNotification(extractId, new DwhProgress(
                         nameof(PatientLaboratoryExtract),
                         nameof(ExtractStatus.Loading),
                         found, 0, 0, 0, 0)));

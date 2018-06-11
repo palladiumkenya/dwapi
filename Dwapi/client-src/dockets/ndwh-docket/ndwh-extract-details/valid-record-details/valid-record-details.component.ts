@@ -46,13 +46,13 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
     }
 
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-        console.log(this.extract);
+        this.cols = [];
+        this.validExtracts = [];
         this.getColumns();
         this.getValidExtracts();
     }
 
     ngOnInit() {
-        console.log(this.extract);
         this.getPatientColumns();
         this.getValidPatientExtracts();
     }

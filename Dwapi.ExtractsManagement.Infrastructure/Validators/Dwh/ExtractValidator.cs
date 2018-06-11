@@ -21,10 +21,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh
             _validatorRepository = validatorRepository;
         }
 
-        public async Task<bool> Validate(int extracted, string extractName, string sourceTable)
+        public async Task<bool> Validate(Guid extractId, int extracted, string extractName, string sourceTable)
         {
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(new DwhProgress(
+                new ExtractActivityNotification(extractId, new DwhProgress(
                     extractName,
                     nameof(ExtractStatus.Validating),
                     extracted, 0, 0, 0, 0)));
@@ -55,7 +55,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh
                     }
                 }
                 DomainEvents.Dispatch(
-                    new ExtractActivityNotification(new DwhProgress(
+                    new ExtractActivityNotification(extractId, new DwhProgress(
                         extractName,
                         nameof(ExtractStatus.Validated),
                         extracted, 0, 0, 0, 0)));
@@ -64,7 +64,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh
             catch (Exception e)
             {
                 DomainEvents.Dispatch(
-                    new ExtractActivityNotification(new DwhProgress(
+                    new ExtractActivityNotification(extractId, new DwhProgress(
                         extractName,
                         nameof(ExtractStatus.Idle),
                         extracted, 0, 0, 0, 0)));

@@ -57,7 +57,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                    
 
                         DomainEvents.Dispatch(
-                            new ExtractActivityNotification(new DwhProgress(
+                            new ExtractActivityNotification(extract.Id, new DwhProgress(
                                 nameof(PatientStatusExtract),
                                 nameof(ExtractStatus.Finding),
                                 loaded, 0, 0, 0, 0)));

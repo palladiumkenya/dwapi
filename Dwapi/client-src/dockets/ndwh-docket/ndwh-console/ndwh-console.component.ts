@@ -51,7 +51,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadingData: boolean;
     public extracts: Extract[] = [];
     public currentExtract: Extract;
-    public currentextract: Extract;
     private dwhExtract: DwhExtract;
     private dwhExtracts: DwhExtract[] = [];
     private extractEvent: ExtractEvent;
@@ -122,7 +121,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public loadFromEmr(): void {
         this.errorMessage = [];
-        console.log(this.emr);
         this.load$ = this._ndwhExtractService
             .extractAll(this.generateExtractLoadCommand(this.emr))
             .subscribe(
@@ -162,7 +160,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 });
             },
             () => {
-                console.log(this.centralRegistry.name);
             }
         );
     }
@@ -187,7 +184,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         });
                     },
                     () => {
-                        // console.log(extract);
                     }
                 );
         });
@@ -210,7 +206,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     });
                 },
                 () => {
-                    console.log(this.sendResponse);
                     this.updateEvent();
                     if (this.sendResponse) {
                         if (this.sendResponse.isSending) {
@@ -241,32 +236,30 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
-        this._hubConnection.on('ShowProgress', (dwhProgress: any) => {
-            // console.log(dwhProgress);
+        this._hubConnection.on('ShowProgress', (extractActivityNotification: any) => {
             this.currentExtract = this.extracts.find(
-                x => x.name === 'PatientExtract'
+                x => x.id === extractActivityNotification.extractId
             );
             if (this.currentExtract) {
                 this.extractEvent = {
-                    lastStatus: `${dwhProgress.status}`,
-                    found: dwhProgress.found,
-                    loaded: dwhProgress.loaded,
-                    rejected: dwhProgress.rejected,
-                    queued: dwhProgress.queued,
-                    sent: dwhProgress.sent
+                    lastStatus: `${extractActivityNotification.progress.status}`,
+                    found: extractActivityNotification.progress.found,
+                    loaded: extractActivityNotification.progress.loaded,
+                    rejected: extractActivityNotification.progress.rejected,
+                    queued: extractActivityNotification.progress.queued,
+                    sent: extractActivityNotification.progress.sent
                 };
                 this.currentExtract.extractEvent = {};
                 this.currentExtract.extractEvent = this.extractEvent;
                 const newWithoutPatientExtract = this.extracts.filter(
-                    x => x.name !== 'PatientExtract'
+                    x => x.id !== extractActivityNotification.extractId
                 );
                 this.extracts = [
                     ...newWithoutPatientExtract,
                     this.currentExtract
                 ];
             }
-        });
-        // console.log('im done', this.extracts);
+        } );
     }
 
     private getExtractProtocols(
@@ -316,8 +309,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private generateExtractPatientBaseline(currentEmr: EmrSystem): ExtractProfile {
-        // tslint:disable-next-line:no-debugger
-        debugger;
         const selectedProtocal = this.extracts.find(x => x.name === 'PatientBaselineExtract').databaseProtocolId;
         this.extractPatientBaseline = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'PatientBaselineExtract')
@@ -326,8 +317,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private generateExtractPatientLaboratory(currentEmr: EmrSystem): ExtractProfile {
-        // tslint:disable-next-line:no-debugger
-        debugger;
         const selectedProtocal = this.extracts.find(x => x.name === 'PatientLabExtract').databaseProtocolId;
         this.extractPatientLaboratory = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'PatientLabExtract')
