@@ -14,11 +14,5 @@ namespace Dwapi.ExtractsManagement.Core.Notifications
             ExtractId = extractId;
             Progress = progress;
         }
-
-        public ExtractActivityNotification(DwhProgress progress)
-        {
-            Progress = progress;
-            ExtractId = Guid.Empty;
-        }
     }
 }

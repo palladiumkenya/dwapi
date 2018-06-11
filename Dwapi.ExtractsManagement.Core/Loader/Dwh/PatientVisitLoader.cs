@@ -27,12 +27,12 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
             _tempPatientVisitExtractRepository = tempPatientVisitExtractRepository;
         }
 
-        public async Task<int> Load(int found)
+        public async Task<int> Load(Guid extractId, int found)
         {
             try
             {
                 DomainEvents.Dispatch(
-                    new ExtractActivityNotification(new DwhProgress(
+                    new ExtractActivityNotification(extractId, new DwhProgress(
                         nameof(PatientVisitExtract),
                         nameof(ExtractStatus.Loading),
                         found, 0, 0, 0, 0)));
@@ -45,7 +45,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 query.Append($" s.SiteCode = p.SiteCode ");
                 query.Append($" WHERE s.CheckError = 0");
 
-                var tempPatientVisitExtracts = await _tempPatientVisitExtractRepository.GetFromSql(query.ToString());
+                var tempPatientVisitExtracts = _tempPatientVisitExtractRepository.GetFromSql(query.ToString());
 
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempPatientVisitExtract>, List<PatientVisitExtract>>(tempPatientVisitExtracts);

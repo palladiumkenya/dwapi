@@ -17,7 +17,7 @@ namespace Dwapi.NotificationHandlers
             _extractHistoryRepository = Startup.ServiceProvider.GetService<IExtractHistoryRepository>();
 
             SaveExtractHistory(domainEvent);
-            await Startup.HubContext.Clients.All.SendAsync("ShowProgress", domainEvent.Progress);
+            await Startup.HubContext.Clients.All.SendAsync("ShowProgress", domainEvent);
         }
 
         private void SaveExtractHistory(ExtractActivityNotification domainEvent)

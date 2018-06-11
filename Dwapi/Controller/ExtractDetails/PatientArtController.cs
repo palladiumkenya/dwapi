@@ -24,7 +24,7 @@ namespace Dwapi.Controller.ExtractDetails
         {
             try
             {
-                var tempPatientArtExtracts = _patientArtExtractRepository.GetAll().ToList();
+                var tempPatientArtExtracts = _patientArtExtractRepository.BatchGet().ToList();
                 return Ok(tempPatientArtExtracts);
             }
             catch (Exception e)

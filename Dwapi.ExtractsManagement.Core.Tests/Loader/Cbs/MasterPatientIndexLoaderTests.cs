@@ -99,7 +99,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Cbs
             _clearCbsExtracts.Clean(_extract.Id).Wait();
             Assert.False(_extractsContext.MasterPatientIndices.Any());
             var recordcount = _extractor.Extract(_extract, _protocol).Result;
-           var loadCount=  _loader.Load(0).Result;
+           var loadCount=  _loader.Load(Guid.NewGuid(), 0).Result;
             Assert.True(_extractsContext.MasterPatientIndices.Any());
             Console.WriteLine($"extracted {_extractsContext.MasterPatientIndices.Count()}");
         }

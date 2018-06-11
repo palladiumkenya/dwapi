@@ -27,12 +27,12 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
             _tempPatientArtExtractRepository = tempPatientArtExtractRepository;
         }
 
-        public async Task<int> Load(int found)
+        public async Task<int> Load(Guid extractId,int found)
         {
             try
             {
                 DomainEvents.Dispatch(
-                    new ExtractActivityNotification(new DwhProgress(
+                    new ExtractActivityNotification(extractId, new DwhProgress(
                         nameof(PatientArtExtract),
                         nameof(ExtractStatus.Loading),
                         found, 0, 0, 0, 0)));
@@ -48,7 +48,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 string query = querybuilder.ToString();
 
                 var x = _tempPatientArtExtractRepository.GetFromSql(query);
-                var tempPatientArtExtracts = await _tempPatientArtExtractRepository.GetFromSql(query);
+                var tempPatientArtExtracts = _tempPatientArtExtractRepository.GetFromSql(query);
 
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempPatientArtExtract>, List<PatientArtExtract>>(tempPatientArtExtracts);
