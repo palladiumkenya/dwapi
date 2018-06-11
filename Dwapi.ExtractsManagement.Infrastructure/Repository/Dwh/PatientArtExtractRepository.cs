@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using Dapper.Contrib.Extensions;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.SharedKernel.Infrastructure.Repository;
@@ -32,6 +33,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
                 Console.WriteLine(e.Message);
                 Log.Error(e, "Failed batch insert");
                 return false;
+            }
+        }
+
+        public IEnumerable<PatientArtExtract> BatchGet()
+        {
+            var cn = GetConnectionString();
+
+            using (var connection = new SqlConnection(cn))
+            {
+                var patientArtExtracts = connection.GetAll<PatientArtExtract>();
+                return patientArtExtracts;
             }
         }
     }

@@ -46,7 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 query.Append($" s.SiteCode = p.SiteCode ");
                 query.Append($" WHERE s.CheckError = 0");
 
-                var tempPatientLaboratoryExtracts = await _tempPatientLaboratoryExtractRepository.GetFromSql(query.ToString());
+                var tempPatientLaboratoryExtracts = _tempPatientLaboratoryExtractRepository.GetFromSql(query.ToString());
 
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempPatientLaboratoryExtract>, List<PatientLaboratoryExtract>>(tempPatientLaboratoryExtracts);

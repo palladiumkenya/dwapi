@@ -1,12 +1,11 @@
-﻿using AutoMapper;
-using Dwapi.SharedKernel.Interfaces;
+﻿using Dwapi.SharedKernel.Interfaces;
 using Dwapi.SharedKernel.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
+using Dapper;
 
 namespace Dwapi.SharedKernel.Infrastructure.Repository
 {
@@ -63,26 +62,15 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             Create(entity);
         }
 
-        public async Task<List<T>> GetFromSql(string query)
+        public List<T> GetFromSql(string query)
         {
-            var result = new List<T>();
-            using (SqlConnection sqlConnection = new SqlConnection(GetConnectionString()))
+            var cn = GetConnectionString();
+
+            using (var connection = new SqlConnection(cn))
             {
-                sqlConnection.Open();
-                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
-                {
-                    sqlCommand.CommandType = CommandType.Text;
-                    using (var reader = await sqlCommand.ExecuteReaderAsync())
-                    {
-                        while (reader.Read())
-                        {
-                            var resultItem = Mapper.Map<IDataRecord, T>(reader);
-                            result.Add(resultItem);
-                        }
-                    }
-                }
+                var results = connection.Query<T>(query).ToList();
+                return results;
             }
-            return result;
         }
 
         public virtual void Delete(TId id)

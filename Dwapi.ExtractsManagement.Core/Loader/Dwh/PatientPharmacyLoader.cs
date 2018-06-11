@@ -46,7 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 queryBuilder.Append($" WHERE s.CheckError = 0");
 
                 string query = queryBuilder.ToString();
-                var tempPatientPharmacyExtracts = await _tempPatientPharmacyExtractRepository.GetFromSql(query);
+                var tempPatientPharmacyExtracts = _tempPatientPharmacyExtractRepository.GetFromSql(query);
 
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempPatientPharmacyExtract>, List<PatientPharmacyExtract>>(tempPatientPharmacyExtracts);

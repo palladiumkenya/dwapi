@@ -48,7 +48,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 string query = querybuilder.ToString();
 
                 var x = _tempPatientArtExtractRepository.GetFromSql(query);
-                var tempPatientArtExtracts = await _tempPatientArtExtractRepository.GetFromSql(query);
+                var tempPatientArtExtracts = _tempPatientArtExtractRepository.GetFromSql(query);
 
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempPatientArtExtract>, List<PatientArtExtract>>(tempPatientArtExtracts);
