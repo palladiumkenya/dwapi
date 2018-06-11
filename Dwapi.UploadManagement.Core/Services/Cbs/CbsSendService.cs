@@ -6,6 +6,7 @@ using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
+using Newtonsoft.Json;
 using Serilog;
 
 namespace Dwapi.UploadManagement.Core.Services.Cbs
@@ -19,27 +20,33 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
             _endPoint = "api/cbs/manifest";
         }
 
-        public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessage manifestMessage)
+        public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage)
         {
             var responses=new List<SendManifestResponse>();
 
             var client = new HttpClient();
 
-            foreach (var message in manifestMessage.Manifests)
+            foreach (var message in manifestMessage.Messages)
             {
-                var response = await client.PostAsJsonAsync(sendTo.GetUrl(_endPoint), message);
-                if (null != response && response.IsSuccessStatusCode)
+                try
                 {
-                    try
+                    var msg = JsonConvert.SerializeObject(message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl(_endPoint), message);
+                    if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsJsonAsync<SendManifestResponse>();
                         responses.Add(content);
                     }
-                    catch (Exception e)
+                    else
                     {
-                        Log.Error(e,$"Send Manifest Error");
-                        throw;
+                        var error = await response.Content.ReadAsStringAsync();
+                        throw new Exception(error);
                     }
+               }
+                catch (Exception e)
+                {
+                    Log.Error(e, $"Send Manifest Error");
+                    throw;
                 }
             }
             

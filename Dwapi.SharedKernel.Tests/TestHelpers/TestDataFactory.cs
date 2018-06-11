@@ -7,26 +7,28 @@ namespace Dwapi.SharedKernel.Tests.TestHelpers
 {
     public class TestDataFactory
     {
-        public static ManifestMessage ManifestMessage(int count,params int[] siteCodes)
+        public static ManifestMessageBag ManifestMessageBag(int count,params int[] siteCodes)
         {
-            var list = Builder<ManifestMessage>.CreateNew().Build();
+            var list = Builder<ManifestMessageBag>.CreateNew().Build();
 
-            list.Manifests.AddRange(ManifestMessages(count,siteCodes));
+            list.Messages.AddRange(ManifestMessages(count,siteCodes));
 
             return list;
         }
 
-        private static List<Manifest> ManifestMessages(int count, params int[] siteCodes)
+        private static List<ManifestMessage> ManifestMessages(int count, params int[] siteCodes)
         {
-            var list=new List<Manifest>();
+            var list=new List<ManifestMessage>();
 
             foreach (var siteCode in siteCodes)
             {
-                var manifests = Builder<Manifest>.CreateListOfSize(count).All().With(x => x.SiteCode == siteCode).Build()
+                var manifests = Builder<Manifest>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
                     .ToList();
-                list.AddRange(manifests);
+                foreach (var manifest in manifests)
+                {
+                    list.Add(new ManifestMessage(manifest));
+                }
             }
-
             return list;
         }
     }

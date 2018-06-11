@@ -24,7 +24,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
 
         private ICbsSendService _cbsSendService; 
         private IServiceProvider _serviceProvider;
-        private ManifestMessage _manifestMessage;
+        private ManifestMessageBag _bag;
         private CentralRegistry _registry;
 
         [OneTimeSetUp]
@@ -39,7 +39,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
                 22696|HERTLANDS MEDICAL CENTRE|NAROK
             */
 
-            _manifestMessage = TestDataFactory.ManifestMessage(2,22704,22696);
+            _bag = TestDataFactory.ManifestMessageBag(2,22704,22696);
         }
 
         [SetUp]
@@ -58,9 +58,13 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
         {
             var sendTo=new SendManifestPackageDTO(_registry);
 
-            var responses = _cbsSendService.SendManifestAsync(sendTo, _manifestMessage).Result;
+            var responses = _cbsSendService.SendManifestAsync(sendTo, _bag).Result;
             Assert.NotNull(responses);
-            Console.WriteLine(responses);
+            Assert.False(responses.Select(x=>x.IsValid()).Any(x=>false));
+            foreach (var sendManifestResponse in responses)
+            {
+                Console.WriteLine(responses);
+            }
         }
     }
 }

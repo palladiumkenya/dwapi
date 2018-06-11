@@ -4,14 +4,14 @@ namespace Dwapi.SharedKernel.Model
 {
     public class ManifestMessage
     {
-        public List<Manifest> Manifests { get; set; }=new List<Manifest>();
+  public  Manifest Manifest { get; set; }
 
         public ManifestMessage()
         {
         }
-        public ManifestMessage(List<Manifest> manifests)
+        public ManifestMessage(Manifest manifest)
         {
-            Manifests = manifests;
+            Manifest = manifest;
         }
     }
 }

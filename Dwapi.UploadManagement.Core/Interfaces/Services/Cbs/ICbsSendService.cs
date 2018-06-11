@@ -7,6 +7,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Cbs
 {
     public interface ICbsSendService
     {
-        Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessage message);
+        Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag messageBag);
     }
 }
