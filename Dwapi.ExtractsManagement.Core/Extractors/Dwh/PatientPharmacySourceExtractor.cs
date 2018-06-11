@@ -38,12 +38,14 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
             var list = new List<TempPatientPharmacyExtract>();
 
             int count = 0;
+            int loaded = 0;
 
             using (var rdr = await _reader.ExecuteReader(dbProtocol, extract))
             {
                 while (rdr.Read())
                 {
-                    count++;        
+                    count++;
+                    loaded++;
                     // AutoMapper profiles
                     var extractRecord = Mapper.Map<IDataRecord, TempPatientPharmacyExtract>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
@@ -60,7 +62,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                             new ExtractActivityNotification(new DwhProgress(
                                 nameof(PatientPharmacyExtract),
                                 nameof(ExtractStatus.Finding),
-                                list.Count, 0, 0, 0, 0)));
+                                loaded, 0, 0, 0, 0)));
                         list = new List<TempPatientPharmacyExtract>();
                     }
                 }
@@ -78,9 +80,9 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                 new ExtractActivityNotification(extract.Id, new DwhProgress(
                     nameof(PatientPharmacyExtract),
                     nameof(ExtractStatus.Found),
-                    list.Count, 0, 0, 0, 0)));
+                    loaded, 0, 0, 0, 0)));
 
-            return list.Count;
+            return loaded;
         }
     }
 }

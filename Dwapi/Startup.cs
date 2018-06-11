@@ -119,14 +119,15 @@ namespace Dwapi
 
             services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
             services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
-          
+
+            services.AddTransient<ExtractsContext>();
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
             services.AddScoped<IEmrSystemRepository, EmrSystemRepository>();
             services.AddScoped<IDocketRepository, DocketRepository>();
             services.AddScoped<IDatabaseProtocolRepository, DatabaseProtocolRepository>();
             services.AddScoped<IExtractRepository, ExtractRepository>();
             services.AddScoped<IPsmartStageRepository, PsmartStageRepository>();
-            services.AddScoped<IExtractHistoryRepository, ExtractHistoryRepository>();
+            services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddScoped<ITempPatientExtractRepository, TempPatientExtractRepository>();
             services.AddScoped<ITempPatientArtExtractRepository, TempPatientArtExtractRepository>();
             services.AddScoped<ITempPatientBaselinesExtractRepository, TempPatientBaselinesExtractRepository>();
@@ -222,8 +223,6 @@ namespace Dwapi
 
             app.UseStaticFiles()
                 .UseSwaggerUi();
-
-            app.UseHangfire();
 
 
             Log.Debug(@"initializing Database...");

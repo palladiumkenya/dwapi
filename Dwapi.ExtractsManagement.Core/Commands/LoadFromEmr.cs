@@ -1,4 +1,4 @@
-﻿using Dwapi.SharedKernel.Model;
+﻿using Dwapi.ExtractsManagement.Core.DTOs;
 using MediatR;
 using System.Collections.Generic;
 
@@ -6,7 +6,6 @@ namespace Dwapi.ExtractsManagement.Core.Commands
 {
     public class LoadFromEmrCommand : IRequest<bool>
     {
-        public IList<DbExtract> Extracts { get; set; }
-        public DbProtocol DatabaseProtocol { get; set; }
+        public IList<ExtractProfile> Extracts { get; set; }
     }
 }

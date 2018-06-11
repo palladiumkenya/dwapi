@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using System.Xml;
 using Dwapi.SharedKernel.Model;
 
@@ -14,7 +15,7 @@ namespace Dwapi.SharedKernel.Interfaces
         void Create(T entity);
         void Update(T entity);
         void CreateOrUpdate(T entity);
-        IEnumerable<T> GetFromSql(string query);
+        Task<List<T>> GetFromSql(string query);
         void Delete(TId id);
         IDbConnection GetConnection();
         string GetConnectionString();

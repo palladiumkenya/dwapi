@@ -1,7 +1,5 @@
-import {DatabaseProtocol} from './database-protocol';
-import { DwhExtract } from './dwh-extract';
+import { ExtractProfile } from '../../dockets/ndwh-docket/model/extract-profile';
 
 export interface LoadFromEmrCommand {
-    extracts?: DwhExtract[];
-    databaseProtocol?: DatabaseProtocol;
+    extracts?: ExtractProfile[];
 }
