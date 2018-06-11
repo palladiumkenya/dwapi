@@ -22,6 +22,11 @@ export class RegistryConfigService {
             .catch(this.handleError);
     }
 
+    public get(docket: string): Observable<CentralRegistry> {
+        return this._http.get<CentralRegistry>(`${this._url}/${docket}`)
+            .catch(this.handleError);
+    }
+
     public saveDefault(entity: CentralRegistry): Observable<CentralRegistry> {
         return this._http.post<CentralRegistry>(this._url, entity)
             .catch(this.handleError);

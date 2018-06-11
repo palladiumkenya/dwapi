@@ -28,7 +28,7 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Configuration', icon: 'settings_application',
                 items: [
-                    {label: 'Registry', icon: 'cloud', routerLink: ['/registryconfig']},
+                    {label: 'Registry', icon: 'cloud', routerLink: ['/registry']},
                     {label: 'EMR Settings', icon: 'dvr', routerLink: ['/emrconfig']}
                 ]
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
@@ -18,7 +19,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services
         private readonly string url = "http://52.178.24.227:8026";
 
         private IPsmartSendService _psmartSendService; 
-        private Registry _registry;
+        private CentralRegistry _registry;
         private SendPackageDTO _sendPackageDTO;
         private PsmartMessage _psmartMessage;
    
@@ -26,7 +27,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services
         [SetUp]
         public void SetUp()
         {
-            _registry=new Registry(url);
+            _registry=new CentralRegistry(url,"PSMART");
             _registry.AuthToken = _authToken;
             _registry.SubscriberId = _subId;
             _psmartSendService = new PsmartSendService();

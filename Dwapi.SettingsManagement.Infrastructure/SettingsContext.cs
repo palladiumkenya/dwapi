@@ -38,12 +38,11 @@ namespace Dwapi.SettingsManagement.Infrastructure
             };
             SeederConfiguration.ResetConfiguration(csvConfig, null, typeof(SettingsContext).GetTypeInfo().Assembly);
 
+            Dockets.SeedDbSetIfEmpty($"{nameof(Dockets)}");
             CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
             EmrSystems.SeedDbSetIfEmpty($"{nameof(EmrSystems)}");
             DatabaseProtocols.SeedDbSetIfEmpty($"{nameof(DatabaseProtocols)}");
-            Dockets.SeedDbSetIfEmpty($"{nameof(Dockets)}");
             Extracts.SeedDbSetIfEmpty($"{nameof(Extracts)}");
-
             SaveChanges();
         }
 

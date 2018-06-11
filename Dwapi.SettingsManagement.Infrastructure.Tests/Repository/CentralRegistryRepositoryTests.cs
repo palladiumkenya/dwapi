@@ -51,7 +51,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests.Repository
         {
             var centralRegistries = _centralRegistryRepository.GetAll().ToList();
             Assert.True(centralRegistries.Count > 0);
-            var newReg = new CentralRegistry("Test Registry", "http://52.178.24.227:4747/api","xyz");
+            var newReg = new CentralRegistry("Test Registry", "http://52.178.24.227:4747/api", "PSMART", "xyz");
             
             _centralRegistryRepository.SaveDefault(newReg);
             _centralRegistryRepository.SaveChanges();

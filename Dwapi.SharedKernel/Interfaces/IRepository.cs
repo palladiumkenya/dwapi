@@ -11,6 +11,7 @@ namespace Dwapi.SharedKernel.Interfaces
     public interface IRepository<T, in TId> where T : Entity<TId>
     {
         T Get(TId id);
+        T Get(Expression<Func<T, bool>> predicate);
         IEnumerable<T> GetAll();
         void Create(T entity);
         void Update(T entity);

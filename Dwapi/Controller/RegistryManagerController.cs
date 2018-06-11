@@ -19,6 +19,29 @@ namespace Dwapi.Controller
             _registryManagerService = registryManagerService;
         }
 
+        // GET: api/RegistryManager/47
+        [HttpGet("{id}")]
+        public IActionResult Get(string id)
+        {
+            try
+            {
+                var centralRegistry = _registryManagerService.GetByDocket(id);
+
+                if (null == centralRegistry)
+                    return NotFound();
+
+                return Ok(centralRegistry);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(CentralRegistry)}";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+
         // GET: api/RegistryManager/default
         [HttpGet("default")]
         public IActionResult Default()
