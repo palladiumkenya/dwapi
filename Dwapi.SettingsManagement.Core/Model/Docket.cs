@@ -11,6 +11,7 @@ namespace Dwapi.SettingsManagement.Core.Model
         public override string Id { get; set; }
         [MaxLength(100)]
         public string Name { get; set; }
-        public ICollection<Extract> Extracts { get; set; }
+        public ICollection<Extract> Extracts { get; set; }=new List<Extract>();
+        public ICollection<CentralRegistry> Registries { get; set; }=new List<CentralRegistry>();
     }
 }

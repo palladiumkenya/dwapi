@@ -75,7 +75,7 @@ import {TreeTableModule} from 'primeng/primeng';
 import {TableModule} from 'primeng/table';
 
 import {AppComponent} from './app.component';
-import {RegistryConfigComponent} from '../settings/registry-config/registry-config.component';
+import {RegistryConfigComponent} from '../settings/registry-manager/registry-config/registry-config.component';
 import {EmrConfigComponent} from '../settings/emrs/emr-config/emr-config.component';
 import { TopbarComponent } from './topbar/topbar.component';
 import { InlineProfileComponent } from './inline-profile/inline-profile.component';
@@ -123,6 +123,7 @@ import { NdwhPatientLaboratoryService } from '../dockets/services/ndwh-patient-l
 import { NdwhPatientPharmacyService } from '../dockets/services/ndwh-patient-pharmacy.service';
 import { NdwhPatientStatusService } from '../dockets/services/ndwh-patient-status.service';
 import { NdwhPatientVisitService } from '../dockets/services/ndwh-patient-visit.service';
+import { RegistryManagerComponent } from '../settings/registry-manager/registry-manager.component';
 
 @NgModule({
     imports: [
@@ -227,7 +228,8 @@ import { NdwhPatientVisitService } from '../dockets/services/ndwh-patient-visit.
         ValidRecordDetailsComponent,
         InvalidRecordDetailsComponent,
         EmrSettingsComponent,
-        EmrDocketComponent
+        EmrDocketComponent,
+        RegistryManagerComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,

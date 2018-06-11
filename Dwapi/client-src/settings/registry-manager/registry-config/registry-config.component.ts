@@ -1,23 +1,25 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {BreadcrumbService} from '../../app/breadcrumb.service';
-import {RegistryConfigService} from '../services/registry-config.service';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {BreadcrumbService} from '../../../app/breadcrumb.service';
+import {RegistryConfigService} from '../../services/registry-config.service';
 import {Subscription} from 'rxjs/Subscription';
-import {CentralRegistry} from '../model/central-registry';
+import {CentralRegistry} from '../../model/central-registry';
 import {ConfirmationService, Message} from 'primeng/primeng';
-import {VerificationResponse} from '../model/verification-response';
+import {VerificationResponse} from '../../model/verification-response';
 
 @Component({
   selector: 'liveapp-registry-config',
   templateUrl: './registry-config.component.html',
   styleUrls: ['./registry-config.component.scss']
 })
-export class RegistryConfigComponent implements OnInit, OnDestroy {
+export class RegistryConfigComponent implements OnInit, OnDestroy , OnChanges {
 
+    @Input() docketId: string;
     private _registryConfigService: RegistryConfigService;
     private _confirmationService: ConfirmationService;
     public loadingData: boolean;
 
     public getDefault$: Subscription;
+    public get$: Subscription;
     public saveDefault$: Subscription;
     public verfiy$: Subscription;
 
@@ -41,12 +43,15 @@ export class RegistryConfigComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.loadingData = true;
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
         this.loadData();
     }
 
     public loadData(): void {
         this.centralRegistry = {subscriberId: 'DWAPI'};
-        this.getDefault$ = this._registryConfigService.getDefault()
+        this.getDefault$ = this._registryConfigService.get(this.docketId)
             .subscribe(
                 p => {
                     this.centralRegistry = p;

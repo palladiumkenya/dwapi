@@ -27,7 +27,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
             _tempPatientExtractRepository = tempPatientExtractRepository;
         }
 
-        public async Task<int> Load()
+        public Task<int> Load()
         {
             try
             {
@@ -42,12 +42,12 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
                 Log.Debug("saved batch");
 
 
-                return tempPatientExtracts.Count;
+                return Task.FromResult(tempPatientExtracts.Count);
 
             }
             catch (Exception e)
             {
-                Log.Error(e, $"Extract {nameof(PatientExtract)} not Loaded");
+                Log.Error(e, $"Extract {nameof(MasterPatientIndex)} not Loaded");
                 throw;
             }
         }

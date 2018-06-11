@@ -15,12 +15,4 @@
     <ProjectReference Include="..\Dwapi.SettingsManagement.Core\Dwapi.SettingsManagement.Core.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Hangfire.Core">
-      <HintPath>..\..\..\..\..\Users\mwasi\.nuget\packages\hangfire.core\1.6.19\lib\netstandard1.3\Hangfire.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
-      <HintPath>..\..\..\..\..\Users\mwasi\.nuget\packages\microsoft.aspnetcore.http.abstractions\2.1.0\lib\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 </Project>

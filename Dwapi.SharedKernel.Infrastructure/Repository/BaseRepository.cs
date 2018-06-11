@@ -1,4 +1,5 @@
-﻿using Dwapi.SharedKernel.Interfaces;
+﻿using System;
+using Dwapi.SharedKernel.Interfaces;
 using Dwapi.SharedKernel.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -6,6 +7,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Dwapi.SharedKernel.Infrastructure.Repository
 {
@@ -24,6 +27,11 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         public virtual T Get(TId id)
         {
             return DbSet.Find(id);
+        }
+
+        public T Get(Expression<Func<T, bool>> predicate)
+        {
+            return DbSet.Where(predicate).AsNoTracking().FirstOrDefault();
         }
 
         public virtual IEnumerable<T> GetAll()

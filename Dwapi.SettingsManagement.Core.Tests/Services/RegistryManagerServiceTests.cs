@@ -18,7 +18,7 @@ namespace Dwapi.SettingsManagement.Core.Tests.Services
         public void Setup()
         {
             _registryManagerService=new RegistryManagerService(null);
-            _centralRegistry=new CentralRegistry("hAPI", "http://52.178.24.227:8026",_authToken);
+            _centralRegistry=new CentralRegistry("hAPI", "http://52.178.24.227:8026", "PSMART", _authToken);
 
         }
 

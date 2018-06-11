@@ -46,6 +46,11 @@ namespace Dwapi.SettingsManagement.Core.Services
             return _centralRegistryRepository.GetDefault();
         }
 
+        public CentralRegistry GetByDocket(string docket)
+        {
+            return _centralRegistryRepository.Get(x=>x.DocketId.IsSameAs(docket));
+        }
+
         public void SaveDefault(CentralRegistry centralRegistry)
         {
             _centralRegistryRepository.SaveDefault(centralRegistry);
