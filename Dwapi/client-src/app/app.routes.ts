@@ -10,12 +10,14 @@ import {EmrSettingsComponent} from '../settings/emr-settings/emr-settings.compon
 import {RegistryManagerComponent} from '../settings/registry-manager/registry-manager.component';
 
 export const routes: Routes = [
-    {path: '', component: DashboardComponent},
-    {path: 'registry', component: RegistryManagerComponent},
+    {path: 'dashboard', component: DashboardComponent},
+    {path: 'registry/:docketId', component: RegistryManagerComponent },
     {path: 'emrconfig', component: EmrSettingsComponent},
     {path: 'datawarehouse', component: NdwhDocketComponent},
     {path: 'psmart', component: PsmartDocketComponent},
     {path: 'cbs', component: CbsDocketComponent},
+    {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
+    {path: '**', component: DashboardComponent }
 ];
 
 export const AppRoutes: ModuleWithProviders = RouterModule.forRoot(routes);

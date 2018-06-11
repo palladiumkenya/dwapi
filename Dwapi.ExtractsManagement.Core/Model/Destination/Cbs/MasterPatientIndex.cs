@@ -11,7 +11,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Cbs
         public int RowId { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
-
+        public string FacilityName { get; set; }
         public string Serial { get; set; }
 
         public string FirstName { get; set; }

@@ -97,8 +97,18 @@ namespace Dwapi.Controller
 
             try
             {
-                var verified =await _registryManagerService.Verify(entity);
-                return Ok(verified);
+                if (entity.DocketId != "PSMART")
+                {
+                    var verified = await _registryManagerService.VerifyDocket(entity);
+                    return Ok(verified);
+                }
+                else
+                {
+                    var verified = await _registryManagerService.Verify(entity);
+                    return Ok(verified);
+                }
+
+                
             }
             catch (Exception e)
             {

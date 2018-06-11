@@ -14,6 +14,8 @@ import {ExtractEvent} from '../../settings/model/extract-event';
 import {MasterPatientIndex} from '../models/master-patient-index';
 import {RegistryConfigService} from '../../settings/services/registry-config.service';
 import {CentralRegistry} from '../../settings/model/central-registry';
+import {SendPackage} from '../../settings/model/send-package';
+import {SendResponse} from '../../settings/model/send-response';
 
 @Component({
   selector: 'liveapp-cbs-docket',
@@ -34,6 +36,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public get$: Subscription;
     public getCount$: Subscription;
     public loadRegistry$: Subscription;
+    public send$: Subscription;
     public emrSystem: EmrSystem;
     public extracts: Extract[];
     public dbProtocol: DatabaseProtocol;
@@ -41,10 +44,13 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public extractPatient: ExtractPatient;
     private extractEvent: ExtractEvent;
     public extractDetails: MasterPatientIndex[] = [];
+    public sendResponse: SendResponse;
+
 
     public messages: Message[];
     public canLoad: boolean = false;
     public loading: boolean = false;
+    public canSend: boolean = false;
     public recordCount = 0;
     private sdk: string[] = [];
 public colorMappings: any[] = [];
@@ -139,6 +145,9 @@ public colorMappings: any[] = [];
             },
             () => {
                 console.log(this.centralRegistry.name);
+                if (this.centralRegistry) {
+                    this.canSend = true;
+                }
             }
         );
     }
@@ -192,9 +201,11 @@ public colorMappings: any[] = [];
             .subscribe(
                 p => {
                     this.extract.extractEvent = p;
-                    // if (this.extract.extractEvent) {
-                    //     this.canLoad = this.extract.extractEvent.queued > 0;
-                    // }
+                    if (this.extract) {
+                        if (this.extract.extractEvent) {
+                            this.canSend = this.extract.extractEvent.queued > 0;
+                        }
+                    }
                 },
                 e => {
                     this.messages = [];
@@ -206,6 +217,44 @@ public colorMappings: any[] = [];
             );
 
     }
+
+
+    public send(): void {
+        this.messages = [];
+        this.send$ = this.cbsService.sendExtract(this.getSendPackage('PSMART'))
+            .subscribe(
+                p => {
+                    this.sendResponse = p;
+                },
+                e => {
+                    this.messages = [];
+                    this.messages.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                },
+                () => {
+                    console.log(this.sendResponse);
+                    this.updateEvent();
+                    if (this.sendResponse) {
+                        if (this.sendResponse.isSending) {
+                            this.messages.push({severity: 'warning', summary: 'sending has already started '});
+                        }
+                        if (this.sendResponse.isComplete) {
+                            this.messages.push({severity: 'success', summary: 'sent successfully '});
+                        }
+                    }
+                    // this.errorMessage.push({severity: 'success', summary: 'sent successful '});
+                }
+            );
+    }
+
+    private getSendPackage(docketId: string): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            docket: docketId,
+            endpoint: ''
+        };
+    }
+
+
     private isEven(value: number): boolean {
             if ((value % 2) !== 0) {
                 return false;
@@ -259,6 +308,9 @@ public colorMappings: any[] = [];
         }
         if (this.loadRegistry$) {
             this.loadRegistry$.unsubscribe();
+        }
+        if (this.send$) {
+            this.send$.unsubscribe();
         }
     }
 }

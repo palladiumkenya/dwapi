@@ -22,6 +22,7 @@ export class RegistryConfigComponent implements OnInit, OnDestroy , OnChanges {
     public get$: Subscription;
     public saveDefault$: Subscription;
     public verfiy$: Subscription;
+    public send$: Subscription;
 
     public centralRegistry: CentralRegistry = {subscriberId: 'DWAPI'};
     public canSave: boolean;
@@ -94,6 +95,7 @@ export class RegistryConfigComponent implements OnInit, OnDestroy , OnChanges {
             .subscribe(
                 p => {
                     this.isVerfied = p;
+                    console.log(p);
                     if (this.isVerfied) {
                         this.centralRegistry.name = this.isVerfied.registryName;
                     }

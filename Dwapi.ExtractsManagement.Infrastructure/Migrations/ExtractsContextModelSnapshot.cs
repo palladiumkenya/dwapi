@@ -42,6 +42,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime>("DateExtracted");
 
+                    b.Property<string>("FacilityName");
+
                     b.Property<string>("FirstName");
 
                     b.Property<string>("FirstName_Normalized");
@@ -622,6 +624,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<DateTime?>("DateConfirmedHIVPositive");
 
                     b.Property<DateTime>("DateExtracted");
+
+                    b.Property<string>("FacilityName");
 
                     b.Property<string>("FirstName");
 
