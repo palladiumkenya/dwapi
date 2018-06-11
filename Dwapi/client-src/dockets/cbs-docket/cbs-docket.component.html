@@ -10,7 +10,7 @@
         </div>
 
         <div class="ui-toolbar-group-right">
-            <button pButton type="button" [disabled]="!canSend" label="Send Warehouse" icon="ui-icon-cloud-upload" class="blue-btn"></button>
+            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send Warehouse" icon="ui-icon-cloud-upload" class="blue-btn"></button>
         </div>
     </p-toolbar>
     <p-dataTable [value]="extracts" selectionMode="single" resizableColumns="true">
@@ -23,6 +23,7 @@
         <p-column field="extractEvent.sent" header="Sent"></p-column>
     </p-dataTable>
     <p-messages [(value)]="messages"></p-messages>
+    <p-growl [(value)]="notifications"></p-growl>
 
 </div>
 <div class="card card-w-title">

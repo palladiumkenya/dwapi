@@ -5,6 +5,7 @@ using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Tests.TestHelpers;
+using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services;
@@ -25,6 +26,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
         private ICbsSendService _cbsSendService; 
         private IServiceProvider _serviceProvider;
         private ManifestMessageBag _bag;
+        private MpiMessageBag _mpiBag;
         private CentralRegistry _registry;
 
         [OneTimeSetUp]
@@ -40,6 +42,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
             */
 
             _bag = TestDataFactory.ManifestMessageBag(2,22704,22696);
+            _mpiBag = TestDataFactory.MpiMessageBag(5, 22704, 22696);
         }
 
         [SetUp]
@@ -63,7 +66,22 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
             Assert.False(responses.Select(x=>x.IsValid()).Any(x=>false));
             foreach (var sendManifestResponse in responses)
             {
-                Console.WriteLine(responses);
+                Console.WriteLine(sendManifestResponse);
+            }
+        }
+
+
+        [Test]
+        public void should_Send_Mpi()
+        {
+            var sendTo = new SendManifestPackageDTO(_registry);
+
+            var responses = _cbsSendService.SendMpiAsync(sendTo, _mpiBag).Result;
+            Assert.NotNull(responses);
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+            foreach (var sendManifestResponse in responses)
+            {
+                Console.WriteLine(sendManifestResponse);
             }
         }
     }

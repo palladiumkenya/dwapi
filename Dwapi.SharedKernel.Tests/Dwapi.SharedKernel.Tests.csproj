@@ -14,5 +14,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
+    <ProjectReference Include="..\Dwapi.UploadManagement.Core\Dwapi.UploadManagement.Core.csproj" />
   </ItemGroup>
 </Project>

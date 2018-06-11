@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Dwapi.SharedKernel.Model.Enum;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.SharedKernel.Model

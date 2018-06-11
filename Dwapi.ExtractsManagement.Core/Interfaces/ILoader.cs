@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Dwapi.SharedKernel.Interfaces
+namespace Dwapi.ExtractsManagement.Core.Interfaces
 {
     public interface ILoader<in T> where T : class 
     {

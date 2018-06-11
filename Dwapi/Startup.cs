@@ -14,6 +14,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
@@ -26,6 +27,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Dwh;
+using Dwapi.ExtractsManagement.Core.Packager.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
@@ -50,7 +52,9 @@ using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services;
+using Dwapi.UploadManagement.Core.Services.Cbs;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -202,6 +206,8 @@ namespace Dwapi
             services.AddScoped<IMasterPatientIndexValidator,MasterPatientIndexValidator>();
             services.AddScoped<IMasterPatientIndexLoader, MasterPatientIndexLoader>();
             services.AddScoped<ICleanCbsExtracts, CleanCbsExtracts>();
+            services.AddScoped<ICbsSendService, CbsSendService>();
+            services.AddScoped<ICbsPackager, CbsPackager>();
 
             services.AddScoped<IAppDatabaseManager, AppDatabaseManager>();
 

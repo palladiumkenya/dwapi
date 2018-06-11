@@ -1,4 +1,4 @@
-﻿namespace Dwapi.SharedKernel.Model.Enum
+﻿namespace Dwapi.SharedKernel.Enum
 {
     public enum CargoType
     {

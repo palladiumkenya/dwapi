@@ -8,6 +8,7 @@ import {ExtractEvent} from '../../settings/model/extract-event';
 import {MasterPatientIndex} from '../models/master-patient-index';
 import {SendResponse} from '../../settings/model/send-response';
 import {SendPackage} from '../../settings/model/send-package';
+import {CentralRegistry} from '../../settings/model/central-registry';
 
 @Injectable()
 export class CbsService {
@@ -39,13 +40,13 @@ export class CbsService {
             .catch(this.handleError);
     }
 
-    public send(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
-        return this._http.post<boolean>(this._url + '/load', extracts)
+    public sendManifest(sendPackage: SendPackage): Observable<boolean> {
+        return this._http.post<boolean>(`${this._url}/manifest`, sendPackage)
             .catch(this.handleError);
     }
 
-    public sendExtract(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<SendResponse>(this._url, sendPackage)
+    public sendMpi(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/mpi`, sendPackage)
             .catch(this.handleError);
     }
 

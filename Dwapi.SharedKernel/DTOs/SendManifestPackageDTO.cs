@@ -10,6 +10,10 @@ namespace Dwapi.SharedKernel.DTOs
         public Registry Destination { get; set; }
         public string Endpoint { get; private set; }
 
+        public SendManifestPackageDTO()
+        {
+        }
+
         public SendManifestPackageDTO(Registry destination)
         {
             Destination = destination;
@@ -17,7 +21,7 @@ namespace Dwapi.SharedKernel.DTOs
 
         public bool IsValid()
         {
-            return null != Destination && !string.IsNullOrWhiteSpace(Endpoint);
+            return null != Destination && !string.IsNullOrWhiteSpace(Destination.Url);
         }
 
         public string GetUrl(string endPoint = "")

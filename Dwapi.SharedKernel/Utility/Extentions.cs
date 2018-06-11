@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -55,6 +57,14 @@ namespace Dwapi.SharedKernel.Utility
         {
             var dataAsString = await content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(dataAsString);
+        }
+        public static List<List<T>> ChunkBy<T>(this List<T> source, int chunkSize)
+        {
+            return source
+                .Select((x, i) => new {Index = i, Value = x})
+                .GroupBy(x => x.Index / chunkSize)
+                .Select(x => x.Select(v => v.Value).ToList())
+                .ToList();
         }
     }
 }

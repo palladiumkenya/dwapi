@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Dwapi.SharedKernel.Model
+namespace Dwapi.UploadManagement.Core.Exchange.Psmart
 {
     public class SmartMessageBag
     {
