@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -124,12 +124,15 @@ import { NdwhPatientPharmacyService } from '../dockets/services/ndwh-patient-pha
 import { NdwhPatientStatusService } from '../dockets/services/ndwh-patient-status.service';
 import { NdwhPatientVisitService } from '../dockets/services/ndwh-patient-visit.service';
 import { RegistryManagerComponent } from '../settings/registry-manager/registry-manager.component';
+import { SetupComponent } from '../settings/setup/setup.component';
+import {SetupService} from '../settings/services/setup.service';
 
 @NgModule({
     imports: [
         CommonModule,
         BrowserModule,
         FormsModule,
+        ReactiveFormsModule,
         AppRoutes,
         HttpModule,
         HttpClientModule,
@@ -229,14 +232,16 @@ import { RegistryManagerComponent } from '../settings/registry-manager/registry-
         InvalidRecordDetailsComponent,
         EmrSettingsComponent,
         EmrDocketComponent,
-        RegistryManagerComponent
+        RegistryManagerComponent,
+        SetupComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
         MessageService, ConfirmationService, RegistryConfigService, EmrConfigService, ProtocolConfigService,
         ExtractConfigService, PsmartExtractService , PsmartSenderService, NdwhExtractService, NdwhSenderService, NdwhPatientsExtractService,
         CbsService, NdwhPatientArtService, NdwhPatientBaselineService, NdwhPatientLaboratoryService, NdwhPatientPharmacyService,
-        NdwhPatientStatusService, NdwhPatientVisitService
+        NdwhPatientStatusService, NdwhPatientVisitService,
+        SetupService
     ],
     bootstrap: [AppComponent]
 })
