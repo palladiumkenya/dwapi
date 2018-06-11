@@ -293,15 +293,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'lastVisit', header: 'Last Visit' },
             { field: 'exitReason', header: 'Exit Reason' },
             { field: 'exitDate', header: 'Exit Date' },
-            { field: 'dateExtracted', header: 'Date Extracted' },
-
-
-            //{ field: 'patientPK', header: 'Patient PK' },
-            //{ field: 'patientID', header: 'Patient ID' },
-            //{ field: 'facilityId', header: 'Facility Id' },
-            //{ field: 'siteCode', header: 'Site Code' },
-            //{ field: 'emr', header: 'EMR' },
-            //{ field: 'project', header: 'Project' },
+            { field: 'dateExtracted', header: 'Date Extracted' }
         ];
     }
 
@@ -313,7 +305,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
             { field: 'siteCode', header: 'Site Code' },
-            { field: 'dateExtracted', header: 'Date Extracted' },            
+            { field: 'dateExtracted', header: 'Date Extracted' },
             { field: 'bCD4', header: 'Baseline CD4' },
             { field: 'bCD4Date', header: 'Baseline CD4 Date' },
             { field: 'bWAB', header: 'Baseline WAB' },
@@ -338,14 +330,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'm6CD4Date', header: 'm6CD4Date' },
             { field: 'emr', header: 'Emr' },
             { field: 'project', header: 'Project' },
-            { field: 'checkError', header: 'Check Error' },
-
-            //{ field: 'patientPK', header: 'Patient PK' },
-            //{ field: 'patientID', header: 'Patient ID' },
-            //{ field: 'facilityId', header: 'Facility Id' },
-            //{ field: 'siteCode', header: 'Site Code' },
-            //{ field: 'emr', header: 'EMR' },
-            //{ field: 'project', header: 'Project' },
+            { field: 'checkError', header: 'Check Error' }
         ];
     }
 
@@ -356,7 +341,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'patientPK', header: 'Patient PK' },
             { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
-            { field: 'siteCode', header: 'Site Code' },          
+            { field: 'siteCode', header: 'Site Code' },
             { field: 'checkError', header: 'Check Error' },
             { field: 'facilityName', header: 'Facility Name' },
             { field: 'satelliteName', header: 'Satellite Name' },
@@ -368,15 +353,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'testName', header: 'Test Name' },
             { field: 'enrollmentTest', header: 'Enrollment Test' },
             { field: 'testResult', header: 'Test Result' },
-            { field: 'dateExtracted', header: 'Date Extracted' },
-
-
-            //{ field: 'patientPK', header: 'Patient PK' },
-            //{ field: 'patientID', header: 'Patient ID' },
-            //{ field: 'facilityId', header: 'Facility Id' },
-            //{ field: 'siteCode', header: 'Site Code' },
-            //{ field: 'emr', header: 'EMR' },
-            //{ field: 'project', header: 'Project' },
+            { field: 'dateExtracted', header: 'Date Extracted' }
         ];
     }
 
@@ -388,7 +365,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
             { field: 'siteCode', header: 'Site Code' },
-            { field: 'dateExtracted', header: 'Date Extracted' },          
+            { field: 'dateExtracted', header: 'Date Extracted' },
             { field: 'visitID', header: 'Visit ID' },
             { field: 'drug', header: 'Drug' },
             { field: 'provider', header: 'Provider' },
@@ -401,13 +378,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'prophylaxisType', header: 'Prophylaxis Type' },
             { field: 'emr', header: 'Emr' },
             { field: 'project', header: 'Project' },
-            { field: 'checkError', header: 'Check Error' },
-            //{ field: 'patientPK', header: 'Patient PK' },
-            //{ field: 'patientID', header: 'Patient ID' },
-            //{ field: 'facilityId', header: 'Facility Id' },
-            //{ field: 'siteCode', header: 'Site Code' },
-            //{ field: 'emr', header: 'EMR' },
-            //{ field: 'project', header: 'Project' },
+            { field: 'checkError', header: 'Check Error' }
         ];
     }
 
@@ -425,8 +396,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'exitDescription', header: 'Exit Description' },
             { field: 'exitDate', header: 'Exit Date' },
             { field: 'exitReason', header: 'Exit Reason' },
-            { field: 'checkError', header: 'CheckError' },
-
+            { field: 'checkError', header: 'CheckError' }
         ];
     }
 
@@ -468,16 +438,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'secondlineRegimenChangeReason', header: 'SecondlineRegimenChangeReason' },
             { field: 'familyPlanningMethod', header: 'FamilyPlanningMethod' },
             { field: 'pwP', header: 'PwP' },
-            { field: 'gestationAge', header: 'GestationAge' },
-           
-
-
-            //{ field: 'patientPK', header: 'Patient PK' },
-            //{ field: 'patientID', header: 'Patient ID' },
-            //{ field: 'facilityId', header: 'Facility Id' },
-            //{ field: 'siteCode', header: 'Site Code' },
-            //{ field: 'emr', header: 'EMR' },
-            //{ field: 'project', header: 'Project' },
+            { field: 'gestationAge', header: 'GestationAge' }
         ];
     }
 }

@@ -1,8 +1,9 @@
 <p-table [value]="validExtracts" autoLayout="true" resizableColumns="true" columnResizeMode="expand" [paginator]="true" [rows]="5">
     <ng-template pTemplate="header">
         <tr>
-            <th *ngFor="let col of cols">
+            <th *ngFor="let col of cols" [pSortableColumn]="col.field">
                 {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
         </tr>
     </ng-template>
