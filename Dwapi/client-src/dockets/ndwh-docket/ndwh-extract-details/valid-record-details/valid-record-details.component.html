@@ -1,16 +1,18 @@
-<p-table [value]="validExtracts" autoLayout = "true" resizableColumns="true" columnResizeMode = "expand" [paginator]="true" [rows]="5">
-  <ng-template pTemplate="header">
-      <tr>
-          <th *ngFor="let col of cols">
-              {{col.header}}
-          </th>
-      </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-valid>
-      <tr>
-          <td *ngFor="let col of cols">
-                  {{valid[col.field]}}
-          </td>
-      </tr>
-  </ng-template>
+<p-table [value]="validExtracts" autoLayout="true" resizableColumns="true" columnResizeMode="expand" [paginator]="true" [rows]="5">
+    <ng-template pTemplate="header">
+        <tr>
+            <th *ngFor="let col of cols">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-valid>
+        <tr>
+            <td *ngFor="let col of cols">
+                {{valid[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
 </p-table>
+<p-messages [(value)]="errorMessage"></p-messages>
+<p-growl [(value)]="otherMessage"></p-growl>

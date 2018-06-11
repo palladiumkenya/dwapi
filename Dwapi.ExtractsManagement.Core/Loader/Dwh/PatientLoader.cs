@@ -11,6 +11,7 @@ using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
@@ -41,14 +42,19 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempPatientExtract>, List<PatientExtract>>(tempPatientExtracts);
-
+                foreach (var record in extractRecords)
+                {
+                    record.Id = LiveGuid.NewGuid();
+                }
                 //Batch Insert
-                _patientExtractRepository.BatchInsert(extractRecords);
+                var inserted = _patientExtractRepository.BatchInsert(extractRecords);
+                if (!inserted)
+                {
+                    Log.Error($"Extract {nameof(PatientExtract)} not Loaded");
+                    return 0;
+                }
                 Log.Debug("saved batch");
-
-
                 return tempPatientExtracts.Count;
-
             }
             catch (Exception e)
             {

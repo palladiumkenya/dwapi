@@ -12,6 +12,7 @@ using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
@@ -27,7 +28,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
             _tempPatientArtExtractRepository = tempPatientArtExtractRepository;
         }
 
-        public async Task<int> Load(Guid extractId,int found)
+        public async Task<int> Load(Guid extractId, int found)
         {
             try
             {
@@ -47,17 +48,23 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                 string query = querybuilder.ToString();
 
-                var x = _tempPatientArtExtractRepository.GetFromSql(query);
                 var tempPatientArtExtracts = _tempPatientArtExtractRepository.GetFromSql(query);
 
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempPatientArtExtract>, List<PatientArtExtract>>(tempPatientArtExtracts);
+                foreach (var record in extractRecords)
+                {
+                    record.Id = LiveGuid.NewGuid();
+                }
 
                 //Batch Insert
-                _patientArtExtractRepository.BatchInsert(extractRecords);
+                var inserted = _patientArtExtractRepository.BatchInsert(extractRecords);
+                if (!inserted)
+                {
+                    Log.Error($"Extract {nameof(PatientArtExtract)} not Loaded");
+                    return 0;
+                }
                 Log.Debug("saved batch");
-
-
                 return tempPatientArtExtracts.Count;
 
             }
