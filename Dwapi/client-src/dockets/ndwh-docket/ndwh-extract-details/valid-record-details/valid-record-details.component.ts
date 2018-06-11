@@ -72,8 +72,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             this.getValidPatientStatusExtracts();
         }  if (this.extract === 'Patient Visits') {
             this.getValidPatientVisitExtracts();
-        }  else {
-            this.validExtracts = [];
         }
     }
 
@@ -90,10 +88,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             this.getPatientPharmacyColumns();
         }  if (this.extract === 'Patient Status') {
             this.getPatientStatusColumns();
-        }  if (this.extract === 'Patient Visit') {
+        }  if (this.extract === 'Patient Visits') {
             this.getPatientVisitColumns();
-        } else {
-            this.cols = [];
         }
     }
 
