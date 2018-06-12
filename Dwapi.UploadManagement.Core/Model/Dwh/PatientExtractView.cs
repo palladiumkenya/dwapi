@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
-using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.UploadManagement.Core.Model.Dwh
 {
     [Table("PatientExtracts")]
     public class PatientExtractView : PatientExtract
     {
+        [NotMapped]
+        public int PatientPID => PatientPK;
+        [NotMapped] public string PatientCccNumbe => PatientID;
+        [NotMapped] public int FacilityId =>SiteCode;
+
         [NotMapped]
         public IEnumerable<PatientArtExtractView> PatientArtExtracts { get; set; } = new List<PatientArtExtractView>();
         [NotMapped]
@@ -21,5 +24,10 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         public IEnumerable<PatientStatusExtractView> PatientStatusExtracts { get; set; }=new List<PatientStatusExtractView>();
         [NotMapped]
         public IEnumerable<PatientVisitExtractView> PatientVisitExtracts { get; set; }=new List<PatientVisitExtractView>();
+
+        public Facility GetFacility()
+        {
+            return new Facility(SiteCode,FacilityName,Emr,Project);
+        }
     }
 }

@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Exchange;
-using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;

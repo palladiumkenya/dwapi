@@ -7,7 +7,6 @@ using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
-using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Newtonsoft.Json;
 using Serilog;

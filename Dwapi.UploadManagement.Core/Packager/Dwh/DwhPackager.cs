@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+﻿using System;
+using System.Collections.Generic;
 using Dwapi.SharedKernel.Exchange;
-using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Model.Dwh;
@@ -29,6 +27,11 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         public IEnumerable<PatientExtractView> GenerateExtracts()
         {
             return _reader.ReadAll();
+        }
+
+        public PatientExtractView GenerateExtracts(Guid id)
+        {
+            return _reader.Read(id);
         }
     }
 }

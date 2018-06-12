@@ -1,7 +1,4 @@
-﻿using System;
-using Dwapi.SharedKernel.Utility;
-
-namespace Dwapi.UploadManagement.Core.Exchange.Cbs
+﻿namespace Dwapi.UploadManagement.Core.Exchange.Cbs
 {
     public class SendMpiResponse
     {
