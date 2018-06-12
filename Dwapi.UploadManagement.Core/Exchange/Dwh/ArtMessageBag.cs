@@ -16,9 +16,9 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
         {
             Messages = messages;
         }
-        public static ArtMessageBag Create(PatientExtractView patient, List<PatientArtExtractView> arts)
+        public static ArtMessageBag Create(PatientExtractView patient)
         {
-            var messages = new List<ArtMessage> {new ArtMessage(patient, arts)};
+            var messages = new List<ArtMessage> {new ArtMessage(patient)};
             return new ArtMessageBag(messages);
         }
     }

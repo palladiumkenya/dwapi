@@ -5,7 +5,7 @@ using Dwapi.UploadManagement.Core.Model.Dwh;
 
 namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
-    public class ArtMessage
+    public class BaselineMessage
     {
         public Facility Facility
         {
@@ -18,16 +18,16 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
             }
         }
         public PatientExtractView Demographic { get; set; }
-        public List<PatientArtExtractView> ArtExtracts { get; set; }=new List<PatientArtExtractView>();
+        public List<PatientBaselinesExtractView> BaselinesExtracts { get; set; }=new List<PatientBaselinesExtractView>();
 
-        public ArtMessage()
+        public BaselineMessage()
         {
         }
 
-        public ArtMessage(PatientExtractView patient)
+        public BaselineMessage(PatientExtractView patient)
         {
             Demographic = patient;
-            ArtExtracts = patient.PatientArtExtracts.ToList();
+            BaselinesExtracts = patient.PatientBaselinesExtracts.ToList();
         }
 
     }

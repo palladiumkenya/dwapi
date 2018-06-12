@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 
 namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
-    public class ArtMessage
+    public class LabMessage
     {
         public Facility Facility
         {
@@ -18,16 +17,16 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
             }
         }
         public PatientExtractView Demographic { get; set; }
-        public List<PatientArtExtractView> ArtExtracts { get; set; }=new List<PatientArtExtractView>();
+        public List<PatientLaboratoryExtractView> LaboratoryExtracts { get; set; } = new List<PatientLaboratoryExtractView>();
 
-        public ArtMessage()
+        public LabMessage()
         {
         }
 
-        public ArtMessage(PatientExtractView patient)
+        public LabMessage(PatientExtractView patient)
         {
             Demographic = patient;
-            ArtExtracts = patient.PatientArtExtracts.ToList();
+            LaboratoryExtracts = patient.PatientLaboratoryExtracts.ToList();
         }
 
     }

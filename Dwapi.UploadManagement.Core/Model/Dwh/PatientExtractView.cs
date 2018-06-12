@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 
 namespace Dwapi.UploadManagement.Core.Model.Dwh
@@ -24,6 +25,14 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         public IEnumerable<PatientStatusExtractView> PatientStatusExtracts { get; set; }=new List<PatientStatusExtractView>();
         [NotMapped]
         public IEnumerable<PatientVisitExtractView> PatientVisitExtracts { get; set; }=new List<PatientVisitExtractView>();
+
+        [NotMapped] public bool HasArt => null!= PatientArtExtracts&& PatientArtExtracts.Any();
+        [NotMapped] public bool HasBaseline => null != PatientBaselinesExtracts&& PatientBaselinesExtracts.Any();
+        [NotMapped] public bool HasLab => null != PatientLaboratoryExtracts&&PatientLaboratoryExtracts.Any();
+        [NotMapped] public bool HasPharmacy => null != PatientPharmacyExtracts && PatientPharmacyExtracts.Any();
+        [NotMapped] public bool HasStatus => null != PatientStatusExtracts && PatientStatusExtracts.Any();
+        [NotMapped] public bool HasVisit => null != PatientVisitExtracts&&PatientVisitExtracts.Any();
+
 
         public Facility GetFacility()
         {
