@@ -11,15 +11,21 @@ import {SendPackage} from '../../settings/model/send-package';
 @Injectable()
 export class NdwhSenderService {
 
-  private _url: string = './api/ExtractSender';
+  private _url: string = './api/DwhExtracts';
     private _http: HttpClient;
 
     public constructor(http: HttpClient) {
         this._http = http;
     }
 
-    public send(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<SendResponse>(this._url, sendPackage)
+
+    public sendManifest(sendPackage: SendPackage): Observable<boolean> {
+        return this._http.post<boolean>(`${this._url}/manifest`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public sendPatientExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/patients`, sendPackage)
             .catch(this.handleError);
     }
 
