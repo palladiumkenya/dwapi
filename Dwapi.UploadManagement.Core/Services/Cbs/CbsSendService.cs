@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dwapi.SharedKernel.DTOs;
@@ -7,6 +8,7 @@ using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Newtonsoft.Json;
 using Serilog;
@@ -16,10 +18,22 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
     public class CbsSendService : ICbsSendService
     {
         private readonly string _endPoint;
+        private readonly ICbsPackager _packager;
 
-        public CbsSendService()
+        public CbsSendService(ICbsPackager packager)
         {
+            _packager = packager;
             _endPoint = "api/cbs/";
+        }
+
+        public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
+        {
+            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.Generate().ToList()));
+        }
+
+        public Task<List<SendMpiResponse>> SendMpiAsync(SendManifestPackageDTO sendTo)
+        {
+            return SendMpiAsync(sendTo, MpiMessageBag.Create(_packager.GenerateMpi().ToList()));
         }
 
         public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage)

@@ -1,36 +1,18 @@
 ﻿using System;
 using System.Linq;
-using AutoMapper;
-using AutoMapper.Data;
-using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
-using Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs;
-using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Packager;
-using Dwapi.ExtractsManagement.Core.Interfaces.Packager.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
-using Dwapi.ExtractsManagement.Core.Loader.Cbs;
-using Dwapi.ExtractsManagement.Core.Packager.Cbs;
-using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure;
-using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
-using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
-using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
-using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
-using Dwapi.SettingsManagement.Core.Model;
-using Dwapi.SettingsManagement.Infrastructure.Repository;
-using Dwapi.SharedKernel.Model;
-using MediatR;
+using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
+using Dwapi.UploadManagement.Core.Packager.Cbs;
+using Dwapi.UploadManagement.Infrastructure.Data;
+using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace Dwapi.ExtractsManagement.Core.Tests.Packager.Cbs
+namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
 {
     [TestFixture]
     public class CbsPackagerTests
@@ -47,8 +29,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Packager.Cbs
             var connectionString = config["ConnectionStrings:DwapiConnection"];
 
             _serviceProvider = new ServiceCollection()
+                .AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(o => o.UseSqlServer(connectionString))
                 .AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString))
-                .AddTransient<IMasterPatientIndexRepository, MasterPatientIndexRepository>()
+                .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
+                .AddTransient<ICbsExtractReader, CbsExtractReader>()
                 .AddTransient<ICbsPackager, CbsPackager>()
                 .BuildServiceProvider();
         }

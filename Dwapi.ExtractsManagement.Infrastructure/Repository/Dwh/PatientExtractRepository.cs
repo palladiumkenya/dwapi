@@ -39,12 +39,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
 
         public IEnumerable<PatientExtract> GetAllToSend()
         {
-//            var ctx = Context as ExtractsContext;
-//            var p = GetAll();
-//            foreach (var extract in p)
-//            {
-//            }
-//            return p;
+            throw new NotImplementedException();
         }
     }
 }

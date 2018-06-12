@@ -1,17 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
   <ItemGroup>
     <None Remove="appsettings.json" />
   </ItemGroup>
+
   <ItemGroup>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="AutoMapper.Data" Version="1.0.1" />
@@ -40,4 +45,5 @@
     <ProjectReference Include="..\Dwapi.SharedKernel.Infrastructure.Tests\Dwapi.SharedKernel.Infrastructure.Tests.csproj" />
     <ProjectReference Include="..\Dwapi.UploadManagement.Infrastructure\Dwapi.UploadManagement.Infrastructure.csproj" />
   </ItemGroup>
+
 </Project>

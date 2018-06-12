@@ -1,26 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Interfaces.Packager;
-using Dwapi.ExtractsManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
+using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 
-namespace Dwapi.ExtractsManagement.Core.Packager.Cbs
+namespace Dwapi.UploadManagement.Core.Packager.Cbs
 {
     public class CbsPackager: ICbsPackager
     {
-        private readonly IMasterPatientIndexRepository _repository;
+        private readonly ICbsExtractReader _cbsExtractReader;
 
-        public CbsPackager(IMasterPatientIndexRepository repository)
+        public CbsPackager(ICbsExtractReader cbsExtractReader)
         {
-            _repository = repository;
+            _cbsExtractReader = cbsExtractReader;
         }
+
 
         public IEnumerable<Manifest>  Generate()
         {
-            var getPks = _repository.GetAll()
+            var getPks = _cbsExtractReader.ReadAll()
                 .Select(x => new SitePatientProfile(x.SiteCode, x.FacilityName, x.PatientPk));
 
 
@@ -29,7 +30,7 @@ namespace Dwapi.ExtractsManagement.Core.Packager.Cbs
 
         public IEnumerable<MasterPatientIndex> GenerateMpi()
         {
-            return _repository.GetAll();
+            return _cbsExtractReader.ReadAll();
         }
     }
 }

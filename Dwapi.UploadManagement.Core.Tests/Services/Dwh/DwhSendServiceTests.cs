@@ -6,6 +6,7 @@ using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Tests.TestHelpers;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services.Dwh;
 using Microsoft.Extensions.DependencyInjection;

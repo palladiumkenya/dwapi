@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Interfaces.Packager.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Packager.Dwh;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
-using Dwapi.ExtractsManagement.Core.Packager.Cbs;
-using Dwapi.ExtractsManagement.Core.Packager.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure;
-using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
-using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
+using Dwapi.UploadManagement.Core.Packager.Dwh;
+using Dwapi.UploadManagement.Infrastructure.Data;
+using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace Dwapi.ExtractsManagement.Core.Tests.Packager.Dwh
+namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
 {
     [TestFixture]
     public class DwhPackagerTests
@@ -31,8 +29,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Packager.Dwh
             var connectionString = config["ConnectionStrings:DwapiConnection"];
 
             _serviceProvider = new ServiceCollection()
+                .AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(o => o.UseSqlServer(connectionString))
                 .AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString))
-                .AddTransient<IPatientExtractRepository, PatientExtractRepository>()
+                .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
+                .AddTransient<ICbsExtractReader, CbsExtractReader>()
                 .AddTransient<IDwhPackager, DwhPackager>()
                 .BuildServiceProvider();
         }

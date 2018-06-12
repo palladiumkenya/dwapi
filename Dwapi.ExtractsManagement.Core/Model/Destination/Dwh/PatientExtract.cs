@@ -9,11 +9,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
     public class PatientExtract : Entity<Guid>
     {
-        [Key, Column(Order = 1)]
         public int PatientPK { get; set; }
-        [Key, Column(Order = 2)]
-        public int SiteCode { get; set; }
         public string PatientID { get; set; }
+        public int SiteCode { get; set; }
         [Column(Order = 100)]
         public string Emr { get; set; }
         [Column(Order = 101)]
@@ -28,7 +26,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public virtual string Status { get; set; }
         [DoNotRead]
         public virtual DateTime? StatusDate { get; set; }
-        
+
         public string FacilityName { get; set; }
         public string Gender { get; set; }
         public DateTime? DOB { get; set; }
@@ -50,14 +48,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string StatusAtCCC { get; set; }
         public string StatusAtPMTCT { get; set; }
         public string StatusAtTBClinic { get; set; }
-
-        //TODO add foreign Key relations
-
-        public ICollection<PatientArtExtract> PatientArtExtracts { get; set; } = new List<PatientArtExtract>();
-        public ICollection<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; }=new List<PatientBaselinesExtract>();
-        public ICollection<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; }=new List<PatientLaboratoryExtract>();
-        public ICollection<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; }=new List<PatientPharmacyExtract>();
-        public ICollection<PatientStatusExtract> PatientStatusExtracts { get; set; }=new List<PatientStatusExtract>();
-        public ICollection<PatientVisitExtract> PatientVisitExtracts { get; set; }=new List<PatientVisitExtract>();
     }
 }

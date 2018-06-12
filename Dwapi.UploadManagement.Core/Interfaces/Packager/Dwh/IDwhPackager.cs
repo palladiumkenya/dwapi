@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Dwapi.SharedKernel.Exchange;
-using Dwapi.SharedKernel.Model;
+using Dwapi.UploadManagement.Core.Model.Dwh;
 
-namespace Dwapi.ExtractsManagement.Core.Interfaces.Packager.Dwh
+namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh
 {
     public interface IDwhPackager
     {
         IEnumerable<DwhManifest> Generate();
+        IEnumerable<PatientExtractView> GenerateExtracts();
     }
 }
