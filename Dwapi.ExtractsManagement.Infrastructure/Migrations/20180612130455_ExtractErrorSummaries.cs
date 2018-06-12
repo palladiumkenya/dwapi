@@ -37,7 +37,6 @@ SELECT        dbo.ValidationError.Id, dbo.Validator.Extract, dbo.Validator.Field
 FROM            dbo.vTempPatientArtExtractError INNER JOIN
                          dbo.ValidationError ON dbo.vTempPatientArtExtractError.Id = dbo.ValidationError.RecordId INNER JOIN
                          dbo.Validator ON dbo.ValidationError.ValidatorId = dbo.Validator.Id
-
                 ");
 
             //Patient Baselines errors
@@ -77,7 +76,6 @@ SELECT        dbo.ValidationError.Id, dbo.Validator.Extract, dbo.Validator.Field
 FROM            dbo.vTempPatientBaselinesExtractError INNER JOIN
                          dbo.ValidationError ON dbo.vTempPatientBaselinesExtractError.Id = dbo.ValidationError.RecordId INNER JOIN
                          dbo.Validator ON dbo.ValidationError.ValidatorId = dbo.Validator.Id
-
                 ");
 
             //Patient Labs Errors
@@ -86,7 +84,7 @@ SELECT        *
 FROM            TempPatientLaboratoryExtracts
 WHERE        (CheckError = 1)
                 ");
-            migrationBuilder.Sql(@"vTempPatientLaboratoryExtractErrorSummary
+            migrationBuilder.Sql(@"CREATE view vTempPatientLaboratoryExtractErrorSummary
 AS
 SELECT        dbo.ValidationError.Id, dbo.Validator.Extract, dbo.Validator.Field, dbo.Validator.Type, dbo.Validator.Summary, dbo.ValidationError.DateGenerated, dbo.vTempPatientLaboratoryExtractError.PatientPK,dbo.vTempPatientLaboratoryExtractError.FacilityId,
                          dbo.vTempPatientLaboratoryExtractError.PatientID, dbo.vTempPatientLaboratoryExtractError.SiteCode, dbo.vTempPatientLaboratoryExtractError.FacilityName, dbo.ValidationError.RecordId,
@@ -131,7 +129,7 @@ FROM            dbo.vTempPatientPharmacyExtractError INNER JOIN
                 ");
 
             //Patient Status Errors
-            migrationBuilder.Sql(@"vTempPatientStatusExtractError as
+            migrationBuilder.Sql(@"create view vTempPatientStatusExtractError as
 SELECT        *
 FROM            TempPatientStatusExtracts
 WHERE        (CheckError = 1)
