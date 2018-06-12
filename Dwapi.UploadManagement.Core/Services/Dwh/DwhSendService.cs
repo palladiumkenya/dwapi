@@ -75,16 +75,141 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             var ids = _reader.ReadAllIds();
             foreach (var id in ids)
             {
-                var extractView = _packager.GenerateExtracts(id);
-                var messageBag = ArtMessageBag.Create(extractView, extractView.PatientArtExtracts.ToList());
+                var patient = _packager.GenerateExtracts(id);
+                var artMessageBag = ArtMessageBag.Create(patient);
+                var baselineMessageBag = BaselineMessageBag.Create(patient);
+                var labMessageBag = LabMessageBag.Create(patient);
+                var pharmacyMessageBag = PharmacyMessageBag.Create(patient);
+                var statusMessageBag = StatusMessageBag.Create(patient);
+                var visitsMessageBag = VisitsMessageBag.Create(patient);
 
 
-                foreach (var message in messageBag.Messages)
+                foreach (var message in artMessageBag.Messages)
                 {
                     try
                     {
                         var msg = JsonConvert.SerializeObject(message);
-                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{messageBag.EndPoint}"), message);
+                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{artMessageBag.EndPoint}"), message);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            responses.Add(content);
+                        }
+                        else
+                        {
+                            var error = await response.Content.ReadAsStringAsync();
+                            throw new Exception(error);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e, $"Send Error");
+                        throw;
+                    }
+                }
+
+                foreach (var message in baselineMessageBag.Messages)
+                {
+                    try
+                    {
+                        var msg = JsonConvert.SerializeObject(message);
+                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{baselineMessageBag.EndPoint}"), message);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            responses.Add(content);
+                        }
+                        else
+                        {
+                            var error = await response.Content.ReadAsStringAsync();
+                            throw new Exception(error);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e, $"Send Error");
+                        throw;
+                    }
+                }
+
+                foreach (var message in labMessageBag.Messages)
+                {
+                    try
+                    {
+                        var msg = JsonConvert.SerializeObject(message);
+                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{labMessageBag.EndPoint}"), message);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            responses.Add(content);
+                        }
+                        else
+                        {
+                            var error = await response.Content.ReadAsStringAsync();
+                            throw new Exception(error);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e, $"Send Error");
+                        throw;
+                    }
+                }
+
+                foreach (var message in pharmacyMessageBag.Messages)
+                {
+                    try
+                    {
+                        var msg = JsonConvert.SerializeObject(message);
+                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{pharmacyMessageBag.EndPoint}"), message);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            responses.Add(content);
+                        }
+                        else
+                        {
+                            var error = await response.Content.ReadAsStringAsync();
+                            throw new Exception(error);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e, $"Send Error");
+                        throw;
+                    }
+                }
+
+                foreach (var message in statusMessageBag.Messages)
+                {
+                    try
+                    {
+                        var msg = JsonConvert.SerializeObject(message);
+                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{statusMessageBag.EndPoint}"), message);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            responses.Add(content);
+                        }
+                        else
+                        {
+                            var error = await response.Content.ReadAsStringAsync();
+                            throw new Exception(error);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e, $"Send Error");
+                        throw;
+                    }
+                }
+                
+                foreach (var message in visitsMessageBag.Messages)
+                {
+                    try
+                    {
+                        var msg = JsonConvert.SerializeObject(message);
+                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{visitsMessageBag.EndPoint}"), message);
                         if (response.IsSuccessStatusCode)
                         {
                             var content = await response.Content.ReadAsStringAsync();

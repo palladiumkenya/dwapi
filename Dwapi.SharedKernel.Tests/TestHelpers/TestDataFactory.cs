@@ -113,7 +113,8 @@ namespace Dwapi.SharedKernel.Tests.TestHelpers
                 var masterPatientIndices = Builder<PatientArtExtractView>.CreateListOfSize(count).All()
                     .With(x => x.SiteCode = siteCode).Build()
                     .ToList();
-                list.Add(new ArtMessage(patientExtractView, masterPatientIndices));
+                patientExtractView.PatientArtExtracts = masterPatientIndices;
+                list.Add(new ArtMessage(patientExtractView));
 
             }
 
