@@ -37,7 +37,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<PsmartStage> PsmartStage { get; set; }
         public DbSet<TempPatientExtractError> TempPatientExtractError { get; set; }
         public DbSet<TempPatientExtractErrorSummary> TempPatientExtractErrorSummary { get; set; }
-        /*public  DbSet<TempPatientArtExtractError> TempPatientArtExtractError { get; set; }
+        public  DbSet<TempPatientArtExtractError> TempPatientArtExtractError { get; set; }
         public  DbSet<TempPatientArtExtractErrorSummary> TempPatientArtExtractErrorSummary { get; set; }
         public  DbSet<TempPatientBaselinesExtractError> TempPatientBaselinesExtractError { get; set; }
         public  DbSet<TempPatientBaselinesExtractErrorSummary> TempPatientBaselinesExtractErrorSummary { get; set; }
@@ -48,7 +48,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public  DbSet<TempPatientStatusExtractError> TempPatientStatusExtractError { get; set; }
         public  DbSet<TempPatientStatusExtractErrorSummary> TempPatientStatusExtractErrorSummary { get; set; }
         public  DbSet<TempPatientVisitExtractError> TempPatientVisitExtractError { get; set; }
-        public  DbSet<TempPatientVisitExtractErrorSummary> TempPatientVisitExtractErrorSummary { get; set; }*/
+        public  DbSet<TempPatientVisitExtractErrorSummary> TempPatientVisitExtractErrorSummary { get; set; }
 
         public DbSet<MasterPatientIndex> MasterPatientIndices { get; set; }
         public DbSet<TempMasterPatientIndex> TempMasterPatientIndices { get; set; }
