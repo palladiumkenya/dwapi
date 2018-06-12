@@ -5,6 +5,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Z.Dapper.Plus;
 
@@ -34,6 +35,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
                 Log.Error(e, "Failed batch insert");
                 return false;
             }
+        }
+
+        public IEnumerable<PatientExtract> GetAllToSend()
+        {
+//            var ctx = Context as ExtractsContext;
+//            var p = GetAll();
+//            foreach (var extract in p)
+//            {
+//            }
+//            return p;
         }
     }
 }
