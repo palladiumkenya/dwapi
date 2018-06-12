@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Model;
+using Dwapi.UploadManagement.Core.Exchange.Psmart;
+using SendResponse = Dwapi.UploadManagement.Core.Exchange.Psmart.SendResponse;
 
 namespace Dwapi.UploadManagement.Core.Interfaces.Services
 {

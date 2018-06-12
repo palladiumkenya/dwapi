@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Packager;
+using Dwapi.ExtractsManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Packager.Cbs
@@ -22,6 +24,11 @@ namespace Dwapi.ExtractsManagement.Core.Packager.Cbs
 
 
             return Manifest.Create(getPks);
+        }
+
+        public IEnumerable<MasterPatientIndex> GenerateMpi()
+        {
+            return _repository.GetAll();
         }
     }
 }

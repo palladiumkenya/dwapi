@@ -36,6 +36,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public get$: Subscription;
     public getCount$: Subscription;
     public loadRegistry$: Subscription;
+    public sendManifest$: Subscription;
     public send$: Subscription;
     public emrSystem: EmrSystem;
     public extracts: Extract[];
@@ -45,12 +46,16 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     private extractEvent: ExtractEvent;
     public extractDetails: MasterPatientIndex[] = [];
     public sendResponse: SendResponse;
+    public manifestPackage: SendPackage;
+    public mpiPackage: SendPackage;
 
 
     public messages: Message[];
+    public notifications: Message[];
     public canLoad: boolean = false;
     public loading: boolean = false;
     public canSend: boolean = false;
+    public canSendMpi: boolean = false;
     public recordCount = 0;
     private sdk: string[] = [];
 public colorMappings: any[] = [];
@@ -220,37 +225,54 @@ public colorMappings: any[] = [];
 
 
     public send(): void {
+
         this.messages = [];
-        this.send$ = this.cbsService.sendExtract(this.getSendPackage('PSMART'))
+        this.notifications = [];
+        this.canSendMpi = false;
+        this.manifestPackage = this.getSendManifestPackage();
+        this.sendManifest$ = this.cbsService.sendManifest(this.manifestPackage)
             .subscribe(
                 p => {
-                    this.sendResponse = p;
+                    this.canSendMpi = true;
                 },
                 e => {
                     this.messages = [];
                     this.messages.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                 },
                 () => {
-                    console.log(this.sendResponse);
-                    this.updateEvent();
-                    if (this.sendResponse) {
-                        if (this.sendResponse.isSending) {
-                            this.messages.push({severity: 'warning', summary: 'sending has already started '});
-                        }
-                        if (this.sendResponse.isComplete) {
-                            this.messages.push({severity: 'success', summary: 'sent successfully '});
-                        }
-                    }
-                    // this.errorMessage.push({severity: 'success', summary: 'sent successful '});
+                    this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+                    this.sendMpi();
                 }
             );
     }
 
-    private getSendPackage(docketId: string): SendPackage {
+    public sendMpi(): void {
+        this.messages = [];
+        this.mpiPackage = this.getMpiPackage();
+        this.send$ = this.cbsService.sendMpi(this.mpiPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                },
+                e => {
+                    this.messages = [];
+                    this.messages.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                },
+                () => {
+                    this.messages.push({severity: 'success', summary: 'sent successfully '});
+                }
+            );
+    }
+
+    private getSendManifestPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            docket: docketId,
-            endpoint: ''
+        };
+    }
+
+    private getMpiPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
         };
     }
 
@@ -311,6 +333,9 @@ public colorMappings: any[] = [];
         }
         if (this.send$) {
             this.send$.unsubscribe();
+        }
+        if (this.sendManifest$) {
+            this.sendManifest$.unsubscribe();
         }
     }
 }

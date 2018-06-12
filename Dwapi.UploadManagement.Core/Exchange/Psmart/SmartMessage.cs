@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Dwapi.SharedKernel.Model
+namespace Dwapi.UploadManagement.Core.Exchange.Psmart
 {
     public class SmartMessage
     {
