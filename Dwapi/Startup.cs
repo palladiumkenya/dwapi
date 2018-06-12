@@ -55,6 +55,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services;
 using Dwapi.UploadManagement.Core.Services.Cbs;
+using Dwapi.UploadManagement.Core.Services.Psmart;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

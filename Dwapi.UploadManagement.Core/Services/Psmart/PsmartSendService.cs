@@ -2,14 +2,13 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dwapi.SharedKernel.DTOs;
-using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Exchange.Psmart;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Serilog;
 using SendResponse = Dwapi.UploadManagement.Core.Exchange.Psmart.SendResponse;
 
-namespace Dwapi.UploadManagement.Core.Services
+namespace Dwapi.UploadManagement.Core.Services.Psmart
 {
     public class PsmartSendService: IPsmartSendService
     {
