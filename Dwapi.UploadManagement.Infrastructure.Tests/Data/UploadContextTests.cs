@@ -28,7 +28,6 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Data
 
             _serviceProvider = new ServiceCollection()
                 .AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(o => o.UseSqlServer(connectionString))
-                .AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString))
                 .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
                 .BuildServiceProvider();
 

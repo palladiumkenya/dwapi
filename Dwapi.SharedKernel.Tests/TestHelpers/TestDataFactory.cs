@@ -4,6 +4,8 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
+using Dwapi.UploadManagement.Core.Exchange.Dwh;
+using Dwapi.UploadManagement.Core.Model.Dwh;
 using FizzWare.NBuilder;
 
 namespace Dwapi.SharedKernel.Tests.TestHelpers
@@ -85,6 +87,36 @@ namespace Dwapi.SharedKernel.Tests.TestHelpers
                 list.Add(new MpiMessage(masterPatientIndices));
                 
             }
+            return list;
+        }
+
+        public static ArtMessageBag ArtMessageBag(int count, params int[] siteCodes)
+        {
+            var list = Builder<ArtMessageBag>.CreateNew().Build();
+            foreach (var siteCode in siteCodes)
+            {
+                list.Messages.AddRange(ArtMessages(count, siteCode));
+            }
+
+            return list;
+        }
+
+        private static List<ArtMessage> ArtMessages(int count, params int[] siteCodes)
+        {
+            var list = new List<ArtMessage>();
+
+            foreach (var siteCode in siteCodes)
+            {
+                var patientExtractView =
+                    Builder<PatientExtractView>.CreateNew().With(x => x.SiteCode = siteCode).Build();
+
+                var masterPatientIndices = Builder<PatientArtExtractView>.CreateListOfSize(count).All()
+                    .With(x => x.SiteCode = siteCode).Build()
+                    .ToList();
+                list.Add(new ArtMessage(patientExtractView, masterPatientIndices));
+
+            }
+
             return list;
         }
     }

@@ -50,11 +50,20 @@ using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Packager.Cbs;
+using Dwapi.UploadManagement.Core.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Services.Cbs;
+using Dwapi.UploadManagement.Core.Services.Dwh;
 using Dwapi.UploadManagement.Core.Services.Psmart;
+using Dwapi.UploadManagement.Infrastructure.Data;
+using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
+using Dwapi.UploadManagement.Infrastructure.Reader.Dwh;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -131,12 +140,14 @@ namespace Dwapi
                 {
                     services.AddDbContext<SettingsContext>(o => o.UseMySql(connectionString,x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<ExtractsContext>(o => o.UseMySql(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+                    services.AddDbContext<UploadContext>(o => o.UseMySql(connectionString, x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name)));
                 }
 
                 if (provider == DatabaseProvider.MsSql)
                 {
                     services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString,x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
+                    services.AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name)));
                 }
             }
             catch (Exception e)
@@ -212,8 +223,13 @@ namespace Dwapi
             services.AddScoped<IMasterPatientIndexValidator,MasterPatientIndexValidator>();
             services.AddScoped<IMasterPatientIndexLoader, MasterPatientIndexLoader>();
             services.AddScoped<ICleanCbsExtracts, CleanCbsExtracts>();
+            services.AddScoped<ICbsExtractReader, CbsExtractReader>();
             services.AddScoped<ICbsSendService, CbsSendService>();
             services.AddScoped<ICbsPackager, CbsPackager>();
+
+            services.AddScoped<IDwhExtractReader, DwhExtractReader>();
+            services.AddScoped<IDwhPackager, DwhPackager>();
+            services.AddScoped<IDwhSendService, DwhSendService>();
 
             services.AddScoped<IAppDatabaseManager, AppDatabaseManager>();
 

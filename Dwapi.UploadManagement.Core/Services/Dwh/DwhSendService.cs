@@ -26,7 +26,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         {
             _packager = packager;
             _reader = reader;
-            _endPoint = "api/spot/";
+            _endPoint = "api/";
         }
 
         public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
@@ -45,7 +45,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 try
                 {
                     var msg = JsonConvert.SerializeObject(message);
-                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint}"), message.Manifest);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}spot"), message.Manifest);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
@@ -84,7 +84,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     try
                     {
                         var msg = JsonConvert.SerializeObject(message);
-                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint}"), message);
+                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{messageBag.EndPoint}"), message);
                         if (response.IsSuccessStatusCode)
                         {
                             var content = await response.Content.ReadAsStringAsync();

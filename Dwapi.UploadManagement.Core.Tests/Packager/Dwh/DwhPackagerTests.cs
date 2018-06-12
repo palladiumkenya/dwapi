@@ -4,9 +4,11 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Packager.Dwh;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
+using Dwapi.UploadManagement.Infrastructure.Reader.Dwh;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,15 +33,14 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
 
             _serviceProvider = new ServiceCollection()
                 .AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(o => o.UseSqlServer(connectionString))
-                .AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString))
                 .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
-                .AddTransient<ICbsExtractReader, CbsExtractReader>()
+                .AddTransient<IDwhExtractReader, DwhExtractReader>()
                 .AddTransient<IDwhPackager, DwhPackager>()
                 .BuildServiceProvider();
 
-            var ctx = _serviceProvider.GetService<ExtractsContext>();
-            var art= ctx.PatientArtExtracts.First();
-            _pid = ctx.PatientExtracts.First(x => x.PatientPK == art.PatientPK && x.SiteCode == art.SiteCode).Id;
+            var ctx = _serviceProvider.GetService<UploadContext>();
+            var art= ctx.ClientPatientArtExtracts.First();
+            _pid = ctx.ClientPatientExtracts.First(x => x.PatientPK == art.PatientPK && x.SiteCode == art.SiteCode).Id;
         }
 
 

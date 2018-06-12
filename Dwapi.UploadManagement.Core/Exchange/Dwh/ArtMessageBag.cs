@@ -5,6 +5,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class ArtMessageBag
     {
+        public string EndPoint => "PatientArt";
         public List<ArtMessage> Messages { get; set; } = new List<ArtMessage>();
 
         public ArtMessageBag()

@@ -9,7 +9,7 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
     {
         [NotMapped]
         public int PatientPID => PatientPK;
-        [NotMapped] public string PatientCccNumbe => PatientID;
+        [NotMapped] public string PatientCccNumber => PatientID;
         [NotMapped] public int FacilityId =>SiteCode;
 
         [NotMapped]

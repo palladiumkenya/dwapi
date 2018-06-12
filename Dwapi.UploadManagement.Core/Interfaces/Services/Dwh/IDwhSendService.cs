@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Exchange;
+using Dwapi.UploadManagement.Core.Exchange.Dwh;
 
 namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
 {
