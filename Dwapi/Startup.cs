@@ -169,6 +169,12 @@ namespace Dwapi
             services.AddScoped<IPatientStatusExtractRepository, PatientStatusExtractRepository>();
             services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
             services.AddScoped<ITempPatientExtractErrorSummaryRepository, TempPatientExtractErrorSummaryRepository>();
+            services.AddScoped<ITempPatientArtExtractErrorSummaryRepository, TempPatientArtExtractErrorSummaryRepository>();
+            services.AddScoped<ITempPatientBaselinesExtractErrorSummaryRepository, TempPatientBaselinesExtractErrorSummaryRepository>();
+            services.AddScoped<ITempPatientLaboratoryExtractErrorSummaryRepository, TempPatientLaboratoryExtractErrorSummaryRepository>();
+            services.AddScoped<ITempPatientPharmacyExtractErrorSummaryRepository, TempPatientPharmacyExtractErrorSummaryRepository>();
+            services.AddScoped<ITempPatientStatusExtractErrorSummaryRepository, TempPatientStatusExtractErrorSummaryRepository>();
+            services.AddScoped<ITempPatientVisitExtractErrorSummaryRepository, TempPatientVisitExtractErrorSummaryRepository>();
 
             services.AddScoped<IMasterPatientIndexRepository, MasterPatientIndexRepository>();
             services.AddScoped<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>();
