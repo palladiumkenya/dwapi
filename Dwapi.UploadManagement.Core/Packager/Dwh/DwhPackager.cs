@@ -23,12 +23,6 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
 
             return DwhManifest.Create(patientProfiles);
         }
-
-        public IEnumerable<PatientExtractView> GenerateExtracts()
-        {
-            return _reader.ReadAll();
-        }
-
         public PatientExtractView GenerateExtracts(Guid id)
         {
             return _reader.Read(id);

@@ -6,7 +6,6 @@ using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Exchange.Psmart;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Serilog;
-using SendResponse = Dwapi.UploadManagement.Core.Exchange.Psmart.SendResponse;
 
 namespace Dwapi.UploadManagement.Core.Services.Psmart
 {

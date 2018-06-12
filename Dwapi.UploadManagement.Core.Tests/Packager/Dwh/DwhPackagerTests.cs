@@ -19,6 +19,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
     {
         private IServiceProvider _serviceProvider;
         private IDwhPackager _packager;
+        private Guid _pid;
         
         [OneTimeSetUp]
         public void Init()
@@ -35,6 +36,10 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
                 .AddTransient<ICbsExtractReader, CbsExtractReader>()
                 .AddTransient<IDwhPackager, DwhPackager>()
                 .BuildServiceProvider();
+
+            var ctx = _serviceProvider.GetService<ExtractsContext>();
+            var art= ctx.PatientArtExtracts.First();
+            _pid = ctx.PatientExtracts.First(x => x.PatientPK == art.PatientPK && x.SiteCode == art.SiteCode).Id;
         }
 
 
@@ -42,6 +47,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         public void SetUp()
         {
             _packager = _serviceProvider.GetService<IDwhPackager>();
+          
         }
 
         [Test]
@@ -52,6 +58,14 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
             var m = manfiests.First();
             Assert.True(m.PatientPks.Any());
             Console.WriteLine($"{m}");
+        }
+
+        [Test]
+        public void should_Generate_Extracts()
+        {
+            var manfiests = _packager.GenerateExtracts(_pid);
+            Assert.NotNull(manfiests);
+            Assert.True(manfiests.PatientArtExtracts.Any());
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh
     public interface IDwhExtractReader
     {
         IEnumerable<SitePatientProfile> ReadProfiles();
-        IEnumerable<PatientExtractView> ReadAll();
+        IEnumerable<Guid> ReadAllIds();
         PatientExtractView Read(Guid id);
 
     }

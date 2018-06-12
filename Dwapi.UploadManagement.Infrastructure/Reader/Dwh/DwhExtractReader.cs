@@ -27,9 +27,9 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 );
         }
 
-        public IEnumerable<PatientExtractView> ReadAll()
+        public IEnumerable<Guid> ReadAllIds()
         {
-            return _context.ClientPatientExtracts.AsNoTracking();
+            return _context.ClientPatientExtracts.AsNoTracking().Select(x=>x.Id);
         }
 
         public PatientExtractView Read(Guid id)

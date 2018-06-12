@@ -50,9 +50,9 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader
         }
 
         [Test]
-        public void should_ReadExtracts()
+        public void should_ReadIds()
         {
-            var extractViews = _reader.ReadAll().ToList();
+            var extractViews = _reader.ReadAllIds().ToList();
             Assert.True(extractViews.Any());
         }
     }

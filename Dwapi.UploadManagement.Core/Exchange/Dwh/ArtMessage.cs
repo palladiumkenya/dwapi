@@ -29,5 +29,6 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
             Demographic = patient;
             ArtExtracts = artExtracts;
         }
+
     }
 }

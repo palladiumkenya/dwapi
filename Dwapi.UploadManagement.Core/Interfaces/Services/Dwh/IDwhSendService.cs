@@ -11,5 +11,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
 
         Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, DwhManifestMessageBag messageBag);
 
+        Task<List<string>> SendExtractsAsync(SendManifestPackageDTO sendTo);
     }
 }
