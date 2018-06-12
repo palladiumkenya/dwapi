@@ -10,6 +10,36 @@ namespace Dwapi.SharedKernel.Tests.TestHelpers
 {
     public class TestDataFactory
     {
+
+        public static DwhManifestMessageBag DwhManifestMessageBag(int count, params int[] siteCodes)
+        {
+            var list = Builder<DwhManifestMessageBag>.CreateNew().Build();
+
+            list.Messages.AddRange(DwhManifestMessages(count, siteCodes));
+
+            return list;
+        }
+
+        private static List<DwhManifestMessage> DwhManifestMessages(int count, params int[] siteCodes)
+        {
+            var list = new List<DwhManifestMessage>();
+
+            foreach (var siteCode in siteCodes)
+            {
+                var manifests = Builder<DwhManifest>.CreateListOfSize(count).All()
+                    .With(x => x.SiteCode = siteCode)
+                    .With(x => x.PatientPks =new List<int>{1,2})
+                    .Build()
+                    .ToList();
+                foreach (var manifest in manifests)
+                {
+                    list.Add(new DwhManifestMessage(manifest));
+                }
+            }
+            return list;
+        }
+
+
         public static ManifestMessageBag ManifestMessageBag(int count,params int[] siteCodes)
         {
             var list = Builder<ManifestMessageBag>.CreateNew().Build();
