@@ -2,7 +2,7 @@
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh
 {
-    public interface ITempPatientExtractErrorSummaryRepository : ITempExtractErrorSummaryRepository<TempPatientExtractErrorSummary>
+    public interface ITempPatientArtExtractErrorSummaryRepository : ITempExtractErrorSummaryRepository<TempPatientArtExtractErrorSummary>
     {
     }
 }
