@@ -113,7 +113,6 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
          });
 
         this._hubConnection.on('ShowCbsSendProgress', (dwhProgress: any) => {
-            console.log(dwhProgress);
             if (this.extract) {
                 this.sendEvent = {
                     sentProgress: dwhProgress.progress

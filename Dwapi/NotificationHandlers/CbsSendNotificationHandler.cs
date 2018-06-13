@@ -1,6 +1,6 @@
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Events;
-using Dwapi.UploadManagement.Core.Notifications;
+using Dwapi.UploadManagement.Core.Notifications.Cbs;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Dwapi.NotificationHandlers

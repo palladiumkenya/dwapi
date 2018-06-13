@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Interfaces;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh
 {
     public interface IPatientExtractRepository : IRepository<PatientExtract, Guid>
     {
         bool BatchInsert(IEnumerable<PatientExtract> extracts);
-        IEnumerable<PatientExtract> GetAllToSend();
+        void UpdateSendStatus(List<SentItem> sentItems);
     }
 }

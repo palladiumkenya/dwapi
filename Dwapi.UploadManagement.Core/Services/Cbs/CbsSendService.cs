@@ -13,10 +13,12 @@ using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Event;
+using Dwapi.UploadManagement.Core.Event.Cbs;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Notifications;
+using Dwapi.UploadManagement.Core.Notifications.Cbs;
 using Newtonsoft.Json;
 using Serilog;
 

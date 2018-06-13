@@ -1,6 +1,6 @@
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.SharedKernel.Events;
-using Dwapi.UploadManagement.Core.Event;
+using Dwapi.UploadManagement.Core.Event.Cbs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dwapi.EventHandlers

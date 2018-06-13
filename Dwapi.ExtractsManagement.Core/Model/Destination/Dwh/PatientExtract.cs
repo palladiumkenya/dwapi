@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 
@@ -46,5 +47,10 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string StatusAtCCC { get; set; }
         public string StatusAtPMTCT { get; set; }
         public string StatusAtTBClinic { get; set; }
+        [NotMapped]
+        public bool IsSent
+        {
+            get { return !string.IsNullOrWhiteSpace(Status) && Status.IsSameAs(nameof(SendStatus.Sent)); }
+        }
     }
 }

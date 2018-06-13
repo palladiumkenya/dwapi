@@ -21,5 +21,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
             var messages = new List<ArtMessage> {new ArtMessage(patient)};
             return new ArtMessageBag(messages);
         }
+
+       
     }
 }
