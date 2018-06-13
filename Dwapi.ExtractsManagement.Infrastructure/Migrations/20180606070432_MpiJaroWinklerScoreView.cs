@@ -278,7 +278,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE FUNCTION [dbo].[fn_calculateJaroWinkler](@str1 VARCHAR(MAX), @str2 VARCHAR(MAX)) 
+CREATE FUNCTION fn_calculateJaroWinkler (@str1 VARCHAR(MAX), @str2 VARCHAR(MAX)) 
 RETURNS float As 
 BEGIN
 	DECLARE @jaro_distance			FLOAT

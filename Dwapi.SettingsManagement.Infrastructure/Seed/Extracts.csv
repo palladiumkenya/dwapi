@@ -535,7 +535,8 @@ SELECT
   FROM [dbo].[tmp_PatientMaster] a 
   inner join [dbo].[mst_patient_decoded]mst on a.patientpk=mst.ptn_pk
   left  join (SELECT DISTINCT a.PatientPK, a.PatientID, a.RegistrationAtCCC, b.StartARTDate, b.StartRegimen, b.StartRegimenLine
-  FROM dbo.tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
+  FROM 
+  tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
   WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
  --ORDER BY PKV_2,Ptn_Pk  ASC
 ) X 

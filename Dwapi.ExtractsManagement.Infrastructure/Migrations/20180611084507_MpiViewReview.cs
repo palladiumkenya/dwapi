@@ -18,11 +18,11 @@ A.PatientPk,A.SiteCode,
                          A.StartARTRegimenCode, A.StartARTRegimenDesc, A.dmFirstName, A.dmLastName, A.sxFirstName, A.sxLastName, A.sxPKValue, A.dmPKValue, A.sxdmPKValue, A.sxMiddleName, 
                          A.dmMiddleName, A.sxPKValueDoB, A.dmPKValueDoB, A.sxdmPKValueDoB, A.DateExtracted, A.Processed, A.QueueId, A.Status, A.StatusDate,
                 
-                [dbo].[fn_calculateJaroWinkler](A.sxdmPKValueDoB,B.sxdmPKValueDoB) AS JaroWinklerScore
-                FROM[MasterPatientIndices] A
+                 dbo.fn_calculateJaroWinkler (A.sxdmPKValueDoB,B.sxdmPKValueDoB) AS JaroWinklerScore
+                FROM MasterPatientIndices  A
                 INNER JOIN
             (
-                SELECT  sxdmPKValueDoB, COUNT(*) Number  from[MasterPatientIndices]
+                SELECT  sxdmPKValueDoB, COUNT(*) Number  from MasterPatientIndices
             GROUP BY sxdmPKValueDoB having COUNT(*) > 1
                 ) AS  B
             ON A.sxdmPKValueDoB = B.sxdmPKValueDoB

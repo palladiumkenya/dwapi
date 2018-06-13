@@ -1,4 +1,9 @@
-<p-table [value]="validExtracts" autoLayout="true" resizableColumns="true" columnResizeMode="expand" [paginator]="true" [rows]="5">
+<p-table #dt [value]="validExtracts" autoLayout="true" resizableColumns="true" columnResizeMode="expand" [paginator]="true" [rows]="5">
+    <ng-template pTemplate="caption">
+        <div class="ui-helper-clearfix">
+                <button disabled="true"type="button" pButton icon="ui-icon-cloud-download" iconPos="left" label="Export" (click)="dt.exportCSV()" style="float:left" class="blue-btn"></button>
+        </div>
+    </ng-template>
     <ng-template pTemplate="header">
         <tr>
             <th *ngFor="let col of cols" [pSortableColumn]="col.field">

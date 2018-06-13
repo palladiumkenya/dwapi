@@ -4,16 +4,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     public partial class MpiViewInitial : Migration
     {
+        //TODO: MG Remove all references to [dbo] schema
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"create view
             vMasterPatientIndices
                 as
                 SELECT A.*
-                FROM[MasterPatientIndices] A
+                FROM [MasterPatientIndices] A
                 INNER JOIN
             (
-                SELECT  sxdmPKValueDoB, COUNT(*) Number  from[MasterPatientIndices]
+                SELECT  sxdmPKValueDoB, COUNT(*) Number  from [MasterPatientIndices]
             GROUP BY sxdmPKValueDoB having COUNT(*) > 1
                 ) AS  B
             ON A.sxdmPKValueDoB = B.sxdmPKValueDoB
