@@ -17,7 +17,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                          A.StartARTRegimenCode, A.StartARTRegimenDesc, A.dmFirstName, A.dmLastName, A.sxFirstName, A.sxLastName, A.sxPKValue, A.dmPKValue, A.sxdmPKValue, A.sxMiddleName, 
                          A.dmMiddleName, A.sxPKValueDoB, A.dmPKValueDoB, A.sxdmPKValueDoB, A.DateExtracted, A.Processed, A.QueueId, A.Status, A.StatusDate,
                 
-                fn_calculateJaroWinkler(A.sxdmPKValueDoB,B.sxdmPKValueDoB) AS JaroWinklerScore
+                dbo.fn_calculateJaroWinkler(A.sxdmPKValueDoB,B.sxdmPKValueDoB) AS JaroWinklerScore
                 FROM MasterPatientIndices A
                 INNER JOIN
             (
