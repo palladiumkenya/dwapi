@@ -12,11 +12,11 @@ FROM            TempPatientExtracts
 WHERE        (CheckError = 1)");
             migrationBuilder.Sql(@"CREATE VIEW vTempPatientExtractErrorSummary
 AS
-SELECT         ValidationError.Id,  Validator.Extract,  Validator.Field,  Validator.Type,  Validator.Summary,  ValidationError.DateGenerated,  vTempPatientExtractError.PatientPK, vTempPatientExtractError.FacilityId,
-                          vTempPatientExtractError.PatientID,  vTempPatientExtractError.SiteCode,  vTempPatientExtractError.FacilityName,  ValidationError.RecordId
-FROM             vTempPatientExtractError INNER JOIN
-                          ValidationError ON  vTempPatientExtractError.Id =  ValidationError.RecordId INNER JOIN
-                          Validator ON  ValidationError.ValidatorId =  Validator.Id");
+SELECT        dbo.ValidationError.Id, dbo.Validator.Extract, dbo.Validator.Field, dbo.Validator.Type, dbo.Validator.Summary, dbo.ValidationError.DateGenerated, dbo.vTempPatientExtractError.PatientPK,dbo.vTempPatientExtractError.FacilityId,
+                         dbo.vTempPatientExtractError.PatientID, dbo.vTempPatientExtractError.SiteCode, dbo.vTempPatientExtractError.FacilityName, dbo.ValidationError.RecordId
+FROM            dbo.vTempPatientExtractError INNER JOIN
+                         dbo.ValidationError ON dbo.vTempPatientExtractError.Id = dbo.ValidationError.RecordId INNER JOIN
+                         dbo.Validator ON dbo.ValidationError.ValidatorId = dbo.Validator.Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
