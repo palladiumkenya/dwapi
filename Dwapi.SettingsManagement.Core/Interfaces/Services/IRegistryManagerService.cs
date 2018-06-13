@@ -10,5 +10,6 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Services
         CentralRegistry GetDefault();
         CentralRegistry GetByDocket(string docket);
         void SaveDefault(CentralRegistry centralRegistry);
+        void Save(CentralRegistry centralRegistry);
     }
 }
