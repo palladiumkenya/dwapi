@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 
-namespace Dwapi.SharedKernel.Model
+namespace Dwapi.SharedKernel.Exchange
 {
     public class Manifest
     {

@@ -1,5 +1,6 @@
 <div class="card card-w-title">
   <h1>National Data Warehouse <span style="color: lightgray">|</span> {{emrName}} <span style="font-size:13px ">{{emrVersion}}</span></h1>
+    <p-growl [(value)]="notifications"></p-growl>
   <p-toolbar>
       <div class="ui-toolbar-group-left">
           <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr()" label="Load from EMR"
@@ -7,7 +8,7 @@
       </div>
 
       <div class="ui-toolbar-group-right">
-          <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Registry" icon="ui-icon-cloud-upload"
+          <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
                   class="blue-btn"></button>
       </div>
   </p-toolbar>

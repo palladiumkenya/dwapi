@@ -15,7 +15,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime DateExtracted { get; set; } = DateTime.Now;
 
         //[DoNotRead]
-        public bool CheckError { get; set; }
+       
+        public virtual bool CheckError { get; set; }
 
         //[DoNotRead]
         [NotMapped]

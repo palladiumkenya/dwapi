@@ -1,7 +1,7 @@
 ﻿using System;
 using Dwapi.SharedKernel.Utility;
 
-namespace Dwapi.SharedKernel.Model
+namespace Dwapi.SharedKernel.Exchange
 {
     public class SendManifestResponse
     {

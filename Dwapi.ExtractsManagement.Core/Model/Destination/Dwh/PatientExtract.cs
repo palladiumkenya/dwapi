@@ -24,7 +24,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public virtual string Status { get; set; }
         [DoNotRead]
         public virtual DateTime? StatusDate { get; set; }
-        
+
         public string FacilityName { get; set; }
         public string Gender { get; set; }
         public DateTime? DOB { get; set; }

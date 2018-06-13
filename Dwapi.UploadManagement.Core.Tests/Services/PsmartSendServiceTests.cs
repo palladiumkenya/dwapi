@@ -7,6 +7,7 @@ using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Exchange.Psmart;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Services;
+using Dwapi.UploadManagement.Core.Services.Psmart;
 using FizzWare.NBuilder;
 using NUnit.Framework;
 

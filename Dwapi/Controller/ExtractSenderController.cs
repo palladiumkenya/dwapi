@@ -6,7 +6,6 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
-using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Exchange.Psmart;
 using Dwapi.UploadManagement.Core.Interfaces.Services;

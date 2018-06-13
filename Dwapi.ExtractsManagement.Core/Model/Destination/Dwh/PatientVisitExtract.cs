@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
@@ -43,5 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string PwP { get; set; }
         public decimal? GestationAge { get; set; }
         public DateTime? NextAppointmentDate { get; set; }
+        [NotMapped]
+        public override bool CheckError { get; set; }
     }
 }

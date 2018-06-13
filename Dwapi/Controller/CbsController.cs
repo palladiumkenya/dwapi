@@ -2,16 +2,13 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
-using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
-using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,17 +26,16 @@ namespace Dwapi.Controller
         private readonly IHubContext<CbsActivity> _hubContext;
         private readonly IMasterPatientIndexRepository _masterPatientIndexRepository;
         private readonly ICbsSendService _cbsSendService;
-        private readonly ICbsPackager _cbsPackager;
+        
 
         public CbsController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<CbsActivity> hubContext, IMasterPatientIndexRepository masterPatientIndexRepository,
-            ICbsSendService cbsSendService, ICbsPackager cbsPackager)
+            ICbsSendService cbsSendService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _masterPatientIndexRepository = masterPatientIndexRepository;
             _cbsSendService = cbsSendService;
-            _cbsPackager = cbsPackager;
             Startup.CbsHubContext = _hubContext = hubContext;
         }
 
@@ -119,8 +115,7 @@ namespace Dwapi.Controller
             try
             {
 
-                var manifests = _cbsPackager.Generate().ToList();
-                await _cbsSendService.SendManifestAsync(packageDTO, ManifestMessageBag.Create(manifests));
+                await _cbsSendService.SendManifestAsync(packageDTO);
                 return Ok();
             }
             catch (Exception e)
@@ -140,9 +135,7 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-
-                var mpi = _cbsPackager.GenerateMpi().ToList();
-                await _cbsSendService.SendMpiAsync(packageDTO, MpiMessageBag.Create(mpi));
+                await _cbsSendService.SendMpiAsync(packageDTO);
                 return Ok();
             }
             catch (Exception e)
