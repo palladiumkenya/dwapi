@@ -47,6 +47,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadRegistry$: Subscription;
     public send$: Subscription;
     public getStatus$: Subscription;
+    public sendManifest$: Subscription;
 
     public loadingData: boolean;
     public extracts: Extract[] = [];
@@ -58,9 +59,13 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public canLoadFromEmr: boolean;
     public canSend: boolean;
+    public canSendPatients: boolean = false;
+    public manifestPackage: SendPackage;
+    public patientPackage: SendPackage;
 
     public errorMessage: Message[];
     public otherMessage: Message[];
+    public notifications: Message[];
     private _extractDbProtocol: ExtractDatabaseProtocol;
     private _extractDbProtocols: ExtractDatabaseProtocol[];
     private extractLoadCommand: LoadFromEmrCommand;
@@ -189,42 +194,60 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
+
     public send(): void {
+
         this.errorMessage = [];
-        this.send$ = this._ndwhSenderService
-            .send(this.getSendPackage('NDWH'))
+        this.notifications = [];
+        this.canSendPatients = false;
+        this.manifestPackage = this.getSendManifestPackage();
+        this.sendManifest$ = this._ndwhSenderService.sendManifest(this.manifestPackage)
             .subscribe(
                 p => {
-                    this.sendResponse = p;
+                    this.canSendPatients = true;
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({
-                        severity: 'error',
-                        summary: 'Error sending ',
-                        detail: <any>e
-                    });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                 },
                 () => {
-                    this.updateEvent();
-                    if (this.sendResponse) {
-                        if (this.sendResponse.isSending) {
-                            this.errorMessage.push({
-                                severity: 'warning',
-                                summary: 'sending has already started '
-                            });
-                        }
-                        if (this.sendResponse.isComplete) {
-                            this.errorMessage.push({
-                                severity: 'success',
-                                summary: 'sent successfully '
-                            });
-                        }
-                    }
-                    // this.errorMessage.push({severity: 'success', summary: 'sent successful '});
+                    this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+                    this.sendPatientExtract();
                 }
             );
     }
+
+    public sendPatientExtract(): void {
+        this.errorMessage = [];
+        this.patientPackage = this.getPatientExtractPackage();
+        this.send$ = this._ndwhSenderService.sendPatientExtracts(this.patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                },
+                () => {
+                    this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
+                }
+            );
+    }
+
+    private getSendManifestPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+        };
+    }
+
+    private getPatientExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+        };
+    }
+
+
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(

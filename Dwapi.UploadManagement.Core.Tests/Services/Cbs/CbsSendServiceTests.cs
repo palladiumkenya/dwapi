@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Tests.TestHelpers;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;

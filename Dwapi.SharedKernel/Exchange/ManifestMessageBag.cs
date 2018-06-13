@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Dwapi.SharedKernel.Exchange;
 
-namespace Dwapi.SharedKernel.Model
+namespace Dwapi.SharedKernel.Exchange
 {
     public class ManifestMessageBag
     {

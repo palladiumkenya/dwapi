@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
-using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Exchange;
 
-namespace Dwapi.ExtractsManagement.Core.Interfaces.Packager.Cbs
+namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs
 {
     public interface ICbsPackager
     {
