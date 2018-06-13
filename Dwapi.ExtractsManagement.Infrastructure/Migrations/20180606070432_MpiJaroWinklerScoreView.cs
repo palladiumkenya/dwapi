@@ -278,7 +278,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE FUNCTION [dbo].[fn_calculateJaroWinkler](@str1 VARCHAR(MAX), @str2 VARCHAR(MAX)) 
+CREATE FUNCTION fn_calculateJaroWinkler (@str1 VARCHAR(MAX), @str2 VARCHAR(MAX)) 
 RETURNS float As 
 BEGIN
 	DECLARE @jaro_distance			FLOAT
@@ -288,8 +288,8 @@ BEGIN
 
 	SET		@prefixScaleFactor	= 0.1 --Constant = .1
 
-	SET		@jaro_distance	= dbo.fn_calculateJaro(@str1, @str2)	
-	SET		@prefixLength	= dbo.fn_calculatePrefixLength(@str1, @str2)
+	SET		@jaro_distance	= fn_calculateJaro(@str1, @str2)	
+	SET		@prefixLength	= fn_calculatePrefixLength(@str1, @str2)
 
 	SET		@jaro_winkler_distance = @jaro_distance + ((@prefixLength * @prefixScaleFactor) * (1.0 - @jaro_distance))
 	RETURN	@jaro_winkler_distance
