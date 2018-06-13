@@ -40,6 +40,15 @@ export class CbsService {
             .catch(this.handleError);
     }
 
+    public getAllDetailCount(): Observable<number> {
+        return this._http.get<number>(this._url + '/allcount')
+            .catch(this.handleError);
+    }
+    public getAllDetails(): Observable<MasterPatientIndex[]> {
+        return this._http.get<MasterPatientIndex[]>(this._url + '/all')
+            .catch(this.handleError);
+    }
+
     public sendManifest(sendPackage: SendPackage): Observable<boolean> {
         return this._http.post<boolean>(`${this._url}/manifest`, sendPackage)
             .catch(this.handleError);

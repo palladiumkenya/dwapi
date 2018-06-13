@@ -75,6 +75,42 @@ namespace Dwapi.Controller
             }
         }
 
+        [HttpGet("allcount")]
+        public IActionResult GetAllExtractCount()
+        {
+            try
+            {
+                var count = _masterPatientIndexRepository.GetAll().Count();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(Extract)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAllExtracts()
+        {
+            try
+            {
+                var eventExtract = _masterPatientIndexRepository.GetAll().ToList();
+                return Ok(eventExtract);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(Extract)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+
+
         [HttpGet("count")]
         public IActionResult GetExtractCount()
         {

@@ -36,6 +36,8 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public getStatus$: Subscription;
     public get$: Subscription;
     public getCount$: Subscription;
+    public getall$: Subscription;
+    public getallCount$: Subscription;
     public loadRegistry$: Subscription;
     public sendManifest$: Subscription;
     public send$: Subscription;
@@ -45,8 +47,9 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public extract: Extract;
     public extractPatient: ExtractPatient;
     private extractEvent: ExtractEvent;
-    public sendEvent: SendEvent ={};
+    public sendEvent: SendEvent = {};
     public extractDetails: MasterPatientIndex[] = [];
+    public allExtractDetails: MasterPatientIndex[] = [];
     public sendResponse: SendResponse;
     public manifestPackage: SendPackage;
     public mpiPackage: SendPackage;
@@ -56,11 +59,13 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public notifications: Message[];
     public canLoad: boolean = false;
     public loading: boolean = false;
+    public loadingAll: boolean = false;
     public canSend: boolean = false;
     public canSendMpi: boolean = false;
     public sending: boolean = false;
     public sendingManifest: boolean = false;
     public recordCount = 0;
+    public allrecordCount = 0;
     private sdk: string[] = [];
     public colorMappings: any[] = [];
     rowStyleMap: {[key: string]: string};
@@ -215,6 +220,20 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     // console.log(extract);
                 }
             );
+
+        this.getallCount$ = this.cbsService.getAllDetailCount()
+            .subscribe(
+                p => {
+                    this.allrecordCount = p;
+                },
+                e => {
+                    this.messages = [];
+                    this.messages.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
+                },
+                () => {
+                    // console.log(extract);
+                }
+            );
         this.getStatus$ = this.cbsService.getStatus(this.extract.id)
             .subscribe(
                 p => {
@@ -307,7 +326,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     }
 
     private loadDetails(): void {
-        this.loading = true;
+       this.loadingAll=  this.loading = true;
         this.get$ = this.cbsService.getDetails()
             .subscribe(
                 p => {
@@ -319,6 +338,28 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                 },
                 () => {
                     this.loading = false;
+
+                    this.sdk = Array.from(new Set(this.extractDetails.map(extract => extract.sxdmPKValueDoB)));
+                    this.colorMappings = this.sdk.map((sd, idx) => ({sxdmPKValueDoB: sd, color: this.isEven(idx) ? 'white' : 'pink'}));
+                    // this.colorMappings.forEach(value => {
+                    //     this.rowStyleMap[value.sxdmPKValueDoB] = value.color;
+                    //     console.log(this.rowStyleMap);
+                    // });
+
+                }
+            );
+
+        this.getall$ = this.cbsService.getAllDetails()
+            .subscribe(
+                p => {
+                    this.allExtractDetails = p;
+                },
+                e => {
+                    this.messages = [];
+                    this.messages.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
+                },
+                () => {
+                    this.loadingAll = false;
 
                     this.sdk = Array.from(new Set(this.extractDetails.map(extract => extract.sxdmPKValueDoB)));
                     this.colorMappings = this.sdk.map((sd, idx) => ({sxdmPKValueDoB: sd, color: this.isEven(idx) ? 'white' : 'pink'}));
@@ -349,6 +390,15 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
         }
         if (this.get$) {
             this.get$.unsubscribe();
+        }
+        if (this.getCount$) {
+            this.getCount$.unsubscribe();
+        }
+        if (this.getallCount$) {
+            this.getallCount$.unsubscribe();
+        }
+        if (this.getall$) {
+            this.getall$.unsubscribe();
         }
         if (this.loadRegistry$) {
             this.loadRegistry$.unsubscribe();
