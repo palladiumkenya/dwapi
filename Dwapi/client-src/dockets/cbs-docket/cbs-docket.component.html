@@ -10,6 +10,7 @@
         </div>
 
         <div class="ui-toolbar-group-right">
+
             <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send Warehouse" icon="ui-icon-cloud-upload" class="blue-btn"></button>
         </div>
     </p-toolbar>
@@ -22,8 +23,24 @@
         <p-column field="extractEvent.queued" header="Queued"></p-column>
         <p-column field="extractEvent.sent" header="Sent"></p-column>
     </p-dataTable>
+
+    <div class="ui-g" *ngIf="sendingManifest">
+        <div class="ui-g-12">
+            Stage 1 of 2: Sending manifest...
+            <p-progressBar mode="indeterminate"></p-progressBar>
+        </div>
+    </div>
+
+    <div class="ui-g" *ngIf="sending">
+        <div class="ui-g-12">
+            Stage 2 of 2: Sending Extracts, please wait ...
+            <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+        </div>
+    </div>
+
     <p-messages [(value)]="messages"></p-messages>
     <p-growl [(value)]="notifications"></p-growl>
+
 
 </div>
 <div class="card card-w-title">

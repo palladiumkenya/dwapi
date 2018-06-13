@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Model.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Data;
@@ -18,7 +19,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Cbs
 
         public IEnumerable<MasterPatientIndexView> ReadAll()
         {
-            return _context.ClientMasterPatientIndices.AsNoTracking();
+            return _context.ClientMasterPatientIndices.Where(x=>!x.IsSent).AsNoTracking();
         }
     }
 }

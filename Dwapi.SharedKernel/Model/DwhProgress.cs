@@ -14,7 +14,6 @@ namespace Dwapi.SharedKernel.Model
         public int Queued { get; set; }
         public int Sent { get; set; }
 
-
         public DwhProgress(string extract, string status)
         {
             Extract = extract;

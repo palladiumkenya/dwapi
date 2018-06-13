@@ -1,4 +1,5 @@
 import {ExtractEvent} from './extract-event';
+import {SendEvent} from './send-event';
 
 export interface Extract {
     id?: string;
@@ -12,5 +13,6 @@ export interface Extract {
     emrSystemId?: string;
     emr?: string;
     extractEvent?: ExtractEvent;
+    sendEvent?: SendEvent;
     databaseProtocolId?: string;
 }

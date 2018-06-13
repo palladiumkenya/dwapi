@@ -16,6 +16,7 @@ import {RegistryConfigService} from '../../settings/services/registry-config.ser
 import {CentralRegistry} from '../../settings/model/central-registry';
 import {SendPackage} from '../../settings/model/send-package';
 import {SendResponse} from '../../settings/model/send-response';
+import {SendEvent} from '../../settings/model/send-event';
 
 @Component({
   selector: 'liveapp-cbs-docket',
@@ -44,6 +45,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public extract: Extract;
     public extractPatient: ExtractPatient;
     private extractEvent: ExtractEvent;
+    public sendEvent: SendEvent ={};
     public extractDetails: MasterPatientIndex[] = [];
     public sendResponse: SendResponse;
     public manifestPackage: SendPackage;
@@ -56,9 +58,11 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public loading: boolean = false;
     public canSend: boolean = false;
     public canSendMpi: boolean = false;
+    public sending: boolean = false;
+    public sendingManifest: boolean = false;
     public recordCount = 0;
     private sdk: string[] = [];
-public colorMappings: any[] = [];
+    public colorMappings: any[] = [];
     rowStyleMap: {[key: string]: string};
     public centralRegistry: CentralRegistry;
 
@@ -90,6 +94,7 @@ public colorMappings: any[] = [];
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
         this._hubConnection.on('ShowCbsProgress', (dwhProgress: any) => {
+
             if (this.extract) {
                 this.extractEvent = {
                     lastStatus: `${dwhProgress.status}`, found: dwhProgress.found, loaded: dwhProgress.loaded,
@@ -101,6 +106,15 @@ public colorMappings: any[] = [];
                 this.extracts = [...newWithoutPatientExtract, this.extract];
             }
          });
+
+        this._hubConnection.on('ShowCbsSendProgress', (dwhProgress: any) => {
+            console.log(dwhProgress);
+            if (this.extract) {
+                this.sendEvent = {
+                    sentProgress: dwhProgress.progress
+                };
+            }
+        });
     }
 
     public loadData(): void {
@@ -183,7 +197,6 @@ public colorMappings: any[] = [];
 
     public updateEvent(): void {
 
-        console.log(this.extract);
 
         if (!this.extract) {
             return;
@@ -225,6 +238,7 @@ public colorMappings: any[] = [];
 
 
     public send(): void {
+        this.sendingManifest = true;
 
         this.messages = [];
         this.notifications = [];
@@ -240,13 +254,17 @@ public colorMappings: any[] = [];
                     this.messages.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                 },
                 () => {
-                    this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+                  //  this.notifications.push({severity: 'success', summary: 'Manifest sent'});
                     this.sendMpi();
+                    this.sendingManifest = false;
+                    this.updateEvent();
                 }
             );
     }
 
     public sendMpi(): void {
+        this.sendEvent = {sentProgress: 0};
+        this.sending = true;
         this.messages = [];
         this.mpiPackage = this.getMpiPackage();
         this.send$ = this.cbsService.sendMpi(this.mpiPackage)
@@ -260,19 +278,23 @@ public colorMappings: any[] = [];
                 },
                 () => {
                     this.messages.push({severity: 'success', summary: 'sent successfully '});
+                    this.sending = false;
+                    this.updateEvent();
                 }
             );
     }
 
     private getSendManifestPackage(): SendPackage {
         return {
-            destination: this.centralRegistry,
+            extractId: this.extract.id,
+            destination: this.centralRegistry
         };
     }
 
     private getMpiPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
+            extractId: this.extract.id,
         };
     }
 

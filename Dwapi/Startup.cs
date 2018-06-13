@@ -38,6 +38,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
+using Dwapi.Hubs.Cbs;
 using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
@@ -85,6 +86,7 @@ namespace Dwapi
         public static IServiceProvider ServiceProvider;
         public static IHubContext<ExtractActivity> HubContext;
         public static IHubContext<CbsActivity> CbsHubContext;
+        public static IHubContext<CbsSendActivity> CbsSendHubContext;
 
 
         public Startup(IHostingEnvironment env)

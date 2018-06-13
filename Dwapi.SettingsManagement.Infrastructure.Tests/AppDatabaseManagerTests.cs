@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Dwapi.SettingsManagement.Infrastructure.Tests
 {
     [TestFixture]
-    public class DbManagerTests
+    public class AppDatabaseManagerTests
     {
 
 
@@ -114,6 +114,8 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
             
             using (var context = new SettingsContext(optionsBuilder.Options))
             {
+                Console.WriteLine(context.Database.ProviderName);
+
                 var facilities = context.EmrSystems.Include(x => x.Extracts).ToList();
                 Assert.True(facilities.Any());
                 Assert.True(facilities.First().Extracts.Any());

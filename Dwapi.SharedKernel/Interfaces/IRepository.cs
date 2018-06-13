@@ -13,14 +13,16 @@ namespace Dwapi.SharedKernel.Interfaces
         T Get(TId id);
         T Get(Expression<Func<T, bool>> predicate);
         IEnumerable<T> GetAll();
+        IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate);
         void Create(T entity);
         void Update(T entity);
         void CreateOrUpdate(T entity);
         List<T> GetFromSql(string query);
         void Delete(TId id);
-        IDbConnection GetConnection();
+        IDbConnection GetConnection(bool opened=true);
         string GetConnectionString();
         void CloseConnection();
+        void CloseConnection(IDbConnection connection);
         void SaveChanges();
 
     }
