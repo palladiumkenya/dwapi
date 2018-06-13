@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
@@ -36,5 +37,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public DateTime? m6CD4Date { get; set; }
         public string Emr { get; set; }
         public string Project { get; set; }
+        [NotMapped]
+        public override bool CheckError { get; set; }
     }
 }

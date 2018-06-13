@@ -9,5 +9,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh
     public interface IPatientExtractRepository : IRepository<PatientExtract, Guid>
     {
         bool BatchInsert(IEnumerable<PatientExtract> extracts);
+        IEnumerable<PatientExtract> GetAllToSend();
     }
 }

@@ -73,8 +73,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<PatientStatusExtract>().Key(x => x.Id).Table($"{nameof(PatientStatusExtracts)}");
             DapperPlusManager.Entity<PatientVisitExtract>().Key(x => x.Id).Table($"{nameof(PatientVisitExtracts)}");
             DapperPlusManager.Entity<PatientExtract>().Key(x => x.Id).Table($"{nameof(PatientExtracts)}");
-            DapperPlusManager.Entity<MasterPatientIndex>().Key(x => x.Id).Table("MasterPatientIndices");
-            DapperPlusManager.Entity<TempMasterPatientIndex>().Key(x => x.Id).Table("TempMasterPatientIndices");
+            DapperPlusManager.Entity<MasterPatientIndex>().Key(x => x.Id).Table($"{nameof(MasterPatientIndices)}");
+            DapperPlusManager.Entity<TempMasterPatientIndex>().Key(x => x.Id).Table($"{nameof(TempMasterPatientIndices)}");
         }
 
         public override void EnsureSeeded()

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
@@ -22,5 +23,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string TestName { get; set; }
         public int? EnrollmentTest { get; set; }
         public string TestResult { get; set; }
+        [NotMapped]
+        public override bool CheckError { get; set; }
     }
 }
