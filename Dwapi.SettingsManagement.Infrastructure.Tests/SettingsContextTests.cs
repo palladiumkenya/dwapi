@@ -34,7 +34,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         public void should_Setup_Mssql_Database()
         {
             var ctx = _serviceProvider.GetService<SettingsContext>();
-
+            ctx.Database.EnsureDeleted();
             ctx.Database.Migrate();
             ctx.EnsureSeeded();
 
@@ -51,6 +51,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         {
             var ctx = _serviceProviderMysql.GetService<SettingsContext>();
 
+            ctx.Database.EnsureDeleted();
             ctx.Database.Migrate();
             ctx.EnsureSeeded();
 
