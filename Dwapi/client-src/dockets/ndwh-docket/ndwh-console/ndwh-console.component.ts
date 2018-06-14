@@ -302,7 +302,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.sendEvent = {
                 sentProgress: dwhProgress.progress
             };
-
+            this.sending = true;
+            this.canLoadFromEmr = this.canSend = ! this.sending;
         });
     }
 

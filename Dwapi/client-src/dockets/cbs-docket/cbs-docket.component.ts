@@ -117,6 +117,8 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                 this.sendEvent = {
                     sentProgress: dwhProgress.progress
                 };
+                this.sending = true;
+                this.canLoad = this.canSend = ! this.sending;
             }
         });
     }
@@ -325,7 +327,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     }
 
     private loadDetails(): void {
-       this.loadingAll=  this.loading = true;
+       this.loadingAll =  this.loading = true;
         this.get$ = this.cbsService.getDetails()
             .subscribe(
                 p => {
