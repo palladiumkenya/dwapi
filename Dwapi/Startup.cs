@@ -233,6 +233,7 @@ namespace Dwapi
             services.AddScoped<IDwhExtractReader, DwhExtractReader>();
             services.AddScoped<IDwhPackager, DwhPackager>();
             services.AddScoped<IDwhSendService, DwhSendService>();
+            services.AddScoped<IDwhExtractSentServcie, DwhExtractSentServcie>();
 
             services.AddScoped<IAppDatabaseManager, AppDatabaseManager>();
 

@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using Dwapi.UploadManagement.Core.Event.Dwh;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
@@ -105,15 +107,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
+                            DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientArt, message.ArtExtracts.Select(x=>x.Id).ToList(), SendStatus.Sent));
                         }
                         else
                         {
+                           
                             var error = await response.Content.ReadAsStringAsync();
                             throw new Exception(error);
                         }
                     }
                     catch (Exception e)
                     {
+                        DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientArt, message.ArtExtracts.Select(x => x.Id).ToList(), SendStatus.Failed,e.Message));
                         Log.Error(e, $"Send Error");
                         PrintMessage(message);
                         throw;
@@ -130,15 +135,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
+                            DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientBaseline, message.BaselinesExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                         }
                         else
                         {
+                            
                             var error = await response.Content.ReadAsStringAsync();
                             throw new Exception(error);
                         }
                     }
                     catch (Exception e)
                     {
+                        DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientBaseline, message.BaselinesExtracts.Select(x => x.Id).ToList(), SendStatus.Failed,e.Message));
                         Log.Error(e, $"Send Error");
                         PrintMessage(message);
                         throw;
@@ -155,15 +163,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
+                            DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientLab, message.LaboratoryExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                         }
                         else
                         {
+                            
                             var error = await response.Content.ReadAsStringAsync();
                             throw new Exception(error);
                         }
                     }
                     catch (Exception e)
                     {
+                        DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientLab, message.LaboratoryExtracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
                         Log.Error(e, $"Send Error");
                         PrintMessage(message);
                         throw;
@@ -180,6 +191,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
+                            DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientPharmacy, message.PharmacyExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                         }
                         else
                         {
@@ -189,6 +201,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     }
                     catch (Exception e)
                     {
+                        DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientPharmacy, message.PharmacyExtracts.Select(x => x.Id).ToList(), SendStatus.Failed,e.Message));
                         Log.Error(e, $"Send Error");
                         PrintMessage(message);
                         throw;
@@ -205,16 +218,19 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
+                            DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientStatus, message.StatusExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                         }
                         else
                         {
                             var error = await response.Content.ReadAsStringAsync();
+                            
                             throw new Exception(error);
                         }
                     }
                     catch (Exception e)
                     {
                         Log.Error(e, $"Send Error");
+                        DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientStatus, message.StatusExtracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
                         PrintMessage(message);
                         throw;
                     }
@@ -230,6 +246,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
+                            DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientVisit, message.VisitExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                         }
                         else
                         {
@@ -240,13 +257,16 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     catch (Exception e)
                     {
                         Log.Error(e, $"Send Error");
+                        DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientVisit, message.VisitExtracts.Select(x => x.Id).ToList(), SendStatus.Sent,e.Message));
                         PrintMessage(message);
                         throw;
                     }
                 }
 
+
                DomainEvents.Dispatch(new DwhSendNotification(new SendProgress(nameof(PatientExtract), Common.GetProgress(count, total))));
 
+               DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.Patient,new List<Guid>{id},SendStatus.Sent));
             }
 
             return responses;
