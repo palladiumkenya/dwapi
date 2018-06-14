@@ -9,6 +9,7 @@ using System.Linq;
 using Dapper;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace Dwapi.SharedKernel.Infrastructure.Repository
 {
@@ -77,13 +78,29 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public List<T> GetFromSql(string query)
         {
+            var results = new List<T>();
+
             var cn = GetConnectionString();
 
-            using (var connection = new SqlConnection(cn))
+            if (Context.Database.ProviderName.ToLower().Contains("SqlServer".ToLower()))
             {
-                var results = connection.Query<T>(query).ToList();
-                return results;
+                using (var connection = new SqlConnection(cn))
+                {
+                    results = connection.Query<T>(query).ToList();
+
+                }
             }
+
+            if (Context.Database.ProviderName.ToLower().Contains("MySql".ToLower()))
+            {
+                using (var connection = new MySqlConnection(cn))
+                {
+                    results = connection.Query<T>(query).ToList();
+
+                }
+            }
+
+            return results;
         }
 
         public virtual void Delete(TId id)
