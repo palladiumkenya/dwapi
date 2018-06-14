@@ -304,6 +304,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     DROP function IF EXISTS `fn_GetCommonCharacters`;
 					CREATE FUNCTION `fn_GetCommonCharacters` (firstWord VARCHAR(4000), secondWord VARCHAR(4000), matchWindow INT)
 					RETURNS VARCHAR(4000)
+                    READS SQL DATA
+                    DETERMINISTIC
 					BEGIN
 					DECLARE CommonChars VARCHAR(4000);
 						DECLARE copy VARCHAR(4000);
@@ -368,6 +370,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                   	DROP function IF EXISTS `fn_calculateTranspositionstion`;				
 					CREATE FUNCTION `fn_calculateTranspositionstion` (s1_len INT, str1 VARCHAR(4000), str2 VARCHAR(4000))
 					RETURNS INTEGER
+                    READS SQL DATA
+                    DETERMINISTIC
 					BEGIN
 						DECLARE  transpositions INT;
 						DECLARE  i INT;
@@ -393,6 +397,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 DROP function IF EXISTS `fn_calculatePrefixLength`;
 					CREATE FUNCTION `fn_calculatePrefixLength` (firstWord VARCHAR(4000), secondWord VARCHAR(4000))
 					RETURNS INTEGER
+                    READS SQL DATA
+                    DETERMINISTIC
 					BEGIN
 					DECLARE f1_len INT;
 						DECLARE f2_len INT;
@@ -439,6 +445,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 migrationBuilder.Sql(@"DROP function IF EXISTS `fn_calculateMatchWindow`;
                     CREATE FUNCTION `fn_calculateMatchWindow` (s1_len INT, s2_len INT)
 					RETURNS INTEGER
+                    READS SQL DATA
+                    DETERMINISTIC
 					BEGIN
 						DECLARE matchWindow INT;
      
@@ -459,6 +467,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 migrationBuilder.Sql(@"DROP function IF EXISTS `fn_calculateJaro`;
 					CREATE FUNCTION `fn_calculateJaro` ( str1 VARCHAR(4000),  str2 VARCHAR(4000))
 					RETURNS INTEGER
+                    READS SQL DATA
+                    DETERMINISTIC
 					BEGIN
 					DECLARE	 Common1				VARCHAR(4000);
 						DECLARE	 Common2				VARCHAR(4000);
@@ -504,6 +514,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 DROP function IF EXISTS `fn_calculateJaroWinkler`;
 					CREATE FUNCTION `fn_calculateJaroWinkler` (str1 VARCHAR(4000), str2 VARCHAR(4000))
 					RETURNS float
+                    READS SQL DATA
+                    DETERMINISTIC
 					BEGIN
 					DECLARE jaro_distance			FLOAT;
 						DECLARE jaro_winkler_distance	FLOAT;

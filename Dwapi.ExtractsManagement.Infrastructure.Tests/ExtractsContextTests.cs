@@ -13,8 +13,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
     private IServiceProvider _serviceProvider;
     private IServiceProvider _serviceProviderMysql;
-    private const string MssqlConnection = "Data Source=.\\sqlexpress;Initial Catalog=dwapidevx;Persist Security Info=True;User ID=sa;Password=c0nstella;MultipleActiveResultSets=True";
-    private const string MysqlConnection = "server=localhost;port=3306;database=dwapiremote;user=root;password=MySQL";
+    private const string MssqlConnection = "Data Source=.\\koske14;Initial Catalog=dwapidev;Persist Security Info=True;User ID=sa;Password=maun;MultipleActiveResultSets=True";
+    private const string MysqlConnection = "server=localhost;port=3306;database=dwapidev;user=root;password=root";
 
     [OneTimeSetUp]
     public void Init()
@@ -33,6 +33,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
     {
       var ctx = _serviceProvider.GetService<ExtractsContext>();
 
+        ctx.Database.EnsureDeleted();
       ctx.Database.Migrate();
       ctx.EnsureSeeded();
 
@@ -45,6 +46,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
     {
       var ctx = _serviceProviderMysql.GetService<ExtractsContext>();
 
+        ctx.Database.EnsureDeleted();
       ctx.Database.Migrate();
       ctx.EnsureSeeded();
 
