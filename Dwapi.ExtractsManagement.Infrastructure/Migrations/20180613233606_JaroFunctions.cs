@@ -365,8 +365,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
 
                 migrationBuilder.Sql(@"
-                  	DROP function IF EXISTS `fn_calculateTranspositionstion`;
-				
+                  	DROP function IF EXISTS `fn_calculateTranspositionstion`;				
 					CREATE FUNCTION `fn_calculateTranspositionstion` (s1_len INT, str1 VARCHAR(4000), str2 VARCHAR(4000))
 					RETURNS INTEGER
 					BEGIN
@@ -392,7 +391,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                 migrationBuilder.Sql(@"
                 DROP function IF EXISTS `fn_calculatePrefixLength`;
-
 					CREATE FUNCTION `fn_calculatePrefixLength` (firstWord VARCHAR(4000), secondWord VARCHAR(4000))
 					RETURNS INTEGER
 					BEGIN
@@ -439,10 +437,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
 
                 migrationBuilder.Sql(@"DROP function IF EXISTS `fn_calculateMatchWindow`;
-
-					
-
-					CREATE FUNCTION `fn_calculateMatchWindow` (s1_len INT, s2_len INT)
+                    CREATE FUNCTION `fn_calculateMatchWindow` (s1_len INT, s2_len INT)
 					RETURNS INTEGER
 					BEGIN
 						DECLARE matchWindow INT;
@@ -461,8 +456,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
 
 
-                migrationBuilder.Sql(@"DROP function IF EXISTS `fn_calculateMatchWindow`;
-
+                migrationBuilder.Sql(@"DROP function IF EXISTS `fn_calculateJaro`;
 					CREATE FUNCTION `fn_calculateJaro` ( str1 VARCHAR(4000),  str2 VARCHAR(4000))
 					RETURNS INTEGER
 					BEGIN
@@ -508,7 +502,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                 migrationBuilder.Sql(@"
                 DROP function IF EXISTS `fn_calculateJaroWinkler`;
-
 					CREATE FUNCTION `fn_calculateJaroWinkler` (str1 VARCHAR(4000), str2 VARCHAR(4000))
 					RETURNS float
 					BEGIN

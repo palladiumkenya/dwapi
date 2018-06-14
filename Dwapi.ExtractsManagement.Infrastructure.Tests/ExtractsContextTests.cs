@@ -13,8 +13,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
     private IServiceProvider _serviceProvider;
     private IServiceProvider _serviceProviderMysql;
-    private const string MssqlConnection = "Data Source=.\\koske14;Initial Catalog=dwapidevx;Persist Security Info=True;User ID=sa;Password=maun;MultipleActiveResultSets=True";
-    private const string MysqlConnection = "server=127.0.0.1;port=3306;database=dwapidevx;user=root;password=test";
+    private const string MssqlConnection = "Data Source=.\\sqlexpress;Initial Catalog=dwapidevx;Persist Security Info=True;User ID=sa;Password=c0nstella;MultipleActiveResultSets=True";
+    private const string MysqlConnection = "server=localhost;port=3306;database=dwapiremote;user=root;password=MySQL";
 
     [OneTimeSetUp]
     public void Init()
