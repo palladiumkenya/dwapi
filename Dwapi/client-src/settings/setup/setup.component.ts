@@ -55,11 +55,13 @@ export class SetupComponent implements OnInit, OnDestroy {
     }
 
     public loadData(): void {
+
         this.dbMessages = [];
         this.getDatabase$ = this._configService.getDatabase()
             .subscribe(
                 p => {
                     this.appDatabase = p;
+                    console.log('load', this.appDatabase) ;
                 },
                 e => {
                     this.dbMessages.push({severity: 'error', summary: 'Error Loading', detail: <any>e});
@@ -115,6 +117,7 @@ export class SetupComponent implements OnInit, OnDestroy {
     public saveDatabase(): void {
         this.dbMessages = [];
         this.sysMessages = [];
+        console.log('save', this.databaseForm.value) ;
         this.saveDatabase$ = this._configService.saveDatabase(this.databaseForm.value)
             .subscribe(
                 p => {
