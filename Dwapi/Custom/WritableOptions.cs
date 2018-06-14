@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Dwapi.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
@@ -33,7 +34,7 @@ namespace Dwapi.Custom
         public void Update(Action<T> applyChanges)
         {
             var fileProvider = _environment.ContentRootFileProvider;
-            var fileInfo = fileProvider.GetFileInfo(_file);
+            var fileInfo = fileProvider.GetFileInfo(GetFileName());
             var physicalPath = fileInfo.PhysicalPath;
 
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(physicalPath));
@@ -44,6 +45,14 @@ namespace Dwapi.Custom
 
             jObject[_section] = JObject.Parse(JsonConvert.SerializeObject(sectionObject));
             File.WriteAllText(physicalPath, JsonConvert.SerializeObject(jObject, Formatting.Indented));
+        }
+
+        private string GetFileName()
+        {
+            if (_environment.IsDevelopment())
+                return _file.Contains("Development") ? _file : _file.Replace(".json", ".Development.json");
+
+            return _file;
         }
     }
 }
