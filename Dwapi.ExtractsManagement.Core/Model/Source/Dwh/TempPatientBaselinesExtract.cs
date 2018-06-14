@@ -5,12 +5,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     
     public class TempPatientBaselinesExtract : TempExtract
     {
-       
-        public override string ToString()
-        {
-            return $"{SiteCode}-{PatientID}";
-        }
-
         public int? bCD4 { get; set; }
         public DateTime? bCD4Date { get; set; }
         public int? bWAB { get; set; }
@@ -33,7 +27,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? m12CD4Date { get; set; }
         public int? m6CD4 { get; set; }
         public DateTime? m6CD4Date { get; set; }
-        public string Emr { get; set; }
-        public string Project { get; set; }
+      
     }
 }

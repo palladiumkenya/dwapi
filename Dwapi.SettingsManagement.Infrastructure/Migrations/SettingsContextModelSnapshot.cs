@@ -117,7 +117,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("DatabaseProtocolId");
+                    b.Property<Guid?>("DatabaseProtocolId");
 
                     b.Property<string>("Destination");
 
@@ -188,8 +188,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                 {
                     b.HasOne("Dwapi.SettingsManagement.Core.Model.DatabaseProtocol")
                         .WithMany("Extracts")
-                        .HasForeignKey("DatabaseProtocolId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("DatabaseProtocolId");
 
                     b.HasOne("Dwapi.SettingsManagement.Core.Model.Docket")
                         .WithMany("Extracts")

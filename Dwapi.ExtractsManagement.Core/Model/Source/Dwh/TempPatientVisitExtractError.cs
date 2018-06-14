@@ -7,17 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     [Table("vTempPatientVisitExtractError")]
     public class TempPatientVisitExtractError : TempExtract
     {
-       
-
-
-        public override string ToString()
-        {
-            return $"{SiteCode}-{PatientID}";
-        }
-
         public string FacilityName { get; set; }
-        public string Emr { get; set; }
-        public string Project { get; set; }
         public int? VisitId { get; set; }
         public DateTime? VisitDate { get; set; }
         public string Service { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 
@@ -8,7 +9,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Cbs
 {
     public class MasterPatientIndex: Entity<Guid>
     {
-        public int RowId { get; set; }
         public int PatientPk { get; set; }
         public int SiteCode { get; set; }
         public string FacilityName { get; set; }
@@ -107,5 +107,11 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Cbs
         public virtual string Status { get; set; }
         [DoNotRead]
         public virtual DateTime? StatusDate { get; set; }
+
+        [NotMapped]
+        public bool IsSent
+        {
+            get { return !string.IsNullOrWhiteSpace(Status) && Status.IsSameAs(nameof(SendStatus.Sent)); }
+        }
     }
 }

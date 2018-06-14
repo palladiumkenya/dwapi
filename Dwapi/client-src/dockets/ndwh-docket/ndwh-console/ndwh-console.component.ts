@@ -24,6 +24,7 @@ import { ExtractProfile } from '../model/extract-profile';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
 import { EmrConfigService } from '../../../settings/services/emr-config.service';
 import { ExtractEvent } from '../../../settings/model/extract-event';
+import {SendEvent} from '../../../settings/model/send-event';
 
 @Component({
     selector: 'liveapp-ndwh-console',
@@ -33,6 +34,7 @@ import { ExtractEvent } from '../../../settings/model/extract-event';
 export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     @Input() emr: EmrSystem;
     private _hubConnection: HubConnection | undefined;
+    private _sendhubConnection: HubConnection | undefined;
     public async: any;
 
     public emrName: string;
@@ -55,6 +57,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private dwhExtract: DwhExtract;
     private dwhExtracts: DwhExtract[] = [];
     private extractEvent: ExtractEvent;
+    public sendEvent: SendEvent = {};
     public recordCount: number;
 
     public canLoadFromEmr: boolean;
@@ -62,6 +65,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public canSendPatients: boolean = false;
     public manifestPackage: SendPackage;
     public patientPackage: SendPackage;
+    public sending: boolean = false;
+    public sendingManifest: boolean = false;
 
     public errorMessage: Message[];
     public otherMessage: Message[];
@@ -196,7 +201,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
 
     public send(): void {
-
+        this.sendingManifest = true;
         this.errorMessage = [];
         this.notifications = [];
         this.canSendPatients = false;
@@ -213,11 +218,15 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});
                     this.sendPatientExtract();
+                    this.sendingManifest = false;
+                    this.updateEvent();
                 }
             );
     }
 
     public sendPatientExtract(): void {
+        this.sendEvent = {sentProgress: 0};
+        this.sending = true;
         this.errorMessage = [];
         this.patientPackage = this.getPatientExtractPackage();
         this.send$ = this._ndwhSenderService.sendPatientExtracts(this.patientPackage)
@@ -231,6 +240,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 () => {
                     this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
+                    this.sending = false;
+                    this.updateEvent();
                 }
             );
     }
@@ -238,12 +249,14 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private getSendManifestPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'PatientExtract').id
         };
     }
 
     private getPatientExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'PatientExtract').id
         };
     }
 
@@ -255,7 +268,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             )
             .configureLogging(LogLevel.Trace)
             .build();
-        this._hubConnection.serverTimeoutInMilliseconds = 120000;
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
@@ -282,7 +294,16 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.currentExtract
                 ];
             }
-        } );
+        });
+
+        this._hubConnection.on('ShowDwhSendProgress', (dwhProgress: any) => {
+            console.log(dwhProgress);
+
+            this.sendEvent = {
+                sentProgress: dwhProgress.progress
+            };
+
+        });
     }
 
     private getExtractProtocols(

@@ -29,6 +29,6 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
             Demographic = patient;
             ArtExtracts = patient.PatientArtExtracts.ToList();
         }
-
+        public bool HasContents => null != ArtExtracts && ArtExtracts.Any();
     }
 }

@@ -5,24 +5,8 @@ using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
-    public class TempPatientExtract:Entity<Guid>
+    public class TempPatientExtract:TempExtract
     {
-        public int? PatientPK { get; set; }
-        public string PatientID { get; set; }
-        public int? FacilityId { get; set; }
-        public int? SiteCode { get; set; }
-
-        [DoNotRead]
-        public DateTime DateExtracted { get; set; }= DateTime.Now;
-        [DoNotRead]
-        public bool CheckError { get; set; }
-
-        [DoNotRead]
-        [NotMapped]
-        public bool HasError { get; set; }
-
-        public string EMR { get; set; }
-        public string Project { get; set; }
         public string FacilityName { get; set; }
         public string Gender { get; set; }
         public DateTime? DOB { get; set; }

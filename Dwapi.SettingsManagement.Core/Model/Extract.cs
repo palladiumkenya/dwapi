@@ -11,7 +11,7 @@ namespace Dwapi.SettingsManagement.Core.Model
         public string Destination { get; set; }
         public Guid EmrSystemId { get; set; }
         public string DocketId { get; set; }
-        public Guid DatabaseProtocolId { get; set; }
+        public Guid? DatabaseProtocolId { get; set; }
 
         public static Extract CreatePsmart(Guid emrSystemId, string docketId = "PSMART")
         {

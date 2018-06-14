@@ -1,11 +1,12 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
-using Dwapi.Hubs.Dwh;
+using Dwapi.Hubs.Cbs;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
@@ -24,18 +25,20 @@ namespace Dwapi.Controller
         private readonly IMediator _mediator;
         private readonly IExtractStatusService _extractStatusService;
         private readonly IHubContext<CbsActivity> _hubContext;
+        private readonly IHubContext<CbsSendActivity> _hubSendContext;
         private readonly IMasterPatientIndexRepository _masterPatientIndexRepository;
         private readonly ICbsSendService _cbsSendService;
         
 
         public CbsController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<CbsActivity> hubContext, IMasterPatientIndexRepository masterPatientIndexRepository,
-            ICbsSendService cbsSendService)
+            ICbsSendService cbsSendService, IHubContext<CbsSendActivity> hubSendContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _masterPatientIndexRepository = masterPatientIndexRepository;
             _cbsSendService = cbsSendService;
+            Startup.CbsSendHubContext= _hubSendContext = hubSendContext;
             Startup.CbsHubContext = _hubContext = hubContext;
         }
 
@@ -71,6 +74,42 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+        [HttpGet("allcount")]
+        public IActionResult GetAllExtractCount()
+        {
+            try
+            {
+                var count = _masterPatientIndexRepository.GetAll().Count();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(Extract)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAllExtracts()
+        {
+            try
+            {
+                var eventExtract = _masterPatientIndexRepository.GetAll().ToList();
+                return Ok(eventExtract);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(Extract)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+
 
         [HttpGet("count")]
         public IActionResult GetExtractCount()
@@ -114,7 +153,6 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-
                 await _cbsSendService.SendManifestAsync(packageDTO);
                 return Ok();
             }

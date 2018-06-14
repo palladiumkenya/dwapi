@@ -6,20 +6,19 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
     public abstract class TempExtract : Entity<Guid>
     {
-        public int? PatientPK { get; set; }
-        public string PatientID { get; set; }
-        public int? FacilityId { get; set; }
-        public int? SiteCode { get; set; }
-
-        //[DoNotRead]
-        public DateTime DateExtracted { get; set; } = DateTime.Now;
-
-        //[DoNotRead]
-       
+        public virtual int? PatientPK { get; set; }
+        public virtual string PatientID { get; set; }
+        public virtual int? FacilityId { get; set; }
+        public virtual int? SiteCode { get; set; }
+        public virtual DateTime DateExtracted { get; set; } = DateTime.Now;
+        public virtual string Emr { get; set; }
+        public virtual string Project { get; set; }
         public virtual bool CheckError { get; set; }
-
-        //[DoNotRead]
         [NotMapped]
         public bool HasError { get; set; }
+        public override string ToString()
+        {
+            return $"{SiteCode}-{PatientID}";
+        }
     }
 }

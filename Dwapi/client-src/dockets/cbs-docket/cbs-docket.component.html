@@ -10,6 +10,7 @@
         </div>
 
         <div class="ui-toolbar-group-right">
+
             <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send Warehouse" icon="ui-icon-cloud-upload" class="blue-btn"></button>
         </div>
     </p-toolbar>
@@ -22,8 +23,24 @@
         <p-column field="extractEvent.queued" header="Queued"></p-column>
         <p-column field="extractEvent.sent" header="Sent"></p-column>
     </p-dataTable>
+
+    <div class="ui-g" *ngIf="sendingManifest">
+        <div class="ui-g-12">
+            Stage 1 of 2: Sending manifest...
+            <p-progressBar mode="indeterminate"></p-progressBar>
+        </div>
+    </div>
+
+    <div class="ui-g" *ngIf="sending">
+        <div class="ui-g-12">
+            Stage 2 of 2: Sending Extracts, please wait ...
+            <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+        </div>
+    </div>
+
     <p-messages [(value)]="messages"></p-messages>
     <p-growl [(value)]="notifications"></p-growl>
+
 
 </div>
 <div class="card card-w-title">
@@ -36,9 +53,9 @@
                             <button type="button" pButton icon="ui-icon-cloud-download" iconPos="left" label="Export All" (click)="persons.exportCSV()" class="blue-btn"></button>
                     </div>
             </p-toolbar>
-            <p-dataTable [value]="extractDetails" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
+            <p-dataTable [value]="allExtractDetails" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
                 [loading]="loading" loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true"
-                [paginator]="true" [rows]="200" [totalRecords]="recordCount" exportFilename="Dwapi" #persons>
+                [paginator]="true" [rows]="25" [totalRecords]="recordCount" exportFilename="DwapiMpiAll" #persons>
                 <p-column field="serial" header="Serial" [filter]="true"></p-column>
                 <p-column field="firstName_Normalized" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
                 <p-column field="middleName_Normalized" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
@@ -55,11 +72,30 @@
 
             </p-dataTable>
         </p-tabPanel>
-        <p-tabPanel header="Master Patient Index Validation Summary">
-            Not Impelemented
-        </p-tabPanel>
-        <p-tabPanel header="Master Patient Index Validation Summary">
-            Not Impelemented
+        <p-tabPanel header="Master Patient Duplicates Summary">
+            <p-toolbar>
+                <div class="ui-toolbar-group-left">
+                    <button type="button" pButton icon="ui-icon-cloud-download" iconPos="left" label="Export All" (click)="duplicatepersons.exportCSV()" class="blue-btn"></button>
+                </div>
+            </p-toolbar>
+            <p-dataTable [value]="extractDetails" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
+                         [loading]="loadingAll" loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true"
+                         [paginator]="true" [rows]="25" [totalRecords]="recordCount" exportFilename="DwapiMpiDups" #duplicatepersons>
+                <p-column field="serial" header="Serial" [filter]="true"></p-column>
+                <p-column field="firstName_Normalized" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
+                <p-column field="middleName_Normalized" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+                <p-column field="lastName_Normalized" header="Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+                <p-column field="patientPhoneNumber" header="Phone"></p-column>
+                <p-column field="gender" header="Gender" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
+                <p-column field="dob" header="Birth Date" sortable="true">
+                    <ng-template let-col let-detail="rowData" pTemplate="body">
+                        {{detail.dob | date: 'dd MMM yyyy'}}
+                    </ng-template>
+                </p-column>
+                <p-column field="jaroWinklerScore" header="JaroWinklerScore" sortable="true"></p-column>
+                <p-column field="sxdmPKValueDoB" header="sxdmPKValueDoB" sortable="true"></p-column>
+
+            </p-dataTable>
         </p-tabPanel>
     </p-tabView>
 </div>

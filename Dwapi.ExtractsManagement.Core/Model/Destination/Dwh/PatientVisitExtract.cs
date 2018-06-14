@@ -1,23 +1,15 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
-    
-    public class PatientVisitExtract : TempExtract
+
+    public class PatientVisitExtract : ClientExtract
     {
-       
-
-
-        public override string ToString()
-        {
-            return $"{SiteCode}-{PatientID}";
-        }
-
         public string FacilityName { get; set; }
-        public string Emr { get; set; }
-        public string Project { get; set; }
         public int? VisitId { get; set; }
         public DateTime? VisitDate { get; set; }
         public string Service { get; set; }
@@ -44,7 +36,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string PwP { get; set; }
         public decimal? GestationAge { get; set; }
         public DateTime? NextAppointmentDate { get; set; }
-        [NotMapped]
-        public override bool CheckError { get; set; }
     }
 }

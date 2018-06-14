@@ -27,7 +27,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
     {
         private readonly string _authToken = @"1ba47c2a-6e05-11e8-adc0-fa7ae01bbebc";
         private readonly string _subId = "DWAPI";
-        private readonly string url = "http://localhost:21751";
+        private readonly string url = "http://192.168.100.8/dwapi";
 
         private IDwhSendService _dwhSendService; 
         private IServiceProvider _serviceProvider;

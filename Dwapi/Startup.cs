@@ -38,6 +38,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
+using Dwapi.Hubs.Cbs;
 using Dwapi.Hubs.Dwh;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
@@ -84,7 +85,9 @@ namespace Dwapi
         public IServiceCollection Service;
         public static IServiceProvider ServiceProvider;
         public static IHubContext<ExtractActivity> HubContext;
+        public static IHubContext<DwhSendActivity> DwhSendHubContext;
         public static IHubContext<CbsActivity> CbsHubContext;
+        public static IHubContext<CbsSendActivity> CbsSendHubContext;
 
 
         public Startup(IHostingEnvironment env)
@@ -290,6 +293,8 @@ namespace Dwapi
                 {
                     routes.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}");
                     routes.MapHub<CbsActivity>($"/{nameof(CbsActivity).ToLower()}");
+                    routes.MapHub<DwhSendActivity>($"/{nameof(DwhSendActivity).ToLower()}");
+                    routes.MapHub<CbsSendActivity>($"/{nameof(CbsSendActivity).ToLower()}");
                 }
             );
 

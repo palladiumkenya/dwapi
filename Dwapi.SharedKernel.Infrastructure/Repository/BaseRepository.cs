@@ -39,6 +39,11 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             return DbSet.AsNoTracking();
         }
 
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate)
+        {
+            return DbSet.Where(predicate).AsNoTracking(); 
+        }
+
         public virtual void Create(T entity)
         {
             if (null != entity)
@@ -87,15 +92,18 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             Delete(entity);
         }
 
-        public IDbConnection GetConnection()
+        public IDbConnection GetConnection(bool opened = true)
         {
             if (null == _connection)
             {
                 _connection = Context.Database.GetDbConnection();
+            }
+
+            if (opened)
+            {
                 if (_connection.State != ConnectionState.Open)
                     _connection.Open();
             }
-
             return _connection;
         }
 
@@ -106,11 +114,16 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public void CloseConnection()
         {
-            if (null != _connection)
+            CloseConnection(_connection);
+        }
+
+        public void CloseConnection(IDbConnection connection)
+        {
+            if (null != connection)
             {
                 try
                 {
-                    _connection.Close();
+                    connection.Close();
                 }
                 catch { }
             }

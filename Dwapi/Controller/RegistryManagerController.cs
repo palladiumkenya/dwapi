@@ -76,7 +76,7 @@ namespace Dwapi.Controller
 
             try
             {
-                _registryManagerService.SaveDefault(entity);
+                _registryManagerService.Save(entity);
                 return Ok();
             }
             catch (Exception e)

@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Exchange;
+using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
+using Dwapi.UploadManagement.Core.Notifications;
+using Dwapi.UploadManagement.Core.Notifications.Dwh;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -72,9 +78,14 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             var client = new HttpClient();
             var responses = new List<string>();
 
-            var ids = _reader.ReadAllIds();
+            var ids = _reader.ReadAllIds().ToList();
+            int count = 0;
+            int total = ids.Count;
+
             foreach (var id in ids)
             {
+                count++;
+
                 var patient = _packager.GenerateExtracts(id);
                 var artMessageBag = ArtMessageBag.Create(patient);
                 var baselineMessageBag = BaselineMessageBag.Create(patient);
@@ -84,7 +95,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 var visitsMessageBag = VisitsMessageBag.Create(patient);
 
 
-                foreach (var message in artMessageBag.Messages)
+                foreach (var message in artMessageBag.Messages.Where(x => x.HasContents))
                 {
                     try
                     {
@@ -104,11 +115,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     catch (Exception e)
                     {
                         Log.Error(e, $"Send Error");
+                        PrintMessage(message);
                         throw;
                     }
                 }
 
-                foreach (var message in baselineMessageBag.Messages)
+                foreach (var message in baselineMessageBag.Messages.Where(x => x.HasContents))
                 {
                     try
                     {
@@ -128,15 +140,16 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     catch (Exception e)
                     {
                         Log.Error(e, $"Send Error");
+                        PrintMessage(message);
                         throw;
                     }
                 }
 
-                foreach (var message in labMessageBag.Messages)
+                foreach (var message in labMessageBag.Messages.Where(x => x.HasContents))
                 {
                     try
                     {
-                        var msg = JsonConvert.SerializeObject(message);
+                     
                         var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{labMessageBag.EndPoint}"), message);
                         if (response.IsSuccessStatusCode)
                         {
@@ -152,11 +165,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     catch (Exception e)
                     {
                         Log.Error(e, $"Send Error");
+                        PrintMessage(message);
                         throw;
                     }
                 }
 
-                foreach (var message in pharmacyMessageBag.Messages)
+                foreach (var message in pharmacyMessageBag.Messages.Where(x => x.HasContents))
                 {
                     try
                     {
@@ -176,11 +190,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     catch (Exception e)
                     {
                         Log.Error(e, $"Send Error");
+                        PrintMessage(message);
                         throw;
                     }
                 }
 
-                foreach (var message in statusMessageBag.Messages)
+                foreach (var message in statusMessageBag.Messages.Where(x => x.HasContents))
                 {
                     try
                     {
@@ -200,11 +215,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     catch (Exception e)
                     {
                         Log.Error(e, $"Send Error");
+                        PrintMessage(message);
                         throw;
                     }
                 }
                 
-                foreach (var message in visitsMessageBag.Messages)
+                foreach (var message in visitsMessageBag.Messages.Where(x => x.HasContents))
                 {
                     try
                     {
@@ -224,13 +240,30 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     catch (Exception e)
                     {
                         Log.Error(e, $"Send Error");
+                        PrintMessage(message);
                         throw;
                     }
                 }
 
+               DomainEvents.Dispatch(new DwhSendNotification(new SendProgress(nameof(PatientExtract), Common.GetProgress(count, total))));
+
             }
 
             return responses;
+        }
+
+
+        private void PrintMessage(object message)
+        {
+            try
+            {
+                Log.Debug(new string('+', 40));
+                Log.Debug(JsonConvert.SerializeObject(message, Formatting.Indented));
+                Log.Debug(new string('+', 40));
+            }
+            catch
+            {
+            }
         }
     }
 }

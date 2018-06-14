@@ -28,6 +28,6 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
             Demographic = patient;
             StatusExtracts = patient.PatientStatusExtracts.ToList();
         }
-
+        public bool HasContents => null != StatusExtracts && StatusExtracts.Any();
     }
 }

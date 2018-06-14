@@ -8,6 +8,7 @@ namespace Dwapi.SharedKernel.DTOs
     public class SendManifestPackageDTO
     {
         public Registry Destination { get; set; }
+        public Guid ExtractId { get; set; }
         public string Endpoint { get; private set; }
 
         public SendManifestPackageDTO()

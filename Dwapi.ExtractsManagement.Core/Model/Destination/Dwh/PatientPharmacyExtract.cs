@@ -1,20 +1,14 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
     
-    public class PatientPharmacyExtract : TempExtract
+    public class PatientPharmacyExtract : ClientExtract
     {
-     
-
-
-        public override string ToString()
-        {
-            return $"{SiteCode}-{PatientID}";
-        }
-
         public int? VisitID { get; set; }
         public string Drug { get; set; }
         public string Provider { get; set; }
@@ -25,9 +19,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string RegimenLine { get; set; }
         public string PeriodTaken { get; set; }
         public string ProphylaxisType { get; set; }
-        public string Emr { get; set; }
-        public string Project { get; set; }
-        [NotMapped]
-        public override bool CheckError { get; set; }
     }
 }

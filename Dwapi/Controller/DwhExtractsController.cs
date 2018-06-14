@@ -23,13 +23,15 @@ namespace Dwapi.Controller
         private readonly IMediator _mediator;
         private readonly IExtractStatusService _extractStatusService;
         private readonly IHubContext<ExtractActivity> _hubContext;
+        private readonly IHubContext<DwhSendActivity> _hubSendContext;
         private readonly IDwhSendService _dwhSendService;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService, IHubContext<DwhSendActivity> hubSendContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _dwhSendService = dwhSendService;
+            Startup.DwhSendHubContext= _hubSendContext = hubSendContext;
             Startup.HubContext= _hubContext = hubContext;
         }
 

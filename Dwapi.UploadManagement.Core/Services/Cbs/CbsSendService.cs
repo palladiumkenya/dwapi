@@ -2,13 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Exchange;
+using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using Dwapi.UploadManagement.Core.Event;
+using Dwapi.UploadManagement.Core.Event.Cbs;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
+using Dwapi.UploadManagement.Core.Notifications;
+using Dwapi.UploadManagement.Core.Notifications.Cbs;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -73,9 +83,14 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
             var responses = new List<SendMpiResponse>();
 
             var client = new HttpClient();
+            int sendCound=0;
+            int count = 0;
+            int total = messageBag.Messages.Count;
+            DomainEvents.Dispatch(new CbsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
 
             foreach (var message in messageBag.Messages)
             {
+                count++;
                 try
                 {
                     var msg = JsonConvert.SerializeObject(message);
@@ -84,10 +99,15 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
                     {
                         var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
                         responses.Add(content);
+
+                        var sentIds = message.MasterPatientIndices.Select(x => x.Id).ToList();
+                        sendCound += sentIds.Count;
+                        DomainEvents.Dispatch(new CbsExtractSentEvent(sentIds, SendStatus.Sent));
                     }
                     else
                     {
                         var error = await response.Content.ReadAsStringAsync();
+                        DomainEvents.Dispatch(new CbsExtractSentEvent(message.MasterPatientIndices.Select(x => x.Id).ToList(), SendStatus.Failed,error));
                         throw new Exception(error);
                     }
                 }
@@ -96,7 +116,11 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
                     Log.Error(e, $"Send Manifest Error");
                     throw;
                 }
+
+                DomainEvents.Dispatch(new CbsSendNotification(new SendProgress(nameof(MasterPatientIndex), Common.GetProgress(count,total))));
             }
+
+            DomainEvents.Dispatch(new CbsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
             return responses;
         }

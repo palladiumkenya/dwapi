@@ -20,6 +20,9 @@ namespace Dwapi.SharedKernel.Events
 
         public static void Dispatch(IDomainEvent domainEvent)
         {
+            if(null==_handlers)
+                return;
+
             foreach (Type handlerType in _handlers)
             {
                 bool canHandleEvent = handlerType.GetInterfaces()
