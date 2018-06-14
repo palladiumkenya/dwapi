@@ -20,7 +20,7 @@
                         <p-column field="version" header="Version"></p-column>
                         <p-column styleClass="col-button">
                             <ng-template let-emr="rowData" pTemplate="body">
-                                <button type="button" pButton (click)="confirmDelete(emr)" icon="ui-icon-close" class="pink-btn"></button>
+                                <p-splitButton label="Actions" icon="ui-icon-settings"  [model]="items"></p-splitButton>
                             </ng-template>
                         </p-column>
                     </p-dataTable>

@@ -28,6 +28,10 @@ export class EmrConfigService {
             .catch(this.handleError);
     }
 
+    public makeEmrDefault(emr: EmrSystem): Observable<boolean> {
+        return this._http.post<boolean>(this._url + '/setDefault', emr)
+            .catch(this.handleError);
+    }
     public delete(id: string): Observable<number> {
         return this._http.delete<number>(this._url + '/' + id)
             .catch(this.handleError);

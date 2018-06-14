@@ -9,11 +9,9 @@
                     <p-header>EMR Systems</p-header>
                     <p-footer>showing {{recordCount}} EMR(s)</p-footer>
                     <p-column field="name" header="Name"></p-column>
-                    <p-column field="version" header="Version"></p-column>
-                    <p-column styleClass="col-button">
+                    <p-column styleClass="col-button" header="Actions ">
                         <ng-template let-emr="rowData" pTemplate="body">
-                            <button type="button" pButton (click)="confirmDelete(emr)" icon="ui-icon-close"
-                                    class="pink-btn"></button>
+                            <p-splitButton label="Actions" icon="ui-icon-settings"  [model]="items"></p-splitButton>
                         </ng-template>
                     </p-column>
                 </p-dataTable>

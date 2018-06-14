@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BreadcrumbService} from '../../../app/breadcrumb.service';
 import {Subscription} from 'rxjs/Subscription';
-import {ConfirmationService, Message} from 'primeng/api';
+import {ConfirmationService, MenuItem, Message} from 'primeng/api';
 import {EmrSystem} from '../../model/emr-system';
 import {EmrConfigService} from '../../services/emr-config.service';
 
@@ -21,6 +21,7 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
     public getCount$: Subscription;
     public save$: Subscription;
     public delete$: Subscription;
+    public makeDefault$: Subscription;
 
     public recordCount: number;
 
@@ -32,8 +33,11 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
     public emrDialog: EmrSystem;
     public protocolTitle: string;
     public displayDialog: boolean;
+    public isMadeDefault: boolean;
 
     public canMakeDefault: boolean;
+
+    items: MenuItem[];
 
     public constructor(public breadcrumbService: BreadcrumbService,
                        confirmationService: ConfirmationService, emrConfigService: EmrConfigService) {
@@ -43,6 +47,10 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
         ]);
         this._confirmationService = confirmationService;
         this._emrConfigService = emrConfigService;
+        this.items = [
+            {label: 'Make Default', icon: 'fa-close', command: () => this.makeDefault()},
+            {label: 'Delete', icon: 'fa-close', command: () => this.confirmDelete()}
+        ];
     }
 
     public ngOnInit() {
@@ -142,13 +150,55 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
                 });
     }
 
-    public confirmDelete(emr: EmrSystem) {
+    public makeDefault(): void {
+        if ( this.selectedEmr) {
+            return;
+        }
+        this.isMadeDefault = false;
+        this.errorMessage = [];
+        this.makeDefault$ = this._emrConfigService.makeEmrDefault(this.selectedEmr)
+            .subscribe(
+                p => {
+                    this.isMadeDefault = p;
+                },
+
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: `Error setting ${this.selectedEmr.name} as default `,
+                        detail: <any>e
+                    });
+                },
+
+                () => {
+                    this.errorMessage = [];
+                    this.otherMessage = [];
+                    if (this.isMadeDefault) {
+                        this.errorMessage.push({
+                            severity: 'success',
+                            summary: `${this.selectedEmr.name} was set as default successfully`
+                        });
+                    } else {
+                        this.errorMessage.push({
+                            severity: 'error', summary: `${this.selectedEmr.name}cannot be set as default `
+                        });
+                    }
+                }
+            );
+    }
+
+    public confirmDelete() {
+
+        if (!this.selectedEmr) {
+            return;
+        }
         this._confirmationService.confirm({
             message: 'Do you want to delete record(s)?',
             header: 'Delete Confirmation',
             icon: 'ui-icon-delete',
             accept: () => {
-                this.deleteEmr(emr);
+                this.deleteEmr(this.selectedEmr);
             },
             reject: () => {
                 this.loadData();
@@ -171,6 +221,9 @@ export class EmrConfigComponent implements OnInit, OnDestroy {
         }
         if (this.getCount$) {
             this.getCount$.unsubscribe();
+        }
+        if (this.makeDefault$) {
+            this.makeDefault$.unsubscribe();
         }
     }
 }
