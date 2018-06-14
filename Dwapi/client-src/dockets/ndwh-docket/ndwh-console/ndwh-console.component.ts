@@ -34,6 +34,7 @@ import {SendEvent} from '../../../settings/model/send-event';
 export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     @Input() emr: EmrSystem;
     private _hubConnection: HubConnection | undefined;
+    private _sendhubConnection: HubConnection | undefined;
     public async: any;
 
     public emrName: string;
@@ -267,7 +268,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             )
             .configureLogging(LogLevel.Trace)
             .build();
-        this._hubConnection.serverTimeoutInMilliseconds = 120000;
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
@@ -294,15 +294,15 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.currentExtract
                 ];
             }
-        } );
+        });
 
         this._hubConnection.on('ShowDwhSendProgress', (dwhProgress: any) => {
             console.log(dwhProgress);
-            if (this.extracts) {
-                this.sendEvent = {
-                    sentProgress: dwhProgress.progress
-                };
-            }
+
+            this.sendEvent = {
+                sentProgress: dwhProgress.progress
+            };
+
         });
     }
 

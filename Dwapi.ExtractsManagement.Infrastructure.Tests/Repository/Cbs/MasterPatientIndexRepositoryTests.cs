@@ -4,7 +4,6 @@ using System.Linq;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
-using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;

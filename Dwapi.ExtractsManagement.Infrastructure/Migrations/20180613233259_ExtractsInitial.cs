@@ -3,23 +3,105 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
-    public partial class AllDwhExtracts : Migration
+    public partial class ExtractsInitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ExtractHistory",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    StatusDate = table.Column<DateTime>(nullable: true),
+                    Stats = table.Column<int>(nullable: true),
+                    StatusInfo = table.Column<string>(nullable: true),
+                    ExtractId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExtractHistory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MasterPatientIndices",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    PatientPk = table.Column<int>(nullable: false),
+                    SiteCode = table.Column<int>(nullable: false),
+                    FacilityName = table.Column<string>(nullable: true),
+                    Serial = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    MiddleName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    FirstName_Normalized = table.Column<string>(nullable: true),
+                    MiddleName_Normalized = table.Column<string>(nullable: true),
+                    LastName_Normalized = table.Column<string>(nullable: true),
+                    PatientPhoneNumber = table.Column<string>(nullable: true),
+                    PatientAlternatePhoneNumber = table.Column<string>(nullable: true),
+                    Gender = table.Column<string>(nullable: true),
+                    DOB = table.Column<DateTime>(nullable: true),
+                    MaritalStatus = table.Column<string>(nullable: true),
+                    PatientSource = table.Column<string>(nullable: true),
+                    PatientCounty = table.Column<string>(nullable: true),
+                    PatientSubCounty = table.Column<string>(nullable: true),
+                    PatientVillage = table.Column<string>(nullable: true),
+                    PatientID = table.Column<string>(nullable: true),
+                    National_ID = table.Column<string>(nullable: true),
+                    NHIF_Number = table.Column<string>(nullable: true),
+                    Birth_Certificate = table.Column<string>(nullable: true),
+                    CCC_Number = table.Column<string>(nullable: true),
+                    TB_Number = table.Column<string>(nullable: true),
+                    ContactName = table.Column<string>(nullable: true),
+                    ContactRelation = table.Column<string>(nullable: true),
+                    ContactPhoneNumber = table.Column<string>(nullable: true),
+                    ContactAddress = table.Column<string>(nullable: true),
+                    DateConfirmedHIVPositive = table.Column<DateTime>(nullable: true),
+                    StartARTDate = table.Column<DateTime>(nullable: true),
+                    StartARTRegimenCode = table.Column<string>(nullable: true),
+                    StartARTRegimenDesc = table.Column<string>(nullable: true),
+                    dmFirstName = table.Column<string>(nullable: true),
+                    dmLastName = table.Column<string>(nullable: true),
+                    sxFirstName = table.Column<string>(nullable: true),
+                    sxLastName = table.Column<string>(nullable: true),
+                    sxPKValue = table.Column<string>(nullable: true),
+                    dmPKValue = table.Column<string>(nullable: true),
+                    sxdmPKValue = table.Column<string>(nullable: true),
+                    sxMiddleName = table.Column<string>(nullable: true),
+                    dmMiddleName = table.Column<string>(nullable: true),
+                    sxPKValueDoB = table.Column<string>(nullable: true),
+                    dmPKValueDoB = table.Column<string>(nullable: true),
+                    sxdmPKValueDoB = table.Column<string>(nullable: true),
+                    JaroWinklerScore = table.Column<double>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: false),
+                    Processed = table.Column<bool>(nullable: true),
+                    QueueId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    StatusDate = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MasterPatientIndices", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "PatientArtExtracts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PatientPK = table.Column<int>(nullable: true),
+                    PatientPK = table.Column<int>(nullable: false),
+                    SiteCode = table.Column<int>(nullable: false),
                     PatientID = table.Column<string>(nullable: true),
                     FacilityId = table.Column<int>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: true),
-                    DateExtracted = table.Column<DateTime>(nullable: false),
-                    FacilityName = table.Column<string>(nullable: true),
+                    Processed = table.Column<bool>(nullable: true),
+                    QueueId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    StatusDate = table.Column<DateTime>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: true),
                     Emr = table.Column<string>(nullable: true),
                     Project = table.Column<string>(nullable: true),
+                    FacilityName = table.Column<string>(nullable: true),
                     DOB = table.Column<DateTime>(nullable: true),
                     AgeEnrollment = table.Column<decimal>(nullable: true),
                     AgeARTStart = table.Column<decimal>(nullable: true),
@@ -53,12 +135,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PatientPK = table.Column<int>(nullable: true),
+                    PatientPK = table.Column<int>(nullable: false),
+                    SiteCode = table.Column<int>(nullable: false),
                     PatientID = table.Column<string>(nullable: true),
                     FacilityId = table.Column<int>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: true),
-                    DateExtracted = table.Column<DateTime>(nullable: false),
-                    CheckError = table.Column<bool>(nullable: false),
+                    Processed = table.Column<bool>(nullable: true),
+                    QueueId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    StatusDate = table.Column<DateTime>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: true),
+                    Emr = table.Column<string>(nullable: true),
+                    Project = table.Column<string>(nullable: true),
                     bCD4 = table.Column<int>(nullable: true),
                     bCD4Date = table.Column<DateTime>(nullable: true),
                     bWAB = table.Column<int>(nullable: true),
@@ -80,9 +167,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     m12CD4 = table.Column<int>(nullable: true),
                     m12CD4Date = table.Column<DateTime>(nullable: true),
                     m6CD4 = table.Column<int>(nullable: true),
-                    m6CD4Date = table.Column<DateTime>(nullable: true),
-                    Emr = table.Column<string>(nullable: true),
-                    Project = table.Column<string>(nullable: true)
+                    m6CD4Date = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -90,20 +175,66 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PatientExtracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    PatientPK = table.Column<int>(nullable: false),
+                    SiteCode = table.Column<int>(nullable: false),
+                    PatientID = table.Column<string>(nullable: true),
+                    FacilityId = table.Column<int>(nullable: true),
+                    Processed = table.Column<bool>(nullable: true),
+                    QueueId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    StatusDate = table.Column<DateTime>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: true),
+                    Emr = table.Column<string>(nullable: true),
+                    Project = table.Column<string>(nullable: true),
+                    FacilityName = table.Column<string>(nullable: true),
+                    Gender = table.Column<string>(nullable: true),
+                    DOB = table.Column<DateTime>(nullable: true),
+                    RegistrationDate = table.Column<DateTime>(nullable: true),
+                    RegistrationAtCCC = table.Column<DateTime>(nullable: true),
+                    RegistrationATPMTCT = table.Column<DateTime>(nullable: true),
+                    RegistrationAtTBClinic = table.Column<DateTime>(nullable: true),
+                    PatientSource = table.Column<string>(nullable: true),
+                    Region = table.Column<string>(nullable: true),
+                    District = table.Column<string>(nullable: true),
+                    Village = table.Column<string>(nullable: true),
+                    ContactRelation = table.Column<string>(nullable: true),
+                    LastVisit = table.Column<DateTime>(nullable: true),
+                    MaritalStatus = table.Column<string>(nullable: true),
+                    EducationLevel = table.Column<string>(nullable: true),
+                    DateConfirmedHIVPositive = table.Column<DateTime>(nullable: true),
+                    PreviousARTExposure = table.Column<string>(nullable: true),
+                    DatePreviousARTStart = table.Column<DateTime>(nullable: true),
+                    StatusAtCCC = table.Column<string>(nullable: true),
+                    StatusAtPMTCT = table.Column<string>(nullable: true),
+                    StatusAtTBClinic = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PatientExtracts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PatientLaboratoryExtracts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PatientPK = table.Column<int>(nullable: true),
+                    PatientPK = table.Column<int>(nullable: false),
+                    SiteCode = table.Column<int>(nullable: false),
                     PatientID = table.Column<string>(nullable: true),
                     FacilityId = table.Column<int>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: true),
-                    DateExtracted = table.Column<DateTime>(nullable: false),
-                    CheckError = table.Column<bool>(nullable: false),
-                    FacilityName = table.Column<string>(nullable: true),
-                    SatelliteName = table.Column<string>(nullable: true),
+                    Processed = table.Column<bool>(nullable: true),
+                    QueueId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    StatusDate = table.Column<DateTime>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: true),
                     Emr = table.Column<string>(nullable: true),
                     Project = table.Column<string>(nullable: true),
+                    FacilityName = table.Column<string>(nullable: true),
+                    SatelliteName = table.Column<string>(nullable: true),
                     VisitId = table.Column<int>(nullable: true),
                     OrderedByDate = table.Column<DateTime>(nullable: true),
                     ReportedByDate = table.Column<DateTime>(nullable: true),
@@ -121,12 +252,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PatientPK = table.Column<int>(nullable: true),
+                    PatientPK = table.Column<int>(nullable: false),
+                    SiteCode = table.Column<int>(nullable: false),
                     PatientID = table.Column<string>(nullable: true),
                     FacilityId = table.Column<int>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: true),
-                    DateExtracted = table.Column<DateTime>(nullable: false),
-                    CheckError = table.Column<bool>(nullable: false),
+                    Processed = table.Column<bool>(nullable: true),
+                    QueueId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    StatusDate = table.Column<DateTime>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: true),
+                    Emr = table.Column<string>(nullable: true),
+                    Project = table.Column<string>(nullable: true),
                     VisitID = table.Column<int>(nullable: true),
                     Drug = table.Column<string>(nullable: true),
                     Provider = table.Column<string>(nullable: true),
@@ -136,9 +272,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     TreatmentType = table.Column<string>(nullable: true),
                     RegimenLine = table.Column<string>(nullable: true),
                     PeriodTaken = table.Column<string>(nullable: true),
-                    ProphylaxisType = table.Column<string>(nullable: true),
-                    Emr = table.Column<string>(nullable: true),
-                    Project = table.Column<string>(nullable: true)
+                    ProphylaxisType = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,15 +284,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PatientPK = table.Column<int>(nullable: true),
+                    PatientPK = table.Column<int>(nullable: false),
+                    SiteCode = table.Column<int>(nullable: false),
                     PatientID = table.Column<string>(nullable: true),
                     FacilityId = table.Column<int>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: true),
-                    DateExtracted = table.Column<DateTime>(nullable: false),
-                    CheckError = table.Column<bool>(nullable: false),
-                    FacilityName = table.Column<string>(nullable: true),
+                    Processed = table.Column<bool>(nullable: true),
+                    QueueId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    StatusDate = table.Column<DateTime>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: true),
                     Emr = table.Column<string>(nullable: true),
                     Project = table.Column<string>(nullable: true),
+                    FacilityName = table.Column<string>(nullable: true),
                     ExitDescription = table.Column<string>(nullable: true),
                     ExitDate = table.Column<DateTime>(nullable: true),
                     ExitReason = table.Column<string>(nullable: true)
@@ -173,15 +310,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PatientPK = table.Column<int>(nullable: true),
+                    PatientPK = table.Column<int>(nullable: false),
+                    SiteCode = table.Column<int>(nullable: false),
                     PatientID = table.Column<string>(nullable: true),
                     FacilityId = table.Column<int>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: true),
-                    DateExtracted = table.Column<DateTime>(nullable: false),
-                    CheckError = table.Column<bool>(nullable: false),
-                    FacilityName = table.Column<string>(nullable: true),
+                    Processed = table.Column<bool>(nullable: true),
+                    QueueId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    StatusDate = table.Column<DateTime>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: true),
                     Emr = table.Column<string>(nullable: true),
                     Project = table.Column<string>(nullable: true),
+                    FacilityName = table.Column<string>(nullable: true),
                     VisitId = table.Column<int>(nullable: true),
                     VisitDate = table.Column<DateTime>(nullable: true),
                     Service = table.Column<string>(nullable: true),
@@ -215,6 +355,87 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PsmartStage",
+                columns: table => new
+                {
+                    EId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: true),
+                    Shr = table.Column<string>(nullable: true),
+                    Date_Created = table.Column<DateTime>(nullable: true),
+                    Status = table.Column<string>(maxLength: 100, nullable: true),
+                    Status_Date = table.Column<DateTime>(nullable: true),
+                    Uuid = table.Column<string>(nullable: true),
+                    Emr = table.Column<string>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: true),
+                    DateStaged = table.Column<DateTime>(nullable: false),
+                    DateSent = table.Column<DateTime>(nullable: true),
+                    RequestId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PsmartStage", x => x.EId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TempMasterPatientIndices",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    PatientPk = table.Column<int>(nullable: true),
+                    SiteCode = table.Column<int>(nullable: true),
+                    FacilityName = table.Column<string>(nullable: true),
+                    Serial = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    MiddleName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    FirstName_Normalized = table.Column<string>(nullable: true),
+                    MiddleName_Normalized = table.Column<string>(nullable: true),
+                    LastName_Normalized = table.Column<string>(nullable: true),
+                    PatientPhoneNumber = table.Column<string>(nullable: true),
+                    PatientAlternatePhoneNumber = table.Column<string>(nullable: true),
+                    Gender = table.Column<string>(nullable: true),
+                    DOB = table.Column<DateTime>(nullable: true),
+                    MaritalStatus = table.Column<string>(nullable: true),
+                    PatientSource = table.Column<string>(nullable: true),
+                    PatientCounty = table.Column<string>(nullable: true),
+                    PatientSubCounty = table.Column<string>(nullable: true),
+                    PatientVillage = table.Column<string>(nullable: true),
+                    PatientID = table.Column<string>(nullable: true),
+                    National_ID = table.Column<string>(nullable: true),
+                    NHIF_Number = table.Column<string>(nullable: true),
+                    Birth_Certificate = table.Column<string>(nullable: true),
+                    CCC_Number = table.Column<string>(nullable: true),
+                    TB_Number = table.Column<string>(nullable: true),
+                    ContactName = table.Column<string>(nullable: true),
+                    ContactRelation = table.Column<string>(nullable: true),
+                    ContactPhoneNumber = table.Column<string>(nullable: true),
+                    ContactAddress = table.Column<string>(nullable: true),
+                    DateConfirmedHIVPositive = table.Column<DateTime>(nullable: true),
+                    StartARTDate = table.Column<DateTime>(nullable: true),
+                    StartARTRegimenCode = table.Column<string>(nullable: true),
+                    StartARTRegimenDesc = table.Column<string>(nullable: true),
+                    dmFirstName = table.Column<string>(nullable: true),
+                    dmLastName = table.Column<string>(nullable: true),
+                    sxFirstName = table.Column<string>(nullable: true),
+                    sxLastName = table.Column<string>(nullable: true),
+                    sxPKValue = table.Column<string>(nullable: true),
+                    dmPKValue = table.Column<string>(nullable: true),
+                    sxdmPKValue = table.Column<string>(nullable: true),
+                    sxMiddleName = table.Column<string>(nullable: true),
+                    dmMiddleName = table.Column<string>(nullable: true),
+                    sxPKValueDoB = table.Column<string>(nullable: true),
+                    dmPKValueDoB = table.Column<string>(nullable: true),
+                    sxdmPKValueDoB = table.Column<string>(nullable: true),
+                    JaroWinklerScore = table.Column<double>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: false),
+                    CheckError = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TempMasterPatientIndices", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TempPatientArtExtracts",
                 columns: table => new
                 {
@@ -224,10 +445,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     FacilityId = table.Column<int>(nullable: true),
                     SiteCode = table.Column<int>(nullable: true),
                     DateExtracted = table.Column<DateTime>(nullable: false),
-                    CheckError = table.Column<bool>(nullable: false),
-                    FacilityName = table.Column<string>(nullable: true),
                     Emr = table.Column<string>(nullable: true),
                     Project = table.Column<string>(nullable: true),
+                    CheckError = table.Column<bool>(nullable: false),
+                    FacilityName = table.Column<string>(nullable: true),
                     DOB = table.Column<DateTime>(nullable: true),
                     AgeEnrollment = table.Column<decimal>(nullable: true),
                     AgeARTStart = table.Column<decimal>(nullable: true),
@@ -266,6 +487,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     FacilityId = table.Column<int>(nullable: true),
                     SiteCode = table.Column<int>(nullable: true),
                     DateExtracted = table.Column<DateTime>(nullable: false),
+                    Emr = table.Column<string>(nullable: true),
+                    Project = table.Column<string>(nullable: true),
                     CheckError = table.Column<bool>(nullable: false),
                     bCD4 = table.Column<int>(nullable: true),
                     bCD4Date = table.Column<DateTime>(nullable: true),
@@ -288,13 +511,52 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     m12CD4 = table.Column<int>(nullable: true),
                     m12CD4Date = table.Column<DateTime>(nullable: true),
                     m6CD4 = table.Column<int>(nullable: true),
-                    m6CD4Date = table.Column<DateTime>(nullable: true),
-                    Emr = table.Column<string>(nullable: true),
-                    Project = table.Column<string>(nullable: true)
+                    m6CD4Date = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TempPatientBaselinesExtracts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TempPatientExtracts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    PatientPK = table.Column<int>(nullable: true),
+                    PatientID = table.Column<string>(nullable: true),
+                    FacilityId = table.Column<int>(nullable: true),
+                    SiteCode = table.Column<int>(nullable: true),
+                    DateExtracted = table.Column<DateTime>(nullable: false),
+                    Emr = table.Column<string>(nullable: true),
+                    Project = table.Column<string>(nullable: true),
+                    CheckError = table.Column<bool>(nullable: false),
+                    FacilityName = table.Column<string>(nullable: true),
+                    Gender = table.Column<string>(nullable: true),
+                    DOB = table.Column<DateTime>(nullable: true),
+                    RegistrationDate = table.Column<DateTime>(nullable: true),
+                    RegistrationAtCCC = table.Column<DateTime>(nullable: true),
+                    RegistrationAtPMTCT = table.Column<DateTime>(nullable: true),
+                    RegistrationAtTBClinic = table.Column<DateTime>(nullable: true),
+                    PatientSource = table.Column<string>(nullable: true),
+                    Region = table.Column<string>(nullable: true),
+                    District = table.Column<string>(nullable: true),
+                    Village = table.Column<string>(nullable: true),
+                    ContactRelation = table.Column<string>(nullable: true),
+                    LastVisit = table.Column<DateTime>(nullable: true),
+                    MaritalStatus = table.Column<string>(nullable: true),
+                    EducationLevel = table.Column<string>(nullable: true),
+                    DateConfirmedHIVPositive = table.Column<DateTime>(nullable: true),
+                    PreviousARTExposure = table.Column<string>(nullable: true),
+                    PreviousARTStartDate = table.Column<DateTime>(nullable: true),
+                    StatusAtCCC = table.Column<string>(nullable: true),
+                    StatusAtPMTCT = table.Column<string>(nullable: true),
+                    StatusAtTBClinic = table.Column<string>(nullable: true),
+                    SatelliteName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TempPatientExtracts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -307,11 +569,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     FacilityId = table.Column<int>(nullable: true),
                     SiteCode = table.Column<int>(nullable: true),
                     DateExtracted = table.Column<DateTime>(nullable: false),
+                    Emr = table.Column<string>(nullable: true),
+                    Project = table.Column<string>(nullable: true),
                     CheckError = table.Column<bool>(nullable: false),
                     FacilityName = table.Column<string>(nullable: true),
                     SatelliteName = table.Column<string>(nullable: true),
-                    Emr = table.Column<string>(nullable: true),
-                    Project = table.Column<string>(nullable: true),
                     VisitId = table.Column<int>(nullable: true),
                     OrderedByDate = table.Column<DateTime>(nullable: true),
                     ReportedByDate = table.Column<DateTime>(nullable: true),
@@ -334,6 +596,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     FacilityId = table.Column<int>(nullable: true),
                     SiteCode = table.Column<int>(nullable: true),
                     DateExtracted = table.Column<DateTime>(nullable: false),
+                    Emr = table.Column<string>(nullable: true),
+                    Project = table.Column<string>(nullable: true),
                     CheckError = table.Column<bool>(nullable: false),
                     VisitID = table.Column<int>(nullable: true),
                     Drug = table.Column<string>(nullable: true),
@@ -344,9 +608,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     TreatmentType = table.Column<string>(nullable: true),
                     RegimenLine = table.Column<string>(nullable: true),
                     PeriodTaken = table.Column<string>(nullable: true),
-                    ProphylaxisType = table.Column<string>(nullable: true),
-                    Emr = table.Column<string>(nullable: true),
-                    Project = table.Column<string>(nullable: true)
+                    ProphylaxisType = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -363,10 +625,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     FacilityId = table.Column<int>(nullable: true),
                     SiteCode = table.Column<int>(nullable: true),
                     DateExtracted = table.Column<DateTime>(nullable: false),
-                    CheckError = table.Column<bool>(nullable: false),
-                    FacilityName = table.Column<string>(nullable: true),
                     Emr = table.Column<string>(nullable: true),
                     Project = table.Column<string>(nullable: true),
+                    CheckError = table.Column<bool>(nullable: false),
+                    FacilityName = table.Column<string>(nullable: true),
                     ExitDescription = table.Column<string>(nullable: true),
                     ExitDate = table.Column<DateTime>(nullable: true),
                     ExitReason = table.Column<string>(nullable: true)
@@ -386,10 +648,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     FacilityId = table.Column<int>(nullable: true),
                     SiteCode = table.Column<int>(nullable: true),
                     DateExtracted = table.Column<DateTime>(nullable: false),
-                    CheckError = table.Column<bool>(nullable: false),
-                    FacilityName = table.Column<string>(nullable: true),
                     Emr = table.Column<string>(nullable: true),
                     Project = table.Column<string>(nullable: true),
+                    CheckError = table.Column<bool>(nullable: false),
+                    FacilityName = table.Column<string>(nullable: true),
                     VisitId = table.Column<int>(nullable: true),
                     VisitDate = table.Column<DateTime>(nullable: true),
                     Service = table.Column<string>(nullable: true),
@@ -421,15 +683,65 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_TempPatientVisitExtracts", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Validator",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Extract = table.Column<string>(nullable: true),
+                    Field = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    Logic = table.Column<string>(nullable: true),
+                    Summary = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Validator", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ValidationError",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ValidatorId = table.Column<Guid>(nullable: false),
+                    RecordId = table.Column<Guid>(nullable: false),
+                    DateGenerated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ValidationError", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ValidationError_Validator_ValidatorId",
+                        column: x => x.ValidatorId,
+                        principalTable: "Validator",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ValidationError_ValidatorId",
+                table: "ValidationError",
+                column: "ValidatorId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ExtractHistory");
+
+            migrationBuilder.DropTable(
+                name: "MasterPatientIndices");
+
+            migrationBuilder.DropTable(
                 name: "PatientArtExtracts");
 
             migrationBuilder.DropTable(
                 name: "PatientBaselinesExtracts");
+
+            migrationBuilder.DropTable(
+                name: "PatientExtracts");
 
             migrationBuilder.DropTable(
                 name: "PatientLaboratoryExtracts");
@@ -444,10 +756,19 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 name: "PatientVisitExtracts");
 
             migrationBuilder.DropTable(
+                name: "PsmartStage");
+
+            migrationBuilder.DropTable(
+                name: "TempMasterPatientIndices");
+
+            migrationBuilder.DropTable(
                 name: "TempPatientArtExtracts");
 
             migrationBuilder.DropTable(
                 name: "TempPatientBaselinesExtracts");
+
+            migrationBuilder.DropTable(
+                name: "TempPatientExtracts");
 
             migrationBuilder.DropTable(
                 name: "TempPatientLaboratoryExtracts");
@@ -460,6 +781,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "TempPatientVisitExtracts");
+
+            migrationBuilder.DropTable(
+                name: "ValidationError");
+
+            migrationBuilder.DropTable(
+                name: "Validator");
         }
     }
 }

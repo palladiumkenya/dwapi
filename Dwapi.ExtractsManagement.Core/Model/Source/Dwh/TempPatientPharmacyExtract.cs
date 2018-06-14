@@ -5,14 +5,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     
     public class TempPatientPharmacyExtract : TempExtract
     {
-     
-
-
-        public override string ToString()
-        {
-            return $"{SiteCode}-{PatientID}";
-        }
-
         public int? VisitID { get; set; }
         public string Drug { get; set; }
         public string Provider { get; set; }
@@ -23,7 +15,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string RegimenLine { get; set; }
         public string PeriodTaken { get; set; }
         public string ProphylaxisType { get; set; }
-        public string Emr { get; set; }
-        public string Project { get; set; }
     }
 }

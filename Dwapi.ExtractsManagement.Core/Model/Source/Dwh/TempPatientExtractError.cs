@@ -30,14 +30,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string StatusAtCCC { get; set; }
         public string StatusAtPMTCT { get; set; }
         public string StatusAtTBClinic { get; set; }
-        public string Emr { get; set; }
-        public string Project { get; set; }
-
+     
         public virtual ICollection<TempPatientExtractErrorSummary> TempPatientExtractErrorSummaries { get; set; } = new List<TempPatientExtractErrorSummary>();
-        public override string ToString()
-        {
-            return $"{SiteCode}-{PatientID}";
-        }
-
+    
     }
 }

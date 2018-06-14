@@ -7,14 +7,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     [Table("vTempPatientPharmacyExtractError")]
     public class TempPatientPharmacyExtractError : TempExtract
     {
-     
-
-
-        public override string ToString()
-        {
-            return $"{SiteCode}-{PatientID}";
-        }
-
         public int? VisitID { get; set; }
         public string Drug { get; set; }
         public string Provider { get; set; }
@@ -25,9 +17,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string RegimenLine { get; set; }
         public string PeriodTaken { get; set; }
         public string ProphylaxisType { get; set; }
-        public string Emr { get; set; }
-        public string Project { get; set; }
-
+     
         public virtual ICollection<TempPatientPharmacyExtractErrorSummary> TempPatientPharmacyExtractErrorSummaries { get; set; } = new List<TempPatientPharmacyExtractErrorSummary>();
     }
 }

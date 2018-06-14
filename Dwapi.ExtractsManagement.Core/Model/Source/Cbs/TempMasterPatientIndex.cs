@@ -9,8 +9,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Cbs
 {
     public class TempMasterPatientIndex:Entity<Guid>
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RowId { get; set; }
         public int? PatientPk { get; set; }
         public int? SiteCode { get; set; }
         public string FacilityName { get; set; }
@@ -99,11 +97,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Cbs
         public string sxdmPKValueDoB { get; set; }
 
         public double? JaroWinklerScore { get; set; }
-        [DoNotRead]
         public DateTime DateExtracted { get; set; }=DateTime.Now;
-        [DoNotRead]
         public bool CheckError { get; set; }
-        [DoNotRead]
         [NotMapped]
         public bool HasError { get; set; }
     }

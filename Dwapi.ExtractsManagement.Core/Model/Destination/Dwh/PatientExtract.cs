@@ -6,26 +6,8 @@ using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
-    public class PatientExtract : Entity<Guid>
+    public class PatientExtract : ClientExtract
     {
-        public int PatientPK { get; set; }
-        public string PatientID { get; set; }
-        public int SiteCode { get; set; }
-        [Column(Order = 100)]
-        public string Emr { get; set; }
-        [Column(Order = 101)]
-        public string Project { get; set; }
-        [DoNotRead]
-        [Column(Order = 102)]
-        public virtual bool? Processed { get; set; }
-
-        [DoNotRead]
-        public virtual string QueueId { get; set; }
-        [DoNotRead]
-        public virtual string Status { get; set; }
-        [DoNotRead]
-        public virtual DateTime? StatusDate { get; set; }
-
         public string FacilityName { get; set; }
         public string Gender { get; set; }
         public DateTime? DOB { get; set; }
@@ -47,10 +29,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string StatusAtCCC { get; set; }
         public string StatusAtPMTCT { get; set; }
         public string StatusAtTBClinic { get; set; }
-        [NotMapped]
-        public bool IsSent
-        {
-            get { return !string.IsNullOrWhiteSpace(Status) && Status.IsSameAs(nameof(SendStatus.Sent)); }
-        }
+      
     }
 }

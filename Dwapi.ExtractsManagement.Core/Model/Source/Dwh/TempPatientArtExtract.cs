@@ -5,15 +5,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     
     public class TempPatientArtExtract : TempExtract 
     {
-      
-        public override string ToString()
-        {
-            return $"{SiteCode}-{PatientID}";
-        }
-
         public string FacilityName { get; set; }
-        public string Emr { get; set; }
-        public string Project { get; set; }
         public DateTime? DOB { get; set; }
         public decimal? AgeEnrollment { get; set; }
         public decimal? AgeARTStart { get; set; }

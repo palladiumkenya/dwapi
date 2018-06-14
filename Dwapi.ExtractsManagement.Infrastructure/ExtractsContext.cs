@@ -52,13 +52,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 
         public DbSet<MasterPatientIndex> MasterPatientIndices { get; set; }
         public DbSet<TempMasterPatientIndex> TempMasterPatientIndices { get; set; }
-
+       
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+         
+
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
             DapperPlusManager.Entity<TempPatientArtExtract>().Key(x => x.Id).Table($"{nameof(TempPatientArtExtracts)}");
             DapperPlusManager.Entity<TempPatientBaselinesExtract>().Key(x => x.Id).Table($"{nameof(TempPatientBaselinesExtracts)}");

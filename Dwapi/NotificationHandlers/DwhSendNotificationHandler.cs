@@ -8,7 +8,7 @@ namespace Dwapi.NotificationHandlers
     {
         public async void Handle(DwhSendNotification domainEvent)
         {
-            await Startup.DwhSendHubContext.Clients.All.SendAsync("ShowDwhSendProgress", domainEvent.Progress);
+            await Startup.HubContext.Clients.All.SendAsync("ShowDwhSendProgress", domainEvent.Progress);
         }
     }
 }

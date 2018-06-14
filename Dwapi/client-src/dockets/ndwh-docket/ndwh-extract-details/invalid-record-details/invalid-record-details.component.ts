@@ -97,7 +97,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
         this.getInvalid$ = this._patientExtractsService.loadErrors().subscribe(
             p => {
                 this.invalidExtracts = p;
-                console.log('Invalid Patient', this.invalidExtracts);
+                //console.log('Invalid Patient', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -116,7 +116,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
         this.getInvalid$ = this._patientArtService.loadErrors().subscribe(
             p => {
                 this.invalidExtracts = p;
-                console.log('Invalid Art', this.invalidExtracts);
+                //console.log('Invalid Art', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -135,7 +135,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
         this.getInvalid$ = this._patientBaselineService.loadErrors().subscribe(
             p => {
                 this.invalidExtracts = p;
-                console.log('Invalid Baselines', this.invalidExtracts);
+                //console.log('Invalid Baselines', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -154,7 +154,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
         this.getInvalid$ = this._patientLabService.loadErrors().subscribe(
             p => {
                 this.invalidExtracts = p;
-                console.log('Invalid Lab', this.invalidExtracts);
+                //console.log('Invalid Lab', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -173,7 +173,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
         this.getInvalid$ = this._patientPharmacyService.loadErrors().subscribe(
             p => {
                 this.invalidExtracts = p;
-                console.log('Invalid PharmacyS', this.invalidExtracts);
+                //console.log('Invalid PharmacyS', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -192,7 +192,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
         this.getInvalid$ = this._patientStatusService.loadErrors().subscribe(
             p => {
                 this.invalidExtracts = p;
-                console.log('Invalid Status', this.invalidExtracts);
+                //console.log('Invalid Status', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -211,7 +211,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
         this.getInvalid$ = this._patientVisitService.loadErrors().subscribe(
             p => {
                 this.invalidExtracts = p;
-                console.log('Invalid Visit', this.invalidExtracts);
+                //console.log('Invalid Visit', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
