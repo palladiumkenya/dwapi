@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
-using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
-using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
-using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SharedKernel.Model;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Dwapi.SharedKernel.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
@@ -18,61 +13,60 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
     [TestFixture]
     public class MasterPatientIndexReaderTests
     {
+        private SettingsContext _settingsContext;
+        private SettingsContext _settingsContextMysql;
+        private DbProtocol _iQtoolsDb, _kenyaEmrDb;
+        
         private IMasterPatientIndexReader _reader;
-        private IServiceProvider _serviceProvider;
-        private Dwapi.SettingsManagement.Infrastructure.SettingsContext _settingsContext;
-        private ExtractsContext _extractsContext;
-        private DbProtocol _protocol;
-        private DbExtract _extract;
-        private EmrSystem _emrSystem;
 
         [OneTimeSetUp]
         public void Init()
         {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var connectionString = config["ConnectionStrings:DwapiConnectionDevData"];
+            _settingsContext = TestInitializer.ServiceProvider.GetService<SettingsContext>();
+            _settingsContextMysql = TestInitializer.ServiceProviderMysql.GetService<SettingsContext>();
 
-            _serviceProvider = new ServiceCollection()
-                .AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(o => o.UseSqlServer(connectionString))
-                .AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString))
-                .AddTransient<IMasterPatientIndexRepository, MasterPatientIndexRepository>()
-                .AddTransient<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>()
-                .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
-                .BuildServiceProvider();
+            _iQtoolsDb = TestInitializer.Iqtools.DatabaseProtocols.First(x=>x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
+            _iQtoolsDb.Host = ".\\Koske14";
+            _iQtoolsDb.Username = "sa";
+            _iQtoolsDb.Password = "maun";
+            
+            _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
+            _kenyaEmrDb.Host = "192.168.100.99";
+            _kenyaEmrDb.Username = "root";
+            _kenyaEmrDb.Password = "root";
+            _kenyaEmrDb.DatabaseName = "openmrs";
 
-
-            _settingsContext = _serviceProvider.GetService<SettingsContext>();
-            _settingsContext.Database.EnsureDeleted();
-            _settingsContext.Database.Migrate();
-            _settingsContext.EnsureSeeded();
-            _extractsContext = _serviceProvider.GetService<ExtractsContext>();
-            _extractsContext.Database.Migrate();
-            _extractsContext.EnsureSeeded();
         }
 
 
-        [SetUp]
-        public void SetUp()
-        {
-            _emrSystem = _settingsContext.EmrSystems.First(x => x.IsDefault);
-            _protocol = _settingsContext.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools")&&x.EmrSystemId==_emrSystem.Id);
-            _extract = _settingsContext.Extracts.First(x => x.EmrSystemId == _emrSystem.Id&&x.DocketId=="CBS");
-            _reader = _serviceProvider.GetService<IMasterPatientIndexReader>();
-        }
+       [Test]
+        public void should_Execute_Reader_MsSql()
+       {
+           var extract = TestInitializer.Iqtools.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
 
-
-     
-        [Test]
-        public void should_Execute_Reade()
-        {
-            var reader = _reader.ExecuteReader(_protocol, _extract).Result;
+            _reader = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexReader>();
+            var reader = _reader.ExecuteReader(_iQtoolsDb, extract).Result;
             reader.Read();
             var row = reader[0].ToString();
-            reader.Close();
             Assert.False(string.IsNullOrWhiteSpace(row));
             Console.WriteLine(reader[$"{nameof(TempMasterPatientIndex.FirstName)}"]);
+           reader.Close();
         }
+
+        [Test]
+        public void should_Execute_Reader_MySql()
+        {
+            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
+
+            _reader = TestInitializer.ServiceProviderMysql.GetService<IMasterPatientIndexReader>();
+            var reader = _reader.ExecuteReader(_kenyaEmrDb, extract).Result;
+            reader.Read();
+            var row = reader[0].ToString();
+         
+            Assert.False(string.IsNullOrWhiteSpace(row));
+            Console.WriteLine(reader[$"{nameof(TempMasterPatientIndex.FirstName)}"]);
+
+            reader.Close();
+        }   
     }
 }

@@ -156,5 +156,10 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         {
             Context.SaveChanges();
         }
+
+        public Task<int> SaveChangesAsync()
+        {
+            return Context.SaveChangesAsync();
+        }
     }
 }

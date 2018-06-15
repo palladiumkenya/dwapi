@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
@@ -14,15 +15,23 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
         {
         }
 
-        public void ClearHistory(Guid extractId)
+        public async void ClearHistory(Guid extractId)
         {
+            await ClearHistory(new List<Guid> {extractId});
+        }
+
+        public async Task<int> ClearHistory(List<Guid> extractIds)
+        {
+            var count = 0;
             var histories = DbSet
-                .Where(x => x.ExtractId == extractId).ToList();
-            if (histories.Count > 0)
+                .Where(x => extractIds.Contains(x.ExtractId)).ToList();
+            if (histories.Any())
             {
                 DbSet.RemoveRange(histories);
-                SaveChanges();
+                count= await SaveChangesAsync();
             }
+
+            return count;
         }
 
         public ExtractHistory GetLatest(Guid extractId)

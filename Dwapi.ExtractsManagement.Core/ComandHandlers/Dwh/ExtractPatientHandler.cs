@@ -33,9 +33,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
 
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
         {
-            //clear
-            int count = await _clearDwhExtracts.Clear(request.Extract.Id);
-
+           
             //Extract
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 

@@ -5,11 +5,16 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="appsettings.mysql.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appsettings.mysql.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

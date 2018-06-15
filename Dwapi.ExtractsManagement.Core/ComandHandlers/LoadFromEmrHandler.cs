@@ -19,6 +19,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
         public async Task<bool> Handle(LoadFromEmrCommand request, CancellationToken cancellationToken)
         {
+            var extractIds = request.Extracts.Select(x => x.Extract.Id).ToList();
+
+            await _mediator.Send(new ClearAllExtracts(extractIds), cancellationToken);
+
+
             var patientProfile = request.Extracts.FirstOrDefault(x=>x.Extract.IsPriority);
             //Generate extract patient command
             if (patientProfile != null)

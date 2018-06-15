@@ -24,6 +24,7 @@ namespace Dwapi.SharedKernel.Interfaces
         void CloseConnection();
         void CloseConnection(IDbConnection connection);
         void SaveChanges();
+        Task<int> SaveChangesAsync();
 
     }
 }

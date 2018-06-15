@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -18,100 +20,42 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Dwh
 {
     public class ClearDwhExtracts : IClearDwhExtracts
     {
-        private readonly SqlConnection _connection;
+        private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
+        private readonly IExtractHistoryRepository _historyRepository;
 
-        public ClearDwhExtracts(IEmrSystemRepository emrSystemRepository)
+        public ClearDwhExtracts(ITempPatientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository historyRepository)
         {
-            _connection = new SqlConnection(emrSystemRepository.GetConnectionString());
+            _tempPatientExtractRepository = tempPatientExtractRepository;
+            _historyRepository = historyRepository;
         }
 
-        public async Task<int> Clear(Guid extractId)
+        public async Task<int> Clear(List<Guid> extractIds)
         {
             Log.Debug($"Executing ClearDwhExtracts command...");
 
-            DomainEvents.Dispatch(
-                new ExtractActivityNotification(extractId, new DwhProgress(
-                    nameof(PatientExtract),
-                    nameof(ExtractStatus.Clearing),
-                     0, 0, 0, 0, 0)));
-
-            int totalCount = 0;
-            var truncates = new List<string>
-            {  $"{nameof(TempPatientExtract)}s",
-               $"{nameof(TempPatientArtExtract)}s",
-               $"{nameof(PatientArtExtract)}s",
-               $"{nameof(TempPatientBaselinesExtract)}s",
-               $"{nameof(PatientBaselinesExtract)}s",
-               $"{nameof(TempPatientStatusExtract)}s",
-               $"{nameof(PatientStatusExtract)}s",
-               $"{nameof(TempPatientLaboratoryExtract)}s",
-               $"{nameof(PatientLaboratoryExtract)}s",
-               $"{nameof(TempPatientPharmacyExtract)}s",
-               $"{nameof(PatientPharmacyExtract)}s",
-               $"{nameof(TempPatientVisitExtract)}s",
-               $"{nameof(PatientVisitExtract)}s",
-                //todo specfy clean for dw extracts only
-                nameof(ExtractHistory),
-                nameof(ValidationError)
-            };
-
-            var deletes = new List<string> { $"{nameof(PatientExtract)}s" };
-
-            using (_connection)
+            foreach (var extractId in extractIds)
             {
-                if (_connection.State != ConnectionState.Open)
-                {
-                    await _connection.OpenAsync();
-                }
-
-                var command = _connection.CreateCommand();
-                command.CommandTimeout = 0;
-
-                var parallelTasks = new List<Task<int>>();
-
-                foreach (var name in truncates)
-                {
-                    parallelTasks.Add(TruncateCommand(name));
-                }
-
-                var orderdTasks = new List<Task<int>>();
-
-                foreach (var name in deletes)
-                {
-                    orderdTasks.Add(DeleteCommand(name));
-                }
-
-                foreach (var t in orderdTasks)
-                {
-                    totalCount += await t;
-                }
+                DomainEvents.Dispatch(
+                    new ExtractActivityNotification(extractId, new DwhProgress(
+                        nameof(PatientExtract),
+                        nameof(ExtractStatus.Clearing),
+                        0, 0, 0, 0, 0)));
             }
-            DomainEvents.Dispatch(
-                new ExtractActivityNotification(extractId, new DwhProgress(
-                    nameof(PatientExtract),
-                    nameof(ExtractStatus.Cleared),
-                    0, 0, 0, 0, 0)));
-            return totalCount;
-        }
 
-        private Task<int> TruncateCommand(string extract)
-        {
-            var command = GetCommand(extract, "TRUNCATE TABLE");
-            return command.ExecuteNonQueryAsync();
-        }
+            await _historyRepository.ClearHistory(extractIds);
+            await _tempPatientExtractRepository.Clear();
 
-        private Task<int> DeleteCommand(string extract)
-        {
-            var command = GetCommand(extract, "DELETE FROM");
-            return command.ExecuteNonQueryAsync();
-        }
 
-        private SqlCommand GetCommand(string extract, string action)
-        {
-            var command = _connection.CreateCommand();
-            command.CommandTimeout = 0;
-            command.CommandText = $@" {action} {extract}; ";
-            return command;
+            foreach (var extractId in extractIds)
+            {
+                DomainEvents.Dispatch(
+                    new ExtractActivityNotification(extractId, new DwhProgress(
+                        nameof(PatientExtract),
+                        nameof(ExtractStatus.Cleared),
+                        0, 0, 0, 0, 0)));
+            }
+
+            return 1;
         }
     }
 }

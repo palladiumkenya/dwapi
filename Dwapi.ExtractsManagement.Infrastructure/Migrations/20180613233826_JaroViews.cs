@@ -33,6 +33,16 @@ A.PatientPk,A.SiteCode,A.FacilityName,
 
             if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
             {
+
+
+                migrationBuilder.Sql(@"
+create view vMasterPatientIndicesJaroB
+as
+SELECT  sxdmPKValueDoB, COUNT(*) Number  from MasterPatientIndices
+            GROUP BY sxdmPKValueDoB having COUNT(*) > 1
+         
+                ");
+
                 migrationBuilder.Sql(@"
 create view vMasterPatientIndicesJaro
                 as
@@ -48,12 +58,8 @@ A.PatientPk,A.SiteCode,A.FacilityName,
                fn_calculateJaroWinkler(A.sxdmPKValueDoB,B.sxdmPKValueDoB) AS JaroWinklerScore
 
                 FROM MasterPatientIndices A
-                INNER JOIN
-            (
-                SELECT  sxdmPKValueDoB, COUNT(*) Number  from MasterPatientIndices
-            GROUP BY sxdmPKValueDoB having COUNT(*) > 1
-                ) AS  B
-            ON A.sxdmPKValueDoB = B.sxdmPKValueDoB
+                INNER JOIN vMasterPatientIndicesJaroB AS  B
+             ON A.sxdmPKValueDoB = B.sxdmPKValueDoB
                 ");
             }
         }
@@ -67,6 +73,7 @@ A.PatientPk,A.SiteCode,A.FacilityName,
 
             if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
             {
+                migrationBuilder.Sql("DROP View vMasterPatientIndicesJaroB");
                 migrationBuilder.Sql("DROP View vMasterPatientIndicesJaro");
             }
         }

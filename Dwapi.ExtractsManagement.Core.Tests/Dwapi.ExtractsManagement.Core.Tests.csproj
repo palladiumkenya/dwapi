@@ -5,8 +5,13 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="appsettings.mysql.json" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="appsettings.mysql.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -39,5 +44,8 @@
     <ProjectReference Include="..\Dwapi.SharedKernel.Infrastructure.Tests\Dwapi.SharedKernel.Infrastructure.Tests.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel.Infrastructure\Dwapi.SharedKernel.Infrastructure.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extractors\Dwh\" />
   </ItemGroup>
 </Project>
