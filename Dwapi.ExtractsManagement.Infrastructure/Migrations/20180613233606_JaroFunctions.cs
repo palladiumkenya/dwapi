@@ -7,7 +7,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
             if (migrationBuilder.ActiveProvider.ToLower().Contains("SqlServer".ToLower()))
             {
                 migrationBuilder.Sql(@"

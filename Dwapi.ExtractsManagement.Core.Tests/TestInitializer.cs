@@ -101,6 +101,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             var serviceProviderMysql = new ServiceCollection()
                 .AddDbContext<ExtractsContext>(x => x.UseMySql(mysqlConfig["ConnectionStrings:DwapiConnection"]))
                 .AddDbContext<SettingsContext>(x => x.UseMySql(mysqlConfig["ConnectionStrings:DwapiConnection"]))
+                .AddTransient<ExtractsContext>()
+                .AddTransient<SettingsContext>()
                 .AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>()
 
                 .AddTransient<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>()

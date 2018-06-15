@@ -64,7 +64,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
         [Test]
         public void should_Exract_From_Reader_MySql()
         {
-            Assert.False(_extractsContextMySql.TempPatientExtracts.ToList().Any());
+            Assert.Null(_extractsContextMySql.TempPatientExtracts.FirstOrDefault());
 
             var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(PatientExtract)));
 

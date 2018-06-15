@@ -55,6 +55,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
        
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
