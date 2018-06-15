@@ -1,19 +1,33 @@
 ﻿using System;
 using System.Linq;
+using AutoMapper;
+using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
+using Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs;
+using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
+using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
+using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SettingsManagement.Infrastructure;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,20 +60,84 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddDbContext<ExtractsContext>(x => x.UseSqlServer(config["ConnectionStrings:DwapiConnection"]))
                 .AddDbContext<SettingsContext>(x => x.UseSqlServer(config["ConnectionStrings:DwapiConnection"]))
                 .AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>()
+
                 .AddTransient<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>()
+
                 .AddTransient<ITempPatientExtractRepository, TempPatientExtractRepository>()
+                .AddTransient<ITempPatientArtExtractRepository, TempPatientArtExtractRepository>()
+                .AddTransient<ITempPatientBaselinesExtractRepository, TempPatientBaselinesExtractRepository>()
+                .AddTransient<ITempPatientLaboratoryExtractRepository, TempPatientLaboratoryExtractRepository>()
+                .AddTransient<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>()
+                .AddTransient<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>()
+                .AddTransient<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>()
+
+                .AddTransient<IPatientExtractRepository, PatientExtractRepository>()
+                .AddTransient<IPatientArtExtractRepository, PatientArtExtractRepository>()
+                .AddTransient<IPatientBaselinesExtractRepository, PatientBaselinesExtractRepository>()
+                .AddTransient<IPatientLaboratoryExtractRepository, PatientLaboratoryExtractRepository>()
+                .AddTransient<IPatientPharmacyExtractRepository, PatientPharmacyExtractRepository>()
+                .AddTransient<IPatientStatusExtractRepository, PatientStatusExtractRepository>()
+                .AddTransient<IPatientVisitExtractRepository, PatientVisitExtractRepository>()
+
                 .AddTransient<ICleanCbsExtracts, CleanCbsExtracts>()
                 .AddTransient<IClearDwhExtracts, ClearDwhExtracts>()
+
+                .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
+                .AddTransient<IExtractSourceReader, ExtractSourceReader>()
+
+                .AddTransient<IPatientSourceExtractor, PatientSourceExtractor>()
+                .AddTransient<IPatientStatusSourceExtractor, PatientStatusSourceExtractor>()
+                .AddTransient<IPatientArtSourceExtractor, PatientArtSourceExtractor>()
+                .AddTransient<IPatientBaselinesSourceExtractor, PatientBaselinesSourceExtractor>()
+                .AddTransient<IPatientPharmacySourceExtractor, PatientPharmacySourceExtractor>()
+                .AddTransient<IPatientVisitSourceExtractor, PatientVisitSourceExtractor>()
+                .AddTransient<IPatientLaboratorySourceExtractor, PatientLaboratorySourceExtractor>()
+
+                .AddTransient<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>()
+
+                .AddMediatR(typeof(ExtractMasterPatientIndexHandler))
                 .BuildServiceProvider();
 
             var serviceProviderMysql = new ServiceCollection()
                 .AddDbContext<ExtractsContext>(x => x.UseMySql(mysqlConfig["ConnectionStrings:DwapiConnection"]))
                 .AddDbContext<SettingsContext>(x => x.UseMySql(mysqlConfig["ConnectionStrings:DwapiConnection"]))
                 .AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>()
+
                 .AddTransient<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>()
+
+
                 .AddTransient<ITempPatientExtractRepository, TempPatientExtractRepository>()
+                .AddTransient<ITempPatientArtExtractRepository, TempPatientArtExtractRepository>()
+                .AddTransient<ITempPatientBaselinesExtractRepository, TempPatientBaselinesExtractRepository>()
+                .AddTransient<ITempPatientLaboratoryExtractRepository, TempPatientLaboratoryExtractRepository>()
+                .AddTransient<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>()
+                .AddTransient<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>()
+                .AddTransient<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>()
+
+                .AddTransient<IPatientExtractRepository, PatientExtractRepository>()
+                .AddTransient<IPatientArtExtractRepository, PatientArtExtractRepository>()
+                .AddTransient<IPatientBaselinesExtractRepository, PatientBaselinesExtractRepository>()
+                .AddTransient<IPatientLaboratoryExtractRepository, PatientLaboratoryExtractRepository>()
+                .AddTransient<IPatientPharmacyExtractRepository, PatientPharmacyExtractRepository>()
+                .AddTransient<IPatientStatusExtractRepository, PatientStatusExtractRepository>()
+                .AddTransient<IPatientVisitExtractRepository, PatientVisitExtractRepository>()
+
                 .AddTransient<ICleanCbsExtracts, CleanCbsExtracts>()
                 .AddTransient<IClearDwhExtracts, ClearDwhExtracts>()
+
+                .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
+                .AddTransient<IExtractSourceReader, ExtractSourceReader>()
+
+                .AddTransient<IPatientSourceExtractor, PatientSourceExtractor>()
+                .AddTransient<IPatientStatusSourceExtractor, PatientStatusSourceExtractor>()
+                .AddTransient<IPatientArtSourceExtractor, PatientArtSourceExtractor>()
+                .AddTransient<IPatientBaselinesSourceExtractor, PatientBaselinesSourceExtractor>()
+                .AddTransient<IPatientPharmacySourceExtractor, PatientPharmacySourceExtractor>()
+                .AddTransient<IPatientVisitSourceExtractor, PatientVisitSourceExtractor>()
+                .AddTransient<IPatientLaboratorySourceExtractor, PatientLaboratorySourceExtractor>()
+
+                .AddMediatR(typeof(ExtractMasterPatientIndexHandler))
+                .AddTransient<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>()
                 .BuildServiceProvider();
 
             ServiceProvider = serviceProvider;
@@ -93,6 +171,15 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .First(x => x.Id == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"));
 
             Validator = extractsContext.Validator.First();
+
+            Mapper.Initialize(cfg =>
+                {
+                    cfg.AddDataReaderMapping();
+                    cfg.AddProfile<TempMasterPatientIndexProfile>();
+                    cfg.AddProfile<TempExtractProfile>();
+                }
+            );
+
         }
     }
 }
