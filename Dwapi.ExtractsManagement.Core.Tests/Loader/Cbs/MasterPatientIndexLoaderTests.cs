@@ -12,6 +12,8 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
@@ -21,6 +23,8 @@ using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
+using FizzWare.NBuilder;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,76 +36,67 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Cbs
     [TestFixture]
     public class MasterPatientIndexLoaderTests
     {
-        private IMasterPatientIndexSourceExtractor _extractor;
-        private IMasterPatientIndexLoader _loader;
-        private IServiceProvider _serviceProvider;
-        private Dwapi.SettingsManagement.Infrastructure.SettingsContext _settingsContext;
-        private ExtractsContext _extractsContext;
-        private DbProtocol _protocol;
-        private DbExtract _extract;
-        private EmrSystem _emrSystem;
-        private ICleanCbsExtracts _clearCbsExtracts;
-
+        private ExtractsContext _extractsContext, _extractsContextMySql;
+        private DbProtocol _iQtoolsDb, _kenyaEmrDb;
         [OneTimeSetUp]
         public void Init()
         {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var connectionString = config["ConnectionStrings:DwapiConnection"];
+            var extractId = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(MasterPatientIndex))).Id;
+            var cleaner = TestInitializer.ServiceProvider.GetService<ICleanCbsExtracts>();
+            cleaner.Clean(extractId);
 
-            _serviceProvider = new ServiceCollection()
-                .AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(o => o.UseSqlServer(connectionString))
-                .AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString))
-                .AddTransient<IMasterPatientIndexRepository, MasterPatientIndexRepository>()
-                .AddTransient<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>()
-                .AddTransient<IEmrSystemRepository, EmrSystemRepository>()
-                .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
-                .AddTransient<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>()
-                .AddTransient<IMasterPatientIndexValidator, MasterPatientIndexValidator>()
-                .AddTransient<IMasterPatientIndexLoader, MasterPatientIndexLoader>()
-                .AddTransient<ICleanCbsExtracts, CleanCbsExtracts>()
-                .AddMediatR(typeof(ExtractMasterPatientIndexHandler))
-                .BuildServiceProvider();
+            var extractIdMySql = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(MasterPatientIndex))).Id;
+            var cleanerMySql = TestInitializer.ServiceProviderMysql.GetService<ICleanCbsExtracts>();
+            cleanerMySql.Clean(extractIdMySql);
 
-            Mapper.Initialize(cfg =>
-            {
-                cfg.AddDataReaderMapping();
-                cfg.AddProfile<TempMasterPatientIndexProfile>();
-            }
-            );
+            _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
+            _extractsContextMySql = TestInitializer.ServiceProviderMysql.GetService<ExtractsContext>();
 
+            var tempMpis = Builder<TempMasterPatientIndex>.CreateListOfSize(2).Build().ToList();
+          
+            _extractsContext.TempMasterPatientIndices.AddRange(tempMpis);
+            _extractsContext.SaveChanges();
 
-            _settingsContext = _serviceProvider.GetService<Dwapi.SettingsManagement.Infrastructure.SettingsContext>();
-            _settingsContext.Database.Migrate();
-            _settingsContext.EnsureSeeded();
-            _extractsContext = _serviceProvider.GetService<ExtractsContext>();
-            _extractsContext.Database.Migrate();
-            _extractsContext.EnsureSeeded();
+            _extractsContextMySql.TempMasterPatientIndices.AddRange(tempMpis);
+            _extractsContextMySql.SaveChanges();
+
+            _iQtoolsDb = TestInitializer.Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
+            _iQtoolsDb.Host = "192.168.100.99\\Koske14";
+            _iQtoolsDb.Username = "sa";
+            _iQtoolsDb.Password = "maun";
+
+            _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
+            _kenyaEmrDb.Host = "192.168.100.99";
+            _kenyaEmrDb.Username = "root";
+            _kenyaEmrDb.Password = "root";
+            _kenyaEmrDb.DatabaseName = "openmrs";
         }
 
 
-        [SetUp]
-        public void SetUp()
+        [Test]
+        public void should_Load_From_Temp_MsSQL()
         {
+            Assert.False(_extractsContext.MasterPatientIndices.Any());
+            var extract = TestInitializer.Iqtools.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
 
-            _emrSystem = _settingsContext.EmrSystems.First(x => x.IsDefault);
-            _protocol = _settingsContext.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools") && x.EmrSystemId == _emrSystem.Id);
-            _extract = _settingsContext.Extracts.First(x => x.EmrSystemId == _emrSystem.Id && x.DocketId == "CBS");
-            _extractor = _serviceProvider.GetService<IMasterPatientIndexSourceExtractor>();
-            _clearCbsExtracts = _serviceProvider.GetService<ICleanCbsExtracts>();
-            _loader = _serviceProvider.GetService<IMasterPatientIndexLoader>();
+            var loader = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexLoader>();
+
+            var loadCount=  loader.Load(extract.Id, 0).Result;
+            Assert.True(_extractsContext.MasterPatientIndices.Any());
+            Console.WriteLine($"extracted {_extractsContext.MasterPatientIndices.Count()}");
         }
 
         [Test]
-        public void should_Load_From_Temp()
+        public void should_Load_From_Temp_MySQL()
         {
-            _clearCbsExtracts.Clean(_extract.Id).Wait();
-            Assert.False(_extractsContext.MasterPatientIndices.Any());
-            var recordcount = _extractor.Extract(_extract, _protocol).Result;
-           var loadCount=  _loader.Load(Guid.NewGuid(), 0).Result;
-            Assert.True(_extractsContext.MasterPatientIndices.Any());
-            Console.WriteLine($"extracted {_extractsContext.MasterPatientIndices.Count()}");
+            Assert.False(_extractsContextMySql.MasterPatientIndices.Any());
+            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
+
+            var loader = TestInitializer.ServiceProviderMysql.GetService<IMasterPatientIndexLoader>();
+
+            var loadCount = loader.Load(extract.Id, 0).Result;
+            Assert.True(_extractsContextMySql.MasterPatientIndices.Any());
+            Console.WriteLine($"extracted {_extractsContextMySql.MasterPatientIndices.Count()}");
         }
     }
 }

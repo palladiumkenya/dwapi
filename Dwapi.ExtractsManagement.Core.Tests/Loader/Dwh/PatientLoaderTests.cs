@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using FizzWare.NBuilder;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
+namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Dwh
 {
     [TestFixture]
-    public class PatientBaselinesSourceExtractorTests
+    public class PatientLoaderTests
     {
         private ExtractsContext _extractsContext, _extractsContextMySql;
         private DbProtocol _iQtoolsDb, _kenyaEmrDb;
@@ -32,6 +38,14 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
             _extractsContextMySql = TestInitializer.ServiceProviderMysql.GetService<ExtractsContext>();
 
+            var tempMpis = Builder<TempPatientExtract>.CreateListOfSize(2).All().With(x=>x.CheckError=false).Build().ToList();
+          
+            _extractsContext.TempPatientExtracts.AddRange(tempMpis);
+            _extractsContext.SaveChanges();
+
+            _extractsContextMySql.TempPatientExtracts.AddRange(tempMpis);
+            _extractsContextMySql.SaveChanges();
+
             _iQtoolsDb = TestInitializer.Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
             _iQtoolsDb.Host = "192.168.100.99\\Koske14";
             _iQtoolsDb.Username = "sa";
@@ -44,33 +58,31 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
             _kenyaEmrDb.DatabaseName = "openmrs";
         }
 
+
         [Test]
-        public void should_Exract_From_Reader_MsSql()
+        public void should_Load_From_Temp_MsSQL()
         {
-            Assert.False(_extractsContext.TempPatientBaselinesExtracts.Any());
+            Assert.False(_extractsContext.PatientExtracts.Any());
+            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(PatientExtract)));
 
-            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs("PatientBaselineExtract"));
+            var loader = TestInitializer.ServiceProvider.GetService<IPatientLoader>();
 
-            var extractor = TestInitializer.ServiceProvider.GetService<IPatientBaselinesSourceExtractor>();
-
-            var recordcount = extractor.Extract(extract, _iQtoolsDb).Result;
-            Assert.True(_extractsContext.TempPatientBaselinesExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContext.TempPatientBaselinesExtracts.Count()}");
+            var loadCount=  loader.Load(extract.Id, 0).Result;
+            Assert.True(_extractsContext.PatientExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContext.PatientExtracts.Count()}");
         }
 
         [Test]
-        public void should_Exract_From_Reader_MySql()
+        public void should_Load_From_Temp_MySQL()
         {
-            Assert.False(_extractsContextMySql.TempPatientBaselinesExtracts.ToList().Any());
+            Assert.False(_extractsContextMySql.PatientExtracts.Any());
+            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(PatientExtract)));
 
-            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs("PatientBaselineExtract"));
+            var loader = TestInitializer.ServiceProviderMysql.GetService<IPatientLoader>();
 
-            var extractor = TestInitializer.ServiceProviderMysql.GetService<IPatientBaselinesSourceExtractor>();
-
-            var recordcount = extractor.Extract(extract, _kenyaEmrDb).Result;
-            Assert.True(_extractsContextMySql.TempPatientBaselinesExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContextMySql.TempPatientBaselinesExtracts.Count()}");
+            var loadCount = loader.Load(extract.Id, 0).Result;
+            Assert.True(_extractsContextMySql.PatientExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContextMySql.PatientExtracts.Count()}");
         }
     }
 }
-

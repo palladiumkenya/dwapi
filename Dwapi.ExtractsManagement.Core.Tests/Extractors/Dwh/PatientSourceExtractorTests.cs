@@ -25,7 +25,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
             var extractIds = TestInitializer.Iqtools.Extracts.Where(x => x.DocketId.IsSameAs("NDWH")).Select(x => x.Id)
                 .ToList();
             var cleaner = TestInitializer.ServiceProvider.GetService<IClearDwhExtracts>();
-            cleaner.Clear(extractIds);
+            cleaner.Clear(extractIds); ;
 
             var extractIdsMySql = TestInitializer.KenyaEmr.Extracts.Where(x => x.DocketId.IsSameAs("NDWH")).Select(x => x.Id)
                 .ToList();

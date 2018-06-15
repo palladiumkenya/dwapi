@@ -10,12 +10,16 @@ using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
+using Dwapi.ExtractsManagement.Core.Loader.Cbs;
+using Dwapi.ExtractsManagement.Core.Loader.Dwh;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
@@ -62,6 +66,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>()
 
                 .AddTransient<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>()
+                .AddTransient<IMasterPatientIndexRepository, MasterPatientIndexRepository>()
 
                 .AddTransient<ITempPatientExtractRepository, TempPatientExtractRepository>()
                 .AddTransient<ITempPatientArtExtractRepository, TempPatientArtExtractRepository>()
@@ -94,6 +99,15 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientLaboratorySourceExtractor, PatientLaboratorySourceExtractor>()
 
                 .AddTransient<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>()
+                .AddTransient<IMasterPatientIndexLoader, MasterPatientIndexLoader>()
+
+                .AddTransient<IPatientLoader, PatientLoader>()
+                .AddTransient<IPatientArtLoader, PatientArtLoader>()
+                .AddTransient<IPatientBaselinesLoader, PatientBaselinesLoader>()
+                .AddTransient<IPatientLaboratoryLoader, PatientLaboratoryLoader>()
+                .AddTransient<IPatientPharmacyLoader, PatientPharmacyLoader>()
+                .AddTransient<IPatientStatusLoader, PatientStatusLoader>()
+                .AddTransient<IPatientVisitLoader, PatientVisitLoader>()
 
                 .AddMediatR(typeof(ExtractMasterPatientIndexHandler))
                 .BuildServiceProvider();
@@ -106,7 +120,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>()
 
                 .AddTransient<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>()
-
+                .AddTransient<IMasterPatientIndexRepository, MasterPatientIndexRepository>()
 
                 .AddTransient<ITempPatientExtractRepository, TempPatientExtractRepository>()
                 .AddTransient<ITempPatientArtExtractRepository, TempPatientArtExtractRepository>()
@@ -140,6 +154,17 @@ namespace Dwapi.ExtractsManagement.Core.Tests
 
                 .AddMediatR(typeof(ExtractMasterPatientIndexHandler))
                 .AddTransient<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>()
+                .AddTransient<IMasterPatientIndexLoader, MasterPatientIndexLoader>()
+
+                .AddTransient<IPatientLoader, PatientLoader>()
+                .AddTransient<IPatientArtLoader, PatientArtLoader>()
+                .AddTransient<IPatientBaselinesLoader, PatientBaselinesLoader>()
+                .AddTransient<IPatientLaboratoryLoader, PatientLaboratoryLoader>()
+                .AddTransient<IPatientPharmacyLoader, PatientPharmacyLoader>()
+                .AddTransient<IPatientStatusLoader, PatientStatusLoader>()
+                .AddTransient<IPatientVisitLoader, PatientVisitLoader>()
+
+
                 .BuildServiceProvider();
 
             ServiceProvider = serviceProvider;

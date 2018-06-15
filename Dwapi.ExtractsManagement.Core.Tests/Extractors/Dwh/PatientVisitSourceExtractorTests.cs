@@ -19,7 +19,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
         [OneTimeSetUp]
         public void Init()
         {
-            var extractIds = TestInitializer.Iqtools.Extracts.Where(x => Extentions.IsSameAs(x.DocketId, "NDWH")).Select(x => x.Id)
+            var extractIds = TestInitializer.Iqtools.Extracts.Where(x => x.DocketId.IsSameAs("NDWH")).Select(x => x.Id)
                 .ToList();
             var cleaner = TestInitializer.ServiceProvider.GetService<IClearDwhExtracts>();
             cleaner.Clear(extractIds);
