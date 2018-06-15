@@ -47,29 +47,29 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
         [Test]
         public void should_Exract_From_Reader_MsSql()
         {
-            Assert.False(_extractsContext.TempPatientExtracts.Any());
+            Assert.False(_extractsContext.TempPatientVisitExtracts.Any());
 
             var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(PatientVisitExtract)));
 
             var extractor = TestInitializer.ServiceProvider.GetService<IPatientVisitSourceExtractor>();
 
             var recordcount = extractor.Extract(extract, _iQtoolsDb).Result;
-            Assert.True(_extractsContext.TempPatientExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContext.TempPatientExtracts.Count()}");
+            Assert.True(_extractsContext.TempPatientVisitExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContext.TempPatientVisitExtracts.Count()}");
         }
 
         [Test]
         public void should_Exract_From_Reader_MySql()
         {
-            Assert.False(_extractsContextMySql.TempPatientExtracts.ToList().Any());
+            Assert.False(_extractsContextMySql.TempPatientVisitExtracts.ToList().Any());
 
             var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(PatientVisitExtract)));
 
             var extractor = TestInitializer.ServiceProviderMysql.GetService<IPatientVisitSourceExtractor>();
 
             var recordcount = extractor.Extract(extract, _kenyaEmrDb).Result;
-            Assert.True(_extractsContextMySql.TempPatientExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContextMySql.TempPatientExtracts.Count()}");
+            Assert.True(_extractsContextMySql.TempPatientVisitExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContextMySql.TempPatientVisitExtracts.Count()}");
         }
     }
 }

@@ -47,29 +47,29 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
         [Test]
         public void should_Exract_From_Reader_MsSql()
         {
-            Assert.False(_extractsContext.TempPatientExtracts.Any());
+            Assert.False(_extractsContext.TempPatientLaboratoryExtracts.Any());
 
-            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(PatientLaboratoryExtract)));
+            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs("PatientLabExtract"));
 
             var extractor = TestInitializer.ServiceProvider.GetService<IPatientLaboratorySourceExtractor>();
 
             var recordcount = extractor.Extract(extract, _iQtoolsDb).Result;
-            Assert.True(_extractsContext.TempPatientExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContext.TempPatientExtracts.Count()}");
+            Assert.True(_extractsContext.TempPatientLaboratoryExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContext.TempPatientLaboratoryExtracts.Count()}");
         }
 
         [Test]
         public void should_Exract_From_Reader_MySql()
         {
-            Assert.False(_extractsContextMySql.TempPatientExtracts.ToList().Any());
+            Assert.False(_extractsContextMySql.TempPatientLaboratoryExtracts.ToList().Any());
 
-            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(PatientLaboratoryExtract)));
+            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs("PatientLabExtract"));
 
             var extractor = TestInitializer.ServiceProviderMysql.GetService<IPatientLaboratorySourceExtractor>();
 
             var recordcount = extractor.Extract(extract, _kenyaEmrDb).Result;
-            Assert.True(_extractsContextMySql.TempPatientExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContextMySql.TempPatientExtracts.Count()}");
+            Assert.True(_extractsContextMySql.TempPatientLaboratoryExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContextMySql.TempPatientLaboratoryExtracts.Count()}");
         }
     }
 }
