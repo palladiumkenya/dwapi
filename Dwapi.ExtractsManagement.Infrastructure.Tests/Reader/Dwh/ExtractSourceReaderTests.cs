@@ -33,7 +33,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
             _iQtoolsDb.Password = "maun";
 
             _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
-            _kenyaEmrDb.Host = "192.168.100.99";
+            _kenyaEmrDb.Host = "127.0.0.1";
             _kenyaEmrDb.Username = "root";
             _kenyaEmrDb.Password = "root";
             _kenyaEmrDb.DatabaseName = "openmrs";
