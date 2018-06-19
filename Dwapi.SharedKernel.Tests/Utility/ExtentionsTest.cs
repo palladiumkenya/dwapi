@@ -10,8 +10,7 @@ namespace Dwapi.SharedKernel.Tests.Utility
         [Test]
         public void should_check_null_guids()
         {
-            Guid blank;
-            Assert.IsTrue(blank.IsNullOrEmpty());
+           
 
              var blank2=new Guid();
             Assert.IsTrue(blank2.IsNullOrEmpty());
