@@ -42,13 +42,12 @@ namespace Dwapi.ExtractsManagement.Core.Model
 
             if (provider == DatabaseProvider.MySql)
             {
-                string newId = Guid.NewGuid().ToString();
                 if (Type.ToLower() != "Complex".ToLower())
                 {
                     selectSql =
                         $@" 
                         SELECT 
-                            '{newId}' as Id,'{Id}',Id as RecordId,NOW() as DateGenerated  
+                            UUID() as Id,'{Id}',Id as RecordId,NOW() as DateGenerated  
                         FROM 
                             {Extract} 
                         WHERE 
