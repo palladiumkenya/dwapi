@@ -36,15 +36,15 @@ namespace Dwapi.SharedKernel.Utility
             object columnValue = reader[reader.GetOrdinal(columnName)];
             if (!(columnValue is DBNull))
             {
-                try
-                {
-                    DateTime validDate = DateTime.Parse(columnValue.ToString());
-                    return validDate;
-                }
-                catch (Exception e)
-                {
-                    Log.Error(columnName, e);
-                }
+                //try
+                //{
+                  
+                    return DateTime.Parse(columnValue.ToString());
+                //}
+                //catch (Exception e)
+                //{
+                //    Log.Error(columnName, e);
+                //}
                 
             }
 
