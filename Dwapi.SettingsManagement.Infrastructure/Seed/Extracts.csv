@@ -91,7 +91,7 @@ FROM
 FROM            
  tmp_ClinicalEncounters INNER JOIN
  tmp_PatientMaster ON tmp_PatientMaster.PatientPK = tmp_ClinicalEncounters.PatientPK"|dwhstage|0|PatientVisitExtract|7|a6221983-0e85-11e8-ba89-0ed5f89f718b
-3A742EB0-5856-E811-8E16-9CB6D0DA773C|All Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.unique_patient_no as PatientID,
+3A742EB0-5856-E811-8E16-9CB6D0DA773C|All Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId,d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select value_reference from location_attribute
 where location_id in (select property_value
@@ -146,7 +146,7 @@ and cn.locale='en'
 where unique_patient_no is not null
 group by d.patient_id
 order by d.patient_id"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.unique_patient_no as PatientID,
+39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 timestampdiff(year,d.DOB, hiv.visit_date) as AgeEnrollment,
 timestampdiff(year,d.DOB, reg.art_start_date) as AgeARTStart,
@@ -223,7 +223,7 @@ and cn.locale='en'
 where d.unique_patient_no is not null
 
 group by d.patient_id"|dwhstage|0|PatientArtExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-3C742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Baselines|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.unique_patient_no as PatientID,
+3C742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Baselines|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select value_reference from location_attribute
 where location_id in (select property_value
@@ -290,7 +290,7 @@ from kenyaemr_etl.etl_hiv_enrollment e
 group by e.patient_id) p_dates on p_dates.patient_id=fup.patient_id
 left outer join kenyaemr_etl.etl_laboratory_extract l on l.patient_id=fup.patient_id and l.lab_test in (5497,730)
 group by fup.patient_id"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-38742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Status|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.unique_patient_no as PatientID, d.patient_id as PatientPK,(select value_reference from location_attribute
+38742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Status|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId,d.unique_patient_no as PatientID, d.patient_id as PatientPK,(select value_reference from location_attribute
 where location_id in (select property_value from global_property where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode, (select name from location where location_id in (select property_value
 from global_property
 where property='kenyaemr.defaultLocation')) as FacilityName,
@@ -307,7 +307,7 @@ join kenyaemr_etl.etl_patient_demographics d on d.patient_id=disc.patient_id
 left outer join concept_name cn on cn.concept_id=disc.discontinuation_reason  and cn.concept_name_type='FULLY_SPECIFIED'
 and cn.locale='en'
 where d.unique_patient_no is not null"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.unique_patient_no as patientID, d.patient_id as patientPK, l.encounter_id as visitID, 
+3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as patientID, d.patient_id as patientPK, l.encounter_id as visitID, 
 l.visit_date as orderedByDate,l.visit_date as reportedByDate, (select value_reference from location_attribute
 where location_id in (select property_value
 from global_property
@@ -336,7 +336,7 @@ and cn.locale='en'
 join concept c on c.concept_id = l.lab_test
 left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
 and cn2.locale='en';"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.unique_patient_no as PatientID,
+3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select name from location
 where location_id in (select property_value
@@ -364,7 +364,7 @@ left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph
 and fup.patient_id=ph.patient_id
 where unique_patient_no is not null
 order by ph.patient_id,ph.visit_date;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.unique_patient_no as PatientID,
+40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select name from location
 where location_id in (select property_value
@@ -658,7 +658,7 @@ SELECT
 	,UPPER(family_name) as LastName
     ,UPPER(REPLACE(given_name ,'0','O')) AS FirstName_Normalized 
 	,UPPER(REPLACE(middle_name ,'0','O')) AS MiddleName_Normalized 
-	,kenyaemr_etl.fnReplaceInvalidChars (UPPER(REPLACE(family_name ,'0','O'))) AS LastName_Normalized 
+	,UPPER(REPLACE(family_name ,'0','O')) AS LastName_Normalized 
    ,SOUNDEX(UPPER(REPLACE(given_name ,'0','O'))) AS  sxFirstName 
    ,SOUNDEX(UPPER(REPLACE(family_name ,'0','O'))) AS sxLastName 
    ,SOUNDEX(UPPER(REPLACE(middle_name ,'0','O'))) AS sxMiddleName 
