@@ -32,7 +32,6 @@ ce7b571e-160f-11e7-93ae-92361f002671|TempPatientExtracts|Gender|Required|Gender 
 61bbe6d2-35a1-11e7-a919-92ebcb67fe33|TempPatientExtracts|LastVisit|Required|LastVisit IS NULL|LastVisit is Required
 6c5c6c40-2a95-11e7-93ae-92361f002671|TempPatientExtracts|PatientID|Required|PatientID IS NULL|PatientID Required
 6c5c6b28-2a95-11e7-93ae-92361f002671|TempPatientExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
-61bc2f52-35a1-11e7-a919-92ebcb67fe33|TempPatientExtracts|PatientSource|Required|PatientSource IS NULL|PatientSource is required
 61bbf186-35a1-11e7-a919-92ebcb67fe33|TempPatientExtracts|RegistrationAtCCC|Required|RegistrationAtCCC IS NULL|RegistrationAtCCC is Required
 6c5c70be-2a95-11e7-93ae-92361f002671|TempPatientExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 61bbedee-35a1-11e7-a919-92ebcb67fe33|TempPatientLaboratoryExtracts|OrderedByDate|Required|OrderedByDate IS NULL|OrderedByDate is required
