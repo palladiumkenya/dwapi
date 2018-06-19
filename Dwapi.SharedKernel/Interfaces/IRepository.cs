@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Xml;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.SharedKernel.Interfaces
@@ -18,6 +19,7 @@ namespace Dwapi.SharedKernel.Interfaces
         void Update(T entity);
         void CreateOrUpdate(T entity);
         List<T> GetFromSql(string query);
+        DatabaseProvider GetConnectionProvider();
         void Delete(TId id);
         IDbConnection GetConnection(bool opened=true);
         string GetConnectionString();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 
@@ -19,14 +20,16 @@ namespace Dwapi.ExtractsManagement.Core.Model
             Id = LiveGuid.NewGuid();
         }
 
-        public string GenerateValidateSql()
+        public string GenerateValidateSql(DatabaseProvider provider)
         {
             string selectSql = string.Empty;
 
-            if (Type.ToLower() != "Complex".ToLower())
+            if (provider == DatabaseProvider.MsSql)
             {
-                selectSql =
-                    $@" 
+                if (Type.ToLower() != "Complex".ToLower())
+                {
+                    selectSql =
+                        $@" 
                         SELECT 
                             NEWID() as Id,'{Id}',Id as RecordId,GETDATE() as DateGenerated  
                         FROM 
@@ -34,6 +37,24 @@ namespace Dwapi.ExtractsManagement.Core.Model
                         WHERE 
                             {Logic}
                     ";
+                }
+            }
+
+            if (provider == DatabaseProvider.MySql)
+            {
+                string newId = Guid.NewGuid().ToString();
+                if (Type.ToLower() != "Complex".ToLower())
+                {
+                    selectSql =
+                        $@" 
+                        SELECT 
+                            '{newId}' as Id,'{Id}',Id as RecordId,NOW() as DateGenerated  
+                        FROM 
+                            {Extract} 
+                        WHERE 
+                            {Logic}
+                    ";
+                }
             }
 
             var sql = $"{GenerateInsert()} " +

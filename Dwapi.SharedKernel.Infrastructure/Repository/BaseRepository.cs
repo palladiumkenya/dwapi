@@ -9,6 +9,7 @@ using System.Linq;
 using Dapper;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Dwapi.SharedKernel.Enum;
 using MySql.Data.MySqlClient;
 
 namespace Dwapi.SharedKernel.Infrastructure.Repository
@@ -101,6 +102,21 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             }
 
             return results;
+        }
+
+        public DatabaseProvider GetConnectionProvider()
+        {
+            DatabaseProvider provider = DatabaseProvider.Other;
+            if (Context.Database.ProviderName.ToLower().Contains("SqlServer".ToLower()))
+            {
+                provider = DatabaseProvider.MsSql;
+            }
+
+            if (Context.Database.ProviderName.ToLower().Contains("MySql".ToLower()))
+            {
+                provider = DatabaseProvider.MySql;
+            }
+            return provider;
         }
 
         public virtual void Delete(TId id)

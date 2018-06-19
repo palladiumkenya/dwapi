@@ -38,7 +38,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh
                 {
                     using (var command = _validatorRepository.GetConnection().CreateCommand())
                     {
-                        command.CommandText = validator.GenerateValidateSql();
+                        var provider = _validatorRepository.GetConnectionProvider();
+                        command.CommandText = validator.GenerateValidateSql(provider);
 
                         try
                         {
