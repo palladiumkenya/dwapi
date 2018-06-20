@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
@@ -6,6 +7,7 @@ using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.Extensions.DependencyInjection;
+using MySql.Data.MySqlClient;
 using NUnit.Framework;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
@@ -31,26 +33,24 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
             _iQtoolsDb.Password = "maun";
             
             _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
-            _kenyaEmrDb.Host = "127.0.0.1";
+            _kenyaEmrDb.Host = "192.168.43.212";
             _kenyaEmrDb.Username = "root";
-            _kenyaEmrDb.Password = "root";
+            _kenyaEmrDb.Password = "test";
             _kenyaEmrDb.DatabaseName = "openmrs";
 
         }
 
 
-       [Test]
+        [Test]
         public void should_Execute_Reader_MsSql()
-       {
-           var extract = TestInitializer.Iqtools.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
+        {
+            var extract = TestInitializer.Iqtools.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
 
             _reader = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexReader>();
-            var reader = _reader.ExecuteReader(_iQtoolsDb, extract).Result;
-            reader.Read();
-            var row = reader[0].ToString();
-            Assert.False(string.IsNullOrWhiteSpace(row));
-            Console.WriteLine(reader[$"{nameof(TempMasterPatientIndex.FirstName)}"]);
-           reader.Close();
+            var reader = _reader.ExecuteReader(_iQtoolsDb, extract).Result as SqlDataReader;
+            Assert.NotNull(reader);
+            Assert.True(reader.HasRows);
+            reader.Close();
         }
 
         [Test]
@@ -59,13 +59,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
             var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
 
             _reader = TestInitializer.ServiceProviderMysql.GetService<IMasterPatientIndexReader>();
-            var reader = _reader.ExecuteReader(_kenyaEmrDb, extract).Result;
-            reader.Read();
-            var row = reader[0].ToString();
-         
-            Assert.False(string.IsNullOrWhiteSpace(row));
-            Console.WriteLine(reader[$"{nameof(TempMasterPatientIndex.FirstName)}"]);
-
+            var reader = _reader.ExecuteReader(_kenyaEmrDb, extract).Result as MySqlDataReader;
+            Assert.NotNull(reader);
+            Assert.True(reader.HasRows);
             reader.Close();
         }   
     }

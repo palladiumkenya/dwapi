@@ -17,7 +17,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         private IServiceProvider _serviceProviderMysql;
         private IAppDatabaseManager _dbManager;
         private const string MssqlConnection= "Data Source=.\\koske14;Initial Catalog=dwapidev;Persist Security Info=True;User ID=sa;Password=maun;MultipleActiveResultSets=True";
-        private const string MysqlConnection= "server=127.0.0.1;port=3306;database=dwapidev;user=root;password=root";
+        private const string MysqlConnection= "server=192.168.43.212;port=3306;database=dwapidev;user=root;password=test";
 
         [OneTimeSetUp]
         public void Init()

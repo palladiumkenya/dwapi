@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -8,6 +9,7 @@ using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.Extensions.DependencyInjection;
+using MySql.Data.MySqlClient;
 using NUnit.Framework;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
@@ -33,9 +35,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
             _iQtoolsDb.Password = "maun";
 
             _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
-            _kenyaEmrDb.Host = "127.0.0.1";
+            _kenyaEmrDb.Host = "192.168.43.212";
             _kenyaEmrDb.Username = "root";
-            _kenyaEmrDb.Password = "root";
+            _kenyaEmrDb.Password = "test";
             _kenyaEmrDb.DatabaseName = "openmrs";
         }
 
@@ -50,19 +52,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
         public void should_Execute_Reader_MsSql(string extractName)
         {
             var extract = TestInitializer.Iqtools.Extracts.First(x => x.DocketId.IsSameAs("NDWH")&&x.Name.IsSameAs(extractName));
-
             _reader = TestInitializer.ServiceProvider.GetService<IExtractSourceReader>();
-            var reader = _reader.ExecuteReader(_iQtoolsDb, extract).Result;
-            reader.Read();
-            var row = reader[0].ToString();
-            Assert.False(string.IsNullOrWhiteSpace(row));
-            Console.WriteLine(reader[$"{nameof(TempExtract.PatientPK)}"]);
-            Console.WriteLine(reader[$"{nameof(TempExtract.SiteCode)}"]);
-            Console.WriteLine(reader[$"{nameof(TempExtract.PatientID)}"]);
+            var reader = _reader.ExecuteReader(_iQtoolsDb, extract).Result as SqlDataReader;
+            Assert.NotNull(reader);
+            Assert.True(reader.HasRows);
             reader.Close();
         }
-
-  
+        
         [TestCase(nameof(PatientExtract))]
         [TestCase(nameof(PatientArtExtract))]
         [TestCase(nameof(PatientPharmacyExtract))]
@@ -73,18 +69,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
         public void should_Execute_Reader_MySql(string extractName)
         {
             var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.DocketId.IsSameAs("NDWH") && x.Name.IsSameAs(extractName));
-
             _reader = TestInitializer.ServiceProviderMysql.GetService<IExtractSourceReader>();
-            var reader = _reader.ExecuteReader(_kenyaEmrDb, extract).Result;
-            reader.Read();
-            var row = reader[0].ToString();
-
-            Assert.False(string.IsNullOrWhiteSpace(row));
-            Console.WriteLine(reader[$"{nameof(TempMasterPatientIndex.FirstName)}"]);
-            Console.WriteLine(reader[$"{nameof(TempExtract.PatientPK)}"]);
-            Console.WriteLine(reader[$"{nameof(TempExtract.SiteCode)}"]);
-            Console.WriteLine(reader[$"{nameof(TempExtract.PatientID)}"]);
-
+            var reader = _reader.ExecuteReader(_kenyaEmrDb, extract).Result as MySqlDataReader;
+            Assert.NotNull(reader);
+            Assert.True(reader.HasRows);
             reader.Close();
         }
     }
