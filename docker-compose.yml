@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   dwapi:
-    image: ${DOCKER_REGISTRY}dwapi
+    image: ${DOCKER_REGISTRY}dwapi:latest
     build:
       context: .
       dockerfile: Dwapi/Dockerfile
