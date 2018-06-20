@@ -91,7 +91,7 @@ FROM
 FROM            
  tmp_ClinicalEncounters INNER JOIN
  tmp_PatientMaster ON tmp_PatientMaster.PatientPK = tmp_ClinicalEncounters.PatientPK"|dwhstage|0|PatientVisitExtract|7|a6221983-0e85-11e8-ba89-0ed5f89f718b
-3A742EB0-5856-E811-8E16-9CB6D0DA773C|All Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId,d.unique_patient_no as PatientID,
+3A742EB0-5856-E811-8E16-9CB6D0DA773C|All Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select NULL AS StatusAtTBClinic, NULL AS StatusAtPMTCT,NULL AS StatusATCCC,'' AS SatelliteName, 0 AS FacilityId,d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select value_reference from location_attribute
 where location_id in (select property_value
@@ -133,7 +133,7 @@ d.marital_status as MaritalStatus,
 d.education_level as EducationLevel,
 min(hiv.date_confirmed_hiv_positive) as DateConfirmedHIVPositive,
 max(hiv.arv_status) as PreviousARTExposure,
-'' as PreviousARTStartDate,
+NULL as PreviousARTStartDate,
 'KenyaEMR' as Emr,
 'Kenya HMIS II' as Project, 
 CAST(now() as Date) AS DateExtracted
@@ -146,7 +146,9 @@ and cn.locale='en'
 where unique_patient_no is not null
 group by d.patient_id
 order by d.patient_id"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
+39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.DOB,
+d.Gender, '' AS Provider,
+d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 timestampdiff(year,d.DOB, hiv.visit_date) as AgeEnrollment,
 timestampdiff(year,d.DOB, reg.art_start_date) as AgeARTStart,
@@ -170,9 +172,9 @@ when 160536 then 'IPD - Adult'
 else cn.name
 end as PatientSource,
 reg.art_start_date as StartARTDate,
-'' as PreviousARTStartDate,
+hiv.date_started_art_at_transferring_facility as PreviousARTStartDate,
 '' as PreviousARTRegimen,
-'' as StartARTAtThisFacility,
+reg.art_start_date as StartARTAtThisFacility,
 reg.regimen as StartRegimen,
 reg.regimen_line as StartRegimenLine,
 reg.last_art_date as LastARTDate,
@@ -211,17 +213,11 @@ left outer join kenyaemr_etl.etl_patient_program_discontinuation d on d.patient_
 left outer join kenyaemr_etl.etl_hiv_enrollment enr on enr.patient_id=e.patient_id
 left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=e.patient_id
 group by e.patient_id)reg on reg.patient_id=hiv.patient_id
-
 left outer join concept_name dis_rsn on dis_rsn.concept_id=disc.discontinuation_reason  and dis_rsn.concept_name_type='FULLY_SPECIFIED'
-
 and dis_rsn.locale='en'
-
 left outer join concept_name cn on cn.concept_id=hiv.entry_point  and cn.concept_name_type='FULLY_SPECIFIED'
-
 and cn.locale='en'
-
 where d.unique_patient_no is not null
-
 group by d.patient_id"|dwhstage|0|PatientArtExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3C742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Baselines|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
@@ -245,13 +241,13 @@ where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
  when 1205 then 'WHO II'
  when 1206 then 'WHO III'
  when 1207 then 'WHO IV'
- end,null) as ewhostage,
+ end,null) as ewho,
  if(fup.visit_date<=p_dates.enrollment_date and who_stage is not null,
 fup.visit_date,null) as ewhodate,
 '' as bCD4,
-'' as bCD4Date,
+NULL as bCD4Date,
 '' as bWHO,
-'' as bWHODate,
+NULL as bWHODate,
  mid(max(concat(fup.visit_date,case who_stage
  when 1220 then 'WHO I'
  when 1221 then 'WHO II'
@@ -277,9 +273,15 @@ fup.visit_date,null) as ewhodate,
  mid(max(if(l.visit_date>p_dates.six_month_date and l.visit_date<p_dates.twelve_month_date ,concat(l.visit_date,test_result),null)),11) as m6Cd4,
  left(max(if(l.visit_date>=p_dates.six_month_date and l.visit_date<p_dates.twelve_month_date ,concat(l.visit_date,test_result),null)),10) as m6Cd4Date,
  mid(max(if(l.visit_date>=p_dates.twelve_month_date,concat(l.visit_date,test_result),null)),11) as m6Cd4,
- left(max(if(l.visit_date>p_dates.twelve_month_date,concat(l.visit_date,test_result),null)),10) as m6Cd4Date,'' as eWAB,'' as eWABDate,'' as bWAB,'' as bWABDAte,
+ left(max(if(l.visit_date>p_dates.twelve_month_date,concat(l.visit_date,test_result),null)),10) as m6Cd4Date,
+ '' as eWAB, NULL as eWABDate,'' as bWAB, NULL as bWABDAte,
  'KenyaEMR' as Emr,
  'Kenya HMIS II' as Project, 
+ '' AS LastWaB,NULL AS LastWABDate,
+ '' as m12CD4,
+NULL as m12CD4Date,
+'' AS m6CD4,
+NULL m6CD4Date,
 CAST(now() as Date) AS DateExtracted
 from kenyaemr_etl.etl_patient_hiv_followup fup
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=fup.patient_id
@@ -325,7 +327,7 @@ case
 when c.datatype_id=2 then cn2.name
 else
  l.test_result
-end as lab_test_results, '' as enrollmentTest, 
+end as TestResult, '' as enrollmentTest, 
  'KenyaEMR' as Emr,
  'Kenya HMIS II' as Project, 
 CAST(now() as Date) AS DateExtracted
@@ -336,7 +338,7 @@ and cn.locale='en'
 join concept c on c.concept_id = l.lab_test
 left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
 and cn2.locale='en';"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
+3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS Provider,'' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select name from location
 where location_id in (select property_value
@@ -350,9 +352,15 @@ ph.visit_id as VisitID,
 if(cn2.name is not null, cn2.name,cn.name) as Drug,
 ph.visit_date as DispenseDate,
 duration,
+duration as PeriodTaken,
 fup.next_appointment_date as ExpectedReturn,
  'KenyaEMR' as Emr,
  'Kenya HMIS II' as Project, 
+ CASE WHEN is_arv=1 THEN 'ARV' 
+	  WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,
+ '' AS RegimenLine,
+ CASE WHEN is_ctx=1 THEN 'CTX' 
+	  WHEN is_dapsone =1  THEN 'DAPSON' END AS ProphylaxisType, 
 CAST(now() as Date) AS DateExtracted
 from kenyaemr_etl.etl_pharmacy_extract ph
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=ph.patient_id
@@ -364,7 +372,8 @@ left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph
 and fup.patient_id=ph.patient_id
 where unique_patient_no is not null
 order by ph.patient_id,ph.visit_date;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
+40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 
+ '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select name from location
 where location_id in (select property_value
@@ -405,7 +414,7 @@ IF(fup.arv_adherence=159405, 'Good', IF(fup.arv_adherence=159406, 'Fair', IF(fup
 IF(fup.ctx_adherence=159405, 'Good', IF(fup.ctx_adherence=159406, 'Fair', IF(fup.ctx_adherence=159407, 'Poor', ''))) 
 ) AS Adherence, 
 '' as OI, 
-'' as OIDate, 
+NULL as OIDate, 
 case fup.family_planning_status 
 when 695 then 'Currently using FP'
 when 160652 then 'Not using FP'
@@ -430,9 +439,15 @@ when 1065 then 'Screened for STI'
 else ''
 end )as PWP,
 if(fup.last_menstrual_period is not null, timestampdiff(week,fup.last_menstrual_period,fup.visit_date),'') as GestationAge,
-fup.next_appointment_date,
+fup.next_appointment_date AS NextAppointmentDate,
  'KenyaEMR' as Emr,
  'Kenya HMIS II' as Project, 
+ NULL AS SubstitutionFirstlineRegimenDate,
+ NULL AS SubstitutionFirstlineRegimenReason,
+ NULL AS SubstitutionSecondlineRegimenDate,
+ NULL AS SubstitutionSecondlineRegimenReason,
+ NULL AS SecondlineRegimenChangeDate,
+ NULL AS SecondlineRegimenChangeReason,
 CAST(now() as Date) AS DateExtracted
 from kenyaemr_etl.etl_patient_demographics d
 join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=d.patient_id

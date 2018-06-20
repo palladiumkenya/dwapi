@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using Serilog;
 
 namespace Dwapi.SharedKernel.Utility
 {
@@ -35,7 +36,16 @@ namespace Dwapi.SharedKernel.Utility
             object columnValue = reader[reader.GetOrdinal(columnName)];
             if (!(columnValue is DBNull))
             {
-                return (DateTime) columnValue;
+                //try
+                //{
+                  
+                    return DateTime.Parse(columnValue.ToString());
+                //}
+                //catch (Exception e)
+                //{
+                //    Log.Error(columnName, e);
+                //}
+                
             }
 
             return null;
