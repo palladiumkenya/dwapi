@@ -187,7 +187,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             extractsContextMysql.Database.Migrate();
             extractsContextMysql.EnsureSeeded();
 
-            Iqtools = settingsContextMysql.EmrSystems
+            Iqtools = settingsContext.EmrSystems
                 .Include(x => x.DatabaseProtocols)
                 .Include(x => x.Extracts)
                 .First(x => x.Id == new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"));

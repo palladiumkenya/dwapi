@@ -72,7 +72,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
            return new List<DatabaseProtocol>
            {
                new DatabaseProtocol(DatabaseType.MicrosoftSQL, @".\koske14", "sa", "maun", "IQTools_KeHMIS"),
-               new DatabaseProtocol(DatabaseType.MySQL, @"192.168.43.212", "root", "test", "openmrs")
+               new DatabaseProtocol(DatabaseType.MySQL, @"127.0.0.1", "root", "test", "openmrs")
            };
        }
    }

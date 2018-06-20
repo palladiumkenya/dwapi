@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
@@ -44,14 +47,29 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs
         public bool BatchInsert(IEnumerable<TempMasterPatientIndex> extracts)
         {
             var cn = GetConnectionString();
+
             try
             {
-                using (var connection = new SqlConnection(cn))
+
+                if (GetConnectionProvider()==DatabaseProvider.MySql)
                 {
-                    connection.BulkInsert(extracts);
-                    return true;
+                    using (var connection = new MySqlConnection(cn))
+                    {
+                        connection.BulkInsert(extracts);
+                      
+                    }
                 }
-                
+
+                if (GetConnectionProvider() == DatabaseProvider.MsSql)
+                {
+                    using (var connection = new SqlConnection(cn))
+                    {
+                        connection.BulkInsert(extracts);
+                    }
+                }
+
+                return true;
+
             }
             catch (Exception e)
             {
