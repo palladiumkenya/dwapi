@@ -366,8 +366,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
 
                 migrationBuilder.Sql(@"
-                  	DROP function IF EXISTS `fn_calculateTranspositionstion`;				
-					CREATE FUNCTION `fn_calculateTranspositionstion` (s1_len INT, str1 VARCHAR(4000), str2 VARCHAR(4000))
+                  	DROP function IF EXISTS `fn_calculateTranspositions`;				
+					CREATE FUNCTION `fn_calculateTranspositions` (s1_len INT, str1 VARCHAR(4000), str2 VARCHAR(4000))
 					RETURNS INTEGER
                     READS SQL DATA
                     DETERMINISTIC
@@ -555,7 +555,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 migrationBuilder.Sql("DROP function IF EXISTS `fn_calculateJaro`");
                 migrationBuilder.Sql("DROP function IF EXISTS `fn_calculateMatchWindow`");
                 migrationBuilder.Sql("DROP function IF EXISTS `fn_calculatePrefixLength`");
-                migrationBuilder.Sql("DROP function IF EXISTS `fn_calculateTranspositionstion`");
+                migrationBuilder.Sql("DROP function IF EXISTS `fn_calculateTranspositions`");
                 migrationBuilder.Sql("DROP function IF EXISTS `fn_GetCommonCharacters`");
                 migrationBuilder.Sql("DROP function IF EXISTS `fn_calculateMatchWindow`");
             }
