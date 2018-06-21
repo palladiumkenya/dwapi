@@ -13,7 +13,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 GRANT EXECUTE ON FUNCTION fn_calculateJaroWinkler TO '*'@'%';
                 GRANT EXECUTE ON FUNCTION fn_calculateMatchWindow TO '*'@'%';
                 GRANT EXECUTE ON FUNCTION fn_calculatePrefixLength TO '*'@'%';
-                GRANT EXECUTE ON FUNCTION fn_calculateTranspositions TO '*'@'%';
                 GRANT EXECUTE ON FUNCTION fn_GetCommonCharacters TO '*'@'%';");
             }
         }

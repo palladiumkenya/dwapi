@@ -6,7 +6,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"
+            if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
+            {
+                migrationBuilder.Sql(@"
                   	DROP function IF EXISTS `fn_calculateTranspositionstion`;
                     DROP function IF EXISTS `fn_calculateTranspositions`;
 					CREATE FUNCTION `fn_calculateTranspositions` (s1_len INT, str1 VARCHAR(4000), str2 VARCHAR(4000))
@@ -31,14 +33,19 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 						RETURN  transpositions;
 
 					END;");
-            migrationBuilder.Sql(@"GRANT EXECUTE ON FUNCTION fn_calculateTranspositions TO '*'@'%';
+
+                migrationBuilder.Sql(@"GRANT EXECUTE ON FUNCTION fn_calculateTranspositions TO '*'@'%';
             FLUSH PRIVILEGES;");
+            }
 
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("DROP function IF EXISTS `fn_calculateTranspositions`");
+            if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
+            {
+                migrationBuilder.Sql("DROP function IF EXISTS `fn_calculateTranspositions`");
+            }
         }
     }
 }
