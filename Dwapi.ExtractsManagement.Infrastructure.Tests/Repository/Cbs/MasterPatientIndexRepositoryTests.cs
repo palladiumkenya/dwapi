@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
+using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Microsoft.EntityFrameworkCore;
@@ -18,54 +20,70 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Cbs
     public class MasterPatientIndexRepositoryTests
     {
 
-        private IMasterPatientIndexRepository _repository;
-        private IServiceProvider _serviceProvider;
         private ExtractsContext _extractsContext;
-        private List<Guid> _mpiIds = new List<Guid>();
-        private List<SentItem> _sentItems = new List<SentItem>();
+        private ExtractsContext _extractsContextMysql;
+        private DbProtocol _iQtoolsDb, _kenyaEmrDb;
+
+        private IMasterPatientIndexReader _reader;
 
         [OneTimeSetUp]
         public void Init()
         {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var connectionString = config["ConnectionStrings:DwapiConnection"];
+            _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
+            _extractsContextMysql = TestInitializer.ServiceProviderMysql.GetService<ExtractsContext>();
 
-            _serviceProvider = new ServiceCollection()
-                .AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString))
-                .AddTransient<IMasterPatientIndexRepository, MasterPatientIndexRepository>()
-                .BuildServiceProvider();
+            _iQtoolsDb = TestInitializer.Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
+            _iQtoolsDb.Host = ".\\Koske14";
+            _iQtoolsDb.Username = "sa";
+            _iQtoolsDb.Password = "maun";
 
-            _extractsContext = _serviceProvider.GetService<ExtractsContext>();
-            
+            _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
+            _kenyaEmrDb.Host = "127.0.0.1";
+            _kenyaEmrDb.Username = "root";
+            _kenyaEmrDb.Password = "test";
+            _kenyaEmrDb.DatabaseName = "openmrs";
+
         }
 
-        [SetUp]
-        public void SetUp()
-        {
-            _mpiIds = _extractsContext.MasterPatientIndices.AsNoTracking().Take(2).Select(x => x.Id).ToList();
-            
-            _repository =_serviceProvider.GetService<IMasterPatientIndexRepository>();
-        }
 
         [Test]
-        public void GetView()
+        public void should_GetView_MsSQL()
         {
-            _repository = _serviceProvider.GetService<IMasterPatientIndexRepository>();
-            var mpis = _repository.GetView().ToList();
+            var repository = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexRepository>();
+            var mpis = repository.GetView().ToList();
             Assert.True(mpis.Any());
         }
 
         [Test]
-        public void shoul_Update_Sent_Items()
+        public void should_GetView_MySQL()
         {
-            _sentItems = _mpiIds.Select(x => new SentItem(x, SendStatus.Sent)).ToList();
+            var repository = TestInitializer.ServiceProviderMysql.GetService<IMasterPatientIndexRepository>();
+            var mpis = repository.GetView().ToList();
+            Assert.True(mpis.Any());
+        }
 
-            _repository.UpdateSendStatus(_sentItems);
+        [Test]
+        public void shoul_Update_Sent_Items_MsSQL()
+        {
+            var mpiIds = _extractsContext.MasterPatientIndices.AsNoTracking().Take(2).Select(x => x.Id).ToList();
+           var  sentItems = mpiIds.Select(x => new SentItem(x, SendStatus.Sent)).ToList();
+            var repository = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexRepository>();
+            repository.UpdateSendStatus(sentItems);
 
-            var updated = _repository.GetAll(x => x.Status == $"{nameof(SendStatus.Sent)}").ToList();
+            var updated = repository.GetAll(x => x.Status == $"{nameof(SendStatus.Sent)}").ToList();
             Assert.True(updated.Count==2);
+        }
+
+        [Test]
+        public void shoul_Update_Sent_Items_MySQL()
+        {
+            var mpiIds = _extractsContextMysql.MasterPatientIndices.AsNoTracking().Take(2).Select(x => x.Id).ToList();
+            var sentItems = mpiIds.Select(x => new SentItem(x, SendStatus.Sent)).ToList();
+            var repository = TestInitializer.ServiceProviderMysql.GetService<IMasterPatientIndexRepository>();
+            repository.UpdateSendStatus(sentItems);
+
+            var updated = repository.GetAll(x => x.Status == $"{nameof(SendStatus.Sent)}").ToList();
+            Assert.True(updated.Count == 2);
         }
 
         [TearDown]
