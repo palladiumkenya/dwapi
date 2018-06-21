@@ -19,6 +19,7 @@ using NUnit.Framework;
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Cbs
 {
     [TestFixture]
+    [Category("Cbs")]
     public class MasterPatientIndexRepositoryTests
     {
 

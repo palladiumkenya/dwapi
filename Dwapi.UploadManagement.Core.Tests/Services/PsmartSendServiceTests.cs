@@ -14,6 +14,7 @@ using NUnit.Framework;
 namespace Dwapi.UploadManagement.Core.Tests.Services
 {
     [TestFixture]
+    [Category("Psmart")]
     public class PsmartSendServiceTests
     {
         private readonly string _authToken = @"268DFA3EB92BC53FAE94A048E23112A1";

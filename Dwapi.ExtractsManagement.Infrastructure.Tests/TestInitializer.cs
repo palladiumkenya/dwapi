@@ -15,8 +15,10 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
+using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SettingsManagement.Infrastructure;
+using Dwapi.SharedKernel.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,7 +34,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
         public static EmrSystem Iqtools;
         public static EmrSystem KenyaEmr;
         public static Validator Validator;
-  
+        public static AppDatabase IqToolsDatabase;
+        public static AppDatabase KenyaEmrDatabase;
+        public static DatabaseProtocol IQtoolsDbProtocol;
+        public static DatabaseProtocol KenyaEmrDbProtocol;
 
         [OneTimeSetUp]
         public void Setup()
@@ -57,6 +62,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                 .AddTransient<IClearDwhExtracts, ClearDwhExtracts>()
                 .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
                 .AddTransient<IExtractSourceReader, ExtractSourceReader>()
+                .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
                 .BuildServiceProvider();
 
             var serviceProviderMysql = new ServiceCollection()
@@ -70,6 +76,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                 .AddTransient<IClearDwhExtracts, ClearDwhExtracts>()
                 .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
                 .AddTransient<IExtractSourceReader, ExtractSourceReader>()
+                .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
                 .BuildServiceProvider();
 
             ServiceProvider = serviceProvider;
@@ -103,6 +110,24 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                 .First(x => x.Id == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"));
 
             Validator = extractsContext.Validator.First();
+
+
+            var dbmanager= serviceProvider.GetService<IAppDatabaseManager>();
+
+            IqToolsDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,DatabaseProvider.MsSql);
+            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString, DatabaseProvider.MySql);
+
+            IQtoolsDbProtocol = Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
+            IQtoolsDbProtocol.Host = IqToolsDatabase.Server;
+            IQtoolsDbProtocol.Username = IqToolsDatabase.User;
+            IQtoolsDbProtocol.Password = IqToolsDatabase.Password;
+            //_iQtoolsDb.Password = TestInitializer.IqToolsDatabase.Database;
+
+            KenyaEmrDbProtocol = KenyaEmr.DatabaseProtocols.First();
+            KenyaEmrDbProtocol.Host = KenyaEmrDatabase.Server;
+            KenyaEmrDbProtocol.Username = KenyaEmrDatabase.User;
+            KenyaEmrDbProtocol.Password = KenyaEmrDatabase.Password;
+            KenyaEmrDbProtocol.DatabaseName = KenyaEmrDatabase.Database;
         }
     }
 }

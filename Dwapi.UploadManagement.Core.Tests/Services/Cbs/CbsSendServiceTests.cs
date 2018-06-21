@@ -18,6 +18,7 @@ using NUnit.Framework;
 namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
 {
     [TestFixture]
+    [Category("Cbs")]
     public class CbsSendServiceTests
     {
         private readonly string _authToken = @"1983aeda-6a96-11e8-adc0-fa7ae01bbebc";

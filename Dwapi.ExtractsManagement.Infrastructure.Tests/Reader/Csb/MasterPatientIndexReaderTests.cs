@@ -6,6 +6,7 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
 using NUnit.Framework;
@@ -13,6 +14,7 @@ using NUnit.Framework;
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
 {
     [TestFixture]
+    [Category("Cbs")]
     public class MasterPatientIndexReaderTests
     {
         private SettingsContext _settingsContext;
@@ -26,18 +28,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
         {
             _settingsContext = TestInitializer.ServiceProvider.GetService<SettingsContext>();
             _settingsContextMysql = TestInitializer.ServiceProviderMysql.GetService<SettingsContext>();
-
-            _iQtoolsDb = TestInitializer.Iqtools.DatabaseProtocols.First(x=>x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
-            _iQtoolsDb.Host = ".\\Koske14";
-            _iQtoolsDb.Username = "sa";
-            _iQtoolsDb.Password = "maun";
-            
-            _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
-            _kenyaEmrDb.Host = "127.0.0.1";
-            _kenyaEmrDb.Username = "root";
-            _kenyaEmrDb.Password = "test";
-            _kenyaEmrDb.DatabaseName = "openmrs";
-
+            _iQtoolsDb = TestInitializer.IQtoolsDbProtocol;
+            _kenyaEmrDb = TestInitializer.KenyaEmrDbProtocol;
         }
 
 

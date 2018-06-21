@@ -10,6 +10,7 @@ using NUnit.Framework;
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Stage.Psmart
 {
     [TestFixture]
+    [Category("Psmart")]
     public class PsmartStageRepositoryTests
     {
         private IPsmartStageRepository _psmartStageRepository;

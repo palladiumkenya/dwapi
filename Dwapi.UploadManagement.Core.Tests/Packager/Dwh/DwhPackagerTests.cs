@@ -17,6 +17,7 @@ using NUnit.Framework;
 namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
 {
     [TestFixture]
+    [Category("Dwh")]
     public class DwhPackagerTests
     {
         private IServiceProvider _serviceProvider;

@@ -23,6 +23,7 @@ using NUnit.Framework;
 namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
 {
     [TestFixture]
+    [Category("Dwh")]
     public class DwhSendServiceTests
     {
         private readonly string _authToken = @"1ba47c2a-6e05-11e8-adc0-fa7ae01bbebc";

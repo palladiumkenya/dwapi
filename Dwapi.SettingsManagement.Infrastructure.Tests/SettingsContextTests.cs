@@ -15,18 +15,18 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
 
         private IServiceProvider _serviceProvider;
         private IServiceProvider _serviceProviderMysql;
-        private const string MssqlConnection = "Data Source=.\\koske14;Initial Catalog=dwapidevb;Persist Security Info=True;User ID=sa;Password=maun;MultipleActiveResultSets=True";
-        private const string MysqlConnection = "server=127.0.0.1;port=3306;database=dwapidevb;user=root;password=test";
+        private const string MysqlConnection = "server=127.0.0.1;port=3307;database=dwapidevb;user=root;password=test";
 
         [OneTimeSetUp]
         public void Init()
         {
-            _serviceProvider = new ServiceCollection()
-                .AddDbContext<SettingsContext>(x => x.UseSqlServer(MssqlConnection))
-                .BuildServiceProvider();
+            _serviceProvider = TestInitializer.ServiceProvider;
+            _serviceProviderMysql = TestInitializer.ServiceProviderMysql;
 
+            //mysql 5.5
             _serviceProviderMysql = new ServiceCollection()
                 .AddDbContext<SettingsContext>(x => x.UseMySql(MysqlConnection))
+                .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
                 .BuildServiceProvider();
         }
 
@@ -49,8 +49,8 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         [Test]
         public void should_Setup_MySql_Database()
         {
-            var ctx = _serviceProviderMysql.GetService<SettingsContext>();
-
+           var ctx = _serviceProviderMysql.GetService<SettingsContext>();
+            Console.WriteLine(ctx.Database.GetDbConnection().ConnectionString);
             ctx.Database.EnsureDeleted();
             ctx.Database.Migrate();
             ctx.EnsureSeeded();

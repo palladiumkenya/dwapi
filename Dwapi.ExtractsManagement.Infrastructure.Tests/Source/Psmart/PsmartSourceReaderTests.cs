@@ -9,6 +9,7 @@ using NUnit.Framework;
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Source.Psmart
 {
     [TestFixture]
+    [Category("Psmart")]
     public class PsmartSourceReaderTests
     {
         private IPsmartSourceReader _psmartSourceReader;

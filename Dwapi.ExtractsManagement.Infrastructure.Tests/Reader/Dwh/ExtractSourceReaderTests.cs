@@ -15,6 +15,7 @@ using NUnit.Framework;
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
 {
     [TestFixture]
+    [Category("Dwh")]
     public class ExtractSourceReaderTests
     {
         private SettingsContext _settingsContext;
@@ -29,16 +30,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
             _settingsContext = TestInitializer.ServiceProvider.GetService<SettingsContext>();
             _settingsContextMysql = TestInitializer.ServiceProviderMysql.GetService<SettingsContext>();
 
-            _iQtoolsDb = TestInitializer.Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
-            _iQtoolsDb.Host = ".\\Koske14";
-            _iQtoolsDb.Username = "sa";
-            _iQtoolsDb.Password = "maun";
+            _iQtoolsDb = TestInitializer.IQtoolsDbProtocol;
+            _kenyaEmrDb = TestInitializer.KenyaEmrDbProtocol;
 
-            _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
-            _kenyaEmrDb.Host = "127.0.0.1";
-            _kenyaEmrDb.Username = "root";
-            _kenyaEmrDb.Password = "test";
-            _kenyaEmrDb.DatabaseName = "openmrs";
         }
 
         [TestCase(nameof(PatientExtract))]

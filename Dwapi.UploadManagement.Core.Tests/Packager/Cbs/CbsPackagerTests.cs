@@ -15,6 +15,7 @@ using NUnit.Framework;
 namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
 {
     [TestFixture]
+    [Category("Cbs")]
     public class CbsPackagerTests
     {
         private IServiceProvider _serviceProvider;

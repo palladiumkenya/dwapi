@@ -48,6 +48,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                 var tempPatientVisitExtracts = _tempPatientVisitExtractRepository.GetFromSql(query.ToString());
 
+
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempPatientVisitExtract>, List<PatientVisitExtract>>(tempPatientVisitExtracts);
                 foreach (var record in extractRecords)
