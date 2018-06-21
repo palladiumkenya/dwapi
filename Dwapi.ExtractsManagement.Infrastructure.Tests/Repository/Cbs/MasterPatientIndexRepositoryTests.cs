@@ -50,6 +50,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Cbs
         }
 
         [Test]
+        public void GetView()
+        {
+            _repository = _serviceProvider.GetService<IMasterPatientIndexRepository>();
+            var mpis = _repository.GetView().ToList();
+            Assert.True(mpis.Any());
+        }
+
+        [Test]
         public void shoul_Update_Sent_Items()
         {
             _sentItems = _mpiIds.Select(x => new SentItem(x, SendStatus.Sent)).ToList();
