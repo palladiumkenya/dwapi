@@ -5,10 +5,12 @@ using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
+using FizzWare.NBuilder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +24,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Cbs
 
         private ExtractsContext _extractsContext;
         private ExtractsContext _extractsContextMysql;
-        private DbProtocol _iQtoolsDb, _kenyaEmrDb;
 
         private IMasterPatientIndexReader _reader;
 
@@ -32,17 +33,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Cbs
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
             _extractsContextMysql = TestInitializer.ServiceProviderMysql.GetService<ExtractsContext>();
 
-            _iQtoolsDb = TestInitializer.Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
-            _iQtoolsDb.Host = ".\\Koske14";
-            _iQtoolsDb.Username = "sa";
-            _iQtoolsDb.Password = "maun";
+            var tempMpis = Builder<MasterPatientIndex>.CreateListOfSize(2).All().With(x=>x.Status="").Build().ToList();
 
-            _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
-            _kenyaEmrDb.Host = "127.0.0.1";
-            _kenyaEmrDb.Username = "root";
-            _kenyaEmrDb.Password = "test";
-            _kenyaEmrDb.DatabaseName = "openmrs";
+            _extractsContext.MasterPatientIndices.AddRange(tempMpis);
+            _extractsContext.SaveChanges();
 
+            _extractsContextMysql.MasterPatientIndices.AddRange(tempMpis);
+            _extractsContextMysql.SaveChanges();
         }
 
 
