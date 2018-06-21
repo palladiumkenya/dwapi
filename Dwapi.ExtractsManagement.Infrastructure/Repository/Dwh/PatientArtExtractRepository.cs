@@ -54,12 +54,23 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
         public IEnumerable<PatientArtExtract> BatchGet()
         {
             var cn = GetConnectionString();
-
-            using (var connection = new SqlConnection(cn))
+            var patientArtExtracts = new List<PatientArtExtract>();
+            if (Context.Database.ProviderName.ToLower().Contains("SqlServer".ToLower()))
             {
-                var patientArtExtracts = connection.GetAll<PatientArtExtract>();
-                return patientArtExtracts;
+                using (var connection = new SqlConnection(cn))
+                {
+                    patientArtExtracts = (List<PatientArtExtract>) connection.GetAll<PatientArtExtract>();
+                }
             }
+
+            if (Context.Database.ProviderName.ToLower().Contains("MySql".ToLower()))
+            {
+                using (var connection = new MySqlConnection(cn))
+                {
+                    patientArtExtracts = (List<PatientArtExtract>) connection.GetAll<PatientArtExtract>();
+                }
+            }
+            return patientArtExtracts;
         }
 
         public void UpdateSendStatus(List<SentItem> sentItems)
