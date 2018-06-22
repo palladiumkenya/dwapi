@@ -47,14 +47,14 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Dwh
             _extractsContextMySql.SaveChanges();
 
             _iQtoolsDb = TestInitializer.Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
-            _iQtoolsDb.Host = ".\\Koske14";
+            _iQtoolsDb.Host = ".";
             _iQtoolsDb.Username = "sa";
-            _iQtoolsDb.Password = "maun";
+            _iQtoolsDb.Password = "P@ssw0rd";
 
             _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
             _kenyaEmrDb.Host = "127.0.0.1";
             _kenyaEmrDb.Username = "root";
-            _kenyaEmrDb.Password = "test";
+            _kenyaEmrDb.Password = "mysql";
             _kenyaEmrDb.DatabaseName = "openmrs";
         }
 

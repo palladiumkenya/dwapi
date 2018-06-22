@@ -18,7 +18,7 @@ namespace Dwapi.SharedKernel.Interfaces
         void Create(T entity);
         void Update(T entity);
         void CreateOrUpdate(T entity);
-        List<T> GetFromSql(string query);
+        IEnumerable<T> GetFromSql(string query);
         DatabaseProvider GetConnectionProvider();
         void Delete(TId id);
         IDbConnection GetConnection(bool opened=true);

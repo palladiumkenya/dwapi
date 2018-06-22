@@ -48,21 +48,34 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                 var tempPatientStatusExtracts =_tempPatientStatusExtractRepository.GetFromSql(query.ToString());
 
-                //Auto mapper
-                var extractRecords = Mapper.Map<List<TempPatientStatusExtract>, List<PatientStatusExtract>>(tempPatientStatusExtracts);
-                foreach (var record in extractRecords)
+                const int take = 1000;
+                int skip = 0;
+                var count = tempPatientStatusExtracts.Count();
+                while (skip < count)
                 {
-                    record.Id = LiveGuid.NewGuid();
+                    var batch = tempPatientStatusExtracts.Skip(skip).Take(take).ToList();
+                    //Auto mapper
+                    var extractRecords = Mapper.Map<List<TempPatientStatusExtract>, List<PatientStatusExtract>>(batch);
+                    foreach (var record in extractRecords)
+                    {
+                        record.Id = LiveGuid.NewGuid();
+                    }
+                    //Batch Insert
+                    var inserted = _patientStatusExtractRepository.BatchInsert(extractRecords);
+                    if (!inserted)
+                    {
+                        Log.Error($"Extract {nameof(PatientStatusExtract)} not Loaded");
+                        return 0;
+                    }
+                    Log.Debug("saved batch");
+                    skip = skip + take;
+                    DomainEvents.Dispatch(
+                        new ExtractActivityNotification(extractId, new DwhProgress(
+                            nameof(PatientStatusExtract),
+                            nameof(ExtractStatus.Loading),
+                            found, skip, 0, 0, 0)));
                 }
-                //Batch Insert
-                var inserted = _patientStatusExtractRepository.BatchInsert(extractRecords);
-                if (!inserted)
-                {
-                    Log.Error($"Extract {nameof(PatientStatusExtract)} not Loaded");
-                    return 0;
-                }
-                Log.Debug("saved batch");
-                return tempPatientStatusExtracts.Count;
+                return count;
 
             }
             catch (Exception e)
