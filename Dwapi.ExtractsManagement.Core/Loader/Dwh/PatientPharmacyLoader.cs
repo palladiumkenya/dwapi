@@ -49,21 +49,34 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 string query = queryBuilder.ToString();
                 var tempPatientPharmacyExtracts = _tempPatientPharmacyExtractRepository.GetFromSql(query);
 
-                //Auto mapper
-                var extractRecords = Mapper.Map<List<TempPatientPharmacyExtract>, List<PatientPharmacyExtract>>(tempPatientPharmacyExtracts);
-                foreach (var record in extractRecords)
+                const int take = 1000;
+                int skip = 0;
+                var count = tempPatientPharmacyExtracts.Count();
+                while (skip < count)
                 {
-                    record.Id = LiveGuid.NewGuid();
+                    var batch = tempPatientPharmacyExtracts.Skip(skip).Take(take).ToList();
+                    //Auto mapper
+                    var extractRecords = Mapper.Map<List<TempPatientPharmacyExtract>, List<PatientPharmacyExtract>>(batch);
+                    foreach (var record in extractRecords)
+                    {
+                        record.Id = LiveGuid.NewGuid();
+                    }
+                    //Batch Insert
+                    var inserted = _patientPharmacyExtractRepository.BatchInsert(extractRecords);
+                    if (!inserted)
+                    {
+                        Log.Error($"Extract {nameof(PatientPharmacyExtract)} not Loaded");
+                        return 0;
+                    }
+                    Log.Debug("saved batch");
+                    skip = skip + take;
+                    DomainEvents.Dispatch(
+                        new ExtractActivityNotification(extractId, new DwhProgress(
+                            nameof(PatientPharmacyExtract),
+                            nameof(ExtractStatus.Loading),
+                            found, skip, 0, 0, 0)));
                 }
-                //Batch Insert
-                var inserted = _patientPharmacyExtractRepository.BatchInsert(extractRecords);
-                if (!inserted)
-                {
-                    Log.Error($"Extract {nameof(PatientPharmacyExtract)} not Loaded");
-                    return 0;
-                }
-                Log.Debug("saved batch");
-                return tempPatientPharmacyExtracts.Count;
+                return count;
             }
             catch (Exception e)
             {

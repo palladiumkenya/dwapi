@@ -77,9 +77,9 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             Create(entity);
         }
 
-        public List<T> GetFromSql(string query)
+        public IEnumerable<T> GetFromSql(string query)
         {
-            var results = new List<T>();
+            IEnumerable<T> results = Enumerable.Empty<T>();
 
             var cn = GetConnectionString();
 
@@ -87,7 +87,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             {
                 using (var connection = new SqlConnection(cn))
                 {
-                    results = connection.Query<T>(query).ToList();
+                    results = connection.Query<T>(query);
 
                 }
             }
@@ -96,7 +96,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             {
                 using (var connection = new MySqlConnection(cn))
                 {
-                    results = connection.Query<T>(query).ToList();
+                    results = connection.Query<T>(query);
 
                 }
             }

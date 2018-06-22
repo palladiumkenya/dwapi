@@ -48,23 +48,34 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                 var tempPatientVisitExtracts = _tempPatientVisitExtractRepository.GetFromSql(query.ToString());
 
-
-                //Auto mapper
-                var extractRecords = Mapper.Map<List<TempPatientVisitExtract>, List<PatientVisitExtract>>(tempPatientVisitExtracts);
-                foreach (var record in extractRecords)
+                const int take = 1000;
+                int skip = 0;
+                var count = tempPatientVisitExtracts.Count();
+                while (skip < count)
                 {
-                    record.Id = LiveGuid.NewGuid();
+                    var batch = tempPatientVisitExtracts.Skip(skip).Take(take).ToList();
+                    //Auto mapper
+                    var extractRecords = Mapper.Map<List<TempPatientVisitExtract>, List<PatientVisitExtract>>(batch);
+                    foreach (var record in extractRecords)
+                    {
+                        record.Id = LiveGuid.NewGuid();
+                    }
+                    //Batch Insert
+                    var inserted = _patientVisitExtractRepository.BatchInsert(extractRecords);
+                    if (!inserted)
+                    {
+                        Log.Error($"Extract {nameof(PatientVisitExtract)} not Loaded");
+                        return 0;
+                    }
+                    Log.Debug("saved batch");
+                    skip = skip + take;
+                    DomainEvents.Dispatch(
+                        new ExtractActivityNotification(extractId, new DwhProgress(
+                            nameof(PatientVisitExtract),
+                            nameof(ExtractStatus.Loading),
+                            found, skip , 0, 0, 0)));
                 }
-                //Batch Insert
-                var inserted = _patientVisitExtractRepository.BatchInsert(extractRecords);
-                if (!inserted)
-                {
-                    Log.Error($"Extract {nameof(PatientVisitExtract)} not Loaded");
-                    return 0;
-                }
-                Log.Debug("saved batch");
-                return tempPatientVisitExtracts.Count;
-
+                return count;
             }
             catch (Exception e)
             {

@@ -38,23 +38,36 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         found, 0, 0, 0, 0)));
 
                 //load temp extracts without errors
-                var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false).ToList();
+                var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false);
 
-                //Auto mapper
-                var extractRecords = Mapper.Map<List<TempPatientExtract>, List<PatientExtract>>(tempPatientExtracts);
-                foreach (var record in extractRecords)
+                const int take = 1000;
+                int skip = 0;
+                var count = tempPatientExtracts.Count();
+                while (skip < count)
                 {
-                    record.Id = LiveGuid.NewGuid();
+                    var batch = tempPatientExtracts.Skip(skip).Take(take).ToList();
+                    //Auto mapper
+                    var extractRecords = Mapper.Map<List<TempPatientExtract>, List<PatientExtract>>(batch);
+                    foreach (var record in extractRecords)
+                    {
+                        record.Id = LiveGuid.NewGuid();
+                    }
+                    //Batch Insert
+                    var inserted = _patientExtractRepository.BatchInsert(extractRecords);
+                    if (!inserted)
+                    {
+                        Log.Error($"Extract {nameof(PatientExtract)} not Loaded");
+                        return 0;
+                    }
+                    Log.Debug("saved batch");
+                    skip = skip + take;
+                    DomainEvents.Dispatch(
+                        new ExtractActivityNotification(extractId, new DwhProgress(
+                            nameof(PatientExtract),
+                            nameof(ExtractStatus.Loading),
+                            found, skip, 0, 0, 0)));
                 }
-                //Batch Insert
-                var inserted = _patientExtractRepository.BatchInsert(extractRecords);
-                if (!inserted)
-                {
-                    Log.Error($"Extract {nameof(PatientExtract)} not Loaded");
-                    return 0;
-                }
-                Log.Debug("saved batch");
-                return tempPatientExtracts.Count;
+                return count;
             }
             catch (Exception e)
             {
