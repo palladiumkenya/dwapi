@@ -94,10 +94,9 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     }
 
     private getInvalidPatientExtracts(): void {
-        this.getInvalid$ = this._patientExtractsService.loadErrors().subscribe(
+        this.getInvalid$ = this._patientExtractsService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
-                //console.log('Invalid Patient', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -113,10 +112,9 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     }
 
     private getInvalidPatientArtExtracts(): void {
-        this.getInvalid$ = this._patientArtService.loadErrors().subscribe(
+        this.getInvalid$ = this._patientArtService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
-                //console.log('Invalid Art', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -132,10 +130,9 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     }
 
     private getInvalidPatientBaselineExtracts(): void {
-        this.getInvalid$ = this._patientBaselineService.loadErrors().subscribe(
+        this.getInvalid$ = this._patientBaselineService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
-                //console.log('Invalid Baselines', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -151,10 +148,9 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     }
 
     private getInvalidPatientLabExtracts(): void {
-        this.getInvalid$ = this._patientLabService.loadErrors().subscribe(
+        this.getInvalid$ = this._patientLabService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
-                //console.log('Invalid Lab', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -170,10 +166,9 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     }
 
     private getInvalidPatientPharmacyExtracts(): void {
-        this.getInvalid$ = this._patientPharmacyService.loadErrors().subscribe(
+        this.getInvalid$ = this._patientPharmacyService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
-                //console.log('Invalid PharmacyS', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -189,10 +184,9 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     }
 
     private getInvalidPatientStatusExtracts(): void {
-        this.getInvalid$ = this._patientStatusService.loadErrors().subscribe(
+        this.getInvalid$ = this._patientStatusService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
-                //console.log('Invalid Status', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -208,10 +202,9 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     }
 
     private getInvalidPatientVisitExtracts(): void {
-        this.getInvalid$ = this._patientVisitService.loadErrors().subscribe(
+        this.getInvalid$ = this._patientVisitService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
-                //console.log('Invalid Visit', this.invalidExtracts);
             },
             e => {
                 this.errorMessage = [];
@@ -228,182 +221,159 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientColumns(): void {
         this.cols = [
-            { field: 'patientPK', header: 'Patient PK' },
-            { field: 'patientID', header: 'Patient ID' },
-            { field: 'facilityId', header: 'Facility Id' },
-            { field: 'siteCode', header: 'Site Code' },
-            { field: 'emr', header: 'EMR' },
-            { field: 'project', header: 'Project' },
-            { field: 'facilityName', header: 'Facility Name' },
-            { field: 'gender', header: 'Gender' },
-            { field: 'dob', header: 'DOB' },
-            { field: 'registrationDate', header: 'Registration Date' },
-            { field: 'registrationAtCCC', header: 'Registration At CCC' },
-            { field: 'registrationAtPMTCT', header: 'Registration At PMTCT' },
-            {
-                field: 'registrationAtTBClinic',
-                header: 'Registration At TB Clinic'
-            },
-            { field: 'patientSource', header: 'Patient Source' },
-            { field: 'region', header: 'Region' },
-            { field: 'district', header: 'District' },
-            { field: 'village', header: 'Village' },
-            { field: 'contactRelation', header: 'Contact Relation' },
-            { field: 'lastVisit', header: 'Last Visit' },
-            { field: 'maritalStatus', header: 'Marital Status' },
-            { field: 'educationLevel', header: 'Education Level' },
-            {
-                field: 'dateConfirmedHIVPositive',
-                header: 'Date Confirmed HIV Positive'
-            },
-            { field: 'previousARTExposure', header: 'Previous ART Exposure' },
-            {
-                field: 'previousARTStartDate',
-                header: 'Previous ART Start Date'
-            },
-            { field: 'statusAtCCC', header: 'Status At CCC' },
-            { field: 'statusAtPMTCT', header: 'Status At PMTCT' },
-            { field: 'statusAtTBClinic', header: 'Status At TB Clinic' },
-            { field: 'satelliteName', header: 'Satellite Name' }
+            { field: 'id', header: 'Id' },
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' },
+            { field: 'summary', header: 'Summary' },
+            { field: 'dateGenerated', header: 'DateGenerated' },
+            { field: 'patientPK', header: 'PatientPK' },
+            { field: 'facilityId', header: 'FacilityId' },
+            { field: 'patientID', header: 'PatientID' },
+            { field: 'siteCode', header: 'SiteCode' },
+            { field: 'facilityName', header: 'FacilityName' },
+            { field: 'recordId', header: 'RecordId' }
         ];
     }
 
     private getPatientArtColumns(): void {
         this.cols = [
             { field: 'id', header: 'Id' },
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' },
+            { field: 'summary', header: 'Summary' },
+            { field: 'dateGenerated', header: 'Date Generated' },
             { field: 'patientPK', header: 'Patient PK' },
-            { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
+            { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
             { field: 'facilityName', header: 'Facility Name' },
-            { field: 'emr', header: 'Emr' },
-            { field: 'project', header: 'Project' },
-            { field: 'dOB', header: 'DOB' },
-            { field: 'ageEnrollment', header: 'Enrollment Age' },
-            { field: 'ageARTStart', header: 'Age ART Start' },
-            { field: 'ageLastVisit', header: 'Age Last Visit' },
-            { field: 'registrationDate', header: 'Registration Date' },
-            { field: 'patientSource', header: 'Patient Source' },
+            { field: 'recordId', header: 'Record Id' },
+            { field: 'dob', header: 'DOB' },
             { field: 'gender', header: 'Gender' },
-            { field: 'startARTDate', header: 'Start ART Date' },
+            { field: 'patientSource', header: 'Patient Source' },
+            { field: 'registrationDate', header: 'Registration Date' },
+            { field: 'ageLastVisit', header: 'Age Last Visit' },
             { field: 'previousARTStartDate', header: 'Previous ART Start Date' },
             { field: 'previousARTRegimen', header: 'Previous ART Regimen' },
             { field: 'startARTAtThisFacility', header: 'Start ART At This Facility' },
+            { field: 'startARTDate', header: 'Start ART Date' },
             { field: 'startRegimen', header: 'Start Regimen' },
             { field: 'startRegimenLine', header: 'Start Regimen Line' },
             { field: 'lastARTDate', header: 'Last ART Date' },
             { field: 'lastRegimen', header: 'Last Regimen' },
             { field: 'lastRegimenLine', header: 'Last Regimen Line' },
-            { field: 'duration', header: 'Duration' },
-            { field: 'expectedReturn', header: 'Expected Return' },
-            { field: 'provider', header: 'Provider' },
             { field: 'lastVisit', header: 'Last Visit' },
             { field: 'exitReason', header: 'Exit Reason' },
-            { field: 'exitDate', header: 'Exit Date' },
-            { field: 'dateExtracted', header: 'Date Extracted' }
+            { field: 'exitDate', header: 'Exit Date' }
         ];
     }
 
     private getPatientBaselineColumns(): void {
         this.cols = [
-
             { field: 'id', header: 'Id' },
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' },
+            { field: 'summary', header: 'Summary' },
+            { field: 'dateGenerated', header: 'Date Generated' },
             { field: 'patientPK', header: 'Patient PK' },
-            { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
+            { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
-            { field: 'dateExtracted', header: 'Date Extracted' },
-            { field: 'bCD4', header: 'Baseline CD4' },
-            { field: 'bCD4Date', header: 'Baseline CD4 Date' },
-            { field: 'bWAB', header: 'Baseline WAB' },
-            { field: 'bWABDate', header: 'Baseline WAB Date' },
-            { field: 'bWHO', header: 'Baseline WHO' },
-            { field: 'bWHODate', header: 'Baseline WHO Date' },
-            { field: 'eWAB', header: 'Enrollment WAB' },
-            { field: 'eWABDate', header: 'Enrollment WAB Date' },
-            { field: 'eCD4', header: 'Enrollment CD4' },
-            { field: 'eCD4Date', header: 'Enrollment CD4 Date' },
-            { field: 'eWHO', header: 'Enrollment WHO' },
-            { field: 'eWHODate', header: 'Enrollment WHO Date' },
-            { field: 'lastWHO', header: 'Last WHO' },
-            { field: 'lastWHODate', header: 'Last WHO Date' },
-            { field: 'lastCD4', header: 'Last CD4' },
-            { field: 'lastCD4Date', header: 'Last CD4 Date' },
-            { field: 'lastWAB', header: 'Last WAB' },
-            { field: 'lastWABDate', header: 'Last WAB Date' },
+            { field: 'recordId', header: 'Record Id' },
+            { field: 'bCD4', header: 'bCD4' },
+            { field: 'bCD4Date', header: 'bCD4 Date' },
+            { field: 'bWAB', header: 'bWAB' },
+            { field: 'bWABDate', header: 'bWAB Date' },
+            { field: 'bWHO', header: 'bWHO' },
+            { field: 'bWHODate', header: 'bWHO Date' },
+            { field: 'eWAB', header: 'eWAB' },
+            { field: 'eWABDate', header: 'eWAB Date' },
+            { field: 'eCD4', header: 'eCD4' },
+            { field: 'eCD4Date', header: 'eCD4 Date' },
+            { field: 'eWHO', header: 'eWHO' },
+            { field: 'eWHODate', header: 'eWHO Date' },
+            { field: 'lastWHO', header: 'lastWHO' },
+            { field: 'lastWHODate', header: 'last WHO Date' },
+            { field: 'lastCD4', header: 'lastCD4' },
+            { field: 'lastCD4Date', header: 'last CD4 Date' },
+            { field: 'lastWAB', header: 'lastWAB' },
+            { field: 'lastWABDate', header: 'last WAB Date' },
             { field: 'm12CD4', header: 'm12CD4' },
-            { field: 'm12CD4Date', header: 'm12CD4Date' },
+            { field: 'm12CD4Date', header: 'm12CD4 Date' },
             { field: 'm6CD4', header: 'm6CD4' },
-            { field: 'm6CD4Date', header: 'm6CD4Date' },
-            { field: 'emr', header: 'Emr' },
-            { field: 'project', header: 'Project' },
-            { field: 'checkError', header: 'Check Error' }
+            { field: 'm6CD4Date', header: 'm6CD4 Date' }
         ];
     }
 
     private getPatientLaboratoryColumns(): void {
         this.cols = [
-
-            { field: 'id', header: 'Id' },
-            { field: 'patientPK', header: 'Patient PK' },
-            { field: 'patientID', header: 'Patient ID' },
-            { field: 'facilityId', header: 'Facility Id' },
-            { field: 'siteCode', header: 'Site Code' },
-            { field: 'checkError', header: 'Check Error' },
-            { field: 'facilityName', header: 'Facility Name' },
-            { field: 'satelliteName', header: 'Satellite Name' },
-            { field: 'emr', header: 'Emr' },
-            { field: 'project', header: 'Project' },
-            { field: 'visitId', header: 'VisitId' },
-            { field: 'orderedByDate', header: 'Ordered By Date' },
-            { field: 'reportedByDate', header: 'Reported By Date' },
-            { field: 'testName', header: 'Test Name' },
-            { field: 'enrollmentTest', header: 'Enrollment Test' },
-            { field: 'testResult', header: 'Test Result' },
-            { field: 'dateExtracted', header: 'Date Extracted' }
+        { field: 'id', header: 'Id' },
+        { field: 'extract', header: 'Extract' },
+        { field: 'field', header: 'Field' },
+        { field: 'type', header: 'Type' },
+        { field: 'summary', header: 'Summary' },
+        { field: 'dateGenerated', header: 'Date Generated' },
+        { field: 'patientPK', header: 'Patient PK' },
+        { field: 'facilityId', header: 'Facility Id' },
+        { field: 'patientID', header: 'Patient ID' },
+        { field: 'siteCode', header: 'Site Code' },
+        { field: 'facilityName', header: 'Facility Name' },
+        { field: 'recordId', header: 'Record Id' },
+        { field: 'orderedByDate', header: 'Ordered By Date' },
+        { field: 'reportedByDate', header: 'Reported By Date' },
+        { field: 'testName', header: 'Test Name' },
+        { field: 'enrollmentTest', header: 'Enrollment Test' },
+        { field: 'testResult', header: 'Test Result' },
+        { field: 'visitId', header: 'Visit Id' }
         ];
     }
 
     private getPatientPharmacyColumns(): void {
         this.cols = [
-
             { field: 'id', header: 'Id' },
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' },
+            { field: 'summary', header: 'Summary' },
+            { field: 'dateGenerated', header: 'Date Generated' },
             { field: 'patientPK', header: 'Patient PK' },
-            { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
+            { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
-            { field: 'dateExtracted', header: 'Date Extracted' },
-            { field: 'visitID', header: 'Visit ID' },
+            { field: 'recordId', header: 'Record Id' },
             { field: 'drug', header: 'Drug' },
-            { field: 'provider', header: 'Provider' },
             { field: 'dispenseDate', header: 'Dispense Date' },
             { field: 'duration', header: 'Duration' },
             { field: 'expectedReturn', header: 'Expected Return' },
             { field: 'treatmentType', header: 'Treatment Type' },
             { field: 'regimenLine', header: 'Regimen Line' },
             { field: 'periodTaken', header: 'Period Taken' },
-            { field: 'prophylaxisType', header: 'Prophylaxis Type' },
-            { field: 'emr', header: 'Emr' },
-            { field: 'project', header: 'Project' },
-            { field: 'checkError', header: 'Check Error' }
+            { field: 'prophylaxisType', header: 'ProphylaxisT ype' },
+            { field: 'provider', header: 'Provider' },
+            { field: 'visitID', header: 'VisitID' }
         ];
     }
 
     private getPatientStatusColumns(): void {
         this.cols = [
             { field: 'id', header: 'Id' },
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' },
+            { field: 'summary', header: 'Summary' },
+            { field: 'dateGenerated', header: 'Date Generated' },
             { field: 'patientPK', header: 'Patient PK' },
-            { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
+            { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
-            { field: 'dateExtracted', header: 'Date Extracted' },
             { field: 'facilityName', header: 'Facility Name' },
-            { field: 'emr', header: 'Emr' },
-            { field: 'project', header: 'Project' },
+            { field: 'recordId', header: 'Record Id' },
             { field: 'exitDescription', header: 'Exit Description' },
             { field: 'exitDate', header: 'Exit Date' },
-            { field: 'exitReason', header: 'Exit Reason' },
-            { field: 'checkError', header: 'CheckError' }
+            { field: 'exitReason', header: 'Exit Reason' }
         ];
     }
 
@@ -411,21 +381,21 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
         this.cols = [
 
             { field: 'id', header: 'Id' },
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' },
+            { field: 'summary', header: 'Summary' },
+            { field: 'dateGenerated', header: 'Date Generated' },
             { field: 'patientPK', header: 'Patient PK' },
-            { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
+            { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
-            { field: 'dateExtracted', header: 'Date Extracted' },
-            { field: 'checkError', header: 'Check Error' },
             { field: 'facilityName', header: 'Facility Name' },
-            { field: 'emr', header: 'Emr' },
-            { field: 'nextAppointmentDate', header: 'NextAppointmentDate' },
-            { field: 'project', header: 'Project' },
-            { field: 'visitId', header: 'Visit Id' },
+            { field: 'recordId', header: 'Record Id' },
             { field: 'visitDate', header: 'Visit Date' },
             { field: 'service', header: 'Service' },
             { field: 'visitType', header: 'Visit Type' },
-            { field: 'wHOStage', header: 'WHOS tage' },
+            { field: 'wHOStage', header: 'WHO Stage' },
             { field: 'wABStage', header: 'WAB Stage' },
             { field: 'pregnant', header: 'Pregnant' },
             { field: 'lMP', header: 'LMP' },
@@ -437,15 +407,17 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'oIDate', header: 'OI Date' },
             { field: 'adherence', header: 'Adherence' },
             { field: 'adherenceCategory', header: 'Adherence Category' },
-            { field: 'substitutionFirstlineRegimenDate', header: 'SubstitutionFirstlineRegimenDate' },
-            { field: 'substitutionFirstlineRegimenReason', header: 'SubstitutionFirstlineRegimenReason' },
-            { field: 'substitutionSecondlineRegimenDate', header: 'SubstitutionSecondlineRegimenDate' },
-            { field: 'substitutionSecondlineRegimenReason', header: 'SubstitutionSecondlineRegimenReason' },
-            { field: 'secondlineRegimenChangeDate', header: 'SecondlineRegimenChangeDate' },
-            { field: 'secondlineRegimenChangeReason', header: 'SecondlineRegimenChangeReason' },
-            { field: 'familyPlanningMethod', header: 'FamilyPlanningMethod' },
+            { field: 'substitutionFirstlineRegimenDate', header: 'Substitution Firstline Regimen Date' },
+            { field: 'substitutionFirstlineRegimenReason', header: 'Substitution Firstline Regimen Reason' },
+            { field: 'substitutionSecondlineRegimenDate', header: 'Substitution Secondline Regimen Date' },
+            { field: 'substitutionSecondlineRegimenReason', header: 'Substitution Secondline Regimen Reason' },
+            { field: 'secondlineRegimenChangeDate', header: 'Secondline Regimen Change Date' },
+            { field: 'secondlineRegimenChangeReason', header: 'Secondline RegimenChange Reason' },
+            { field: 'familyPlanningMethod', header: 'Family Planning Method' },
             { field: 'pwP', header: 'PwP' },
-            { field: 'gestationAge', header: 'GestationAge' }
+            { field: 'gestationAge', header: 'Gestation Age' },
+            { field: 'nextAppointmentDate', header: 'Next Appointment Date' },
+            { field: 'visitId', header: 'Visit Id' }
         ];
     }
 }

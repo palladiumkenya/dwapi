@@ -30,7 +30,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string StatusAtCCC { get; set; }
         public string StatusAtPMTCT { get; set; }
         public string StatusAtTBClinic { get; set; }
-     
+        [NotMapped]
         public virtual ICollection<TempPatientExtractErrorSummary> TempPatientExtractErrorSummaries { get; set; } = new List<TempPatientExtractErrorSummary>();
     
     }

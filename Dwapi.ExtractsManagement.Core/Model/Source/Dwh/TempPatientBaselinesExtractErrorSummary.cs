@@ -9,8 +9,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         
         [NotMapped]
         public override string FacilityName { get; set; }
-
-
         public int? bCD4 { get; set; }
         public DateTime? bCD4Date { get; set; }
         public int? bWAB { get; set; }

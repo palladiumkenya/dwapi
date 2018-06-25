@@ -11,10 +11,12 @@ namespace Dwapi.Controller.ExtractDetails
     public class PatientsController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
+        private readonly ITempPatientExtractErrorSummaryRepository _errorSummaryRepository;
 
-        public PatientsController(ITempPatientExtractRepository tempPatientExtractRepository)
+        public PatientsController(ITempPatientExtractRepository tempPatientExtractRepository, ITempPatientExtractErrorSummaryRepository errorSummaryRepository)
         {
             _tempPatientExtractRepository = tempPatientExtractRepository;
+            _errorSummaryRepository = errorSummaryRepository;
         }
 
         [HttpGet("LoadValid")]
@@ -45,6 +47,22 @@ namespace Dwapi.Controller.ExtractDetails
             catch (Exception e)
             {
                 var msg = $"Error loading Patient Extracts with errors";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+        [HttpGet("LoadValidations")]
+        public IActionResult LoadValidations()
+        {
+            try
+            {
+                var errorSummary = _errorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading Patient error summary";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

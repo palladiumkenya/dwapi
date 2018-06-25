@@ -17,6 +17,7 @@ namespace Dwapi.Tests.Controller
         private PatientsController _patientsController;
 
         private ITempPatientExtractRepository _tempPatientExtractRepository;
+        private ITempPatientExtractErrorSummaryRepository _errorSummaryRepository;
         private DbContextOptions<ExtractsContext> _options;
         private ExtractsContext _context;
 
@@ -33,7 +34,8 @@ namespace Dwapi.Tests.Controller
         {
             _context = new ExtractsContext(_options);
             _tempPatientExtractRepository = new TempPatientExtractRepository(_context);
-            _patientsController = new PatientsController(_tempPatientExtractRepository);
+            _errorSummaryRepository = new TempPatientExtractErrorSummaryRepository(_context);
+            _patientsController = new PatientsController(_tempPatientExtractRepository, _errorSummaryRepository);
         }
 
         [Test]

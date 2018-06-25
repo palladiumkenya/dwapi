@@ -12,11 +12,13 @@ namespace Dwapi.Controller.ExtractDetails
     {
         private readonly ITempPatientArtExtractRepository _tempPatientArtExtractRepository;
         private readonly IPatientArtExtractRepository _patientArtExtractRepository;
+        private readonly ITempPatientArtExtractErrorSummaryRepository _errorSummaryRepository;
 
-        public PatientArtController(ITempPatientArtExtractRepository tempPatientArtExtractRepository, IPatientArtExtractRepository patientArtExtractRepository)
+        public PatientArtController(ITempPatientArtExtractRepository tempPatientArtExtractRepository, IPatientArtExtractRepository patientArtExtractRepository, ITempPatientArtExtractErrorSummaryRepository errorSummaryRepository)
         {
             _tempPatientArtExtractRepository = tempPatientArtExtractRepository;
             _patientArtExtractRepository = patientArtExtractRepository;
+            _errorSummaryRepository = errorSummaryRepository;
         }
 
         [HttpGet("LoadValid")]
@@ -47,6 +49,23 @@ namespace Dwapi.Controller.ExtractDetails
             catch (Exception e)
             {
                 var msg = $"Error loading PatientArt Extracts with errors";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("LoadValidations")]
+        public IActionResult LoadValidations()
+        {
+            try
+            {
+                var errorSummary = _errorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading PatientArt error summary";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

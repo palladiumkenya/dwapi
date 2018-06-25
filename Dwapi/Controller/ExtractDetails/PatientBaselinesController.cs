@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System;
 using System.Linq;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 
 namespace Dwapi.Controller.ExtractDetails
 {
@@ -12,11 +13,13 @@ namespace Dwapi.Controller.ExtractDetails
     {
         private readonly ITempPatientBaselinesExtractRepository _tempPatientBaselinesExtractRepository;
         private readonly IPatientBaselinesExtractRepository _patientBaselinesExtractRepository;
+        private readonly ITempPatientBaselinesExtractErrorSummaryRepository _errorSummaryRepository;
 
-        public PatientBaselinesController(ITempPatientBaselinesExtractRepository tempPatientBaselinesExtractRepository, IPatientBaselinesExtractRepository patientBaselinesExtractRepository)
+        public PatientBaselinesController(ITempPatientBaselinesExtractRepository tempPatientBaselinesExtractRepository, IPatientBaselinesExtractRepository patientBaselinesExtractRepository, ITempPatientBaselinesExtractErrorSummaryRepository errorSummaryRepository)
         {
             _tempPatientBaselinesExtractRepository = tempPatientBaselinesExtractRepository;
             _patientBaselinesExtractRepository = patientBaselinesExtractRepository;
+            _errorSummaryRepository = errorSummaryRepository;
         }
 
         [HttpGet("LoadValid")]
@@ -47,6 +50,23 @@ namespace Dwapi.Controller.ExtractDetails
             catch (Exception e)
             {
                 var msg = $"Error loading PatientBaselines Extracts with errors";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("LoadValidations")]
+        public IActionResult LoadValidations()
+        {
+            try
+            {
+                var errorSummary = _errorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading Patient Baselines error summary";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

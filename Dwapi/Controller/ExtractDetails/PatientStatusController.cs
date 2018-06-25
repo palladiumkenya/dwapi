@@ -12,11 +12,13 @@ namespace Dwapi.Controller.ExtractDetails
     {
         private readonly ITempPatientStatusExtractRepository _tempPatientStatusExtractRepository;
         private readonly IPatientStatusExtractRepository _patientStatusExtractRepository;
+        private readonly ITempPatientStatusExtractErrorSummaryRepository _errorSummaryRepository;
 
-        public PatientStatusController(ITempPatientStatusExtractRepository tempPatientStatusExtractRepository, IPatientStatusExtractRepository patientStatusExtractRepository)
+        public PatientStatusController(ITempPatientStatusExtractRepository tempPatientStatusExtractRepository, IPatientStatusExtractRepository patientStatusExtractRepository, ITempPatientStatusExtractErrorSummaryRepository errorSummaryRepository)
         {
             _tempPatientStatusExtractRepository = tempPatientStatusExtractRepository;
             _patientStatusExtractRepository = patientStatusExtractRepository;
+            _errorSummaryRepository = errorSummaryRepository;
         }
 
         [HttpGet("LoadValid")]
@@ -47,6 +49,23 @@ namespace Dwapi.Controller.ExtractDetails
             catch (Exception e)
             {
                 var msg = $"Error loading PatientStatus Extracts with errors";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("LoadValidations")]
+        public IActionResult LoadValidations()
+        {
+            try
+            {
+                var errorSummary = _errorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading Patient Status error summary";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

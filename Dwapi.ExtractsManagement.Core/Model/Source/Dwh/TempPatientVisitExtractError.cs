@@ -34,7 +34,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PwP { get; set; }
         public decimal? GestationAge { get; set; }
         public DateTime? NextAppointmentDate { get; set; }
-
+        [NotMapped]
         public virtual ICollection<TempPatientVisitExtractErrorSummary> TempPatientVisitExtractErrorSummaries { get; set; } = new List<TempPatientVisitExtractErrorSummary>();
     }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { PatientExtract } from '../models/patient-extract';
 
 @Injectable()
 export class NdwhPatientVisitService {
@@ -13,15 +12,20 @@ export class NdwhPatientVisitService {
       this._http = http;
   }
 
-  public loadValid(): Observable<PatientExtract[]> {
-      return this._http.get<PatientExtract>(this._url + '/loadValid')
+  public loadValid(): Observable<any[]> {
+      return this._http.get<any>(this._url + '/loadValid')
           .catch(this.handleError);
   }
 
-  public loadErrors(): Observable<PatientExtract[]> {
-      return this._http.get<PatientExtract>(this._url + '/loadErrors')
+  public loadErrors(): Observable<any[]> {
+      return this._http.get<any>(this._url + '/loadErrors')
           .catch(this.handleError);
   }
+
+  public loadValidations(): Observable<any[]> {
+    return this._http.get<any>(this._url + '/LoadValidations')
+        .catch(this.handleError);
+    }
 
   private handleError(err: HttpErrorResponse) {
       if (err.status === 404) {

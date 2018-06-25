@@ -947,13 +947,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Summary");
 
-                    b.Property<Guid?>("TempPatientArtExtractErrorId");
-
                     b.Property<string>("Type");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TempPatientArtExtractErrorId");
 
                     b.ToTable("vTempPatientArtExtractErrorSummary");
                 });
@@ -1121,8 +1117,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Summary");
 
-                    b.Property<Guid?>("TempPatientBaselinesExtractErrorId");
-
                     b.Property<string>("Type");
 
                     b.Property<int?>("bCD4");
@@ -1170,8 +1164,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<DateTime?>("m6CD4Date");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TempPatientBaselinesExtractErrorId");
 
                     b.ToTable("vTempPatientBaselinesExtractErrorSummary");
                 });
@@ -1341,13 +1333,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Summary");
 
-                    b.Property<Guid?>("TempPatientExtractErrorId");
-
                     b.Property<string>("Type");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TempPatientExtractErrorId");
 
                     b.ToTable("vTempPatientExtractErrorSummary");
                 });
@@ -1467,8 +1455,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Summary");
 
-                    b.Property<Guid?>("TempPatientLaboratoryExtractErrorId");
-
                     b.Property<string>("TestName");
 
                     b.Property<string>("TestResult");
@@ -1478,8 +1464,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("VisitId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TempPatientLaboratoryExtractErrorId");
 
                     b.ToTable("vTempPatientLaboratoryExtractErrorSummary");
                 });
@@ -1615,8 +1599,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Summary");
 
-                    b.Property<Guid?>("TempPatientPharmacyExtractErrorId");
-
                     b.Property<string>("TreatmentType");
 
                     b.Property<string>("Type");
@@ -1624,8 +1606,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("VisitID");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TempPatientPharmacyExtractErrorId");
 
                     b.ToTable("vTempPatientPharmacyExtractErrorSummary");
                 });
@@ -1729,13 +1709,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Summary");
 
-                    b.Property<Guid?>("TempPatientStatusExtractErrorId");
-
                     b.Property<string>("Type");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TempPatientStatusExtractErrorId");
 
                     b.ToTable("vTempPatientStatusExtractErrorSummary");
                 });
@@ -1900,94 +1876,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("vTempPatientVisitExtractError");
                 });
 
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientVisitExtractErrorSummary", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Adherence");
-
-                    b.Property<string>("AdherenceCategory");
-
-                    b.Property<string>("BP");
-
-                    b.Property<DateTime?>("DateGenerated");
-
-                    b.Property<DateTime?>("EDD");
-
-                    b.Property<string>("Extract");
-
-                    b.Property<int?>("FacilityId");
-
-                    b.Property<string>("FacilityName");
-
-                    b.Property<string>("FamilyPlanningMethod");
-
-                    b.Property<string>("Field");
-
-                    b.Property<decimal?>("GestationAge");
-
-                    b.Property<decimal?>("Height");
-
-                    b.Property<DateTime?>("LMP");
-
-                    b.Property<DateTime?>("NextAppointmentDate");
-
-                    b.Property<string>("OI");
-
-                    b.Property<DateTime?>("OIDate");
-
-                    b.Property<string>("PatientID");
-
-                    b.Property<int?>("PatientPK");
-
-                    b.Property<string>("Pregnant");
-
-                    b.Property<string>("PwP");
-
-                    b.Property<Guid>("RecordId");
-
-                    b.Property<DateTime?>("SecondlineRegimenChangeDate");
-
-                    b.Property<string>("SecondlineRegimenChangeReason");
-
-                    b.Property<string>("Service");
-
-                    b.Property<int?>("SiteCode");
-
-                    b.Property<DateTime?>("SubstitutionFirstlineRegimenDate");
-
-                    b.Property<string>("SubstitutionFirstlineRegimenReason");
-
-                    b.Property<DateTime?>("SubstitutionSecondlineRegimenDate");
-
-                    b.Property<string>("SubstitutionSecondlineRegimenReason");
-
-                    b.Property<string>("Summary");
-
-                    b.Property<Guid?>("TempPatientVisitExtractErrorId");
-
-                    b.Property<string>("Type");
-
-                    b.Property<DateTime?>("VisitDate");
-
-                    b.Property<int?>("VisitId");
-
-                    b.Property<string>("VisitType");
-
-                    b.Property<string>("WABStage");
-
-                    b.Property<int?>("WHOStage");
-
-                    b.Property<decimal?>("Weight");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TempPatientVisitExtractErrorId");
-
-                    b.ToTable("vTempPatientVisitExtractErrorSummary");
-                });
-
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.ValidationError", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2024,55 +1912,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Validator");
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientArtExtractErrorSummary", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientArtExtractError")
-                        .WithMany("TempPatientArtExtractErrorSummaries")
-                        .HasForeignKey("TempPatientArtExtractErrorId");
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientBaselinesExtractErrorSummary", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientBaselinesExtractError")
-                        .WithMany("TempPatientBaselinesExtractErrorSummaries")
-                        .HasForeignKey("TempPatientBaselinesExtractErrorId");
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientExtractErrorSummary", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientExtractError")
-                        .WithMany("TempPatientExtractErrorSummaries")
-                        .HasForeignKey("TempPatientExtractErrorId");
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientLaboratoryExtractErrorSummary", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientLaboratoryExtractError")
-                        .WithMany("TempPatientLaboratoryExtractErrorSummaries")
-                        .HasForeignKey("TempPatientLaboratoryExtractErrorId");
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientPharmacyExtractErrorSummary", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientPharmacyExtractError")
-                        .WithMany("TempPatientPharmacyExtractErrorSummaries")
-                        .HasForeignKey("TempPatientPharmacyExtractErrorId");
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientStatusExtractErrorSummary", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientStatusExtractError")
-                        .WithMany("TempPatientStatusExtractErrorSummaries")
-                        .HasForeignKey("TempPatientStatusExtractErrorId");
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientVisitExtractErrorSummary", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientVisitExtractError")
-                        .WithMany("TempPatientVisitExtractErrorSummaries")
-                        .HasForeignKey("TempPatientVisitExtractErrorId");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.ValidationError", b =>
