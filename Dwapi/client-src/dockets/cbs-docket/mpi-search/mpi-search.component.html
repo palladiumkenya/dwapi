@@ -1,100 +1,107 @@
 <div class="card card-w-title">
-  <div class="ui-g">
-    <h1>Master Patient Index Search
-      <span style="color: lightgray">|</span> {{emrSystem?.name}}
-      <span style="font-size:13px ">{{emrSystem?.version}}</span>
-    </h1>
-  </div>
-  <div class="ui-g">
-      <p-card >
-              <div class="ui-g form-group">
-                  <div class="ui-g-12 ui-md-4">
-                      <span class="ui-float-label">
-                          <input id="float-input" type="text" size="30" pInputText> 
-                          <label for="float-input">First Name</label>
-                      </span>
-                  </div>
-                  <div class="ui-g-12 ui-md-4">
-                      <span class="ui-float-label">
-                          <input id="float-input" type="text" size="30" pInputText> 
-                          <label for="float-input">Middle Name</label>
-                      </span>
-                  </div>
-                  <div class="ui-g-12 ui-md-4">
-                      <span class="ui-float-label">
-                          <input id="float-input" type="text" size="30" pInputText> 
-                          <label for="float-input">Last Name</label>
-                      </span>
-                  </div>
-                  <div class="ui-g-12 ui-md-4">
-                      <span class="ui-float-label">
-                          <p-calendar [showIcon]="true"></p-calendar>
-                          <label for="float-input">Date of Birth</label>
-                      </span>
-                  </div>
-                  <div class="ui-g-12 ui-md-4">
-                      <span class="ui-float-label">
-                          <p-dropdown optionLabel="Sex" [showClear]="true"></p-dropdown>
-                          <label for="float-input">Sex</label>
-                      </span>
-                  </div>
-              </div>
-        <p-panel header="Advanced Search" [toggleable]="true" [collapsed]="true" [style]="{'background-color':'#ffff'}">
-            <div class="ui-g form-group">
-                <div class="ui-g-12 ui-md-4">
-                    <span class="ui-float-label">
-                        <input id="float-input" type="text" size="30" pInputText> 
-                        <label for="float-input">Facility Enrolled</label>
-                    </span>
+    <div class="ui-g">
+        <h1>Master Patient Index Search
+            <span style="color: lightgray">|</span> {{emrSystem?.name}}
+            <span style="font-size:13px ">{{emrSystem?.version}}</span>
+        </h1>
+    </div>
+    <div class="ui-g">
+        <p-card>
+            <form [formGroup]="searchForm" (ngSubmit)="search()">
+                <div class="ui-g form-group">
+                    <div class="ui-g-12 ui-md-4">
+                        <span class="ui-float-label">
+                            <input formControlName="firstName" id="firstName" type="text" size="30" pInputText>
+                            <label for="firstName">First Name</label>
+                        </span>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <span class="ui-float-label">
+                            <input formControlName="middleName" id="middleName" type="text" size="30" pInputText>
+                            <label for="middleName">Middle Name</label>
+                        </span>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <span class="ui-float-label">
+                            <input formControlName="lastName" id="lastName" type="text" size="30" pInputText>
+                            <label for="lastName">Last Name</label>
+                        </span>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <span class="ui-float-label">
+                            <p-calendar formControlName="dob" id="dob" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2050" [maxDate]="dateTime" [showIcon]="true"></p-calendar>
+                            <label for="dob">Date of Birth</label>
+                        </span>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <span class="ui-float-label">
+                            <p-dropdown formControlName="gender" [options]="gender" [(ngModel)]="selectedGender" optionLabel="name" placeholder="Gender" [showClear]="true" id="gender"></p-dropdown>
+                        </span>
+                    </div>
                 </div>
-                <div class="ui-g-12 ui-md-4">
-                    <span class="ui-float-label">
-                        <input id="float-input" type="text" size="30" pInputText> 
-                        <label for="float-input">Phone Number</label>
-                    </span>
-                </div>
-            </div>
-        </p-panel>
-            <button pButton type="button" label="Go" class="blue-btn"></button>       
-      </p-card>           
-  </div>
-  <p-messages [(value)]="messages"></p-messages>
-  <p-growl [(value)]="notifications"></p-growl>
+                <p-panel header="Advanced Search" [toggleable]="true" [collapsed]="true" [style]="{'background-color':'#ffff'}">
+                    <div class="ui-g form-group">
+                        <div class="ui-g-12 ui-md-4">
+                            <span class="ui-float-label">
+                                <input formControlName="county" id="county" type="text" size="30" pInputText>
+                                <label for="county">County</label>
+                            </span>
+                        </div>
+                        <div class="ui-g-12 ui-md-4">
+                            <span class="ui-float-label">
+                                <input formControlName="phoneNumber" id="phoneNumber" type="text" size="30" pInputText>
+                                <label for="phoneNumber">Phone Number</label>
+                            </span>
+                        </div>
+                        <div class="ui-g-12 ui-md-4">
+                            <span class="ui-float-label">
+                                <input formControlName="nationalId"id="nationalId" type="text" size="30" pInputText>
+                                <label for="nationalId">National Id</label>
+                            </span>
+                        </div>
+                    </div>
+                </p-panel>
+                <button pButton type="submit" label="Go"  [disabled]="searchForm.invalid" class="blue-btn"></button>
+            </form>
+        </p-card>
+    </div>
+    <p-messages [(value)]="messages"></p-messages>
+    <p-growl [(value)]="notifications"></p-growl>
 </div>
 
 <div class="card card-w-title">
-  <h1>Search Details</h1>
-  <p-toolbar>
-    <div class="ui-toolbar-group-left">
-      <button type="button" pButton icon="ui-icon-cloud-download" iconPos="left" label="Export All" (click)="persons.exportCSV()"
-        class="blue-btn"></button>
-    </div>
-  </p-toolbar>
-  <p-dataTable [value]="searchResultDetails" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
-    loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true"
-    [paginator]="true" [rows]="25" exportFilename="DwapiMpiSearchResults" #persons>
-    <p-column field="serial" header="Serial" [filter]="true"></p-column>
-    <p-column field="firstName_Normalized" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
-    <p-column field="middleName_Normalized" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-    <p-column field="lastName_Normalized" header="Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-    <p-column field="patientPhoneNumber" header="Phone"></p-column>
-    <p-column field="gender" header="Gender" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
-    <p-column field="dob" header="Birth Date" sortable="true">
-      <ng-template let-col let-detail="rowData" pTemplate="body">
-        {{detail.dob | date: 'dd MMM yyyy'}}
-      </ng-template>
-    </p-column>
-    <p-column field="jaroWinklerScore" header="JaroWinklerScore" sortable="true"></p-column>
-    <p-column field="sxdmPKValueDoB" header="sxdmPKValueDoB" sortable="true"></p-column>
-    <p-column field="contactAddress" header="Contact Address" sortable="true" hidden="true"></p-column>
-    <p-column field="contactName" header="Contact Name" sortable="true" hidden="true"></p-column>
-    <p-column field="contactPhoneNumber" header="Contact Phone Number" sortable="true" hidden="true"></p-column>
-    <p-column field="contactRelation" header="Contact Relation" sortable="true" hidden="true"></p-column>
-    <p-column field="dateExtracted" header="Date Extracted" sortable="true" hidden="true"></p-column>
-    <p-column field="national_ID" header="National Id" sortable="true" hidden="true"></p-column>
-    <p-column field="startARTDate" header="Start ART Date" sortable="true" hidden="true"></p-column>
-    <p-column field="startARTRegimenCode" header="Start ART Regimen Code" sortable="true" hidden="true"></p-column>
-    <p-column field="county" header="County" sortable="true" hidden="true"></p-column>
-    <p-column field="subCounty" header="Sub County" sortable="true" hidden="true"></p-column>
-  </p-dataTable>
+    <h1>Search Details</h1>
+    <p-toolbar>
+        <div class="ui-toolbar-group-left">
+            <button type="button" pButton icon="ui-icon-cloud-download" iconPos="left" label="Export All" (click)="persons.exportCSV()"
+                class="blue-btn"></button>
+        </div>
+    </p-toolbar>
+    <p-dataTable [value]="searchResultDetails" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
+        loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true" [paginator]="true"
+        [rows]="25" exportFilename="DwapiMpiSearchResults" #persons>
+        <p-column field="serial" header="Serial" [filter]="true"></p-column>
+        <p-column field="firstName_Normalized" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
+        <p-column field="middleName_Normalized" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="lastName_Normalized" header="Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="patientPhoneNumber" header="Phone"></p-column>
+        <p-column field="gender" header="Gender" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
+        <p-column field="dob" header="Birth Date" sortable="true">
+            <ng-template let-col let-detail="rowData" pTemplate="body">
+                {{detail.dob | date: 'dd MMM yyyy'}}
+            </ng-template>
+        </p-column>
+        <p-column field="jaroWinklerScore" header="JaroWinklerScore" sortable="true"></p-column>
+        <p-column field="sxdmPKValueDoB" header="sxdmPKValueDoB" sortable="true"></p-column>
+        <p-column field="contactAddress" header="Contact Address" sortable="true" hidden="true"></p-column>
+        <p-column field="contactName" header="Contact Name" sortable="true" hidden="true"></p-column>
+        <p-column field="contactPhoneNumber" header="Contact Phone Number" sortable="true" hidden="true"></p-column>
+        <p-column field="contactRelation" header="Contact Relation" sortable="true" hidden="true"></p-column>
+        <p-column field="dateExtracted" header="Date Extracted" sortable="true" hidden="true"></p-column>
+        <p-column field="national_ID" header="National Id" sortable="true" hidden="true"></p-column>
+        <p-column field="startARTDate" header="Start ART Date" sortable="true" hidden="true"></p-column>
+        <p-column field="startARTRegimenCode" header="Start ART Regimen Code" sortable="true" hidden="true"></p-column>
+        <p-column field="county" header="County" sortable="true" hidden="true"></p-column>
+        <p-column field="subCounty" header="Sub County" sortable="true" hidden="true"></p-column>
+    </p-dataTable>
 </div>
