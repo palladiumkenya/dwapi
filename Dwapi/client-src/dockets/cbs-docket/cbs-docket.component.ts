@@ -5,7 +5,6 @@ import {Subscription} from 'rxjs/Subscription';
 import {EmrSystem} from '../../settings/model/emr-system';
 import {BreadcrumbService} from '../../app/breadcrumb.service';
 import {Extract} from '../../settings/model/extract';
-import {Docket} from '../../settings/model/docket';
 import {CbsService} from '../services/cbs.service';
 import {DatabaseProtocol} from '../../settings/model/database-protocol';
 import {ExtractPatient} from '../ndwh-docket/model/extract-patient';

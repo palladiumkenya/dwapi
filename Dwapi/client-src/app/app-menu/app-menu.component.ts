@@ -18,14 +18,6 @@ export class AppMenuComponent implements OnInit {
         this.model = [
             {label: 'Dashboard', icon: 'pie_chart', routerLink: ['/']},
             {
-                label: 'Dockets', icon: 'dashboard',
-                items: [
-                    {label: 'Data Warehouse', icon: 'cloud', routerLink: ['/datawarehouse']},
-                    {label: 'PSmart', icon: 'credit_card', routerLink: ['/psmart']},
-                    {label: 'Case Based Surveillance', icon: 'search', routerLink: ['/cbs']}
-                ]
-            },
-            {
                 label: 'Configuration', icon: 'settings_application',
                 items: [
                     {label: 'Registry', icon: 'cloud', items: [
@@ -35,6 +27,14 @@ export class AppMenuComponent implements OnInit {
                         ]
                     },
                     {label: 'EMR Settings', icon: 'dvr', routerLink: ['/emrconfig']}
+                ]
+            },
+            {
+                label: 'Dockets', icon: 'dashboard',
+                items: [
+                    {label: 'Data Warehouse', icon: 'cloud', routerLink: ['/datawarehouse']},
+                    {label: 'PSmart', icon: 'credit_card', routerLink: ['/psmart']},
+                    {label: 'Case Based Surveillance', icon: 'search', routerLink: ['/cbs']}
                 ]
             }
         ];

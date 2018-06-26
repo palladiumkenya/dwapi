@@ -221,7 +221,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientColumns(): void {
         this.cols = [
-            { field: 'id', header: 'Id' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -231,14 +230,12 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'facilityId', header: 'FacilityId' },
             { field: 'patientID', header: 'PatientID' },
             { field: 'siteCode', header: 'SiteCode' },
-            { field: 'facilityName', header: 'FacilityName' },
-            { field: 'recordId', header: 'RecordId' }
+            { field: 'facilityName', header: 'FacilityName' }
         ];
     }
 
     private getPatientArtColumns(): void {
         this.cols = [
-            { field: 'id', header: 'Id' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -249,7 +246,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
             { field: 'facilityName', header: 'Facility Name' },
-            { field: 'recordId', header: 'Record Id' },
             { field: 'dob', header: 'DOB' },
             { field: 'gender', header: 'Gender' },
             { field: 'patientSource', header: 'Patient Source' },
@@ -272,7 +268,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientBaselineColumns(): void {
         this.cols = [
-            { field: 'id', header: 'Id' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -310,7 +305,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientLaboratoryColumns(): void {
         this.cols = [
-        { field: 'id', header: 'Id' },
         { field: 'extract', header: 'Extract' },
         { field: 'field', header: 'Field' },
         { field: 'type', header: 'Type' },
@@ -321,7 +315,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
         { field: 'patientID', header: 'Patient ID' },
         { field: 'siteCode', header: 'Site Code' },
         { field: 'facilityName', header: 'Facility Name' },
-        { field: 'recordId', header: 'Record Id' },
         { field: 'orderedByDate', header: 'Ordered By Date' },
         { field: 'reportedByDate', header: 'Reported By Date' },
         { field: 'testName', header: 'Test Name' },
@@ -333,7 +326,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientPharmacyColumns(): void {
         this.cols = [
-            { field: 'id', header: 'Id' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -343,7 +335,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'facilityId', header: 'Facility Id' },
             { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
-            { field: 'recordId', header: 'Record Id' },
             { field: 'drug', header: 'Drug' },
             { field: 'dispenseDate', header: 'Dispense Date' },
             { field: 'duration', header: 'Duration' },
@@ -359,7 +350,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientStatusColumns(): void {
         this.cols = [
-            { field: 'id', header: 'Id' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -370,7 +360,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
             { field: 'facilityName', header: 'Facility Name' },
-            { field: 'recordId', header: 'Record Id' },
             { field: 'exitDescription', header: 'Exit Description' },
             { field: 'exitDate', header: 'Exit Date' },
             { field: 'exitReason', header: 'Exit Reason' }
@@ -380,7 +369,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     private getPatientVisitColumns(): void {
         this.cols = [
 
-            { field: 'id', header: 'Id' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -391,7 +379,6 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
             { field: 'facilityName', header: 'Facility Name' },
-            { field: 'recordId', header: 'Record Id' },
             { field: 'visitDate', header: 'Visit Date' },
             { field: 'service', header: 'Service' },
             { field: 'visitType', header: 'Visit Type' },

@@ -263,7 +263,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientArtColumns(): void {
         this.cols = [
-            { field: 'id', header: 'Id' },
             { field: 'patientPK', header: 'Patient PK' },
             { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
@@ -300,7 +299,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
     private getPatientBaselineColumns(): void {
         this.cols = [
 
-            { field: 'id', header: 'Id' },
             { field: 'patientPK', header: 'Patient PK' },
             { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
@@ -337,7 +335,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
     private getPatientLaboratoryColumns(): void {
         this.cols = [
 
-            { field: 'id', header: 'Id' },
             { field: 'patientPK', header: 'Patient PK' },
             { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
@@ -360,7 +357,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
     private getPatientPharmacyColumns(): void {
         this.cols = [
 
-            { field: 'id', header: 'Id' },
             { field: 'patientPK', header: 'Patient PK' },
             { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
@@ -384,7 +380,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientStatusColumns(): void {
         this.cols = [
-            { field: 'id', header: 'Id' },
             { field: 'patientPK', header: 'Patient PK' },
             { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },
@@ -403,7 +398,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
     private getPatientVisitColumns(): void {
         this.cols = [
 
-            { field: 'id', header: 'Id' },
             { field: 'patientPK', header: 'Patient PK' },
             { field: 'patientID', header: 'Patient ID' },
             { field: 'facilityId', header: 'Facility Id' },

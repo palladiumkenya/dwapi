@@ -7,7 +7,7 @@ import {LocationStrategy, HashLocationStrategy, CommonModule} from '@angular/com
 import {AppRoutes} from './app.routes';
 import 'rxjs/add/operator/toPromise';
 
-import {AccordionModule} from 'primeng/primeng';
+import {AccordionModule, Card, CardModule} from 'primeng/primeng';
 import {AutoCompleteModule} from 'primeng/primeng';
 import {BreadcrumbModule} from 'primeng/primeng';
 import {ButtonModule} from 'primeng/primeng';
@@ -126,6 +126,7 @@ import { NdwhPatientVisitService } from '../dockets/services/ndwh-patient-visit.
 import { RegistryManagerComponent } from '../settings/registry-manager/registry-manager.component';
 import { SetupComponent } from '../settings/setup/setup.component';
 import {SetupService} from '../settings/services/setup.service';
+import { MpiSearchComponent } from '../dockets/cbs-docket/mpi-search/mpi-search.component';
 
 @NgModule({
     imports: [
@@ -203,7 +204,8 @@ import {SetupService} from '../settings/services/setup.service';
         TooltipModule,
         TreeModule,
         TreeTableModule,
-        TableModule
+        TableModule,
+        CardModule
     ],
     declarations: [
         AppComponent,
@@ -233,7 +235,8 @@ import {SetupService} from '../settings/services/setup.service';
         EmrSettingsComponent,
         EmrDocketComponent,
         RegistryManagerComponent,
-        SetupComponent
+        SetupComponent,
+        MpiSearchComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,

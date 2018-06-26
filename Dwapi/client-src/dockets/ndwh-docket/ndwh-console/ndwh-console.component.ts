@@ -136,6 +136,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             .subscribe(
                 p => {
                     // this.isVerfied = p;
+                    window.location.reload();
                 },
                 e => {
                     this.errorMessage = [];
