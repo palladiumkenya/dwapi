@@ -41,7 +41,8 @@ export class MpiSearchComponent implements OnInit, OnDestroy  {
         gender: ['', [Validators.required]],
         county: [''],
         phoneNumber: [''],
-        nationalId: ['']
+        nationalId: [''],
+        nhifNumber: ['']
     });
     }
 
