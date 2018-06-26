@@ -229,6 +229,7 @@ namespace Dwapi
             services.AddScoped<ICbsExtractReader, CbsExtractReader>();
             services.AddScoped<ICbsSendService, CbsSendService>();
             services.AddScoped<ICbsPackager, CbsPackager>();
+            services.AddScoped<IMpiSearchService, MpiSearchService>();
 
             services.AddScoped<IDwhExtractReader, DwhExtractReader>();
             services.AddScoped<IDwhPackager, DwhPackager>();

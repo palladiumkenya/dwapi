@@ -28,16 +28,18 @@ namespace Dwapi.Controller
         private readonly IHubContext<CbsSendActivity> _hubSendContext;
         private readonly IMasterPatientIndexRepository _masterPatientIndexRepository;
         private readonly ICbsSendService _cbsSendService;
+        private readonly IMpiSearchService _mpiSearchService;
         
 
         public CbsController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<CbsActivity> hubContext, IMasterPatientIndexRepository masterPatientIndexRepository,
-            ICbsSendService cbsSendService, IHubContext<CbsSendActivity> hubSendContext)
+            ICbsSendService cbsSendService, IHubContext<CbsSendActivity> hubSendContext, IMpiSearchService mpiSearchService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _masterPatientIndexRepository = masterPatientIndexRepository;
             _cbsSendService = cbsSendService;
+            _mpiSearchService = mpiSearchService;
             Startup.CbsSendHubContext= _hubSendContext = hubSendContext;
             Startup.CbsHubContext = _hubContext = hubContext;
         }
@@ -179,6 +181,25 @@ namespace Dwapi.Controller
             catch (Exception e)
             {
                 var msg = $"Error sending {nameof(MasterPatientIndex)} {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        // POST: api/Cbs/mpiSearchPackage
+        [HttpPost("mpiSearch")]
+        public async Task<IActionResult> SearchMpi([FromBody] MpiSearchPackageDto mpiSearchPackage)
+        {
+            if (!mpiSearchPackage.IsValid())
+                return BadRequest();
+            try
+            {
+                var result = await _mpiSearchService.SearchMpiAsync(mpiSearchPackage);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error getting {nameof(MasterPatientIndex)} search results. {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
             }

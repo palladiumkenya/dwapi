@@ -35,7 +35,7 @@
                     </div>
                     <div class="ui-g-12 ui-md-4">
                         <span class="ui-float-label">
-                            <p-dropdown formControlName="gender" [options]="gender" [(ngModel)]="selectedGender" optionLabel="name" placeholder="Gender" [showClear]="true" id="gender"></p-dropdown>
+                            <p-dropdown formControlName="gender" [options]="gender" [(ngModel)]="selectedGender" placeholder="Gender" [showClear]="true" id="gender"></p-dropdown>
                         </span>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                             </div>
                     </div>
                 </p-panel>
-                <button pButton type="submit" label="Go"  [disabled]="searchForm.invalid" class="blue-btn"></button>
+                <button pButton id="mpiGo" type="submit" label="Go" [disabled]="searchForm.invalid" class="blue-btn"></button>
             </form>
         </p-card>
     </div>
