@@ -1,16 +1,21 @@
 <div class="card card-w-title">
-    <h1>Case Based Surveillance
-        <span style="color: lightgray">|</span> {{emrSystem?.name}}
-        <span style="font-size:13px ">{{emrSystem?.version}}</span>
-    </h1>
+        <div class="ui-g">
+        <h1>Case Based Surveillance
+            <span style="color: lightgray">|</span> {{emrSystem?.name}}
+            <span style="font-size:13px ">{{emrSystem?.version}}</span>
+        </h1>
+    </div>
+    <p-toolbar>
+        <div class="ui-toolbar-group-right">
+            <a href="#/mpisearch"><button pButton type="button" label="Search Registry" style="float:right" icon="ui-icon-search" class="blue-grey-btn"></button></a>
+        </div>
+    </p-toolbar>
     <p-toolbar>
         <div class="ui-toolbar-group-left">
             <button pButton type="button" [disabled]="!canLoad" (click)="loadFromEmr()" label="Load from EMR" icon="ui-icon-file-download"
                 class="green-btn"></button>
         </div>
-
         <div class="ui-toolbar-group-right">
-
             <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send Warehouse" icon="ui-icon-cloud-upload" class="blue-btn"></button>
         </div>
     </p-toolbar>
