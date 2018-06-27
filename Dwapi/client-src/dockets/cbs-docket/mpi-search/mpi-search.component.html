@@ -83,7 +83,7 @@
                 class="blue-btn"></button>
         </div>
     </p-toolbar>
-    <p-dataTable [value]="searchResultDetails" [loading]="loadingData" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
+    <p-dataTable [value]="searchResultDetails" [loading]="loadingData" selectionMode="single" autoLayout="true" [tableStyle]="{'table-layout':'auto'}"
         loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true" [paginator]="true"
         [rows]="25" exportFilename="DwapiMpiSearchResults" #persons>
         <p-column field="cccNumber" header="CCC Number" [filter]="true"></p-column>
@@ -95,7 +95,7 @@
         <p-column field="gender" header="Gender" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
         <p-column field="dateOfBirth" header="Birth Date" sortable="true">
             <ng-template let-col let-detail="rowData" pTemplate="body">
-                {{detail.dob | date: 'dd MMM yyyy'}}
+                {{detail.dateOfBirth | date: 'dd MMM yyyy'}}
             </ng-template>
         </p-column>
         <p-column field="homeCounty" header="Home County" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
