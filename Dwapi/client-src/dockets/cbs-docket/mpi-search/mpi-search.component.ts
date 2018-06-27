@@ -21,8 +21,8 @@ export class MpiSearchComponent implements OnInit, OnDestroy  {
     public getSearchresults: Subscription;
     public loadRegistry$: Subscription;
     public emrSystem: EmrSystem;
-    public messages: Message[] = [];
-    public notifications: Message[] = [];
+    public messages: Message[];
+    public notifications: Message[];
     private _emrConfigService: EmrConfigService;
     private _mpiSearchService: MpiSearchService;
     public searchResultDetails: MasterPatientIndex[] = [];
@@ -64,6 +64,12 @@ export class MpiSearchComponent implements OnInit, OnDestroy  {
         if (this.getEmr$) {
             this.getEmr$.unsubscribe();
         }
+        if (this.getSearchresults) {
+            this.getSearchresults.unsubscribe();
+        }
+        if (this.loadRegistry$) {
+            this.loadRegistry$.unsubscribe();
+        }
     }
 
     public loadData(): void {
@@ -85,12 +91,13 @@ export class MpiSearchComponent implements OnInit, OnDestroy  {
     }
 
     public search(): void {
+        this.messages = [];
         this.loadingData = true;
         this.searchPackage = this.getSearchPackage();
         this.getSearchresults = this._mpiSearchService.search(this.searchPackage )
           .subscribe(
               p => {
-                  this.searchDetails = p;
+                  this.searchResultDetails = p;
               },
               e => {
                   this.messages.push({severity: 'error', summary: 'Error getting search results', detail: <any>e});

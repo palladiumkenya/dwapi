@@ -83,31 +83,25 @@
                 class="blue-btn"></button>
         </div>
     </p-toolbar>
-    <p-dataTable [value]="searchResultDetails" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
+    <p-dataTable [value]="searchResultDetails" [loading]="loadingData" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
         loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true" [paginator]="true"
         [rows]="25" exportFilename="DwapiMpiSearchResults" #persons>
-        <p-column field="serial" header="Serial" [filter]="true"></p-column>
-        <p-column field="firstName_Normalized" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
-        <p-column field="middleName_Normalized" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-        <p-column field="lastName_Normalized" header="Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-        <p-column field="patientPhoneNumber" header="Phone"></p-column>
+        <p-column field="cccNumber" header="CCC Number" [filter]="true"></p-column>
+        <p-column field="registeredFacility" header="Registered Facility" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
+        <p-column field="firstName" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="middleName" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="lastName" header="Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="phoneNumber" header="Phone Number"></p-column>
         <p-column field="gender" header="Gender" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
-        <p-column field="dob" header="Birth Date" sortable="true">
+        <p-column field="dateOfBirth" header="Birth Date" sortable="true">
             <ng-template let-col let-detail="rowData" pTemplate="body">
                 {{detail.dob | date: 'dd MMM yyyy'}}
             </ng-template>
         </p-column>
-        <p-column field="jaroWinklerScore" header="JaroWinklerScore" sortable="true"></p-column>
-        <p-column field="sxdmPKValueDoB" header="sxdmPKValueDoB" sortable="true"></p-column>
-        <p-column field="contactAddress" header="Contact Address" sortable="true" hidden="true"></p-column>
-        <p-column field="contactName" header="Contact Name" sortable="true" hidden="true"></p-column>
-        <p-column field="contactPhoneNumber" header="Contact Phone Number" sortable="true" hidden="true"></p-column>
-        <p-column field="contactRelation" header="Contact Relation" sortable="true" hidden="true"></p-column>
-        <p-column field="dateExtracted" header="Date Extracted" sortable="true" hidden="true"></p-column>
-        <p-column field="national_ID" header="National Id" sortable="true" hidden="true"></p-column>
-        <p-column field="startARTDate" header="Start ART Date" sortable="true" hidden="true"></p-column>
-        <p-column field="startARTRegimenCode" header="Start ART Regimen Code" sortable="true" hidden="true"></p-column>
-        <p-column field="county" header="County" sortable="true" hidden="true"></p-column>
-        <p-column field="subCounty" header="Sub County" sortable="true" hidden="true"></p-column>
+        <p-column field="homeCounty" header="Home County" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="homeSubCounty" header="Home Sub-County" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+        <p-column field="nationalId" header="National ID"></p-column>
+        <p-column field="nhifNumber" header="NHIF Number"></p-column>
+        <p-column field="matchingScore" header="Matching Score" sortable="true"></p-column>
     </p-dataTable>
 </div>

@@ -16,7 +16,6 @@ export class MpiSearchService {
     }
 
     public search(model: SearchPackage): Observable<MasterPatientIndex[]> {
-        console.log(model);
       return this._http.post<MasterPatientIndex[]>(this._url + '/mpiSearch', model)
           .catch(this.handleError);
     }
