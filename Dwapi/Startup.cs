@@ -76,6 +76,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using StructureMap;
 using Swashbuckle.AspNetCore.Swagger;
+using Z.Dapper.Plus;
 
 namespace Dwapi
 {
@@ -310,6 +311,20 @@ namespace Dwapi
             );
 
             DomainEvents.Init();
+
+            try
+            {
+                DapperPlusManager.AddLicense("1755;701-ThePalladiumGroup", "9005d618-3965-8877-97a5-7a27cbb21c8f");
+                if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
+                {
+                    throw new Exception(licenseErrorMessage);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Debug($"{e}");
+                throw;
+            }
 
             Log.Debug(@"initializing Database [Complete]");
             Log.Debug(
