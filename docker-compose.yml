@@ -9,5 +9,3 @@ services:
     ports:
     - "5757:5757"
     restart: unless-stopped
-    volumes:
-    - /opt/dwapi:/app
