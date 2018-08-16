@@ -136,7 +136,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             .subscribe(
                 p => {
                     // this.isVerfied = p;
-                    window.location.reload();
+                    // window.location.reload();
                 },
                 e => {
                     this.errorMessage = [];
@@ -267,7 +267,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             .withUrl(
                 `http://${document.location.hostname}:5757/ExtractActivity`
             )
-            .configureLogging(LogLevel.Trace)
+            .configureLogging(LogLevel.Error)
             .build();
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
@@ -298,7 +298,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         });
 
         this._hubConnection.on('ShowDwhSendProgress', (dwhProgress: any) => {
-            console.log(dwhProgress);
+            // console.log(dwhProgress);
 
             this.sendEvent = {
                 sentProgress: dwhProgress.progress

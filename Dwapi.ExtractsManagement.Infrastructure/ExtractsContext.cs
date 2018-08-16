@@ -60,7 +60,46 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-         
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<PatientExtract>()
+                .HasKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.PatientArtExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f =>  new{ f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.PatientBaselinesExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f =>  new{ f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.PatientLaboratoryExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f =>  new{ f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.PatientPharmacyExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f =>  new{ f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.PatientStatusExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f =>  new{ f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.PatientVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f =>  new{ f.SiteCode, f.PatientPK });
 
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
             DapperPlusManager.Entity<TempPatientArtExtract>().Key(x => x.Id).Table($"{nameof(TempPatientArtExtracts)}");

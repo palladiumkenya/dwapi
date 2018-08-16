@@ -62,7 +62,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
             var truncates = new List<string>
             {
                 nameof(ExtractsContext.TempPatientExtracts),
-                nameof(ExtractsContext.PatientExtracts),
                 nameof(ExtractsContext.TempPatientArtExtracts),
                 nameof(ExtractsContext.PatientArtExtracts),
                 nameof(ExtractsContext.TempPatientBaselinesExtracts),
@@ -78,11 +77,20 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
                 nameof(ExtractsContext.ValidationError)
             };
 
+            var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };
+
             var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"TRUNCATE TABLE {x};"));
 
             foreach (var truncateCommand in truncateCommands)
             {
                 await truncateCommand;
+            }
+
+            var deleteCommands = deletes.Select(d => GetSqlCommand(cn, $"DELETE FROM {d};"));
+
+            foreach (var deleteCommand in deleteCommands)
+            {
+                await deleteCommand;
             }
 
             CloseConnection(cn);

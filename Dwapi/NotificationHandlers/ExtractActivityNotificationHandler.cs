@@ -34,6 +34,12 @@ namespace Dwapi.NotificationHandlers
                 case ExtractStatus.Loaded:
                     count = domainEvent.Progress.Loaded;
                     break;
+                case ExtractStatus.Sending:
+                    count = domainEvent.Progress.Sent;
+                    break;
+                case ExtractStatus.Sent:
+                    count = domainEvent.Progress.Sent;
+                    break;
             }
 
             if (count == 0)

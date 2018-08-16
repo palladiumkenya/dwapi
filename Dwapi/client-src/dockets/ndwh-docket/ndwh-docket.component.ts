@@ -51,7 +51,7 @@ export class NdwhDocketComponent implements OnInit {
                   this.loadingData = false;
               },
               () => {
-                  console.log(this.emrSystem);
+                 // console.log(this.emrSystem);
               }
           );
 

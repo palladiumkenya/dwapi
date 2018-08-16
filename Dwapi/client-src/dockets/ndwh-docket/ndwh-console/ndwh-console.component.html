@@ -32,7 +32,7 @@
     <div class="ui-g" *ngIf="sending">
         <div class="ui-g-12">
             Stage 2 of 2: Sending Extracts, please wait ...
-            <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+            <p-progressBar showValue = "true" [value]="sendEvent?.sentProgress"></p-progressBar>
         </div>
     </div>
   <p-messages [(value)]="errorMessage"></p-messages>

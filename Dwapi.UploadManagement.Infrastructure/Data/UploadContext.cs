@@ -23,6 +23,51 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
 
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<PatientExtractView>()
+                .HasKey(f => new { f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtractView>()
+                .HasMany(c => c.PatientArtExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtractView>()
+                .HasMany(c => c.PatientBaselinesExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtractView>()
+                .HasMany(c => c.PatientLaboratoryExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtractView>()
+                .HasMany(c => c.PatientPharmacyExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtractView>()
+                .HasMany(c => c.PatientStatusExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<PatientExtractView>()
+                .HasMany(c => c.PatientVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
         }
     }
 }
