@@ -158,7 +158,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             artCount += message.ArtExtracts.Count;
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
-                            //DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientArt, message.ArtExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                             sentPatientArts.AddRange(message.ArtExtracts.Select(x => x.Id).ToList());
                             /*if (patientArtExtractStatus.Found != null)
                                 if (patientArtExtractStatus.Loaded != null)
@@ -196,7 +195,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             baselineCount += message.BaselinesExtracts.Count;
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
-                            //DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientBaseline, message.BaselinesExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                             sentPatientBaselines.AddRange(message.BaselinesExtracts.Select(x => x.Id).ToList());
                         }
                         else
@@ -224,7 +222,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             labCount += message.LaboratoryExtracts.Count;
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
-                            //DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientLab, message.LaboratoryExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                             sentPatientLabs.AddRange(message.LaboratoryExtracts.Select(x => x.Id).ToList());
                         }
                         else
@@ -253,7 +250,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             pharmacyCount += message.PharmacyExtracts.Count;
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
-                            //DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientPharmacy, message.PharmacyExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                             sentPatientPharmacies.AddRange(message.PharmacyExtracts.Select(x => x.Id).ToList());
                         }
                         else
@@ -282,7 +278,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             statusCount += message.StatusExtracts.Count;
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
-                            //DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientStatus, message.StatusExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                             sentPatientStatuses.AddRange(message.StatusExtracts.Select(x => x.Id).ToList());
                         }
                         else
@@ -312,7 +307,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             visitCount += message.VisitExtracts.Count;
                             var content = await response.Content.ReadAsStringAsync();
                             responses.Add(content);
-                            //DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientVisit, message.VisitExtracts.Select(x => x.Id).ToList(), SendStatus.Sent));
                             sentPatientVisits.AddRange(message.VisitExtracts.Select(x => x.Id).ToList());
                         }
                         else
@@ -331,7 +325,15 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 }
 
                 DomainEvents.Dispatch(new DwhSendNotification(new SendProgress(nameof(PatientExtract), Common.GetProgress(count, total))));
-                //DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.Patient, new List<Guid> { id }, SendStatus.Sent));
+                if (patientExtractStatus.Found != null)
+                    if (patientExtractStatus.Loaded != null)
+                        if (patientExtractStatus.Rejected != null)
+                            DomainEvents.Dispatch(new ExtractActivityNotification(patientExtract.Id,
+                                new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Sending),
+                                    (int)patientExtractStatus.Found,
+                                    (int)patientExtractStatus.Loaded, (int)patientExtractStatus.Rejected,
+                                    (int)patientExtractStatus.Loaded,
+                                    count)));
                 sentPatients.AddRange(ids);
             }
 
