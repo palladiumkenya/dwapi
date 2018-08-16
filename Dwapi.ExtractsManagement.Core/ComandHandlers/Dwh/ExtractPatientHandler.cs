@@ -1,9 +1,13 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -22,13 +26,15 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IExtractValidator _extractValidator;
         private readonly IPatientLoader _patientLoader;
         private readonly IClearDwhExtracts _clearDwhExtracts;
+        private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
 
-        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts)
+        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts, ITempPatientExtractRepository tempPatientExtractRepository)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
             _patientLoader = patientLoader;
             _clearDwhExtracts = clearDwhExtracts;
+            _tempPatientExtractRepository = tempPatientExtractRepository;
         }
 
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
@@ -36,6 +42,22 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
            
             //Extract
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+            //Check for duplicate patients
+            var patientKeys = _tempPatientExtractRepository.GetAll().Select(k => k.PatientPK);
+            var distinct = new HashSet<int?>();
+            var duplicates = new HashSet<int?>();
+            foreach (var key in patientKeys)
+            {
+                if (!distinct.Add(key))
+                    duplicates.Add(key);
+            }
+
+            if (duplicates.Any())
+            {
+                var readDuplicates = string.Join(", ", duplicates.ToArray());
+                throw new DuplicatePatientException($"Duplicate patient(s) with PatientPK(s) {readDuplicates} found");
+            }
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientExtract), $"{nameof(TempPatientExtract)}s");
@@ -54,5 +76,10 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
 
             return true;
         }
+    }
+
+    public class DuplicatePatientException : Exception
+    {
+        public DuplicatePatientException(string msg) : base(msg) { }
     }
 }

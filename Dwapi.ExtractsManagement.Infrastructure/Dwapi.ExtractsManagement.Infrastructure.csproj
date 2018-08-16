@@ -3,6 +3,10 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Migrations\20180807133535_ExtractRelationships.cs" />
+    <Compile Remove="Migrations\20180808074826_ExtractRelationships.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Seed\Validator.csv" />
   </ItemGroup>
   <ItemGroup>

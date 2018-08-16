@@ -15,10 +15,12 @@ namespace Dwapi.UploadManagement.Core.Event.Dwh
         public DwhExtractSentEvent(ExtractType extractType,List<Guid> sentIds,SendStatus status, string statusInfo="")
         {
             SentItems = sentIds.Select(x => new SentItem(x,status, statusInfo)).ToList();
+            ExtractType = extractType;
         }
         public DwhExtractSentEvent(ExtractType extractType,List<SentItem> sentItems)
         {
             SentItems = sentItems;
+            ExtractType = extractType;
         }
     }
 }

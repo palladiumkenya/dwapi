@@ -49,7 +49,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
             {
                 Console.WriteLine(e.Message);
                 Log.Error(e, "Failed batch insert");
-                return false;
+                throw;
             }
         }
 

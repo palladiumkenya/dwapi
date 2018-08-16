@@ -25,6 +25,7 @@ namespace Dwapi.Controller
         private readonly IHubContext<ExtractActivity> _hubContext;
         private readonly IHubContext<DwhSendActivity> _hubSendContext;
         private readonly IDwhSendService _dwhSendService;
+        private bool sending = false;
 
         public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService, IHubContext<DwhSendActivity> hubSendContext)
         {
@@ -103,9 +104,12 @@ namespace Dwapi.Controller
         {
             if (!packageDTO.IsValid())
                 return BadRequest();
+
             try
             {
+                sending = true;
                 await _dwhSendService.SendExtractsAsync(packageDTO);
+                sending = false;
                 return Ok();
             }
             catch (Exception e)

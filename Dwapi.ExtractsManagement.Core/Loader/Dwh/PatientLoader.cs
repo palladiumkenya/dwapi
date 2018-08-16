@@ -72,7 +72,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
             catch (Exception e)
             {
                 Log.Error(e, $"Extract {nameof(PatientExtract)} not Loaded");
-                return 0;
+                throw;
             }
         }
     }
