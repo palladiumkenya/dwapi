@@ -36,7 +36,7 @@ For **MySql**
 
 # Dwapi for Windows Instruction
 
-1) Install prerequisite(NetCore SDK)
+1) Install prerequisite(NetCore Runtime)
   https://www.microsoft.com/net/download/dotnet-core/2.1
 2) Install DWAPI
   http://data.kenyahmis.org:81/dwapi/client/downloads/dwapi.exe
