@@ -175,6 +175,7 @@ namespace Dwapi
             services.AddScoped<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>();
             services.AddScoped<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>();
             services.AddScoped<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>();
+            services.AddScoped<ITempPatientAdverseEventExtractRepository, TempPatientAdverseEventExtractRepository>();
             services.AddScoped<IValidatorRepository, ValidatorRepository>();
             services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
             services.AddScoped<IPatientArtExtractRepository, PatientArtExtractRepository>();
@@ -183,6 +184,7 @@ namespace Dwapi
             services.AddScoped<IPatientPharmacyExtractRepository, PatientPharmacyExtractRepository>();
             services.AddScoped<IPatientStatusExtractRepository, PatientStatusExtractRepository>();
             services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
+            services.AddScoped<IPatientAdverseEventExtractRepository, PatientAdverseEventExtractRepository>();
             services.AddScoped<ITempPatientExtractErrorSummaryRepository, TempPatientExtractErrorSummaryRepository>();
             services.AddScoped<ITempPatientArtExtractErrorSummaryRepository, TempPatientArtExtractErrorSummaryRepository>();
             services.AddScoped<ITempPatientBaselinesExtractErrorSummaryRepository, TempPatientBaselinesExtractErrorSummaryRepository>();
@@ -190,6 +192,7 @@ namespace Dwapi
             services.AddScoped<ITempPatientPharmacyExtractErrorSummaryRepository, TempPatientPharmacyExtractErrorSummaryRepository>();
             services.AddScoped<ITempPatientStatusExtractErrorSummaryRepository, TempPatientStatusExtractErrorSummaryRepository>();
             services.AddScoped<ITempPatientVisitExtractErrorSummaryRepository, TempPatientVisitExtractErrorSummaryRepository>();
+            services.AddScoped<ITempPatientAdverseEventExtractErrorSummaryRepository, TempPatientAdverseEventExtractErrorSummaryRepository>();
 
             services.AddScoped<IMasterPatientIndexRepository, MasterPatientIndexRepository>();
             services.AddScoped<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>();
@@ -212,6 +215,7 @@ namespace Dwapi
             services.AddScoped<IPatientPharmacySourceExtractor, PatientPharmacySourceExtractor>();
             services.AddScoped<IPatientStatusSourceExtractor, PatientStatusSourceExtractor>();
             services.AddScoped<IPatientVisitSourceExtractor, PatientVisitSourceExtractor>();
+            services.AddScoped<IPatientAdverseEventSourceExtractor, PatientAdverseEventSourceExtractor>();
             services.AddScoped<IExtractValidator, ExtractValidator>();
             services.AddScoped<IPatientLoader, PatientLoader>();
             services.AddScoped<IPatientArtLoader, PatientArtLoader>();
@@ -220,6 +224,7 @@ namespace Dwapi
             services.AddScoped<IPatientPharmacyLoader, PatientPharmacyLoader>();
             services.AddScoped<IPatientStatusLoader, PatientStatusLoader>();
             services.AddScoped<IPatientVisitLoader, PatientVisitLoader>();
+            services.AddScoped<IPatientAdverseEventLoader, PatientAdverseEventLoader>();
             services.AddScoped<IClearDwhExtracts, ClearDwhExtracts>();
 
             services.AddScoped<IMasterPatientIndexReader, MasterPatientIndexReader>();

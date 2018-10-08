@@ -3,6 +3,10 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Migrations\20181008121112_PatientAdverseEvents.cs" />
+    <Compile Remove="Migrations\20181008123824_Test.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Seed\Validator.csv" />
   </ItemGroup>
   <ItemGroup>

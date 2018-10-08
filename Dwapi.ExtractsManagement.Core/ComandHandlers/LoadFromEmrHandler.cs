@@ -95,14 +95,23 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 DatabaseProtocol = patientVisitProfile?.DatabaseProtocol
             };
 
+            // ExtractPatientAdverseEvent
+            var patientAdverseEventProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientAdverseEvent");
+            var patientAdverseEventCommand = new ExtractPatientAdverseEvent()
+            {
+                Extract = patientAdverseEventProfile?.Extract,
+                DatabaseProtocol = patientAdverseEventProfile?.DatabaseProtocol
+            };
+
             var t1 = _mediator.Send(patientArtCommand, cancellationToken);
             var t2 = _mediator.Send(patientBaselinesCommand, cancellationToken);
             var t3 = _mediator.Send(patientLaboratoryCommand, cancellationToken);
             var t4 = _mediator.Send(patientPharmacyCommand, cancellationToken);
             var t5 = _mediator.Send(patientStatusCommand, cancellationToken);
             var t6 = _mediator.Send(patientVisitCommand, cancellationToken);
+            var t7 = _mediator.Send(patientAdverseEventCommand, cancellationToken);
 
-            var ts = new List<Task<bool>> { t1, t2, t3, t4, t5, t6 };
+            var ts = new List<Task<bool>> { t1, t2, t3, t4, t5, t6, t7 };
 
             var result = await Task.WhenAll(ts);
 

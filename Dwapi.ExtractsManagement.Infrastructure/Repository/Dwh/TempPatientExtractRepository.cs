@@ -74,6 +74,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
                 nameof(ExtractsContext.PatientPharmacyExtracts),
                 nameof(ExtractsContext.TempPatientVisitExtracts),
                 nameof(ExtractsContext.PatientVisitExtracts),
+                nameof(ExtractsContext.TempPatientAdverseEventExtracts),
+                nameof(ExtractsContext.PatientAdverseEventExtracts),
                 nameof(ExtractsContext.ValidationError)
             };
 

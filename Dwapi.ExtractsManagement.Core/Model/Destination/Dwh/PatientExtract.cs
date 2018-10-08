@@ -37,6 +37,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public virtual ICollection<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; } = new List<PatientPharmacyExtract>();
         public virtual ICollection<PatientStatusExtract> PatientStatusExtracts { get; set; } = new List<PatientStatusExtract>();
         public virtual ICollection<PatientVisitExtract> PatientVisitExtracts { get; set; } = new List<PatientVisitExtract>();
-
+        public virtual ICollection<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; } = new List<PatientAdverseEventExtract>();
     }
 }

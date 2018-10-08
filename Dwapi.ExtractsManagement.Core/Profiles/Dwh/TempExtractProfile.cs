@@ -203,9 +203,23 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.GestationAge, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.GestationAge))))
                 .ForMember(x => x.NextAppointmentDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.NextAppointmentDate))));
 
-
-
             CreateMap<TempPatientVisitExtract, PatientVisitExtract>();
+
+            //Patient Adverse Event Extract
+            CreateMap<IDataRecord, TempPatientAdverseEventExtract>()
+                .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientStatusExtract.PatientPK))))
+                .ForMember(x => x.PatientID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.PatientID))))
+                .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientStatusExtract.FacilityId))))
+                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientStatusExtract.SiteCode))))
+                .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.Emr))))
+                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.Project))))
+                .ForMember(x => x.AdverseEvent, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.FacilityName))))
+                .ForMember(x => x.AdverseEventStartDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.ExitDescription))))
+                .ForMember(x => x.AdverseEventEndDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.ExitDate))))
+                .ForMember(x => x.Severity, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.ExitDate))))
+                .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.ExitReason))));
+
+            CreateMap<TempPatientAdverseEventExtract, PatientAdverseEventExtract>();
         }
     }
 }

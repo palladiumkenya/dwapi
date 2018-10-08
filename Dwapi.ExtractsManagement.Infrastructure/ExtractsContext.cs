@@ -22,6 +22,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; }
         public DbSet<PatientStatusExtract> PatientStatusExtracts { get; set; }
         public DbSet<PatientVisitExtract> PatientVisitExtracts { get; set; }
+        public DbSet<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; }
 
         public DbSet<TempPatientExtract> TempPatientExtracts { get; set; }
         public DbSet<TempPatientArtExtract> TempPatientArtExtracts { get; set; }
@@ -30,6 +31,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempPatientPharmacyExtract> TempPatientPharmacyExtracts { get; set; }
         public DbSet<TempPatientStatusExtract> TempPatientStatusExtracts { get; set; }
         public DbSet<TempPatientVisitExtract> TempPatientVisitExtracts { get; set; }
+        public DbSet<TempPatientAdverseEventExtract> TempPatientAdverseEventExtracts { get; set; }
 
         public DbSet<ValidationError> ValidationError { get; set; }
         public DbSet<Validator> Validator { get; set; }
@@ -49,6 +51,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public  DbSet<TempPatientStatusExtractErrorSummary> TempPatientStatusExtractErrorSummary { get; set; }
         public  DbSet<TempPatientVisitExtractError> TempPatientVisitExtractError { get; set; }
         public  DbSet<TempPatientVisitExtractErrorSummary> TempPatientVisitExtractErrorSummary { get; set; }
+        public DbSet<TempPatientAdverseEventExtractError> TempPatientAdverseEventExtractErrors { get; set; }
+        public DbSet<TempPatientAdverseEventExtractErrorSummary> TempPatientAdverseEventExtractErrorSummaries { get; set; }
 
         public DbSet<MasterPatientIndex> MasterPatientIndices { get; set; }
         public DbSet<TempMasterPatientIndex> TempMasterPatientIndices { get; set; }
@@ -100,6 +104,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(f =>  new{ f.SiteCode, f.PatientPK });
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.PatientAdverseEventExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
 
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
             DapperPlusManager.Entity<TempPatientArtExtract>().Key(x => x.Id).Table($"{nameof(TempPatientArtExtracts)}");
@@ -108,12 +117,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempPatientPharmacyExtract>().Key(x => x.Id).Table($"{nameof(TempPatientPharmacyExtracts)}");
             DapperPlusManager.Entity<TempPatientStatusExtract>().Key(x => x.Id).Table($"{nameof(TempPatientStatusExtracts)}");
             DapperPlusManager.Entity<TempPatientVisitExtract>().Key(x => x.Id).Table($"{nameof(TempPatientVisitExtracts)}");
+            DapperPlusManager.Entity<TempPatientAdverseEventExtract>().Key(x => x.Id).Table($"{nameof(TempPatientAdverseEventExtracts)}");
             DapperPlusManager.Entity<PatientArtExtract>().Key(x => x.Id).Table($"{nameof(PatientArtExtracts)}");
             DapperPlusManager.Entity<PatientBaselinesExtract>().Key(x => x.Id).Table($"{nameof(PatientBaselinesExtracts)}");
             DapperPlusManager.Entity<PatientLaboratoryExtract>().Key(x => x.Id).Table($"{nameof(PatientLaboratoryExtracts)}");
             DapperPlusManager.Entity<PatientPharmacyExtract>().Key(x => x.Id).Table($"{nameof(PatientPharmacyExtracts)}");
             DapperPlusManager.Entity<PatientStatusExtract>().Key(x => x.Id).Table($"{nameof(PatientStatusExtracts)}");
             DapperPlusManager.Entity<PatientVisitExtract>().Key(x => x.Id).Table($"{nameof(PatientVisitExtracts)}");
+            DapperPlusManager.Entity<PatientAdverseEventExtract>().Key(x => x.Id).Table($"{nameof(PatientAdverseEventExtracts)}");
             DapperPlusManager.Entity<PatientExtract>().Key(x => x.Id).Table($"{nameof(PatientExtracts)}");
             DapperPlusManager.Entity<MasterPatientIndex>().Key(x => x.Id).Table($"{nameof(MasterPatientIndices)}");
             DapperPlusManager.Entity<TempMasterPatientIndex>().Key(x => x.Id).Table($"{nameof(TempMasterPatientIndices)}");

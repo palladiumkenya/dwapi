@@ -17,8 +17,9 @@ namespace Dwapi.ExtractsManagement.Core.Services
         private readonly IPatientPharmacyExtractRepository _pharmacyExtractRepository;
         private readonly IPatientStatusExtractRepository _statusExtractRepository;
         private readonly IPatientVisitExtractRepository _visitExtractRepository;
+        private readonly IPatientAdverseEventExtractRepository _adverseEventExtractRepository;
 
-        public DwhExtractSentServcie(IPatientExtractRepository patientExtractRepository, IPatientArtExtractRepository artExtractRepository, IPatientBaselinesExtractRepository baselinesExtractRepository, IPatientLaboratoryExtractRepository patientLaboratoryExtractRepository, IPatientPharmacyExtractRepository patientPharmacyExtractRepository, IPatientStatusExtractRepository patientStatusExtractRepository, IPatientVisitExtractRepository patientVisitExtractRepository)
+        public DwhExtractSentServcie(IPatientExtractRepository patientExtractRepository, IPatientArtExtractRepository artExtractRepository, IPatientBaselinesExtractRepository baselinesExtractRepository, IPatientLaboratoryExtractRepository patientLaboratoryExtractRepository, IPatientPharmacyExtractRepository patientPharmacyExtractRepository, IPatientStatusExtractRepository patientStatusExtractRepository, IPatientVisitExtractRepository patientVisitExtractRepository, IPatientAdverseEventExtractRepository adverseEventExtractRepository)
         {
             _patientExtractRepository = patientExtractRepository;
             _artExtractRepository = artExtractRepository;
@@ -27,6 +28,7 @@ namespace Dwapi.ExtractsManagement.Core.Services
             _pharmacyExtractRepository = patientPharmacyExtractRepository;
             _statusExtractRepository = patientStatusExtractRepository;
             _visitExtractRepository = patientVisitExtractRepository;
+            _adverseEventExtractRepository = adverseEventExtractRepository;
         }
 
         public void UpdateSendStatus(ExtractType extractType, List<SentItem> sentItems)
@@ -55,6 +57,9 @@ namespace Dwapi.ExtractsManagement.Core.Services
                         break;
                     case ExtractType.PatientVisit:
                         _visitExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.PatientAdverseEvent:
+                        _adverseEventExtractRepository.UpdateSendStatus(sentItems);
                         break;
                 }
             }

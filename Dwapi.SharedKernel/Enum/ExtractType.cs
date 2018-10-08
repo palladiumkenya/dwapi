@@ -8,6 +8,7 @@
         PatientStatus,
         PatientPharmacy,
         PatientLab,
-        PatientBaseline
+        PatientBaseline,
+        PatientAdverseEvent
     }
 }
