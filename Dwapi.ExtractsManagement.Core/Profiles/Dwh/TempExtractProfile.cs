@@ -207,17 +207,20 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
 
             //Patient Adverse Event Extract
             CreateMap<IDataRecord, TempPatientAdverseEventExtract>()
-                .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientStatusExtract.PatientPK))))
-                .ForMember(x => x.PatientID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.PatientID))))
-                .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientStatusExtract.FacilityId))))
-                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientStatusExtract.SiteCode))))
-                .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.Emr))))
-                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.Project))))
-                .ForMember(x => x.AdverseEvent, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.FacilityName))))
-                .ForMember(x => x.AdverseEventStartDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.ExitDescription))))
-                .ForMember(x => x.AdverseEventEndDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.ExitDate))))
-                .ForMember(x => x.Severity, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.ExitDate))))
-                .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.ExitReason))));
+                .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientAdverseEventExtract.PatientPK))))
+                .ForMember(x => x.PatientID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.PatientID))))
+                .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientAdverseEventExtract.FacilityId))))
+                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientAdverseEventExtract.SiteCode))))
+                .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.Emr))))
+                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.Project))))
+                .ForMember(x => x.AdverseEvent, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEvent))))
+                .ForMember(x => x.AdverseEventClinicalOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventClinicalOutcome))))
+                .ForMember(x => x.AdverseEventActionTaken, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventActionTaken))))
+                .ForMember(x => x.AdverseEventIsPregnant, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventIsPregnant))))
+                .ForMember(x => x.AdverseEventStartDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventStartDate))))
+                .ForMember(x => x.AdverseEventEndDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventEndDate))))
+                .ForMember(x => x.Severity, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.Severity))))
+                .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientAdverseEventExtract.VisitDate))));
 
             CreateMap<TempPatientAdverseEventExtract, PatientAdverseEventExtract>();
         }
