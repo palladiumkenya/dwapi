@@ -1,4 +1,4 @@
-# Dwapi for Linux Instruction
+# Dwapi for Linux/Mac Instruction
 
 1) Download docker
 --------------
@@ -6,7 +6,7 @@
 
 [Ubuntu 14 64 bit](https://download.docker.com/linux/ubuntu/dists/trusty/pool/stable/amd64/docker-ce_17.03.2~ce-0~ubuntu-trusty_amd64.deb)
 
-[Ubuntu 16 64 bit](https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_17.03.2~ce-0~ubuntu-xenial_amd64.deb)
+[Ubuntu 17 64 bit](https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_17.03.2~ce-0~ubuntu-xenial_amd64.deb)
 
 2) Install docker
 ---
