@@ -13,6 +13,11 @@ namespace Dwapi.SharedKernel.Exchange
         {
         }
 
+        public DwhManifest(int siteCode)
+        {
+            SiteCode = siteCode;
+        }
+
         public DwhManifest(int siteCode, List<int> patientPks)
         {
             SiteCode = siteCode;

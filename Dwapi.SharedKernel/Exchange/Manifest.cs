@@ -25,6 +25,11 @@ namespace Dwapi.SharedKernel.Exchange
         {
         }
 
+        public Manifest(int siteCode)
+        {
+            SiteCode = siteCode;
+        }
+
         private Manifest(int siteCode, string name)
         {
             SiteCode = siteCode;

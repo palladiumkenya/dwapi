@@ -47,6 +47,8 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         public ICollection<PatientStatusExtractView> PatientStatusExtracts { get; set; }=new List<PatientStatusExtractView>();
         [NotMapped]
         public ICollection<PatientVisitExtractView> PatientVisitExtracts { get; set; }=new List<PatientVisitExtractView>();
+        [NotMapped]
+        public ICollection<PatientAdverseEventView> PatientAdverseEventExtracts { get; set; } = new List<PatientAdverseEventView>();
 
         [NotMapped] public bool HasArt => null!= PatientArtExtracts&& PatientArtExtracts.Any();
         [NotMapped] public bool HasBaseline => null != PatientBaselinesExtracts&& PatientBaselinesExtracts.Any();

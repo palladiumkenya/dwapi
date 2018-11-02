@@ -5,6 +5,7 @@
   <ItemGroup>
     <Compile Remove="Migrations\20181008121112_PatientAdverseEvents.cs" />
     <Compile Remove="Migrations\20181008123824_Test.cs" />
+    <Compile Remove="Migrations\20181031085749_AdverseEventsScripts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Seed\Validator.csv" />
