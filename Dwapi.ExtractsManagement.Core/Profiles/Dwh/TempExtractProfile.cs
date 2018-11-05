@@ -218,6 +218,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.AdverseEventActionTaken, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventActionTaken))))
                 .ForMember(x => x.AdverseEventIsPregnant, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventIsPregnant))))
                 .ForMember(x => x.AdverseEventStartDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventStartDate))))
+                .ForMember(x => x.AdverseEventCause, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventCause))))
+                .ForMember(x => x.AdverseEventRegimen, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventRegimen))))
                 .ForMember(x => x.AdverseEventEndDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientAdverseEventExtract.AdverseEventEndDate))))
                 .ForMember(x => x.Severity, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientAdverseEventExtract.Severity))))
                 .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientAdverseEventExtract.VisitDate))));

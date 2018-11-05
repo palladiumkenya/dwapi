@@ -128,6 +128,7 @@ import { SetupComponent } from '../settings/setup/setup.component';
 import {SetupService} from '../settings/services/setup.service';
 import { MpiSearchComponent } from '../dockets/cbs-docket/mpi-search/mpi-search.component';
 import { MpiSearchService } from '../dockets/services/mpi-search.service';
+import { NdwhPatientAdverseEventService } from '../dockets/services/ndwh-patient-adverse-event.service';
 
 @NgModule({
     imports: [
@@ -245,7 +246,7 @@ import { MpiSearchService } from '../dockets/services/mpi-search.service';
         ExtractConfigService, PsmartExtractService , PsmartSenderService, NdwhExtractService, NdwhSenderService, NdwhPatientsExtractService,
         CbsService, NdwhPatientArtService, NdwhPatientBaselineService, NdwhPatientLaboratoryService, NdwhPatientPharmacyService,
         NdwhPatientStatusService, NdwhPatientVisitService,
-        SetupService, MpiSearchService
+        SetupService, MpiSearchService, NdwhPatientAdverseEventService
     ],
     bootstrap: [AppComponent]
 })

@@ -15,7 +15,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 	WHERE        (CheckError = 1)
                 ");
             migrationBuilder.Sql(@"
-	CREATE VIEW TempPatientAdverseEventExtractErrorSummary
+	CREATE VIEW vTempPatientAdverseEventExtractErrorSummary
 	AS
 	SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, vTempPatientAdverseEventExtractError.PatientPK,vTempPatientAdverseEventExtractError.FacilityId,
 							 vTempPatientAdverseEventExtractError.PatientID, vTempPatientAdverseEventExtractError.SiteCode, ValidationError.RecordId,
@@ -24,7 +24,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 							 vTempPatientAdverseEventExtractError.AdverseEventStartDate, 
 							 vTempPatientAdverseEventExtractError.AdverseEventEndDate,
                              vTempPatientAdverseEventExtractError.Severity,
-                             vTempPatientAdverseEventExtractError.VisitDate
+                             vTempPatientAdverseEventExtractError.VisitDate,
+'' AS FacilityName
 
 	FROM            vTempPatientAdverseEventExtractError INNER JOIN
 							 ValidationError ON vTempPatientAdverseEventExtractError.Id = ValidationError.RecordId INNER JOIN
@@ -35,7 +36,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql("DROP View vTempPatientAdverseEventExtractError");
-            migrationBuilder.Sql("DROP View TempPatientAdverseEventExtractErrorSummary");
+            migrationBuilder.Sql("DROP View vTempPatientAdverseEventExtractErrorSummary");
         }
     }
 }
