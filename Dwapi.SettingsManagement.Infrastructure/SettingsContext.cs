@@ -42,7 +42,8 @@ namespace Dwapi.SettingsManagement.Infrastructure
             CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
             EmrSystems.SeedDbSetIfEmpty($"{nameof(EmrSystems)}");
             DatabaseProtocols.SeedDbSetIfEmpty($"{nameof(DatabaseProtocols)}");
-            Extracts.SeedDbSetIfEmpty($"{nameof(Extracts)}");
+            Extracts.RemoveRange(Extracts);
+            Extracts.SeedFromResource($"{nameof(Extracts)}");
             SaveChanges();
         }
 

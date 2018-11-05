@@ -81,6 +81,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private extractPatientPharmacy: ExtractProfile;
     private extractPatientStatus: ExtractProfile;
     private extractPatientVisit: ExtractProfile;
+    private extractPatientAdverseEvent: ExtractProfile;
     private extractProfile: ExtractProfile;
     private extractProfiles: ExtractProfile[] = [];
     public centralRegistry: CentralRegistry;
@@ -330,7 +331,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.extractProfiles.push(this.generateExtractPatientPharmacy(currentEmr));
         this.extractProfiles.push(this.generateExtractPatientStatus(currentEmr));
         this.extractProfiles.push(this.generateExtractPatientVisit(currentEmr));
-
+        this.extractProfiles.push(this.generateExtractPatientAdverseEvent(currentEmr));
         this.extractLoadCommand = {
             extracts: this.extractProfiles
         };
@@ -392,6 +393,14 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             extract: this.extracts.find(x => x.name === 'PatientVisitExtract')
         };
         return this.extractPatientVisit;
+    }
+
+    private generateExtractPatientAdverseEvent(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PatientAdverseEventExtract').databaseProtocolId;
+        this.extractPatientAdverseEvent = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'PatientAdverseEventExtract')
+        };
+        return this.extractPatientAdverseEvent;
     }
 
     private getSendPackage(docketId: string): SendPackage {

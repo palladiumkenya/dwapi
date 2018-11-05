@@ -4,14 +4,16 @@ using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20181105075953_AdverseEventsColumns")]
+    partial class AdverseEventsColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -820,17 +822,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("AdverseEventActionTaken");
 
-                    b.Property<string>("AdverseEventCause");
-
                     b.Property<string>("AdverseEventClinicalOutcome");
 
-                    b.Property<DateTime?>("AdverseEventEndDate");
+                    b.Property<DateTime>("AdverseEventEndDate");
 
-                    b.Property<bool?>("AdverseEventIsPregnant");
+                    b.Property<bool>("AdverseEventIsPregnant");
 
-                    b.Property<string>("AdverseEventRegimen");
-
-                    b.Property<DateTime?>("AdverseEventStartDate");
+                    b.Property<DateTime>("AdverseEventStartDate");
 
                     b.Property<bool>("CheckError");
 
@@ -850,7 +848,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int?>("SiteCode");
 
-                    b.Property<DateTime?>("VisitDate");
+                    b.Property<DateTime>("VisitDate");
 
                     b.HasKey("Id");
 

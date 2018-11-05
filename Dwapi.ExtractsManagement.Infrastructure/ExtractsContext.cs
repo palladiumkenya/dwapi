@@ -142,8 +142,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             };
 
             SeederConfiguration.ResetConfiguration(csvConfig, null, typeof(ExtractsContext).GetTypeInfo().Assembly);
-
-            Validator.SeedDbSetIfEmpty($"{nameof(Validator)}");
+            Validator.RemoveRange(Validator);
+            Validator.SeedFromResource($"{nameof(Validator)}");
             SaveChanges();
         }
     }
