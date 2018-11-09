@@ -9,6 +9,7 @@ using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
+using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -99,13 +100,13 @@ namespace Dwapi.Controller
 
         // POST: api/DwhExtracts/manifest
         [HttpPost("patients")]
-        public async Task<IActionResult> SendMpi([FromBody] SendManifestPackageDTO packageDTO)
+        public IActionResult SendPatientExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            if (!packageDTO.IsValid())
+            if (!packageDto.IsValid())
                 return BadRequest();
             try
             {
-                await _dwhSendService.SendExtractsAsync(packageDTO);
+                var jobId = BackgroundJob.Enqueue(()=>_dwhSendService.SendExtractsAsync(packageDto));
                 return Ok();
             }
             catch (Exception e)

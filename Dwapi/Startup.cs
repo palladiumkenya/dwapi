@@ -65,6 +65,8 @@ using Dwapi.UploadManagement.Core.Services.Psmart;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Reader.Dwh;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -127,8 +129,9 @@ namespace Dwapi
             });
 
             services.AddSignalR();
-            
 
+            services.AddHangfire(_ => _.UseMemoryStorage());
+            JobStorage.Current = new MemoryStorage();
             services.AddMvc()
               .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()))
               .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -152,13 +155,13 @@ namespace Dwapi
                     services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString,x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name)));
+                    
                 }
             }
             catch (Exception e)
             {
                 Log.Error(e, "Connections not Initialized");
             }
-
 
             services.AddTransient<ExtractsContext>();
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
@@ -285,7 +288,8 @@ namespace Dwapi
             app.UseStaticFiles()
                 .UseSwaggerUi();
 
-
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
             Log.Debug(@"initializing Database...");
 
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);

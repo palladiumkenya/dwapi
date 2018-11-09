@@ -241,7 +241,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                 },
                 () => {
-                    this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
+                    this.errorMessage.push({severity: 'success', summary: 'Sending Extracts '});
                     this.sending = false;
                     this.updateEvent();
                 }

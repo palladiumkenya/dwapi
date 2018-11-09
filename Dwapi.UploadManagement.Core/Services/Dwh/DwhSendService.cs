@@ -52,9 +52,13 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, DwhManifestMessageBag messageBag)
         {
             var responses = new List<SendDhwManifestResponse>();
-
-            var client = new HttpClient();
-
+            HttpClientHandler handler = new HttpClientHandler()
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
+            var client = new HttpClient(handler);
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
             foreach (var message in messageBag.Messages)
             {
                 try
