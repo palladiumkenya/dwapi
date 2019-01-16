@@ -351,7 +351,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         try
                         {
                             var msg = JsonConvert.SerializeObject(message);
-                            var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{visitsMessageBag.EndPoint}"), message);
+                            var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{adverseEventsMessageBag.EndPoint}"), message);
                             if (response.IsSuccessStatusCode)
                             {
                                 visitCount += message.AdverseEventExtracts.Count;

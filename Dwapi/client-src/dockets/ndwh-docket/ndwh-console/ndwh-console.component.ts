@@ -140,10 +140,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     // window.location.reload();
                 },
                 e => {
+                    // tslint:disable-next-line:no-debugger
+                    debugger;
                     this.errorMessage = [];
                     this.errorMessage.push({
                         severity: 'error',
-                        summary: 'Error verifying ',
+                        summary: 'Error ',
                         detail: <any>e
                     });
                 },

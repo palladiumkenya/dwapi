@@ -26,6 +26,7 @@ namespace Dwapi.Tests.Controller
         private IDatabaseManager _databaseManager;
         private IEmrSystemRepository _emrSystemRepository;
         private IDatabaseProtocolRepository _databaseProtocolRepository;
+        private IExtractRepository _extractRepository;
         private IEmrManagerService _emrManagerService;
         private DbContextOptions<SettingsContext> _options;
         private SettingsContext _context;
@@ -55,7 +56,8 @@ namespace Dwapi.Tests.Controller
             _databaseManager=new DatabaseManager();
             _emrSystemRepository = new EmrSystemRepository(_context);
             _databaseProtocolRepository=new DatabaseProtocolRepository(_context);
-            _emrManagerService=new EmrManagerService(_databaseManager,_emrSystemRepository,_databaseProtocolRepository);
+            _extractRepository = new ExtractRepository(_context);
+            _emrManagerService=new EmrManagerService(_databaseManager,_emrSystemRepository,_databaseProtocolRepository, _extractRepository);
 
             _emrManagerController =new EmrManagerController(_emrManagerService);
         }

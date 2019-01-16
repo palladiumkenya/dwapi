@@ -745,3 +745,21 @@ Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial"|MPI|1|MasterPatientIndex|1|a6221aa4-
        adv.Pregnancy AS AdverseEventIsPregnant
 FROM IQC_AdverseEvents adv
      INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK"|dwhstage|0|PatientAdverseEventExtract|8|a6221983-0e85-11e8-ba89-0ed5f89f718b
+
+
+a6226eb4-0e85-11e8-ba89-6fb398c5f449|Patient Adverse Events|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT '' AS PatientID, 
+       '' AS PatientPK, 
+       '' AS SiteCode,
+	   '' AS FacilityID, 
+       'Kenya EMR' AS EMR, 
+       'Kenya HMIS II' AS Project, 
+       NOW() AS VisitDate, 
+       '' AS AdverseEventRegimen, 
+       '' AS AdverseEvent, 
+       '' AS AdverseEventCause, 
+       '' AS Severity, 
+       '' AS AdverseEventActionTaken, 
+       '' AS AdverseEventClinicalOutcome, 
+	   NOW() AS AdverseEventStartDate, 
+       NOW() AS AdverseEventEndDate, 
+       '' AS AdverseEventIsPregnant"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
