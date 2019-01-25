@@ -4,7 +4,7 @@
 
 [Ubuntu 14 64 bit](https://download.docker.com/linux/ubuntu/dists/trusty/pool/stable/amd64/docker-ce_17.03.2~ce-0~ubuntu-trusty_amd64.deb)
 
-[Ubuntu 16 64 bit](https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_17.03.2~ce-0~ubuntu-xenial_amd64.deb)
+[Ubuntu 17 64 bit](https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_17.03.2~ce-0~ubuntu-xenial_amd64.deb)
 
 2) Install docker
 ---
@@ -45,15 +45,19 @@ Configure your data sources and verify registries
 - - -
 ***sudo docker restart dwapi***
 - - -
+
+
 Troubleshooting DWAPI
 --------------
 
 View log files   
---
+---
+
  ***sudo docker exec -it dwapi ls logs***
 
 Copying log files to your pc.  
---
+---
+
 ***sudo docker cp dwapi:/app/logs/ .***
 
 # Dwapi for Windows Instruction
