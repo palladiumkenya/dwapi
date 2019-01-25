@@ -7,6 +7,7 @@ import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
 import {ExtractEvent} from '../../settings/model/extract-event';
 import { LoadFromEmrCommand } from '../../settings/model/load-from-emr-command';
 import {ExtractPatient} from '../ndwh-docket/model/extract-patient';
+import { LoadExtracts } from '../../settings/model/load-extracts';
 
 @Injectable()
 export class NdwhExtractService {
@@ -33,8 +34,8 @@ export class NdwhExtractService {
             .catch(this.handleError);
     }
 
-    public extractAll(extracts: LoadFromEmrCommand): Observable<boolean> {
-        return this._http.post<boolean>(this._url + '/extractAll', extracts)
+    public extractAll(loadExtracts: LoadExtracts): Observable<boolean> {
+        return this._http.post<boolean>(this._url + '/extractAll', loadExtracts)
             .catch(this.handleError);
     }
 

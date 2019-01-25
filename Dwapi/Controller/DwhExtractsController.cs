@@ -1,13 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.Hubs.Dwh;
+using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Utility;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Hangfire;
 using MediatR;
@@ -26,12 +30,14 @@ namespace Dwapi.Controller
         private readonly IHubContext<ExtractActivity> _hubContext;
         private readonly IHubContext<DwhSendActivity> _hubSendContext;
         private readonly IDwhSendService _dwhSendService;
+        private readonly ICbsSendService _cbsSendService;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService, IHubContext<DwhSendActivity> hubSendContext)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService, IHubContext<DwhSendActivity> hubSendContext, ICbsSendService cbsSendService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _dwhSendService = dwhSendService;
+            _cbsSendService = cbsSendService;
             Startup.DwhSendHubContext= _hubSendContext = hubSendContext;
             Startup.HubContext= _hubContext = hubContext;
         }
@@ -46,11 +52,21 @@ namespace Dwapi.Controller
         }
 
         [HttpPost("extractAll")]
-        public async Task<IActionResult> Load([FromBody]LoadFromEmrCommand request)
+        public async Task<IActionResult> Load([FromBody]LoadExtracts request)
         {
             if (!ModelState.IsValid) return BadRequest();
-            var result = await _mediator.Send(request, HttpContext.RequestAborted);
-            return Ok(result);
+            if (!request.LoadMpi)
+            {
+                var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
+                return Ok(result);
+            }
+
+            var dwhExtractsTask = _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
+            var mpiExtractsTask = _mediator.Send(request.ExtractMpi, HttpContext.RequestAborted);
+            var extractTasks = new List<Task<bool>> { mpiExtractsTask, dwhExtractsTask};
+            // wait for both tasks but doesn't throw an error for mpi load
+            var result1 = await Task.WhenAll(extractTasks);
+            return Ok(dwhExtractsTask);
         }
 
 
@@ -79,14 +95,19 @@ namespace Dwapi.Controller
 
         // POST: api/DwhExtracts/manifest
         [HttpPost("manifest")]
-        public async Task<IActionResult> SendManifest([FromBody] SendManifestPackageDTO packageDTO)
+        public async Task<IActionResult> SendManifest([FromBody] CombinedSendManifestDto packageDto)
         {
-            if (!packageDTO.IsValid())
+            if (!packageDto.DwhPackage.IsValid() || !packageDto.MpiPackage.IsValid())
                 return BadRequest();
             try
             {
-
-                await _dwhSendService.SendManifestAsync(packageDTO);
+                if (!packageDto.SendMpi)
+                {
+                    var result = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage);
+                    return Ok(result);
+                }
+                var mpiTask = _cbsSendService.SendManifestAsync(packageDto.MpiPackage);
+                var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage);
                 return Ok();
             }
             catch (Exception e)
@@ -98,16 +119,23 @@ namespace Dwapi.Controller
         }
 
 
-        // POST: api/DwhExtracts/manifest
+        // POST: api/DwhExtracts/patients
         [HttpPost("patients")]
-        public IActionResult SendPatientExtracts([FromBody] SendManifestPackageDTO packageDto)
+        public IActionResult SendPatientExtracts([FromBody] CombinedSendManifestDto packageDto)
         {
-            if (!packageDto.IsValid())
+            if (!packageDto.DwhPackage.IsValid()|| !packageDto.MpiPackage.IsValid())
                 return BadRequest();
             try
             {
-                var jobId = BackgroundJob.Enqueue(()=>_dwhSendService.SendExtractsAsync(packageDto));
+                if (!packageDto.SendMpi)
+                {
+                    var jobId = BackgroundJob.Enqueue(() => _dwhSendService.SendExtractsAsync(packageDto.DwhPackage));
+                    return Ok();
+                }
+                var j1 = BackgroundJob.Enqueue(() => _dwhSendService.SendExtractsAsync(packageDto.DwhPackage));
+                var j2 = BackgroundJob.Enqueue(() => _cbsSendService.SendMpiAsync(packageDto.MpiPackage));
                 return Ok();
+
             }
             catch (Exception e)
             {
