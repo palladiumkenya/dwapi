@@ -50,12 +50,12 @@ Configure your data sources and verify registries
 Troubleshooting DWAPI
 --------------
 
-View log files   
+i) View log files   
 ---
 
  ***sudo docker exec -it dwapi ls logs***
 
-Copying log files folder to your pc current directory.  
+ii) Copying log files folder to your pc current directory.  
 ---
 
 ***sudo docker cp dwapi:/app/logs/ .***
