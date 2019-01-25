@@ -55,7 +55,7 @@ View log files
 
  ***sudo docker exec -it dwapi ls logs***
 
-Copying log files to your pc.  
+Copying log files folder to your pc current directory.  
 ---
 
 ***sudo docker cp dwapi:/app/logs/ .***
