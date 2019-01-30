@@ -27,6 +27,7 @@ import { ExtractEvent } from '../../../settings/model/extract-event';
 import {SendEvent} from '../../../settings/model/send-event';
 import { LoadExtracts } from '../../../settings/model/load-extracts';
 import { CombinedPackage } from '../../../settings/model/combined-package';
+import { CbsService } from '../../services/cbs.service';
 
 @Component({
     selector: 'liveapp-ndwh-console',
@@ -36,6 +37,7 @@ import { CombinedPackage } from '../../../settings/model/combined-package';
 export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     @Input() emr: EmrSystem;
     private _hubConnection: HubConnection | undefined;
+    private _hubConnectionMpi: HubConnection | undefined;
     private _sendhubConnection: HubConnection | undefined;
     public async: any;
 
@@ -57,6 +59,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public extracts: Extract[] = [];
     public cbsExtracts: Extract[] = [];
     public currentExtract: Extract;
+    public mpiExtract: Extract;
     private dwhExtract: DwhExtract;
     private dwhExtracts: DwhExtract[] = [];
     private extractEvent: ExtractEvent;
@@ -65,6 +68,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public canLoadFromEmr: boolean;
     public canSend: boolean;
+    public canSendMpi: boolean;
     public canSendPatients: boolean = false;
     public manifestPackage: CombinedPackage;
     public extractPackage: CombinedPackage;
@@ -97,15 +101,16 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public cbsRegistry: CentralRegistry;
     public sendResponse: SendResponse;
     public getEmr$: Subscription;
-    private loadMpi: boolean;
-    private sendMpi: boolean;
+    public loadMpi: boolean = true;
+    public sendMpi: boolean = true;
 
     public constructor(
         confirmationService: ConfirmationService,
         emrConfigService: NdwhExtractService,
         registryConfigService: RegistryConfigService,
         psmartSenderService: NdwhSenderService,
-        private emrService: EmrConfigService
+        private emrService: EmrConfigService,
+        private cbsService: CbsService
     ) {
         this._confirmationService = confirmationService;
         this._ndwhExtractService = emrConfigService;
@@ -121,6 +126,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.loadRegisrty();
         this.loadCbsRegisrty();
         this.liveOnInit();
+        this.liveOnInitMpi();
         this.loadData();
     }
 
@@ -143,6 +149,39 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.centralRegistry) {
             this.canSend = true;
+        }
+        this.cbsExtracts.forEach(extract => {
+            this.getStatus$ = this.cbsService.getStatus(extract.id)
+            .subscribe(
+                p => {
+                    extract.extractEvent = p;
+                    if (extract) {
+                        if (extract.extractEvent) {
+                            this.canSendMpi = extract.extractEvent.queued > 0;
+                        }
+                    }
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
+                },
+                () => {
+                }
+            );
+        });
+        if (!this.loadMpi && !this.canSendMpi) {
+            this.sendMpi = false;
+        } else {
+            this.sendMpi = true;
+        }
+    }
+
+    public loadChange() {
+        this.loadMpi = !this.loadMpi;
+        if (!this.loadMpi || !this.canSendMpi) {
+            this.sendMpi = false;
+        } else {
+            this.sendMpi = true;
         }
     }
 
@@ -207,10 +246,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 });
             },
             () => {
-                console.log(this.cbsRegistry.name);
-                if (this.cbsRegistry) {
-                    this.canSend = true;
-                }
             }
         );
     }
@@ -238,6 +273,26 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     }
                 );
         });
+
+        this.cbsExtracts.forEach(extract => {
+            this.getStatus$ = this.cbsService.getStatus(extract.id)
+            .subscribe(
+                p => {
+                    extract.extractEvent = p;
+                    if (extract) {
+                        if (extract.extractEvent) {
+                            this.canSendMpi = extract.extractEvent.queued > 0;
+                        }
+                    }
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
+                },
+                () => {
+                }
+            );
+        });
     }
 
 
@@ -246,7 +301,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.errorMessage = [];
         this.notifications = [];
         this.canSendPatients = false;
-        this.sendMpi = true;
         this.manifestPackage = this.getSendManifestPackage();
         this.sendManifest$ = this._ndwhSenderService.sendManifest(this.manifestPackage)
             .subscribe(
@@ -379,6 +433,39 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
+    private liveOnInitMpi() {
+        this._hubConnectionMpi = new HubConnectionBuilder()
+            .withUrl(`http://${document.location.hostname}:5757/cbsactivity`)
+            .configureLogging(LogLevel.Trace)
+            .build();
+        this._hubConnectionMpi.serverTimeoutInMilliseconds = 120000;
+
+        this._hubConnectionMpi.start().catch(err => console.error(err.toString()));
+
+        this._hubConnectionMpi.on('ShowCbsProgress', (dwhProgress: any) => {
+
+            if (this.mpiExtract) {
+                this.extractEvent = {
+                    lastStatus: `${dwhProgress.status}`, found: dwhProgress.found, loaded: dwhProgress.loaded,
+                    rejected: dwhProgress.rejected, queued: dwhProgress.queued, sent: dwhProgress.sent
+                };
+                this.mpiExtract.extractEvent = {};
+                this.mpiExtract.extractEvent = this.extractEvent;
+                const newWithoutPatientExtract = this.extracts.filter(x => x.name !== 'MasterPatientIndex');
+                this.extracts = [...newWithoutPatientExtract, this.mpiExtract];
+            }
+         });
+
+        this._hubConnectionMpi.on('ShowCbsSendProgress', (dwhProgress: any) => {
+            if (this.mpiExtract) {
+                this.sendEvent = {
+                    sentProgress: dwhProgress.progress
+                };
+            }
+        });
+    }
+
+
     private getExtractProtocols(
         currentEmr: EmrSystem
     ): ExtractDatabaseProtocol[] {
@@ -406,11 +493,17 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             extracts: this.extractProfiles
         };
         this.extractMpi = this.generateExtractMpi(currentEmr);
-        this.loadMpi = true;
+        if (this.extractMpi !== []) {
+            this.loadExtractsCommand = {
+                loadFromEmrCommand: this.extractLoadCommand,
+                extractMpi: this.extractMpi,
+                loadMpi: this.loadMpi
+            };
+        }
         this.loadExtractsCommand = {
             loadFromEmrCommand: this.extractLoadCommand,
-            extractMpi: this.extractMpi,
-            loadMpi: this.loadMpi
+            extractMpi: null,
+            loadMpi: false
         };
         return this.loadExtractsCommand;
     }
@@ -481,10 +574,13 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private generateExtractMpi(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.cbsExtracts.find(x => x.name === 'MasterPatientIndex').databaseProtocolId;
-        this.extractMpi = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.cbsExtracts.find(x => x.name === 'MasterPatientIndex')
-        };
+        const mpi = this.cbsExtracts.find(x => x.name === 'MasterPatientIndex');
+        if (mpi != null) {
+            const selectedProtocal = mpi.databaseProtocolId;
+            this.extractMpi = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+                extract: this.cbsExtracts.find(x => x.name === 'MasterPatientIndex')
+            };
+        }
         return this.extractMpi;
     }
 

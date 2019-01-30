@@ -32,7 +32,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
-            int batch = 500;
+            int batch = 1000;
 
             var list = new List<TempPatientLaboratoryExtract>();
 

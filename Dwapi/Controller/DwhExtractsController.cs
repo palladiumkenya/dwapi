@@ -61,12 +61,12 @@ namespace Dwapi.Controller
                 return Ok(result);
             }
 
-            var dwhExtractsTask = _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
-            var mpiExtractsTask = _mediator.Send(request.ExtractMpi, HttpContext.RequestAborted);
+            var dwhExtractsTask = Task.Run(() => _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted));
+            var mpiExtractsTask = Task.Run(() => _mediator.Send(request.ExtractMpi, HttpContext.RequestAborted));
             var extractTasks = new List<Task<bool>> { mpiExtractsTask, dwhExtractsTask};
             // wait for both tasks but doesn't throw an error for mpi load
             var result1 = await Task.WhenAll(extractTasks);
-            return Ok(dwhExtractsTask);
+            return Ok(result1);
         }
 
 

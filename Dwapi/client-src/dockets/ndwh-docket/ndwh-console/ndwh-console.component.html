@@ -5,10 +5,11 @@
       <div class="ui-toolbar-group-left">
           <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr()" label="Load from EMR"
                   icon="ui-icon-file-download" class="green-btn"></button>
+                  Include MPI Extracts <input type="checkbox" name="LoadMpi" [(checked)]="loadMpi" (change)="loadChange()">
       </div>
 
       <div class="ui-toolbar-group-right">
-          Send MPI<input type="checkbox" name="SendMpi" checked>
+          <input type="checkbox" name="SendMpi" [(checked)]="sendMpi" (change)="sendMpi = !sendMpi" [disabled]="!loadMpi||!canSendMpi"> Include MPI Extracts
           <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
                   class="blue-btn"></button>
       </div>
