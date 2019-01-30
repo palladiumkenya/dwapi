@@ -343,7 +343,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private getSendManifestPackage(): CombinedPackage {
-        this.manifestPackage = {dwhPackage: this.getSendDwhManifestPackage(),
+        this.manifestPackage = {
+            dwhPackage: this.getSendDwhManifestPackage(),
             mpiPackage: this.getMpiSendManifestPackage(),
             sendMpi: this.sendMpi
         };
@@ -374,7 +375,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     private getMpiSendManifestPackage(): SendPackage {
         return {
-            extractId: this.cbsExtracts.find(x => x.name === 'MasterPatientIndex').id,
+            extractId: this.cbsExtracts.find(x => x.name === 'MasterPatientIndex')?this.cbsExtracts.find(x => x.name === 'MasterPatientIndex').id:null,
             destination: this.cbsRegistry
         };
     }
