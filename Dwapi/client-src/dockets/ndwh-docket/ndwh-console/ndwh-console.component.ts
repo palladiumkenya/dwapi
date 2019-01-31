@@ -18,8 +18,6 @@ import { NdwhSenderService } from '../../services/ndwh-sender.service';
 import { SendPackage } from '../../../settings/model/send-package';
 import { SendResponse } from '../../../settings/model/send-response';
 import { LoadFromEmrCommand } from '../../../settings/model/load-from-emr-command';
-import { DwhExtract } from '../../../settings/model/dwh-extract';
-import { ExtractPatient } from '../model/extract-patient';
 import { ExtractProfile } from '../model/extract-profile';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
 import { EmrConfigService } from '../../../settings/services/emr-config.service';
@@ -59,9 +57,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public extracts: Extract[] = [];
     public cbsExtracts: Extract[] = [];
     public currentExtract: Extract;
-    public mpiExtract: Extract;
-    private dwhExtract: DwhExtract;
-    private dwhExtracts: DwhExtract[] = [];
+    public currentCbsExtract: Extract;
     private extractEvent: ExtractEvent;
     public sendEvent: SendEvent = {};
     public recordCount: number;
@@ -72,10 +68,10 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public canSendPatients: boolean = false;
     public manifestPackage: CombinedPackage;
     public extractPackage: CombinedPackage;
-    public dwhManifestPackage: SendPackage;
-    public dwhExtractPackage: SendPackage;
-    public cbsManifestPackage: SendPackage;
-    public cbsExtractPackage: SendPackage;
+    public dwhManifestPackage: SendPackage = null;
+    public dwhExtractPackage: SendPackage = null;
+    public cbsManifestPackage: SendPackage = null;
+    public cbsExtractPackage: SendPackage = null;
     public sending: boolean = false;
     public sendingManifest: boolean = false;
 
@@ -95,7 +91,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private extractPatientVisit: ExtractProfile;
     private extractPatientAdverseEvent: ExtractProfile;
     private extractMpi: ExtractProfile;
-    private extractProfile: ExtractProfile;
     private extractProfiles: ExtractProfile[] = [];
     public centralRegistry: CentralRegistry;
     public cbsRegistry: CentralRegistry;
@@ -343,47 +338,77 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private getSendManifestPackage(): CombinedPackage {
-        this.manifestPackage = {dwhPackage: this.getSendDwhManifestPackage(),
-            mpiPackage: this.getMpiSendManifestPackage(),
-            sendMpi: this.sendMpi
+        this.getSendDwhManifestPackage();
+        this.getMpiSendManifestPackage();
+        if (this.cbsManifestPackage !== null) {
+            return this.manifestPackage = {dwhPackage: this.dwhManifestPackage,
+                mpiPackage: this.cbsManifestPackage,
+                sendMpi: this.sendMpi
+            };
+        }
+        return this.manifestPackage = this.manifestPackage = {dwhPackage: this.dwhManifestPackage,
+            mpiPackage: null,
+            sendMpi: false
         };
-        return this.manifestPackage;
     }
 
     private getExtractsPackage(): CombinedPackage {
-        this.extractPackage = {dwhPackage: this.getDwhExtractsPackage(),
-            mpiPackage: this.getMpiPackage(),
-            sendMpi: this.sendMpi
+        this.getMpiPackage();
+        this.getDwhExtractsPackage();
+        if (this.cbsExtractPackage !== null) {
+            return this.extractPackage = {dwhPackage: this.dwhExtractPackage,
+                mpiPackage: this.cbsExtractPackage,
+                sendMpi: this.sendMpi
+            };
+        }
+        return this.extractPackage = this.extractPackage = {dwhPackage: this.dwhExtractPackage,
+            mpiPackage: null,
+            sendMpi: false
         };
-        return this.extractPackage;
     }
 
     private getSendDwhManifestPackage(): SendPackage {
-        return {
-            destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'PatientExtract').id
-        };
+        const dwhMan = this.extracts.find(x => x.name === 'PatientExtract');
+        if (dwhMan !== null) {
+            return this.dwhManifestPackage = {
+                destination: this.centralRegistry,
+                extractId: dwhMan.id
+            };
+        }
+        return this.dwhManifestPackage;
     }
 
     private getDwhExtractsPackage(): SendPackage {
-        return {
-            destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'PatientExtract').id
-        };
+        const dwhExt = this.extracts.find(x => x.name === 'PatientExtract');
+        if (dwhExt !== null) {
+            return this.dwhExtractPackage = {
+                destination: this.centralRegistry,
+                extractId: dwhExt.id
+            };
+        }
+        return this.dwhExtractPackage;
     }
 
     private getMpiSendManifestPackage(): SendPackage {
-        return {
-            extractId: this.cbsExtracts.find(x => x.name === 'MasterPatientIndex').id,
-            destination: this.cbsRegistry
-        };
+        const mpiMan = this.cbsExtracts.find(x => x.name === 'MasterPatientIndex');
+        if (mpiMan && mpiMan !== null) {
+            return this.cbsManifestPackage = {
+                extractId: mpiMan.id,
+                destination: this.cbsRegistry
+            };
+        }
+        return this.cbsManifestPackage;
     }
 
     private getMpiPackage(): SendPackage {
-        return {
-            destination: this.cbsRegistry,
-            extractId: this.cbsExtracts.find(x => x.name === 'MasterPatientIndex').id,
-        };
+        const mpiExt = this.cbsExtracts.find(x => x.name === 'MasterPatientIndex');
+        if (mpiExt && mpiExt !== null) {
+            return this.cbsExtractPackage = {
+                destination: this.cbsRegistry,
+                extractId: mpiExt.id,
+            };
+        }
+        return this.cbsExtractPackage;
     }
 
 
@@ -444,20 +469,20 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
         this._hubConnectionMpi.on('ShowCbsProgress', (dwhProgress: any) => {
 
-            if (this.mpiExtract) {
+            if (this.currentCbsExtract) {
                 this.extractEvent = {
                     lastStatus: `${dwhProgress.status}`, found: dwhProgress.found, loaded: dwhProgress.loaded,
                     rejected: dwhProgress.rejected, queued: dwhProgress.queued, sent: dwhProgress.sent
                 };
-                this.mpiExtract.extractEvent = {};
-                this.mpiExtract.extractEvent = this.extractEvent;
+                this.currentCbsExtract.extractEvent = {};
+                this.currentCbsExtract.extractEvent = this.extractEvent;
                 const newWithoutPatientExtract = this.extracts.filter(x => x.name !== 'MasterPatientIndex');
-                this.extracts = [...newWithoutPatientExtract, this.mpiExtract];
+                this.extracts = [...newWithoutPatientExtract, this.currentCbsExtract];
             }
          });
 
         this._hubConnectionMpi.on('ShowCbsSendProgress', (dwhProgress: any) => {
-            if (this.mpiExtract) {
+            if (this.currentCbsExtract) {
                 this.sendEvent = {
                     sentProgress: dwhProgress.progress
                 };
