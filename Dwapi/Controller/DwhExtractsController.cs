@@ -42,7 +42,7 @@ namespace Dwapi.Controller
             Startup.HubContext= _hubContext = hubContext;
         }
 
-    
+
         [HttpPost("extract")]
         public async Task<IActionResult> Load([FromBody]ExtractPatient request)
         {
@@ -97,7 +97,7 @@ namespace Dwapi.Controller
         [HttpPost("manifest")]
         public async Task<IActionResult> SendManifest([FromBody] CombinedSendManifestDto packageDto)
         {
-            if (!packageDto.DwhPackage.IsValid() || !packageDto.MpiPackage.IsValid())
+            if (!packageDto.IsValid())
                 return BadRequest();
             try
             {
