@@ -319,10 +319,9 @@ namespace Dwapi
             );
 
             DomainEvents.Init();
-            // TODO: Use trial license for now THen add icense once procured
-            /*try
+            try
             {
-                DapperPlusManager.AddLicense("1755;701-ThePalladiumGroup", "9005d618-3965-8877-97a5-7a27cbb21c8f");
+                DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
                 if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
                 {
                     throw new Exception(licenseErrorMessage);
@@ -332,7 +331,7 @@ namespace Dwapi
             {
                 Log.Debug($"{e}");
                 throw;
-            }*/
+            }
 
             Log.Debug(@"initializing Database [Complete]");
             Log.Debug(
