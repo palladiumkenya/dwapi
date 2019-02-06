@@ -26,6 +26,7 @@ import {SendEvent} from '../../../settings/model/send-event';
 import { LoadExtracts } from '../../../settings/model/load-extracts';
 import { CombinedPackage } from '../../../settings/model/combined-package';
 import { CbsService } from '../../services/cbs.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'liveapp-ndwh-console',
@@ -415,7 +416,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
-                `http://${document.location.hostname}:5757/ExtractActivity`
+                `http://${document.location.hostname}:${environment.port}/ExtractActivity`
             )
             .configureLogging(LogLevel.Error)
             .build();
@@ -460,7 +461,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     private liveOnInitMpi() {
         this._hubConnectionMpi = new HubConnectionBuilder()
-            .withUrl(`http://${document.location.hostname}:5757/cbsactivity`)
+            .withUrl(`http://${document.location.hostname}:${environment.port}/cbsactivity`)
             .configureLogging(LogLevel.Trace)
             .build();
         this._hubConnectionMpi.serverTimeoutInMilliseconds = 120000;
@@ -524,12 +525,13 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 extractMpi: this.extractMpi,
                 loadMpi: this.loadMpi
             };
+        } else {
+            this.loadExtractsCommand = {
+                loadFromEmrCommand: this.extractLoadCommand,
+                extractMpi: null,
+                loadMpi: false
+            };
         }
-        this.loadExtractsCommand = {
-            loadFromEmrCommand: this.extractLoadCommand,
-            extractMpi: null,
-            loadMpi: false
-        };
         return this.loadExtractsCommand;
     }
 

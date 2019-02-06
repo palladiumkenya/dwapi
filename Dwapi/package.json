@@ -8,6 +8,7 @@
     "vs": "ng serve --proxy-config proxy.config.json",
     "net": "dotnet watch run",
     "build": "ng build --prod",
+    "docker": "ng build --prod --env=qaDocker",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

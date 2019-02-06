@@ -194,6 +194,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             else
                             {
                                 var error = await response.Content.ReadAsStringAsync();
+                                Log.Error(error, $"Host Response Error");
                                 throw new Exception(error);
                             }
                         }
@@ -222,6 +223,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             else
                             {
                                 var error = await response.Content.ReadAsStringAsync();
+                                Log.Error(error, $"Host Response Error");
                                 throw new Exception(error);
                             }
                         }
@@ -249,6 +251,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             else
                             {
                                 var error = await response.Content.ReadAsStringAsync();
+                                Log.Error(error, $"Host Response Error");
                                 throw new Exception(error);
                             }
                         }
@@ -277,6 +280,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             else
                             {
                                 var error = await response.Content.ReadAsStringAsync();
+                                Log.Error(error, $"Host Response Error");
                                 throw new Exception(error);
                             }
                         }
@@ -305,7 +309,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             else
                             {
                                 var error = await response.Content.ReadAsStringAsync();
-
+                                Log.Error(error, $"Host Response Error");
                                 throw new Exception(error);
                             }
                         }
@@ -334,6 +338,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             else
                             {
                                 var error = await response.Content.ReadAsStringAsync();
+                                Log.Error(error, $"Host Response Error");
                                 throw new Exception(error);
                             }
                         }
@@ -362,6 +367,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             else
                             {
                                 var error = await response.Content.ReadAsStringAsync();
+                                Log.Error(error, $"Host Response Error");
                                 throw new Exception(error);
                             }
                         }

@@ -16,6 +16,7 @@ import {CentralRegistry} from '../../settings/model/central-registry';
 import {SendPackage} from '../../settings/model/send-package';
 import {SendResponse} from '../../settings/model/send-response';
 import {SendEvent} from '../../settings/model/send-event';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'liveapp-cbs-docket',
@@ -90,7 +91,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
 
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
-            .withUrl(`http://${document.location.hostname}:5757/cbsactivity`)
+            .withUrl(`http://${document.location.hostname}:${environment.port}/cbsactivity`)
             .configureLogging(LogLevel.Trace)
             .build();
         this._hubConnection.serverTimeoutInMilliseconds = 120000;
