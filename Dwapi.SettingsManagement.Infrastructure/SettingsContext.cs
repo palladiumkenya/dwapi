@@ -52,6 +52,5 @@ namespace Dwapi.SettingsManagement.Infrastructure
             Extracts.SeedFromResource($"{nameof(Extracts)}");
             SaveChanges();
         }
-
     }
 }

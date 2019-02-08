@@ -4,6 +4,13 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <Version>2.2.0</Version>
+    <Company>Palladium Group</Company>
+    <Authors>Brian Mwasi, Danson Koske</Authors>
+    <RepositoryUrl>https://github.com/palladiumkenya/DWAPI</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <NeutralLanguage>en-KE</NeutralLanguage>
+    <PackageReleaseNotes />
     <!--<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>-->
   </PropertyGroup>
  
@@ -22,7 +29,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.2" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />

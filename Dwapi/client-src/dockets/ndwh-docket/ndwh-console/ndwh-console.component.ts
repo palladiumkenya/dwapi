@@ -253,8 +253,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 .subscribe(
                     p => {
                         extract.extractEvent = p;
-                        if (extract.extractEvent) {
-                            this.canSend = extract.extractEvent.queued > 0;
+                        if (extract.extractEvent && extract.name === 'PatientExtract') {
+                            this.canSend = (extract.extractEvent.queued > 0);
                         }
                     },
                     e => {
