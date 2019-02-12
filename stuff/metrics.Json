@@ -1,5 +1,6 @@
 {
+    "EmrName":"v1.0.0.0",
     "EmrVersion":"v1.0.0.0",
     "LastLoginDate":"yyyy-MMM-dd",
-    "MoH731RunDate":"yyyy-MMM-dd"
+    "LastMoH731RunDate":"yyyy-MMM-dd"
 }
