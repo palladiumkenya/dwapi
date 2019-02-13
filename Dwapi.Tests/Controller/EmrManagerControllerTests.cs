@@ -31,6 +31,7 @@ namespace Dwapi.Tests.Controller
         private DbContextOptions<SettingsContext> _options;
         private SettingsContext _context;
         private EmrSystem _iqcareEmr, _kenyaEmr,_otherEmr;
+        private RestProtocolRepository _restProtocolRepository;
 
         [OneTimeSetUp]
         public void Init()
@@ -57,7 +58,8 @@ namespace Dwapi.Tests.Controller
             _emrSystemRepository = new EmrSystemRepository(_context);
             _databaseProtocolRepository=new DatabaseProtocolRepository(_context);
             _extractRepository = new ExtractRepository(_context);
-            _emrManagerService=new EmrManagerService(_databaseManager,_emrSystemRepository,_databaseProtocolRepository, _extractRepository);
+            _restProtocolRepository = new RestProtocolRepository(_context);
+            _emrManagerService=new EmrManagerService(_databaseManager,_emrSystemRepository,_databaseProtocolRepository, _extractRepository,_restProtocolRepository);
 
             _emrManagerController =new EmrManagerController(_emrManagerService);
         }

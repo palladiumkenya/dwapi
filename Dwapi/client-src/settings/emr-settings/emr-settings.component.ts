@@ -6,9 +6,9 @@ import {EmrSystem} from '../model/emr-system';
 import {BreadcrumbService} from '../../app/breadcrumb.service';
 
 @Component({
-  selector: 'liveapp-emr-settings',
-  templateUrl: './emr-settings.component.html',
-  styleUrls: ['./emr-settings.component.scss']
+    selector: 'liveapp-emr-settings',
+    templateUrl: './emr-settings.component.html',
+    styleUrls: ['./emr-settings.component.scss']
 })
 export class EmrSettingsComponent implements OnInit, OnDestroy {
 
@@ -33,6 +33,7 @@ export class EmrSettingsComponent implements OnInit, OnDestroy {
     public emrDialog: EmrSystem;
     public protocolTitle: string;
     public docketTitle: string;
+    public resourceTitle: string;
     public displayDialog: boolean;
 
     public canMakeDefault: boolean;
@@ -57,6 +58,7 @@ export class EmrSettingsComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this.protocolTitle = 'Protocols';
         this.docketTitle = 'Dockets';
+        this.resourceTitle = 'Resources';
         this.loadData();
     }
 
@@ -152,6 +154,7 @@ export class EmrSettingsComponent implements OnInit, OnDestroy {
                     this.loadData();
                 });
     }
+
     public selectEmr(emr: EmrSystem) {
         this.selectedEmr = emr;
     }
@@ -177,7 +180,7 @@ export class EmrSettingsComponent implements OnInit, OnDestroy {
                 },
 
                 () => {
-                     if (this.isMadeDefault) {
+                    if (this.isMadeDefault) {
                         this.messages.push({
                             severity: 'success',
                             summary: `${this.selectedEmr.name} was set as default successfully`
@@ -212,11 +215,13 @@ export class EmrSettingsComponent implements OnInit, OnDestroy {
     onRowSelect(event) {
         this.protocolTitle = `${event.data.name} Protocols`;
         this.docketTitle = `${event.data.name} Dockets`;
+        this.resourceTitle = `${event.data.name} Resources`;
     }
 
     onRowUnselect(event) {
         this.protocolTitle = 'Protocols';
         this.docketTitle = 'Dockets';
+        this.docketTitle = 'Resources';
     }
 
     public ngOnDestroy(): void {

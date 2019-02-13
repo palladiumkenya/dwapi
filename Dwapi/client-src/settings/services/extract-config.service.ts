@@ -40,6 +40,10 @@ export class ExtractConfigService {
         return this._http.post<Extract>(this._url + '/update', extract)
             .catch(this.handleError);
     }
+    public updateResource(extract: Extract): Observable<Extract> {
+        return this._http.post<Extract>(this._url + '/update', extract)
+            .catch(this.handleError);
+    }
 
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {

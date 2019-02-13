@@ -187,6 +187,30 @@ namespace Dwapi.Controller
             }
         }
 
+        // POST: api/EmrManager/protocol
+        [HttpPost("restprotocol")]
+        public IActionResult SaveRestProtocol([FromBody] RestProtocol entity)
+        {
+            if (null == entity)
+                return BadRequest();
+
+            if (entity.Id.IsNullOrEmpty())
+                entity.Id = LiveGuid.NewGuid();
+
+            try
+            {
+                _emrManagerService.SaveRestProtocol(entity);
+                return Ok(entity);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error saving {nameof(RestProtocol)}";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
         // DELETE: api/EmrManager/protocol/5
         [HttpDelete("protocol/{id}")]
         public IActionResult DeleteProtoco(Guid id)

@@ -4,6 +4,7 @@ import {CentralRegistry} from '../model/central-registry';
 import {Observable} from 'rxjs/Observable';
 import {EmrSystem} from '../model/emr-system';
 import {DatabaseProtocol} from '../model/database-protocol';
+import {RestProtocol} from '../model/rest-protocol';
 
 @Injectable()
 export class ProtocolConfigService {
@@ -29,8 +30,18 @@ export class ProtocolConfigService {
             .catch(this.handleError);
     }
 
+    public saveRestProtocol(entity: RestProtocol): Observable<RestProtocol> {
+        return this._http.post<RestProtocol>(this._url + '/restprotocol', entity)
+            .catch(this.handleError);
+    }
+
     public verifyProtocol(entity: DatabaseProtocol): Observable<boolean> {
         return this._http.post<boolean>(this._url + '/verify', entity)
+            .catch(this.handleError);
+    }
+
+    public verifyRestProtocol(entity: RestProtocol): Observable<boolean> {
+        return this._http.post<boolean>(this._url + '/verifyrest', entity)
             .catch(this.handleError);
     }
 

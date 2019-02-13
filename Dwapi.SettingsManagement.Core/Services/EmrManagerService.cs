@@ -15,14 +15,16 @@ namespace Dwapi.SettingsManagement.Core.Services
         private readonly IEmrSystemRepository _emrSystemRepository;
         private readonly IExtractRepository _extractRepository;
         private readonly IDatabaseProtocolRepository _databaseProtocolRepository;
+        private readonly IRestProtocolRepository _restProtocolRepository;
 
         public EmrManagerService(IDatabaseManager databaseManager, IEmrSystemRepository emrSystemRepository,
-            IDatabaseProtocolRepository databaseProtocolRepository, IExtractRepository extractRepository)
+            IDatabaseProtocolRepository databaseProtocolRepository, IExtractRepository extractRepository, IRestProtocolRepository restProtocolRepository)
         {
             _databaseManager = databaseManager;
             _emrSystemRepository = emrSystemRepository;
             _databaseProtocolRepository = databaseProtocolRepository;
             _extractRepository = extractRepository;
+            _restProtocolRepository = restProtocolRepository;
         }
 
 
@@ -70,6 +72,12 @@ namespace Dwapi.SettingsManagement.Core.Services
             }
         }
 
+        public void SaveRestProtocol(RestProtocol protocol)
+        {
+            _restProtocolRepository.CreateOrUpdate(protocol);
+            _restProtocolRepository.SaveChanges();
+        }
+
         public void DeleteProtocol(Guid protocolId)
         {
             _databaseProtocolRepository.Delete(protocolId);
@@ -93,7 +101,7 @@ namespace Dwapi.SettingsManagement.Core.Services
             {
                 defaultEmr.IsDefault = false;
                 _emrSystemRepository.Update(defaultEmr);
-            }         
+            }
 
             var emr = _emrSystemRepository.Get(id);
             emr.IsDefault = true;
@@ -127,7 +135,7 @@ namespace Dwapi.SettingsManagement.Core.Services
         {
             var dwhExtracts = _extractRepository.GetAllByEmr(GetDefault().Id, "NDWH").ToList();
             var defaultExtracts = new List<Extract>();
-            
+
             foreach (var extract in dwhExtracts)
             {
                 var defaultExtract = new Extract()

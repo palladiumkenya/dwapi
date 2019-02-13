@@ -169,6 +169,7 @@ namespace Dwapi
             services.AddScoped<IEmrSystemRepository, EmrSystemRepository>();
             services.AddScoped<IDocketRepository, DocketRepository>();
             services.AddScoped<IDatabaseProtocolRepository, DatabaseProtocolRepository>();
+            services.AddScoped<IRestProtocolRepository, RestProtocolRepository>();
             services.AddScoped<IExtractRepository, ExtractRepository>();
             services.AddScoped<IPsmartStageRepository, PsmartStageRepository>();
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
