@@ -5,6 +5,10 @@ import {FormGroup} from '@angular/forms';
 import {Message} from 'primeng/api';
 import {Subscription} from 'rxjs/Subscription';
 import {ProtocolConfigService} from '../services/protocol-config.service';
+import { viewParentEl } from '@angular/core/src/view/util';
+import { EmrSettingsComponent } from '../emr-settings/emr-settings.component';
+import { Router } from '@angular/router';
+import { routerNgProbeToken } from '@angular/router/src/router_module';
 
 @Component({
   selector: 'liveapp-db-protocol',
@@ -72,7 +76,7 @@ export class DbProtocolComponent implements OnInit, OnChanges {
                 () => {
                     this.messages = [];
                     this.messages.push({severity: 'success', detail: 'Saved successfully '});
-
+                    location.reload();
                     //this.settingSavedChange.emit();
                 }
             );

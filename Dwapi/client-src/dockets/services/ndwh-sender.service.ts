@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Extract} from '../../settings/model/extract';
-import {DatabaseProtocol} from '../../settings/model/database-protocol';
 import {Observable} from 'rxjs/Observable';
-import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
-import {CentralRegistry} from '../../settings/model/central-registry';
 import {SendResponse} from '../../settings/model/send-response';
-import {SendPackage} from '../../settings/model/send-package';
+import { CombinedPackage } from '../../settings/model/combined-package';
 
 @Injectable()
 export class NdwhSenderService {
@@ -19,12 +15,12 @@ export class NdwhSenderService {
     }
 
 
-    public sendManifest(sendPackage: SendPackage): Observable<boolean> {
+    public sendManifest(sendPackage: CombinedPackage): Observable<boolean> {
         return this._http.post<boolean>(`${this._url}/manifest`, sendPackage)
             .catch(this.handleError);
     }
 
-    public sendPatientExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+    public sendPatientExtracts(sendPackage: CombinedPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/patients`, sendPackage)
             .catch(this.handleError);
     }

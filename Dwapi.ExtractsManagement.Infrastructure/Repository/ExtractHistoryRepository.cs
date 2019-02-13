@@ -15,9 +15,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
         {
         }
 
-        public async void ClearHistory(Guid extractId)
+        public  void ClearHistory(Guid extractId)
         {
-            await ClearHistory(new List<Guid> {extractId});
+            Task.Run(() =>ClearHistory(new List<Guid> {extractId}));
         }
 
         public async Task<int> ClearHistory(List<Guid> extractIds)

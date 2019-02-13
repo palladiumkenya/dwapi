@@ -10,6 +10,7 @@ import { NdwhPatientPharmacyService } from '../../../services/ndwh-patient-pharm
 import { NdwhPatientStatusService } from '../../../services/ndwh-patient-status.service';
 import { NdwhPatientVisitService } from '../../../services/ndwh-patient-visit.service';
 import {Extract} from '../../../../settings/model/extract';
+import { NdwhPatientAdverseEventService } from '../../../services/ndwh-patient-adverse-event.service';
 
 @Component({
     selector: 'liveapp-invalid-record-details',
@@ -26,6 +27,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     private _patientPharmacyService: NdwhPatientPharmacyService;
     private _patientStatusService: NdwhPatientStatusService;
     private _patientVisitService: NdwhPatientVisitService;
+    private _patientAdverseEventService: NdwhPatientAdverseEventService;
     public invalidExtracts: any[] = [];
     public cols: any[];
     public getInvalid$: Subscription;
@@ -35,7 +37,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
     constructor(patientExtractsService: NdwhPatientsExtractService, patientArtService: NdwhPatientArtService,
         patientBaselineService: NdwhPatientBaselineService, patientLabService: NdwhPatientLaboratoryService,
         patientPharmacyService: NdwhPatientPharmacyService, patientStatusService: NdwhPatientStatusService,
-        patientVisitService: NdwhPatientVisitService) {
+        patientVisitService: NdwhPatientVisitService, patientAdverseEventService: NdwhPatientAdverseEventService) {
         this._patientExtractsService = patientExtractsService;
         this._patientArtService = patientArtService;
         this._patientBaselineService = patientBaselineService;
@@ -43,6 +45,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
         this._patientPharmacyService = patientPharmacyService;
         this._patientStatusService = patientStatusService;
         this._patientVisitService = patientVisitService;
+        this._patientAdverseEventService = patientAdverseEventService;
     }
 
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -72,6 +75,8 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             this.getInvalidPatientStatusExtracts();
         }  if (this.extract === 'Patient Visits') {
             this.getInvalidPatientVisitExtracts();
+        }  if (this.extract === 'Patient Adverse Events') {
+            this.getInvalidPatientAdverseEventExtracts();
         }
     }
 
@@ -90,6 +95,8 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             this.getPatientStatusColumns();
         }  if (this.extract === 'Patient Visits') {
             this.getPatientVisitColumns();
+        }  if (this.extract === 'Patient Adverse Events') {
+            this.getPatientAdverseEventColumns();
         }
     }
 
@@ -218,9 +225,27 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             }
         );
     }
+    private getInvalidPatientAdverseEventExtracts(): void {
+        this.getInvalid$ = this._patientAdverseEventService.loadValidations().subscribe(
+            p => {
+                this.invalidExtracts = p;
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+            }
+        );
+    }
 
     private getPatientColumns(): void {
         this.cols = [
+            { field: 'summary', header: 'Summary' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -236,6 +261,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientArtColumns(): void {
         this.cols = [
+            { field: 'summary', header: 'Summary' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -268,6 +294,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientBaselineColumns(): void {
         this.cols = [
+            { field: 'summary', header: 'Summary' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -305,6 +332,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientLaboratoryColumns(): void {
         this.cols = [
+        { field: 'summary', header: 'Summary' },
         { field: 'extract', header: 'Extract' },
         { field: 'field', header: 'Field' },
         { field: 'type', header: 'Type' },
@@ -326,6 +354,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientPharmacyColumns(): void {
         this.cols = [
+            { field: 'summary', header: 'Summary' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -350,6 +379,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientStatusColumns(): void {
         this.cols = [
+            { field: 'summary', header: 'Summary' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -368,7 +398,7 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientVisitColumns(): void {
         this.cols = [
-
+            { field: 'summary', header: 'Summary' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
@@ -405,6 +435,29 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'gestationAge', header: 'Gestation Age' },
             { field: 'nextAppointmentDate', header: 'Next Appointment Date' },
             { field: 'visitId', header: 'Visit Id' }
+        ];
+    }
+
+    private getPatientAdverseEventColumns(): void {
+        this.cols = [
+            { field: 'summary', header: 'Summary' },
+            { field: 'patientPK', header: 'Patient PK' },
+            { field: 'patientID', header: 'Patient ID' },
+            { field: 'facilityId', header: 'Facility Id' },
+            { field: 'siteCode', header: 'Site Code' },
+            { field: 'dateExtracted', header: 'Date Extracted' },
+            { field: 'emr', header: 'Emr' },
+            { field: 'project', header: 'Project' },
+            { field: 'adverseEvent', header: 'Adverse Event' },
+            { field: 'adverseEventStartDate', header: 'Start Date' },
+            { field: 'adverseEventEndDate', header: 'End Date' },
+            { field: 'severity', header: 'Severity' },
+            { field: 'adverseEventRegimen', header: 'Regimen' },
+            { field: 'adverseEventCause', header: 'Cause' },
+            { field: 'adverseEventClinicalOutcome', header: 'Clinical Outcome' },
+            { field: 'adverseEventActionTaken', header: 'Action Taken' },
+            { field: 'adverseEventIsPregnant', header: 'Is Pregnant?' },
+            { field: 'visitDate', header: 'Visit Date' }
         ];
     }
 }

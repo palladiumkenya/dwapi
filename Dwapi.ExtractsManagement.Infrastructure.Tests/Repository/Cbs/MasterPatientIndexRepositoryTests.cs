@@ -64,7 +64,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Cbs
         public void shoul_Update_Sent_Items_MsSQL()
         {
             var mpiIds = _extractsContext.MasterPatientIndices.AsNoTracking().Take(2).Select(x => x.Id).ToList();
-           var  sentItems = mpiIds.Select(x => new SentItem(x, SendStatus.Sent)).ToList();
+            var  sentItems = mpiIds.Select(x => new SentItem(x, SendStatus.Sent)).ToList();
             var repository = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexRepository>();
             repository.UpdateSendStatus(sentItems);
 

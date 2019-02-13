@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using CsvHelper.Configuration;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Infrastructure;
@@ -42,9 +43,14 @@ namespace Dwapi.SettingsManagement.Infrastructure
             CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
             EmrSystems.SeedDbSetIfEmpty($"{nameof(EmrSystems)}");
             DatabaseProtocols.SeedDbSetIfEmpty($"{nameof(DatabaseProtocols)}");
-            Extracts.SeedDbSetIfEmpty($"{nameof(Extracts)}");
+            var ex = Extracts.Where(e => e.EmrSystemId.ToString() == "a62216ee-0e85-11e8-ba89-0ed5f89f718b" ||
+            e.EmrSystemId.ToString() == "a6221856-0e85-11e8-ba89-0ed5f89f718b" ||
+            e.EmrSystemId.ToString() == "a6221857-0e85-11e8-ba89-0ed5f89f718b"
+
+            );
+            Extracts.RemoveRange(ex);
+            Extracts.SeedFromResource($"{nameof(Extracts)}");
             SaveChanges();
         }
-
     }
 }

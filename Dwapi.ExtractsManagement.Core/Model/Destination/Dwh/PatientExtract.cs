@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
@@ -29,6 +30,13 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string StatusAtCCC { get; set; }
         public string StatusAtPMTCT { get; set; }
         public string StatusAtTBClinic { get; set; }
-      
+
+        public virtual ICollection<PatientArtExtract> PatientArtExtracts { get; set; } = new List<PatientArtExtract>();
+        public virtual ICollection<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; } = new List<PatientBaselinesExtract>();
+        public virtual ICollection<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; } = new List<PatientLaboratoryExtract>();
+        public virtual ICollection<PatientPharmacyExtract> PatientPharmacyExtracts { get; set; } = new List<PatientPharmacyExtract>();
+        public virtual ICollection<PatientStatusExtract> PatientStatusExtracts { get; set; } = new List<PatientStatusExtract>();
+        public virtual ICollection<PatientVisitExtract> PatientVisitExtracts { get; set; } = new List<PatientVisitExtract>();
+        public virtual ICollection<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; } = new List<PatientAdverseEventExtract>();
     }
 }

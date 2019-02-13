@@ -36,7 +36,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
             int batch = 500;
 
             DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracting...")));
-            DomainEvents.Dispatch(new CbsStatusNotification(extract.Id,ExtractStatus.Loading));
+            //DomainEvents.Dispatch(new CbsStatusNotification(extract.Id,ExtractStatus.Loading));
 
             var list = new List<TempMasterPatientIndex>();
 
@@ -87,7 +87,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
             try
             {
         
-                DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracted", totalCount, totalCount, 0, 0, 0)));
+                DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracted", totalCount, 0, 0, 0, 0)));
                 DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
                 DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Loaded,totalCount));
             }
@@ -97,7 +97,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
 
             }
 
-            return list.Count;
+            return totalCount;
         }
     }
 }

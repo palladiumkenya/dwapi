@@ -34,35 +34,17 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
 
         public PatientExtractView Read(Guid id)
         {
-            var p = _context.ClientPatientExtracts.SingleOrDefault(x => x.Id == id);
-            if (null != p)
-            {
-                p.PatientArtExtracts =
-                    _context.ClientPatientArtExtracts.Where(x =>
-                        x.PatientPK == p.PatientPK && x.SiteCode == p.SiteCode && !x.IsSent);
-
-                p.PatientBaselinesExtracts =
-                    _context.ClientPatientBaselinesExtracts.Where(x =>
-                        x.PatientPK == p.PatientPK && x.SiteCode == p.SiteCode && !x.IsSent);
-
-                p.PatientLaboratoryExtracts =
-                    _context.ClientPatientLaboratoryExtracts.Where(x =>
-                        x.PatientPK == p.PatientPK && x.SiteCode == p.SiteCode && !x.IsSent);
-
-                p.PatientPharmacyExtracts =
-                    _context.ClientPatientPharmacyExtracts.Where(x =>
-                        x.PatientPK == p.PatientPK && x.SiteCode == p.SiteCode && !x.IsSent);
-
-                p.PatientStatusExtracts =
-                    _context.ClientPatientStatusExtracts.Where(x =>
-                        x.PatientPK == p.PatientPK && x.SiteCode == p.SiteCode && !x.IsSent);
-
-                p.PatientVisitExtracts =
-                    _context.ClientPatientVisitExtracts.Where(x =>
-                        x.PatientPK == p.PatientPK && x.SiteCode == p.SiteCode && !x.IsSent);
-            }
-
-            return p;
+            var patientExtractView = _context.ClientPatientExtracts
+                .Include(x => x.PatientArtExtracts)
+                .Include(x => x.PatientBaselinesExtracts)
+                .Include(x => x.PatientLaboratoryExtracts)
+                .Include(x => x.PatientPharmacyExtracts)
+                .Include(x => x.PatientStatusExtracts)
+                .Include(x => x.PatientVisitExtracts)
+                .Include(x => x.PatientAdverseEventExtracts)
+                .AsNoTracking()
+                .SingleOrDefault(x => x.Id == id);
+            return patientExtractView;
         }
     }
 }

@@ -30,11 +30,19 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 
         public EmrSystem GetDefault()
         {
-            return DbSet.AsNoTracking()
+            var emr = DbSet.AsNoTracking()
                 .Include(x => x.DatabaseProtocols)
                 .Include(r => r.RestProtocols)
                 .Include(e=>e.Extracts)
                 .FirstOrDefault(x=>x.IsDefault);
+            if (emr != null)
+            {
+                var extracts = emr.Extracts.OrderBy(c => c.Rank).ToList();
+                emr.Extracts = extracts;
+                return emr;
+            }
+
+            return null;
         }
 
         public EmrSystem GetMiddleware()

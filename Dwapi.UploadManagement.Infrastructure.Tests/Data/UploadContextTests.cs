@@ -46,6 +46,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Data
             Assert.True(_context.ClientPatientPharmacyExtracts.Any());
             Assert.True(_context.ClientPatientStatusExtracts.Any());
             Assert.True(_context.ClientPatientVisitExtracts.Any());
+            Assert.True(_context.ClientPatientAdverseEventExtracts.Any());
         }
     }
 }

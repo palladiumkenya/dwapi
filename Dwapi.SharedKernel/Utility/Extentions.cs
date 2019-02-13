@@ -66,5 +66,23 @@ namespace Dwapi.SharedKernel.Utility
                 .Select(x => x.Select(v => v.Value).ToList())
                 .ToList();
         }
+
+        public static string GetFolderPath(string folder)
+        {
+            return folder.EndsWith("\\") ? folder : $"{folder}\\";
+        }
+
+        public static string ReplaceFromEnd(this string s, string suffix, string replaceWith, int number = 1)
+        {
+            var finalString = s;
+
+            if (s.EndsWith(suffix))
+            {
+                finalString = s.Substring(0, s.Length - number);
+                finalString = $@"{finalString}.zip";
+            }
+
+            return finalString;
+        }
     }
 }

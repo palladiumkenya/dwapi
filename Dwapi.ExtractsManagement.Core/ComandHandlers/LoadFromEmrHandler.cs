@@ -47,63 +47,93 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
         private async Task<bool> ExtractAll(LoadFromEmrCommand request, CancellationToken cancellationToken)
         {
+            Task<bool> t1 = null, t2 = null, t3 = null, t4 = null, t5 = null, t6 = null, t7 = null;
             // ExtractPatientART
             var patientArtProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientArtExtract");
-            var patientArtCommand = new ExtractPatientArt()
+            if (null != patientArtProfile)
             {
-                Extract = patientArtProfile?.Extract,
-                DatabaseProtocol = patientArtProfile?.DatabaseProtocol
-            };
+                var patientArtCommand = new ExtractPatientArt()
+                {
+                    Extract = patientArtProfile?.Extract,
+                    DatabaseProtocol = patientArtProfile?.DatabaseProtocol
+                };
+                t1 = _mediator.Send(patientArtCommand, cancellationToken);
+            }
 
             // ExtractPatientBaselines
             var patientBaselinesProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientBaselineExtract");
-            var patientBaselinesCommand = new ExtractPatientBaselines()
+            if (null != patientBaselinesProfile)
             {
-                Extract = patientBaselinesProfile?.Extract,
-                DatabaseProtocol = patientBaselinesProfile?.DatabaseProtocol
-            };
+                var patientBaselinesCommand = new ExtractPatientBaselines()
+                {
+                    Extract = patientBaselinesProfile?.Extract,
+                    DatabaseProtocol = patientBaselinesProfile?.DatabaseProtocol
+                };
+                t2 = _mediator.Send(patientBaselinesCommand, cancellationToken);
+            }
 
             // ExtractPatientLaboratory
             var patientLaboratoryProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientLabExtract");
-            var patientLaboratoryCommand = new ExtractPatientLaboratory()
+            if (null != patientLaboratoryProfile)
             {
-                Extract = patientLaboratoryProfile?.Extract,
-                DatabaseProtocol = patientLaboratoryProfile?.DatabaseProtocol
-            };
+                var patientLaboratoryCommand = new ExtractPatientLaboratory()
+                {
+                    Extract = patientLaboratoryProfile?.Extract,
+                    DatabaseProtocol = patientLaboratoryProfile?.DatabaseProtocol
+                };
+                t3 = _mediator.Send(patientLaboratoryCommand, cancellationToken);
+            }
 
             // ExtractPatientPharmacy
             var patientPharmacyProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientPharmacyExtract");
-            var patientPharmacyCommand = new ExtractPatientPharmacy()
+            if (null != patientPharmacyProfile)
             {
-                Extract = patientPharmacyProfile?.Extract,
-                DatabaseProtocol = patientPharmacyProfile?.DatabaseProtocol
-            };
+                var patientPharmacyCommand = new ExtractPatientPharmacy()
+                {
+                    Extract = patientPharmacyProfile?.Extract,
+                    DatabaseProtocol = patientPharmacyProfile?.DatabaseProtocol
+                };
+                t4 = _mediator.Send(patientPharmacyCommand, cancellationToken);
+            }
 
             // ExtractPatientStatus
             var patientStatusProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientStatusExtract");
-            var patientStatusCommand = new ExtractPatientStatus()
+            if (null != patientStatusProfile)
             {
-                Extract = patientStatusProfile?.Extract,
-                DatabaseProtocol = patientStatusProfile?.DatabaseProtocol
-            };
+                var patientStatusCommand = new ExtractPatientStatus()
+                {
+                    Extract = patientStatusProfile?.Extract,
+                    DatabaseProtocol = patientStatusProfile?.DatabaseProtocol
+                };
+                t5 = _mediator.Send(patientStatusCommand, cancellationToken);
+            }
 
             // ExtractPatientVisit
             var patientVisitProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientVisitExtract");
-            var patientVisitCommand = new ExtractPatientVisit()
+            if (null != patientVisitProfile)
             {
-                Extract = patientVisitProfile?.Extract,
-                DatabaseProtocol = patientVisitProfile?.DatabaseProtocol
-            };
+                var patientVisitCommand = new ExtractPatientVisit()
+                {
+                    Extract = patientVisitProfile?.Extract,
+                    DatabaseProtocol = patientVisitProfile?.DatabaseProtocol
+                };
+                t6 = _mediator.Send(patientVisitCommand, cancellationToken);
+            }
 
-            var t1 = _mediator.Send(patientArtCommand, cancellationToken);
-            var t2 = _mediator.Send(patientBaselinesCommand, cancellationToken);
-            var t3 = _mediator.Send(patientLaboratoryCommand, cancellationToken);
-            var t4 = _mediator.Send(patientPharmacyCommand, cancellationToken);
-            var t5 = _mediator.Send(patientStatusCommand, cancellationToken);
-            var t6 = _mediator.Send(patientVisitCommand, cancellationToken);
+            // ExtractPatientAdverseEvent
+            var patientAdverseEventProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientAdverseEventExtract");
+            if (null != patientAdverseEventProfile)
+            {
+                var patientAdverseEventCommand = new ExtractPatientAdverseEvent()
+                {
+                    Extract = patientAdverseEventProfile?.Extract,
+                    DatabaseProtocol = patientAdverseEventProfile?.DatabaseProtocol
+                };
+                t7 = _mediator.Send(patientAdverseEventCommand, cancellationToken);
+            }
 
-            var ts = new List<Task<bool>> { t1, t2, t3, t4, t5, t6 };
-
+            // await all tasks
+            var ts = new List<Task<bool>> { t1, t2, t3, t4, t5, t6, t7};
             var result = await Task.WhenAll(ts);
 
             return result.All(x=>x);

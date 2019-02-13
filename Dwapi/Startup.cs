@@ -65,6 +65,8 @@ using Dwapi.UploadManagement.Core.Services.Psmart;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Reader.Dwh;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -127,8 +129,9 @@ namespace Dwapi
             });
 
             services.AddSignalR();
-            
 
+            services.AddHangfire(_ => _.UseMemoryStorage());
+            JobStorage.Current = new MemoryStorage();
             services.AddMvc()
               .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()))
               .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -152,13 +155,13 @@ namespace Dwapi
                     services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString,x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name)));
+                    
                 }
             }
             catch (Exception e)
             {
                 Log.Error(e, "Connections not Initialized");
             }
-
 
             services.AddTransient<ExtractsContext>();
             services.AddScoped<ICentralRegistryRepository, CentralRegistryRepository>();
@@ -175,6 +178,7 @@ namespace Dwapi
             services.AddScoped<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>();
             services.AddScoped<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>();
             services.AddScoped<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>();
+            services.AddScoped<ITempPatientAdverseEventExtractRepository, TempPatientAdverseEventExtractRepository>();
             services.AddScoped<IValidatorRepository, ValidatorRepository>();
             services.AddScoped<IPatientExtractRepository, PatientExtractRepository>();
             services.AddScoped<IPatientArtExtractRepository, PatientArtExtractRepository>();
@@ -183,6 +187,7 @@ namespace Dwapi
             services.AddScoped<IPatientPharmacyExtractRepository, PatientPharmacyExtractRepository>();
             services.AddScoped<IPatientStatusExtractRepository, PatientStatusExtractRepository>();
             services.AddScoped<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
+            services.AddScoped<IPatientAdverseEventExtractRepository, PatientAdverseEventExtractRepository>();
             services.AddScoped<ITempPatientExtractErrorSummaryRepository, TempPatientExtractErrorSummaryRepository>();
             services.AddScoped<ITempPatientArtExtractErrorSummaryRepository, TempPatientArtExtractErrorSummaryRepository>();
             services.AddScoped<ITempPatientBaselinesExtractErrorSummaryRepository, TempPatientBaselinesExtractErrorSummaryRepository>();
@@ -190,6 +195,7 @@ namespace Dwapi
             services.AddScoped<ITempPatientPharmacyExtractErrorSummaryRepository, TempPatientPharmacyExtractErrorSummaryRepository>();
             services.AddScoped<ITempPatientStatusExtractErrorSummaryRepository, TempPatientStatusExtractErrorSummaryRepository>();
             services.AddScoped<ITempPatientVisitExtractErrorSummaryRepository, TempPatientVisitExtractErrorSummaryRepository>();
+            services.AddScoped<ITempPatientAdverseEventExtractErrorSummaryRepository, TempPatientAdverseEventExtractErrorSummaryRepository>();
 
             services.AddScoped<IMasterPatientIndexRepository, MasterPatientIndexRepository>();
             services.AddScoped<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>();
@@ -212,6 +218,7 @@ namespace Dwapi
             services.AddScoped<IPatientPharmacySourceExtractor, PatientPharmacySourceExtractor>();
             services.AddScoped<IPatientStatusSourceExtractor, PatientStatusSourceExtractor>();
             services.AddScoped<IPatientVisitSourceExtractor, PatientVisitSourceExtractor>();
+            services.AddScoped<IPatientAdverseEventSourceExtractor, PatientAdverseEventSourceExtractor>();
             services.AddScoped<IExtractValidator, ExtractValidator>();
             services.AddScoped<IPatientLoader, PatientLoader>();
             services.AddScoped<IPatientArtLoader, PatientArtLoader>();
@@ -220,6 +227,7 @@ namespace Dwapi
             services.AddScoped<IPatientPharmacyLoader, PatientPharmacyLoader>();
             services.AddScoped<IPatientStatusLoader, PatientStatusLoader>();
             services.AddScoped<IPatientVisitLoader, PatientVisitLoader>();
+            services.AddScoped<IPatientAdverseEventLoader, PatientAdverseEventLoader>();
             services.AddScoped<IClearDwhExtracts, ClearDwhExtracts>();
 
             services.AddScoped<IMasterPatientIndexReader, MasterPatientIndexReader>();
@@ -280,7 +288,8 @@ namespace Dwapi
             app.UseStaticFiles()
                 .UseSwaggerUi();
 
-
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
             Log.Debug(@"initializing Database...");
 
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);
@@ -310,10 +319,9 @@ namespace Dwapi
             );
 
             DomainEvents.Init();
-
             try
             {
-                DapperPlusManager.AddLicense("1755;701-ThePalladiumGroup", "9005d618-3965-8877-97a5-7a27cbb21c8f");
+                DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
                 if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
                 {
                     throw new Exception(licenseErrorMessage);

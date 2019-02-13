@@ -23,7 +23,7 @@ export class AppMenuComponent implements OnInit {
                     {label: 'Registry', icon: 'cloud', items: [
                             {label: 'Data Warehouse', icon: 'cloud', routerLink: ['/registry', 'NDWH']},
                             {label: 'PSmart', icon: 'credit_card', routerLink: ['/registry', 'PSMART']},
-                            {label: 'Case Based Surveillance', icon: 'search', routerLink: ['/registry', 'CBS']}
+                            {label: 'Master Patient Index', icon: 'search', routerLink: ['/registry', 'CBS']}
                         ]
                     },
                     {label: 'EMR Settings', icon: 'dvr', routerLink: ['/emrconfig']}
@@ -34,7 +34,7 @@ export class AppMenuComponent implements OnInit {
                 items: [
                     {label: 'Data Warehouse', icon: 'cloud', routerLink: ['/datawarehouse']},
                     {label: 'PSmart', icon: 'credit_card', routerLink: ['/psmart']},
-                    {label: 'Case Based Surveillance', icon: 'search', routerLink: ['/cbs']}
+                    {label: 'Master Patient Index', icon: 'search', routerLink: ['/cbs']}
                 ]
             }
         ];

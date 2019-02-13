@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Dwapi.ExtractsManagement.Core.DTOs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
@@ -20,9 +21,9 @@ namespace Dwapi.ExtractsManagement.Core.Services
         private readonly IPsmartStageRepository _psmartStageRepository;
         private readonly IMapper _mapper;
         private string _emr;
-        private List<string> errorList=new List<string>();
+        private readonly List<string> errorList=new List<string>();
 
-        private IExtractHistoryRepository _extractHistoryRepository;
+        private readonly IExtractHistoryRepository _extractHistoryRepository;
 
         public PsmartExtractService(IPsmartSourceReader psmartSourceReader, IPsmartStageRepository psmartStageRepository, IExtractHistoryRepository extractHistoryRepository)
         {
@@ -58,10 +59,10 @@ namespace Dwapi.ExtractsManagement.Core.Services
             return history;
         }
 
-        public void Find(DbExtractProtocolDTO dbExtractProtocolDTO)
+        public void Find(DbExtractProtocolDTO dbExtractProtocolDto)
         {
-            var extract = dbExtractProtocolDTO.Extract;
-            var protocol = dbExtractProtocolDTO.DatabaseProtocol;
+            var extract = dbExtractProtocolDto.Extract;
+            var protocol = dbExtractProtocolDto.DatabaseProtocol;
 
             _extractHistoryRepository.ClearHistory(extract.Id);
 
@@ -106,9 +107,9 @@ namespace Dwapi.ExtractsManagement.Core.Services
 
         public void Find(IEnumerable<DbExtractProtocolDTO> extracts)
         {
-            foreach (var dbExtractProtocolDTO in extracts)
+            foreach (var dbExtractProtocolDto in extracts)
             {
-                Find(dbExtractProtocolDTO);
+                Find(dbExtractProtocolDto);
             }
         }
 

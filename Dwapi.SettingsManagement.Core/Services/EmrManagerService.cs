@@ -13,14 +13,16 @@ namespace Dwapi.SettingsManagement.Core.Services
     {
         private readonly IDatabaseManager _databaseManager;
         private readonly IEmrSystemRepository _emrSystemRepository;
+        private readonly IExtractRepository _extractRepository;
         private readonly IDatabaseProtocolRepository _databaseProtocolRepository;
 
         public EmrManagerService(IDatabaseManager databaseManager, IEmrSystemRepository emrSystemRepository,
-            IDatabaseProtocolRepository databaseProtocolRepository)
+            IDatabaseProtocolRepository databaseProtocolRepository, IExtractRepository extractRepository)
         {
             _databaseManager = databaseManager;
             _emrSystemRepository = emrSystemRepository;
             _databaseProtocolRepository = databaseProtocolRepository;
+            _extractRepository = extractRepository;
         }
 
 
@@ -60,6 +62,12 @@ namespace Dwapi.SettingsManagement.Core.Services
         {
             _databaseProtocolRepository.CreateOrUpdate(protocol);
             _databaseProtocolRepository.SaveChanges();
+            var extracts = _extractRepository.GetAllByEmr(protocol.EmrSystemId, "NDWH");
+            if (!extracts.Any())
+            {
+                var databaseProtocol = _databaseProtocolRepository.GetAll().FirstOrDefault(p => p.EmrSystemId == protocol.EmrSystemId);
+                AddDefaultExtracts(databaseProtocol);
+            }
         }
 
         public void DeleteProtocol(Guid protocolId)
@@ -99,6 +107,81 @@ namespace Dwapi.SettingsManagement.Core.Services
             return _databaseProtocolRepository
                 .GetAll()
                 .Where(x=>x.EmrSystemId==emrId);
+        }
+
+        private void AddDefaultExtracts(DatabaseProtocol protocol)
+        {
+            var extracts = DefaultExtracts();
+            var emrName = _emrSystemRepository.Get(protocol.EmrSystemId).Name;
+            foreach (var extract in extracts)
+            {
+                extract.EmrSystemId = protocol.EmrSystemId;
+                extract.DatabaseProtocolId = protocol.Id;
+                extract.Emr = emrName;
+                _extractRepository.CreateOrUpdate(extract);
+                _extractRepository.SaveChanges();
+            }
+        }
+
+        private IEnumerable<Extract> DefaultExtracts()
+        {
+            var dwhExtracts = _extractRepository.GetAllByEmr(GetDefault().Id, "NDWH").ToList();
+            var defaultExtracts = new List<Extract>();
+            
+            foreach (var extract in dwhExtracts)
+            {
+                var defaultExtract = new Extract()
+                {
+                    Id = Guid.NewGuid(),
+                    ExtractSql = "",
+                    Name = extract.Name,
+                    Emr = extract.Emr,
+                    Destination = extract.Destination,
+                    Display = extract.Display,
+                    DocketId = extract.DocketId,
+                    IsPriority = extract.IsPriority,
+                    Rank = extract.Rank
+                };
+                defaultExtracts.Add(defaultExtract);
+            }
+
+            var cardExtract = _extractRepository.GetAllByEmr(GetDefault().Id, "PSMART").FirstOrDefault();
+            if (cardExtract != null)
+            {
+                var defaultCardExtract = new Extract()
+                {
+                    Id = Guid.NewGuid(),
+                    ExtractSql = "",
+                    Name = cardExtract.Name,
+                    Emr = cardExtract.Emr,
+                    Destination = cardExtract.Destination,
+                    Display = cardExtract.Display,
+                    DocketId = cardExtract.DocketId,
+                    IsPriority = cardExtract.IsPriority,
+                    Rank = cardExtract.Rank
+                };
+                defaultExtracts.Add(defaultCardExtract);
+            }
+            var mpiExtract = _extractRepository.GetAllByEmr(GetDefault().Id, "CBS").FirstOrDefault();
+            if (mpiExtract != null)
+            {
+                var defaultMpiExtract = new Extract()
+                {
+                    Id = Guid.NewGuid(),
+                    ExtractSql = "",
+                    Name = mpiExtract.Name,
+                    Emr = mpiExtract.Emr,
+                    Destination = mpiExtract.Destination,
+                    Display = mpiExtract.Display,
+                    DocketId = mpiExtract.DocketId,
+                    IsPriority = mpiExtract.IsPriority,
+                    Rank = mpiExtract.Rank
+                };
+                defaultExtracts.Add(defaultMpiExtract);
+            }
+
+
+            return defaultExtracts;
         }
     }
 }

@@ -10,6 +10,7 @@ import { NdwhPatientVisitService } from '../../../services/ndwh-patient-visit.se
 import { Message } from 'primeng/api';
 import { Subscription } from 'rxjs/Subscription';
 import {Extract} from '../../../../settings/model/extract';
+import { NdwhPatientAdverseEventService } from '../../../services/ndwh-patient-adverse-event.service';
 
 @Component({
     selector: 'liveapp-valid-record-details',
@@ -26,6 +27,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
     private _patientPharmacyService: NdwhPatientPharmacyService;
     private _patientStatusService: NdwhPatientStatusService;
     private _patientVisitService: NdwhPatientVisitService;
+    private _patientAdverseEventService: NdwhPatientAdverseEventService;
     public validExtracts: any[] = [];
     public cols: any[];
     public errorMessage: Message[];
@@ -35,7 +37,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
     constructor(patientExtractsService: NdwhPatientsExtractService, patientArtService: NdwhPatientArtService,
         patientBaselineService: NdwhPatientBaselineService, patientLabService: NdwhPatientLaboratoryService,
         patientPharmacyService: NdwhPatientPharmacyService, patientStatusService: NdwhPatientStatusService,
-        patientVisitService: NdwhPatientVisitService) {
+        patientVisitService: NdwhPatientVisitService, patientAdverseEventService: NdwhPatientAdverseEventService) {
         this._patientExtractsService = patientExtractsService;
         this._patientArtService = patientArtService;
         this._patientBaselineService = patientBaselineService;
@@ -43,6 +45,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
         this._patientPharmacyService = patientPharmacyService;
         this._patientStatusService = patientStatusService;
         this._patientVisitService = patientVisitService;
+        this._patientAdverseEventService = patientAdverseEventService;
     }
 
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -72,6 +75,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             this.getValidPatientStatusExtracts();
         }  if (this.extract === 'Patient Visits') {
             this.getValidPatientVisitExtracts();
+        } if (this.extract === 'Patient Adverse Events') {
+            this.getValidPatientAdverseEventExtracts();
         }
     }
 
@@ -90,6 +95,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             this.getPatientStatusColumns();
         }  if (this.extract === 'Patient Visits') {
             this.getPatientVisitColumns();
+        }   if (this.extract === 'Patient Adverse Events') {
+            this.getPatientAdverseEventColumns();
         }
     }
 
@@ -203,6 +210,24 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getValidPatientVisitExtracts(): void {
         this.getValid$ = this._patientVisitService.loadValid().subscribe(
+            p => {
+                this.validExtracts = p;
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+            }
+        );
+    }
+
+    private getValidPatientAdverseEventExtracts(): void {
+        this.getValid$ = this._patientAdverseEventService.loadValid().subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -433,6 +458,28 @@ export class ValidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'familyPlanningMethod', header: 'FamilyPlanningMethod' },
             { field: 'pwP', header: 'PwP' },
             { field: 'gestationAge', header: 'GestationAge' }
+        ];
+    }
+
+    private getPatientAdverseEventColumns(): void {
+        this.cols = [
+            { field: 'patientPK', header: 'Patient PK' },
+            { field: 'patientID', header: 'Patient ID' },
+            { field: 'facilityId', header: 'Facility Id' },
+            { field: 'siteCode', header: 'Site Code' },
+            { field: 'dateExtracted', header: 'Date Extracted' },
+            { field: 'emr', header: 'Emr' },
+            { field: 'project', header: 'Project' },
+            { field: 'adverseEvent', header: 'Adverse Event' },
+            { field: 'adverseEventStartDate', header: 'Start Date' },
+            { field: 'adverseEventEndDate', header: 'End Date' },
+            { field: 'severity', header: 'Severity' },
+            { field: 'adverseEventRegimen', header: 'Regimen' },
+            { field: 'adverseEventCause', header: 'Cause' },
+            { field: 'adverseEventClinicalOutcome', header: 'Clinical Outcome' },
+            { field: 'adverseEventActionTaken', header: 'Action Taken' },
+            { field: 'adverseEventIsPregnant', header: 'Is Pregnant?' },
+            { field: 'visitDate', header: 'Visit Date' }
         ];
     }
 }

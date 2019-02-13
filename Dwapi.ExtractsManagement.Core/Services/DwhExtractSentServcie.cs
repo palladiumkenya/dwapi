@@ -1,39 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+﻿using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Serilog;
+using System;
+using System.Collections.Generic;
 
 namespace Dwapi.ExtractsManagement.Core.Services
 {
-    public class DwhExtractSentServcie: IDwhExtractSentServcie
+    public class DwhExtractSentServcie : IDwhExtractSentServcie
     {
         private readonly IPatientExtractRepository _patientExtractRepository;
         private readonly IPatientArtExtractRepository _artExtractRepository;
+        private readonly IPatientBaselinesExtractRepository _baselinesExtractRepository;
+        private readonly IPatientLaboratoryExtractRepository _laboratoryExtractRepository;
+        private readonly IPatientPharmacyExtractRepository _pharmacyExtractRepository;
+        private readonly IPatientStatusExtractRepository _statusExtractRepository;
+        private readonly IPatientVisitExtractRepository _visitExtractRepository;
+        private readonly IPatientAdverseEventExtractRepository _adverseEventExtractRepository;
 
-        public DwhExtractSentServcie(IPatientExtractRepository patientExtractRepository, IPatientArtExtractRepository artExtractRepository)
+        public DwhExtractSentServcie(IPatientExtractRepository patientExtractRepository, IPatientArtExtractRepository artExtractRepository, IPatientBaselinesExtractRepository baselinesExtractRepository, IPatientLaboratoryExtractRepository patientLaboratoryExtractRepository, IPatientPharmacyExtractRepository patientPharmacyExtractRepository, IPatientStatusExtractRepository patientStatusExtractRepository, IPatientVisitExtractRepository patientVisitExtractRepository, IPatientAdverseEventExtractRepository adverseEventExtractRepository)
         {
             _patientExtractRepository = patientExtractRepository;
             _artExtractRepository = artExtractRepository;
+            _baselinesExtractRepository = baselinesExtractRepository;
+            _laboratoryExtractRepository = patientLaboratoryExtractRepository;
+            _pharmacyExtractRepository = patientPharmacyExtractRepository;
+            _statusExtractRepository = patientStatusExtractRepository;
+            _visitExtractRepository = patientVisitExtractRepository;
+            _adverseEventExtractRepository = adverseEventExtractRepository;
         }
 
         public void UpdateSendStatus(ExtractType extractType, List<SentItem> sentItems)
         {
             try
             {
-                if (extractType == ExtractType.Patient)
-                    _patientExtractRepository.UpdateSendStatus(sentItems);
-
-                if (extractType == ExtractType.PatientArt)
-                    _artExtractRepository.UpdateSendStatus(sentItems);
+                switch (extractType)
+                {
+                    case ExtractType.Patient:
+                        _patientExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.PatientArt:
+                        _artExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.PatientBaseline:
+                        _baselinesExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.PatientLab:
+                        _laboratoryExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.PatientPharmacy:
+                        _pharmacyExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.PatientStatus:
+                        _statusExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.PatientVisit:
+                        _visitExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.PatientAdverseEvent:
+                        _adverseEventExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                }
             }
             catch (Exception e)
             {
-                Log.Error(e,"Sent status");
+                Log.Error(e, "Sent status");
             }
-            
         }
     }
 }

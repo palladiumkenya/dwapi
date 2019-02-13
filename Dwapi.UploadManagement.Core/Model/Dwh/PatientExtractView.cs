@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -6,25 +7,48 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 namespace Dwapi.UploadManagement.Core.Model.Dwh
 {
     [Table("PatientExtracts")]
-    public class PatientExtractView : PatientExtract
+    public class PatientExtractView : ClientExtract
     {
+        public string FacilityName { get; set; }
+        public string Gender { get; set; }
+        public DateTime? DOB { get; set; }
+        public DateTime? RegistrationDate { get; set; }
+        public DateTime? RegistrationAtCCC { get; set; }
+        public DateTime? RegistrationATPMTCT { get; set; }
+        public DateTime? RegistrationAtTBClinic { get; set; }
+        public string PatientSource { get; set; }
+        public string Region { get; set; }
+        public string District { get; set; }
+        public string Village { get; set; }
+        public string ContactRelation { get; set; }
+        public DateTime? LastVisit { get; set; }
+        public string MaritalStatus { get; set; }
+        public string EducationLevel { get; set; }
+        public DateTime? DateConfirmedHIVPositive { get; set; }
+        public string PreviousARTExposure { get; set; }
+        public DateTime? DatePreviousARTStart { get; set; }
+        public string StatusAtCCC { get; set; }
+        public string StatusAtPMTCT { get; set; }
+        public string StatusAtTBClinic { get; set; }
         [NotMapped]
         public int PatientPID => PatientPK;
         [NotMapped] public string PatientCccNumber => PatientID;
         [NotMapped] public int FacilityId =>SiteCode;
 
         [NotMapped]
-        public IEnumerable<PatientArtExtractView> PatientArtExtracts { get; set; } = new List<PatientArtExtractView>();
+        public ICollection<PatientArtExtractView> PatientArtExtracts { get; set; } = new List<PatientArtExtractView>();
         [NotMapped]
-        public IEnumerable<PatientBaselinesExtractView> PatientBaselinesExtracts { get; set; }=new List<PatientBaselinesExtractView>();
+        public ICollection<PatientBaselinesExtractView> PatientBaselinesExtracts { get; set; }=new List<PatientBaselinesExtractView>();
         [NotMapped]
-        public IEnumerable<PatientLaboratoryExtractView> PatientLaboratoryExtracts { get; set; }=new List<PatientLaboratoryExtractView>();
+        public ICollection<PatientLaboratoryExtractView> PatientLaboratoryExtracts { get; set; }=new List<PatientLaboratoryExtractView>();
         [NotMapped]
-        public IEnumerable<PatientPharmacyExtractView> PatientPharmacyExtracts { get; set; }=new List<PatientPharmacyExtractView>();
+        public ICollection<PatientPharmacyExtractView> PatientPharmacyExtracts { get; set; }=new List<PatientPharmacyExtractView>();
         [NotMapped]
-        public IEnumerable<PatientStatusExtractView> PatientStatusExtracts { get; set; }=new List<PatientStatusExtractView>();
+        public ICollection<PatientStatusExtractView> PatientStatusExtracts { get; set; }=new List<PatientStatusExtractView>();
         [NotMapped]
-        public IEnumerable<PatientVisitExtractView> PatientVisitExtracts { get; set; }=new List<PatientVisitExtractView>();
+        public ICollection<PatientVisitExtractView> PatientVisitExtracts { get; set; }=new List<PatientVisitExtractView>();
+        [NotMapped]
+        public ICollection<PatientAdverseEventView> PatientAdverseEventExtracts { get; set; } = new List<PatientAdverseEventView>();
 
         [NotMapped] public bool HasArt => null!= PatientArtExtracts&& PatientArtExtracts.Any();
         [NotMapped] public bool HasBaseline => null != PatientBaselinesExtracts&& PatientBaselinesExtracts.Any();

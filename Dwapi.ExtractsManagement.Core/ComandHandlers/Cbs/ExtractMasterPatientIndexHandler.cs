@@ -45,11 +45,12 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             DomainEvents.Dispatch(new CbsNotification( new ExtractProgress(nameof(MasterPatientIndex), "validating...")));
+            
             //  await _patientValidator.Validate();
 
-            DomainEvents.Dispatch(new CbsNotification( new ExtractProgress(nameof(MasterPatientIndex), "loading...")));
-            int loaded = await _patientLoader.Load(request.Extract.Id, 0);
-            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "loaded")));
+            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "loading...", found, 0, 0, 0, 0)));
+            int loaded = await _patientLoader.Load(request.Extract.Id, found);
+            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "loaded", found, loaded, found-loaded, loaded, 0)));
             //notify loaded
             return true;
         }

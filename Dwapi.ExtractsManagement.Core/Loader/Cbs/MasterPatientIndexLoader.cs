@@ -12,6 +12,9 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SharedKernel.Events;
+using Dwapi.SharedKernel.Model;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
@@ -20,6 +23,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
     {
         private readonly IMasterPatientIndexRepository _patientExtractRepository;
         private readonly ITempMasterPatientIndexRepository _tempPatientExtractRepository;
+        private int Found { get; set; }
+        private Guid ExtractId { get; set; }
 
         public MasterPatientIndexLoader(IMasterPatientIndexRepository patientExtractRepository, ITempMasterPatientIndexRepository tempPatientExtractRepository)
         {
@@ -41,7 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
                 _patientExtractRepository.BatchInsert(extractRecords);
                 Log.Debug("saved batch");
 
-
+                DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "Loading...", Found, 0, 0, 0, 0)));
                 return Task.FromResult(tempPatientExtracts.Count);
 
             }
@@ -54,6 +59,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
 
         public Task<int> Load(Guid extractId, int found)
         {
+            Found = found;
+            ExtractId = extractId;
             return Load();
         }
     }
