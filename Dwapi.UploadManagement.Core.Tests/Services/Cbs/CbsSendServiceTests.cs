@@ -7,11 +7,18 @@ using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Tests.TestHelpers;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
+using Dwapi.UploadManagement.Core.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Services;
 using Dwapi.UploadManagement.Core.Services.Cbs;
+using Dwapi.UploadManagement.Infrastructure.Data;
+using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using FizzWare.NBuilder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
@@ -23,7 +30,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
     {
         private readonly string _authToken = @"1983aeda-6a96-11e8-adc0-fa7ae01bbebc";
         private readonly string _subId = "DWAPI";
-        private readonly string url = "http://localhost:5000";
+        private readonly string url = "http://data.kenyahmis.org:6767";
 
         private ICbsSendService _cbsSendService; 
         private IServiceProvider _serviceProvider;
@@ -34,8 +41,18 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
         [OneTimeSetUp]
         public void Init()
         {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+            var connectionString = config["ConnectionStrings:DwapiConnection"];
+
+            
             _serviceProvider = new ServiceCollection()
+                .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
                 .AddTransient<ICbsSendService,CbsSendService>()
+            .AddTransient<ICbsPackager, CbsPackager>()
+            .AddTransient<ICbsExtractReader, CbsExtractReader>()
+                
                 .BuildServiceProvider();
 
             /*
@@ -43,8 +60,8 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
                 22696|HERTLANDS MEDICAL CENTRE|NAROK
             */
 
-            _bag = TestDataFactory.ManifestMessageBag(2,22704,22696);
-            _mpiBag = TestDataFactory.MpiMessageBag(5, 22704, 22696);
+            _bag = TestDataFactory.ManifestMessageBag(2,10001,10002);
+            _mpiBag = TestDataFactory.MpiMessageBag(5, 10001, 10002);
         }
 
         [SetUp]
