@@ -23,7 +23,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
         public DbSet<EmrSystem> EmrSystems { get; set; }
         public DbSet<DatabaseProtocol> DatabaseProtocols { get; set; }
         public DbSet<RestProtocol> RestProtocols { get; set; }
-
+        public DbSet<Resource> Resources { get; set; }
         public DbSet<Docket> Dockets { get; set; }
         public DbSet<Extract> Extracts { get; set; }
 
@@ -43,6 +43,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
             CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
             EmrSystems.SeedDbSetIfEmpty($"{nameof(EmrSystems)}");
             DatabaseProtocols.SeedDbSetIfEmpty($"{nameof(DatabaseProtocols)}");
+            Resources.SeedDbSetIfEmpty($"{nameof(Resources)}");
             var ex = Extracts.Where(e => e.EmrSystemId.ToString() == "a62216ee-0e85-11e8-ba89-0ed5f89f718b" ||
             e.EmrSystemId.ToString() == "a6221856-0e85-11e8-ba89-0ed5f89f718b" ||
             e.EmrSystemId.ToString() == "a6221857-0e85-11e8-ba89-0ed5f89f718b"
