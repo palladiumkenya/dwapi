@@ -7,14 +7,8 @@ using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.SettingsManagement.Core.Model
 {
-    public class RestProtocol : Entity<Guid>
+    public class RestProtocol : AuthProtocol
     {
-        [MaxLength(100)]
-        public string Url { get; set; }
-
-        [MaxLength(100)]
-        public string AuthToken { get; set; }
-    
         public Guid EmrSystemId { get; set; }
         
         public ICollection<Resource> Resources { get; set; }=new List<Resource>();

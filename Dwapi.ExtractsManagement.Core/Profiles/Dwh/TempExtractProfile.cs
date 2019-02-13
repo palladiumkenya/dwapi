@@ -1,6 +1,8 @@
 ﻿using System.Data;
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Model.Destination;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Source;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Utility;
 
@@ -225,6 +227,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientAdverseEventExtract.VisitDate))));
 
             CreateMap<TempPatientAdverseEventExtract, PatientAdverseEventExtract>();
+          
         }
     }
 }

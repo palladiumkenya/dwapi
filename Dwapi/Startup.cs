@@ -26,6 +26,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Dwh;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Services;
@@ -115,9 +116,9 @@ namespace Dwapi
             }
 
             services.AddMediatR(assemblies);
-            
 
-            
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
@@ -155,7 +156,7 @@ namespace Dwapi
                     services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString,x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name)));
-                    
+
                 }
             }
             catch (Exception e)
@@ -247,6 +248,9 @@ namespace Dwapi
 
             services.AddScoped<IAppDatabaseManager, AppDatabaseManager>();
 
+            services.AddScoped<IEmrMetricRepository, EmrMetricRepository>();
+            services.AddScoped<IEmrMetricsService, EmrMetricsService>();
+
             var container = new Container();
             container.Populate(services);
             ServiceProvider = container.GetInstance<IServiceProvider>();
@@ -296,7 +300,7 @@ namespace Dwapi
             EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
 
 
-            
+
 
 
             app.UseSignalR(
@@ -315,6 +319,7 @@ namespace Dwapi
                     cfg.AddDataReaderMapping();
                     cfg.AddProfile<TempExtractProfile>();
                     cfg.AddProfile<TempMasterPatientIndexProfile>();
+                    cfg.AddProfile<EmrProfiles>();
                 }
             );
 
