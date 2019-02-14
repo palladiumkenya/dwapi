@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
+using CsvHelper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Packager.Dwh;
 using Dwapi.UploadManagement.Infrastructure.Data;
+using Dwapi.UploadManagement.Infrastructure.Reader;
 using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Reader.Dwh;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +26,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         private IServiceProvider _serviceProvider;
         private IDwhPackager _packager;
         private Guid _pid;
-        
+
         [OneTimeSetUp]
         public void Init()
         {
@@ -36,6 +39,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
                 .AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(o => o.UseSqlServer(connectionString))
                 .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
                 .AddTransient<IDwhExtractReader, DwhExtractReader>()
+                .AddTransient<IEmrMetricReader, EmrMetricReader>()
                 .AddTransient<IDwhPackager, DwhPackager>()
                 .BuildServiceProvider();
 
@@ -49,7 +53,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         public void SetUp()
         {
             _packager = _serviceProvider.GetService<IDwhPackager>();
-          
+
         }
 
         [Test]
@@ -60,6 +64,18 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
             var m = manfiests.First();
             Assert.True(m.PatientPks.Any());
             Console.WriteLine($"{m}");
+        }
+
+        [Test]
+        public void should_Generate_Manifest_With_Metrics()
+        {
+            var manfiests = _packager.GenerateWithMetrics().ToList();
+            Assert.True(manfiests.Any());
+            var m = manfiests.First();
+            Assert.True(m.PatientPks.Any());
+            Assert.False(string.IsNullOrWhiteSpace(m.Metrics));
+            Console.WriteLine($"{m}");
+            Console.WriteLine(m.Metrics);
         }
 
         [Test]

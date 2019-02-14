@@ -15,7 +15,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.0-rtm-30799")
+                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -149,6 +149,24 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.ToTable("Extracts");
                 });
 
+            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Resource", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("EndPoint");
+
+                    b.Property<string>("Name");
+
+                    b.Property<Guid>("RestProtocolId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestProtocolId");
+
+                    b.ToTable("Resources");
+                });
+
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.RestProtocol", b =>
                 {
                     b.Property<Guid>("Id")
@@ -197,6 +215,14 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.HasOne("Dwapi.SettingsManagement.Core.Model.EmrSystem")
                         .WithMany("Extracts")
                         .HasForeignKey("EmrSystemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Resource", b =>
+                {
+                    b.HasOne("Dwapi.SettingsManagement.Core.Model.RestProtocol")
+                        .WithMany("Resources")
+                        .HasForeignKey("RestProtocolId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -8,6 +8,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh
     public interface IDwhPackager
     {
         IEnumerable<DwhManifest> Generate();
+        IEnumerable<DwhManifest> GenerateWithMetrics();
         PatientExtractView GenerateExtracts(Guid id);
     }
 }

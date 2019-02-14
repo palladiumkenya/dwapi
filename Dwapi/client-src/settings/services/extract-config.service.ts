@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {CentralRegistry} from '../model/central-registry';
 import {Observable} from 'rxjs/Observable';
@@ -18,7 +18,7 @@ export class ExtractConfigService {
         this._http = http;
     }
 
-    public getAll(id: string, docketId: string ): Observable<Extract[]> {
+    public getAll(id: string, docketId: string): Observable<Extract[]> {
         return this._http.get<Extract[]>(this._url + '/' + id + '/' + docketId)
             .catch(this.handleError);
     }
@@ -36,8 +36,14 @@ export class ExtractConfigService {
         return this._http.post<boolean>(this._url + '/verify', this._extractDatabaseProtocol)
             .catch(this.handleError);
     }
+
     public updateExtract(extract: Extract): Observable<Extract> {
         return this._http.post<Extract>(this._url + '/update', extract)
+            .catch(this.handleError);
+    }
+
+    public updateResource(extract: Extract): Observable<Extract> {
+        return this._http.post<Extract>('./api/EmrManager/updateresource', extract)
             .catch(this.handleError);
     }
 

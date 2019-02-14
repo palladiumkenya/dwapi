@@ -2,6 +2,7 @@
 {
     public enum CargoType
     {
-        Patient
+        Patient,
+        Metrics
     }
 }

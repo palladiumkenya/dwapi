@@ -23,6 +23,8 @@ namespace Dwapi.SettingsManagement.Core.Model
         public ICollection<RestProtocol> RestProtocols { get; set; } = new List<RestProtocol>();
         public ICollection<Extract> Extracts { get; set; } = new List<Extract>();
 
+
+
         public EmrSystem()
         {
         }

@@ -31,7 +31,7 @@
                 </p-tabPanel>
                 <p-tabPanel header="REST Endpoints" leftIcon="ui-icon-rss-feed">
                     <div *ngIf="selectedEmr">
-                        <liveapp-rest-protocol-config></liveapp-rest-protocol-config>
+                        <liveapp-rest-protocol [selectedEmr]="selectedEmr"></liveapp-rest-protocol>
                     </div>
                 </p-tabPanel>
             </p-tabView>
@@ -39,6 +39,10 @@
         <div class="card">
             <h1>{{docketTitle}}</h1>
             <liveapp-emr-docket [selectedEmr]="selectedEmr"></liveapp-emr-docket>
+        </div>
+        <div class="card">
+            <h1>{{resourceTitle}}</h1>
+            <liveapp-rest-resource [selectedEmr]="selectedEmr"></liveapp-rest-resource>
         </div>
     </div>
 </div>

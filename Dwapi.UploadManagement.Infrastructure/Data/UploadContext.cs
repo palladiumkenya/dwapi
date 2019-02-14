@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using CsvHelper.Configuration;
 using Dwapi.SharedKernel.Infrastructure;
+using Dwapi.UploadManagement.Core.Model;
 using Dwapi.UploadManagement.Core.Model.Cbs;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 using EFCore.Seeder.Configuration;
@@ -21,6 +22,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<PatientStatusExtractView> ClientPatientStatusExtracts { get; set; }
         public virtual DbSet<PatientVisitExtractView> ClientPatientVisitExtracts { get; set; }
         public virtual DbSet<PatientAdverseEventView> ClientPatientAdverseEventExtracts { get; set; }
+        public virtual DbSet<EmrMetricView> EmrMetrics { get; set; }
 
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {

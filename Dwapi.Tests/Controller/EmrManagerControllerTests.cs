@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dwapi.Controller;
+using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
@@ -31,6 +32,8 @@ namespace Dwapi.Tests.Controller
         private DbContextOptions<SettingsContext> _options;
         private SettingsContext _context;
         private EmrSystem _iqcareEmr, _kenyaEmr,_otherEmr;
+        private RestProtocolRepository _restProtocolRepository;
+        private IEmrMetricsService _metricsService;
 
         [OneTimeSetUp]
         public void Init()
@@ -57,9 +60,10 @@ namespace Dwapi.Tests.Controller
             _emrSystemRepository = new EmrSystemRepository(_context);
             _databaseProtocolRepository=new DatabaseProtocolRepository(_context);
             _extractRepository = new ExtractRepository(_context);
-            _emrManagerService=new EmrManagerService(_databaseManager,_emrSystemRepository,_databaseProtocolRepository, _extractRepository);
+            _restProtocolRepository = new RestProtocolRepository(_context);
+            _emrManagerService=new EmrManagerService(_databaseManager,_emrSystemRepository,_databaseProtocolRepository, _extractRepository,_restProtocolRepository);
 
-            _emrManagerController =new EmrManagerController(_emrManagerService);
+            _emrManagerController =new EmrManagerController(_emrManagerService,_metricsService);
         }
 
         [Test]
@@ -79,7 +83,7 @@ namespace Dwapi.Tests.Controller
             {
                 Console.WriteLine($"{emrSystem}  |{emrSystem.DatabaseProtocols.Count}");
             }
-                
+
         }
 
         [Test]

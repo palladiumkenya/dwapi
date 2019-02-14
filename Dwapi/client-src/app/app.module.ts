@@ -130,6 +130,9 @@ import { MpiSearchComponent } from '../dockets/cbs-docket/mpi-search/mpi-search.
 import { MpiSearchService } from '../dockets/services/mpi-search.service';
 import { NdwhPatientAdverseEventService } from '../dockets/services/ndwh-patient-adverse-event.service';
 import { AppDetailsService } from './services/app-details.service';
+import {RestProtocolComponent} from '../settings/rest-protocol/rest-protocol.component';
+import {RestResourceComponent} from '../settings/rest-resource/rest-resource.component';
+
 
 @NgModule({
     imports: [
@@ -239,7 +242,9 @@ import { AppDetailsService } from './services/app-details.service';
         EmrDocketComponent,
         RegistryManagerComponent,
         SetupComponent,
-        MpiSearchComponent
+        MpiSearchComponent,
+        RestProtocolComponent,
+        RestResourceComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,

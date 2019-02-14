@@ -652,6 +652,26 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("PatientVisitExtracts");
                 });
 
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.EmrMetric", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<string>("EmrName");
+
+                    b.Property<string>("EmrVersion");
+
+                    b.Property<DateTime?>("LastLoginDate");
+
+                    b.Property<DateTime?>("LastMoH731RunDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmrMetrics");
+                });
+
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.ExtractHistory", b =>
                 {
                     b.Property<Guid>("Id")

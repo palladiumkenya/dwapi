@@ -1,7 +1,8 @@
 <div class="card card-w-title">
   <h1>Extracts</h1>
+    <p-messages [(value)]="metricMessages"></p-messages>
   <div class="ui-g">
-    <liveapp-ndwh-console [emr]="emrSystem"></liveapp-ndwh-console>
+    <liveapp-ndwh-console [emr]="emrSystem" [emrVer]="emrVersion"></liveapp-ndwh-console>
   </div>
 </div>
 

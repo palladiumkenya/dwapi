@@ -17,12 +17,15 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Dwh;
 using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
+using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
@@ -51,6 +54,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests
         [OneTimeSetUp]
         public void Setup()
         {
+            // return;
+            
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
@@ -109,6 +114,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientStatusLoader, PatientStatusLoader>()
                 .AddTransient<IPatientVisitLoader, PatientVisitLoader>()
 
+                
+                .AddTransient<IEmrMetricRepository, EmrMetricRepository>()
+                .AddTransient<IEmrMetricsService, EmrMetricsService>()
+                
                 .AddMediatR(typeof(ExtractMasterPatientIndexHandler))
                 .BuildServiceProvider();
 
@@ -163,6 +172,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientPharmacyLoader, PatientPharmacyLoader>()
                 .AddTransient<IPatientStatusLoader, PatientStatusLoader>()
                 .AddTransient<IPatientVisitLoader, PatientVisitLoader>()
+                
+                
+                .AddTransient<IEmrMetricRepository, EmrMetricRepository>()
+                .AddTransient<IEmrMetricsService, EmrMetricsService>()
 
 
                 .BuildServiceProvider();
@@ -175,35 +188,44 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             var extractsContext = serviceProvider.GetService<ExtractsContext>();
             var extractsContextMysql = serviceProviderMysql.GetService<ExtractsContext>();
 
-            settingsContext.Database.Migrate();
-            settingsContext.EnsureSeeded();
+            /*try
+            {
+                settingsContext.Database.Migrate();
+                settingsContext.EnsureSeeded();
 
-            settingsContextMysql.Database.Migrate();
-            settingsContextMysql.EnsureSeeded();
+                settingsContextMysql.Database.Migrate();
+                settingsContextMysql.EnsureSeeded();
 
-            extractsContext.Database.Migrate();
-            extractsContext.EnsureSeeded();
+                extractsContext.Database.Migrate();
+                extractsContext.EnsureSeeded();
 
-            extractsContextMysql.Database.Migrate();
-            extractsContextMysql.EnsureSeeded();
+                extractsContextMysql.Database.Migrate();
+                extractsContextMysql.EnsureSeeded();
 
-            Iqtools = settingsContext.EmrSystems
-                .Include(x => x.DatabaseProtocols)
-                .Include(x => x.Extracts)
-                .First(x => x.Id == new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"));
+                Iqtools = settingsContext.EmrSystems
+                    .Include(x => x.DatabaseProtocols)
+                    .Include(x => x.Extracts)
+                    .First(x => x.Id == new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"));
 
-            KenyaEmr = settingsContextMysql.EmrSystems
-                .Include(x => x.DatabaseProtocols)
-                .Include(x => x.Extracts)
-                .First(x => x.Id == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"));
+                KenyaEmr = settingsContextMysql.EmrSystems
+                    .Include(x => x.DatabaseProtocols)
+                    .Include(x => x.Extracts)
+                    .First(x => x.Id == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"));
 
-            Validator = extractsContext.Validator.First();
+                Validator = extractsContext.Validator.First();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }*/
+           
 
             Mapper.Initialize(cfg =>
                 {
                     cfg.AddDataReaderMapping();
                     cfg.AddProfile<TempMasterPatientIndexProfile>();
                     cfg.AddProfile<TempExtractProfile>();
+                    cfg.AddProfile<EmrProfiles>();
                 }
             );
 
