@@ -211,6 +211,26 @@ namespace Dwapi.Controller
             }
         }
 
+        [HttpPost("updateresource")]
+        public IActionResult UpdateResource([FromBody] Resource resource)
+        {
+            if (resource == null)
+                return BadRequest();
+
+            try
+            {
+                _emrManagerService.SaveResource(resource);
+                return Ok(resource);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error saving {nameof(Resource)}";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
         // DELETE: api/EmrManager/protocol/5
         [HttpDelete("protocol/{id}")]
         public IActionResult DeleteProtoco(Guid id)

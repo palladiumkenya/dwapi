@@ -3,11 +3,10 @@
         <p-dataTable [value]="resources" selectionMode="single" [(selection)]="selectedResource" dataKey="id">
             <p-header>Rest Endpoints</p-header>
             <p-column field="name" header="Name"></p-column>
-            <p-column field="display" header="Display"></p-column>
-            <p-column field="destination" header="Destination"></p-column>
+            <p-column field="endPoint" header="Endpoint"></p-column>=
             <p-column styleClass="col-button" header="Action">
-                <ng-template let-extract="rowData" pTemplate="body">
-                    <button type="button" pButton (click)="editResource(extract)" icon="ui-icon-edit" class="green-btn"></button>
+                <ng-template let-resource="rowData" pTemplate="body">
+                    <button type="button" pButton (click)="editResource(resource)" icon="ui-icon-edit" class="green-btn"></button>
                 </ng-template>
             </p-column>
         </p-dataTable>
@@ -32,7 +31,7 @@
                     <label for="name">Base Url</label>
                 </div>
                 <div class="ui-g-12">
-                    <p-dropdown [options]="dbs" name="databaseProtocolId" [(ngModel)]="selectedDb" placeholder="Select Base Url"></p-dropdown>
+                    <p-dropdown [options]="urls" name="databaseProtocolId" [(ngModel)]="selectedUrl" placeholder="Select Base Url"></p-dropdown>
                 </div>
             </div>
         </div>

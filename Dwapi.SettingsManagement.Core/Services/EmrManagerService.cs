@@ -78,6 +78,12 @@ namespace Dwapi.SettingsManagement.Core.Services
             _restProtocolRepository.SaveChanges();
         }
 
+        public void SaveResource(Resource resource)
+        {
+            _restProtocolRepository.UpdateResource(resource);
+            _restProtocolRepository.SaveChanges();
+        }
+
         public void DeleteProtocol(Guid protocolId)
         {
             _databaseProtocolRepository.Delete(protocolId);

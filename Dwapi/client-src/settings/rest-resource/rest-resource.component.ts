@@ -26,8 +26,8 @@ export class RestResourceComponent implements OnInit, OnChanges {
     public resourceDialog: Resource;
     public displayDialog: boolean = false;
     public messages: Message[] = [];
-    public dbs: SelectItem[] = [];
-    public selectedDb: string;
+    public urls: SelectItem[] = [];
+    public selectedUrl: string;
 
     public constructor(private _confirmationService: ConfirmationService, private _emrConfigService: ExtractConfigService) {
     }
@@ -41,30 +41,28 @@ export class RestResourceComponent implements OnInit, OnChanges {
     }
 
     private loadResources(): void {
-        this.dbs = [];
+        this.urls = [];
         if (this.selectedEmr) {
+            this.restProtocols = this.selectedEmr.restProtocols;
 
-            if (this.selectedEmr.restProtocols && this.selectedEmr.restProtocols.length > 0) {
-                this.resources = this.selectedEmr.restProtocols[0].resources;
-            }
-
-            if (this.selectedEmr.restProtocols) {
-                this.selectedEmr.restProtocols.forEach(value => {
-                        this.dbs.push({label: value.url, value: value.id});
+            if (this.restProtocols && this.restProtocols.length > 0) {
+                this.resources = this.restProtocols[0].resources;
+                this.restProtocols.forEach(value => {
+                        this.urls.push({label: value.url, value: value.id});
                     }
                 );
             }
         }
     }
 
-    public editResource(extract: Extract): void {
-        this.resourceDialog = extract;
-        this.selectedDb = extract.databaseProtocolId;
+    public editResource(resource: Resource): void {
+        this.resourceDialog = resource;
+        this.selectedUrl = resource.restProtocolId;
         this.displayDialog = true;
     }
 
     public updateResource(): void {
-        this.resourceDialog.restProtocolId = this.selectedDb;
+        this.resourceDialog.restProtocolId = this.selectedUrl;
         this.update$ = this._emrConfigService
             .updateResource(this.resourceDialog)
             .subscribe(

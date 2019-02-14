@@ -4,8 +4,8 @@ using Dwapi.SharedKernel.Interfaces;
 
 namespace Dwapi.SettingsManagement.Core.Interfaces.Repositories
 {
-    public interface IRestProtocolRepository : IRepository<RestProtocol,Guid>
+    public interface IRestProtocolRepository : IRepository<RestProtocol, Guid>
     {
-
+        void UpdateResource(Resource resource);
     }
 }
