@@ -35,6 +35,7 @@ import { environment } from '../../../environments/environment';
 })
 export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     @Input() emr: EmrSystem;
+    @Input() emrVer: string;
     private _hubConnection: HubConnection | undefined;
     private _hubConnectionMpi: HubConnection | undefined;
     private _sendhubConnection: HubConnection | undefined;
@@ -116,6 +117,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
         this.loadData();
+        this.emrVersion = this.emrVer;
     }
 
     public ngOnInit() {

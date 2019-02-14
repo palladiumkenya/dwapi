@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Destination;
@@ -15,14 +16,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 
         public override void CreateOrUpdate(EmrMetric entity)
         {
-            var metrics = GetAll();
-            foreach (var emrMetric in metrics)
+            var ctx = Context as ExtractsContext;
+            var allmetrics = ctx.EmrMetrics;
+
+            if (allmetrics.Any())
             {
-                Delete(emrMetric);
-                SaveChanges();
+                ctx.RemoveRange(allmetrics);
+                ctx.SaveChanges();
             }
 
-            base.CreateOrUpdate(entity);
+            ctx.EmrMetrics.Add(entity);
             SaveChanges();
         }
     }

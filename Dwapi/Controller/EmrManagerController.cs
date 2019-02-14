@@ -1,5 +1,8 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.Interfaces.Services;
+using Dwapi.ExtractsManagement.Core.Model.Destination;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Utility;
@@ -13,9 +16,12 @@ namespace Dwapi.Controller
     public class EmrManagerController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly IEmrManagerService _emrManagerService;
-        public EmrManagerController(IEmrManagerService emrManagerService)
+        private readonly IEmrMetricsService _metricsService;
+
+        public EmrManagerController(IEmrManagerService emrManagerService, IEmrMetricsService metricsService)
         {
             _emrManagerService = emrManagerService;
+            _metricsService = metricsService;
         }
 
         // GET: api/EmrManager
@@ -293,6 +299,39 @@ namespace Dwapi.Controller
                 Log.Error($"{ex}");
                 return StatusCode(500, msg);
             }
+        }
+
+        // POST: api/EmrManager
+        [HttpPost("metrics")]
+        public async Task<IActionResult> LoadMetric([FromBody] EmrSystem entity)
+        {
+            if (null == entity)
+                return BadRequest();
+
+            var restProtocol = entity.RestProtocols.FirstOrDefault();
+
+             if(null==restProtocol)
+                 return BadRequest();
+
+             if(null==restProtocol.Metric)
+                 return BadRequest();
+
+             try
+             {
+                 var metric =await _metricsService.Read(restProtocol, restProtocol.Metric.EndPoint);
+
+                 if(null==metric)
+                    throw new Exception("could not load EMR metrics");
+
+                 return Ok(metric);
+             }
+             catch (Exception e)
+             {
+                 var msg = $"Error loading {nameof(EmrMetric)}";
+                 Log.Error(msg);
+                 Log.Error($"{e}");
+                 return StatusCode(500, msg);
+             }
         }
     }
 }

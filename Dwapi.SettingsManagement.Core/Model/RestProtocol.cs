@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -10,9 +11,12 @@ namespace Dwapi.SettingsManagement.Core.Model
     public class RestProtocol : AuthProtocol
     {
         public Guid EmrSystemId { get; set; }
-        
+
         public ICollection<Resource> Resources { get; set; }=new List<Resource>();
-        
+
+        [NotMapped]
+        public Resource Metric => Resources.FirstOrDefault(x => x.Name.IsSameAs("EMR Metrics"));
+
         public RestProtocol()
         {
         }

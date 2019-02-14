@@ -4,6 +4,7 @@ import {CentralRegistry} from '../model/central-registry';
 import {Observable} from 'rxjs/Observable';
 import {EmrSystem} from '../model/emr-system';
 import {DatabaseProtocol} from '../model/database-protocol';
+import {EmrMetrics} from '../model/emr-metrics';
 
 @Injectable()
 export class EmrConfigService {
@@ -44,6 +45,11 @@ export class EmrConfigService {
 
     public getMiddleware(): Observable<EmrSystem> {
         return this._http.get<EmrSystem>(this._url + '/middleware')
+            .catch(this.handleError);
+    }
+
+    public loadMetrics(emr: EmrSystem): Observable<EmrMetrics> {
+        return this._http.post<boolean>(this._url + '/metrics', emr)
             .catch(this.handleError);
     }
 
