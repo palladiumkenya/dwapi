@@ -70,8 +70,8 @@
                 <p-tabView>
                     <p-tabPanel header="Database" leftIcon="ui-icon-blur-linear">
                         <div *ngIf="selectedEmr">
-                           <liveapp-database-protocol-config [selectedEmr]="selectedEmr" (settingSavedChange)="loadData()"></liveapp-database-protocol-config>
-                            <liveapp-extract-config [selectedEmr]="selectedEmr" ></liveapp-extract-config>
+                            <liveapp-database-protocol-config [selectedEmr]="selectedEmr" (settingSavedChange)="loadData()"></liveapp-database-protocol-config>
+                            <liveapp-extract-config [selectedEmr]="selectedEmr"></liveapp-extract-config>
                         </div>
                     </p-tabPanel>
                     <p-tabPanel header="REST Endpoints" leftIcon="ui-icon-rss-feed">

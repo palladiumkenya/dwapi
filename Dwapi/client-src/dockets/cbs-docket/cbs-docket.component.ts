@@ -16,12 +16,13 @@ import {CentralRegistry} from '../../settings/model/central-registry';
 import {SendPackage} from '../../settings/model/send-package';
 import {SendResponse} from '../../settings/model/send-response';
 import {SendEvent} from '../../settings/model/send-event';
-import { environment } from '../../environments/environment';
+import {environment} from '../../environments/environment';
+import {EmrMetrics} from '../../settings/model/emr-metrics';
 
 @Component({
-  selector: 'liveapp-cbs-docket',
-  templateUrl: './cbs-docket.component.html',
-  styleUrls: ['./cbs-docket.component.scss']
+    selector: 'liveapp-cbs-docket',
+    templateUrl: './cbs-docket.component.html',
+    styleUrls: ['./cbs-docket.component.scss']
 })
 export class CbsDocketComponent implements OnInit, OnDestroy {
 
@@ -42,6 +43,8 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public sendManifest$: Subscription;
     public send$: Subscription;
     public emrSystem: EmrSystem;
+    public emrMetric: EmrMetrics;
+    public emrVersion: string;
     public extracts: Extract[];
     public dbProtocol: DatabaseProtocol;
     public extract: Extract;
@@ -56,6 +59,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
 
 
     public messages: Message[];
+    public metricMessages: Message[];
     public notifications: Message[];
     public canLoad: boolean = false;
     public loading: boolean = false;
@@ -68,12 +72,12 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public allrecordCount = 0;
     private sdk: string[] = [];
     public colorMappings: any[] = [];
-    rowStyleMap: {[key: string]: string};
+    rowStyleMap: { [key: string]: string };
     public centralRegistry: CentralRegistry;
 
     public constructor(public breadcrumbService: BreadcrumbService,
                        confirmationService: ConfirmationService, emrConfigService: EmrConfigService, private cbsService: CbsService,
-                        private _registryConfigService: RegistryConfigService  ) {
+                       private _registryConfigService: RegistryConfigService) {
         this.breadcrumbService.setItems([
             {label: 'Dockets'},
             {label: 'Case Based Surveillance', routerLink: ['/cbs']}
@@ -110,7 +114,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                 const newWithoutPatientExtract = this.extracts.filter(x => x.name !== 'MasterPatientIndex');
                 this.extracts = [...newWithoutPatientExtract, this.extract];
             }
-         });
+        });
 
         this._hubConnection.on('ShowCbsSendProgress', (dwhProgress: any) => {
             if (this.extract) {
@@ -118,7 +122,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     sentProgress: dwhProgress.progress
                 };
                 this.sending = true;
-                this.canLoad = this.canSend = ! this.sending;
+                this.canLoad = this.canSend = !this.sending;
             }
         });
     }
@@ -137,8 +141,10 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     this.messages.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
                 },
                 () => {
-
+                    this.loadMetrics();
                     if (this.emrSystem) {
+                        this.emrVersion = this.emrSystem.version;
+
                         if (this.emrSystem.extracts) {
                             this.extracts = this.emrSystem.extracts.filter(x => x.docketId === 'CBS');
 
@@ -152,6 +158,26 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     }
                 }
             );
+    }
+
+    public loadMetrics(): void {
+
+        this.getEmr$ = this._emrConfigService.loadMetrics(this.emrSystem)
+            .subscribe(
+                p => {
+                    this.emrMetric = p;
+                },
+                e => {
+                    this.metricMessages = [];
+                    this.metricMessages.push({severity: 'warn', summary: 'Could not load EMR metrics', detail: <any>e});
+                },
+                () => {
+                    if (this.emrMetric) {
+                        this.emrVersion = this.emrMetric.emrVersion;
+                    }
+                }
+            );
+
     }
 
     public loadRegisrty(): void {
@@ -274,7 +300,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     this.messages.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                 },
                 () => {
-                  //  this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+                    //  this.notifications.push({severity: 'success', summary: 'Manifest sent'});
                     this.sendMpi();
                     this.sendingManifest = false;
                     this.updateEvent();
@@ -320,14 +346,14 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
 
 
     private isEven(value: number): boolean {
-            if ((value % 2) !== 0) {
-                return false;
-            }
-            return true;
+        if ((value % 2) !== 0) {
+            return false;
+        }
+        return true;
     }
 
     private loadDetails(): void {
-       this.loadingAll =  this.loading = true;
+        this.loadingAll = this.loading = true;
         this.get$ = this.cbsService.getDetails()
             .subscribe(
                 p => {
@@ -374,7 +400,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     }
 
     lookupRowStyleClass(rowData: MasterPatientIndex) {
-       // console.log(rowData);
+        // console.log(rowData);
         return rowData.sxdmPKValueDoB === 'FA343ALPS19730615' ? 'disabled-account-row' : '';
 
     }

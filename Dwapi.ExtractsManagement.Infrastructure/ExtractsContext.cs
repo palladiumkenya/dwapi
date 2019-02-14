@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using CsvHelper.Configuration;
 using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.ExtractsManagement.Core.Model.Destination;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
@@ -56,6 +57,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 
         public DbSet<MasterPatientIndex> MasterPatientIndices { get; set; }
         public DbSet<TempMasterPatientIndex> TempMasterPatientIndices { get; set; }
+        public DbSet<EmrMetric> EmrMetrics { get; set; }
        
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
@@ -128,6 +130,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<PatientExtract>().Key(x => x.Id).Table($"{nameof(PatientExtracts)}");
             DapperPlusManager.Entity<MasterPatientIndex>().Key(x => x.Id).Table($"{nameof(MasterPatientIndices)}");
             DapperPlusManager.Entity<TempMasterPatientIndex>().Key(x => x.Id).Table($"{nameof(TempMasterPatientIndices)}");
+            DapperPlusManager.Entity<EmrMetric>().Key(x => x.Id).Table($"{nameof(EmrMetric)}");
+
         }
 
         public override void EnsureSeeded()

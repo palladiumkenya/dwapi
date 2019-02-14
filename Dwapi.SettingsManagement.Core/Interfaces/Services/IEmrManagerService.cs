@@ -13,6 +13,8 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Services
         void SaveEmr(EmrSystem emrSystem);
         void DeleteEmr(Guid emrId);
         void SaveProtocol(DatabaseProtocol protocol);
+        void SaveRestProtocol(RestProtocol protocol);
+        void SaveResource(Resource resource);
         void DeleteProtocol(Guid protocolId);
         bool VerifyConnection(DatabaseProtocol databaseProtocol);
         string GetConnectionError();

@@ -4,6 +4,7 @@ using System.Linq;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using Newtonsoft.Json;
 
 namespace Dwapi.SharedKernel.Exchange
 {
@@ -15,11 +16,6 @@ namespace Dwapi.SharedKernel.Exchange
         public DateTime DateLogged { get; set; } = DateTime.Now;
         public List<Cargo> Cargoes { get; set; } = new List<Cargo>();
 
-        public void AddCargo(List<int> patienPks, CargoType type = CargoType.Patient)
-        {
-            var items = string.Join(',', patienPks);
-            Cargoes.Add(new Cargo(type, items, Id));
-        }
 
         public Manifest()
         {
@@ -46,6 +42,21 @@ namespace Dwapi.SharedKernel.Exchange
             manifests.Add(m);
             return manifests;
         }
+
+        public void AddCargo(List<int> patienPks, CargoType type = CargoType.Patient)
+        {
+            var items = string.Join(',', patienPks);
+            Cargoes.Add(new Cargo(type, items, Id));
+        }
+
+        public void AddCargo(Metric metric, CargoType type = CargoType.Metrics)
+        {
+            if(null==metric)
+                return;
+            var items = JsonConvert.SerializeObject(metric);
+            Cargoes.Add(new Cargo(type, items, Id));
+        }
+
 
         public override string ToString()
         {

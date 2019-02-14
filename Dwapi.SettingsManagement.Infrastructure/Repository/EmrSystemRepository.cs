@@ -20,7 +20,8 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
             return DbSet.AsNoTracking()
                 .Include(x => x.DatabaseProtocols)
                 .Include(e => e.Extracts)
-                .Include(r => r.RestProtocols);
+                .Include(r => r.RestProtocols)
+                .ThenInclude(p => p.Resources);
         }
 
         public int Count()
@@ -33,6 +34,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
             var emr = DbSet.AsNoTracking()
                 .Include(x => x.DatabaseProtocols)
                 .Include(r => r.RestProtocols)
+                .ThenInclude(p => p.Resources)
                 .Include(e=>e.Extracts)
                 .FirstOrDefault(x=>x.IsDefault);
             if (emr != null)
