@@ -53,6 +53,7 @@ using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
@@ -64,6 +65,7 @@ using Dwapi.UploadManagement.Core.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services.Dwh;
 using Dwapi.UploadManagement.Core.Services.Psmart;
 using Dwapi.UploadManagement.Infrastructure.Data;
+using Dwapi.UploadManagement.Infrastructure.Reader;
 using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Reader.Dwh;
 using Hangfire;
@@ -251,6 +253,7 @@ namespace Dwapi
 
             services.AddScoped<IEmrMetricRepository, EmrMetricRepository>();
             services.AddScoped<IEmrMetricsService, EmrMetricsService>();
+            services.AddScoped<IEmrMetricReader, EmrMetricReader>();
 
             var container = new Container();
             container.Populate(services);

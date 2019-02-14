@@ -2,10 +2,13 @@
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Packager.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Data;
+using Dwapi.UploadManagement.Infrastructure.Reader;
 using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +23,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
     {
         private IServiceProvider _serviceProvider;
         private ICbsPackager _packager;
-        
+
         [OneTimeSetUp]
         public void Init()
         {
@@ -34,6 +37,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
                 .AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString))
                 .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
                 .AddTransient<ICbsExtractReader, CbsExtractReader>()
+                .AddTransient<IEmrMetricReader, EmrMetricReader>()
                 .AddTransient<ICbsPackager, CbsPackager>()
                 .BuildServiceProvider();
         }
@@ -53,6 +57,18 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
             var m = manfiests.First();
             Assert.True(m.Cargoes.Any());
             Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First().Items} ");
+        }
+
+        [Test]
+        public void should_Generate_Manifest_With_Metrics()
+        {
+            var manfiests = _packager.GenerateWithMetrics();
+            Assert.True(manfiests.Any());
+            var m = manfiests.First();
+            Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.Patient));
+            Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.Metrics));
+            Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Patient).Items} ");
+            Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Metrics).Items} ");
         }
     }
 }

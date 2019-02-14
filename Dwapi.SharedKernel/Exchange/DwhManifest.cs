@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.SharedKernel.Model;
+using Newtonsoft.Json;
 
 namespace Dwapi.SharedKernel.Exchange
 {
@@ -8,6 +9,7 @@ namespace Dwapi.SharedKernel.Exchange
     {
         public int SiteCode { get; set; }
         public List<int> PatientPks { get; set; } =new List<int>();
+        public string Metrics { get; set; }
 
         public DwhManifest()
         {
@@ -38,6 +40,14 @@ namespace Dwapi.SharedKernel.Exchange
                 list.Add(new DwhManifest(getPks.First().SiteCode,getPks.Select(x=>x.PatientPk).ToList()));
 
             return list;
+        }
+
+        public void AddCargo(Metric metric)
+        {
+            if (null == metric)
+                return;
+            var items = JsonConvert.SerializeObject(metric);
+            Metrics = items;
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs
     public interface ICbsPackager
     {
         IEnumerable<Manifest> Generate();
+        IEnumerable<Manifest> GenerateWithMetrics();
         IEnumerable<MasterPatientIndex> GenerateMpi();
     }
 }

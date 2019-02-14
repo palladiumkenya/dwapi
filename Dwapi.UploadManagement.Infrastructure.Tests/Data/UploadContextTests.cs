@@ -16,7 +16,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Data
     {
         private IServiceProvider _serviceProvider;
         private UploadContext _context;
-        
+
 
         [OneTimeSetUp]
         public void Init()
@@ -47,6 +47,12 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Data
             Assert.True(_context.ClientPatientStatusExtracts.Any());
             Assert.True(_context.ClientPatientVisitExtracts.Any());
             Assert.True(_context.ClientPatientAdverseEventExtracts.Any());
+        }
+
+        [Test]
+        public void should_load_Metrics()
+        {
+            Assert.True(_context.EmrMetrics.Any());
         }
     }
 }
