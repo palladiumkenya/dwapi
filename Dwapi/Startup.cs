@@ -296,8 +296,15 @@ namespace Dwapi
             app.UseStaticFiles()
                 .UseSwaggerUi();
 
+            var hfServerOptions = new BackgroundJobServerOptions()
+            {
+                ServerName = $"dwapi",
+                WorkerCount = Environment.ProcessorCount * 5,
+                Queues = new string[] { "mpi", "default" }
+
+            };
             app.UseHangfireDashboard();
-            app.UseHangfireServer();
+            app.UseHangfireServer(hfServerOptions);
             Log.Debug(@"initializing Database...");
 
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);
