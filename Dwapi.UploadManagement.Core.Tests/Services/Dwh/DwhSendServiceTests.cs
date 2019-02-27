@@ -57,8 +57,8 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
                 22696|HERTLANDS MEDICAL CENTRE|NAROK
             */
 
-            _bag = TestDataFactory.DwhManifestMessageBag(2,10001, 10002);
-            _artBag = TestDataFactory.ArtMessageBag(5, 10001, 10002);
+            _bag = TestDataFactory.DwhManifestMessageBag(2,10001);
+            _artBag = TestDataFactory.ArtMessageBag(5, 10001);
         }
 
         [SetUp]
