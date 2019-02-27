@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.Hubs.Dwh;
 using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
-using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
@@ -145,12 +142,12 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
-        
+        [AutomaticRetry(Attempts = 0)]
         private void QueueDwh(SendManifestPackageDTO package)
         {
             BackgroundJob.Enqueue(() => _dwhSendService.SendExtractsAsync(package));
         }
-
+        [AutomaticRetry(Attempts = 0)]
         private void QueueMpi(SendManifestPackageDTO package)
         {
             var client = new BackgroundJobClient();
