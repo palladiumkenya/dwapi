@@ -155,7 +155,7 @@ namespace Dwapi.Controller
         {
             var client = new BackgroundJobClient();
             var state = new EnqueuedState("mpi");
-            client.Create(() => _dwhSendService.SendExtractsAsync(package), state);
+            client.Create(() => _cbsSendService.SendMpiAsync(package), state);
         }
     }
 }

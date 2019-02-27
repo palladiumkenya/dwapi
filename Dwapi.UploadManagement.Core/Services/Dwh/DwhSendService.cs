@@ -24,6 +24,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Dwapi.SettingsManagement.Core.Model;
 using Hangfire;
 
 namespace Dwapi.UploadManagement.Core.Services.Dwh
@@ -35,6 +36,33 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private readonly IExtractStatusService _extractStatusService;
         private readonly IEmrSystemRepository _emrSystemRepository;
         private readonly string _endPoint;
+        private const int MaxRetries = 3;
+        private int _count;
+        private int _artCount;
+        private int _baselineCount;
+        private int _labCount;
+        private int _pharmacyCount;
+        private int _statusCount;
+        private int _visitCount;
+        private int _adverseEventCount;
+        private int _total;
+        private const int Batch = 50;
+        private readonly Extract _patientExtract;
+        private readonly Extract _patientArtExtract;
+        private readonly Extract _patientBaselineExtract;
+        private readonly Extract _patientLabExtract;
+        private readonly Extract _patientPharmacyExtract;
+        private readonly Extract _patientStatusExtract;
+        private readonly Extract _patientVisitExtract;
+        private readonly Extract _patientAdverseEventExtract;
+        private readonly ExtractEventDTO _patientExtractStatus;
+        private readonly ExtractEventDTO _patientArtExtractStatus;
+        private readonly ExtractEventDTO _patientBaselineExtractStatus;
+        private readonly ExtractEventDTO _patientLabExtractStatus;
+        private readonly ExtractEventDTO _patientPharmacyExtractStatus;
+        private readonly ExtractEventDTO _patientStatusExtractStatus;
+        private readonly ExtractEventDTO _patientVisitExtractStatus;
+        private readonly ExtractEventDTO _patientAdverseEventExtractStatus;
 
         public DwhSendService(IDwhPackager packager, IDwhExtractReader reader, IExtractStatusService extractStatusService, IEmrSystemRepository emrSystemRepository)
         {
@@ -43,6 +71,25 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             _extractStatusService = extractStatusService;
             _emrSystemRepository = emrSystemRepository;
             _endPoint = "api/";
+            var defaultEmr = _emrSystemRepository.GetDefault();
+            var extracts = defaultEmr.Extracts;
+            _patientExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientExtract)));
+            _patientExtractStatus = _extractStatusService.GetStatus(_patientExtract.Id);
+            _patientArtExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientArtExtract)));
+            _patientArtExtractStatus = _extractStatusService.GetStatus(_patientArtExtract.Id);
+            _patientBaselineExtract = extracts.FirstOrDefault(x => x.Name.Equals("PatientBaselineExtract"));
+            _patientBaselineExtractStatus = _extractStatusService.GetStatus(_patientBaselineExtract.Id);
+            _patientLabExtract = extracts.FirstOrDefault(x => x.Name.Equals("PatientLabExtract"));
+            _patientLabExtractStatus = _extractStatusService.GetStatus(_patientLabExtract.Id);
+            _patientPharmacyExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientPharmacyExtract)));
+            _patientPharmacyExtractStatus = _extractStatusService.GetStatus(_patientPharmacyExtract.Id);
+            _patientStatusExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientStatusExtract)));
+            _patientStatusExtractStatus = _extractStatusService.GetStatus(_patientStatusExtract.Id);
+            _patientVisitExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientVisitExtract)));
+            _patientVisitExtractStatus = _extractStatusService.GetStatus(_patientVisitExtract.Id);
+            _patientAdverseEventExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientAdverseEventExtract)));
+            _patientAdverseEventExtractStatus = _extractStatusService.GetStatus(_patientAdverseEventExtract.Id);
+
         }
 
         public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
@@ -439,6 +486,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         public async Task<List<string>> SendExtractsAsync(SendManifestPackageDTO sendTo)
         {
             var responses = new List<Task<string>>();
+            var output = new List<string>();
             HttpClientHandler handler = new HttpClientHandler()
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
@@ -449,34 +497,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var defaultEmr = _emrSystemRepository.GetDefault();
-                var extracts = defaultEmr.Extracts;
-                var patientExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientExtract)));
-                var patientExtractStatus = _extractStatusService.GetStatus(patientExtract.Id);
-                var patientArtExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientArtExtract)));
-                var patientArtExtractStatus = _extractStatusService.GetStatus(patientArtExtract.Id);
-                var patientBaselineExtract = extracts.FirstOrDefault(x => x.Name.Equals("PatientBaselineExtract"));
-                var patientBaselineExtractStatus = _extractStatusService.GetStatus(patientBaselineExtract.Id);
-                var patientLabExtract = extracts.FirstOrDefault(x => x.Name.Equals("PatientLabExtract"));
-                var patientLabExtractStatus = _extractStatusService.GetStatus(patientLabExtract.Id);
-                var patientPharmacyExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientPharmacyExtract)));
-                var patientPharmacyExtractStatus = _extractStatusService.GetStatus(patientPharmacyExtract.Id);
-                var patientStatusExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientStatusExtract)));
-                var patientStatusExtractStatus = _extractStatusService.GetStatus(patientStatusExtract.Id);
-                var patientVisitExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientVisitExtract)));
-                var patientVisitExtractStatus = _extractStatusService.GetStatus(patientVisitExtract.Id);
-                var patientAdverseEventExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientAdverseEventExtract)));
-                var patientAdverseEventExtractStatus = _extractStatusService.GetStatus(patientAdverseEventExtract.Id);
                 var ids = _reader.ReadAllIds().ToList();
-                var count = 0;
-                var artCount = 0;
-                var baselineCount = 0;
-                var labCount = 0;
-                var pharmacyCount = 0;
-                var statusCount = 0;
-                var visitCount = 0;
-                var adverseEventCount = 0;
-                var total = ids.Count;
+                _total = ids.Count;
                 var sentPatients = new List<Guid>();
                 var sentPatientArts = new List<Guid>();
                 var sentPatientBaselines = new List<Guid>();
@@ -489,21 +511,21 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 //update status to sending
                 var extractSendingStatuses = new List<ExtractSentEventDto>
                 {
-                    new ExtractSentEventDto(patientExtract.Id, patientExtractStatus, ExtractType.Patient, count),
-                    new ExtractSentEventDto(patientArtExtract.Id, patientArtExtractStatus, ExtractType.PatientArt,
-                        artCount),
-                    new ExtractSentEventDto(patientBaselineExtract.Id, patientBaselineExtractStatus,
-                        ExtractType.PatientBaseline, baselineCount),
-                    new ExtractSentEventDto(patientLabExtract.Id, patientLabExtractStatus, ExtractType.PatientLab,
-                        labCount),
-                    new ExtractSentEventDto(patientPharmacyExtract.Id, patientPharmacyExtractStatus,
-                        ExtractType.PatientPharmacy, pharmacyCount),
-                    new ExtractSentEventDto(patientStatusExtract.Id, patientStatusExtractStatus, ExtractType.PatientStatus,
-                        statusCount),
-                    new ExtractSentEventDto(patientVisitExtract.Id, patientVisitExtractStatus, ExtractType.PatientVisit,
-                        visitCount),
-                    new ExtractSentEventDto(patientAdverseEventExtract.Id, patientAdverseEventExtractStatus, ExtractType.PatientAdverseEvent,
-                        visitCount)
+                    new ExtractSentEventDto(_patientExtract.Id, _patientExtractStatus, ExtractType.Patient, _count),
+                    new ExtractSentEventDto(_patientArtExtract.Id, _patientArtExtractStatus, ExtractType.PatientArt,
+                        _artCount),
+                    new ExtractSentEventDto(_patientBaselineExtract.Id, _patientBaselineExtractStatus,
+                        ExtractType.PatientBaseline, _baselineCount),
+                    new ExtractSentEventDto(_patientLabExtract.Id, _patientLabExtractStatus, ExtractType.PatientLab,
+                        _labCount),
+                    new ExtractSentEventDto(_patientPharmacyExtract.Id, _patientPharmacyExtractStatus,
+                        ExtractType.PatientPharmacy, _pharmacyCount),
+                    new ExtractSentEventDto(_patientStatusExtract.Id, _patientStatusExtractStatus, ExtractType.PatientStatus,
+                        _statusCount),
+                    new ExtractSentEventDto(_patientVisitExtract.Id, _patientVisitExtractStatus, ExtractType.PatientVisit,
+                        _visitCount),
+                    new ExtractSentEventDto(_patientAdverseEventExtract.Id, _patientAdverseEventExtractStatus, ExtractType.PatientAdverseEvent,
+                        _visitCount)
                 };
                 UpdateStatusNotification(extractSendingStatuses, ExtractStatus.Sending);
                 
@@ -512,7 +534,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                 foreach (var id in ids)
                 {
-                    count++;
+                    _count++;
                     var patient = _packager.GenerateExtracts(id);
                     var artMessageBag = ArtMessageBag.Create(patient);
                     var baselineMessageBag = BaselineMessageBag.Create(patient);
@@ -528,7 +550,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{artMessageBag.EndPoint}"), message);
                             httpResponseMessages.Add(response);
-                            artCount += message.ArtExtracts.Count;
+                            _artCount += message.ArtExtracts.Count;
                             sentPatientArts.AddRange(message.ArtExtracts.Select(x => x.Id).ToList());
 
                         }
@@ -547,7 +569,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{baselineMessageBag.EndPoint}"), message);
                             httpResponseMessages.Add(response);
-                            baselineCount += message.BaselinesExtracts.Count;
+                            _baselineCount += message.BaselinesExtracts.Count;
                             sentPatientBaselines.AddRange(message.BaselinesExtracts.Select(x => x.Id).ToList());
                             
                         }
@@ -566,7 +588,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{labMessageBag.EndPoint}"), message);
                             httpResponseMessages.Add(response);
-                            labCount += message.LaboratoryExtracts.Count;
+                            _labCount += message.LaboratoryExtracts.Count;
                             sentPatientLabs.AddRange(message.LaboratoryExtracts.Select(x => x.Id).ToList());
                         }
                         catch (Exception e)
@@ -584,7 +606,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{pharmacyMessageBag.EndPoint}"), message);
                             httpResponseMessages.Add(response);
-                            pharmacyCount += message.PharmacyExtracts.Count;
+                            _pharmacyCount += message.PharmacyExtracts.Count;
                             sentPatientPharmacies.AddRange(message.PharmacyExtracts.Select(x => x.Id).ToList());
                         }
                         catch (Exception e)
@@ -602,7 +624,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{statusMessageBag.EndPoint}"), message);
                             httpResponseMessages.Add(response);
-                            statusCount += message.StatusExtracts.Count;
+                            _statusCount += message.StatusExtracts.Count;
                             sentPatientStatuses.AddRange(message.StatusExtracts.Select(x => x.Id).ToList());
 
                         }
@@ -621,7 +643,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{visitsMessageBag.EndPoint}"), message);
                             httpResponseMessages.Add(response);
-                            visitCount += message.VisitExtracts.Count;
+                            _visitCount += message.VisitExtracts.Count;
                             sentPatientVisits.AddRange(message.VisitExtracts.Select(x => x.Id).ToList());
 
                         }
@@ -640,7 +662,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{adverseEventsMessageBag.EndPoint}"), message);
                             httpResponseMessages.Add(response);
-                            visitCount += message.AdverseEventExtracts.Count;
+                            _adverseEventCount += message.AdverseEventExtracts.Count;
                             sentPatientAdverseEvents.AddRange(message.AdverseEventExtracts.Select(x => x.Id).ToList());
                         }
                         catch (Exception e)
@@ -651,69 +673,89 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             throw;
                         }
                     }
-
-                    DomainEvents.Dispatch(new DwhSendNotification(new SendProgress(nameof(PatientExtract), Common.GetProgress(count, total))));
-                    /*if (patientExtractStatus.Found != null)
-                        if (patientExtractStatus.Loaded != null)
-                            if (patientExtractStatus.Rejected != null)
-                                DomainEvents.Dispatch(new ExtractActivityNotification(patientExtract.Id,
-                                    new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Sending),
-                                        (int)patientExtractStatus.Found,
-                                        (int)patientExtractStatus.Loaded, (int)patientExtractStatus.Rejected,
-                                        (int)patientExtractStatus.Loaded,
-                                        count)));*/
-                    sentPatients.Add(id);
-                }
-
-                foreach (var httpResponseMessage in httpResponseMessages)
-                {
-                    var response = await httpResponseMessage;
-                    if (response.IsSuccessStatusCode)
+                    
+                    foreach (var httpResponseMessage in httpResponseMessages)
                     {
-                        var content = response.Content.ReadAsStringAsync();
-                        responses.Add(content);
+                        var response = await httpResponseMessage;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = response.Content.ReadAsStringAsync();
+                            responses.Add(content);
+                            sentPatients.Add(id);
+                        }
+                        //Retry failed requests for set number of retries
+                        else
+                        {
+                            int retry = 0;
+                            for (int i = 0; i < MaxRetries; i++)
+                            {
+                                retry = i;
+                                var r = await client.PostAsJsonAsync(sendTo.GetUrl($"{response.RequestMessage.RequestUri}"), response.RequestMessage.Content);
+                                if (r.IsSuccessStatusCode)
+                                {
+                                    var content = response.Content.ReadAsStringAsync();
+                                    responses.Add(content);
+                                    break;
+                                }
+                            }
+                            //if all retries fail throw error
+                            if (retry == 3)
+                            {
+                                var error = await response.Content.ReadAsStringAsync();
+                                Log.Error(error, $"Host Response Error");
+                                throw new Exception(error);
+                            }
+                        }
                     }
-                    else
+
+                    //start of the update UI process 
+                    if (_count == 1)
                     {
-                        var error = await response.Content.ReadAsStringAsync();
-                        Log.Error(error, $"Host Response Error");
-                        throw new Exception(error);
+                        UpdateUiNumbers();
                     }
+                    //update UI in set number of batches
+                    if (_count % Batch == 0)
+                    {
+                        UpdateUiNumbers();
+                    }
+
+                    httpResponseMessages.Clear();
                 }
+                //update UI for the remainder of the batch
+                UpdateUiNumbers();
 
                 //update extract sent field
-                BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.Patient, sentPatients));
-                BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.Patient, sentPatients));
-                BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.PatientArt, sentPatientArts));
-                BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.PatientBaseline, sentPatientBaselines));
-                BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.PatientLab, sentPatientLabs));
-                BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.PatientPharmacy, sentPatientPharmacies));
-                BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.PatientStatus, sentPatientStatuses));
-                BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.PatientVisit, sentPatientVisits));
-                BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.PatientAdverseEvent, sentPatientAdverseEvents));
+                var b = BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.Patient, sentPatients));
+                var b1 = BackgroundJob.ContinueWith(b, () => UpdateExtractSent(ExtractType.PatientArt, sentPatientArts));
+                var b2 = BackgroundJob.ContinueWith(b1, () => UpdateExtractSent(ExtractType.PatientBaseline, sentPatientBaselines));
+                var b3 = BackgroundJob.ContinueWith(b2, () => UpdateExtractSent(ExtractType.PatientLab, sentPatientLabs));
+                var b4 = BackgroundJob.ContinueWith(b3, () => UpdateExtractSent(ExtractType.PatientPharmacy, sentPatientPharmacies));
+                var b5 = BackgroundJob.ContinueWith(b4, () => UpdateExtractSent(ExtractType.PatientStatus, sentPatientStatuses));
+                var b6 = BackgroundJob.ContinueWith(b5, () => UpdateExtractSent(ExtractType.PatientVisit, sentPatientVisits));
+                BackgroundJob.ContinueWith(b6, () => UpdateExtractSent(ExtractType.PatientAdverseEvent, sentPatientAdverseEvents));
 
                 // update sent status notification
                 var extractsStatuses = new List<ExtractSentEventDto>();
-                var patientStatus = new ExtractSentEventDto(patientExtract.Id, patientExtractStatus, ExtractType.Patient, count);
+                var patientStatus = new ExtractSentEventDto(_patientExtract.Id, _patientExtractStatus, ExtractType.Patient, _count);
                 extractsStatuses.Add(patientStatus);
-                var patientArtStatus = new ExtractSentEventDto(patientArtExtract.Id, patientArtExtractStatus, ExtractType.PatientArt, artCount);
+                var patientArtStatus = new ExtractSentEventDto(_patientArtExtract.Id, _patientArtExtractStatus, ExtractType.PatientArt, _artCount);
                 extractsStatuses.Add(patientArtStatus);
-                var patientBaselineStatus = new ExtractSentEventDto(patientBaselineExtract.Id, patientBaselineExtractStatus, ExtractType.PatientBaseline, baselineCount);
+                var patientBaselineStatus = new ExtractSentEventDto(_patientBaselineExtract.Id, _patientBaselineExtractStatus, ExtractType.PatientBaseline, _baselineCount);
                 extractsStatuses.Add(patientBaselineStatus);
-                var patientLabStatus = new ExtractSentEventDto(patientLabExtract.Id, patientLabExtractStatus, ExtractType.PatientLab, labCount);
+                var patientLabStatus = new ExtractSentEventDto(_patientLabExtract.Id, _patientLabExtractStatus, ExtractType.PatientLab, _labCount);
                 extractsStatuses.Add(patientLabStatus);
-                var patientPharmacyStatus = new ExtractSentEventDto(patientPharmacyExtract.Id, patientPharmacyExtractStatus, ExtractType.PatientPharmacy, pharmacyCount);
+                var patientPharmacyStatus = new ExtractSentEventDto(_patientPharmacyExtract.Id, _patientPharmacyExtractStatus, ExtractType.PatientPharmacy, _pharmacyCount);
                 extractsStatuses.Add(patientPharmacyStatus);
-                var patientStatusStatus = new ExtractSentEventDto(patientStatusExtract.Id, patientStatusExtractStatus, ExtractType.PatientStatus, statusCount);
+                var patientStatusStatus = new ExtractSentEventDto(_patientStatusExtract.Id, _patientStatusExtractStatus, ExtractType.PatientStatus, _statusCount);
                 extractsStatuses.Add(patientStatusStatus);
-                var patientVisitStatus = new ExtractSentEventDto(patientVisitExtract.Id, patientVisitExtractStatus, ExtractType.PatientVisit, visitCount);
+                var patientVisitStatus = new ExtractSentEventDto(_patientVisitExtract.Id, _patientVisitExtractStatus, ExtractType.PatientVisit, _visitCount);
                 extractsStatuses.Add(patientVisitStatus);
-                var patientAdverseEventStatus = new ExtractSentEventDto(patientAdverseEventExtract.Id, patientAdverseEventExtractStatus, ExtractType.PatientAdverseEvent, adverseEventCount);
+                var patientAdverseEventStatus = new ExtractSentEventDto(_patientAdverseEventExtract.Id, _patientAdverseEventExtractStatus, ExtractType.PatientAdverseEvent, _adverseEventCount);
                 extractsStatuses.Add(patientAdverseEventStatus);
                 UpdateStatusNotification(extractsStatuses, ExtractStatus.Sent);
             }
 
-            var output = new List<string>();
+            
             foreach (var r in responses)
             {
                 var response = await r;
@@ -848,6 +890,92 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         public void UpdateExtractSent(ExtractType extractType, List<Guid> sentIds)
         {
             DomainEvents.Dispatch(new DwhExtractSentEvent(extractType, sentIds, SendStatus.Sent));
+        }
+
+        public void UpdateUiNumbers()
+        {
+            //update progress bar
+            DomainEvents.Dispatch(new DwhSendNotification(new SendProgress(nameof(PatientExtract), Common.GetProgress(_count, _total))));
+            //update Patients
+            if (_patientExtractStatus.Found != null)
+                if (_patientExtractStatus.Loaded != null)
+                    if (_patientExtractStatus.Rejected != null)
+                        DomainEvents.Dispatch(new ExtractActivityNotification(_patientExtract.Id,
+                            new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Sending),
+                                (int)_patientExtractStatus.Found,
+                                (int)_patientExtractStatus.Loaded, (int)_patientExtractStatus.Rejected,
+                                (int)_patientExtractStatus.Loaded,
+                                _count)));
+            //update Patient ARTs
+            if (_patientArtExtractStatus.Found != null)
+                if (_patientArtExtractStatus.Loaded != null)
+                    if (_patientArtExtractStatus.Rejected != null)
+                        DomainEvents.Dispatch(new ExtractActivityNotification(_patientArtExtract.Id,
+                            new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Sending),
+                                (int)_patientArtExtractStatus.Found,
+                                (int)_patientArtExtractStatus.Loaded, (int)_patientArtExtractStatus.Rejected,
+                                (int)_patientArtExtractStatus.Loaded,
+                                _artCount)));
+            //update Patient Baselines
+            if (_patientBaselineExtractStatus.Found != null)
+                if (_patientBaselineExtractStatus.Loaded != null)
+                    if (_patientBaselineExtractStatus.Rejected != null)
+                        DomainEvents.Dispatch(new ExtractActivityNotification(_patientBaselineExtract.Id,
+                            new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Sending),
+                                (int)_patientBaselineExtractStatus.Found,
+                                (int)_patientBaselineExtractStatus.Loaded, (int)_patientBaselineExtractStatus.Rejected,
+                                (int)_patientBaselineExtractStatus.Loaded,
+                                _baselineCount)));
+            //update Patient Labs
+            if (_patientLabExtractStatus.Found != null)
+                if (_patientLabExtractStatus.Loaded != null)
+                    if (_patientLabExtractStatus.Rejected != null)
+                        DomainEvents.Dispatch(new ExtractActivityNotification(_patientLabExtract.Id,
+                            new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Sending),
+                                (int)_patientLabExtractStatus.Found,
+                                (int)_patientLabExtractStatus.Loaded, (int)_patientLabExtractStatus.Rejected,
+                                (int)_patientLabExtractStatus.Loaded,
+                                _labCount)));
+            //update Patient Pharmacies
+            if (_patientPharmacyExtractStatus.Found != null)
+                if (_patientPharmacyExtractStatus.Loaded != null)
+                    if (_patientPharmacyExtractStatus.Rejected != null)
+                        DomainEvents.Dispatch(new ExtractActivityNotification(_patientPharmacyExtract.Id,
+                            new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Sending),
+                                (int)_patientPharmacyExtractStatus.Found,
+                                (int)_patientPharmacyExtractStatus.Loaded, (int)_patientPharmacyExtractStatus.Rejected,
+                                (int)_patientPharmacyExtractStatus.Loaded,
+                                _pharmacyCount)));
+            //update Patient Statuses
+            if (_patientStatusExtractStatus.Found != null)
+                if (_patientStatusExtractStatus.Loaded != null)
+                    if (_patientStatusExtractStatus.Rejected != null)
+                        DomainEvents.Dispatch(new ExtractActivityNotification(_patientStatusExtract.Id,
+                            new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Sending),
+                                (int)_patientStatusExtractStatus.Found,
+                                (int)_patientStatusExtractStatus.Loaded, (int)_patientStatusExtractStatus.Rejected,
+                                (int)_patientStatusExtractStatus.Loaded,
+                                _statusCount)));
+            //update Patient Visits
+            if (_patientVisitExtractStatus.Found != null)
+                if (_patientVisitExtractStatus.Loaded != null)
+                    if (_patientVisitExtractStatus.Rejected != null)
+                        DomainEvents.Dispatch(new ExtractActivityNotification(_patientVisitExtract.Id,
+                            new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Sending),
+                                (int)_patientVisitExtractStatus.Found,
+                                (int)_patientVisitExtractStatus.Loaded, (int)_patientVisitExtractStatus.Rejected,
+                                (int)_patientVisitExtractStatus.Loaded,
+                                _visitCount)));
+            //update Patient Adverse Events
+            if (_patientAdverseEventExtractStatus.Found != null)
+                if (_patientAdverseEventExtractStatus.Loaded != null)
+                    if (_patientAdverseEventExtractStatus.Rejected != null)
+                        DomainEvents.Dispatch(new ExtractActivityNotification(_patientAdverseEventExtract.Id,
+                            new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Sending),
+                                (int)_patientAdverseEventExtractStatus.Found,
+                                (int)_patientAdverseEventExtractStatus.Loaded, (int)_patientAdverseEventExtractStatus.Rejected,
+                                (int)_patientAdverseEventExtractStatus.Loaded,
+                                _adverseEventCount)));
         }
 
         private void PrintMessage(object message)
