@@ -95,7 +95,6 @@ namespace Dwapi
         public static IHubContext<CbsActivity> CbsHubContext;
         public static IHubContext<CbsSendActivity> CbsSendHubContext;
 
-
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -305,6 +304,7 @@ namespace Dwapi
             };
             app.UseHangfireDashboard();
             app.UseHangfireServer(hfServerOptions);
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute() { Attempts = 3 });
             Log.Debug(@"initializing Database...");
 
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);

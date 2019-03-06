@@ -4,13 +4,14 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <Version>2.2.2</Version>
+    <Version>2.2.3</Version>
     <Company>Palladium Group</Company>
     <Authors>Brian Mwasi, Danson Koske</Authors>
     <RepositoryUrl>https://github.com/palladiumkenya/DWAPI</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <NeutralLanguage>en-KE</NeutralLanguage>
-    <PackageReleaseNotes>Optimized sending of DWH Extracts</PackageReleaseNotes>
+    <PackageReleaseNotes>Optimized sending of DWH Extracts
+Improved notifications and messages on sending</PackageReleaseNotes>
     <!--<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>-->
   </PropertyGroup>
  
