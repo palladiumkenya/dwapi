@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Serilog;
@@ -50,6 +53,23 @@ namespace Dwapi.SharedKernel.Utility
             var dataAsString = JsonConvert.SerializeObject(data);
             var content = new StringContent(dataAsString);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            return httpClient.PostAsync(url, content);
+        }
+
+        public static Task<HttpResponseMessage> PostAsCompressedAsync<T>(
+            this HttpClient httpClient, string url, T data)
+        {
+            var dataAsString = JsonConvert.SerializeObject(data);
+            byte[] jsonBytes = Encoding.UTF8.GetBytes(dataAsString);
+            MemoryStream ms = new MemoryStream();
+            using (GZipStream gzip = new GZipStream(ms, CompressionMode.Compress, true))
+            {
+                gzip.Write(jsonBytes, 0, jsonBytes.Length);
+            }
+            ms.Position = 0;
+            StreamContent content = new StreamContent(ms);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            content.Headers.ContentEncoding.Add("gzip");
             return httpClient.PostAsync(url, content);
         }
 

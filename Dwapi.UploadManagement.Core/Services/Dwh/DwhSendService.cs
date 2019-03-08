@@ -19,10 +19,13 @@ using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Dwapi.SettingsManagement.Core.Model;
 using Hangfire;
@@ -155,6 +158,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.Timeout = new TimeSpan(0,1,0);
                     var ids = _reader.ReadAllIds().ToList();
                     _total = ids.Count;
                     var sentPatients = new List<Guid>();
@@ -196,7 +200,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             try
                             {
-                                var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{artMessageBag.EndPoint}"), artMessage);
+                                var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{artMessageBag.EndPoint}"), artMessage);
                                 httpResponseMessages.Add(response);
                                 _artCount += artMessage.ArtExtracts.Count;
                                 sentPatientArts.AddRange(artMessage.ArtExtracts.Select(x => x.Id).ToList());
@@ -217,7 +221,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             try
                             {
-                                var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{baselineMessageBag.EndPoint}"), baselineMessage);
+                                var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{baselineMessageBag.EndPoint}"), baselineMessage);
                                 httpResponseMessages.Add(response);
                                 _baselineCount += baselineMessage.BaselinesExtracts.Count;
                                 sentPatientBaselines.AddRange(baselineMessage.BaselinesExtracts.Select(x => x.Id).ToList());
@@ -238,7 +242,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             try
                             {
-                                var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{labMessageBag.EndPoint}"), labMessage);
+                                var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{labMessageBag.EndPoint}"), labMessage);
                                 httpResponseMessages.Add(response);
                                 _labCount += labMessage.LaboratoryExtracts.Count;
                                 sentPatientLabs.AddRange(labMessage.LaboratoryExtracts.Select(x => x.Id).ToList());
@@ -258,7 +262,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             try
                             {
-                                var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{pharmacyMessageBag.EndPoint}"), pharmacyMessage);
+                                var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{pharmacyMessageBag.EndPoint}"), pharmacyMessage);
                                 httpResponseMessages.Add(response);
                                 _pharmacyCount += pharmacyMessage.PharmacyExtracts.Count;
                                 sentPatientPharmacies.AddRange(pharmacyMessage.PharmacyExtracts.Select(x => x.Id).ToList());
@@ -278,7 +282,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             try
                             {
-                                var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{statusMessageBag.EndPoint}"), statusMessage);
+                                var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{statusMessageBag.EndPoint}"), statusMessage);
                                 httpResponseMessages.Add(response);
                                 _statusCount += statusMessage.StatusExtracts.Count;
                                 sentPatientStatuses.AddRange(statusMessage.StatusExtracts.Select(x => x.Id).ToList());
@@ -299,7 +303,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             try
                             {
-                                var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{visitsMessageBag.EndPoint}"), visitsMessage);
+                                var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{visitsMessageBag.EndPoint}"), visitsMessage);
                                 httpResponseMessages.Add(response);
                                 _visitCount += visitsMessage.VisitExtracts.Count;
                                 sentPatientVisits.AddRange(visitsMessage.VisitExtracts.Select(x => x.Id).ToList());
@@ -320,7 +324,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         {
                             try
                             {
-                                var response = client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{adverseEventsMessageBag.EndPoint}"), adverseEventsMessage);
+                                var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{adverseEventsMessageBag.EndPoint}"), adverseEventsMessage);
                                 httpResponseMessages.Add(response);
                                 _adverseEventCount += adverseEventsMessage.AdverseEventExtracts.Count;
                                 sentPatientAdverseEvents.AddRange(adverseEventsMessage.AdverseEventExtracts.Select(x => x.Id).ToList());
@@ -335,50 +339,49 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 throw;
                             }
                         }
-                    
-                        foreach (var httpResponseMessage in httpResponseMessages)
-                        {
-                            var response = await httpResponseMessage;
-                            if (response.IsSuccessStatusCode)
-                            {
-                                var content = response.Content.ReadAsStringAsync();
-                                responses.Add(content);
-                                sentPatients.Add(id);
-                            }
-                            //Retry failed requests for set number of retries
-                            else
-                            {
-                                int retry = 0;
-                                for (int i = 0; i < MaxRetries; i++)
-                                {
-                                    retry = i;
-                                    var r = await client.PostAsJsonAsync(sendTo.GetUrl($"{response.RequestMessage.RequestUri}"), response.RequestMessage.Content);
-                                    if (r.IsSuccessStatusCode)
-                                    {
-                                        var content = response.Content.ReadAsStringAsync();
-                                        responses.Add(content);
-                                        break;
-                                    }
-                                }
-                                //if all retries fail throw error
-                                if (retry == 3)
-                                {
-                                    //Show error message in UI
-                                    DomainEvents.Dispatch(new DwhMessageNotification(true, $"Error sending Extracts for patient id {id}"));
-                                    var error = await response.Content.ReadAsStringAsync();
-                                    Log.Error(error, $"Host Response Error");
-                                    throw new Exception(error);
-                                }
-                            }
-                        }
 
                         //update UI in set number of batches
                         if (_count % Batch == 0)
                         {
+                            foreach (var httpResponseMessage in httpResponseMessages)
+                            {
+                                var response = await httpResponseMessage;
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    var content = response.Content.ReadAsStringAsync();
+                                    responses.Add(content);
+                                    sentPatients.Add(id);
+                                }
+                                //Retry failed requests for set number of retries
+                                else
+                                {
+                                    int retry = 0;
+                                    for (int i = 0; i < MaxRetries; i++)
+                                    {
+                                        retry = i;
+                                        var r = await client.PostAsCompressedAsync(sendTo.GetUrl($"{response.RequestMessage.RequestUri}"), response.RequestMessage.Content);
+                                        if (r.IsSuccessStatusCode)
+                                        {
+                                            var content = response.Content.ReadAsStringAsync();
+                                            responses.Add(content);
+                                            break;
+                                        }
+                                    }
+                                    //if all retries fail throw error
+                                    if (retry == 3)
+                                    {
+                                        //Show error message in UI
+                                        DomainEvents.Dispatch(new DwhMessageNotification(true, $"Error sending Extracts for patient id {id}"));
+                                        var error = await response.Content.ReadAsStringAsync();
+                                        Log.Error(error, $"Host Response Error");
+                                        throw new Exception(error);
+                                    }
+                                }
+                            }
+                            httpResponseMessages.Clear();
                             UpdateUiNumbers(ExtractStatus.Sending);
                         }
-
-                        httpResponseMessages.Clear();
+                        
                     }
                     //update extract sent field
                     BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.Patient, sentPatients));

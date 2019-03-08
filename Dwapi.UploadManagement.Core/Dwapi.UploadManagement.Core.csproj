@@ -10,4 +10,9 @@
     <ProjectReference Include="..\Dwapi.ExtractsManagement.Core\Dwapi.ExtractsManagement.Core.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Http">
+      <HintPath>..\..\..\..\..\Users\mwasi\.nuget\packages\microsoft.extensions.http\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Http.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
