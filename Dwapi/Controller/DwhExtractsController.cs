@@ -1,19 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.Hubs.Dwh;
 using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
-using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Hangfire;
+using Hangfire.States;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -129,20 +127,32 @@ namespace Dwapi.Controller
             {
                 if (!packageDto.SendMpi)
                 {
-                    var jobId = BackgroundJob.Enqueue(() => _dwhSendService.SendExtractsAsync(packageDto.DwhPackage));
+                    QueueDwh(packageDto.DwhPackage);
                     return Ok();
                 }
-                var j1 = BackgroundJob.Enqueue(() => _dwhSendService.SendExtractsAsync(packageDto.DwhPackage));
-                var j2 = BackgroundJob.Enqueue(() => _cbsSendService.SendMpiAsync(packageDto.MpiPackage));
+                QueueDwh(packageDto.DwhPackage);
+                QueueMpi(packageDto.MpiPackage);
                 return Ok();
 
             }
             catch (Exception e)
             {
-                var msg = $"Error sending to DWH {e.Message}";
+                var msg = $"Error sending Extracts {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
             }
+        }
+        [AutomaticRetry(Attempts = 0)]
+        private void QueueDwh(SendManifestPackageDTO package)
+        {
+            BackgroundJob.Enqueue(() => _dwhSendService.SendExtractsAsync(package));
+        }
+        [AutomaticRetry(Attempts = 0)]
+        private void QueueMpi(SendManifestPackageDTO package)
+        {
+            var client = new BackgroundJobClient();
+            var state = new EnqueuedState("mpi");
+            client.Create(() => _cbsSendService.SendMpiAsync(package), state);
         }
     }
 }

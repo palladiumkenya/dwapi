@@ -90,35 +90,23 @@ namespace Dwapi.SharedKernel.Tests.TestHelpers
             return list;
         }
 
-        public static ArtMessageBag ArtMessageBag(int count, params int[] siteCodes)
+        public static ArtMessageBag ArtMessageBag(int count, int siteCode)
         {
             var list = Builder<ArtMessageBag>.CreateNew().Build();
-            foreach (var siteCode in siteCodes)
-            {
-                list.Messages.AddRange(ArtMessages(count, siteCode));
-            }
-
+            list.Message = ArtMessages(count, siteCode);
             return list;
         }
 
-        private static List<ArtMessage> ArtMessages(int count, params int[] siteCodes)
+        private static ArtMessage ArtMessages(int count, int siteCode)
         {
-            var list = new List<ArtMessage>();
+            var patientExtractView =
+                Builder<PatientExtractView>.CreateNew().With(x => x.SiteCode = siteCode).Build();
 
-            foreach (var siteCode in siteCodes)
-            {
-                var patientExtractView =
-                    Builder<PatientExtractView>.CreateNew().With(x => x.SiteCode = siteCode).Build();
-
-                var masterPatientIndices = Builder<PatientArtExtractView>.CreateListOfSize(count).All()
-                    .With(x => x.SiteCode = siteCode).Build()
-                    .ToList();
-                patientExtractView.PatientArtExtracts = masterPatientIndices;
-                list.Add(new ArtMessage(patientExtractView));
-
-            }
-
-            return list;
+            var masterPatientIndices = Builder<PatientArtExtractView>.CreateListOfSize(count).All()
+                .With(x => x.SiteCode = siteCode).Build()
+                .ToList();
+            patientExtractView.PatientArtExtracts = masterPatientIndices;
+            return new ArtMessage(patientExtractView);
         }
     }
 }

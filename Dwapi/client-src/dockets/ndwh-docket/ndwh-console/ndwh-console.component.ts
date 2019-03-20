@@ -38,7 +38,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     @Input() emrVer: string;
     private _hubConnection: HubConnection | undefined;
     private _hubConnectionMpi: HubConnection | undefined;
-    private _sendhubConnection: HubConnection | undefined;
     public async: any;
 
     public emrName: string;
@@ -334,7 +333,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 () => {
                     this.errorMessage.push({severity: 'success', summary: 'Sending Extracts '});
-                    this.sending = false;
                     this.updateEvent();
                 }
             );
@@ -452,12 +450,24 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
         this._hubConnection.on('ShowDwhSendProgress', (dwhProgress: any) => {
             // console.log(dwhProgress);
-
             this.sendEvent = {
                 sentProgress: dwhProgress.progress
             };
-            this.sending = true;
+            if (dwhProgress.progress !== 100) {
+                this.sending = true;
+            } else {
+                this.sending = false;
+            }
             this.canLoadFromEmr = this.canSend = ! this.sending;
+        });
+
+        this._hubConnection.on('ShowDwhSendMessage', (message: any) => {
+            // console.log(message);
+            if (message.error) {
+                this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: message.message});
+            } else {
+                this.errorMessage.push({severity: 'success', summary: message.message});
+            }
         });
     }
 

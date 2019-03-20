@@ -6,20 +6,20 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
     public class LabMessageBag
     {
         public string EndPoint => "PatientLabs";
-        public List<LabMessage> Messages { get; set; } = new List<LabMessage>();
+        public LabMessage Message{ get; set; } = new LabMessage();
 
         public LabMessageBag()
         {
         }
 
-        public LabMessageBag(List<LabMessage> messages)
+        public LabMessageBag(LabMessage message)
         {
-            Messages = messages;
+            Message = message;
         }
         public static LabMessageBag Create(PatientExtractView patient)
         {
-            var messages = new List<LabMessage> { new LabMessage(patient) };
-            return new LabMessageBag(messages);
+            var message = new LabMessage(patient);
+            return new LabMessageBag(message);
         }
     }
 }

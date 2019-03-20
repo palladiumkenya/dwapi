@@ -6,20 +6,20 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
     public class BaselineMessageBag
     {
         public string EndPoint => "PatientBaselines";
-        public List<BaselineMessage> Messages { get; set; } = new List<BaselineMessage>();
+        public BaselineMessage Message { get; set; } = new BaselineMessage();
 
         public BaselineMessageBag()
         {
         }
 
-        public BaselineMessageBag(List<BaselineMessage> messages)
+        public BaselineMessageBag(BaselineMessage message)
         {
-            Messages = messages;
+            Message = message;
         }
         public static BaselineMessageBag Create(PatientExtractView patient)
         {
-            var messages = new List<BaselineMessage> { new BaselineMessage(patient) };
-            return new BaselineMessageBag(messages);
+            var message = new BaselineMessage(patient);
+            return new BaselineMessageBag(message);
         }
     }
 }

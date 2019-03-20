@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using AutoMapper.Data;
@@ -74,6 +76,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -94,7 +97,6 @@ namespace Dwapi
         public static IHubContext<DwhSendActivity> DwhSendHubContext;
         public static IHubContext<CbsActivity> CbsHubContext;
         public static IHubContext<CbsSendActivity> CbsSendHubContext;
-
 
         public Startup(IHostingEnvironment env)
         {
@@ -119,7 +121,33 @@ namespace Dwapi
 
             services.AddMediatR(assemblies);
 
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<GzipCompressionProvider>();
+                options.EnableForHttps = true;
+                options.MimeTypes =
+                    ResponseCompressionDefaults.MimeTypes.Concat(
+                        new[]
+                        {
+                            "application/xhtml+xml",
+                            "application/atom+xml",
+                            "image/svg+xml",
+                        });
+            });
 
+            services.Configure<GzipCompressionProviderOptions>(options =>
+                options.Level = CompressionLevel.Fastest);
+
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<GzipCompressionProvider>();
+                options.EnableForHttps = true;
+            });
+
+            services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -264,7 +292,7 @@ namespace Dwapi
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             //ServiceProvider = serviceProvider;
-
+            app.UseResponseCompression();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -296,8 +324,16 @@ namespace Dwapi
             app.UseStaticFiles()
                 .UseSwaggerUi();
 
+            var hfServerOptions = new BackgroundJobServerOptions()
+            {
+                ServerName = $"dwapi",
+                WorkerCount = Environment.ProcessorCount * 5,
+                Queues = new string[] { "mpi", "default" }
+
+            };
             app.UseHangfireDashboard();
-            app.UseHangfireServer();
+            app.UseHangfireServer(hfServerOptions);
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute() { Attempts = 3 });
             Log.Debug(@"initializing Database...");
 
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);

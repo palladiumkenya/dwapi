@@ -9,7 +9,7 @@
       </div>
 
       <div class="ui-toolbar-group-right">
-          <input type="checkbox" name="SendMpi" [(checked)]="sendMpi" (change)="sendMpi = !sendMpi" [disabled]="!loadMpi||!canSendMpi"> Include MPI Extracts
+          <input type="checkbox" name="SendMpi" [(checked)]="sendMpi&&canSendMpi" (change)="sendMpi = !sendMpi" [disabled]="!loadMpi||!canSendMpi"> Include MPI Extracts
           <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
                   class="blue-btn"></button>
       </div>

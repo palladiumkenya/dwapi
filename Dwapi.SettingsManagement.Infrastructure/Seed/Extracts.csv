@@ -677,9 +677,9 @@ SELECT
    ,SOUNDEX(UPPER(REPLACE(given_name ,'0','O'))) AS  sxFirstName 
    ,SOUNDEX(UPPER(REPLACE(family_name ,'0','O'))) AS sxLastName 
    ,SOUNDEX(UPPER(REPLACE(middle_name ,'0','O'))) AS sxMiddleName 
-  , kenyaemr_etl.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name ,'0','O'))) AS dmFirstName
-  , kenyaemr_etl.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name ,'0','O'))) AS dmLastName
-  , kenyaemr_etl.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name ,'0','O'))) AS dmMiddleName
+  , openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name ,'0','O'))) AS dmFirstName
+  , openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name ,'0','O'))) AS dmLastName
+  , openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name ,'0','O'))) AS dmMiddleName
   ,a.phone_number AS PatientPhoneNumber
    ,en.treatment_supporter_telephone AS PatientAlternatePhoneNumber
    ,a.Gender 

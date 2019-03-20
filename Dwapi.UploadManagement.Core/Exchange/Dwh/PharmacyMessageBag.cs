@@ -6,20 +6,20 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
     public class PharmacyMessageBag
     {
         public string EndPoint => "PatientPharmacy";
-        public List<PharmacyMessage> Messages { get; set; } = new List<PharmacyMessage>();
+        public PharmacyMessage Message { get; set; } = new PharmacyMessage();
 
         public PharmacyMessageBag()
         {
         }
 
-        public PharmacyMessageBag(List<PharmacyMessage> messages)
+        public PharmacyMessageBag(PharmacyMessage message)
         {
-            Messages = messages;
+            Message = message;
         }
         public static PharmacyMessageBag Create(PatientExtractView patient)
         {
-            var messages = new List<PharmacyMessage> { new PharmacyMessage(patient) };
-            return new PharmacyMessageBag(messages);
+            var message = new PharmacyMessage(patient);
+            return new PharmacyMessageBag(message);
         }
     }
 }
