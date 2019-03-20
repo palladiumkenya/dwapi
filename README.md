@@ -29,12 +29,15 @@
 ***sudo docker rm dwapi***
 
 ***sudo docker run --name dwapi -p 5757:5757 -d --restart unless-stopped kenyahmis/dwapi:latest***
+
+***Configure your data sources and verify registries***
+
+***sudo docker restart dwapi***
 - - -
 
 5) Update your browser
 ---
 ***sudo apt-get update***
-
 ***sudo apt-get install firefox***
 
 6) Configure MySQL
@@ -51,6 +54,7 @@
 8) Start DWAPI
 ---
 On your browser open dwapi on `http://localhost:5757`
+
 Configure your data sources and verify registries
 
 9) Restart DWAPI
