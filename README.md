@@ -56,7 +56,7 @@
 ---
  ***On your browser open dwapi on `http://localhost:5757`***
 
- ***Configure your data sources and verify registries ***
+ ***Configure your data sources and verify registries***
 
 9) Restart DWAPI
 ---
