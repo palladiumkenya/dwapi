@@ -38,6 +38,7 @@
 5) Update your browser
 ---
 ***sudo apt-get update***
+
 ***sudo apt-get install firefox***
 
 6) Configure MySQL
@@ -53,9 +54,9 @@
 
 8) Start DWAPI
 ---
-On your browser open dwapi on `http://localhost:5757`
+ ***On your browser open dwapi on `http://localhost:5757`***
 
-Configure your data sources and verify registries
+ ***Configure your data sources and verify registries ***
 
 9) Restart DWAPI
 ---
