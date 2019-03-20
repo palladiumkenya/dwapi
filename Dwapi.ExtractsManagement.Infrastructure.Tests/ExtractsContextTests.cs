@@ -13,6 +13,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
     [Test]
     public void should_Setup_Mssql_Database()
     {
+      TestInitializer.InitDb();
       var ctx =TestInitializer.ServiceProvider.GetService<ExtractsContext>();
 
       ctx.Database.Migrate();
@@ -26,6 +27,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
     [Test]
     public void should_Setup_MySql_Database()
     {
+      TestInitializer.InitMysQLDb();
       var ctx = TestInitializer.ServiceProviderMysql.GetService<ExtractsContext>();
 
       ctx.Database.Migrate();

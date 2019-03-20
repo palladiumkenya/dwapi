@@ -82,19 +82,58 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             ServiceProvider = serviceProvider;
             ServiceProviderMysql = serviceProviderMysql;
 
-            var settingsContext = serviceProvider.GetService<SettingsContext>();
-            var settingsContextMysql = serviceProviderMysql.GetService<SettingsContext>();
-            var extractsContext = serviceProvider.GetService<ExtractsContext>();
-            var extractsContextMysql = serviceProviderMysql.GetService<ExtractsContext>();
+        }
 
-            settingsContext.Database.Migrate();
+        public static void InitDb()
+        {
+            var settingsContext = ServiceProvider.GetService<SettingsContext>();
+            var extractsContext = ServiceProvider.GetService<ExtractsContext>();
+
+             settingsContext.Database.Migrate();
             settingsContext.EnsureSeeded();
 
-            settingsContextMysql.Database.Migrate();
-            settingsContextMysql.EnsureSeeded();
 
             extractsContext.Database.Migrate();
             extractsContext.EnsureSeeded();
+
+
+            Iqtools = settingsContext.EmrSystems
+                .Include(x => x.DatabaseProtocols)
+                .Include(x => x.Extracts)
+                .First(x => x.Id == new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"));
+
+            KenyaEmr = settingsContext.EmrSystems
+                .Include(x => x.DatabaseProtocols)
+                .Include(x => x.Extracts)
+                .First(x => x.Id == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"));
+
+            Validator = extractsContext.Validator.First();
+
+
+            var dbmanager= ServiceProvider.GetService<IAppDatabaseManager>();
+
+            IqToolsDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,DatabaseProvider.MsSql);
+            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString, DatabaseProvider.MySql);
+
+            IQtoolsDbProtocol = Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
+            IQtoolsDbProtocol.Host = IqToolsDatabase.Server;
+            IQtoolsDbProtocol.Username = IqToolsDatabase.User;
+            IQtoolsDbProtocol.Password = IqToolsDatabase.Password;
+            //_iQtoolsDb.Password = TestInitializer.IqToolsDatabase.Database;
+
+            KenyaEmrDbProtocol = KenyaEmr.DatabaseProtocols.First();
+            KenyaEmrDbProtocol.Host = KenyaEmrDatabase.Server;
+            KenyaEmrDbProtocol.Username = KenyaEmrDatabase.User;
+            KenyaEmrDbProtocol.Password = KenyaEmrDatabase.Password;
+            KenyaEmrDbProtocol.DatabaseName = KenyaEmrDatabase.Database;
+        }
+         public static void InitMysQLDb()
+        {
+            var settingsContextMysql = ServiceProviderMysql.GetService<SettingsContext>();
+            var extractsContextMysql = ServiceProviderMysql.GetService<ExtractsContext>();
+
+            settingsContextMysql.Database.Migrate();
+            settingsContextMysql.EnsureSeeded();
 
             extractsContextMysql.Database.Migrate();
             extractsContextMysql.EnsureSeeded();
@@ -109,13 +148,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                 .Include(x => x.Extracts)
                 .First(x => x.Id == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"));
 
-            Validator = extractsContext.Validator.First();
+            Validator = extractsContextMysql.Validator.First();
 
 
-            var dbmanager= serviceProvider.GetService<IAppDatabaseManager>();
+            var dbmanager= ServiceProvider.GetService<IAppDatabaseManager>();
 
-            IqToolsDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,DatabaseProvider.MsSql);
-            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString, DatabaseProvider.MySql);
+            IqToolsDatabase = dbmanager.ReadConnection(settingsContextMysql.Database.GetDbConnection().ConnectionString,DatabaseProvider.MsSql);
+            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContextMysql.Database.GetDbConnection().ConnectionString, DatabaseProvider.MySql);
 
             IQtoolsDbProtocol = Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
             IQtoolsDbProtocol.Host = IqToolsDatabase.Server;
