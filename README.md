@@ -81,4 +81,44 @@ ii)  Copying log files folder to your pc current directory.
 2) Install DWAPI
   http://data.kenyahmis.org:81/dwapi/client/downloads/dwapi.exe
 
+# Dwapi Linux Installation (Ubuntu 64 bit 14 and above ONLY)
 
+1) Install prerequisite(NetCore SDK)
+
+Ubuntu 14
+wget -q https://packages.microsoft.com/config/ubuntu/14.04/packages-microsoft-prod.deb
+
+Ubuntu 16
+wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
+
+Ubuntu 18
+wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
+
+sudo dpkg -i packages-microsoft-prod.deb
+
+sudo apt-get install apt-transport-https
+sudo apt-get update
+sudo apt-get install dotnet-sdk-2.2
+sudo apt-get wget
+
+2) Install DWAPI
+  
+  option 1 form commandline
+  wget -q data.kenyahmis.org:81/dwapi/client/downloads/dwapi.zip
+  
+  option 2 download from browser
+  http://data.kenyahmis.org:81/dwapi/client/downloads/dwapi.zip
+
+  unzip dwapi.zip
+  
+  go to unzipped dwapi folder
+  cd dwapi
+  
+  start dwapi by running this command
+  dotnet Dwapi.dll
+  
+  restarting dwapi
+  close terminal
+  go to unzipped dwapi folder
+  start dwapi by running this command
+  dotnet Dwapi.dll
