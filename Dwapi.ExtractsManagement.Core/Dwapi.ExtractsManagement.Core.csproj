@@ -14,4 +14,7 @@
     <ProjectReference Include="..\Dwapi.SettingsManagement.Core\Dwapi.SettingsManagement.Core.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\Destination\Hts\" />
+  </ItemGroup>
 </Project>
