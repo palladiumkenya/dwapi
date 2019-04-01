@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
-    public abstract class HTSExtract : Entity<Guid>
+    public abstract class TempHTSExtract : Entity<Guid>
     {
         public virtual string HtsNumber { get; set; }
         public virtual string PatientID { get; set; }

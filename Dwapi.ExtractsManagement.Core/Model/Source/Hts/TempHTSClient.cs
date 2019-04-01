@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
-    public class HTSClient : HTSExtract
+    public class TempHTSClient : HTSExtract
     {
 
         public DateTime? VisitDate { get; set; }
