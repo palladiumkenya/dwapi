@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
-    public class TempHTSClientPartner : HTSExtract
+    public class HTSClientPartner : HTSExtract
     {
 
         public string RelationsipToIndexClient { get; set; }

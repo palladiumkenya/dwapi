@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
-    public class TempHTSClientLinkage : HTSExtract
+    public class HTSClientLinkage : HTSExtract
     {
         public DateTime? PhoneTracing { get; set; }
         public DateTime? PhysicalTracing { get; set; }
