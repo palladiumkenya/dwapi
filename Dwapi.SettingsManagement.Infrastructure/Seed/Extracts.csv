@@ -997,3 +997,107 @@ FROM   ndwr_patient_pharmacy"|dwhstage|0|PatientPharmacyExtract|6|a6221aa5-0e85-
 	   NOW() AS AdverseEventStartDate, 
        NOW() AS AdverseEventEndDate, 
        '' AS AdverseEventIsPregnant"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa5-0e85-11e8-ba89-0ed5f89f718b
+
+04b4205d-0ad4-47f2-a7a5-7774d7dade65|HTS Client Extracts|HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT distinct p.HTSID as  [PatientID]
+      ,CAST(l.[VisitDate] AS date)  as [DateTested]
+	  ,CAST(l.[DOB] as Date) as DoB
+	  ,l.[Gender]
+	  ,l.[MaritalStatus]
+      ,[KeyPop] as PopulationType
+	  ,[TestedBefore] as EverTested
+      ,[WhenLastTested] as MonthsLastTested
+	  ,[ClientTestedAs]
+	  ,[StrategyHTS]
+	  ,[TestKitName1]
+      ,[TestKitLotNumber1]
+	  ,CAST([TestKitExpiryDate1] AS date)  as [TestKitExpiryDate1]
+      ,[TestResultsHTS1]
+      ,[TestKitName_2]
+      ,[TestKitLotNumber_2]
+      ,CAST([TestKitExpiryDate_2] AS date)  as [TestKitExpiryDate_2]
+	  ,[TestResultsHTS_2]
+	  ,[finalResultHTS]
+	  ,[FinalResultsGiven] 
+	  ,[TBScreeningHTS]
+	  ,case when [clientSelfTestesd]=0 then 'No' else 'Yes' end as [clientSelfTested]
+  FROM IQC_HTS_LAB_Register l
+  INNER JOIN tmp_PatientMaster p on  p.PatientPK=l.PatientPK"|DWHStage|1|HTSClientExtract|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
+6f3ce1d9-6cfc-47d2-ad1b-73a6ee7ef909|HTS Client Extracts|HTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct e.patient_id, e.visit_date as DateTested, p.DOB, p.Gender,p.marital_status,population_type as PopulationType, 
+case when isnull(e.months_since_last_test) then 'No' else 'Yes' end as 'EverTested',e.months_since_last_test as MonthsLastTested,e.client_tested_as,
+hts_entry_point as StrategyHTS,
+e.test_1_kit_name,e.test_1_kit_lot_no, e.test_1_kit_expiry,e.test_1_result, e.test_2_kit_name, e.test_2_kit_lot_no, 
+e.test_2_kit_expiry, e.test_2_result,e.final_test_result,e.patient_given_result,tb_screening, patient_had_hiv_self_test as clientSelfTested
+FROM kenyaemr_etl.etl_hts_test e
+inner join kenyaemr_etl.etl_patient_demographics p on e.patient_id=p.patient_id"|DWHStage|1|HTSClientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+fe1904c9-c7eb-4f5e-b45c-16ca046161bc|HTS Partner Extracts|HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"
+SELECT distinct [HTS_Number], personid as PartnerID, age, Gender,[RelationsipToIndexClient],[ScreenedForIPV],[IPVScreeningOutcome],[CurrentlyLivingWithIndexClient],[KnowledgeOfHIVStatus]
+      ,[PNSApproach],SUBSTRING( Trace1 , LEN(Trace1) -  CHARINDEX('    ',REVERSE(Trace1)) + 2  , LEN(Trace1)  ) as Trace1Outcome, substring(Trace1, 1 , CHARINDEX('    ', Trace1)-1)as Trace1Type,
+	  (CONVERT(date,ltrim(substring(Trace1,
+                charindex('    ',Trace1),case when (charindex('    ',
+                Trace1,charindex('    ',Trace1)+(1))-charindex('    ',Trace1))<=(0) 
+                then (0) else charindex('    ',Trace1,charindex('    ',
+                Trace1)+(1))-charindex('    ',Trace1) end)),0)) as Trace1Date,
+	  
+	  SUBSTRING( Trace2 , LEN(Trace2) -  CHARINDEX('    ',REVERSE(Trace2)) + 2  , LEN(Trace2)  ) 
+as Trace2Outcome , substring(Trace2, 1 , CHARINDEX('    ', Trace2)-1)as Trace2Type,
+	  (CONVERT(date,ltrim(substring(Trace2,
+                charindex('    ',Trace2),case when (charindex('    ',
+                Trace2,charindex('    ',Trace2)+(1))-charindex('    ',Trace2))<=(0) 
+                then (0) else charindex('    ',Trace2,charindex('    ',
+                Trace2)+(1))-charindex('    ',Trace2) end)),0)) as Trace2Date,
+				SUBSTRING( Trace3 , LEN(Trace3) -  CHARINDEX('    ',REVERSE(Trace3)) + 2  , LEN(Trace3)  ) as Trace3Outcome,
+				substring(Trace3, 1 , CHARINDEX('    ', Trace3)-1)as Trace3Type,
+				(CONVERT(date,ltrim(substring(Trace3,
+                charindex('    ',Trace3),case when (charindex('    ',
+                Trace3,charindex('    ',Trace3)+(1))-charindex('    ',Trace3))<=(0) 
+                then (0) else charindex('    ',Trace3,charindex('    ',
+                Trace3)+(1))-charindex('    ',Trace3) end)),0)) as Trace3Date, [PNSConsent],[Linked], [DateLinkedToCare],[CCCNo]
+  FROM [IQC_PNS_Register]"|DWHStage|1|HTSClientPartnerExtract|2|a6221983-0e85-11e8-ba89-0ed5f89f718b
+
+12a52617-d227-4f1f-97a6-b7ceb0282a56|HTS Partner Extracts|HTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT distinct patient_related_to as 'HTS_Number',pns.id as 'PartnerID',year(current_date()) - year(birth_date) as Age, 
+sex as Gender,rel.name as RelationsipToIndexClient, case when isnull(ipv_outcome) then 'No' else 'Yes' end as 'ScreenedForIPV',ipv_outcome as IPVScreeningOutcome,
+live.name as CurrentlyLivingWithIndexClient, baseline_hiv_status as KnowledgeOfHIVStatus, app.name as PNSApproach,
+trace1.status as Trace1Outcome, trace1.contact_type as Trace1Type, trace1.encounter_date as Trace1Date,
+trace2.status as Trace2Outcome, trace2.contact_type as Trace2Type, trace2.encounter_date as Trace2Date,
+trace3.status as Trace3Outcome, trace3.contact_type as Trace3Type, trace3.encounter_date as Trace3Date, 
+case when isnull(pns.appointment_date) then 'No' else 'Yes' end as 'PNSConsent',case when isnull(contact_link.visit_date) then 'No' else 'Yes' end as 'Linked',
+contact_link.visit_date as DateLinkedToCare, contact_link.ccc_number as CCCNo
+FROM openmrs.kenyaemr_hiv_testing_patient_contact pns
+left join (select * from
+(SELECT @row_number:=CASE
+        WHEN @client_id = client_id THEN @row_number + 1
+        ELSE 1
+    END AS num,
+@client_id:=client_id as client_id,contact_type, status, encounter_date, remarks FROM openmrs.kenyaemr_hiv_testing_client_trace
+order by client_id) a
+where num=1) trace1 on  pns.id=trace1.client_id
+left join (select * from
+(SELECT @row_number:=CASE
+        WHEN @client_id = client_id THEN @row_number + 1
+        ELSE 1
+    END AS num,
+@client_id:=client_id as client_id,contact_type, status, encounter_date, remarks FROM openmrs.kenyaemr_hiv_testing_client_trace
+order by client_id) a
+where num=2) trace2 on  pns.id=trace2.client_id
+left join (select * from
+(SELECT @row_number:=CASE
+        WHEN @client_id = client_id THEN @row_number + 1
+        ELSE 1
+    END AS num,
+@client_id:=client_id as client_id,contact_type, status, encounter_date, remarks FROM openmrs.kenyaemr_hiv_testing_client_trace
+order by client_id) a
+where num=3) trace3 on  pns.id=trace3.client_id
+left join (select concept_id, name from openmrs.concept_name where locale='en' and locale_preferred=1) rel on pns.relationship_type=rel.concept_id
+left join (select concept_id, name from openmrs.concept_name where locale='en' and locale_preferred=1) live on pns.living_with_patient=live.concept_id
+left join (select concept_id, name from openmrs.concept_name where locale='en' and locale_preferred=1) app on pns.pns_approach=app.concept_id
+left join kenyaemr_etl.etl_hts_test contact_test on pns.patient_id=contact_test.patient_id
+left join kenyaemr_etl.etl_hts_referral_and_linkage contact_link on pns.patient_id=contact_link.patient_id"|DWHStage|1|HTSClientPartnerExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+cebfba5f-89e6-4fba-867b-fe817a5d5acc|HTS Linkage Extracts|HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT distinct p.HTSID as HTS_Number, [Phone Tracing],[Physical Tracing],tracingOutcome,CCCNumber,l.FacilityName,ReferalDate, dateEnrolled
+  FROM dbo.IQC_HIVTesting_Services_Referral_Linkage_Register l, tmp_PatientMaster p
+  where p.PatientPK=l.ptn_pk"|DWHStage|1|HTSClientLinkageExtract|3|a6221983-0e85-11e8-ba89-0ed5f89f718b
+911c69b6-14d0-4e37-804e-8c7d5a939694|HTS Linkage Extracts|HTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select DISTINCT ref.patient_id as HTSNumber, null as 'PhoneTracing', null as 'PhysicalTracing', tracing_status as 'tracingOutcome',ccc_number,facility_linked_to as FacilityName,
+ref.visit_date as ReferalDate, enrollment_date as dateEnrolled
+from  kenyaemr_etl.etl_hts_referral_and_linkage ref
+inner join kenyaemr_etl.etl_patient_demographics p on ref.patient_id=p.patient_id
+left outer join openmrs.obs o on o.encounter_id = ref.encounter_id and o.concept_id in (1542) and o.voided=0
+group by REF.encounter_id;"|DWHStage|1|HTSClientLinkageExtract|3|a6221aa4-0e85-11e8-ba89-0ed5f89f718b

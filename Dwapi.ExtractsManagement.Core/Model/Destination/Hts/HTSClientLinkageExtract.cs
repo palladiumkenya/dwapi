@@ -6,12 +6,12 @@ using System.Text;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
-    public class TempHTSClientLinkage : HTSExtract
+    public class HTSClientLinkageExtract : HTSExtract
     {
         public DateTime? PhoneTracing { get; set; }
         public DateTime? PhysicalTracing { get; set; }
-        public string tracingOutcome { get; set; }
-        public string CCCNumber { get; set; }
+        public string TracingOutcome { get; set; }
+        public string CccNumber { get; set; }
         public DateTime ReferralDate { get; set; }
         public DateTime dateEnrolled { get; set; }
         public string PNSConsent { get; set; }
