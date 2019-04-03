@@ -1,10 +1,6 @@
-﻿using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
-using Dwapi.SharedKernel.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
+namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
 {
     public class HTSClientPartnerExtract : HTSExtract
     {
