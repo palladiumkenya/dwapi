@@ -5,7 +5,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
     public class HTSClientPartnerExtract : HTSExtract
     {
 
-        public string RelationsipToIndexClient { get; set; }
+        public string RelationshipToIndexClient { get; set; }
         public string ScreenedForIPV { get; set; }
         public string IpvScreeningOutcome { get; set; }
         public string CurrentlyLivingWithIndexClient { get; set; }
