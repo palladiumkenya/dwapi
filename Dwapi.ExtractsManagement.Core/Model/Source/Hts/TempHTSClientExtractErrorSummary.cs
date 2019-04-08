@@ -28,51 +28,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public string FinalResultsGiven { get; set; }
         public string TBScreeningHTS { get; set; }
         public string ClientSelfTested { get; set; }
-
-        /*public override void AddHeader(Row row)
-        {
-            base.AddHeader(row);
-            row.Append(
-                ConstructCell("PatientSource ", CellValues.String),
-                ConstructCell("RegistrationDate ", CellValues.String),
-                ConstructCell("AgeLastVisit ", CellValues.String),
-                ConstructCell("PreviousARTStartDate ", CellValues.String),
-                ConstructCell("PreviousARTRegimen ", CellValues.String),
-                ConstructCell("StartARTAtThisFacility ", CellValues.String),
-                ConstructCell("StartARTDate ", CellValues.String),
-                ConstructCell("StartRegimen ", CellValues.String),
-                ConstructCell("StartRegimenLine ", CellValues.String),
-                ConstructCell("LastARTDate ", CellValues.String),
-                ConstructCell("LastRegimen ", CellValues.String),
-                ConstructCell("LastRegimenLine ", CellValues.String),
-                ConstructCell("LastVisit ", CellValues.String),
-                ConstructCell("ExitReason ", CellValues.String),
-                ConstructCell("ExitDate ", CellValues.String)
-
-            );
-        }
-
-        public override void AddRow(Row row)
-        {
-            base.AddRow(row);
-            row.Append(
-                ConstructCell(PatientSource, CellValues.String),
-                ConstructCell(GetNullDateValue(RegistrationDate), CellValues.Date),
-                ConstructCell(GetNullDecimalValue(AgeLastVisit), CellValues.Number),
-                ConstructCell(GetNullDateValue(PreviousARTStartDate), CellValues.Date),
-                ConstructCell(PreviousARTRegimen, CellValues.String),
-                ConstructCell(GetNullDateValue(StartARTAtThisFacility), CellValues.Date),
-                ConstructCell(GetNullDateValue(StartARTDate), CellValues.Date),
-                ConstructCell(StartRegimen, CellValues.String),
-                ConstructCell(StartRegimenLine, CellValues.String),
-                ConstructCell(GetNullDateValue(LastARTDate), CellValues.Date),
-                ConstructCell(LastRegimen, CellValues.String),
-                ConstructCell(LastRegimenLine, CellValues.String),
-                ConstructCell(GetNullDateValue(LastVisit), CellValues.Date),
-                ConstructCell(ExitReason, CellValues.String),
-                ConstructCell(GetNullDateValue(ExitDate), CellValues.Date)
-
-            );
-        }*/
     }
 }
