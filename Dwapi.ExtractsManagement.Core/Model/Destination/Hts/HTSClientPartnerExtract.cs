@@ -5,6 +5,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
     public class HTSClientPartnerExtract : HTSExtract
     {
 
+        public int PartnerID { get; set; }
+        public int Age { get; set; }
+        public string Sex { get; set; }
         public string RelationshipToIndexClient { get; set; }
         public string ScreenedForIPV { get; set; }
         public string IpvScreeningOutcome { get; set; }
@@ -22,7 +25,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
         public DateTime? Trace3Date { get; set; }
         public string PNSConsent { get; set; }
         public string Linked { get; set; }
-        public DateTime? LinkDateLinkedToCareed { get; set; }
+        public DateTime? LinkDateLinkedToCare { get; set; }
         public string CCCNumber { get; set; }
     }
 }

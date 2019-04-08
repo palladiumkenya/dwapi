@@ -25,5 +25,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
         public string FinalResultsGiven { get; set; }
         public string TBScreeningHTS { get; set; }
         public string ClientSelfTested { get; set; }
- }
+        public string CoupleDiscordant { get; set; }
+        public string TestType { get; set; }
+    }
 }
