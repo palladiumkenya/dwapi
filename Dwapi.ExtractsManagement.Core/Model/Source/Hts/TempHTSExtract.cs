@@ -1,23 +1,24 @@
-﻿using Dwapi.SharedKernel.Model;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Dwapi.SharedKernel.Model;
 
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
+namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
     public abstract class TempHTSExtract : Entity<Guid>
     {
+        public virtual int? SiteCode { get; set; }
+        public virtual int? PatientPk { get; set; }
         public virtual string HtsNumber { get; set; }
-        public virtual string PatientID { get; set; }
-         public virtual int? SiteCode { get; set; }
-        public virtual DateTime DateExtracted { get; set; } = DateTime.Now;
         public virtual string Emr { get; set; }
         public virtual string Project { get; set; }
         public virtual bool CheckError { get; set; }
+        public virtual DateTime DateExtracted { get; set; } = DateTime.Now;
         [NotMapped]
-        public bool HasError { get; set; }
+        public virtual bool HasError { get; set; }
+
         public override string ToString()
         {
-            return $"{SiteCode}-{PatientID}";
+            return $"{SiteCode}-{HtsNumber}";
         }
     }
 }

@@ -1,10 +1,6 @@
-﻿using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
-using Dwapi.SharedKernel.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
+namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
 {
     public class HTSClientLinkageExtract : HTSExtract
     {
@@ -13,8 +9,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public string TracingOutcome { get; set; }
         public string CccNumber { get; set; }
         public DateTime ReferralDate { get; set; }
-        public DateTime dateEnrolled { get; set; }
+        public DateTime DateEnrolled { get; set; }
         public string PNSConsent { get; set; }
-    
     }
 }

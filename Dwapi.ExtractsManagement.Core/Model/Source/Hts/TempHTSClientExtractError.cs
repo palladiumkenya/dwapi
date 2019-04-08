@@ -1,9 +1,12 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
-    public class TempHTSClientExtract : TempHTSExtract
+    [Table("vTempHTSClientExtractError")]
+    public class TempHTSClientExtractError : TempHTSExtract
     {
         public DateTime? VisitDate { get; set; }
         public DateTime? Dob { get; set; }
@@ -26,5 +29,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public string FinalResultsGiven { get; set; }
         public string TBScreeningHTS { get; set; }
         public string ClientSelfTested { get; set; }
+        [NotMapped]
+        public virtual ICollection<TempPatientArtExtractErrorSummary> TempPatientArtExtractErrorSummaries { get; set; } = new List<TempPatientArtExtractErrorSummary>();
     }
 }

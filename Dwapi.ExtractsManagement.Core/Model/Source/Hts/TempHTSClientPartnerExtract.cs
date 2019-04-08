@@ -6,10 +6,9 @@ using System.Text;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
-    public class TempHTSClientPartnerExtract : HTSExtract
+    public class TempHTSClientPartnerExtract : TempHTSExtract
     {
-
-        public string RelationsipToIndexClient { get; set; }
+        public string RelationshipToIndexClient { get; set; }
         public string ScreenedForIpv { get; set; }
         public string IpvScreeningOutcome { get; set; }
         public string CurrentlyLivingWithIndexClient { get; set; }
