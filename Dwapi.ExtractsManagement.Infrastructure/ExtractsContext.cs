@@ -74,6 +74,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<HTSClientPartnerExtract> HtsClientPartnerExtracts { get; set; }
         public DbSet<HTSClientLinkageExtract> HtsClientLinkageExtracts { get; set; }
 
+//        public DbSet<TempHTSClientExtractError> TempHtsClientExtractErrors { get; set; }
+//        public DbSet<TempHTSClientPartnerExtractError> TempHtsClientPartnerExtractErrors { get; set; }
+//        public DbSet<TempHTSClientLinkageExtractError> TempHtsClientLinkageExtractErrors { get; set; }
+//
+//        public DbSet<TempHTSClientExtractErrorSummary> TempHtsClientExtractErrorSummaries { get; set; }
+//        public DbSet<TempHTSClientPartnerExtractErrorSummary> TempHtsClientPartnerExtractErrorSummaries { get; set; }
+//        public DbSet<TempHTSClientLinkageExtractErrorSummary> TempHtsClientLinkageExtractErrorSummaries { get; set; }
+
+
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
 
