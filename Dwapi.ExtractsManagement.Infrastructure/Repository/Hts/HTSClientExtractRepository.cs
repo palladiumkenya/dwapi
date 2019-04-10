@@ -31,7 +31,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
                         return true;
                     }
                 }
-
                 if (Context.Database.ProviderName.ToLower().Contains("MySql".ToLower()))
                 {
                     using (var connection = new MySqlConnection(cn))
@@ -41,7 +40,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
                     }
                 }
                 return false;
-
             }
             catch (Exception e)
             {
