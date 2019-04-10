@@ -11,6 +11,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
         public string EnrolledFacilityName { get; set; }
         public DateTime ReferralDate { get; set; }
         public DateTime DateEnrolled { get; set; }
-        public string PNSConsent { get; set; }
     }
 }
