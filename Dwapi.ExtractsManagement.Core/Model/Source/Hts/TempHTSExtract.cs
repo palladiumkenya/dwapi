@@ -6,6 +6,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
     public abstract class TempHTSExtract : Entity<Guid>
     {
+        public string FacilityName { get; set; }
         public virtual int? SiteCode { get; set; }
         public virtual int? PatientPk { get; set; }
         public virtual string HtsNumber { get; set; }

@@ -30,5 +30,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public string CccNumber { get; set; }
         public int? Age { get; set; }
         public string Sex { get; set; }
+        public virtual int? PartnerSiteCode { get; set; }
+        public virtual int? PartnerPatientPk { get; set; }
     }
 }

@@ -8,16 +8,18 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
 {
     public abstract class HTSExtract : Entity<Guid>
     {
+        public string FacilityName { get; set; }
         public virtual int? SiteCode { get; set; }
-        public virtual int PatientPK { get; set; }
+        public virtual int PatientPk { get; set; }
         public virtual string HtsNumber { get; set; }
+        public virtual string Emr { get; set; }
+        public virtual string Project { get; set; }
         public virtual bool? Processed { get; set; }
         public virtual string QueueId { get; set; }
         public virtual string Status { get; set; }
         public virtual DateTime? StatusDate { get; set; }
         public virtual DateTime? DateExtracted { get; set; }
-        public virtual string Emr { get; set; }
-        public virtual string Project { get; set; }
+
 
         [NotMapped]
         public bool IsSent => !string.IsNullOrWhiteSpace(Status) && Status.IsSameAs(nameof(SendStatus.Sent));
