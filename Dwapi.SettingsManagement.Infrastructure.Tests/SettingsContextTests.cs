@@ -13,27 +13,11 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
     public class SettingsContextTests
     {
 
-        private IServiceProvider _serviceProvider;
-        private IServiceProvider _serviceProviderMysql;
-        private const string MysqlConnection = "server=127.0.0.1;port=3307;database=dwapidevb;user=root;password=test";
-
-        [OneTimeSetUp]
-        public void Init()
-        {
-            _serviceProvider = TestInitializer.ServiceProvider;
-            _serviceProviderMysql = TestInitializer.ServiceProviderMysql;
-
-            //mysql 5.5
-            _serviceProviderMysql = new ServiceCollection()
-                .AddDbContext<SettingsContext>(x => x.UseMySql(MysqlConnection))
-                .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
-                .BuildServiceProvider();
-        }
-
         [Test]
         public void should_Setup_Mssql_Database()
         {
-            var ctx = _serviceProvider.GetService<SettingsContext>();
+            var ctx = TestInitializer.ServiceProvider.GetService<SettingsContext>();
+            Console.WriteLine(ctx.Database.GetDbConnection().ConnectionString);
             ctx.Database.EnsureDeleted();
             ctx.Database.Migrate();
             ctx.EnsureSeeded();
@@ -49,7 +33,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         [Test]
         public void should_Setup_MySql_Database()
         {
-           var ctx = _serviceProviderMysql.GetService<SettingsContext>();
+           var ctx =TestInitializer.ServiceProviderMysql.GetService<SettingsContext>();
             Console.WriteLine(ctx.Database.GetDbConnection().ConnectionString);
             ctx.Database.EnsureDeleted();
             ctx.Database.Migrate();
