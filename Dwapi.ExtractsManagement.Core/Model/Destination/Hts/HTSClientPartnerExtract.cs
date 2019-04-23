@@ -4,10 +4,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
 {
     public class HTSClientPartnerExtract : HTSExtract
     {
-
-        public int PartnerId { get; set; }
-        public int Age { get; set; }
-        public string Sex { get; set; }
+        public int? PartnerPatientPk { get; set; }
+        public int? PartnerPersonId { get; set; }
         public string RelationshipToIndexClient { get; set; }
         public string ScreenedForIpv { get; set; }
         public string IpvScreeningOutcome { get; set; }
@@ -27,7 +25,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
         public string Linked { get; set; }
         public DateTime? LinkDateLinkedToCare { get; set; }
         public string CccNumber { get; set; }
-        public int? PartnerSiteCode { get; set; }
-        public int? PartnerPatientPk { get; set; }
+        public int Age { get; set; }
+        public string Sex { get; set; }
     }
 }

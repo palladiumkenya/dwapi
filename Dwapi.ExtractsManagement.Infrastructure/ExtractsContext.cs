@@ -136,6 +136,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
+            modelBuilder.Entity<HTSClientExtract>()
+                .HasKey(f => new {f.SiteCode, f.PatientPk,f.EncounterId});
+
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
             DapperPlusManager.Entity<TempPatientArtExtract>().Key(x => x.Id).Table($"{nameof(TempPatientArtExtracts)}");
             DapperPlusManager.Entity<TempPatientBaselinesExtract>().Key(x => x.Id)
@@ -167,6 +170,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .Table($"{nameof(TempMasterPatientIndices)}");
             DapperPlusManager.Entity<EmrMetric>().Key(x => x.Id).Table($"{nameof(EmrMetric)}");
 
+            DapperPlusManager.Entity<HTSClientExtract>().Key(x => x.Id).Table($"{nameof(HtsClientExtracts)}");
+            DapperPlusManager.Entity<HTSClientLinkageExtract>().Key(x => x.Id).Table($"{nameof(HtsClientLinkageExtracts)}");
+            DapperPlusManager.Entity<HTSClientPartnerExtract>().Key(x => x.Id).Table($"{nameof(HtsClientPartnerExtracts)}");
+
+            DapperPlusManager.Entity<TempHTSClientExtract>().Key(x => x.Id).Table($"{nameof(TempHtsClientExtracts)}");
+            DapperPlusManager.Entity<TempHTSClientLinkageExtract>().Key(x => x.Id).Table($"{nameof(TempHtsClientLinkageExtracts)}");
+            DapperPlusManager.Entity<TempHTSClientPartnerExtract>().Key(x => x.Id).Table($"{nameof(TempHtsClientPartnerExtracts)}");
         }
 
         public override void EnsureSeeded()

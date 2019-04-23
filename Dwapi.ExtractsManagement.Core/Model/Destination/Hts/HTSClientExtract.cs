@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
 {
     public class HTSClientExtract : HTSExtract
     {
+        public int EncounterId { get; set; }
         public DateTime? VisitDate { get; set; }
         public DateTime? Dob { get; set; }
         public string Gender { get; set; }

@@ -8,8 +8,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts
 {
     public abstract class HTSExtract : Entity<Guid>
     {
-        public string FacilityName { get; set; }
-        public virtual int? SiteCode { get; set; }
+        public virtual string FacilityName { get; set; }
+        public virtual int SiteCode { get; set; }
         public virtual int PatientPk { get; set; }
         public virtual string HtsNumber { get; set; }
         public virtual string Emr { get; set; }

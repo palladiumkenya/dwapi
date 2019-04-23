@@ -1,10 +1,10 @@
 ﻿using System;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
     public class TempHTSClientExtract : TempHTSExtract
     {
+        public int? EncounterId { get; set; }
         public DateTime? VisitDate { get; set; }
         public DateTime? Dob { get; set; }
         public string Gender { get; set; }
