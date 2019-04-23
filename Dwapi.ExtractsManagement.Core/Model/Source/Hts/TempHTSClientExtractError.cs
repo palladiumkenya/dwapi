@@ -10,6 +10,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
     {
 
         [NotMapped]
-        public virtual ICollection<TempPatientArtExtractErrorSummary> TempPatientArtExtractErrorSummaries { get; set; } = new List<TempPatientArtExtractErrorSummary>();
+        public virtual ICollection<TempHTSClientExtractErrorSummary> TempHtsClientExtractErrorSummaries { get; set; } =new List<TempHTSClientExtractErrorSummary>();
     }
 }

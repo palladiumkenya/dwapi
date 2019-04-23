@@ -7,6 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
     [Table("vTempHTSClientExtractErrorSummary")]
     public class TempHTSClientExtractErrorSummary: TempHTSExtractErrorSummary
     {
+        public int? EncounterId { get; set; }
         public DateTime? VisitDate { get; set; }
         public DateTime? Dob { get; set; }
         public string Gender { get; set; }
@@ -28,5 +29,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public string FinalResultsGiven { get; set; }
         public string TBScreeningHTS { get; set; }
         public string ClientSelfTested { get; set; }
+        public string CoupleDiscordant { get; set; }
+        public string TestType { get; set; }
     }
 }
