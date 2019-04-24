@@ -18,7 +18,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         {
             var ctx = TestInitializer.ServiceProvider.GetService<SettingsContext>();
             Console.WriteLine(ctx.Database.GetDbConnection().ConnectionString);
-            ctx.Database.EnsureDeleted();
+            //ctx.Database.EnsureDeleted();
             ctx.Database.Migrate();
             ctx.EnsureSeeded();
 
@@ -35,7 +35,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         {
            var ctx =TestInitializer.ServiceProviderMysql.GetService<SettingsContext>();
             Console.WriteLine(ctx.Database.GetDbConnection().ConnectionString);
-            ctx.Database.EnsureDeleted();
+            //ctx.Database.EnsureDeleted();
             ctx.Database.Migrate();
             ctx.EnsureSeeded();
 

@@ -11,51 +11,27 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
     [TestFixture]
     public class AppDatabaseManagerTests
     {
-        private IServiceProvider _serviceProvider;
-        private IServiceProvider _serviceProviderMysql;
         private IAppDatabaseManager _dbManager;
-
-        private const string MssqlConnection ="Data Source=.\\koske14;Initial Catalog=dwapidev;Persist Security Info=True;User ID=sa;Password=maun;MultipleActiveResultSets=True";
-        private const string MysqlConnection = "server=127.0.0.1;port=3306;database=dwapidev;user=root;password=test";
-
-        [OneTimeSetUp]
-        public void Init()
-        {
-            _serviceProvider = new ServiceCollection()
-                .AddDbContext<SettingsContext>(x=>x.UseSqlServer(MssqlConnection))
-                .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
-                .BuildServiceProvider();
-
-            _serviceProviderMysql = new ServiceCollection()
-                .AddDbContext<SettingsContext>(x => x.UseMySql(MysqlConnection))
-                .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
-                .BuildServiceProvider();
-            var ctx = _serviceProvider.GetService<SettingsContext>();
-            ctx.Database.Migrate();
-            var ctxMysql = _serviceProviderMysql.GetService<SettingsContext>();
-            ctxMysql.Database.Migrate();
-        }
-
         [SetUp]
         public void SetUp()
         {
-            _dbManager = _serviceProvider.GetService<IAppDatabaseManager>();
+            _dbManager =TestInitializer.ServiceProvider.GetService<IAppDatabaseManager>();
         }
 
-        [TestCase(MssqlConnection,DatabaseProvider.MsSql)]
-        [TestCase(MysqlConnection, DatabaseProvider.MySql)]
-        public void should_ReadConnection_To_DbProtocol(string connection,DatabaseProvider provider)
+        [TestCase(DatabaseProvider.MsSql)]
+        [TestCase(DatabaseProvider.MySql)]
+        public void should_ReadConnection_To_DbProtocol(DatabaseProvider provider)
         {
-            var dbprotocol = _dbManager.ReadConnection(connection, provider);
+            var dbprotocol = _dbManager.ReadConnection(GetConnection(provider), provider);
             Assert.NotNull(dbprotocol);
             Console.WriteLine(dbprotocol);
         }
 
-        [TestCase(MssqlConnection, DatabaseProvider.MsSql)]
-        [TestCase(MysqlConnection, DatabaseProvider.MySql)]
-        public void should_BuildConnection_From_DbProtocol(string connection, DatabaseProvider provider)
+        [TestCase(DatabaseProvider.MsSql)]
+        [TestCase(DatabaseProvider.MySql)]
+        public void should_BuildConnection_From_DbProtocol(DatabaseProvider provider)
         {
-            var dbprotocol = _dbManager.ReadConnection(connection, provider);
+            var dbprotocol = _dbManager.ReadConnection(GetConnection(provider), provider);
             Assert.NotNull(dbprotocol);
 
             var cn = _dbManager.BuildConncetion(dbprotocol);
@@ -64,20 +40,20 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
             Console.WriteLine($"    {cn}");
         }
 
-        [TestCase(MssqlConnection, DatabaseProvider.MsSql)]
-        [TestCase(MysqlConnection, DatabaseProvider.MySql)]
-        public void should_verify_Connection_From_ConnectionString(string connection, DatabaseProvider provider)
+        [TestCase(DatabaseProvider.MsSql)]
+        [TestCase(DatabaseProvider.MySql)]
+        public void should_verify_Connection_From_ConnectionString(DatabaseProvider provider)
         {
-          var cn = _dbManager.Verfiy(connection,provider);
+          var cn = _dbManager.Verfiy(GetConnection(provider),provider);
             Assert.True(cn);
-            Console.WriteLine($" Connected [{provider}] >>> {connection} <<<");
+            Console.WriteLine($" Connected [{provider}] >>> {GetConnection(provider)} <<<");
         }
 
-        [TestCase(MssqlConnection, DatabaseProvider.MsSql)]
-        [TestCase(MysqlConnection, DatabaseProvider.MySql)]
-        public void should_verify_Server_Connection_From_DbProtocol(string connection, DatabaseProvider provider)
+        [TestCase(DatabaseProvider.MsSql)]
+        [TestCase(DatabaseProvider.MySql)]
+        public void should_verify_Server_Connection_From_DbProtocol(DatabaseProvider provider)
         {
-            var dbprotocol = _dbManager.ReadConnection(connection, provider);
+            var dbprotocol = _dbManager.ReadConnection(GetConnection(provider), provider);
             Assert.NotNull(dbprotocol);
 
             var cn = _dbManager.VerfiyServer(dbprotocol);
@@ -85,11 +61,11 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
             Console.WriteLine($" Connected [{dbprotocol}]");
         }
 
-        [TestCase(MssqlConnection, DatabaseProvider.MsSql)]
-        [TestCase(MysqlConnection, DatabaseProvider.MySql)]
-        public void should_verify_Server_Database_Connection_From_DbProtocol(string connection, DatabaseProvider provider)
+        [TestCase(DatabaseProvider.MsSql)]
+        [TestCase(DatabaseProvider.MySql)]
+        public void should_verify_Server_Database_Connection_From_DbProtocol(DatabaseProvider provider)
         {
-            var dbprotocol = _dbManager.ReadConnection(connection, provider);
+            var dbprotocol = _dbManager.ReadConnection(GetConnection(provider), provider);
             Assert.NotNull(dbprotocol);
 
             var cn = _dbManager.Verfiy(dbprotocol);
@@ -97,20 +73,20 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
             Console.WriteLine($" Connected [{dbprotocol}]");
         }
 
-        [TestCase(MssqlConnection, DatabaseProvider.MsSql)]
-        [TestCase(MysqlConnection, DatabaseProvider.MySql)]
-        public void should_Read_Data_Using_Connection_String(string connection, DatabaseProvider provider)
+        [TestCase(DatabaseProvider.MsSql)]
+        [TestCase(DatabaseProvider.MySql)]
+        public void should_Read_Data_Using_Connection_String(DatabaseProvider provider)
         {
-            var dbprotocol = _dbManager.ReadConnection(connection, provider);
+            var dbprotocol = _dbManager.ReadConnection(GetConnection(provider), provider);
             Assert.NotNull(dbprotocol);
 
             var cn = _dbManager.BuildConncetion(dbprotocol);
             var optionsBuilder = new DbContextOptionsBuilder<SettingsContext>();
-            if(provider == DatabaseProvider.MsSql)
-            optionsBuilder.UseSqlServer(connection);
-            if(provider == DatabaseProvider.MySql)
-                optionsBuilder.UseMySql(connection);
-            
+            if (provider == DatabaseProvider.MsSql)
+                optionsBuilder.UseSqlServer(cn);
+            if (provider == DatabaseProvider.MySql)
+                optionsBuilder.UseMySql(cn);
+
             using (var context = new SettingsContext(optionsBuilder.Options))
             {
                 Console.WriteLine(context.Database.ProviderName);
@@ -127,9 +103,26 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
                         Console.WriteLine($" > {clinic}");
                     }
                 }
-                
+
             }
-            
+
+        }
+
+        private string GetConnection(DatabaseProvider provider)
+        {
+
+
+            if (provider == DatabaseProvider.MySql)
+            {
+                if(string.IsNullOrWhiteSpace(TestInitializer.MySqlConnectionString))
+                    TestInitializer.InitConnections();
+                return TestInitializer.MySqlConnectionString;
+            }
+
+            if(string.IsNullOrWhiteSpace(TestInitializer.MsSqlConnectionString))
+                TestInitializer.InitConnections();
+
+            return TestInitializer.MsSqlConnectionString;
         }
     }
 }

@@ -50,6 +50,20 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
                 .BuildServiceProvider();
         }
 
+        public static void InitConnections()
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            MsSqlConnectionString = config["ConnectionStrings:DwapiConnection"];
+
+            var mysqlConfig = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.mysql.json")
+                .Build();
+
+            MySqlConnectionString = mysqlConfig["ConnectionStrings:DwapiConnection"];
+        }
         public static void InitDbMsSql()
         {
             var  settingsContext=ServiceProvider.GetService<SettingsContext>();
