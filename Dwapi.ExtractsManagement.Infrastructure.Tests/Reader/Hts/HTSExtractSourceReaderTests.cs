@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.SettingsManagement.Infrastructure;
@@ -16,21 +17,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
     [Category("Dwh")]
     public class HTSExtractSourceReaderTests
     {
-        private SettingsContext _settingsContext;
-        private SettingsContext _settingsContextMysql;
-        private DbProtocol _iQtoolsDb, _kenyaEmrDb;
 
-        private IExtractSourceReader _reader;
+        private IHTSExtractSourceReader _reader;
 
         [OneTimeSetUp]
         public void Init()
         {
-            _settingsContext = TestInitializer.ServiceProvider.GetService<SettingsContext>();
-            _settingsContextMysql = TestInitializer.ServiceProviderMysql.GetService<SettingsContext>();
-
-            _iQtoolsDb = TestInitializer.IQtoolsDbProtocol;
-            _kenyaEmrDb = TestInitializer.KenyaEmrDbProtocol;
-
+            TestInitializer.InitDb();
+            TestInitializer.InitMysQLDb();
         }
 
         [TestCase(nameof(HTSClientExtract))]
@@ -41,8 +35,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
             var extract =
                 TestInitializer.Iqtools.Extracts.First(x =>
                     x.DocketId.IsSameAs("HTS") && x.Name.IsSameAs(extractName));
-            _reader = TestInitializer.ServiceProvider.GetService<IExtractSourceReader>();
-            var reader = _reader.ExecuteReader(_iQtoolsDb, extract).Result as SqlDataReader;
+            _reader = TestInitializer.ServiceProvider.GetService<IHTSExtractSourceReader>();
+            var reader = _reader.ExecuteReader(TestInitializer.IQtoolsDbProtocol, extract).Result as SqlDataReader;
             Assert.NotNull(reader);
             Assert.True(reader.HasRows);
             reader.Close();
@@ -56,8 +50,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
             var extract =
                 TestInitializer.KenyaEmr.Extracts.First(
                     x => x.DocketId.IsSameAs("HTS") && x.Name.IsSameAs(extractName));
-            _reader = TestInitializer.ServiceProviderMysql.GetService<IExtractSourceReader>();
-            var reader = _reader.ExecuteReader(_kenyaEmrDb, extract).Result as MySqlDataReader;
+            _reader = TestInitializer.ServiceProviderMysql.GetService<IHTSExtractSourceReader>();
+            var reader = _reader.ExecuteReader(TestInitializer.KenyaEmrDbProtocol, extract).Result as MySqlDataReader;
             Assert.NotNull(reader);
             Assert.True(reader.HasRows);
             reader.Close();

@@ -5,6 +5,7 @@ using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
@@ -12,6 +13,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Hts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
@@ -51,7 +53,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                 .Build();
 
 
-            var serviceProvider = new ServiceCollection()
+            ServiceProvider = new ServiceCollection()
                 .AddDbContext<ExtractsContext>(x => x.UseSqlServer(config["ConnectionStrings:DwapiConnection"]))
                 .AddDbContext<SettingsContext>(x => x.UseSqlServer(config["ConnectionStrings:DwapiConnection"]))
                 .AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>()
@@ -62,10 +64,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                 .AddTransient<IClearDwhExtracts, ClearDwhExtracts>()
                 .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
                 .AddTransient<IExtractSourceReader, ExtractSourceReader>()
+                .AddTransient<IHTSExtractSourceReader, HTSExtractSourceReader>()
                 .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
                 .BuildServiceProvider();
 
-            var serviceProviderMysql = new ServiceCollection()
+            ServiceProviderMysql = new ServiceCollection()
                 .AddDbContext<ExtractsContext>(x => x.UseMySql(mysqlConfig["ConnectionStrings:DwapiConnection"]))
                 .AddDbContext<SettingsContext>(x => x.UseMySql(mysqlConfig["ConnectionStrings:DwapiConnection"]))
                 .AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>()
@@ -76,12 +79,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                 .AddTransient<IClearDwhExtracts, ClearDwhExtracts>()
                 .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
                 .AddTransient<IExtractSourceReader, ExtractSourceReader>()
+                .AddTransient<IHTSExtractSourceReader, HTSExtractSourceReader>()
                 .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
                 .BuildServiceProvider();
-
-            ServiceProvider = serviceProvider;
-            ServiceProviderMysql = serviceProviderMysql;
-
         }
 
         public static void InitDb()
@@ -89,7 +89,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             var settingsContext = ServiceProvider.GetService<SettingsContext>();
             var extractsContext = ServiceProvider.GetService<ExtractsContext>();
 
-             settingsContext.Database.Migrate();
+            settingsContext.Database.Migrate();
             settingsContext.EnsureSeeded();
 
 
@@ -110,32 +110,36 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             Validator = extractsContext.Validator.First();
 
 
-            var dbmanager= ServiceProvider.GetService<IAppDatabaseManager>();
+            var dbmanager = ServiceProvider.GetService<IAppDatabaseManager>();
 
-            IqToolsDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,DatabaseProvider.MsSql);
-            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString, DatabaseProvider.MySql);
+            IqToolsDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,
+                DatabaseProvider.MsSql);
+            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,
+                DatabaseProvider.MsSql);
 
-            IQtoolsDbProtocol = Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
+            IQtoolsDbProtocol =
+                Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
             IQtoolsDbProtocol.Host = IqToolsDatabase.Server;
             IQtoolsDbProtocol.Username = IqToolsDatabase.User;
             IQtoolsDbProtocol.Password = IqToolsDatabase.Password;
-            //_iQtoolsDb.Password = TestInitializer.IqToolsDatabase.Database;
+
 
             KenyaEmrDbProtocol = KenyaEmr.DatabaseProtocols.First();
             KenyaEmrDbProtocol.Host = KenyaEmrDatabase.Server;
             KenyaEmrDbProtocol.Username = KenyaEmrDatabase.User;
             KenyaEmrDbProtocol.Password = KenyaEmrDatabase.Password;
-            KenyaEmrDbProtocol.DatabaseName = KenyaEmrDatabase.Database;
+            ;
         }
-         public static void InitMysQLDb()
+
+        public static void InitMysQLDb()
         {
             var settingsContextMysql = ServiceProviderMysql.GetService<SettingsContext>();
             var extractsContextMysql = ServiceProviderMysql.GetService<ExtractsContext>();
 
-            settingsContextMysql.Database.Migrate();
+            //settingsContextMysql.Database.Migrate();
             settingsContextMysql.EnsureSeeded();
 
-            extractsContextMysql.Database.Migrate();
+            //extractsContextMysql.Database.Migrate();
             extractsContextMysql.EnsureSeeded();
 
             Iqtools = settingsContextMysql.EmrSystems
@@ -153,20 +157,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
             var dbmanager= ServiceProvider.GetService<IAppDatabaseManager>();
 
-            IqToolsDatabase = dbmanager.ReadConnection(settingsContextMysql.Database.GetDbConnection().ConnectionString,DatabaseProvider.MsSql);
+            IqToolsDatabase = dbmanager.ReadConnection(settingsContextMysql.Database.GetDbConnection().ConnectionString,DatabaseProvider.MySql);
             KenyaEmrDatabase = dbmanager.ReadConnection(settingsContextMysql.Database.GetDbConnection().ConnectionString, DatabaseProvider.MySql);
 
             IQtoolsDbProtocol = Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
             IQtoolsDbProtocol.Host = IqToolsDatabase.Server;
             IQtoolsDbProtocol.Username = IqToolsDatabase.User;
             IQtoolsDbProtocol.Password = IqToolsDatabase.Password;
-            //_iQtoolsDb.Password = TestInitializer.IqToolsDatabase.Database;
 
             KenyaEmrDbProtocol = KenyaEmr.DatabaseProtocols.First();
             KenyaEmrDbProtocol.Host = KenyaEmrDatabase.Server;
             KenyaEmrDbProtocol.Username = KenyaEmrDatabase.User;
             KenyaEmrDbProtocol.Password = KenyaEmrDatabase.Password;
-            KenyaEmrDbProtocol.DatabaseName = KenyaEmrDatabase.Database;
         }
     }
 }
