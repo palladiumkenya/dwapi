@@ -36,9 +36,7 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Hts
 
             foreach (var extractId in extractIds)
             {
-                DomainEvents.Dispatch(new CbsStatusNotification(extractId, ExtractStatus.Clearing));
-                DomainEvents.Dispatch(new CbsStatusNotification(extractId, ExtractStatus.Clearing));
-                DomainEvents.Dispatch(new CbsStatusNotification(extractId, ExtractStatus.Clearing));
+                DomainEvents.Dispatch(new HtsStatusNotification(extractId, ExtractStatus.Clearing));
             }
 
 
@@ -48,9 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Hts
 
             foreach (var extractId in extractIds)
             {
-                DomainEvents.Dispatch(new CbsStatusNotification(extractId, ExtractStatus.Cleared));
-                DomainEvents.Dispatch(new CbsStatusNotification(extractId, ExtractStatus.Cleared));
-                DomainEvents.Dispatch(new CbsStatusNotification(extractId, ExtractStatus.Cleared));
+                DomainEvents.Dispatch(new HtsStatusNotification(extractId, ExtractStatus.Cleared));
             }
         }
     }

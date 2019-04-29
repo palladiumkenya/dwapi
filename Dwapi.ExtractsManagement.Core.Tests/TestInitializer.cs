@@ -4,19 +4,23 @@ using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
+using Dwapi.ExtractsManagement.Core.Cleaner.Hts;
 using Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
@@ -29,9 +33,11 @@ using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Hts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SettingsManagement.Infrastructure;
 using MediatR;
@@ -55,7 +61,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
         public void Setup()
         {
             // return;
-            
+
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
@@ -89,11 +95,21 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientStatusExtractRepository, PatientStatusExtractRepository>()
                 .AddTransient<IPatientVisitExtractRepository, PatientVisitExtractRepository>()
 
+                .AddTransient<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>()
+                .AddTransient<ITempHTSClientLinkageExtractRepository, TempHTSClientLinkageExtractRepository>()
+                .AddTransient<ITempHTSClientPartnerExtractRepository, TempHTSClientPartnerExtractRepository>()
+
+                .AddTransient<IHTSClientExtractRepository, HTSClientExtractRepository>()
+                .AddTransient<IHTSClientLinkageExtractRepository, HTSClientLinkageExtractRepository>()
+                .AddTransient<IHTSClientPartnerExtractRepository, HTSClientPartnerExtractRepository>()
+
                 .AddTransient<ICleanCbsExtracts, CleanCbsExtracts>()
                 .AddTransient<IClearDwhExtracts, ClearDwhExtracts>()
+                .AddTransient<ICleanHtsExtracts, CleanHtsExtracts>()
 
                 .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
                 .AddTransient<IExtractSourceReader, ExtractSourceReader>()
+                .AddTransient<IHTSExtractSourceReader, HTSExtractSourceReader>()
 
                 .AddTransient<IPatientSourceExtractor, PatientSourceExtractor>()
                 .AddTransient<IPatientStatusSourceExtractor, PatientStatusSourceExtractor>()
@@ -114,10 +130,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientStatusLoader, PatientStatusLoader>()
                 .AddTransient<IPatientVisitLoader, PatientVisitLoader>()
 
-                
+
                 .AddTransient<IEmrMetricRepository, EmrMetricRepository>()
                 .AddTransient<IEmrMetricsService, EmrMetricsService>()
-                
+
                 .AddMediatR(typeof(ExtractMasterPatientIndexHandler))
                 .BuildServiceProvider();
 
@@ -147,11 +163,22 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientStatusExtractRepository, PatientStatusExtractRepository>()
                 .AddTransient<IPatientVisitExtractRepository, PatientVisitExtractRepository>()
 
+
+                .AddTransient<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>()
+                .AddTransient<ITempHTSClientLinkageExtractRepository, TempHTSClientLinkageExtractRepository>()
+                .AddTransient<ITempHTSClientPartnerExtractRepository, TempHTSClientPartnerExtractRepository>()
+
+                .AddTransient<IHTSClientExtractRepository, HTSClientExtractRepository>()
+                .AddTransient<IHTSClientLinkageExtractRepository, HTSClientLinkageExtractRepository>()
+                .AddTransient<IHTSClientPartnerExtractRepository, HTSClientPartnerExtractRepository>()
+
                 .AddTransient<ICleanCbsExtracts, CleanCbsExtracts>()
                 .AddTransient<IClearDwhExtracts, ClearDwhExtracts>()
+                .AddTransient<ICleanHtsExtracts, CleanHtsExtracts>()
 
                 .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
                 .AddTransient<IExtractSourceReader, ExtractSourceReader>()
+                .AddTransient<IHTSExtractSourceReader, HTSExtractSourceReader>()
 
                 .AddTransient<IPatientSourceExtractor, PatientSourceExtractor>()
                 .AddTransient<IPatientStatusSourceExtractor, PatientStatusSourceExtractor>()
@@ -172,8 +199,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientPharmacyLoader, PatientPharmacyLoader>()
                 .AddTransient<IPatientStatusLoader, PatientStatusLoader>()
                 .AddTransient<IPatientVisitLoader, PatientVisitLoader>()
-                
-                
+
+
                 .AddTransient<IEmrMetricRepository, EmrMetricRepository>()
                 .AddTransient<IEmrMetricsService, EmrMetricsService>()
 
@@ -218,7 +245,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             {
                 Console.WriteLine(e);
             }*/
-           
+
 
             Mapper.Initialize(cfg =>
                 {

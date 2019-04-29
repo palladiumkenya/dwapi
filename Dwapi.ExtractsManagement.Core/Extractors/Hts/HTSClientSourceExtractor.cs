@@ -64,7 +64,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 
                         try
                         {
-                            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(HTSClientExtract), "extracting...",totalCount,count,0,0,0)));
+                            DomainEvents.Dispatch(new  HtsNotification(new ExtractProgress(nameof(HTSClientExtract), "extracting...",totalCount,count,0,0,0)));
                         }
                         catch (Exception e)
                         {

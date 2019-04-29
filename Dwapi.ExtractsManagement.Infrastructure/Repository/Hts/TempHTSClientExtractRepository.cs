@@ -59,25 +59,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
 
             var truncates = new List<string>
             {
-                nameof(ExtractsContext.TempPatientExtracts),
-                nameof(ExtractsContext.TempPatientArtExtracts),
-                nameof(ExtractsContext.PatientArtExtracts),
-                nameof(ExtractsContext.TempPatientBaselinesExtracts),
-                nameof(ExtractsContext.PatientBaselinesExtracts),
-                nameof(ExtractsContext.TempPatientStatusExtracts),
-                nameof(ExtractsContext.PatientStatusExtracts),
-                nameof(ExtractsContext.TempPatientLaboratoryExtracts),
-                nameof(ExtractsContext.PatientLaboratoryExtracts),
-                nameof(ExtractsContext.TempPatientPharmacyExtracts),
-                nameof(ExtractsContext.PatientPharmacyExtracts),
-                nameof(ExtractsContext.TempPatientVisitExtracts),
-                nameof(ExtractsContext.PatientVisitExtracts),
-                nameof(ExtractsContext.TempPatientAdverseEventExtracts),
-                nameof(ExtractsContext.PatientAdverseEventExtracts),
-                nameof(ExtractsContext.ValidationError)
+                nameof(ExtractsContext.TempHtsClientLinkageExtracts),
+                nameof(ExtractsContext.TempHtsClientPartnerExtracts),
+                nameof(ExtractsContext.TempHtsClientExtracts),
+                nameof(ExtractsContext.HtsClientLinkageExtracts),
+                nameof(ExtractsContext.HtsClientPartnerExtracts),
+                nameof(ExtractsContext.HtsClientExtracts)
             };
 
-            var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };
+         //   var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };
 
             var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"TRUNCATE TABLE {x};"));
 
@@ -86,13 +76,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
                 await truncateCommand;
             }
 
-            var deleteCommands = deletes.Select(d => GetSqlCommand(cn, $"DELETE FROM {d};"));
+          /*  var deleteCommands = deletes.Select(d => GetSqlCommand(cn, $"DELETE FROM {d};"));
 
             foreach (var deleteCommand in deleteCommands)
             {
                 await deleteCommand;
             }
-
+            */
             CloseConnection(cn);
         }
 
