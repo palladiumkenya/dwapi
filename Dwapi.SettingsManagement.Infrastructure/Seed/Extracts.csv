@@ -1043,7 +1043,7 @@ inner join (select location_id,value_reference from openmrs.location_attribute w
 inner join openmrs.location lname on lname.location_id=e.encounter_location
 "|DWHStage|1|HTSClientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 fe1904c9-c7eb-4f5e-b45c-16ca046161bc|HTS Partner Extracts|HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"
-SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 'IQCare' as Emr, 'Kenya HMIS II' as Project,[HTS_Number] as HTSNumber, a.personid as PartnerPersonID, a.ptn_pk as PartnerPatientPk, age, pns.Gender as Sex,a.displayname as [RelationsipToIndexClient],[ScreenedForIPV],[IPVScreeningOutcome],[CurrentlyLivingWithIndexClient],[KnowledgeOfHIVStatus]
+SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 'IQCare' as Emr, 'Kenya HMIS II' as Project,[HTS_Number] as HTSNumber, a.personid as PartnerPersonID, a.ptn_pk as PartnerPatientPk, age, pns.Gender as Sex,a.displayname as [RelationshipToIndexClient],[ScreenedForIPV],[IPVScreeningOutcome],[CurrentlyLivingWithIndexClient],[KnowledgeOfHIVStatus]
       ,[PNSApproach],SUBSTRING( Trace1 , LEN(Trace1) -  CHARINDEX('    ',REVERSE(Trace1)) + 2  , LEN(Trace1)  ) as Trace1Outcome, substring(Trace1, 1 , CHARINDEX('    ', Trace1)-1)as Trace1Type,
 	  (CONVERT(date,ltrim(substring(Trace1,
                 charindex('    ',Trace1),case when (charindex('    ',
@@ -1077,7 +1077,7 @@ left join patient pat on pat.PersonId=pr.PersonId) as a
 
 12a52617-d227-4f1f-97a6-b7ceb0282a56|HTS Partner Extracts|HTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT distinct patient_related_to as 'PatientPK',l.value_reference as SiteCode, lname.name as FacilityName, 'KenyaEMR' as Emr, 'Kenya HMIS II' as Project,
 patient_related_to as 'HTSNumber',pns.id as 'PartnerPersonID', pns.patient_id as 'PartnerPatientPk' ,year(current_date()) - year(birth_date) as Age,
-sex,rel.name as RelationsipToIndexClient, case when isnull(ipv_outcome) then 'No' else 'Yes' end as 'ScreenedForIPV',ipv_outcome as IPVScreeningOutcome,
+sex,rel.name as RelationshipToIndexClient, case when isnull(ipv_outcome) then 'No' else 'Yes' end as 'ScreenedForIPV',ipv_outcome as IPVScreeningOutcome,
 live.name as CurrentlyLivingWithIndexClient, baseline_hiv_status as KnowledgeOfHIVStatus, app.name as PNSApproach,
 trace1.status as Trace1Outcome, trace1.contact_type as Trace1Type, trace1.encounter_date as Trace1Date,
 trace2.status as Trace2Outcome, trace2.contact_type as Trace2Type, trace2.encounter_date as Trace2Date,

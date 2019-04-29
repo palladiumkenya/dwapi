@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
@@ -20,11 +21,11 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 {
     public class HTSClientPartnerSourceExtractor : IHTSClientPartnerSourceExtractor
     {
-        private readonly IMasterPatientIndexReader _reader;
+        private readonly IHTSExtractSourceReader _reader;
         private readonly IMediator _mediator;
         private readonly ITempHTSClientPartnerExtractRepository _extractRepository;
 
-        public HTSClientPartnerSourceExtractor(IMasterPatientIndexReader reader, IMediator mediator, ITempHTSClientPartnerExtractRepository extractRepository)
+        public HTSClientPartnerSourceExtractor(IHTSExtractSourceReader reader, IMediator mediator, ITempHTSClientPartnerExtractRepository extractRepository)
         {
             _reader = reader;
             _mediator = mediator;
@@ -61,7 +62,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 
                         try
                         {
-                            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(HTSClientPartnerExtract), "extracting...",totalCount,count,0,0,0)));
+                            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientPartnerExtract), "extracting...",totalCount,count,0,0,0)));
                         }
                         catch (Exception e)
                         {
