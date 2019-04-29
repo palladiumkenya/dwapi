@@ -33,6 +33,11 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Hts
             var tempHtsClientExtracts = Builder<TempHTSClientExtract>.CreateListOfSize(2).Build().ToList();
             var htsClientExtracts = Builder<HTSClientExtract>.CreateListOfSize(2).Build().ToList();
 
+            tempHtsClientExtracts[0].EncounterId = (int?) DateTime.Now.Ticks;
+            tempHtsClientExtracts[1].EncounterId = (int?)DateTime.Now.Ticks;
+            htsClientExtracts[0].EncounterId = (int)DateTime.Now.Ticks;
+            htsClientExtracts[1].EncounterId = (int)DateTime.Now.Ticks;
+
             var tempHtsClientPartnerExtracts = Builder<TempHTSClientPartnerExtract>.CreateListOfSize(2).Build().ToList();
             var htsClientPartnerExtracts = Builder<HTSClientPartnerExtract>.CreateListOfSize(2).Build().ToList();
 
