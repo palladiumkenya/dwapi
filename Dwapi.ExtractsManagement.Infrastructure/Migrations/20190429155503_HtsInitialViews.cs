@@ -3,27 +3,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
-    public partial class HtsInitialCreate : Migration
+    public partial class HtsInitialViews : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "HtsClientExtracts",
+                name: "vTempHTSClientExtractError",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    FacilityName = table.Column<string>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: false),
-                    PatientPk = table.Column<int>(nullable: false),
-                    HtsNumber = table.Column<string>(nullable: true),
-                    Emr = table.Column<string>(nullable: true),
-                    Project = table.Column<string>(nullable: true),
-                    Processed = table.Column<bool>(nullable: true),
-                    QueueId = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: true),
-                    StatusDate = table.Column<DateTime>(nullable: true),
-                    DateExtracted = table.Column<DateTime>(nullable: true),
-                    EncounterId = table.Column<int>(nullable: false),
+                    EncounterId = table.Column<int>(nullable: true),
                     VisitDate = table.Column<DateTime>(nullable: true),
                     Dob = table.Column<DateTime>(nullable: true),
                     Gender = table.Column<string>(nullable: true),
@@ -46,93 +34,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     TBScreeningHTS = table.Column<string>(nullable: true),
                     ClientSelfTested = table.Column<string>(nullable: true),
                     CoupleDiscordant = table.Column<string>(nullable: true),
-                    TestType = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HtsClientExtracts", x => new { x.SiteCode, x.PatientPk, x.EncounterId });
-                    table.UniqueConstraint("AK_HtsClientExtracts_Id", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "HtsClientLinkageExtracts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    FacilityName = table.Column<string>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: false),
-                    PatientPk = table.Column<int>(nullable: false),
-                    HtsNumber = table.Column<string>(nullable: true),
-                    Emr = table.Column<string>(nullable: true),
-                    Project = table.Column<string>(nullable: true),
-                    Processed = table.Column<bool>(nullable: true),
-                    QueueId = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: true),
-                    StatusDate = table.Column<DateTime>(nullable: true),
-                    DateExtracted = table.Column<DateTime>(nullable: true),
-                    PhoneTracingDate = table.Column<DateTime>(nullable: true),
-                    PhysicalTracingDate = table.Column<DateTime>(nullable: true),
-                    TracingOutcome = table.Column<string>(nullable: true),
-                    CccNumber = table.Column<string>(nullable: true),
-                    EnrolledFacilityName = table.Column<string>(nullable: true),
-                    ReferralDate = table.Column<DateTime>(nullable: false),
-                    DateEnrolled = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HtsClientLinkageExtracts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "HtsClientPartnerExtracts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    FacilityName = table.Column<string>(nullable: true),
-                    SiteCode = table.Column<int>(nullable: false),
-                    PatientPk = table.Column<int>(nullable: false),
-                    HtsNumber = table.Column<string>(nullable: true),
-                    Emr = table.Column<string>(nullable: true),
-                    Project = table.Column<string>(nullable: true),
-                    Processed = table.Column<bool>(nullable: true),
-                    QueueId = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: true),
-                    StatusDate = table.Column<DateTime>(nullable: true),
-                    DateExtracted = table.Column<DateTime>(nullable: true),
-                    PartnerPatientPk = table.Column<int>(nullable: true),
-                    PartnerPersonId = table.Column<int>(nullable: true),
-                    RelationshipToIndexClient = table.Column<string>(nullable: true),
-                    ScreenedForIpv = table.Column<string>(nullable: true),
-                    IpvScreeningOutcome = table.Column<string>(nullable: true),
-                    CurrentlyLivingWithIndexClient = table.Column<string>(nullable: true),
-                    KnowledgeOfHivStatus = table.Column<string>(nullable: true),
-                    PnsApproach = table.Column<string>(nullable: true),
-                    Trace1Outcome = table.Column<string>(nullable: true),
-                    Trace1Type = table.Column<string>(nullable: true),
-                    Trace1Date = table.Column<DateTime>(nullable: true),
-                    Trace2Outcome = table.Column<string>(nullable: true),
-                    Trace2Type = table.Column<string>(nullable: true),
-                    Trace2Date = table.Column<DateTime>(nullable: true),
-                    Trace3Outcome = table.Column<string>(nullable: true),
-                    Trace3Type = table.Column<string>(nullable: true),
-                    Trace3Date = table.Column<DateTime>(nullable: true),
-                    PnsConsent = table.Column<string>(nullable: true),
-                    Linked = table.Column<string>(nullable: true),
-                    LinkDateLinkedToCare = table.Column<DateTime>(nullable: true),
-                    CccNumber = table.Column<string>(nullable: true),
-                    Age = table.Column<int>(nullable: false),
-                    Sex = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HtsClientPartnerExtracts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TempHtsClientExtracts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
+                    TestType = table.Column<string>(nullable: true),
+                    KeyPopulationType = table.Column<string>(nullable: true),
+                    PopulationType = table.Column<string>(nullable: true),
+                    PatientDisabled = table.Column<string>(nullable: true),
+                    DisabilityType = table.Column<string>(nullable: true),
+                    PatientConsented = table.Column<string>(nullable: true),
                     FacilityName = table.Column<string>(nullable: true),
                     SiteCode = table.Column<int>(nullable: true),
                     PatientPk = table.Column<int>(nullable: true),
@@ -141,6 +48,28 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     Project = table.Column<string>(nullable: true),
                     CheckError = table.Column<bool>(nullable: false),
                     DateExtracted = table.Column<DateTime>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_vTempHTSClientExtractError", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "vTempHTSClientExtractErrorSummary",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Extract = table.Column<string>(nullable: true),
+                    Field = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    Summary = table.Column<string>(nullable: true),
+                    DateGenerated = table.Column<DateTime>(nullable: true),
+                    SiteCode = table.Column<int>(nullable: true),
+                    PatientPK = table.Column<int>(nullable: true),
+                    HtsNumber = table.Column<string>(nullable: true),
+                    FacilityName = table.Column<string>(nullable: true),
+                    RecordId = table.Column<Guid>(nullable: false),
                     EncounterId = table.Column<int>(nullable: true),
                     VisitDate = table.Column<DateTime>(nullable: true),
                     Dob = table.Column<DateTime>(nullable: true),
@@ -168,14 +97,20 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TempHtsClientExtracts", x => x.Id);
+                    table.PrimaryKey("PK_vTempHTSClientExtractErrorSummary", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TempHtsClientLinkageExtracts",
+                name: "vTempHTSClientLinkageExtractError",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    PhoneTracingDate = table.Column<DateTime>(nullable: true),
+                    PhysicalTracingDate = table.Column<DateTime>(nullable: true),
+                    TracingOutcome = table.Column<string>(nullable: true),
+                    CccNumber = table.Column<string>(nullable: true),
+                    ReferralDate = table.Column<DateTime>(nullable: true),
+                    DateEnrolled = table.Column<DateTime>(nullable: true),
+                    EnrolledFacilityName = table.Column<string>(nullable: true),
                     FacilityName = table.Column<string>(nullable: true),
                     SiteCode = table.Column<int>(nullable: true),
                     PatientPk = table.Column<int>(nullable: true),
@@ -184,6 +119,28 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     Project = table.Column<string>(nullable: true),
                     CheckError = table.Column<bool>(nullable: false),
                     DateExtracted = table.Column<DateTime>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_vTempHTSClientLinkageExtractError", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "vTempHTSClientLinkageExtractErrorSummary",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Extract = table.Column<string>(nullable: true),
+                    Field = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    Summary = table.Column<string>(nullable: true),
+                    DateGenerated = table.Column<DateTime>(nullable: true),
+                    SiteCode = table.Column<int>(nullable: true),
+                    PatientPK = table.Column<int>(nullable: true),
+                    HtsNumber = table.Column<string>(nullable: true),
+                    FacilityName = table.Column<string>(nullable: true),
+                    RecordId = table.Column<Guid>(nullable: false),
                     PhoneTracingDate = table.Column<DateTime>(nullable: true),
                     PhysicalTracingDate = table.Column<DateTime>(nullable: true),
                     TracingOutcome = table.Column<string>(nullable: true),
@@ -194,14 +151,36 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TempHtsClientLinkageExtracts", x => x.Id);
+                    table.PrimaryKey("PK_vTempHTSClientLinkageExtractErrorSummary", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TempHtsClientPartnerExtracts",
+                name: "vTempHTSClientPartnerExtractError",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    PartnerPatientPk = table.Column<int>(nullable: true),
+                    PartnerPersonId = table.Column<int>(nullable: true),
+                    RelationshipToIndexClient = table.Column<string>(nullable: true),
+                    ScreenedForIpv = table.Column<string>(nullable: true),
+                    IpvScreeningOutcome = table.Column<string>(nullable: true),
+                    CurrentlyLivingWithIndexClient = table.Column<string>(nullable: true),
+                    KnowledgeOfHivStatus = table.Column<string>(nullable: true),
+                    PnsApproach = table.Column<string>(nullable: true),
+                    Trace1Outcome = table.Column<string>(nullable: true),
+                    Trace1Type = table.Column<string>(nullable: true),
+                    Trace1Date = table.Column<DateTime>(nullable: true),
+                    Trace2Outcome = table.Column<string>(nullable: true),
+                    Trace2Type = table.Column<string>(nullable: true),
+                    Trace2Date = table.Column<DateTime>(nullable: true),
+                    Trace3Outcome = table.Column<string>(nullable: true),
+                    Trace3Type = table.Column<string>(nullable: true),
+                    Trace3Date = table.Column<DateTime>(nullable: true),
+                    PnsConsent = table.Column<string>(nullable: true),
+                    Linked = table.Column<string>(nullable: true),
+                    LinkDateLinkedToCare = table.Column<DateTime>(nullable: true),
+                    CccNumber = table.Column<string>(nullable: true),
+                    Age = table.Column<int>(nullable: true),
+                    Sex = table.Column<string>(nullable: true),
                     FacilityName = table.Column<string>(nullable: true),
                     SiteCode = table.Column<int>(nullable: true),
                     PatientPk = table.Column<int>(nullable: true),
@@ -210,6 +189,28 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     Project = table.Column<string>(nullable: true),
                     CheckError = table.Column<bool>(nullable: false),
                     DateExtracted = table.Column<DateTime>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_vTempHTSClientPartnerExtractError", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "vTempHTSClientPartnerExtractErrorSummary",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Extract = table.Column<string>(nullable: true),
+                    Field = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    Summary = table.Column<string>(nullable: true),
+                    DateGenerated = table.Column<DateTime>(nullable: true),
+                    SiteCode = table.Column<int>(nullable: true),
+                    PatientPK = table.Column<int>(nullable: true),
+                    HtsNumber = table.Column<string>(nullable: true),
+                    FacilityName = table.Column<string>(nullable: true),
+                    RecordId = table.Column<Guid>(nullable: false),
                     PartnerPatientPk = table.Column<int>(nullable: true),
                     PartnerPersonId = table.Column<int>(nullable: true),
                     RelationshipToIndexClient = table.Column<string>(nullable: true),
@@ -236,29 +237,29 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TempHtsClientPartnerExtracts", x => x.Id);
+                    table.PrimaryKey("PK_vTempHTSClientPartnerExtractErrorSummary", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "HtsClientExtracts");
+                name: "vTempHTSClientExtractError");
 
             migrationBuilder.DropTable(
-                name: "HtsClientLinkageExtracts");
+                name: "vTempHTSClientExtractErrorSummary");
 
             migrationBuilder.DropTable(
-                name: "HtsClientPartnerExtracts");
+                name: "vTempHTSClientLinkageExtractError");
 
             migrationBuilder.DropTable(
-                name: "TempHtsClientExtracts");
+                name: "vTempHTSClientLinkageExtractErrorSummary");
 
             migrationBuilder.DropTable(
-                name: "TempHtsClientLinkageExtracts");
+                name: "vTempHTSClientPartnerExtractError");
 
             migrationBuilder.DropTable(
-                name: "TempHtsClientPartnerExtracts");
+                name: "vTempHTSClientPartnerExtractErrorSummary");
         }
     }
 }

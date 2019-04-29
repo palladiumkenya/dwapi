@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20190423142724_HtsInitialCreate")]
-    partial class HtsInitialCreate
+    [Migration("20190429155400_HtsInitialModels")]
+    partial class HtsInitialModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -690,6 +690,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DateExtracted");
 
+                    b.Property<string>("DisabilityType");
+
                     b.Property<DateTime?>("Dob");
 
                     b.Property<string>("Emr");
@@ -708,9 +710,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("KeyPop");
 
+                    b.Property<string>("KeyPopulationType");
+
                     b.Property<string>("MaritalStatus");
 
                     b.Property<int?>("MonthsLastTested");
+
+                    b.Property<string>("PatientConsented");
+
+                    b.Property<string>("PatientDisabled");
+
+                    b.Property<string>("PopulationType");
 
                     b.Property<bool?>("Processed");
 
@@ -2393,6 +2403,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime>("DateExtracted");
 
+                    b.Property<string>("DisabilityType");
+
                     b.Property<DateTime?>("Dob");
 
                     b.Property<string>("Emr");
@@ -2411,11 +2423,19 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("KeyPop");
 
+                    b.Property<string>("KeyPopulationType");
+
                     b.Property<string>("MaritalStatus");
 
                     b.Property<int?>("MonthsLastTested");
 
+                    b.Property<string>("PatientConsented");
+
+                    b.Property<string>("PatientDisabled");
+
                     b.Property<int?>("PatientPk");
+
+                    b.Property<string>("PopulationType");
 
                     b.Property<string>("Project");
 

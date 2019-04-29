@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
-    public partial class HtsViews : Migration
+    public partial class HtsInitiaViews : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
