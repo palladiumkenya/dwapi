@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
@@ -23,11 +24,11 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 {
     public class HTSClientSourceExtractor : IHTSClientSourceExtractor
     {
-        private readonly IMasterPatientIndexReader _reader;
+        private readonly IHTSExtractSourceReader _reader;
         private readonly IMediator _mediator;
         private readonly ITempHTSClientExtractRepository _extractRepository;
 
-        public HTSClientSourceExtractor(IMasterPatientIndexReader reader, IMediator mediator, ITempHTSClientExtractRepository extractRepository)
+        public HTSClientSourceExtractor(IHTSExtractSourceReader reader, IMediator mediator, ITempHTSClientExtractRepository extractRepository)
         {
             _reader = reader;
             _mediator = mediator;

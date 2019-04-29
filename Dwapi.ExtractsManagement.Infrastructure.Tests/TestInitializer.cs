@@ -25,6 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 {
@@ -44,6 +45,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
         [OneTimeSetUp]
         public void Setup()
         {
+            RegisterLicence();
+
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
@@ -146,5 +149,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             KenyaEmrDbProtocol.Username = KenyaEmrDatabase.User;
             KenyaEmrDbProtocol.Password = KenyaEmrDatabase.Password;
         }
+
+        private void RegisterLicence()
+        {
+            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
+            if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
+            {
+                throw new Exception(licenseErrorMessage);
+            }
+        }
     }
+
+
 }
