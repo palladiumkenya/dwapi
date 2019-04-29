@@ -1004,7 +1004,11 @@ FROM   ndwr_patient_pharmacy"|dwhstage|0|PatientPharmacyExtract|6|a6221aa5-0e85-
 	  ,CAST(l.[DOB] as Date) as DoB
 	  ,l.[Gender]
 	  ,l.[MaritalStatus]
-      ,l.[KeyPop]
+	  ,case when l.disability='NA' then 'No' else 'Yes' end as PatientDisabled
+	  ,case when l.disability!='NA' then l.disability else null end as DisabilityType
+	  ,case when l.consent=1 then 'Yes' else 'No' end as PatientConsented
+      ,case when l.KeyPop='N/A' then 'General Population' else 'Key Population' end as PopulationType
+	  ,case when l.KeyPop!='N/A' then l.KeyPop else null end as KeyPopulationType
 	  ,l.[TestedBefore]
       ,l.[WhenLastTested] as MonthsLastTested
 	  ,l.[ClientTestedAs]
@@ -1025,7 +1029,8 @@ FROM   ndwr_patient_pharmacy"|dwhstage|0|PatientPharmacyExtract|6|a6221aa5-0e85-
   INNER JOIN tmp_PatientMaster p on  p.PatientPK=l.PatientPK
  inner join PatientEncounter h on h.PatientId=L.PATIENTID  AND   h.EncounterStarttime=l.VisitDate "|DWHStage|1|HTSClientExtract|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
 6f3ce1d9-6cfc-47d2-ad1b-73a6ee7ef909|HTS Client Extracts|HTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct e.patient_id as PatientPK, l.value_reference as SiteCode, lname.name as FacilityName, 'KenyaEMR' as Emr, 'Kenya HMIS II' as Project,
-e.patient_id as HtsNumber, e.encounter_id as EncounterId, e.visit_date as VisitDate, p.DOB, p.Gender,p.marital_status AS MaritalStatus,population_type as KeyPop,
+e.patient_id as HtsNumber, e.encounter_id as EncounterId, e.visit_date as VisitDate, p.DOB, p.Gender,p.marital_status AS MaritalStatus, patient_disabled as PatientDisabled,
+disability_type as DisabilityType, patient_consented as PatientConsented, population_type as PopulationType, key_population_type as KeyPopulationType,
 case when isnull(e.months_since_last_test) then 'No' else 'Yes' end as 'TestedBefore',e.months_since_last_test as MonthsLastTested,e.client_tested_as as ClientTestedAs,
 hts_entry_point as StrategyHTS, e.test_1_kit_name as TestKitName1,e.test_1_kit_lot_no as TestKitLotNumber1, e.test_1_kit_expiry as TestKitExpiryDate1,
 e.test_1_result as TestResultsHTS1, e.test_2_kit_name as TestKitName2, e.test_2_kit_lot_no as TestKitLotNumber2, e.test_2_kit_expiry as TestKitExpiryDate2,

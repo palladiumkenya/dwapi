@@ -28,5 +28,11 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public string ClientSelfTested { get; set; }
         public string CoupleDiscordant { get; set; }
         public string TestType { get; set; }
+
+        public string KeyPopulationType { get; set; }
+        public string PopulationType { get; set; }
+        public string PatientDisabled { get; set; }
+        public string DisabilityType { get; set; }
+        public string PatientConsented { get; set; }
     }
 }
