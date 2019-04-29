@@ -31,12 +31,12 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
             _extractsContextMySql = TestInitializer.ServiceProviderMysql.GetService<ExtractsContext>();
 
-            var tempHtsClientExtracts = Builder<TempHTSClientExtract>.CreateListOfSize(2).Build().ToList();
+            var tempHtsClientExtracts = Builder<TempHTSClientExtract>.CreateListOfSize(2).All().With(x=>x.CheckError=false).Build().ToList();
             tempHtsClientExtracts[0].EncounterId = (int?) DateTime.Now.Ticks;
             tempHtsClientExtracts[1].EncounterId = (int?)DateTime.Now.Ticks;
 
-            var tempHtsClientPartnerExtracts = Builder<TempHTSClientPartnerExtract>.CreateListOfSize(2).Build().ToList();
-            var tempHtsClientLinkageExtracts = Builder<TempHTSClientLinkageExtract>.CreateListOfSize(2).Build().ToList();
+            var tempHtsClientPartnerExtracts = Builder<TempHTSClientPartnerExtract>.CreateListOfSize(2).All().With(x=>x.CheckError=false).Build().ToList();
+            var tempHtsClientLinkageExtracts = Builder<TempHTSClientLinkageExtract>.CreateListOfSize(2).All().With(x=>x.CheckError=false).Build().ToList();
 
             _extractsContext.AddRange(tempHtsClientExtracts);
             _extractsContext.AddRange(tempHtsClientPartnerExtracts);
@@ -46,6 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
             _extractsContextMySql.AddRange(tempHtsClientExtracts);
             _extractsContextMySql.AddRange(tempHtsClientPartnerExtracts);
             _extractsContextMySql.AddRange(tempHtsClientLinkageExtracts);
+            _extractsContextMySql.SaveChanges();
         }
 
         [Test]

@@ -46,6 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
             _extractsContextMySql.AddRange(tempHtsClientExtracts);
             _extractsContextMySql.AddRange(tempHtsClientPartnerExtracts);
             _extractsContextMySql.AddRange(tempHtsClientLinkageExtracts);
+            _extractsContextMySql.SaveChanges();
         }
 
         [Test]
