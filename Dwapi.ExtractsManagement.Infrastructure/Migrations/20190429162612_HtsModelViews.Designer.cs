@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20190429155655_HtsInitiaViews")]
-    partial class HtsInitiaViews
+    [Migration("20190429162612_HtsModelViews")]
+    partial class HtsModelViews
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -81,7 +81,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHTSClientExtractErrorSummary> TempHtsClientExtractErrorSummaries { get; set; }
         public DbSet<TempHTSClientPartnerExtractErrorSummary> TempHtsClientPartnerExtractErrorSummaries { get; set; }
         public DbSet<TempHTSClientLinkageExtractErrorSummary> TempHtsClientLinkageExtractErrorSummaries { get; set; }
-
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
 

@@ -2,9 +2,9 @@
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
-    public partial class HtsInitiaViews : Migration
+    public partial class HtsModelViews : Migration
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
+          protected override void Up(MigrationBuilder migrationBuilder)
         {
             //HTSClient Extract Errors
 
@@ -77,6 +77,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+
             migrationBuilder.Sql(@"DROP VIEW vTempHTSClientExtractErrorSummary");
             migrationBuilder.Sql(@"DROP VIEW vTempHTSClientExtractError");
             migrationBuilder.Sql(@"DROP VIEW vTempHTSClientLinkageExtractErrorSummary");
