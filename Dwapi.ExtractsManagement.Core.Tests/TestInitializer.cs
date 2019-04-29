@@ -16,6 +16,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
@@ -27,6 +28,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Dwh;
+using Dwapi.ExtractsManagement.Core.Loader.Hts;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
@@ -147,6 +149,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientVisitLoader, PatientVisitLoader>()
 
 
+                .AddTransient<IHTSClientLoader, HTSClientLoader>()
+                .AddTransient<IHTSClientLinkageLoader, HTSClientLinkageLoader>()
+                .AddTransient<IHTSClientPartnerLoader, HTSClientPartnerLoader>()
+
                 .AddTransient<IEmrMetricRepository, EmrMetricRepository>()
                 .AddTransient<IEmrMetricsService, EmrMetricsService>()
                 .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
@@ -221,6 +227,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientStatusLoader, PatientStatusLoader>()
                 .AddTransient<IPatientVisitLoader, PatientVisitLoader>()
 
+                .AddTransient<IHTSClientLoader, HTSClientLoader>()
+                .AddTransient<IHTSClientLinkageLoader, HTSClientLinkageLoader>()
+                .AddTransient<IHTSClientPartnerLoader, HTSClientPartnerLoader>()
 
                 .AddTransient<IEmrMetricRepository, EmrMetricRepository>()
                 .AddTransient<IEmrMetricsService, EmrMetricsService>()
