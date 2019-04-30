@@ -17,6 +17,7 @@ import {ExtractProfile} from '../../ndwh-docket/model/extract-profile';
 import {CentralRegistry} from '../../../settings/model/central-registry';
 import {SendResponse} from '../../../settings/model/send-response';
 import {EmrConfigService} from '../../../settings/services/emr-config.service';
+import {LoadExtracts} from '../../../settings/model/load-extracts';
 
 @Component({
   selector: 'liveapp-hts-console',
@@ -67,6 +68,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private _extractDbProtocol: ExtractDatabaseProtocol;
     private _extractDbProtocols: ExtractDatabaseProtocol[];
     private extractLoadCommand: LoadFromEmrCommand;
+    private loadExtractsCommand: LoadExtracts;
     private extractPatient: ExtractProfile;
     private extractPatientArt: ExtractProfile;
     private extractPatientBaseline: ExtractProfile;
@@ -314,76 +316,48 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         return this._extractDbProtocols;
     }
 
-    private generateExtractLoadCommand(currentEmr: EmrSystem): LoadFromEmrCommand {
+    private generateExtractLoadCommand(currentEmr: EmrSystem): LoadExtracts {
         this.extractProfiles.push(this.generateExtractPatient(currentEmr));
         this.extractProfiles.push(this.generateExtractPatientArt(currentEmr));
         this.extractProfiles.push(this.generateExtractPatientBaseline(currentEmr));
-        this.extractProfiles.push(this.generateExtractPatientLaboratory(currentEmr));
-        this.extractProfiles.push(this.generateExtractPatientPharmacy(currentEmr));
-        this.extractProfiles.push(this.generateExtractPatientStatus(currentEmr));
-        this.extractProfiles.push(this.generateExtractPatientVisit(currentEmr));
-
         this.extractLoadCommand = {
             extracts: this.extractProfiles
         };
-        return this.extractLoadCommand;
+
+        this.loadExtractsCommand = {
+            loadFromEmrCommand: this.extractLoadCommand,
+            extractMpi: null,
+            loadMpi: null
+        };
+        return this.loadExtractsCommand;
+
     }
 
+
+
     private generateExtractPatient(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'PatientExtract').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientExtract').databaseProtocolId;
         this.extractPatient = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'PatientExtract')
+            extract: this.extracts.find(x => x.name === 'HTSClientExtract')
         };
         return this.extractPatient;
     }
 
     private generateExtractPatientArt(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'PatientArtExtract').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientLinkageExtract').databaseProtocolId;
         this.extractPatientArt = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'PatientArtExtract')
+            extract: this.extracts.find(x => x.name === 'HTSClientLinkageExtract')
         };
         return this.extractPatientArt;
     }
 
     private generateExtractPatientBaseline(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'PatientBaselineExtract').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientPartnerExtract').databaseProtocolId;
         this.extractPatientBaseline = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'PatientBaselineExtract')
+            extract: this.extracts.find(x => x.name === 'HTSClientPartnerExtract')
         };
         return this.extractPatientBaseline;
-    }
-
-    private generateExtractPatientLaboratory(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'PatientLabExtract').databaseProtocolId;
-        this.extractPatientLaboratory = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'PatientLabExtract')
-        };
-        return this.extractPatientLaboratory;
-    }
-
-    private generateExtractPatientPharmacy(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'PatientPharmacyExtract').databaseProtocolId;
-        this.extractPatientPharmacy = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'PatientPharmacyExtract')
-        };
-        return this.extractPatientPharmacy;
-    }
-
-    private generateExtractPatientStatus(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'PatientStatusExtract').databaseProtocolId;
-        this.extractPatientStatus = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'PatientStatusExtract')
-        };
-        return this.extractPatientStatus;
-    }
-
-    private generateExtractPatientVisit(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'PatientVisitExtract').databaseProtocolId;
-        this.extractPatientVisit = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'PatientVisitExtract')
-        };
-        return this.extractPatientVisit;
     }
 
     private getSendPackage(docketId: string): SendPackage {
