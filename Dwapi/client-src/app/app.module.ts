@@ -133,6 +133,11 @@ import { AppDetailsService } from './services/app-details.service';
 import {RestProtocolComponent} from '../settings/rest-protocol/rest-protocol.component';
 import {RestResourceComponent} from '../settings/rest-resource/rest-resource.component';
 import { HtsDocketComponent } from '../dockets/hts-docket/hts-docket.component';
+import {HtsService} from '../dockets/services/hts.service';
+import { HtsConsoleComponent } from '../dockets/hts-docket/hts-console/hts-console.component';
+import { HtsExtractDetailsComponent } from '../dockets/hts-docket/hts-extract-details/hts-extract-details.component';
+import { HtsInvalidComponent } from '../dockets/hts-docket/hts-extract-details/hts-invalid/hts-invalid.component';
+import { HtsValidComponent } from '../dockets/hts-docket/hts-extract-details/hts-valid/hts-valid.component';
 
 
 @NgModule({
@@ -246,7 +251,11 @@ import { HtsDocketComponent } from '../dockets/hts-docket/hts-docket.component';
         MpiSearchComponent,
         RestProtocolComponent,
         RestResourceComponent,
-        HtsDocketComponent
+        HtsDocketComponent,
+        HtsConsoleComponent,
+        HtsExtractDetailsComponent,
+        HtsInvalidComponent,
+        HtsValidComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
@@ -254,7 +263,7 @@ import { HtsDocketComponent } from '../dockets/hts-docket/hts-docket.component';
         ExtractConfigService, PsmartExtractService , PsmartSenderService, NdwhExtractService, NdwhSenderService, NdwhPatientsExtractService,
         CbsService, NdwhPatientArtService, NdwhPatientBaselineService, NdwhPatientLaboratoryService, NdwhPatientPharmacyService,
         NdwhPatientStatusService, NdwhPatientVisitService,
-        SetupService, MpiSearchService, NdwhPatientAdverseEventService, AppDetailsService
+        SetupService, MpiSearchService, NdwhPatientAdverseEventService, AppDetailsService, HtsService
     ],
     bootstrap: [AppComponent]
 })
