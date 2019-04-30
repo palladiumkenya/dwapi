@@ -7,6 +7,7 @@ import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
 import {EmrSettingsComponent} from '../settings/emr-settings/emr-settings.component';
 import {RegistryManagerComponent} from '../settings/registry-manager/registry-manager.component';
 import { MpiSearchComponent } from '../dockets/cbs-docket/mpi-search/mpi-search.component';
+import {HtsDocketComponent} from '../dockets/hts-docket/hts-docket.component';
 
 export const routes: Routes = [
     {path: 'dashboard', component: DashboardComponent},
@@ -16,6 +17,7 @@ export const routes: Routes = [
     {path: 'datawarehouse', component: NdwhDocketComponent},
     {path: 'psmart', component: PsmartDocketComponent},
     {path: 'cbs', component: CbsDocketComponent},
+    {path: 'hts', component: HtsDocketComponent},
     {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
     {path: '**', component: DashboardComponent }
 ];

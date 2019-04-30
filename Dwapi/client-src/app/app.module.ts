@@ -132,6 +132,7 @@ import { NdwhPatientAdverseEventService } from '../dockets/services/ndwh-patient
 import { AppDetailsService } from './services/app-details.service';
 import {RestProtocolComponent} from '../settings/rest-protocol/rest-protocol.component';
 import {RestResourceComponent} from '../settings/rest-resource/rest-resource.component';
+import { HtsDocketComponent } from '../dockets/hts-docket/hts-docket.component';
 
 
 @NgModule({
@@ -244,7 +245,8 @@ import {RestResourceComponent} from '../settings/rest-resource/rest-resource.com
         SetupComponent,
         MpiSearchComponent,
         RestProtocolComponent,
-        RestResourceComponent
+        RestResourceComponent,
+        HtsDocketComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,

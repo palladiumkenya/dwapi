@@ -2,9 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {AppComponent} from '../app.component';
 
 @Component({
-  selector: 'liveapp-app-menu',
-  templateUrl: './app-menu.component.html',
-  styleUrls: ['./app-menu.component.scss']
+    selector: 'liveapp-app-menu',
+    templateUrl: './app-menu.component.html',
+    styleUrls: ['./app-menu.component.scss']
 })
 export class AppMenuComponent implements OnInit {
 
@@ -12,7 +12,8 @@ export class AppMenuComponent implements OnInit {
 
     model: any[];
 
-    constructor(public app: AppComponent) {}
+    constructor(public app: AppComponent) {
+    }
 
     ngOnInit() {
         this.model = [
@@ -20,10 +21,12 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Configuration', icon: 'settings_application',
                 items: [
-                    {label: 'Registry', icon: 'cloud', items: [
+                    {
+                        label: 'Registry', icon: 'cloud', items: [
                             {label: 'Data Warehouse', icon: 'cloud', routerLink: ['/registry', 'NDWH']},
                             {label: 'PSmart', icon: 'credit_card', routerLink: ['/registry', 'PSMART']},
-                            {label: 'Master Patient Index', icon: 'search', routerLink: ['/registry', 'CBS']}
+                            {label: 'Master Patient Index', icon: 'search', routerLink: ['/registry', 'CBS']},
+                            {label: 'HIV Testing Services', icon: 'local_hospital', routerLink: ['/registry', 'HTS']}
                         ]
                     },
                     {label: 'EMR Settings', icon: 'dvr', routerLink: ['/emrconfig']}
@@ -34,7 +37,8 @@ export class AppMenuComponent implements OnInit {
                 items: [
                     {label: 'Data Warehouse', icon: 'cloud', routerLink: ['/datawarehouse']},
                     {label: 'PSmart', icon: 'credit_card', routerLink: ['/psmart']},
-                    {label: 'Master Patient Index', icon: 'search', routerLink: ['/cbs']}
+                    {label: 'Master Patient Index', icon: 'search', routerLink: ['/cbs']},
+                    {label: 'HIV Testing Services', icon: 'local_hospital', routerLink: ['/hts']}
                 ]
             }
         ];
