@@ -2,10 +2,15 @@
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
@@ -16,11 +21,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 {
     public class ExtractHTSClientLinkageHandler : IRequestHandler<ExtractHTSClientLinkage, bool>
     {
-        private readonly IPatientAdverseEventSourceExtractor _patientAdverseEventSourceExtractor;
-        private readonly IExtractValidator _extractValidator;
-        private readonly IPatientAdverseEventLoader _patientAdverseEventLoader;
+        private readonly IHTSClientSourceExtractor _patientAdverseEventSourceExtractor;
+        private readonly IHtsExtractValidator _extractValidator;
+        private readonly IHTSClientLinkageLoader _patientAdverseEventLoader;
 
-        public ExtractHTSClientLinkageHandler(IPatientAdverseEventSourceExtractor patientAdverseEventSourceExtractor, IExtractValidator extractValidator, IPatientAdverseEventLoader patientAdverseEventLoader)
+        public ExtractHTSClientLinkageHandler(IHTSClientSourceExtractor patientAdverseEventSourceExtractor, IHtsExtractValidator extractValidator, IHTSClientLinkageLoader patientAdverseEventLoader)
         {
             _patientAdverseEventSourceExtractor = patientAdverseEventSourceExtractor;
             _extractValidator = extractValidator;
@@ -33,7 +38,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
             int found = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
-            await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientAdverseEventExtract), $"{nameof(TempPatientAdverseEventExtract)}s");
+            await _extractValidator.Validate(request.Extract.Id, found, nameof(HTSClientLinkageExtract), $"{nameof(TempHTSClientLinkageExtract)}s");
 
             //Load
             int loaded = await _patientAdverseEventLoader.Load(request.Extract.Id, found);
@@ -42,8 +47,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 
             //notify loaded
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(request.Extract.Id, new DwhProgress(
-                    nameof(PatientAdverseEventExtract),
+                new ExtractActivityNotification(request.Extract.Id, new ExtractProgress(
+                    nameof(HTSClientLinkageExtract),
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));
 

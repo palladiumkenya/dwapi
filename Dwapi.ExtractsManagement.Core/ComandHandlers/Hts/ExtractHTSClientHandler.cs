@@ -1,13 +1,21 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
@@ -18,13 +26,13 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 {
     public class ExtractHTSClientHandler :IRequestHandler<ExtractHTSClient,bool>
     {
-        private readonly IPatientSourceExtractor _patientSourceExtractor;
-        private readonly IExtractValidator _extractValidator;
-        private readonly IPatientLoader _patientLoader;
-        private readonly IClearDwhExtracts _clearDwhExtracts;
-        private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
+        private readonly IHTSClientSourceExtractor _patientSourceExtractor;
+        private readonly IHtsExtractValidator _extractValidator;
+        private readonly IHTSClientLoader _patientLoader;
+        private readonly ICleanHtsExtracts _clearDwhExtracts;
+        private readonly ITempHTSClientExtractRepository _tempPatientExtractRepository;
 
-        public ExtractHTSClientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts, ITempPatientExtractRepository tempPatientExtractRepository)
+        public ExtractHTSClientHandler(IHTSClientSourceExtractor patientSourceExtractor, IHtsExtractValidator extractValidator, IHTSClientLoader patientLoader, ICleanHtsExtracts clearDwhExtracts, ITempHTSClientExtractRepository tempPatientExtractRepository)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
@@ -41,7 +49,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 
 
             //Validate
-            await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientExtract), $"{nameof(TempPatientExtract)}s");
+            await _extractValidator.Validate(request.Extract.Id, found, nameof(HTSClientExtract), $"{nameof(TempHTSClientExtract)}s");
 
             //Load
             int loaded = await _patientLoader.Load(request.Extract.Id, found);
@@ -50,8 +58,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 
             //notify loaded
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(request.Extract.Id, new DwhProgress(
-                    nameof(PatientExtract),
+                new ExtractActivityNotification(request.Extract.Id, new ExtractProgress(
+                    nameof(HTSClientExtract),
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));
 
