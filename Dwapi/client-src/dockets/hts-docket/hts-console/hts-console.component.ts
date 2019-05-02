@@ -113,7 +113,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             this.loadingData = true;
             this.recordCount = 0;
             this.extracts = this.emr.extracts.filter(
-                x => x.docketId === 'NDWH'
+                x => x.docketId === 'HTS'
             );
             this.updateEvent();
             this.emrName = this.emr.name;
@@ -152,7 +152,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public loadRegisrty(): void {
         this.errorMessage = [];
-        this.loadRegistry$ = this._registryConfigService.get('NDWH').subscribe(
+        this.loadRegistry$ = this._registryConfigService.get('HTS').subscribe(
             p => {
                 this.centralRegistry = p;
             },
