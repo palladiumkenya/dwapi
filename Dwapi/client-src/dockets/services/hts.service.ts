@@ -9,6 +9,7 @@ import {SendResponse} from '../../settings/model/send-response';
 import {LoadFromEmrCommand} from '../../settings/model/load-from-emr-command';
 import {LoadExtracts} from '../../settings/model/load-extracts';
 import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
+import {LoadHtsExtracts} from '../../settings/model/load-hts-extracts';
 
 @Injectable()
 export class HtsService {
@@ -35,7 +36,7 @@ export class HtsService {
             .catch(this.handleError);
     }
 
-    public extractAll(loadExtracts: LoadExtracts): Observable<boolean> {
+    public extractAll(loadExtracts: LoadHtsExtracts): Observable<boolean> {
         return this._http.post<boolean>(this._url + '/extractAll', loadExtracts)
             .catch(this.handleError);
     }

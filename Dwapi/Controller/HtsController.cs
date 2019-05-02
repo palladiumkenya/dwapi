@@ -1,16 +1,25 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Cbs;
+using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.Hubs.Cbs;
+using Dwapi.Hubs.Dwh;
+using Dwapi.Hubs.Hts;
+using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
+using Hangfire;
+using Hangfire.States;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -24,32 +33,34 @@ namespace Dwapi.Controller
     {
         private readonly IMediator _mediator;
         private readonly IExtractStatusService _extractStatusService;
-        private readonly IHubContext<CbsActivity> _hubContext;
-        private readonly IHubContext<CbsSendActivity> _hubSendContext;
-        private readonly IMasterPatientIndexRepository _masterPatientIndexRepository;
-        private readonly ICbsSendService _cbsSendService;
-        private readonly IMpiSearchService _mpiSearchService;
+        private readonly IHubContext<HtsActivity> _hubContext;
+        private readonly IHubContext<HtsSendActivity> _hubSendContext;
+        private readonly IHtsSendService _dwhSendService;
 
-
-        public HtsController(IMediator mediator, IExtractStatusService extractStatusService,
-            IHubContext<CbsActivity> hubContext, IMasterPatientIndexRepository masterPatientIndexRepository,
-            ICbsSendService cbsSendService, IHubContext<CbsSendActivity> hubSendContext, IMpiSearchService mpiSearchService)
+        public HtsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<HtsActivity> hubContext, IHtsSendService dwhSendService, IHubContext<HtsSendActivity> hubSendContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
-            _masterPatientIndexRepository = masterPatientIndexRepository;
-            _cbsSendService = cbsSendService;
-            _mpiSearchService = mpiSearchService;
-            Startup.CbsSendHubContext= _hubSendContext = hubSendContext;
-            Startup.CbsHubContext = _hubContext = hubContext;
+            _dwhSendService = dwhSendService;
+            Startup.HtsSendHubContext= _hubSendContext = hubSendContext;
+            Startup.HtsHubContext= _hubContext = hubContext;
         }
 
 
         [HttpPost("extract")]
-        public async Task<IActionResult> Load([FromBody] ExtractMasterPatientIndex request)
+        public async Task<IActionResult> Load([FromBody]ExtractPatient request)
         {
             if (!ModelState.IsValid) return BadRequest();
             var result = await _mediator.Send(request, HttpContext.RequestAborted);
+            return Ok(result);
+        }
+
+        [HttpPost("extractAll")]
+        public async Task<IActionResult> Load([FromBody] LoadHtsExtracts request)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+
+            var result = await _mediator.Send(request.LoadHtsFromEmrCommand, HttpContext.RequestAborted);
             return Ok(result);
         }
 
@@ -77,129 +88,40 @@ namespace Dwapi.Controller
             }
         }
 
-        [HttpGet("allcount")]
-        public IActionResult GetAllExtractCount()
-        {
-            try
-            {
-                var count = _masterPatientIndexRepository.GetAll().Count();
-                return Ok(count);
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error loading {nameof(Extract)}(s)";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
-        [HttpGet("all")]
-        public IActionResult GetAllExtracts()
-        {
-            try
-            {
-                var eventExtract = _masterPatientIndexRepository.GetAll().ToList();
-                return Ok(eventExtract);
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error loading {nameof(Extract)}(s)";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
-
-
-        [HttpGet("count")]
-        public IActionResult GetExtractCount()
-        {
-            try
-            {
-                var count = _masterPatientIndexRepository.GetView().Select(x => x.Id).Count();
-                return Ok(count);
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error loading {nameof(Extract)}(s)";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
-        [HttpGet]
-        public IActionResult GetExtracts()
-        {
-            try
-            {
-                var eventExtract = _masterPatientIndexRepository.GetView().ToList().OrderBy(x => x.sxdmPKValueDoB);
-                return Ok(eventExtract);
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error loading {nameof(Extract)}(s)";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
-        // POST: api/Cbs/manifest
+        // POST: api/DwhExtracts/manifest
         [HttpPost("manifest")]
-        public async Task<IActionResult> SendManifest([FromBody] SendManifestPackageDTO packageDTO)
+        public async Task<IActionResult> SendManifest([FromBody] CombinedSendManifestDto packageDto)
         {
-            if (!packageDTO.IsValid())
+            if (!packageDto.IsValid())
                 return BadRequest();
             try
             {
-                await _cbsSendService.SendManifestAsync(packageDTO);
-                return Ok();
+                var result = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage);
+                return Ok(result);
             }
             catch (Exception e)
             {
-                var msg = $"Error sending {nameof(MasterPatientIndex)} Manifest {e.Message}";
-                Log.Error(e,msg);
-                return StatusCode(500, msg);
-            }
-        }
-
-
-        // POST: api/Cbs/manifest
-        [HttpPost("mpi")]
-        public async Task<IActionResult> SendMpi([FromBody] SendManifestPackageDTO packageDTO)
-        {
-            if (!packageDTO.IsValid())
-                return BadRequest();
-            try
-            {
-                await _cbsSendService.SendMpiAsync(packageDTO);
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error sending {nameof(MasterPatientIndex)} {e.Message}";
+                var msg = $"Error sending  Manifest {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
             }
         }
 
-        // POST: api/Cbs/mpiSearchPackage
-        [HttpPost("mpiSearch")]
-        public async Task<IActionResult> SearchMpi([FromBody] MpiSearchPackageDto mpiSearchPackage)
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("patients")]
+        public IActionResult SendPatientExtracts([FromBody] CombinedSendManifestDto packageDto)
         {
-            if (!mpiSearchPackage.IsValid())
+            if (!packageDto.IsValid())
                 return BadRequest();
             try
             {
-                var result = await _mpiSearchService.SearchMpiAsync(mpiSearchPackage);
-                return Ok(result);
+                _dwhSendService.SendExtractsAsync(packageDto.DwhPackage);
+                    return Ok();
             }
             catch (Exception e)
             {
-                var msg = $"Error getting {nameof(MasterPatientIndex)} search results. {e.Message}";
+                var msg = $"Error sending Extracts {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
             }

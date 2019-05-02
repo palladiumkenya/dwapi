@@ -18,6 +18,8 @@ import {CentralRegistry} from '../../../settings/model/central-registry';
 import {SendResponse} from '../../../settings/model/send-response';
 import {EmrConfigService} from '../../../settings/services/emr-config.service';
 import {LoadExtracts} from '../../../settings/model/load-extracts';
+import {LoadHtsExtracts} from '../../../settings/model/load-hts-extracts';
+import {LoadHtsFromEmrCommand} from '../../../settings/model/load-hts-from-emr-command';
 
 @Component({
   selector: 'liveapp-hts-console',
@@ -35,9 +37,9 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     public emrVersion: string;
 
     private _confirmationService: ConfirmationService;
-    private _ndwhExtractService: HtsService;
+    private _htsService: HtsService;
     private _registryConfigService: RegistryConfigService;
-    private _ndwhSenderService: HtsSenderService;
+    private _htsSenderService: HtsSenderService;
 
     public load$: Subscription;
     public loadRegistry$: Subscription;
@@ -67,15 +69,12 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     public notifications: Message[];
     private _extractDbProtocol: ExtractDatabaseProtocol;
     private _extractDbProtocols: ExtractDatabaseProtocol[];
-    private extractLoadCommand: LoadFromEmrCommand;
-    private loadExtractsCommand: LoadExtracts;
-    private extractPatient: ExtractProfile;
-    private extractPatientArt: ExtractProfile;
-    private extractPatientBaseline: ExtractProfile;
-    private extractPatientLaboratory: ExtractProfile;
-    private extractPatientPharmacy: ExtractProfile;
-    private extractPatientStatus: ExtractProfile;
-    private extractPatientVisit: ExtractProfile;
+    private extractLoadCommand: LoadHtsFromEmrCommand;
+    private loadExtractsCommand: LoadHtsExtracts;
+    private extractClient: ExtractProfile;
+    private extractClientLinkage: ExtractProfile;
+    private extractClientPartner: ExtractProfile;
+
     private extractProfile: ExtractProfile;
     private extractProfiles: ExtractProfile[] = [];
     public centralRegistry: CentralRegistry;
@@ -90,9 +89,9 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         private emrService: EmrConfigService
     ) {
         this._confirmationService = confirmationService;
-        this._ndwhExtractService = emrConfigService;
+        this._htsService = emrConfigService;
         this._registryConfigService = registryConfigService;
-        this._ndwhSenderService = psmartSenderService;
+        this._htsSenderService = psmartSenderService;
     }
 
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -126,7 +125,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public loadFromEmr(): void {
         this.errorMessage = [];
-        this.load$ = this._ndwhExtractService
+        this.load$ = this._htsService
             .extractAll(this.generateExtractLoadCommand(this.emr))
             .subscribe(
                 p => {
@@ -171,7 +170,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public updateEvent(): void {
         this.extracts.forEach(extract => {
-            this.getStatus$ = this._ndwhExtractService
+            this.getStatus$ = this._htsService
                 .getStatus(extract.id)
                 .subscribe(
                     p => {
@@ -201,7 +200,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.notifications = [];
         this.canSendPatients = false;
         this.manifestPackage = this.getSendManifestPackage();
-        this.sendManifest$ = this._ndwhSenderService.sendManifest(this.manifestPackage)
+        this.sendManifest$ = this._htsSenderService.sendManifest(this.manifestPackage)
             .subscribe(
                 p => {
                     this.canSendPatients = true;
@@ -224,7 +223,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.sending = true;
         this.errorMessage = [];
         this.patientPackage = this.getPatientExtractPackage();
-        this.send$ = this._ndwhSenderService.sendPatientExtracts(this.patientPackage)
+        this.send$ = this._htsSenderService.sendPatientExtracts(this.patientPackage)
             .subscribe(
                 p => {
                     // this.sendResponse = p;
@@ -244,14 +243,14 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private getSendManifestPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'PatientExtract').id
+            extractId: this.extracts.find(x => x.name === 'HTSClientExtract').id
         };
     }
 
     private getPatientExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'PatientExtract').id
+            extractId: this.extracts.find(x => x.name === 'HTSClientExtract').id
         };
     }
 
@@ -259,7 +258,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
-                `http://${document.location.hostname}:5757/ExtractActivity`
+                `http://${document.location.hostname}:5757/HtsActivity`
             )
             .configureLogging(LogLevel.Trace)
             .build();
@@ -316,48 +315,46 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         return this._extractDbProtocols;
     }
 
-    private generateExtractLoadCommand(currentEmr: EmrSystem): LoadExtracts {
-        this.extractProfiles.push(this.generateExtractPatient(currentEmr));
-        this.extractProfiles.push(this.generateExtractPatientArt(currentEmr));
-        this.extractProfiles.push(this.generateExtractPatientBaseline(currentEmr));
+    private generateExtractLoadCommand(currentEmr: EmrSystem): LoadHtsExtracts {
+        this.extractProfiles.push(this.generateExtractClient(currentEmr));
+        this.extractProfiles.push(this.generateExtractClientLinkage(currentEmr));
+        this.extractProfiles.push(this.generateExtractClientPartner(currentEmr));
         this.extractLoadCommand = {
             extracts: this.extractProfiles
         };
 
         this.loadExtractsCommand = {
-            loadFromEmrCommand: this.extractLoadCommand,
+            loadHtsFromEmrCommand: this.extractLoadCommand,
             extractMpi: null,
-            loadMpi: null
+            loadMpi: false
         };
         return this.loadExtractsCommand;
 
     }
 
-
-
-    private generateExtractPatient(currentEmr: EmrSystem): ExtractProfile {
+    private generateExtractClient(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientExtract').databaseProtocolId;
-        this.extractPatient = {
+        this.extractClient = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'HTSClientExtract')
         };
-        return this.extractPatient;
+        return this.extractClient;
     }
 
-    private generateExtractPatientArt(currentEmr: EmrSystem): ExtractProfile {
+    private generateExtractClientLinkage(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientLinkageExtract').databaseProtocolId;
-        this.extractPatientArt = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+        this.extractClientLinkage = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'HTSClientLinkageExtract')
         };
-        return this.extractPatientArt;
+        return this.extractClientLinkage;
     }
 
-    private generateExtractPatientBaseline(currentEmr: EmrSystem): ExtractProfile {
+    private generateExtractClientPartner(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientPartnerExtract').databaseProtocolId;
-        this.extractPatientBaseline = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+        this.extractClientPartner = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'HTSClientPartnerExtract')
         };
-        return this.extractPatientBaseline;
+        return this.extractClientPartner;
     }
 
     private getSendPackage(docketId: string): SendPackage {
