@@ -265,7 +265,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
-        this._hubConnection.on('ShowProgress', (extractActivityNotification: any) => {
+        this._hubConnection.on('ShowHtsProgress', (extractActivityNotification: any) => {
             this.currentExtract = this.extracts.find(
                 x => x.id === extractActivityNotification.extractId
             );
@@ -290,7 +290,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             }
         });
 
-        this._hubConnection.on('ShowDwhSendProgress', (dwhProgress: any) => {
+        this._hubConnection.on('ShowHtsSendProgress', (dwhProgress: any) => {
             console.log(dwhProgress);
 
             this.sendEvent = {

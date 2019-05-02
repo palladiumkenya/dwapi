@@ -10,11 +10,11 @@ using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 {
-    public class LoadHtsFromEmrHandler : IRequestHandler<LoadHtsFromEmrCommand, bool>
+    public class LoadHtsFromEmrCommandHandler : IRequestHandler<LoadHtsFromEmrCommand, bool>
     {
         private IMediator _mediator;
 
-        public LoadHtsFromEmrHandler(IMediator mediator)
+        public LoadHtsFromEmrCommandHandler(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -24,7 +24,6 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             var extractIds = request.Extracts.Select(x => x.Extract.Id).ToList();
 
             await _mediator.Send(new ClearAllHTSExtracts(extractIds), cancellationToken);
-
 
             var patientProfile = request.Extracts.FirstOrDefault(x=>x.Extract.IsPriority);
             //Generate extract patient command
@@ -45,6 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 }
             }
             return await ExtractAll(request, cancellationToken);
+
         }
 
         private async Task<bool> ExtractAll(LoadHtsFromEmrCommand request, CancellationToken cancellationToken)
@@ -54,7 +54,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             var patientArtProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HTSClientLinkageExtract");
             if (null != patientArtProfile)
             {
-                var patientArtCommand = new ExtractPatientArt()
+                var patientArtCommand = new ExtractHTSClientLinkage()
                 {
                     Extract = patientArtProfile?.Extract,
                     DatabaseProtocol = patientArtProfile?.DatabaseProtocol
@@ -66,7 +66,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             var patientBaselinesProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HTSClientPartnerExtract");
             if (null != patientBaselinesProfile)
             {
-                var patientBaselinesCommand = new ExtractPatientBaselines()
+                var patientBaselinesCommand = new ExtractHTSClientPartner()
                 {
                     Extract = patientBaselinesProfile?.Extract,
                     DatabaseProtocol = patientBaselinesProfile?.DatabaseProtocol

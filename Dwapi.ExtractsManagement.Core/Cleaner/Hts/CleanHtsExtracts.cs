@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
@@ -34,11 +35,11 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Hts
             DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientPartnerExtract), "clearing...")));
             DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientLinkageExtract), "clearing...")));
 
+
             foreach (var extractId in extractIds)
             {
                 DomainEvents.Dispatch(new HtsStatusNotification(extractId, ExtractStatus.Clearing));
             }
-
 
             await _historyRepository.ClearHistory(extractIds);
             await _tempPatientExtractRepository.Clear();

@@ -21,11 +21,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 {
     public class ExtractHTSClientLinkageHandler : IRequestHandler<ExtractHTSClientLinkage, bool>
     {
-        private readonly IHTSClientSourceExtractor _patientAdverseEventSourceExtractor;
+        private readonly IHTSClientLinkageSourceExtractor _patientAdverseEventSourceExtractor;
         private readonly IHtsExtractValidator _extractValidator;
         private readonly IHTSClientLinkageLoader _patientAdverseEventLoader;
 
-        public ExtractHTSClientLinkageHandler(IHTSClientSourceExtractor patientAdverseEventSourceExtractor, IHtsExtractValidator extractValidator, IHTSClientLinkageLoader patientAdverseEventLoader)
+        public ExtractHTSClientLinkageHandler(IHTSClientLinkageSourceExtractor patientAdverseEventSourceExtractor, IHtsExtractValidator extractValidator, IHTSClientLinkageLoader patientAdverseEventLoader)
         {
             _patientAdverseEventSourceExtractor = patientAdverseEventSourceExtractor;
             _extractValidator = extractValidator;
@@ -47,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 
             //notify loaded
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(request.Extract.Id, new ExtractProgress(
+                new HtsExtractActivityNotification(request.Extract.Id, new ExtractProgress(
                     nameof(HTSClientLinkageExtract),
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));

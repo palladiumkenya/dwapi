@@ -24,7 +24,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators.Hts
         public async Task<bool> Validate(Guid extractId, int extracted, string extractName, string sourceTable)
         {
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(extractId, new ExtractProgress(
+                new HtsExtractActivityNotification(extractId, new ExtractProgress(
                     extractName,
                     nameof(ExtractStatus.Validating),
                     extracted, 0, 0, 0, 0)));
@@ -56,7 +56,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators.Hts
                     }
                 }
                 DomainEvents.Dispatch(
-                    new ExtractActivityNotification(extractId, new ExtractProgress(
+                    new HtsExtractActivityNotification(extractId, new ExtractProgress(
                         extractName,
                         nameof(ExtractStatus.Validated),
                         extracted, 0, 0, 0, 0)));
@@ -65,7 +65,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Validators.Hts
             catch (Exception e)
             {
                 DomainEvents.Dispatch(
-                    new ExtractActivityNotification(extractId, new ExtractProgress(
+                    new HtsExtractActivityNotification(extractId, new ExtractProgress(
                         extractName,
                         nameof(ExtractStatus.Idle),
                         extracted, 0, 0, 0, 0)));

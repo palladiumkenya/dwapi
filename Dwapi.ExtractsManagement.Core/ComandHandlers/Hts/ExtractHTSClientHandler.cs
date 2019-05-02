@@ -58,7 +58,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 
             //notify loaded
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(request.Extract.Id, new ExtractProgress(
+                new HtsExtractActivityNotification(request.Extract.Id, new ExtractProgress(
                     nameof(HTSClientExtract),
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));
