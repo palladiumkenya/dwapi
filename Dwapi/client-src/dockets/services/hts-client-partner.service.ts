@@ -5,7 +5,7 @@ import {Observable} from 'rxjs/Observable';
 @Injectable()
 export class HtsClientPartnerService {
 
-    private _url: string = './api/Hts/partner';
+    private _url: string = './api/HtsSummary';
     private _http: HttpClient;
 
     constructor(http: HttpClient) {
@@ -13,16 +13,12 @@ export class HtsClientPartnerService {
     }
 
     public loadValid(): Observable<any[]> {
-        return this._http.get<any>(this._url + '/loadValid')
+        return this._http.get<any>(this._url + '/partner')
             .catch(this.handleError);
     }
 
-    public loadErrors(): Observable<any[]> {
-        return this._http.get<any>(this._url + '/loadErrors')
-            .catch(this.handleError);
-    }
     public loadValidations(): Observable<any[]> {
-        return this._http.get<any>(this._url + '/LoadValidations')
+        return this._http.get<any>(this._url + '/partnervalidations')
             .catch(this.handleError);
     }
 

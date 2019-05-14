@@ -19,10 +19,42 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                         AS
                         SELECT
                                 ValidationError.Id,Validator.Extract,Validator.Field,Validator.Type,Validator.Summary,ValidationError.DateGenerated,ValidationError.RecordId,
-                                vTempHTSClientExtractError.PatientPk,
-                                vTempHTSClientExtractError.HtsNumber,
-                                vTempHTSClientExtractError.SiteCode,
-                                vTempHTSClientExtractError.FacilityName
+                              vTempHTSClientExtractError.FacilityName,
+                              vTempHTSClientExtractError.SiteCode,
+                              vTempHTSClientExtractError.PatientPk,
+                              vTempHTSClientExtractError.HtsNumber,
+                              vTempHTSClientExtractError.Emr,
+                              vTempHTSClientExtractError.Project,
+                              vTempHTSClientExtractError.CheckError,
+                              vTempHTSClientExtractError.DateExtracted,
+                              vTempHTSClientExtractError.EncounterId,
+                              vTempHTSClientExtractError.VisitDate,
+                              vTempHTSClientExtractError.Dob,
+                              vTempHTSClientExtractError.Gender,
+                              vTempHTSClientExtractError.MaritalStatus,
+                              vTempHTSClientExtractError.KeyPop,
+                              vTempHTSClientExtractError.TestedBefore,
+                              vTempHTSClientExtractError.MonthsLastTested,
+                              vTempHTSClientExtractError.ClientTestedAs,
+                              vTempHTSClientExtractError.StrategyHTS,
+                              vTempHTSClientExtractError.TestKitName1,
+                              vTempHTSClientExtractError.TestKitLotNumber1,
+                              vTempHTSClientExtractError.TestKitExpiryDate1,
+                              vTempHTSClientExtractError.TestResultsHTS1,
+                              vTempHTSClientExtractError.TestKitName2,
+                              vTempHTSClientExtractError.TestKitLotNumber2,
+                              vTempHTSClientExtractError.TestKitExpiryDate2,
+                              vTempHTSClientExtractError.TestResultsHTS2,
+                              vTempHTSClientExtractError.FinalResultHTS,
+                              vTempHTSClientExtractError.FinalResultsGiven,
+                              vTempHTSClientExtractError.TBScreeningHTS,
+                              vTempHTSClientExtractError.ClientSelfTested,
+                              vTempHTSClientExtractError.CoupleDiscordant,
+                              vTempHTSClientExtractError.TestType,
+                              vTempHTSClientExtractError.KeyPopulationType,
+                              vTempHTSClientExtractError.PopulationType,
+                              vTempHTSClientExtractError.PatientDisabled,
+                              vTempHTSClientExtractError.DisabilityType
                         FROM
                                 vTempHTSClientExtractError INNER JOIN
                                 ValidationError ON vTempHTSClientExtractError.Id = ValidationError.RecordId INNER JOIN
@@ -42,10 +74,21 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                         AS
                         SELECT
                                 ValidationError.Id,Validator.Extract,Validator.Field,Validator.Type,Validator.Summary,ValidationError.DateGenerated,ValidationError.RecordId,
-                                vTempHTSClientLinkageExtractError.PatientPk,
-                                vTempHTSClientLinkageExtractError.HtsNumber,
-                                vTempHTSClientLinkageExtractError.SiteCode,
-                                vTempHTSClientLinkageExtractError.FacilityName
+                                 vTempHTSClientLinkageExtractError.FacilityName,
+                                  vTempHTSClientLinkageExtractError.SiteCode,
+                                  vTempHTSClientLinkageExtractError.PatientPk,
+                                  vTempHTSClientLinkageExtractError.HtsNumber,
+                                  vTempHTSClientLinkageExtractError.Emr,
+                                  vTempHTSClientLinkageExtractError.Project,
+                                  vTempHTSClientLinkageExtractError.CheckError,
+                                  vTempHTSClientLinkageExtractError.DateExtracted,
+                                  vTempHTSClientLinkageExtractError.PhoneTracingDate,
+                                  vTempHTSClientLinkageExtractError.PhysicalTracingDate,
+                                  vTempHTSClientLinkageExtractError.TracingOutcome,
+                                  vTempHTSClientLinkageExtractError.CccNumber,
+                                  vTempHTSClientLinkageExtractError.ReferralDate,
+                                  vTempHTSClientLinkageExtractError.DateEnrolled,
+                                  vTempHTSClientLinkageExtractError.EnrolledFacilityName
                         FROM
                                 vTempHTSClientLinkageExtractError INNER JOIN
                                 ValidationError ON vTempHTSClientLinkageExtractError.Id = ValidationError.RecordId INNER JOIN
@@ -64,10 +107,37 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                         AS
                         SELECT
                                 ValidationError.Id,Validator.Extract,Validator.Field,Validator.Type,Validator.Summary,ValidationError.DateGenerated,ValidationError.RecordId,
-                                vTempHTSClientPartnerExtractError.PatientPk,
-                                vTempHTSClientPartnerExtractError.HtsNumber,
-                                vTempHTSClientPartnerExtractError.SiteCode,
-                                vTempHTSClientPartnerExtractError.FacilityName
+                                  vTempHTSClientPartnerExtractError.FacilityName,
+                                  vTempHTSClientPartnerExtractError.SiteCode,
+                                  vTempHTSClientPartnerExtractError.PatientPk,
+                                  vTempHTSClientPartnerExtractError.HtsNumber,
+                                  vTempHTSClientPartnerExtractError.Emr,
+                                  vTempHTSClientPartnerExtractError.Project,
+                                  vTempHTSClientPartnerExtractError.CheckError,
+                                  vTempHTSClientPartnerExtractError.DateExtracted,
+                                  vTempHTSClientPartnerExtractError.PartnerPatientPk,
+                                  vTempHTSClientPartnerExtractError.PartnerPersonId,
+                                  vTempHTSClientPartnerExtractError.RelationshipToIndexClient,
+                                  vTempHTSClientPartnerExtractError.ScreenedForIpv,
+                                  vTempHTSClientPartnerExtractError.IpvScreeningOutcome,
+                                  vTempHTSClientPartnerExtractError.CurrentlyLivingWithIndexClient,
+                                  vTempHTSClientPartnerExtractError.KnowledgeOfHivStatus,
+                                  vTempHTSClientPartnerExtractError.PnsApproach,
+                                  vTempHTSClientPartnerExtractError.Trace1Outcome,
+                                  vTempHTSClientPartnerExtractError.Trace1Type,
+                                  vTempHTSClientPartnerExtractError.Trace1Date,
+                                  vTempHTSClientPartnerExtractError.Trace2Outcome,
+                                  vTempHTSClientPartnerExtractError.Trace2Type,
+                                  vTempHTSClientPartnerExtractError.Trace2Date,
+                                  vTempHTSClientPartnerExtractError.Trace3Outcome,
+                                  vTempHTSClientPartnerExtractError.Trace3Type,
+                                  vTempHTSClientPartnerExtractError.Trace3Date,
+                                  vTempHTSClientPartnerExtractError.PnsConsent,
+                                  vTempHTSClientPartnerExtractError.Linked,
+                                  vTempHTSClientPartnerExtractError.LinkDateLinkedToCare,
+                                  vTempHTSClientPartnerExtractError.CccNumber,
+                                  vTempHTSClientPartnerExtractError.Age,
+                                  vTempHTSClientPartnerExtractError.Sex
                         FROM
                                 vTempHTSClientPartnerExtractError INNER JOIN
                                 ValidationError ON vTempHTSClientPartnerExtractError.Id = ValidationError.RecordId INNER JOIN

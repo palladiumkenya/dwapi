@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -8,17 +7,37 @@ using Serilog;
 namespace Dwapi.Controller
 {
     [Produces("application/json")]
+    [Route("api/HtsSummary")]
     public class HtsSummaryController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly ITempHTSClientExtractRepository _tempPatientArtExtractRepository;
-        private readonly IHTSClientExtractRepository _patientArtExtractRepository;
-        private readonly ITempHTSClientExtractErrorSummaryRepository _errorSummaryRepository;
+        private readonly ITempHTSClientExtractRepository _tempHtsClientExtractRepository;
+        private readonly IHTSClientExtractRepository _htsClientExtractRepository;
+        private readonly ITempHTSClientExtractErrorSummaryRepository _htsClientExtractErrorSummaryRepository;
 
-        public HtsSummaryController(ITempHTSClientExtractRepository tempPatientArtExtractRepository, IHTSClientExtractRepository patientArtExtractRepository, ITempHTSClientExtractErrorSummaryRepository errorSummaryRepository)
+        private readonly ITempHTSClientLinkageExtractRepository _tempHtsClientLinkageExtractRepository;
+        private readonly IHTSClientLinkageExtractRepository _htsClientLinkageExtractRepository;
+        private readonly ITempHTSClientLinkageExtractErrorSummaryRepository _htsClientLinkageExtractErrorSummaryRepository;
+
+        private readonly ITempHTSClientPartnerExtractRepository _tempHtsClientPartnerExtractRepository;
+        private readonly IHTSClientPartnerExtractRepository _htsClientPartnerExtractRepository;
+        private readonly ITempHTSClientPartnerExtractErrorSummaryRepository _htsClientPartnerExtractErrorSummaryRepository;
+
+        public HtsSummaryController(
+            ITempHTSClientExtractRepository tempHtsClientExtractRepository, IHTSClientExtractRepository htsClientExtractRepository, ITempHTSClientExtractErrorSummaryRepository htsClientExtractErrorSummaryRepository,
+            ITempHTSClientLinkageExtractRepository tempHtsClientLinkageExtractRepository, IHTSClientLinkageExtractRepository htsClientLinkageExtractRepository, ITempHTSClientLinkageExtractErrorSummaryRepository htsClientLinkageExtractErrorSummaryRepository,
+            ITempHTSClientPartnerExtractRepository tempHtsClientPartnerExtractRepository, IHTSClientPartnerExtractRepository htsClientPartnerExtractRepository, ITempHTSClientPartnerExtractErrorSummaryRepository htsClientPartnerExtractErrorSummaryRepository)
         {
-            _tempPatientArtExtractRepository = tempPatientArtExtractRepository;
-            _patientArtExtractRepository = patientArtExtractRepository;
-            _errorSummaryRepository = errorSummaryRepository;
+            _tempHtsClientExtractRepository = tempHtsClientExtractRepository;
+            _htsClientExtractRepository = htsClientExtractRepository;
+            _htsClientExtractErrorSummaryRepository = htsClientExtractErrorSummaryRepository;
+
+            _tempHtsClientLinkageExtractRepository = tempHtsClientLinkageExtractRepository;
+            _htsClientLinkageExtractRepository = htsClientLinkageExtractRepository;
+            _htsClientLinkageExtractErrorSummaryRepository = htsClientLinkageExtractErrorSummaryRepository;
+
+            _tempHtsClientPartnerExtractRepository = tempHtsClientPartnerExtractRepository;
+            _htsClientPartnerExtractRepository = htsClientPartnerExtractRepository;
+            _htsClientPartnerExtractErrorSummaryRepository = htsClientPartnerExtractErrorSummaryRepository;
         }
 
         [HttpGet("client")]
@@ -26,29 +45,12 @@ namespace Dwapi.Controller
         {
             try
             {
-                var tempPatientArtExtracts = _patientArtExtractRepository.GetAll().ToList();
+                var tempPatientArtExtracts = _htsClientExtractRepository.GetAll().ToList();
                 return Ok(tempPatientArtExtracts);
             }
             catch (Exception e)
             {
-                var msg = $"Error loading valid PatientArt Extracts";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
-        [HttpGet("clienterrors")]
-        public IActionResult LoadClientErrors()
-        {
-            try
-            {
-                var tempPatientArtExtracts = _tempPatientArtExtractRepository.GetAll().Where(n => n.CheckError).ToList();
-                return Ok(tempPatientArtExtracts);
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error loading PatientArt Extracts with errors";
+                var msg = $"Error loading valid Clients";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);
@@ -60,12 +62,12 @@ namespace Dwapi.Controller
         {
             try
             {
-                var errorSummary = _errorSummaryRepository.GetAll().ToList();
+                var errorSummary = _htsClientExtractErrorSummaryRepository.GetAll().ToList();
                 return Ok(errorSummary);
             }
             catch (Exception e)
             {
-                var msg = $"Error loading PatientArt error summary";
+                var msg = $"Error loading Clients error summary";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);
@@ -77,29 +79,12 @@ namespace Dwapi.Controller
         {
             try
             {
-                var tempPatientArtExtracts = _patientArtExtractRepository.GetAll().ToList();
+                var tempPatientArtExtracts = _htsClientLinkageExtractRepository.GetAll().ToList();
                 return Ok(tempPatientArtExtracts);
             }
             catch (Exception e)
             {
-                var msg = $"Error loading valid PatientArt Extracts";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
-        [HttpGet("linkageerrors")]
-        public IActionResult LoadLinkageErrors()
-        {
-            try
-            {
-                var tempPatientArtExtracts = _tempPatientArtExtractRepository.GetAll().Where(n => n.CheckError).ToList();
-                return Ok(tempPatientArtExtracts);
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error loading PatientArt Extracts with errors";
+                var msg = $"Error loading valid Linkage Extracts";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);
@@ -111,12 +96,12 @@ namespace Dwapi.Controller
         {
             try
             {
-                var errorSummary = _errorSummaryRepository.GetAll().ToList();
+                var errorSummary = _htsClientLinkageExtractErrorSummaryRepository.GetAll().ToList();
                 return Ok(errorSummary);
             }
             catch (Exception e)
             {
-                var msg = $"Error loading PatientArt error summary";
+                var msg = $"Error loading Linkage error summary";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);
@@ -129,29 +114,12 @@ namespace Dwapi.Controller
         {
             try
             {
-                var tempPatientArtExtracts = _patientArtExtractRepository.GetAll().ToList();
+                var tempPatientArtExtracts = _htsClientPartnerExtractRepository.GetAll().ToList();
                 return Ok(tempPatientArtExtracts);
             }
             catch (Exception e)
             {
-                var msg = $"Error loading valid PatientArt Extracts";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
-        [HttpGet("partnererrors")]
-        public IActionResult LoadPartnerErrors()
-        {
-            try
-            {
-                var tempPatientArtExtracts = _tempPatientArtExtractRepository.GetAll().Where(n => n.CheckError).ToList();
-                return Ok(tempPatientArtExtracts);
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error loading PatientArt Extracts with errors";
+                var msg = $"Error loading valid Partner Extracts";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);
@@ -163,12 +131,12 @@ namespace Dwapi.Controller
         {
             try
             {
-                var errorSummary = _errorSummaryRepository.GetAll().ToList();
+                var errorSummary = _htsClientPartnerExtractErrorSummaryRepository.GetAll().ToList();
                 return Ok(errorSummary);
             }
             catch (Exception e)
             {
-                var msg = $"Error loading PatientArt error summary";
+                var msg = $"Error loading Partner error summary";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

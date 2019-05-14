@@ -21,9 +21,9 @@ import {HtsClientPartnerService} from '../../../services/hts-client-partner.serv
 export class HtsInvalidComponent implements OnInit , OnChanges {
 
     @Input() extract: string;
-    private _patientExtractsService: HtsClientService;
-    private _patientArtService: HtsClientLinkageService;
-    private _patientBaselineService: HtsClientPartnerService;
+    private htsClientService: HtsClientService;
+    private htsClientLinkageService: HtsClientLinkageService;
+    private htsClientPartnerService: HtsClientPartnerService;
 
     public invalidExtracts: any[] = [];
     public cols: any[];
@@ -33,9 +33,9 @@ export class HtsInvalidComponent implements OnInit , OnChanges {
 
     constructor(patientExtractsService: HtsClientService, patientArtService: HtsClientLinkageService,
                 patientBaselineService: HtsClientPartnerService) {
-        this._patientExtractsService = patientExtractsService;
-        this._patientArtService = patientArtService;
-        this._patientBaselineService = patientBaselineService;
+        this.htsClientService = patientExtractsService;
+        this.htsClientLinkageService = patientArtService;
+        this.htsClientPartnerService = patientBaselineService;
     }
 
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -54,10 +54,10 @@ export class HtsInvalidComponent implements OnInit , OnChanges {
         if (this.extract === 'HTS Client Extracts') {
             this.getInvalidPatientExtracts();
         }
-        if (this.extract === 'HTS Client Extracts') {
+        if (this.extract === 'HTS Linkage Extracts') {
             this.getInvalidPatientArtExtracts();
         }
-        if (this.extract === 'HTS Client Partner') {
+        if (this.extract === 'HTS Partner Extracts') {
             this.getInvalidPatientBaselineExtracts();
         }
     }
@@ -66,16 +66,16 @@ export class HtsInvalidComponent implements OnInit , OnChanges {
         if (this.extract === 'HTS Client Extracts') {
             this.getPatientColumns();
         }
-        if (this.extract === 'HTS Client Extracts') {
+        if (this.extract === 'HTS Linkage Extracts') {
             this.getPatientArtColumns();
         }
-        if (this.extract === 'HTS Client Partner') {
+        if (this.extract === 'HTS Partner Extracts') {
             this.getPatientBaselineColumns();
         }
     }
 
     private getInvalidPatientExtracts(): void {
-        this.getInvalid$ = this._patientExtractsService.loadValidations().subscribe(
+        this.getInvalid$ = this.htsClientService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
             },
@@ -93,7 +93,7 @@ export class HtsInvalidComponent implements OnInit , OnChanges {
     }
 
     private getInvalidPatientArtExtracts(): void {
-        this.getInvalid$ = this._patientArtService.loadValidations().subscribe(
+        this.getInvalid$ = this.htsClientLinkageService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
             },
@@ -111,7 +111,7 @@ export class HtsInvalidComponent implements OnInit , OnChanges {
     }
 
     private getInvalidPatientBaselineExtracts(): void {
-        this.getInvalid$ = this._patientBaselineService.loadValidations().subscribe(
+        this.getInvalid$ = this.htsClientPartnerService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
             },
