@@ -75,8 +75,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
                 nameof(ExtractsContext.TempPatientVisitExtracts),
                 nameof(ExtractsContext.PatientVisitExtracts),
                 nameof(ExtractsContext.TempPatientAdverseEventExtracts),
-                nameof(ExtractsContext.PatientAdverseEventExtracts),
-                nameof(ExtractsContext.ValidationError)
+                nameof(ExtractsContext.PatientAdverseEventExtracts)
             };
 
             var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };

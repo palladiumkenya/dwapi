@@ -89,7 +89,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddDbContext<ExtractsContext>(x => x.UseSqlServer(config["ConnectionStrings:DwapiConnection"]))
                 .AddDbContext<SettingsContext>(x => x.UseSqlServer(config["ConnectionStrings:DwapiConnection"]))
                 .AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>()
-
+                .AddTransient<IValidatorRepository, ValidatorRepository>()
                 .AddTransient<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>()
                 .AddTransient<IMasterPatientIndexRepository, MasterPatientIndexRepository>()
 
@@ -166,7 +166,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<ExtractsContext>()
                 .AddTransient<SettingsContext>()
                 .AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>()
-
+                .AddTransient<IValidatorRepository, ValidatorRepository>()
                 .AddTransient<ITempMasterPatientIndexRepository, TempMasterPatientIndexRepository>()
                 .AddTransient<IMasterPatientIndexRepository, MasterPatientIndexRepository>()
 

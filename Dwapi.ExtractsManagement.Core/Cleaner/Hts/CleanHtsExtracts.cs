@@ -20,11 +20,13 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Hts
     {
         private readonly ITempHTSClientExtractRepository _tempPatientExtractRepository;
         private readonly IExtractHistoryRepository _historyRepository;
+        private readonly IValidatorRepository _validatorRepository;
 
-        public CleanHtsExtracts(ITempHTSClientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository historyRepository)
+        public CleanHtsExtracts(ITempHTSClientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository historyRepository, IValidatorRepository validatorRepository)
         {
             _tempPatientExtractRepository = tempPatientExtractRepository;
             _historyRepository = historyRepository;
+            _validatorRepository = validatorRepository;
         }
 
         public async Task Clean(List<Guid> extractIds)
@@ -42,6 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Hts
             }
 
             await _historyRepository.ClearHistory(extractIds);
+            _validatorRepository.ClearByDocket("HTS");
             await _tempPatientExtractRepository.Clear();
 
 
