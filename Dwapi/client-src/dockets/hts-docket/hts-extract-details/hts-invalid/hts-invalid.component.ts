@@ -14,11 +14,11 @@ import {HtsClientLinkageService} from '../../../services/hts-client-linkage.serv
 import {HtsClientPartnerService} from '../../../services/hts-client-partner.service';
 
 @Component({
-  selector: 'liveapp-hts-invalid',
-  templateUrl: './hts-invalid.component.html',
-  styleUrls: ['./hts-invalid.component.scss']
+    selector: 'liveapp-hts-invalid',
+    templateUrl: './hts-invalid.component.html',
+    styleUrls: ['./hts-invalid.component.scss']
 })
-export class HtsInvalidComponent implements OnInit , OnChanges {
+export class HtsInvalidComponent implements OnInit, OnChanges {
 
     @Input() extract: string;
     private htsClientService: HtsClientService;
@@ -46,35 +46,35 @@ export class HtsInvalidComponent implements OnInit , OnChanges {
     }
 
     ngOnInit() {
-        this.getPatientColumns();
-        this.getInvalidPatientExtracts();
+        this.getClientColumns();
+        this.getClientExtracts();
     }
 
     public getInvalidExtracts(): void {
         if (this.extract === 'HTS Client Extracts') {
-            this.getInvalidPatientExtracts();
+            this.getClientExtracts();
         }
         if (this.extract === 'HTS Linkage Extracts') {
-            this.getInvalidPatientArtExtracts();
+            this.getLinkageExtracts();
         }
         if (this.extract === 'HTS Partner Extracts') {
-            this.getInvalidPatientBaselineExtracts();
+            this.getPartnerExtracts();
         }
     }
 
     private getColumns(): void {
         if (this.extract === 'HTS Client Extracts') {
-            this.getPatientColumns();
+            this.getClientColumns();
         }
         if (this.extract === 'HTS Linkage Extracts') {
-            this.getPatientArtColumns();
+            this.getLinkageColumns();
         }
         if (this.extract === 'HTS Partner Extracts') {
-            this.getPatientBaselineColumns();
+            this.getPartnerColumns();
         }
     }
 
-    private getInvalidPatientExtracts(): void {
+    private getClientExtracts(): void {
         this.getInvalid$ = this.htsClientService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
@@ -92,7 +92,7 @@ export class HtsInvalidComponent implements OnInit , OnChanges {
         );
     }
 
-    private getInvalidPatientArtExtracts(): void {
+    private getLinkageExtracts(): void {
         this.getInvalid$ = this.htsClientLinkageService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
@@ -110,7 +110,7 @@ export class HtsInvalidComponent implements OnInit , OnChanges {
         );
     }
 
-    private getInvalidPatientBaselineExtracts(): void {
+    private getPartnerExtracts(): void {
         this.getInvalid$ = this.htsClientPartnerService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
@@ -128,90 +128,105 @@ export class HtsInvalidComponent implements OnInit , OnChanges {
         );
     }
 
-    private getPatientColumns(): void {
+    private getClientColumns(): void {
         this.cols = [
-            { field: 'summary', header: 'Summary' },
-            { field: 'extract', header: 'Extract' },
-            { field: 'field', header: 'Field' },
-            { field: 'type', header: 'Type' },
-            { field: 'summary', header: 'Summary' },
-            { field: 'dateGenerated', header: 'DateGenerated' },
-            { field: 'patientPK', header: 'PatientPK' },
-            { field: 'facilityId', header: 'FacilityId' },
-            { field: 'patientID', header: 'PatientID' },
-            { field: 'siteCode', header: 'SiteCode' },
-            { field: 'facilityName', header: 'FacilityName' }
+            {field: 'summary', header: 'summary'},
+            {field: 'dateGenerated', header: 'dateGenerated'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'htsNumber', header: 'htsNumber'},
+            {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordId', header: 'recordId'},
+            {field: 'id', header: 'id'},
+            {field: 'encounterId', header: 'encounterId'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'dob', header: 'dob'},
+            {field: 'gender', header: 'gender'},
+            {field: 'maritalStatus', header: 'maritalStatus'},
+            {field: 'keyPop', header: 'keyPop'},
+            {field: 'testedBefore', header: 'testedBefore'},
+            {field: 'monthsLastTested', header: 'monthsLastTested'},
+            {field: 'clientTestedAs', header: 'clientTestedAs'},
+            {field: 'strategyHTS', header: 'strategyHTS'},
+            {field: 'testKitName1', header: 'testKitName1'},
+            {field: 'testKitLotNumber1', header: 'testKitLotNumber1'},
+            {field: 'testKitExpiryDate1', header: 'testKitExpiryDate1'},
+            {field: 'testResultsHTS1', header: 'testResultsHTS1'},
+            {field: 'testKitName2', header: 'testKitName2'},
+            {field: 'testKitLotNumber2', header: 'testKitLotNumber2'},
+            {field: 'testKitExpiryDate2', header: 'testKitExpiryDate2'},
+            {field: 'testResultsHTS2', header: 'testResultsHTS2'},
+            {field: 'finalResultHTS', header: 'finalResultHTS'},
+            {field: 'finalResultsGiven', header: 'finalResultsGiven'},
+            {field: 'tbScreeningHTS', header: 'tbScreeningHTS'},
+            {field: 'clientSelfTested', header: 'clientSelfTested'},
+            {field: 'coupleDiscordant', header: 'coupleDiscordant'},
+            {field: 'testType', header: 'testType'},
+            {field: 'extract', header: 'extract'},
+            {field: 'field', header: 'field'},
+            {field: 'type', header: 'type'}
         ];
     }
 
-    private getPatientArtColumns(): void {
+    private getLinkageColumns(): void {
         this.cols = [
-            { field: 'summary', header: 'Summary' },
-            { field: 'extract', header: 'Extract' },
-            { field: 'field', header: 'Field' },
-            { field: 'type', header: 'Type' },
-            { field: 'summary', header: 'Summary' },
-            { field: 'dateGenerated', header: 'Date Generated' },
-            { field: 'patientPK', header: 'Patient PK' },
-            { field: 'facilityId', header: 'Facility Id' },
-            { field: 'patientID', header: 'Patient ID' },
-            { field: 'siteCode', header: 'Site Code' },
-            { field: 'facilityName', header: 'Facility Name' },
-            { field: 'dob', header: 'DOB' },
-            { field: 'gender', header: 'Gender' },
-            { field: 'patientSource', header: 'Patient Source' },
-            { field: 'registrationDate', header: 'Registration Date' },
-            { field: 'ageLastVisit', header: 'Age Last Visit' },
-            { field: 'previousARTStartDate', header: 'Previous ART Start Date' },
-            { field: 'previousARTRegimen', header: 'Previous ART Regimen' },
-            { field: 'startARTAtThisFacility', header: 'Start ART At This Facility' },
-            { field: 'startARTDate', header: 'Start ART Date' },
-            { field: 'startRegimen', header: 'Start Regimen' },
-            { field: 'startRegimenLine', header: 'Start Regimen Line' },
-            { field: 'lastARTDate', header: 'Last ART Date' },
-            { field: 'lastRegimen', header: 'Last Regimen' },
-            { field: 'lastRegimenLine', header: 'Last Regimen Line' },
-            { field: 'lastVisit', header: 'Last Visit' },
-            { field: 'exitReason', header: 'Exit Reason' },
-            { field: 'exitDate', header: 'Exit Date' }
+            {field: 'summary', header: 'summary'},
+            {field: 'dateGenerated', header: 'dateGenerated'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'htsNumber', header: 'htsNumber'},
+            {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordId', header: 'recordId'},
+            {field: 'id', header: 'id'},
+            {field: 'phoneTracingDate', header: 'phoneTracingDate'},
+            {field: 'physicalTracingDate', header: 'physicalTracingDate'},
+            {field: 'tracingOutcome', header: 'tracingOutcome'},
+            {field: 'cccNumber', header: 'cccNumber'},
+            {field: 'referralDate', header: 'referralDate'},
+            {field: 'dateEnrolled', header: 'dateEnrolled'},
+            {field: 'enrolledFacilityName', header: 'enrolledFacilityName'},
+            {field: 'extract', header: 'extract'},
+            {field: 'field', header: 'field'},
+            {field: 'type', header: 'type'}
         ];
     }
 
-    private getPatientBaselineColumns(): void {
+    private getPartnerColumns(): void {
         this.cols = [
-            { field: 'summary', header: 'Summary' },
-            { field: 'extract', header: 'Extract' },
-            { field: 'field', header: 'Field' },
-            { field: 'type', header: 'Type' },
-            { field: 'summary', header: 'Summary' },
-            { field: 'dateGenerated', header: 'Date Generated' },
-            { field: 'patientPK', header: 'Patient PK' },
-            { field: 'facilityId', header: 'Facility Id' },
-            { field: 'patientID', header: 'Patient ID' },
-            { field: 'siteCode', header: 'Site Code' },
-            { field: 'recordId', header: 'Record Id' },
-            { field: 'bCD4', header: 'bCD4' },
-            { field: 'bCD4Date', header: 'bCD4 Date' },
-            { field: 'bWAB', header: 'bWAB' },
-            { field: 'bWABDate', header: 'bWAB Date' },
-            { field: 'bWHO', header: 'bWHO' },
-            { field: 'bWHODate', header: 'bWHO Date' },
-            { field: 'eWAB', header: 'eWAB' },
-            { field: 'eWABDate', header: 'eWAB Date' },
-            { field: 'eCD4', header: 'eCD4' },
-            { field: 'eCD4Date', header: 'eCD4 Date' },
-            { field: 'eWHO', header: 'eWHO' },
-            { field: 'eWHODate', header: 'eWHO Date' },
-            { field: 'lastWHO', header: 'lastWHO' },
-            { field: 'lastWHODate', header: 'last WHO Date' },
-            { field: 'lastCD4', header: 'lastCD4' },
-            { field: 'lastCD4Date', header: 'last CD4 Date' },
-            { field: 'lastWAB', header: 'lastWAB' },
-            { field: 'lastWABDate', header: 'last WAB Date' },
-            { field: 'm12CD4', header: 'm12CD4' },
-            { field: 'm12CD4Date', header: 'm12CD4 Date' },
-            { field: 'm6CD4', header: 'm6CD4' },
-            { field: 'm6CD4Date', header: 'm6CD4 Date' }
+            {field: 'summary', header: 'summary'},
+            {field: 'dateGenerated', header: 'dateGenerated'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'htsNumber', header: 'htsNumber'},
+            {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordId', header: 'recordId'},
+            {field: 'id', header: 'id'},
+            {field: 'partnerPatientPk', header: 'partnerPatientPk'},
+            {field: 'partnerPersonId', header: 'partnerPersonId'},
+            {field: 'relationshipToIndexClient', header: 'relationshipToIndexClient'},
+            {field: 'screenedForIpv', header: 'screenedForIpv'},
+            {field: 'ipvScreeningOutcome', header: 'ipvScreeningOutcome'},
+            {field: 'currentlyLivingWithIndexClient', header: 'currentlyLivingWithIndexClient'},
+            {field: 'knowledgeOfHivStatus', header: 'knowledgeOfHivStatus'},
+            {field: 'pnsApproach', header: 'pnsApproach'},
+            {field: 'trace1Outcome', header: 'trace1Outcome'},
+            {field: 'trace1Type', header: 'trace1Type'},
+            {field: 'trace1Date', header: 'trace1Date'},
+            {field: 'trace2Outcome', header: 'trace2Outcome'},
+            {field: 'trace2Type', header: 'trace2Type'},
+            {field: 'trace2Date', header: 'trace2Date'},
+            {field: 'trace3Outcome', header: 'trace3Outcome'},
+            {field: 'trace3Type', header: 'trace3Type'},
+            {field: 'trace3Date', header: 'trace3Date'},
+            {field: 'pnsConsent', header: 'pnsConsent'},
+            {field: 'linked', header: 'linked'},
+            {field: 'linkDateLinkedToCare', header: 'linkDateLinkedToCare'},
+            {field: 'cccNumber', header: 'cccNumber'},
+            {field: 'age', header: 'age'},
+            {field: 'sex', header: 'sex'},
+            {field: 'extract', header: 'extract'},
+            {field: 'field', header: 'field'},
+            {field: 'type', header: 'type'}
         ];
     }
 }
