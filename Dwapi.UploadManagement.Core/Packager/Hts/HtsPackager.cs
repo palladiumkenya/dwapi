@@ -1,35 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.SharedKernel.Exchange;
+using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.UploadManagement.Core.Model.Dwh;
+using Dwapi.UploadManagement.Core.Model.Hts;
 
 namespace Dwapi.UploadManagement.Core.Packager.Hts
 {
     public class HtsPackager : IHtsPackager
     {
-        private readonly IDwhExtractReader _reader;
+        private readonly IHtsExtractReader _cbsExtractReader;
         private readonly IEmrMetricReader _metricReader;
 
-        public HtsPackager(IDwhExtractReader reader, IEmrMetricReader metricReader)
+        public HtsPackager(IHtsExtractReader cbsExtractReader, IEmrMetricReader metricReader)
         {
-            _reader = reader;
+            _cbsExtractReader = cbsExtractReader;
             _metricReader = metricReader;
         }
 
 
-        public IEnumerable<DwhManifest> Generate()
+        public IEnumerable<Manifest>  Generate()
         {
-            var patientProfiles = _reader.ReadProfiles();
+            var getPks = _cbsExtractReader.ReadAllClients()
+                .Select(x => new SitePatientProfile(x.SiteCode, x.FacilityName, x.PatientPk));
 
-            return DwhManifest.Create(patientProfiles);
+
+            return Manifest.Create(getPks);
         }
 
-        public IEnumerable<DwhManifest> GenerateWithMetrics()
+        public IEnumerable<Manifest> GenerateWithMetrics()
         {
             var metrics = _metricReader.ReadAll().FirstOrDefault();
             var manifests = Generate().ToList();
@@ -45,9 +53,19 @@ namespace Dwapi.UploadManagement.Core.Packager.Hts
             return manifests;
         }
 
-        public PatientExtractView GenerateExtracts(Guid id)
+        public IEnumerable<HTSClientExtract> GenerateClients()
         {
-            return _reader.Read(id);
+            return _cbsExtractReader.ReadAllClients();
+        }
+
+        public IEnumerable<HTSClientPartnerExtract> GeneratePartners()
+        {
+            return _cbsExtractReader.ReadAllPartners();
+        }
+
+        public IEnumerable<HTSClientLinkageExtract> GenerateLinkages()
+        {
+            return _cbsExtractReader.ReadAllLinkages();
         }
     }
 }

@@ -116,7 +116,7 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-                _dwhSendService.SendExtractsAsync(packageDto.DwhPackage);
+                _dwhSendService.SendClientsAsync(packageDto.DwhPackage);
                     return Ok();
             }
             catch (Exception e)

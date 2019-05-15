@@ -20,6 +20,7 @@ import {EmrConfigService} from '../../../settings/services/emr-config.service';
 import {LoadExtracts} from '../../../settings/model/load-extracts';
 import {LoadHtsExtracts} from '../../../settings/model/load-hts-extracts';
 import {LoadHtsFromEmrCommand} from '../../../settings/model/load-hts-from-emr-command';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'liveapp-hts-console',
@@ -258,7 +259,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
-                `http://${document.location.hostname}:5757/HtsActivity`
+                `http://${document.location.hostname}:${environment.port}/HtsActivity`
             )
             .configureLogging(LogLevel.Trace)
             .build();
