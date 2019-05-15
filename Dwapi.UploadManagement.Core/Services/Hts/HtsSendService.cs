@@ -1,38 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.DTOs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
-using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
-using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
-using Dwapi.UploadManagement.Core.Event.Cbs;
-using Dwapi.UploadManagement.Core.Event.Dwh;
 using Dwapi.UploadManagement.Core.Event.Hts;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
-using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Exchange.Hts;
-using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
-using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
-using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
-using Dwapi.UploadManagement.Core.Notifications.Cbs;
-using Dwapi.UploadManagement.Core.Notifications.Dwh;
 using Dwapi.UploadManagement.Core.Notifications.Hts;
-using Hangfire;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -93,6 +77,110 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
         }
 
         public async Task<List<SendMpiResponse>> SendClientsAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag)
+        {
+            var responses = new List<SendMpiResponse>();
+
+            var client = new HttpClient();
+            int sendCound=0;
+            int count = 0;
+            int total = messageBag.Messages.Count;
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+
+            foreach (var message in messageBag.Messages)
+            {
+                count++;
+                try
+                {
+                    var msg = JsonConvert.SerializeObject(message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}mpi"), message);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                        responses.Add(content);
+
+                        var sentIds = message.HtsClients.Select(x => x.Id).ToList();
+                        sendCound += sentIds.Count;
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadAsStringAsync();
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.HtsClients.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
+                        throw new Exception(error);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, $"Send Manifest Error");
+                    throw;
+                }
+
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(MasterPatientIndex), Common.GetProgress(count,total))));
+            }
+
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+
+            return responses;
+        }
+
+        public Task<List<SendMpiResponse>> SendClientLinkagesAsync(SendManifestPackageDTO sendTo)
+        {
+            return SendClientLinkagesAsync(sendTo, HtsMessageBag.Create(_packager.GenerateLinkages().ToList()));
+        }
+
+        public async Task<List<SendMpiResponse>> SendClientLinkagesAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag)
+        {
+            var responses = new List<SendMpiResponse>();
+
+            var client = new HttpClient();
+            int sendCound=0;
+            int count = 0;
+            int total = messageBag.Messages.Count;
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+
+            foreach (var message in messageBag.Messages)
+            {
+                count++;
+                try
+                {
+                    var msg = JsonConvert.SerializeObject(message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}mpi"), message);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                        responses.Add(content);
+
+                        var sentIds = message.HtsClients.Select(x => x.Id).ToList();
+                        sendCound += sentIds.Count;
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadAsStringAsync();
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.HtsClients.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
+                        throw new Exception(error);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, $"Send Manifest Error");
+                    throw;
+                }
+
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(MasterPatientIndex), Common.GetProgress(count,total))));
+            }
+
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+
+            return responses;
+        }
+
+        public Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo)
+        {
+            return SendClientPartnersAsync(sendTo, HtsMessageBag.Create(_packager.GeneratePartners().ToList()));
+        }
+
+        public async Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag)
         {
             var responses = new List<SendMpiResponse>();
 

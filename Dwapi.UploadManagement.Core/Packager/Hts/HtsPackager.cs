@@ -1,36 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
-using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
-using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
-using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Hts;
-using Dwapi.UploadManagement.Core.Model.Dwh;
-using Dwapi.UploadManagement.Core.Model.Hts;
 
 namespace Dwapi.UploadManagement.Core.Packager.Hts
 {
     public class HtsPackager : IHtsPackager
     {
-        private readonly IHtsExtractReader _cbsExtractReader;
+        private readonly IHtsExtractReader _htsExtractReader;
         private readonly IEmrMetricReader _metricReader;
 
-        public HtsPackager(IHtsExtractReader cbsExtractReader, IEmrMetricReader metricReader)
+        public HtsPackager(IHtsExtractReader htsExtractReader, IEmrMetricReader metricReader)
         {
-            _cbsExtractReader = cbsExtractReader;
+            _htsExtractReader = htsExtractReader;
             _metricReader = metricReader;
         }
 
 
         public IEnumerable<Manifest>  Generate()
         {
-            var getPks = _cbsExtractReader.ReadAllClients()
+            var getPks = _htsExtractReader.ReadAllClients()
                 .Select(x => new SitePatientProfile(x.SiteCode, x.FacilityName, x.PatientPk));
 
 
@@ -55,17 +48,17 @@ namespace Dwapi.UploadManagement.Core.Packager.Hts
 
         public IEnumerable<HTSClientExtract> GenerateClients()
         {
-            return _cbsExtractReader.ReadAllClients();
+            return _htsExtractReader.ReadAllClients();
         }
 
         public IEnumerable<HTSClientPartnerExtract> GeneratePartners()
         {
-            return _cbsExtractReader.ReadAllPartners();
+            return _htsExtractReader.ReadAllPartners();
         }
 
         public IEnumerable<HTSClientLinkageExtract> GenerateLinkages()
         {
-            return _cbsExtractReader.ReadAllLinkages();
+            return _htsExtractReader.ReadAllLinkages();
         }
     }
 }
