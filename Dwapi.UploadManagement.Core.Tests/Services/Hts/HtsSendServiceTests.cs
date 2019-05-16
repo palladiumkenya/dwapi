@@ -6,11 +6,13 @@ using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Tests.TestHelpers;
 using Dwapi.UploadManagement.Core.Exchange.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
+using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
 using Dwapi.UploadManagement.Core.Packager.Hts;
 using Dwapi.UploadManagement.Core.Services.Hts;
 using Dwapi.UploadManagement.Infrastructure.Data;
+using Dwapi.UploadManagement.Infrastructure.Reader;
 using Dwapi.UploadManagement.Infrastructure.Reader.Hts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,11 +25,11 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
     [Category("Hts")]
     public class HtsSendServiceTests
     {
-        private readonly string _authToken = @"1983aeda-6a96-11e8-adc0-fa7ae01bbebc";
+        private readonly string _authToken = @"1983aeda-1a96-30e9-adc0-fa7ae01bbebc";
         private readonly string _subId = "DWAPI";
-        private readonly string url = "http://data.kenyahmis.org:6767";
+        private readonly string url = "http://localhost:5000";
 
-        private IHtsSendService _cbsSendService;
+        private IHtsSendService _htsSendService;
         private IServiceProvider _serviceProvider;
         private ManifestMessageBag _bag;
         private HtsMessageBag _clientBag;
@@ -46,7 +48,8 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
                 .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
                 .AddTransient<IHtsSendService,HtsSendService>()
             .AddTransient<IHtsPackager, HtsPackager>()
-            .AddTransient<IHtsExtractReader, HtsExtractReader>()
+                .AddTransient<IEmrMetricReader, EmrMetricReader>()
+                .AddTransient<IHtsExtractReader, HtsExtractReader>()
 
                 .BuildServiceProvider();
 
@@ -67,7 +70,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
                 AuthToken = _authToken,
                 SubscriberId = _subId
             };
-            _cbsSendService = _serviceProvider.GetService<IHtsSendService>();
+            _htsSendService = _serviceProvider.GetService<IHtsSendService>();
         }
 
         [Test]
@@ -75,7 +78,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         {
             var sendTo=new SendManifestPackageDTO(_registry);
 
-            var responses = _cbsSendService.SendManifestAsync(sendTo, _bag).Result;
+            var responses = _htsSendService.SendManifestAsync(sendTo, _bag).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x=>x.IsValid()).Any(x=>false));
             foreach (var sendManifestResponse in responses)
@@ -90,7 +93,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         {
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _cbsSendService.SendClientsAsync(sendTo, _clientBag).Result;
+            var responses = _htsSendService.SendClientsAsync(sendTo, _clientBag).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)
@@ -104,7 +107,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         {
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _cbsSendService.SendClientLinkagesAsync(sendTo, _clientBag).Result;
+            var responses = _htsSendService.SendClientLinkagesAsync(sendTo, _clientBag).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)
@@ -118,7 +121,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         {
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _cbsSendService.SendClientPartnersAsync(sendTo, _clientBag).Result;
+            var responses = _htsSendService.SendClientPartnersAsync(sendTo, _clientBag).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)

@@ -21,8 +21,16 @@ export class HtsSenderService {
             .catch(this.handleError);
     }
 
-    public sendPatientExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/patients`, sendPackage)
+    public sendClientExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/clients`, sendPackage)
+            .catch(this.handleError);
+    }
+    public sendClientLinkageExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/linkages`, sendPackage)
+            .catch(this.handleError);
+    }
+    public sendClientPartnerExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/partners`, sendPackage)
             .catch(this.handleError);
     }
 

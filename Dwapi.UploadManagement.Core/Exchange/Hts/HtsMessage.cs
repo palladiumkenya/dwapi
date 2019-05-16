@@ -7,25 +7,25 @@ namespace Dwapi.UploadManagement.Core.Exchange.Hts
 {
     public class HtsMessage
     {
-        public List<HTSClientExtract> HtsClients { get; set; }=new List<HTSClientExtract>();
-        public List<HTSClientLinkageExtract> HtsClientLinkages { get; set; }=new List<HTSClientLinkageExtract>();
-        public List<HTSClientPartnerExtract> HtsClientPartners { get; set; }=new List<HTSClientPartnerExtract>();
+        public List<HTSClientExtract> Clients { get; set; }=new List<HTSClientExtract>();
+        public List<HTSClientLinkageExtract> ClientLinkages { get; set; }=new List<HTSClientLinkageExtract>();
+        public List<HTSClientPartnerExtract> ClientPartners { get; set; }=new List<HTSClientPartnerExtract>();
 
         public HtsMessage()
         {
         }
 
-        public HtsMessage(List<HTSClientExtract> htsClients)
+        public HtsMessage(List<HTSClientExtract> clients)
         {
-            HtsClients = htsClients;
+            Clients = clients;
         }
         public HtsMessage(List<HTSClientLinkageExtract> links)
         {
-            HtsClientLinkages = links;
+            ClientLinkages = links;
         }
         public HtsMessage(List<HTSClientPartnerExtract> partnerExtracts)
         {
-            HtsClientPartners = partnerExtracts;
+            ClientPartners = partnerExtracts;
         }
 
         public static List<HtsMessage> Create(List<HTSClientExtract> masterPatientIndices)

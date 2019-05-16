@@ -37,18 +37,20 @@ namespace Dwapi.Controller
         private readonly IHubContext<HtsSendActivity> _hubSendContext;
         private readonly IHtsSendService _dwhSendService;
 
-        public HtsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<HtsActivity> hubContext, IHtsSendService dwhSendService, IHubContext<HtsSendActivity> hubSendContext)
+        public HtsController(IMediator mediator, IExtractStatusService extractStatusService,
+            IHubContext<HtsActivity> hubContext, IHtsSendService dwhSendService,
+            IHubContext<HtsSendActivity> hubSendContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _dwhSendService = dwhSendService;
-            Startup.HtsSendHubContext= _hubSendContext = hubSendContext;
-            Startup.HtsHubContext= _hubContext = hubContext;
+            Startup.HtsSendHubContext = _hubSendContext = hubSendContext;
+            Startup.HtsHubContext = _hubContext = hubContext;
         }
 
 
         [HttpPost("extract")]
-        public async Task<IActionResult> Load([FromBody]ExtractPatient request)
+        public async Task<IActionResult> Load([FromBody] ExtractPatient request)
         {
             if (!ModelState.IsValid) return BadRequest();
             var result = await _mediator.Send(request, HttpContext.RequestAborted);
@@ -90,13 +92,13 @@ namespace Dwapi.Controller
 
         // POST: api/DwhExtracts/manifest
         [HttpPost("manifest")]
-        public async Task<IActionResult> SendManifest([FromBody] CombinedSendManifestDto packageDto)
+        public async Task<IActionResult> SendManifest([FromBody] SendManifestPackageDTO packageDto)
         {
             if (!packageDto.IsValid())
                 return BadRequest();
             try
             {
-                var result = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage);
+                var result = await _dwhSendService.SendManifestAsync(packageDto);
                 return Ok(result);
             }
             catch (Exception e)
@@ -109,15 +111,53 @@ namespace Dwapi.Controller
 
 
         // POST: api/DwhExtracts/patients
-        [HttpPost("patients")]
-        public IActionResult SendPatientExtracts([FromBody] CombinedSendManifestDto packageDto)
+        [HttpPost("clients")]
+        public IActionResult SendClientExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
             if (!packageDto.IsValid())
                 return BadRequest();
             try
             {
-                _dwhSendService.SendClientsAsync(packageDto.DwhPackage);
-                    return Ok();
+                _dwhSendService.SendClientsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("linkages")]
+        public IActionResult SendClientLinkageExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _dwhSendService.SendClientLinkagesAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("partners")]
+        public IActionResult SendClientPartnerExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _dwhSendService.SendClientPartnersAsync(packageDto);
+                return Ok();
             }
             catch (Exception e)
             {
