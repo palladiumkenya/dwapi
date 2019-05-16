@@ -1,0 +1,41 @@
+<div class="card card-w-title">
+    <h1>HIV Testing Services <span style="color: lightgray">|</span> {{emrName}} <span style="font-size:13px ">{{emrVersion}}</span></h1>
+    <p-growl [(value)]="notifications"></p-growl>
+
+    <p-toolbar>
+        <div class="ui-toolbar-group-left">
+            <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr()" label="Load from EMR"
+                    icon="ui-icon-file-download" class="green-btn"></button>
+        </div>
+
+        <div class="ui-toolbar-group-right">
+            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
+                    class="blue-btn"></button>
+        </div>
+    </p-toolbar>
+
+    <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true" columnResizeMode = "expand">
+        <p-column field="display" header="Extract"></p-column>
+        <p-column field="extractEvent.lastStatus" header="Status"></p-column>
+        <p-column field="extractEvent.found" header="Found"></p-column>
+        <p-column field="extractEvent.loaded" header="Loaded"></p-column>
+        <p-column field="extractEvent.rejected" header="Rejected"></p-column>
+        <p-column field="extractEvent.queued" header="Queued"></p-column>
+        <p-column field="extractEvent.sent" header="Sent"></p-column>
+    </p-dataTable>
+    <div class="ui-g" *ngIf="sendingManifest">
+        <div class="ui-g-12">
+            Stage 1 of 2: Sending manifest...
+            <p-progressBar mode="indeterminate"></p-progressBar>
+        </div>
+    </div>
+
+    <div class="ui-g" *ngIf="sending">
+        <div class="ui-g-12">
+            Stage 2 of 2: Sending Extracts, please wait ...
+            <p-progressBar showValue = "true" [value]="sendEvent?.sentProgress"></p-progressBar>
+        </div>
+    </div>
+    <p-messages [(value)]="errorMessage"></p-messages>
+    <p-growl [(value)]="otherMessage"></p-growl>
+</div>

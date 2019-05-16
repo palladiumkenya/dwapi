@@ -22,11 +22,13 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Dwh
     {
         private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
         private readonly IExtractHistoryRepository _historyRepository;
+        private readonly IValidatorRepository _validatorRepository;
 
-        public ClearDwhExtracts(ITempPatientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository historyRepository)
+        public ClearDwhExtracts(ITempPatientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository historyRepository, IValidatorRepository validatorRepository)
         {
             _tempPatientExtractRepository = tempPatientExtractRepository;
             _historyRepository = historyRepository;
+            _validatorRepository = validatorRepository;
         }
 
         public async Task<int> Clear(List<Guid> extractIds)
@@ -43,6 +45,7 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Dwh
             }
 
             await _historyRepository.ClearHistory(extractIds);
+            _validatorRepository.ClearByDocket("NDWH");    
             await _tempPatientExtractRepository.Clear();
 
 

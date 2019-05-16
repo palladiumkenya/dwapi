@@ -77,61 +77,71 @@ import {TableModule} from 'primeng/table';
 import {AppComponent} from './app.component';
 import {RegistryConfigComponent} from '../settings/registry-manager/registry-config/registry-config.component';
 import {EmrConfigComponent} from '../settings/emrs/emr-config/emr-config.component';
-import { TopbarComponent } from './topbar/topbar.component';
-import { InlineProfileComponent } from './inline-profile/inline-profile.component';
-import { FooterComponent } from './footer/footer.component';
-import { RightpanelComponent } from './rightpanel/rightpanel.component';
-import { AppMenuComponent } from './app-menu/app-menu.component';
-import { AppSubmenuComponent } from './app-submenu/app-submenu.component';
-import { AppBreadcrumbComponent } from './app-breadcrumb/app-breadcrumb.component';
+import {TopbarComponent} from './topbar/topbar.component';
+import {InlineProfileComponent} from './inline-profile/inline-profile.component';
+import {FooterComponent} from './footer/footer.component';
+import {RightpanelComponent} from './rightpanel/rightpanel.component';
+import {AppMenuComponent} from './app-menu/app-menu.component';
+import {AppSubmenuComponent} from './app-submenu/app-submenu.component';
+import {AppBreadcrumbComponent} from './app-breadcrumb/app-breadcrumb.component';
 import {BreadcrumbService} from './breadcrumb.service';
-import { DashboardComponent } from '../dashboard/dashboard.component';
+import {DashboardComponent} from '../dashboard/dashboard.component';
 import {MessageService} from 'primeng/components/common/messageservice';
 import {ConfirmationService} from 'primeng/api';
 import {RegistryConfigService} from '../settings/services/registry-config.service';
 import {HttpClientModule} from '@angular/common/http';
 import {MessageModule} from 'primeng/message';
 import {EmrConfigService} from '../settings/services/emr-config.service';
-import { DatabaseProtocolConfigComponent } from '../settings/emrs/database-protocol-config/database-protocol-config.component';
-import { RestProtocolConfigComponent } from '../settings/emrs/rest-protocol-config/rest-protocol-config.component';
+import {DatabaseProtocolConfigComponent} from '../settings/emrs/database-protocol-config/database-protocol-config.component';
+import {RestProtocolConfigComponent} from '../settings/emrs/rest-protocol-config/rest-protocol-config.component';
 import {ProtocolConfigService} from '../settings/services/protocol-config.service';
-import { ExtractConfigComponent } from '../settings/emrs/extract-config/extract-config.component';
+import {ExtractConfigComponent} from '../settings/emrs/extract-config/extract-config.component';
 import {ExtractConfigService} from '../settings/services/extract-config.service';
-import { PsmartConsoleComponent } from '../dockets/psmart-docket/psmart-console/psmart-console.component';
+import {PsmartConsoleComponent} from '../dockets/psmart-docket/psmart-console/psmart-console.component';
 import {PsmartExtractService} from '../dockets/services/psmart-extract.service';
-import { PsmartMiddlewareConsoleComponent } from '../dockets/psmart-docket/psmart-middleware-console/psmart-middleware-console.component';
+import {PsmartMiddlewareConsoleComponent} from '../dockets/psmart-docket/psmart-middleware-console/psmart-middleware-console.component';
 import {PsmartSenderService} from '../dockets/services/psmart-sender.service';
-import { NdwhConsoleComponent } from '../dockets/ndwh-docket/ndwh-console/ndwh-console.component';
-import { NdwhExtractService } from '../dockets/services/ndwh-extract.service';
-import { NdwhSenderService } from '../dockets/services/ndwh-sender.service';
-import { NdwhDocketComponent } from '../dockets/ndwh-docket/ndwh-docket.component';
-import { PsmartDocketComponent } from '../dockets/psmart-docket/psmart-docket.component';
-import { CbsDocketComponent } from '../dockets/cbs-docket/cbs-docket.component';
-import { NdwhExtractDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
-import { NdwhPatientsExtractService } from '../dockets/services/ndwh-patients-extract.service';
-import { DbProtocolComponent } from '../settings/db-protocol/db-protocol.component';
+import {NdwhConsoleComponent} from '../dockets/ndwh-docket/ndwh-console/ndwh-console.component';
+import {NdwhExtractService} from '../dockets/services/ndwh-extract.service';
+import {NdwhSenderService} from '../dockets/services/ndwh-sender.service';
+import {NdwhDocketComponent} from '../dockets/ndwh-docket/ndwh-docket.component';
+import {PsmartDocketComponent} from '../dockets/psmart-docket/psmart-docket.component';
+import {CbsDocketComponent} from '../dockets/cbs-docket/cbs-docket.component';
+import {NdwhExtractDetailsComponent} from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
+import {NdwhPatientsExtractService} from '../dockets/services/ndwh-patients-extract.service';
+import {DbProtocolComponent} from '../settings/db-protocol/db-protocol.component';
 // tslint:disable-next-line:max-line-length
-import { ValidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/valid-record-details/valid-record-details.component';
+import {ValidRecordDetailsComponent} from '../dockets/ndwh-docket/ndwh-extract-details/valid-record-details/valid-record-details.component';
 // tslint:disable-next-line:max-line-length
-import { InvalidRecordDetailsComponent } from '../dockets/ndwh-docket/ndwh-extract-details/invalid-record-details/invalid-record-details.component';
+import {InvalidRecordDetailsComponent} from '../dockets/ndwh-docket/ndwh-extract-details/invalid-record-details/invalid-record-details.component';
 import {EmrDocketComponent} from '../settings/emr-docket/emr-docket.component';
 import {EmrSettingsComponent} from '../settings/emr-settings/emr-settings.component';
 import {CbsService} from '../dockets/services/cbs.service';
-import { NdwhPatientArtService } from '../dockets/services/ndwh-patient-art.service';
-import { NdwhPatientBaselineService } from '../dockets/services/ndwh-patient-baseline.service';
-import { NdwhPatientLaboratoryService } from '../dockets/services/ndwh-patient-laboratory.service';
-import { NdwhPatientPharmacyService } from '../dockets/services/ndwh-patient-pharmacy.service';
-import { NdwhPatientStatusService } from '../dockets/services/ndwh-patient-status.service';
-import { NdwhPatientVisitService } from '../dockets/services/ndwh-patient-visit.service';
-import { RegistryManagerComponent } from '../settings/registry-manager/registry-manager.component';
-import { SetupComponent } from '../settings/setup/setup.component';
+import {NdwhPatientArtService} from '../dockets/services/ndwh-patient-art.service';
+import {NdwhPatientBaselineService} from '../dockets/services/ndwh-patient-baseline.service';
+import {NdwhPatientLaboratoryService} from '../dockets/services/ndwh-patient-laboratory.service';
+import {NdwhPatientPharmacyService} from '../dockets/services/ndwh-patient-pharmacy.service';
+import {NdwhPatientStatusService} from '../dockets/services/ndwh-patient-status.service';
+import {NdwhPatientVisitService} from '../dockets/services/ndwh-patient-visit.service';
+import {RegistryManagerComponent} from '../settings/registry-manager/registry-manager.component';
+import {SetupComponent} from '../settings/setup/setup.component';
 import {SetupService} from '../settings/services/setup.service';
-import { MpiSearchComponent } from '../dockets/cbs-docket/mpi-search/mpi-search.component';
-import { MpiSearchService } from '../dockets/services/mpi-search.service';
-import { NdwhPatientAdverseEventService } from '../dockets/services/ndwh-patient-adverse-event.service';
-import { AppDetailsService } from './services/app-details.service';
+import {MpiSearchComponent} from '../dockets/cbs-docket/mpi-search/mpi-search.component';
+import {MpiSearchService} from '../dockets/services/mpi-search.service';
+import {NdwhPatientAdverseEventService} from '../dockets/services/ndwh-patient-adverse-event.service';
+import {AppDetailsService} from './services/app-details.service';
 import {RestProtocolComponent} from '../settings/rest-protocol/rest-protocol.component';
 import {RestResourceComponent} from '../settings/rest-resource/rest-resource.component';
+import {HtsDocketComponent} from '../dockets/hts-docket/hts-docket.component';
+import {HtsService} from '../dockets/services/hts.service';
+import {HtsConsoleComponent} from '../dockets/hts-docket/hts-console/hts-console.component';
+import {HtsExtractDetailsComponent} from '../dockets/hts-docket/hts-extract-details/hts-extract-details.component';
+import {HtsInvalidComponent} from '../dockets/hts-docket/hts-extract-details/hts-invalid/hts-invalid.component';
+import {HtsValidComponent} from '../dockets/hts-docket/hts-extract-details/hts-valid/hts-valid.component';
+import {HtsSenderService} from '../dockets/services/hts-sender.service';
+import {HtsClientService} from '../dockets/services/hts-client.service';
+import {HtsClientPartnerService} from '../dockets/services/hts-client-partner.service';
+import {HtsClientLinkageService} from '../dockets/services/hts-client-linkage.service';
 
 
 @NgModule({
@@ -244,17 +254,24 @@ import {RestResourceComponent} from '../settings/rest-resource/rest-resource.com
         SetupComponent,
         MpiSearchComponent,
         RestProtocolComponent,
-        RestResourceComponent
+        RestResourceComponent,
+        HtsDocketComponent,
+        HtsConsoleComponent,
+        HtsExtractDetailsComponent,
+        HtsInvalidComponent,
+        HtsValidComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
         MessageService, ConfirmationService, RegistryConfigService, EmrConfigService, ProtocolConfigService,
-        ExtractConfigService, PsmartExtractService , PsmartSenderService, NdwhExtractService, NdwhSenderService, NdwhPatientsExtractService,
+        ExtractConfigService, PsmartExtractService, PsmartSenderService, NdwhExtractService, NdwhSenderService, NdwhPatientsExtractService,
         CbsService, NdwhPatientArtService, NdwhPatientBaselineService, NdwhPatientLaboratoryService, NdwhPatientPharmacyService,
         NdwhPatientStatusService, NdwhPatientVisitService,
-        SetupService, MpiSearchService, NdwhPatientAdverseEventService, AppDetailsService
+        SetupService, MpiSearchService, NdwhPatientAdverseEventService, AppDetailsService, HtsService, HtsSenderService,
+        HtsClientService, HtsClientPartnerService, HtsClientLinkageService
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
 

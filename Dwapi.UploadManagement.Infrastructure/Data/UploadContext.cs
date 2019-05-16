@@ -4,6 +4,7 @@ using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Model;
 using Dwapi.UploadManagement.Core.Model.Cbs;
 using Dwapi.UploadManagement.Core.Model.Dwh;
+using Dwapi.UploadManagement.Core.Model.Hts;
 using EFCore.Seeder.Configuration;
 using EFCore.Seeder.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -22,8 +23,12 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<PatientStatusExtractView> ClientPatientStatusExtracts { get; set; }
         public virtual DbSet<PatientVisitExtractView> ClientPatientVisitExtracts { get; set; }
         public virtual DbSet<PatientAdverseEventView> ClientPatientAdverseEventExtracts { get; set; }
-        public virtual DbSet<EmrMetricView> EmrMetrics { get; set; }
 
+        public virtual DbSet<HTSClientExtractView> ClientExtracts { get; set; }
+        public virtual DbSet<HTSClientLinkageExtractView> ClientLinkageExtracts { get; set; }
+        public virtual DbSet<HTSClientPartnerExtractView> ClientPartnerExtracts { get; set; }
+
+        public virtual DbSet<EmrMetricView> EmrMetrics { get; set; }
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
 
@@ -76,6 +81,13 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
+
+            modelBuilder.Entity<HTSClientExtractView>()
+                .HasKey(f => f.Id );
+            modelBuilder.Entity<HTSClientLinkageExtractView>()
+                .HasKey(f => f.Id );
+            modelBuilder.Entity<HTSClientPartnerExtractView>()
+                .HasKey(f => f.Id );
         }
     }
 }

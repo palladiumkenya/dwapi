@@ -38,6 +38,19 @@
             </p-column>
         </p-dataTable>
     </p-tabPanel>
+    <p-tabPanel header="HIV Testing Services">
+        <p-dataTable [value]="htsExtracts" selectionMode="single" [(selection)]="selectedHtsExtract" dataKey="id">
+            <p-header>Extract Settings</p-header>
+            <p-column field="name" header="Name"></p-column>
+            <p-column field="display" header="Display"></p-column>
+            <p-column field="destination" header="Destination"></p-column>
+            <p-column styleClass="col-button" header="Action">
+                <ng-template let-extract="rowData" pTemplate="body">
+                    <button type="button" pButton (click)="editExtract(extract)" icon="ui-icon-edit" class="green-btn"></button>
+                </ng-template>
+            </p-column>
+        </p-dataTable>
+    </p-tabPanel>
 </p-tabView>
 
 <p-dialog header="Extract" [(visible)]="displayDialog" [width]="500" [responsive]="true" showEffect="fade" [modal]="true">

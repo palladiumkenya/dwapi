@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
+using Dwapi.UploadManagement.Core.Exchange.Hts;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 using FizzWare.NBuilder;
 
@@ -85,10 +87,41 @@ namespace Dwapi.SharedKernel.Tests.TestHelpers
                 var masterPatientIndices = Builder<MasterPatientIndex>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
                     .ToList();
                 list.Add(new MpiMessage(masterPatientIndices));
-                
+
             }
             return list;
         }
+
+        public static HtsMessageBag HtsMessageBag(int count, params int[] siteCodes)
+        {
+            var list = Builder<HtsMessageBag>.CreateNew().Build();
+
+            list.Messages.AddRange(HtsMessages(count, siteCodes));
+
+            return list;
+        }
+
+        private static List<HtsMessage> HtsMessages(int count, params int[] siteCodes)
+        {
+            var list = new List<HtsMessage>();
+
+            foreach (var siteCode in siteCodes)
+            {
+                var clients = Builder<HTSClientExtract>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                    .ToList();
+                var linkages = Builder<HTSClientLinkageExtract>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                    .ToList();
+                var partners = Builder<HTSClientPartnerExtract>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                    .ToList();
+
+                list.Add(new HtsMessage(clients));
+                list.Add(new HtsMessage(linkages));
+                list.Add(new HtsMessage(partners));
+            }
+            return list;
+        }
+
+
 
         public static ArtMessageBag ArtMessageBag(int count, int siteCode)
         {
