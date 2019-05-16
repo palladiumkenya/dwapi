@@ -92,20 +92,20 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                 try
                 {
                     var msg = JsonConvert.SerializeObject(message);
-                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}mpi"), message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Clients"), message);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
                         responses.Add(content);
 
-                        var sentIds = message.HtsClients.Select(x => x.Id).ToList();
+                        var sentIds = message.Clients.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
                     }
                     else
                     {
                         var error = await response.Content.ReadAsStringAsync();
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.HtsClients.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.Clients.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
                         throw new Exception(error);
                     }
                 }
@@ -144,20 +144,20 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                 try
                 {
                     var msg = JsonConvert.SerializeObject(message);
-                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}mpi"), message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Linkages"), message);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
                         responses.Add(content);
 
-                        var sentIds = message.HtsClients.Select(x => x.Id).ToList();
+                        var sentIds = message.Clients.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
                     }
                     else
                     {
                         var error = await response.Content.ReadAsStringAsync();
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.HtsClients.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.Clients.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
                         throw new Exception(error);
                     }
                 }
@@ -196,20 +196,20 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                 try
                 {
                     var msg = JsonConvert.SerializeObject(message);
-                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}mpi"), message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Partners"), message);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
                         responses.Add(content);
 
-                        var sentIds = message.HtsClients.Select(x => x.Id).ToList();
+                        var sentIds = message.Clients.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
                     }
                     else
                     {
                         var error = await response.Content.ReadAsStringAsync();
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.HtsClients.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.Clients.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
                         throw new Exception(error);
                     }
                 }
