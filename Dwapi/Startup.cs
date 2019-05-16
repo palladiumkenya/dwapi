@@ -73,6 +73,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
@@ -88,6 +89,7 @@ using Dwapi.UploadManagement.Infrastructure.Data;
 using Dwapi.UploadManagement.Infrastructure.Reader;
 using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Reader.Dwh;
+using Dwapi.UploadManagement.Infrastructure.Reader.Hts;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using MediatR;
@@ -339,6 +341,9 @@ namespace Dwapi
             services.AddScoped<IHtsPackager, HtsPackager>();
             services.AddScoped<IHtsSendService, HtsSendService>();
             services.AddScoped<IHtsExtractValidator, HtsExtractValidator>();
+            services.AddScoped<IHtsSendService, HtsSendService>();
+            services.AddScoped<IHtsExtractReader, HtsExtractReader>();
+            services.AddScoped<IHtsSendService, HtsSendService>();
 
             services.AddScoped<IAppDatabaseManager, AppDatabaseManager>();
 
