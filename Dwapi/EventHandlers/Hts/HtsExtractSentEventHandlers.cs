@@ -23,12 +23,15 @@ namespace Dwapi.EventHandlers
 
         public void Handle(HtsExtractSentEvent domainEvent)
         {
-            if (domainEvent.SentItems.First().Extract == "HTSClientExtract")
-                _clientExtractRepository.UpdateSendStatus(domainEvent.SentItems);
-            if (domainEvent.SentItems.First().Extract == "HTSClientLinkageExtract")
-                _clientLinkageExtractRepository.UpdateSendStatus(domainEvent.SentItems);
-            if (domainEvent.SentItems.First().Extract == "HTSClientPartnerExtract")
-                _partnerExtractRepository.UpdateSendStatus(domainEvent.SentItems);
+            if (domainEvent.SentItems.Any())
+            {
+                if (domainEvent.SentItems.First().Extract == "HTSClientExtract")
+                    _clientExtractRepository.UpdateSendStatus(domainEvent.SentItems);
+                if (domainEvent.SentItems.First().Extract == "HTSClientLinkageExtract")
+                    _clientLinkageExtractRepository.UpdateSendStatus(domainEvent.SentItems);
+                if (domainEvent.SentItems.First().Extract == "HTSClientPartnerExtract")
+                    _partnerExtractRepository.UpdateSendStatus(domainEvent.SentItems);
+            }
         }
     }
 }

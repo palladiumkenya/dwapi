@@ -82,6 +82,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     public sendResponse: SendResponse;
     public getEmr$: Subscription;
 
+    public sendStage=2;
+
     public constructor(
         confirmationService: ConfirmationService,
         emrConfigService: HtsService,
@@ -175,6 +177,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 .getStatus(extract.id)
                 .subscribe(
                     p => {
+                        console.log(p);
                         extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
@@ -205,6 +208,9 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             .subscribe(
                 p => {
                     this.canSendPatients = true;
+                    this.sendingManifest = false;
+                    this.updateEvent();
+                    this.sendClientExtract();
                 },
                 e => {
                     this.errorMessage = [];
@@ -212,9 +218,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});
-                    this.sendingManifest = false;
-                    this.updateEvent();
-                    this.sendClientExtract();
+
                 }
             );
     }
@@ -228,6 +232,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             .subscribe(
                 p => {
                     // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendClientLinkageExtract();
                 },
                 e => {
                     this.errorMessage = [];
@@ -235,15 +241,13 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 () => {
                     this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
-                    this.updateEvent();
-                    this.sendClientLinkageExtract();
-                    this.sending = false;
                 }
             );
     }
 
     public sendClientLinkageExtract(): void {
-        this.sendEvent = {sentProgress: 60};
+        this.sendStage=3;
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         this.patientPackage = this.getClientLinkageExtractPackage();
@@ -251,21 +255,23 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             .subscribe(
                 p => {
                     // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendClientPartnerExtract();
                 },
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending Linkages', detail: <any>e});
                 },
                 () => {
-                    this.errorMessage.push({severity: 'success', summary: 'sent Linkages successfully '});
-                    this.updateEvent();
-                    this.sendClientPartnerExtract();
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Linkages successfully '});
+
                 }
             );
     }
 
     public sendClientPartnerExtract(): void {
-        this.sendEvent = {sentProgress: 80};
+        this.sendStage=4;
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         this.patientPackage = this.getClientPartnerExtractPackage();
@@ -273,15 +279,17 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             .subscribe(
                 p => {
                     // this.sendResponse = p;
+                    this.updateEvent();
+                   // this.sending = false;
                 },
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending Partners ', detail: <any>e});
                 },
                 () => {
-                    this.errorMessage.push({severity: 'success', summary: 'sent Partners successfully '});
-                    this.updateEvent();
-                    this.sending = true;
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Partners successfully '});
+
+
                 }
             );
     }
@@ -355,6 +363,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this._hubConnection.on('ShowHtsSendProgress', (dwhProgress: any) => {
+            console.log(dwhProgress);
             this.sendEvent = {
                 sentProgress: dwhProgress.progress
             };

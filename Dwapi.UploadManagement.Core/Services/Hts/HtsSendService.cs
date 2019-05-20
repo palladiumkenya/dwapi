@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
@@ -115,7 +116,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     throw;
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(MasterPatientIndex), Common.GetProgress(count,total))));
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HTSClientExtract), Common.GetProgress(count,total))));
             }
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
@@ -150,14 +151,14 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                         var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
                         responses.Add(content);
 
-                        var sentIds = message.Clients.Select(x => x.Id).ToList();
+                        var sentIds = message.ClientLinkages.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
                     }
                     else
                     {
                         var error = await response.Content.ReadAsStringAsync();
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.Clients.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.ClientLinkages.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
                         throw new Exception(error);
                     }
                 }
@@ -167,7 +168,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     throw;
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(MasterPatientIndex), Common.GetProgress(count,total))));
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HTSClientLinkageExtract), Common.GetProgress(count,total))));
             }
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
@@ -202,14 +203,14 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                         var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
                         responses.Add(content);
 
-                        var sentIds = message.Clients.Select(x => x.Id).ToList();
+                        var sentIds = message.ClientPartners.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
                     }
                     else
                     {
                         var error = await response.Content.ReadAsStringAsync();
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.Clients.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.ClientPartners.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
                         throw new Exception(error);
                     }
                 }
@@ -219,7 +220,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     throw;
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(MasterPatientIndex), Common.GetProgress(count,total))));
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HTSClientPartnerExtract), Common.GetProgress(count,total))));
             }
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
