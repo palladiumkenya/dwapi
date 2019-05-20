@@ -33,6 +33,8 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Hts
         {
             Log.Debug($"Executing ClearHtsExtracts command...");
 
+            await _historyRepository.ClearHistory(extractIds);
+
             DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientExtract), "clearing...")));
             DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientPartnerExtract), "clearing...")));
             DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientLinkageExtract), "clearing...")));
@@ -43,15 +45,18 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Hts
                 DomainEvents.Dispatch(new HtsStatusNotification(extractId, ExtractStatus.Clearing));
             }
 
-            await _historyRepository.ClearHistory(extractIds);
+
             _validatorRepository.ClearByDocket("HTS");
             await _tempPatientExtractRepository.Clear();
-
 
             foreach (var extractId in extractIds)
             {
                 DomainEvents.Dispatch(new HtsStatusNotification(extractId, ExtractStatus.Cleared));
             }
+
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientExtract), "cleared")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientPartnerExtract), "cleared")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientLinkageExtract), "cleared")));
         }
     }
 }

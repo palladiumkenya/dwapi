@@ -39,9 +39,8 @@ export class HtsDocketComponent implements OnInit, OnDestroy {
     private _emrConfigService: EmrConfigService;
 
     public getEmr$: Subscription;
-    public getMiddleware$: Subscription;
+    public getMetrics$: Subscription;
     public emrSystem: EmrSystem;
-    public middlewareSystem: EmrSystem;
     public errorMessage: Message[];
     public otherMessage: Message[];
     public loadingData: boolean;
@@ -85,26 +84,9 @@ export class HtsDocketComponent implements OnInit, OnDestroy {
 
     }
 
-    public loadMiddleware() {
-        this.getMiddleware$ = this._emrConfigService.getMiddleware()
-            .subscribe(
-                p => {
-                    this.middlewareSystem = p;
-                },
-                e => {
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
-                    this.loadingData = false;
-                },
-                () => {
-                    this.loadingData = false;
-                }
-            );
-    }
-
     public loadMetrics(): void {
 
-        this.getEmr$ = this._emrConfigService.loadMetrics(this.emrSystem)
+        this.getMetrics$ = this._emrConfigService.loadMetrics(this.emrSystem)
             .subscribe(
                 p => {
                     this.emrMetric = p;
@@ -126,8 +108,8 @@ export class HtsDocketComponent implements OnInit, OnDestroy {
         if (this.getEmr$) {
             this.getEmr$.unsubscribe();
         }
-        if (this.getMiddleware$) {
-            this.getMiddleware$.unsubscribe();
+        if (this.getMetrics$) {
+            this.getMetrics$.unsubscribe();
         }
     }
 

@@ -23,9 +23,9 @@ import {LoadHtsFromEmrCommand} from '../../../settings/model/load-hts-from-emr-c
 import {environment} from '../../../environments/environment';
 
 @Component({
-  selector: 'liveapp-hts-console',
-  templateUrl: './hts-console.component.html',
-  styleUrls: ['./hts-console.component.scss']
+    selector: 'liveapp-hts-console',
+    templateUrl: './hts-console.component.html',
+    styleUrls: ['./hts-console.component.scss']
 })
 export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     @Input() emr: EmrSystem;
@@ -327,22 +327,24 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
         this._hubConnection.on('ShowHtsProgress', (extractActivityNotification: any) => {
+            console.log(extractActivityNotification);
+            this.currentExtract = {};
             this.currentExtract = this.extracts.find(
-                x => x.id === extractActivityNotification.extractId
+                x => x.name === extractActivityNotification.extract
             );
             if (this.currentExtract) {
                 this.extractEvent = {
-                    lastStatus: `${extractActivityNotification.progress.status}`,
-                    found: extractActivityNotification.progress.found,
-                    loaded: extractActivityNotification.progress.loaded,
-                    rejected: extractActivityNotification.progress.rejected,
-                    queued: extractActivityNotification.progress.queued,
-                    sent: extractActivityNotification.progress.sent
+                    lastStatus: `${extractActivityNotification.status}`,
+                    found: extractActivityNotification.found,
+                    loaded: extractActivityNotification.loaded,
+                    rejected: extractActivityNotification.rejected,
+                    queued: extractActivityNotification.queued,
+                    sent: extractActivityNotification.sent
                 };
                 this.currentExtract.extractEvent = {};
                 this.currentExtract.extractEvent = this.extractEvent;
                 const newWithoutPatientExtract = this.extracts.filter(
-                    x => x.id !== extractActivityNotification.extractId
+                    x => x.name !== extractActivityNotification.extract
                 );
                 this.extracts = [
                     ...newWithoutPatientExtract,
@@ -358,7 +360,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 sentProgress: dwhProgress.progress
             };
             this.sending = true;
-            this.canLoadFromEmr = this.canSend = ! this.sending;
+            this.canLoadFromEmr = this.canSend = !this.sending;
         });
     }
 
@@ -385,9 +387,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         };
 
         this.loadExtractsCommand = {
-            loadHtsFromEmrCommand: this.extractLoadCommand,
-            extractMpi: null,
-            loadMpi: false
+            loadHtsFromEmrCommand: this.extractLoadCommand
         };
         return this.loadExtractsCommand;
 
@@ -404,7 +404,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     private generateExtractClientLinkage(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientLinkageExtract').databaseProtocolId;
-        this.extractClientLinkage = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+        this.extractClientLinkage = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'HTSClientLinkageExtract')
         };
         return this.extractClientLinkage;
@@ -412,7 +413,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     private generateExtractClientPartner(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientPartnerExtract').databaseProtocolId;
-        this.extractClientPartner = {databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+        this.extractClientPartner = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'HTSClientPartnerExtract')
         };
         return this.extractClientPartner;

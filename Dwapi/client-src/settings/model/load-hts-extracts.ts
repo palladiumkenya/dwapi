@@ -4,6 +4,4 @@ import {LoadHtsFromEmrCommand} from './load-hts-from-emr-command';
 
 export interface LoadHtsExtracts {
     loadHtsFromEmrCommand?: LoadHtsFromEmrCommand;
-    extractMpi?: ExtractPatient;
-    loadMpi?: boolean;
 }
