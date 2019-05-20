@@ -48,20 +48,10 @@ namespace Dwapi.Controller
             Startup.HtsHubContext = _hubContext = hubContext;
         }
 
-
-        [HttpPost("extract")]
-        public async Task<IActionResult> Load([FromBody] ExtractPatient request)
-        {
-            if (!ModelState.IsValid) return BadRequest();
-            var result = await _mediator.Send(request, HttpContext.RequestAborted);
-            return Ok(result);
-        }
-
         [HttpPost("extractAll")]
         public async Task<IActionResult> Load([FromBody] LoadHtsExtracts request)
         {
             if (!ModelState.IsValid) return BadRequest();
-
             var result = await _mediator.Send(request.LoadHtsFromEmrCommand, HttpContext.RequestAborted);
             return Ok(result);
         }

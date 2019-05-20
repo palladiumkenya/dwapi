@@ -327,8 +327,9 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
         this._hubConnection.on('ShowHtsProgress', (extractActivityNotification: any) => {
+            console.log(extractActivityNotification);
             this.currentExtract = this.extracts.find(
-                x => x.id === extractActivityNotification.extractId
+                x => x.name === extractActivityNotification.extract
             );
             if (this.currentExtract) {
                 this.extractEvent = {
@@ -342,7 +343,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 this.currentExtract.extractEvent = {};
                 this.currentExtract.extractEvent = this.extractEvent;
                 const newWithoutPatientExtract = this.extracts.filter(
-                    x => x.id !== extractActivityNotification.extractId
+                    x => x.name !== extractActivityNotification.extract
                 );
                 this.extracts = [
                     ...newWithoutPatientExtract,
@@ -385,9 +386,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         };
 
         this.loadExtractsCommand = {
-            loadHtsFromEmrCommand: this.extractLoadCommand,
-            extractMpi: null,
-            loadMpi: false
+            loadHtsFromEmrCommand: this.extractLoadCommand
         };
         return this.loadExtractsCommand;
 

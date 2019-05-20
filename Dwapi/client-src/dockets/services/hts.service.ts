@@ -31,10 +31,6 @@ export class HtsService {
         return this._http.post<boolean>(this._url + '/load', extracts)
             .catch(this.handleError);
     }
-    public extract(extract: ExtractPatient): Observable<boolean> {
-        return this._http.post<boolean>(this._url + '/extract', extract)
-            .catch(this.handleError);
-    }
 
     public extractAll(loadExtracts: LoadHtsExtracts): Observable<boolean> {
         return this._http.post<boolean>(this._url + '/extractAll', loadExtracts)
