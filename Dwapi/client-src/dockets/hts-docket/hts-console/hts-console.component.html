@@ -25,14 +25,14 @@
     </p-dataTable>
     <div class="ui-g" *ngIf="sendingManifest">
         <div class="ui-g-12">
-            Stage 1 of 4: Sending manifest...
+            Stage 1 of 2: Sending manifest...
             <p-progressBar mode="indeterminate"></p-progressBar>
         </div>
     </div>
 
     <div class="ui-g" *ngIf="sending">
         <div class="ui-g-12">
-            Stage {{sendStage}} of 4: Sending Extracts, please wait ...
+            Stage 2 of 2: Sending Extracts, please wait ...
             <p-progressBar showValue = "true" [value]="sendEvent?.sentProgress"></p-progressBar>
         </div>
     </div>

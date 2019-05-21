@@ -21,6 +21,7 @@ import {LoadExtracts} from '../../../settings/model/load-extracts';
 import {LoadHtsExtracts} from '../../../settings/model/load-hts-extracts';
 import {LoadHtsFromEmrCommand} from '../../../settings/model/load-hts-from-emr-command';
 import {environment} from '../../../environments/environment';
+import {el} from '@angular/platform-browser/testing/src/browser_util';
 
 @Component({
     selector: 'liveapp-hts-console',
@@ -55,6 +56,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private dwhExtracts: DwhExtract[] = [];
     private extractEvent: ExtractEvent;
     public sendEvent: SendEvent = {};
+    public sendEventPartners: SendEvent = {};
+    public sendEventLinkage: SendEvent = {};
     public recordCount: number;
 
     public canLoadFromEmr: boolean;
@@ -82,7 +85,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     public sendResponse: SendResponse;
     public getEmr$: Subscription;
 
-    public sendStage=2;
+    public sendStage = 2;
+    extractSent = [];
 
     public constructor(
         confirmationService: ConfirmationService,
@@ -177,7 +181,6 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 .getStatus(extract.id)
                 .subscribe(
                     p => {
-                        console.log(p);
                         extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
@@ -240,13 +243,13 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                     this.errorMessage.push({severity: 'error', summary: 'Error sending Clients', detail: <any>e});
                 },
                 () => {
-                    this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
                 }
             );
     }
 
     public sendClientLinkageExtract(): void {
-        this.sendStage=3;
+        this.sendStage = 3;
         this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
@@ -270,7 +273,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public sendClientPartnerExtract(): void {
-        this.sendStage=4;
+        this.sendStage = 4;
         this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
@@ -280,7 +283,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 p => {
                     // this.sendResponse = p;
                     this.updateEvent();
-                   // this.sending = false;
+                    // this.sending = false;
                 },
                 e => {
                     this.errorMessage = [];
@@ -363,12 +366,23 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this._hubConnection.on('ShowHtsSendProgress', (dwhProgress: any) => {
-            console.log(dwhProgress);
             this.sendEvent = {
                 sentProgress: dwhProgress.progress
             };
-            this.sending = true;
             this.canLoadFromEmr = this.canSend = !this.sending;
+        });
+
+        this._hubConnection.on('ShowHtsSendProgressDone', (extractName: string) => {
+            console.log(`${extractName} DONE !`);
+            this.extractSent.push(extractName);
+            if (this.extractSent.length === 3) {
+                this.errorMessage = [];
+                this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
+                this.updateEvent();
+                this.sending = false;
+            } else {
+                this.updateEvent();
+            }
         });
     }
 

@@ -119,6 +119,8 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                 DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HTSClientExtract), Common.GetProgress(count,total))));
             }
 
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HTSClientExtract), Common.GetProgress(count,total),true)));
+
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
             return responses;
@@ -171,6 +173,8 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                 DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HTSClientLinkageExtract), Common.GetProgress(count,total))));
             }
 
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HTSClientLinkageExtract), Common.GetProgress(count,total),true)));
+
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
             return responses;
@@ -222,6 +226,8 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
 
                 DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HTSClientPartnerExtract), Common.GetProgress(count,total))));
             }
+
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HTSClientPartnerExtract), Common.GetProgress(count,total),true)));
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 

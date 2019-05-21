@@ -9,6 +9,10 @@ namespace Dwapi.NotificationHandlers
         public async void Handle(HtsSendNotification domainEvent)
         {
             await Startup.HtsHubContext.Clients.All.SendAsync("ShowHtsSendProgress", domainEvent.Progress);
+
+            if (domainEvent.Progress.Done)
+                await Startup.HtsHubContext.Clients.All.SendAsync("ShowHtsSendProgressDone",
+                    domainEvent.Progress.Extract);
         }
     }
 }
