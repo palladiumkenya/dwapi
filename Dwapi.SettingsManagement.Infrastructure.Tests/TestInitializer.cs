@@ -1,15 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
-using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
-using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
-using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
-using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
@@ -17,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Z.Dapper.Plus;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Tests
 {
@@ -27,15 +18,19 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         public static IServiceProvider ServiceProviderMysql;
         public static EmrSystem Iqtools;
         public static EmrSystem KenyaEmr;
-        
+
         public static AppDatabase IqToolsDatabase;
         public static AppDatabase KenyaEmrDatabase;
         public static DatabaseProtocol IQtoolsDbProtocol;
         public static DatabaseProtocol KenyaEmrDbProtocol;
 
+        public static string MsSqlConnectionString;
+        public static string MySqlConnectionString;
+
         [OneTimeSetUp]
         public void Setup()
         {
+            RegisterLicence();
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
@@ -44,40 +39,70 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
                 .AddJsonFile("appsettings.mysql.json")
                 .Build();
 
-
-            var serviceProvider = new ServiceCollection()
-                .AddDbContext<SettingsContext>(x => x.UseSqlServer(config["ConnectionStrings:DwapiConnection"]))
+            ServiceProvider = new ServiceCollection()
+                .AddDbContext<SettingsContext>(x =>
+                    x.UseSqlServer(MsSqlConnectionString = config["ConnectionStrings:DwapiConnection"]))
                 .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
                 .BuildServiceProvider();
 
-            var serviceProviderMysql = new ServiceCollection()
-                .AddDbContext<SettingsContext>(x => x.UseMySql(mysqlConfig["ConnectionStrings:DwapiConnection"]))
+            ServiceProviderMysql = new ServiceCollection()
+                .AddDbContext<SettingsContext>(x =>
+                    x.UseMySql(MySqlConnectionString = mysqlConfig["ConnectionStrings:DwapiConnection"]))
                 .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
                 .BuildServiceProvider();
+        }
 
-            var settingsContext = serviceProvider.GetService<SettingsContext>();
-            var settingsContextMysql = serviceProviderMysql.GetService<SettingsContext>();
+        public static void InitConnections()
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
 
-            ServiceProvider = serviceProvider;
-            ServiceProviderMysql = serviceProviderMysql;
+            MsSqlConnectionString = config["ConnectionStrings:DwapiConnection"];
 
-            var dbmanager = serviceProvider.GetService<IAppDatabaseManager>();
+            var mysqlConfig = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.mysql.json")
+                .Build();
 
-            IqToolsDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString, DatabaseProvider.MsSql);
-            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString, DatabaseProvider.MySql);
+            MySqlConnectionString = mysqlConfig["ConnectionStrings:DwapiConnection"];
+        }
+        public static void InitDbMsSql()
+        {
+            var  settingsContext=ServiceProvider.GetService<SettingsContext>();
+            var dbmanager = ServiceProvider.GetService<IAppDatabaseManager>();
+            Iqtools = settingsContext.EmrSystems.Include(x => x.DatabaseProtocols).FirstOrDefault(x=>x.Name=="IQCare");
 
-            IQtoolsDbProtocol = Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
+            IqToolsDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,
+                DatabaseProvider.MsSql);
+
+            IQtoolsDbProtocol =
+                Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
             IQtoolsDbProtocol.Host = IqToolsDatabase.Server;
             IQtoolsDbProtocol.Username = IqToolsDatabase.User;
             IQtoolsDbProtocol.Password = IqToolsDatabase.Password;
-            //_iQtoolsDb.Password = TestInitializer.IqToolsDatabase.Database;
+        }
+        public static void InitDbMySql()
+        {
+            var settingsContext = ServiceProviderMysql.GetService<SettingsContext>();
+            var dbmanager = ServiceProviderMysql.GetService<IAppDatabaseManager>();
+            KenyaEmr = settingsContext.EmrSystems.Include(x => x.DatabaseProtocols).FirstOrDefault(x=>x.Name=="KenyaEMR");
+            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,
+                DatabaseProvider.MySql);
 
             KenyaEmrDbProtocol = KenyaEmr.DatabaseProtocols.First();
             KenyaEmrDbProtocol.Host = KenyaEmrDatabase.Server;
             KenyaEmrDbProtocol.Username = KenyaEmrDatabase.User;
             KenyaEmrDbProtocol.Password = KenyaEmrDatabase.Password;
-            KenyaEmrDbProtocol.DatabaseName = KenyaEmrDatabase.Database;
 
+        }
+
+        private void RegisterLicence()
+        {
+            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
+            if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
+            {
+                throw new Exception(licenseErrorMessage);
+            }
         }
     }
 }

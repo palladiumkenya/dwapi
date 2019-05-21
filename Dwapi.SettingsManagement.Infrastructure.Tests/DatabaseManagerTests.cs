@@ -1,79 +1,93 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Model;
-using Dwapi.SharedKernel.Enum;
 using FizzWare.NBuilder;
 using NUnit.Framework;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Tests
 {
-   [TestFixture]
+    [TestFixture]
     public class DatabaseManagerTests
-   {
+    {
         private IDatabaseManager _databaseManager;
 
         [SetUp]
         public void SetUp()
         {
-            _databaseManager=new DatabaseManager();
+            _databaseManager = new DatabaseManager();
         }
 
-        [TestCaseSource(nameof(DatabaseProtocols))]
-        public void should_GetConnection(DatabaseProtocol databaseProtocol)
+        [Test]
+        public void should_GetConnection()
         {
+            TestInitializer.InitDbMsSql();
+            var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
             var connection = _databaseManager.GetConnection(databaseProtocol);
             Assert.NotNull(connection);
 
             Console.WriteLine($"connections Found:[{connection.ConnectionString}] | {databaseProtocol.DatabaseType}");
         }
 
-       [TestCaseSource(nameof(DatabaseProtocols))]
-        public void should_VerifyConnection(DatabaseProtocol databaseProtocol)
+        [Test]
+        public void should_VerifyConnection()
         {
+            TestInitializer.InitDbMsSql();
+            var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
             var connected = _databaseManager.VerifyConnection(databaseProtocol);
             Assert.True(connected);
 
             Console.WriteLine($"connection OK:[{databaseProtocol}] | {databaseProtocol.DatabaseType}");
         }
 
-       [Test]
-       public void should_Verify_MSSQL_Query()
-       {
-           var extract = Builder<Extract>.CreateNew().Build();
-           extract.ExtractSql = @"SELECT * FROM psmart_store";
+        [Test]
+        public void should_MySQL_GetConnection()
+        {
+            TestInitializer.InitDbMySql();
+            var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
+            var connection = _databaseManager.GetConnection(databaseProtocol);
+            Assert.NotNull(connection);
 
-           var databaseProtocol = DatabaseProtocols().First(x=>x.DatabaseType==DatabaseType.MicrosoftSQL);
-           var verified = _databaseManager.VerifyQuery(extract,databaseProtocol);
-           Assert.True(verified);
+            Console.WriteLine($"connections Found:[{connection.ConnectionString}] | {databaseProtocol.DatabaseType}");
+        }
 
-           Console.WriteLine($"{extract} query [{extract.ExtractSql}] OK | {databaseProtocol.DatabaseType}");
-       }
+        [Test]
+        public void should_MySQL_VerifyConnection()
+        {
+            TestInitializer.InitDbMySql();
+            var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
+            var connected = _databaseManager.VerifyConnection(databaseProtocol);
+            Assert.True(connected);
 
-       [Test]
-       public void should_Verify_MySQL_Query()
-       {
-           var extract = Builder<Extract>.CreateNew().Build();
-           extract.ExtractSql = @"SELECT * FROM psmart_store";
+            Console.WriteLine($"connection OK:[{databaseProtocol}] | {databaseProtocol.DatabaseType}");
+        }
 
-           var databaseProtocol = DatabaseProtocols().First(x => x.DatabaseType == DatabaseType.MySQL);
+        [Test]
+        public void should_Verify_MSSQL_Query()
+        {
+            TestInitializer.InitDbMsSql();
+            var extract = Builder<Extract>.CreateNew().Build();
+            extract.ExtractSql = @"SELECT * FROM psmart_store";
+
+            var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
             var verified = _databaseManager.VerifyQuery(extract, databaseProtocol);
-           Assert.True(verified);
+            Assert.True(verified);
 
-           Console.WriteLine($"{extract} query [{extract.ExtractSql}] OK | {databaseProtocol.DatabaseType}");
-       }
+            Console.WriteLine($"{extract} query [{extract.ExtractSql}] OK | {databaseProtocol.DatabaseType}");
+        }
 
+        [Test]
+        public void should_Verify_MySQL_Query()
+        {
+            TestInitializer.InitDbMySql();
+            var extract = Builder<Extract>.CreateNew().Build();
+            extract.ExtractSql = @"SELECT * FROM psmart_store";
 
-        public static List<DatabaseProtocol> DatabaseProtocols()
-       {
-           return new List<DatabaseProtocol>
-           {
-              TestInitializer.IQtoolsDbProtocol,
-               TestInitializer.IQtoolsDbProtocol
-           };
-       }
-   }
+            var databaseProtocol = TestInitializer.KenyaEmrDbProtocol;
+            var verified = _databaseManager.VerifyQuery(extract, databaseProtocol);
+            Assert.True(verified);
+
+            Console.WriteLine($"{extract} query [{extract.ExtractSql}] OK | {databaseProtocol.DatabaseType}");
+        }
+    }
 }

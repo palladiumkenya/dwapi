@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <Version>2.2.4</Version>
+    <Version>2.2.5</Version>
     <Company>Palladium Group</Company>
     <Authors>Brian Mwasi, Danson Koske</Authors>
     <RepositoryUrl>https://github.com/palladiumkenya/DWAPI</RepositoryUrl>
@@ -17,7 +17,7 @@ Bached sending and await to 50 at a time
     <SignAssembly>false</SignAssembly>
     <!--<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>-->
   </PropertyGroup>
- 
+
   <ItemGroup>
     <Folder Include="logs" />
     <Folder Include="wwwroot\" />

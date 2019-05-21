@@ -4,5 +4,6 @@ export interface SendPackage {
     destination?: CentralRegistry;
     docket?: string;
     extractId?: string;
+    extractName?: string;
     endpoint?: string;
 }
