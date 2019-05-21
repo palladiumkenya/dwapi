@@ -35,33 +35,23 @@ namespace Dwapi.Controller
         private readonly IExtractStatusService _extractStatusService;
         private readonly IHubContext<HtsActivity> _hubContext;
         private readonly IHubContext<HtsSendActivity> _hubSendContext;
-        private readonly IHtsSendService _dwhSendService;
+        private readonly IHtsSendService _htsSendService;
 
         public HtsController(IMediator mediator, IExtractStatusService extractStatusService,
-            IHubContext<HtsActivity> hubContext, IHtsSendService dwhSendService,
+            IHubContext<HtsActivity> hubContext, IHtsSendService htsSendService,
             IHubContext<HtsSendActivity> hubSendContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
-            _dwhSendService = dwhSendService;
+            _htsSendService = htsSendService;
             Startup.HtsSendHubContext = _hubSendContext = hubSendContext;
             Startup.HtsHubContext = _hubContext = hubContext;
-        }
-
-
-        [HttpPost("extract")]
-        public async Task<IActionResult> Load([FromBody] ExtractPatient request)
-        {
-            if (!ModelState.IsValid) return BadRequest();
-            var result = await _mediator.Send(request, HttpContext.RequestAborted);
-            return Ok(result);
         }
 
         [HttpPost("extractAll")]
         public async Task<IActionResult> Load([FromBody] LoadHtsExtracts request)
         {
             if (!ModelState.IsValid) return BadRequest();
-
             var result = await _mediator.Send(request.LoadHtsFromEmrCommand, HttpContext.RequestAborted);
             return Ok(result);
         }
@@ -98,7 +88,7 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-                var result = await _dwhSendService.SendManifestAsync(packageDto);
+                var result = await _htsSendService.SendManifestAsync(packageDto);
                 return Ok(result);
             }
             catch (Exception e)
@@ -118,7 +108,7 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-                _dwhSendService.SendClientsAsync(packageDto);
+                _htsSendService.SendClientsAsync(packageDto);
                 return Ok();
             }
             catch (Exception e)
@@ -137,7 +127,7 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-                _dwhSendService.SendClientLinkagesAsync(packageDto);
+                _htsSendService.SendClientLinkagesAsync(packageDto);
                 return Ok();
             }
             catch (Exception e)
@@ -156,7 +146,7 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-                _dwhSendService.SendClientPartnersAsync(packageDto);
+                _htsSendService.SendClientPartnersAsync(packageDto);
                 return Ok();
             }
             catch (Exception e)

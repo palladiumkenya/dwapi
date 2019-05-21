@@ -60,10 +60,29 @@ c691fceb-3ee9-4a8f-a075-e39c0a1a225f|TempPatientAdverseEventExtracts|PatientPK|R
 5a662658-0582-4156-9478-a1c63bfe096b|TempPatientAdverseEventExtracts|AdverseEvent|Required|AdverseEvent IS NULL|AdverseEvent is Required
 aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEventStartDate|Required|AdverseEventStartDate IS NULL|AdverseEventStartDate is Required
 4f62bd6b-674f-48cb-bb68-9d26497eb4de|TempPatientAdverseEventExtracts|AdverseEventRegimen|Required|AdverseEventRegimen IS NULL|AdverseEventRegimen is Required
-4f62bd6b-674f-48cb-bb69-9d26497eb4de|TempHTSClientExtract|Dob|Required|Dob IS NULL|DOB is Required
-4f62bd6b-674f-48cb-bb70-9d26497eb4de|TempHTSClientExtract|Gender|Required|Gender IS NULL|Gender is Required
-4f62bd6b-674f-48cb-bb71-9d26497eb4de|TempHTSClientExtract|StrategyHTS|Required|StrategyHTS IS NULL|StrategyHTS is Required
-4f62bd6b-674f-48cb-bb72-9d26497eb4de|TempHTSClientExtract|TestResultsHTS1|Required|TestResultsHTS1 IS NULL|TestResultsHTS1 is Required
-4f62bd6b-674f-48cb-bb73-9d26497eb4de|TempHTSClientExtract|FinalResultHTS|Required|FinalResultHTS IS NULL|FinalResultHTS is Required
-4f62bd6b-674f-48cb-bb74-9d26497eb4de|TempHTSClientExtract|TestResultsHTS2|Required|TestResultsHTS2 IS NULL AND TestResultsHTS1 = 'Positive' |TestResultsHTS1 is positive and TestResultsHTS2 is Missing
-4f62bd6b-674f-48cb-bb75-9d26497eb4de|TempHTSClientExtract|TBScreeningHTS|Required|TBScreeningHTS IS NULL|TBScreeningHTS is Required
+
+4f62bd6b-674f-48cb-bb49-9d26497eb4de|TempHTSClientExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+4f62bd6b-674f-48cb-bb50-9d26497eb4de|TempHTSClientExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+4f62bd6b-674f-48cb-bb51-9d26497eb4de|TempHTSClientExtracts|HtsNumber|Required|HtsNumber IS NULL|HtsNumber Required
+4f62bd6b-674f-48cb-bb69-9d26497eb4de|TempHTSClientExtracts|Dob|Required|Dob IS NULL|DOB is Required
+4f62bd6b-674f-48cb-bb70-9d26497eb4de|TempHTSClientExtracts|Gender|Required|Gender IS NULL|Gender is Required
+4f62bd6b-674f-48cb-bb71-9d26497eb4de|TempHTSClientExtracts|VisitDate|Required|VisitDate IS NULL|VisitDate is Required
+4f62bd6b-674f-48cb-bb72-9d26497eb4de|TempHTSClientExtracts|StrategyHTS|Required|StrategyHTS IS NULL|StrategyHTS is Required
+4f62bd6b-674f-48cb-bb73-9d26497eb4de|TempHTSClientExtracts|TestResultsHTS1|Required|TestResultsHTS1 IS NULL|TestResultsHTS1 is Required
+4f62bd6b-674f-48cb-bb74-9d26497eb4de|TempHTSClientExtracts|FinalResultHTS|Required|FinalResultHTS IS NULL|FinalResultHTS is Required
+4f62bd6b-674f-48cb-bb75-9d26497eb4de|TempHTSClientExtracts|TestResultsHTS2|Required|TestResultsHTS2 IS NULL AND TestResultsHTS1 = 'Positive' |TestResultsHTS1 is positive and TestResultsHTS2 is Missing
+4f62bd6b-674f-48cb-bb76-9d26497eb4de|TempHTSClientExtracts|TBScreeningHTS|Required|TBScreeningHTS IS NULL|TBScreeningHTS is Required
+
+4f62bd6b-674f-48cb-bb77-9d26497eb4de|TempHtsClientLinkageExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK is Required
+4f62bd6b-674f-48cb-bb78-9d26497eb4de|TempHtsClientLinkageExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
+4f62bd6b-674f-48cb-bb79-9d26497eb4de|TempHtsClientLinkageExtracts|HtsNumber|Required|HtsNumber IS NULL|HtsNumber is Required
+
+4f62bd6b-674f-48cb-bb80-9d26497eb4de|TempHtsClientPartnerExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK is Required
+4f62bd6b-674f-48cb-bb81-9d26497eb4de|TempHtsClientPartnerExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
+4f62bd6b-674f-48cb-bb82-9d26497eb4de|TempHtsClientPartnerExtracts|HtsNumber|Required|HtsNumber IS NULL|HtsNumber is Required
+4f62bd6b-674f-48cb-bb83-9d26497eb4de|TempHtsClientPartnerExtracts|RelationshipToIndexClient|Required|RelationshipToIndexClient IS NULL|RelationshipToIndexClient is Required
+4f62bd6b-674f-48cb-bb84-9d26497eb4de|TempHtsClientPartnerExtracts|Age|Required|Age IS NULL|Age is Required
+4f62bd6b-674f-48cb-bb85-9d26497eb4de|TempHtsClientPartnerExtracts|Sex|Required|Sex IS NULL|Sex is Required
+
+
+
