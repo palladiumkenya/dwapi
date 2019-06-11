@@ -63,7 +63,6 @@ aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEven
 
 4f62bd6b-674f-48cb-bb49-9d26497eb4de|TempHTSClientExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 4f62bd6b-674f-48cb-bb50-9d26497eb4de|TempHTSClientExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
-4f62bd6b-674f-48cb-bb51-9d26497eb4de|TempHTSClientExtracts|HtsNumber|Required|HtsNumber IS NULL|HtsNumber Required
 4f62bd6b-674f-48cb-bb69-9d26497eb4de|TempHTSClientExtracts|Dob|Required|Dob IS NULL|DOB is Required
 4f62bd6b-674f-48cb-bb70-9d26497eb4de|TempHTSClientExtracts|Gender|Required|Gender IS NULL|Gender is Required
 4f62bd6b-674f-48cb-bb71-9d26497eb4de|TempHTSClientExtracts|VisitDate|Required|VisitDate IS NULL|VisitDate is Required
@@ -75,11 +74,9 @@ aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEven
 
 4f62bd6b-674f-48cb-bb77-9d26497eb4de|TempHtsClientLinkageExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK is Required
 4f62bd6b-674f-48cb-bb78-9d26497eb4de|TempHtsClientLinkageExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
-4f62bd6b-674f-48cb-bb79-9d26497eb4de|TempHtsClientLinkageExtracts|HtsNumber|Required|HtsNumber IS NULL|HtsNumber is Required
 
 4f62bd6b-674f-48cb-bb80-9d26497eb4de|TempHtsClientPartnerExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK is Required
 4f62bd6b-674f-48cb-bb81-9d26497eb4de|TempHtsClientPartnerExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
-4f62bd6b-674f-48cb-bb82-9d26497eb4de|TempHtsClientPartnerExtracts|HtsNumber|Required|HtsNumber IS NULL|HtsNumber is Required
 4f62bd6b-674f-48cb-bb83-9d26497eb4de|TempHtsClientPartnerExtracts|RelationshipToIndexClient|Required|RelationshipToIndexClient IS NULL|RelationshipToIndexClient is Required
 4f62bd6b-674f-48cb-bb84-9d26497eb4de|TempHtsClientPartnerExtracts|Age|Required|Age IS NULL|Age is Required
 4f62bd6b-674f-48cb-bb85-9d26497eb4de|TempHtsClientPartnerExtracts|Sex|Required|Sex IS NULL|Sex is Required
