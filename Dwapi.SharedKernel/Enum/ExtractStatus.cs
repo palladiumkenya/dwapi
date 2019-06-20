@@ -7,6 +7,8 @@
         Finding,Found,
         Loading,Loaded,
         Validating,Validated,
-        Sending,Sent
+        Sending,Sent,
+        Excluded
+
     }
 }
