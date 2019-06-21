@@ -95,7 +95,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
             var sql = $@"
                     select count(distinct PatientPK)
                     from {extract.TempTableName}s a where a.PatientPk in (select PatientPK
-                    from {extract.TableName}s where CheckError=1 and a.SiteCode=SiteCode )
+                    from {extract.MainName} where CheckError=1 and a.SiteCode=SiteCode )
             ";
 
             int count = ExecQuery<int>(sql);

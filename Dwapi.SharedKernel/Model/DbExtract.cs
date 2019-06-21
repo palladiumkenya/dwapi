@@ -18,6 +18,7 @@ namespace Dwapi.SharedKernel.Model
         [NotMapped]
         public string Emr { get; set; }
 
+        [NotMapped] public string MainName => GetMainName();
         [NotMapped] public string TableName => GetName();
         [NotMapped] public string TempTableName => GetTempName();
 
@@ -30,6 +31,14 @@ namespace Dwapi.SharedKernel.Model
                 return "PatientLaboratoryExtract";
 
             return Name;
+        }
+
+        private string GetMainName()
+        {
+            if (Name.StartsWith("Hts"))
+                return "TempHtsClientExtracts";
+
+            return "TempPatientExtracts";
         }
 
         private string GetTempName()
