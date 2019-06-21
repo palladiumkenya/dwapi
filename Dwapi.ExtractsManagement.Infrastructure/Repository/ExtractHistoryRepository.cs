@@ -6,6 +6,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 {
@@ -82,13 +83,35 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
                 SaveChanges();
         }
 
-
-
         public void Complete(Guid extractId)
         {
             var history = new ExtractHistory(ExtractStatus.Idle,extractId);
             Create(history);
             SaveChanges();
+        }
+
+        public int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract)
+        {
+            var sql = $@"
+                    select count(distinct PatientPK)
+                    from {extract.TempTableName}s a where a.PatientPk in (select PatientPK
+                    from {extract.TableName}s where CheckError=1 and a.SiteCode=SiteCode )
+            ";
+
+            int count = ExecQuery<int>(sql);
+
+            DwhUpdateStatus(extractId, ExtractStatus.Excluded, count);
+            DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount-count);
+
+            return count;
+        }
+
+        public int ProcessExcluded(Guid extractId, int rejectedCount, int excludedCount)
+        {
+            DwhUpdateStatus(extractId, ExtractStatus.Excluded, excludedCount);
+            DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount);
+
+            return excludedCount;
         }
     }
 }

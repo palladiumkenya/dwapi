@@ -27,6 +27,8 @@ namespace Dwapi.SharedKernel.Interfaces
         void CloseConnection(IDbConnection connection);
         void SaveChanges();
         Task<int> SaveChangesAsync();
+        void ExecCommand(string sql);
+        TC ExecQuery<TC>(string sql);
 
     }
 }
