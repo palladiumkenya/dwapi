@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Interfaces;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
 {
@@ -17,5 +18,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
         void UpdateStatus(Guid extractId, ExtractStatus status,int? stats=null,string statusInfo="", bool express = false);
         void DwhUpdateStatus(Guid extractId, ExtractStatus status, int? stats = null, string statusInfo = "");
         void Complete(Guid extractId);
+        int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract);
+        int ProcessExcluded(Guid extractId,int rejectedCount,int excludedCount);
     }
 }

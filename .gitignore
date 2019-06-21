@@ -262,3 +262,5 @@ __pycache__/
 
 # DWAPI Logs
 Dwapi/logs
+
+Dwapi/appsettings.Development.json
