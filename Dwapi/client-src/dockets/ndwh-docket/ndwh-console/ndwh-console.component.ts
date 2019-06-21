@@ -97,8 +97,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public cbsRegistry: CentralRegistry;
     public sendResponse: SendResponse;
     public getEmr$: Subscription;
-    public loadMpi: boolean = true;
-    public sendMpi: boolean = true;
+    public loadMpi: boolean = false;
+    public sendMpi: boolean = false;
 
     public constructor(
         confirmationService: ConfirmationService,
