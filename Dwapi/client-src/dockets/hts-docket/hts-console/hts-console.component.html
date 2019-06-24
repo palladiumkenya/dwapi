@@ -39,4 +39,19 @@
     </div>
     <p-messages [(value)]="errorMessage"></p-messages>
     <p-growl [(value)]="otherMessage"></p-growl>
+    <div>
+
+        <p-fieldset legend="Statics description" [toggleable]="true" collapsed="true">
+                <span style="background-color:white "><b>*Found </b></span> => Total number of records available in the source EMR.<br/>
+                <span style="background-color:green "><b>*Loaded </b></span>=> Total number of valid records extracted from source EMR<br/>
+                <span style="background-color:yellow "><b><*Excluded </b></span>=> These are records that are not extracted and associated with the rejected patients. <br/>
+                <span style="background-color:red"><b>*Rejected </b></span>=> Total number of invalid unique patient records that need to be cleaned in the source EMR. These records are available below in the validation summary section.<br/>
+                <span style="background-color:orange "><b>*Queued </b></span>=> Total number loaded, ready for sending to the data warehouse.<br/>
+                <span style="background-color:lightskyblue "><b>*Sent </b></span>=> Total number of records sent to the data warehouse.<br/> 
+
+
+        </p-fieldset>
+        
+        
+    </div>
 </div>
