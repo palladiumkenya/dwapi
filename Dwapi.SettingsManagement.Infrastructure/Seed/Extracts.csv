@@ -15,7 +15,7 @@ FROM
 
  tmp_ARTPatients AS a INNER JOIN
 
- tmp_PatientMaster AS c ON a.PatientPK = c.PatientPK"|dwhStage|0|PatientArtExtract|2|a6221983-0e85-11e8-ba89-0ed5f89f718b
+ tmp_PatientMaster AS c ON a.PatientPK = c.PatientPK where c.RegistrationAtCCC is not null"|dwhStage|0|PatientArtExtract|2|a6221983-0e85-11e8-ba89-0ed5f89f718b
 42742eb0-5856-e811-8e16-9cb6d0da773c|Patient Baselines|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
 
  tmp_PatientMaster.PatientPK, tmp_PatientMaster.PatientID, tmp_PatientMaster.FacilityID, tmp_PatientMaster.SiteCode, IQC_bCD4.bCD4, IQC_bCD4.bCD4Date, IQC_bWAB.bWAB, IQC_bWAB.bWABDate,
@@ -51,20 +51,20 @@ FROM
 
     IQC_m12CD4 ON tmp_PatientMaster.PatientPK = IQC_m12CD4.PatientPK LEFT OUTER JOIN
 
-    IQC_m6CD4 ON tmp_PatientMaster.PatientPK = IQC_m6CD4.PatientPK"|dwhStage|0|PatientBaselineExtract|3|a6221983-0e85-11e8-ba89-0ed5f89f718b
+    IQC_m6CD4 ON tmp_PatientMaster.PatientPK = IQC_m6CD4.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhStage|0|PatientBaselineExtract|3|a6221983-0e85-11e8-ba89-0ed5f89f718b
 43742eb0-5856-e811-8e16-9cb6d0da773c|Patient Status|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
  tmp_PatientMaster.PatientID, tmp_LastStatus.PatientPK, tmp_PatientMaster.SiteCode, tmp_PatientMaster.FacilityName, tmp_PatientMaster.FacilityID as FacilityId, tmp_LastStatus.ExitDescription, tmp_LastStatus.ExitDate, tmp_LastStatus.ExitReason,
  CAST(GETDATE() AS DATE) AS DateExtracted, 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
 FROM
  tmp_LastStatus INNER JOIN
- tmp_PatientMaster ON tmp_LastStatus.PatientPK = tmp_PatientMaster.PatientPK "|dwhStage|0|PatientStatusExtract|4|a6221983-0e85-11e8-ba89-0ed5f89f718b
+ tmp_PatientMaster ON tmp_LastStatus.PatientPK = tmp_PatientMaster.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhStage|0|PatientStatusExtract|4|a6221983-0e85-11e8-ba89-0ed5f89f718b
 44742eb0-5856-e811-8e16-9cb6d0da773c|Patient Labs|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
  tmp_PatientMaster.PatientID, tmp_Labs.PatientPK, tmp_PatientMaster.FacilityID, tmp_PatientMaster.SiteCode, tmp_PatientMaster.FacilityName, tmp_PatientMaster.SatelliteName, tmp_Labs.VisitID,
  tmp_Labs.OrderedbyDate, tmp_Labs.ReportedbyDate, tmp_Labs.TestName, tmp_Labs.EnrollmentTest, tmp_Labs.TestResult, CAST(GETDATE() AS DATE) AS DateExtracted,
    'IQCare' AS EMR, 'Kenya HMIS II' AS Project
 FROM
  tmp_Labs INNER JOIN
- tmp_PatientMaster ON tmp_Labs.PatientPK = tmp_PatientMaster.PatientPK"|dwhstage|0|PatientLabExtract|5|a6221983-0e85-11e8-ba89-0ed5f89f718b
+ tmp_PatientMaster ON tmp_Labs.PatientPK = tmp_PatientMaster.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientLabExtract|5|a6221983-0e85-11e8-ba89-0ed5f89f718b
 46742eb0-5856-e811-8e16-9cb6d0da773c|Patient Pharmacy|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
 
  tmp_PatientMaster.PatientID, tmp_PatientMaster.FacilityID, tmp_PatientMaster.SiteCode, tmp_Pharmacy.PatientPK, tmp_Pharmacy.VisitID, tmp_Pharmacy.Drug, tmp_Pharmacy.Provider,
@@ -78,7 +78,7 @@ FROM
 
  tmp_Pharmacy INNER JOIN
 
-    tmp_PatientMaster ON tmp_Pharmacy.PatientPK = tmp_PatientMaster.PatientPK"|dwhstage|0|PatientPharmacyExtract|6|a6221983-0e85-11e8-ba89-0ed5f89f718b
+    tmp_PatientMaster ON tmp_Pharmacy.PatientPK = tmp_PatientMaster.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientPharmacyExtract|6|a6221983-0e85-11e8-ba89-0ed5f89f718b
 47742eb0-5856-e811-8e16-9cb6d0da773c|Patient Visits|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
  REPLACE(tmp_PatientMaster.PatientID, ' ', '') AS PatientID, tmp_PatientMaster.FacilityName, tmp_PatientMaster.FacilityID as FacilityId, tmp_PatientMaster.SiteCode, tmp_ClinicalEncounters.PatientPK, tmp_ClinicalEncounters.VisitID,
  tmp_ClinicalEncounters.VisitDate, tmp_ClinicalEncounters.Service, tmp_ClinicalEncounters.VisitType, tmp_ClinicalEncounters.WHOStage, tmp_ClinicalEncounters.WABStage, tmp_ClinicalEncounters.Pregnant,
@@ -90,7 +90,7 @@ FROM
  , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
 FROM
  tmp_ClinicalEncounters INNER JOIN
- tmp_PatientMaster ON tmp_PatientMaster.PatientPK = tmp_ClinicalEncounters.PatientPK"|dwhstage|0|PatientVisitExtract|7|a6221983-0e85-11e8-ba89-0ed5f89f718b
+ tmp_PatientMaster ON tmp_PatientMaster.PatientPK = tmp_ClinicalEncounters.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientVisitExtract|7|a6221983-0e85-11e8-ba89-0ed5f89f718b
 3A742EB0-5856-E811-8E16-9CB6D0DA773C|All Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select NULL AS StatusAtTBClinic, NULL AS StatusAtPMTCT,NULL AS StatusATCCC,'' AS SatelliteName, 0 AS FacilityId,d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select value_reference from location_attribute
@@ -290,7 +290,7 @@ date_add(date_add(min(e.visit_date), interval 6 month),interval 1 day) as six_mo
 date_add(date_add(min(e.visit_date), interval 12 month),interval 1 day) as twelve_month_date
 from kenyaemr_etl.etl_hiv_enrollment e
 group by e.patient_id) p_dates on p_dates.patient_id=fup.patient_id
-left outer join kenyaemr_etl.etl_laboratory_extract l on l.patient_id=fup.patient_id and l.lab_test in (5497,730)
+left outer join kenyaemr_etl.etl_laboratory_extract l on l.patient_id=fup.patient_id and l.lab_test in (5497,730) where d.unique_patient_no is not null
 group by fup.patient_id"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 38742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Status|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId,d.unique_patient_no as PatientID, d.patient_id as PatientPK,(select value_reference from location_attribute
 where location_id in (select property_value from global_property where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode, (select name from location where location_id in (select property_value
@@ -337,7 +337,7 @@ join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY
 and cn.locale='en'
 join concept c on c.concept_id = l.lab_test
 left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
-and cn2.locale='en';"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+and cn2.locale='en' where d.unique_patient_no is not null;"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS Provider,'' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select name from location
@@ -744,7 +744,7 @@ Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial"|MPI|1|MasterPatientIndex|1|a6221aa4-
        adv.AdverseEventEndDate,
        adv.Pregnancy AS AdverseEventIsPregnant
 FROM IQC_AdverseEvents adv
-     INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK"|dwhstage|0|PatientAdverseEventExtract|8|a6221983-0e85-11e8-ba89-0ed5f89f718b
+     INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientAdverseEventExtract|8|a6221983-0e85-11e8-ba89-0ed5f89f718b
 
 
 a6226eb4-0e85-11e8-ba89-6fb398c5f449|Patient Adverse Events|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT '' AS PatientID,
