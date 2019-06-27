@@ -7,6 +7,7 @@ using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
+using Serilog;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 {
@@ -99,6 +100,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
             ";
 
             int count = ExecQuery<int>(sql);
+
+            Log.Debug(sql);
 
             DwhUpdateStatus(extractId, ExtractStatus.Excluded, count);
             DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount-count);
