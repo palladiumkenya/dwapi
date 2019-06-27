@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -19,6 +20,12 @@ namespace Dwapi.ExtractsManagement.Core.Model
         {
             Id = LiveGuid.NewGuid();
         }
+
+        private ErrorType GettErrorType()
+        {
+            return Type == "Required" ? ErrorType.Required : ErrorType.Logical;
+        }
+
 
         public string GenerateValidateSql(DatabaseProvider provider)
         {
@@ -58,7 +65,7 @@ namespace Dwapi.ExtractsManagement.Core.Model
 
             var sql = $"{GenerateInsert()} " +
                       $"{selectSql};" +
-                      $"{GenerateUpdateError()} ";
+                      $"{GenerateUpdateErrorWithType()} ";
 
             return sql;
         }
@@ -81,6 +88,15 @@ namespace Dwapi.ExtractsManagement.Core.Model
                         Id IN (SELECT RecordId FROM ValidationError WHERE ValidatorId='{Id}')";
 
         }
+        private string GenerateUpdateErrorWithType()
+        {
+            return $@"
+                    UPDATE 
+                        {Extract} 
+                    SET 
+                        CheckError=1  , ErrorType={(int)GettErrorType()}
+                    WHERE 
+                        Id IN (SELECT RecordId FROM ValidationError WHERE ValidatorId='{Id}')";
 
-    }
+        }    }
 }
