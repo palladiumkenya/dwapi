@@ -187,5 +187,11 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         {
            return GetConnection().Query<TC>(sql).FirstOrDefault();
         }
+
+        public IEnumerable<dynamic> ExecQueryMulti<dynamic>(string sql)
+        {
+            return GetConnection().Query<dynamic>(sql);
+
+        }
     }
 }

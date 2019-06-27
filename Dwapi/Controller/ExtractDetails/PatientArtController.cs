@@ -60,7 +60,14 @@ namespace Dwapi.Controller.ExtractDetails
         {
             try
             {
-                var errorSummary = _errorSummaryRepository.GetAll().ToList();
+                var sql = "SELECT v.Id, v.Extract, v.Field, v.Type, v.Summary, v.DateGenerated, v.PatientPK, v.FacilityId, v.PatientID, v.SiteCode, " +
+                    "v.FacilityName, v.RecordId, v.DOB, v.Gender, v.PatientSource, v.RegistrationDate, v.AgeLastVisit, v.PreviousARTStartDate, " +
+                    "v.PreviousARTRegimen, v.StartARTAtThisFacility, v.StartARTDate, v.StartRegimen, v.StartRegimenLine, v.LastARTDate, " +
+                    "v.LastRegimen, v.LastRegimenLine, v.LastVisit, v.ExitReason, v.ExitDate, t.ExpectedReturn FROM " +
+                    "vTempPatientArtExtractErrorSummary AS v INNER JOIN vTempPatientArtExtractError AS t ON v.PatientPK = t.PatientPK " +
+                    "AND v.SiteCode = t.SiteCode";
+
+                var errorSummary = _tempPatientArtExtractRepository.ExecQueryMulti<dynamic>(sql).ToList();
                 return Ok(errorSummary);
             }
             catch (Exception e)
