@@ -245,50 +245,57 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientColumns(): void {
         this.cols = [
-            { field: 'summary', header: 'Summary' },
-            { field: 'extract', header: 'Extract' },
-            { field: 'field', header: 'Field' },
-            { field: 'type', header: 'Type' },
-            { field: 'summary', header: 'Summary' },
-            { field: 'dateGenerated', header: 'DateGenerated' },
-            { field: 'patientPK', header: 'PatientPK' },
-            { field: 'facilityId', header: 'FacilityId' },
-            { field: 'patientID', header: 'PatientID' },
-            { field: 'siteCode', header: 'SiteCode' },
-            { field: 'facilityName', header: 'FacilityName' }
+
+            { field: 'PatientID', header: 'Patient ID' },
+            { field: 'Summary', header: 'Summary' },
+            { field: 'Extract', header: 'Extract' },
+            { field: 'Field', header: 'Field' },
+            { field: 'Type', header: 'Type' },
+            { field: 'Dob', header: 'DOB' },
+            { field: 'Gender', header: 'Gender' },
+            { field: 'LastVisit', header: 'Last Visit' },
+            { field: 'RegistrationAtCCC', header: 'CCC Registration Date' }, 
+            { field: 'DateGenerated', header: 'Date Generated' },
+            { field: 'PatientPK', header: 'Patient PK' },
+            { field: 'FacilityId', header: 'Facility Id' },
+            { field: 'SiteCode', header: 'Site Code' },
+            { field: 'FacilityName', header: 'Facility Name' }
         ];
     }
-
+    
     private getPatientArtColumns(): void {
         this.cols = [
-            { field: 'summary', header: 'Summary' },
-            { field: 'extract', header: 'Extract' },
-            { field: 'field', header: 'Field' },
-            { field: 'type', header: 'Type' },
-            { field: 'summary', header: 'Summary' },
-            { field: 'dateGenerated', header: 'Date Generated' },
-            { field: 'patientPK', header: 'Patient PK' },
-            { field: 'facilityId', header: 'Facility Id' },
-            { field: 'patientID', header: 'Patient ID' },
-            { field: 'siteCode', header: 'Site Code' },
-            { field: 'facilityName', header: 'Facility Name' },
-            { field: 'dob', header: 'DOB' },
-            { field: 'gender', header: 'Gender' },
-            { field: 'patientSource', header: 'Patient Source' },
-            { field: 'registrationDate', header: 'Registration Date' },
-            { field: 'ageLastVisit', header: 'Age Last Visit' },
-            { field: 'previousARTStartDate', header: 'Previous ART Start Date' },
-            { field: 'previousARTRegimen', header: 'Previous ART Regimen' },
-            { field: 'startARTAtThisFacility', header: 'Start ART At This Facility' },
-            { field: 'startARTDate', header: 'Start ART Date' },
-            { field: 'startRegimen', header: 'Start Regimen' },
-            { field: 'startRegimenLine', header: 'Start Regimen Line' },
-            { field: 'lastARTDate', header: 'Last ART Date' },
-            { field: 'lastRegimen', header: 'Last Regimen' },
-            { field: 'lastRegimenLine', header: 'Last Regimen Line' },
-            { field: 'lastVisit', header: 'Last Visit' },
-            { field: 'exitReason', header: 'Exit Reason' },
-            { field: 'exitDate', header: 'Exit Date' }
+            { field: 'PatientID', header: 'Patient ID' },
+            { field: 'Summary', header: 'Summary' },
+            { field: 'Extract', header: 'Extract' },
+            { field: 'Field', header: 'Field' },
+            { field: 'Type', header: 'Type' },
+            { field: 'StartRegimen', header: 'Start Regimen' },
+            { field: 'StartARTDate', header: 'Start ART Date' },
+            { field: 'StartRegimenLine', header: 'Start Regimen Line' },
+            { field: 'Dob', header: 'DOB' },
+            { field: 'Gender', header: 'Gender' },
+            { field: 'PatientSource', header: 'Patient Source' },
+            { field: 'RegistrationDate', header: 'Registration Date' },
+
+            { field: 'Summary', header: 'Summary' },
+            { field: 'DateGenerated', header: 'Date Generated' },
+            { field: 'PatientPK', header: 'Patient PK' },
+            { field: 'FacilityId', header: 'Facility Id' },
+            { field: 'SiteCode', header: 'Site Code' },
+            { field: 'FacilityName', header: 'Facility Name' },
+            { field: 'AgeLastVisit', header: 'Age Last Visit' },
+            { field: 'PreviousARTStartDate', header: 'Previous ART Start Date' },
+            { field: 'PreviousARTRegimen', header: 'Previous ART Regimen' },
+            { field: 'StartARTAtThisFacility', header: 'Start ART At This Facility' },
+            
+            { field: 'LastARTDate', header: 'Last ART Date' },
+            { field: 'LastRegimen', header: 'Last Regimen' },
+            { field: 'LastRegimenLine', header: 'Last Regimen Line' },
+            { field: 'LastVisit', header: 'Last Visit' },
+            { field: 'ExpectedReturn', header: 'Expected Return' },
+            { field: 'ExitReason', header: 'Exit Reason' },
+            { field: 'ExitDate', header: 'Exit Date' }
         ];
     }
 
@@ -332,38 +339,36 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
 
     private getPatientLaboratoryColumns(): void {
         this.cols = [
-        { field: 'summary', header: 'Summary' },
-        { field: 'extract', header: 'Extract' },
-        { field: 'field', header: 'Field' },
-        { field: 'type', header: 'Type' },
-        { field: 'summary', header: 'Summary' },
-        { field: 'dateGenerated', header: 'Date Generated' },
-        { field: 'patientPK', header: 'Patient PK' },
-        { field: 'facilityId', header: 'Facility Id' },
-        { field: 'patientID', header: 'Patient ID' },
-        { field: 'siteCode', header: 'Site Code' },
-        { field: 'facilityName', header: 'Facility Name' },
-        { field: 'orderedByDate', header: 'Ordered By Date' },
-        { field: 'reportedByDate', header: 'Reported By Date' },
-        { field: 'testName', header: 'Test Name' },
-        { field: 'enrollmentTest', header: 'Enrollment Test' },
-        { field: 'testResult', header: 'Test Result' },
-        { field: 'visitId', header: 'Visit Id' }
-        ];
-    }
 
-    private getPatientPharmacyColumns(): void {
-        this.cols = [
+            { field: 'patientID', header: 'Patient ID' },
             { field: 'summary', header: 'Summary' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
             { field: 'summary', header: 'Summary' },
+            { field: 'orderedByDate', header: 'Ordered By Date' },
+            { field: 'reportedByDate', header: 'Reported By Date' },
+            { field: 'testName', header: 'Test Name' },
             { field: 'dateGenerated', header: 'Date Generated' },
             { field: 'patientPK', header: 'Patient PK' },
             { field: 'facilityId', header: 'Facility Id' },
-            { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
+            { field: 'facilityName', header: 'Facility Name' },
+        
+            { field: 'enrollmentTest', header: 'Enrollment Test' },
+            { field: 'testResult', header: 'Test Result' },
+            { field: 'visitId', header: 'Visit Id' }
+        ];
+    }
+
+    private getPatientPharmacyColumns(): void {
+        this.cols = [
+            { field: 'patientID', header: 'Patient ID' },
+            { field: 'summary', header: 'Summary' },
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' },
+            { field: 'summary', header: 'Summary' },
             { field: 'drug', header: 'Drug' },
             { field: 'dispenseDate', header: 'Dispense Date' },
             { field: 'duration', header: 'Duration' },
@@ -373,43 +378,50 @@ export class InvalidRecordDetailsComponent implements OnInit, OnChanges {
             { field: 'periodTaken', header: 'Period Taken' },
             { field: 'prophylaxisType', header: 'ProphylaxisT ype' },
             { field: 'provider', header: 'Provider' },
-            { field: 'visitID', header: 'VisitID' }
+            { field: 'visitID', header: 'VisitID' },
+            { field: 'dateGenerated', header: 'Date Generated' },
+            { field: 'patientPK', header: 'Patient PK' },
+            { field: 'facilityId', header: 'Facility Id' },
+            { field: 'siteCode', header: 'Site Code' },
+            
         ];
     }
 
     private getPatientStatusColumns(): void {
         this.cols = [
+            { field: 'patientID', header: 'Patient ID' },
             { field: 'summary', header: 'Summary' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
             { field: 'summary', header: 'Summary' },
+            { field: 'exitDescription', header: 'Exit Description' },
+            { field: 'exitDate', header: 'Exit Date' },
+            { field: 'exitReason', header: 'Exit Reason' },
             { field: 'dateGenerated', header: 'Date Generated' },
             { field: 'patientPK', header: 'Patient PK' },
             { field: 'facilityId', header: 'Facility Id' },
-            { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
             { field: 'facilityName', header: 'Facility Name' },
-            { field: 'exitDescription', header: 'Exit Description' },
-            { field: 'exitDate', header: 'Exit Date' },
-            { field: 'exitReason', header: 'Exit Reason' }
+            
         ];
     }
 
     private getPatientVisitColumns(): void {
         this.cols = [
+
+            { field: 'patientID', header: 'Patient ID' },
             { field: 'summary', header: 'Summary' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' },
             { field: 'summary', header: 'Summary' },
+            { field: 'visitDate', header: 'Visit Date' },
             { field: 'dateGenerated', header: 'Date Generated' },
             { field: 'patientPK', header: 'Patient PK' },
             { field: 'facilityId', header: 'Facility Id' },
-            { field: 'patientID', header: 'Patient ID' },
             { field: 'siteCode', header: 'Site Code' },
             { field: 'facilityName', header: 'Facility Name' },
-            { field: 'visitDate', header: 'Visit Date' },
             { field: 'service', header: 'Service' },
             { field: 'visitType', header: 'Visit Type' },
             { field: 'wHOStage', header: 'WHO Stage' },
