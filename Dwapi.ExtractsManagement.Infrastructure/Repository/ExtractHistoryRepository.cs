@@ -94,7 +94,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
         public int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract)
         {
             var sql = $@"
-                    select count(distinct PatientPK)
+                    select count(PatientPK)
                     from {extract.TempTableName}s a where a.PatientPk in (select PatientPK
                     from {extract.MainName} where CheckError=1 and a.SiteCode=SiteCode )
             ";
