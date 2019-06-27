@@ -41,7 +41,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
             int found = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
-            await _extractValidator.Validate(request.Extract.Id, found, nameof(HTSClientLinkageExtract), $"{nameof(TempHTSClientLinkageExtract)}s");
+            await _extractValidator.Validate(request.Extract.Id, found, "HtsClientLinkageExtracts", "TempHtsClientLinkageExtracts");
 
             //Load
             int loaded = await _patientAdverseEventLoader.Load(request.Extract.Id, found);

@@ -30,6 +30,15 @@ namespace Dwapi.SharedKernel.Model
             if (Name.IsSameAs("PatientLabExtract"))
                 return "PatientLaboratoryExtract";
 
+            if (Name.IsSameAs("HTSClientExtract"))
+                return "HtsClientExtract";
+
+            if (Name.IsSameAs("HTSClientLinkageExtract"))
+                return "HtsClientLinkageExtract";
+
+            if (Name.IsSameAs("HTSClientPartnerExtract"))
+                return "HtsClientPartnerExtract";
+
             return Name;
         }
 

@@ -52,7 +52,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 
 
             //Validate
-            await _extractValidator.Validate(request.Extract.Id, found, nameof(HTSClientExtract), $"{nameof(TempHTSClientExtract)}s");
+            await _extractValidator.Validate(request.Extract.Id, found, "HtsClientExtracts", "TempHtsClientExtracts");
 
             //Load
             int loaded = await _patientLoader.Load(request.Extract.Id, found);

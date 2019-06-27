@@ -44,7 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 
             //Validate
 
-            await _extractValidator.Validate(request.Extract.Id, found, nameof(HTSClientPartnerExtract), $"{nameof(TempHTSClientPartnerExtract)}s");
+            await _extractValidator.Validate(request.Extract.Id, found, "HtsClientPartnerExtracts", "TempHtsClientPartnerExtracts");
 
             //Load
             int loaded = await _patientLaboratoryLoader.Load(request.Extract.Id, found);
