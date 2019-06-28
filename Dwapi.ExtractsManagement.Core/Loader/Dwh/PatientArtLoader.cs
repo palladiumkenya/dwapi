@@ -44,7 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 querybuilder.Append($" INNER JOIN PatientExtracts p ON ");
                 querybuilder.Append($" s.PatientPK = p.PatientPK AND ");
                 querybuilder.Append($" s.SiteCode = p.SiteCode ");
-                querybuilder.Append($" WHERE s.CheckError = 0");
+                //querybuilder.Append($" WHERE s.CheckError = 0");
 
                 string query = querybuilder.ToString();
 

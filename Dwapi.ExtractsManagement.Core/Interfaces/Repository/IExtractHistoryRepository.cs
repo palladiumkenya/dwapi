@@ -20,6 +20,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
         void DwhUpdateStatus(Guid extractId, ExtractStatus status, int? stats = null, string statusInfo = "");
         void Complete(Guid extractId);
         int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract);
+        int ProcessRejected(Guid extractId,int rejectedCount,DbExtract extract);
         int ProcessExcluded(Guid extractId,int rejectedCount,int excludedCount);
     }
 }

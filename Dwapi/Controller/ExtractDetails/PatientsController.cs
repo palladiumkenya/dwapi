@@ -64,7 +64,7 @@ namespace Dwapi.Controller.ExtractDetails
                     "FROM vTempPatientExtractErrorSummary AS v INNER JOIN TempPatientExtracts AS t ON v.PatientPK = t.PatientPK " +
                     "AND v.SiteCode = t.SiteCode";
 
-                var errorSummary = _tempPatientExtractRepository.ExecQueryMulti<dynamic>(sql).ToList();
+                var errorSummary = _tempPatientExtractRepository.ExecQueryMulti<dynamic>(sql).OrderByDescending(x=>x.Type).ToList();
 
                 return Ok(errorSummary);
             }
