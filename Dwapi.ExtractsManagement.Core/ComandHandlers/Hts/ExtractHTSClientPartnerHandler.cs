@@ -5,7 +5,6 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Hts;
@@ -26,15 +25,13 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
         private readonly IHTSClientPartnerSourceExtractor _patientLaboratorySourceExtractor;
         private readonly IHtsExtractValidator _extractValidator;
         private readonly IHTSClientPartnerLoader _patientLaboratoryLoader;
-        private readonly IExtractHistoryRepository _extractHistoryRepository;
 
 
-        public ExtractHTSClientPartnerHandler(IHTSClientPartnerSourceExtractor patientLaboratorySourceExtractor, IHtsExtractValidator extractValidator, IHTSClientPartnerLoader patientLaboratoryLoader, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractHTSClientPartnerHandler(IHTSClientPartnerSourceExtractor patientLaboratorySourceExtractor, IHtsExtractValidator extractValidator, IHTSClientPartnerLoader patientLaboratoryLoader)
         {
             _patientLaboratorySourceExtractor = patientLaboratorySourceExtractor;
             _extractValidator = extractValidator;
             _patientLaboratoryLoader = patientLaboratoryLoader;
-            _extractHistoryRepository = extractHistoryRepository;
         }
 
         public async Task<bool> Handle(ExtractHTSClientPartner request, CancellationToken cancellationToken)
@@ -44,14 +41,12 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 
             //Validate
 
-            await _extractValidator.Validate(request.Extract.Id, found, "HtsClientPartnerExtracts", "TempHtsClientPartnerExtracts");
+            await _extractValidator.Validate(request.Extract.Id, found, nameof(HTSClientPartnerExtract), $"{nameof(TempHTSClientPartnerExtract)}s");
 
             //Load
             int loaded = await _patientLaboratoryLoader.Load(request.Extract.Id, found);
 
             int rejected = found - loaded;
-
-            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected, request.Extract);
 
             //notify loaded
             DomainEvents.Dispatch(

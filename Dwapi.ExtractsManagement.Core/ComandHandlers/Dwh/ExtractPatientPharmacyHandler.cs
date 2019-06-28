@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -22,15 +21,13 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IExtractValidator _extractValidator;
         private readonly IPatientPharmacyLoader _patientPharmacyLoader;
         private readonly IClearDwhExtracts _clearDwhExtracts;
-        private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractPatientPharmacyHandler(IPatientPharmacySourceExtractor patientPharmacySourceExtractor, IExtractValidator extractValidator, IPatientPharmacyLoader patientPharmacyLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractPatientPharmacyHandler(IPatientPharmacySourceExtractor patientPharmacySourceExtractor, IExtractValidator extractValidator, IPatientPharmacyLoader patientPharmacyLoader, IClearDwhExtracts clearDwhExtracts)
         {
             _patientPharmacySourceExtractor = patientPharmacySourceExtractor;
             _extractValidator = extractValidator;
             _patientPharmacyLoader = patientPharmacyLoader;
             _clearDwhExtracts = clearDwhExtracts;
-            _extractHistoryRepository = extractHistoryRepository;
         }
 
         public async Task<bool> Handle(ExtractPatientPharmacy request, CancellationToken cancellationToken)
@@ -45,8 +42,6 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             int loaded = await _patientPharmacyLoader.Load(request.Extract.Id, found);
 
             int rejected = found - loaded;
-
-            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected, request.Extract);
 
             //notify loaded
             DomainEvents.Dispatch(

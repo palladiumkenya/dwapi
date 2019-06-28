@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -22,15 +21,13 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IExtractValidator _extractValidator;
         private readonly IPatientArtLoader _patientArtLoader;
         private readonly IClearDwhExtracts _clearDwhExtracts;
-        private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractPatientArtHandler(IPatientArtSourceExtractor patientArtSourceExtractor, IExtractValidator extractValidator, IPatientArtLoader patientArtLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractPatientArtHandler(IPatientArtSourceExtractor patientArtSourceExtractor, IExtractValidator extractValidator, IPatientArtLoader patientArtLoader, IClearDwhExtracts clearDwhExtracts)
         {
             _patientArtSourceExtractor = patientArtSourceExtractor;
             _extractValidator = extractValidator;
             _patientArtLoader = patientArtLoader;
             _clearDwhExtracts = clearDwhExtracts;
-            _extractHistoryRepository = extractHistoryRepository;
         }
 
         public async Task<bool> Handle(ExtractPatientArt request, CancellationToken cancellationToken)
@@ -45,9 +42,6 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             int loaded = await _patientArtLoader.Load(request.Extract.Id, found);
 
             int rejected = found - loaded;
-
-            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected,request.Extract);
-
 
             //notify loaded
             DomainEvents.Dispatch(

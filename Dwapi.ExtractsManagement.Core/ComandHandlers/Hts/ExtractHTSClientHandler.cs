@@ -7,7 +7,6 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
@@ -32,16 +31,14 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
         private readonly IHTSClientLoader _patientLoader;
         private readonly ICleanHtsExtracts _clearDwhExtracts;
         private readonly ITempHTSClientExtractRepository _tempPatientExtractRepository;
-        private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractHTSClientHandler(IHTSClientSourceExtractor patientSourceExtractor, IHtsExtractValidator extractValidator, IHTSClientLoader patientLoader, ICleanHtsExtracts clearDwhExtracts, ITempHTSClientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractHTSClientHandler(IHTSClientSourceExtractor patientSourceExtractor, IHtsExtractValidator extractValidator, IHTSClientLoader patientLoader, ICleanHtsExtracts clearDwhExtracts, ITempHTSClientExtractRepository tempPatientExtractRepository)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
             _patientLoader = patientLoader;
             _clearDwhExtracts = clearDwhExtracts;
             _tempPatientExtractRepository = tempPatientExtractRepository;
-            _extractHistoryRepository = extractHistoryRepository;
         }
 
         public async Task<bool> Handle(ExtractHTSClient request, CancellationToken cancellationToken)
@@ -52,14 +49,12 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 
 
             //Validate
-            await _extractValidator.Validate(request.Extract.Id, found, "HtsClientExtracts", "TempHtsClientExtracts");
+            await _extractValidator.Validate(request.Extract.Id, found, nameof(HTSClientExtract), $"{nameof(TempHTSClientExtract)}s");
 
             //Load
             int loaded = await _patientLoader.Load(request.Extract.Id, found);
 
             int rejected = found - loaded;
-
-            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected,request.Extract);
 
             //notify loaded
             DomainEvents.Dispatch(

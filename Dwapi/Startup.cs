@@ -214,6 +214,7 @@ namespace Dwapi
                         x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString,
                         x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name)));
+
                 }
             }
             catch (Exception e)
@@ -317,6 +318,7 @@ namespace Dwapi
             services.AddScoped<IDwhSendService, DwhSendService>();
             services.AddScoped<IDwhExtractSentServcie, DwhExtractSentServcie>();
 
+
             services.AddScoped<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>();
             services.AddScoped<ITempHTSClientLinkageExtractRepository, TempHTSClientLinkageExtractRepository>();
             services.AddScoped<ITempHTSClientPartnerExtractRepository, TempHTSClientPartnerExtractRepository>();
@@ -405,6 +407,10 @@ namespace Dwapi
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);
             EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
 
+
+
+
+
             app.UseSignalR(
                 routes =>
                 {
@@ -416,6 +422,7 @@ namespace Dwapi
                     routes.MapHub<HtsSendActivity>($"/{nameof(HtsSendActivity).ToLower()}");
                 }
             );
+
 
             Mapper.Initialize(cfg =>
                 {

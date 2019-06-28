@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
@@ -14,7 +13,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public virtual string Emr { get; set; }
         public virtual string Project { get; set; }
         public virtual bool CheckError { get; set; }
-        public virtual ErrorType ErrorType { get; set; }
         public virtual DateTime DateExtracted { get; set; } = DateTime.Now;
         [NotMapped]
         public virtual bool HasError { get; set; }

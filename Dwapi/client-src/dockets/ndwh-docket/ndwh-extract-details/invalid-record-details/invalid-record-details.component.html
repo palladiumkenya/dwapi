@@ -1,21 +1,21 @@
-<p-table #dt [columns]="cols" [value]="invalidExtracts" autoLayout="true" [paginator]="true" [rows]="10">
+<p-table #dt [value]="invalidExtracts" autoLayout="true" [paginator]="true" [rows]="10">
     <ng-template pTemplate="caption">
         <div class="ui-helper-clearfix">
-            <button  type="button" pButton icon="ui-icon-cloud-download" iconPos="left" label="Export" (click)="dt.exportCSV()" style="float:left" class="blue-btn"></button>
+            <button disabled="true" type="button" pButton icon="ui-icon-cloud-download" iconPos="left" label="Export" (click)="dt.exportCSV()" style="float:left" class="blue-btn"></button>
         </div>
     </ng-template>
-    <ng-template pTemplate="header" let-columns>
+    <ng-template pTemplate="header">
         <tr>
-            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+            <th *ngFor="let col of cols" [pSortableColumn]="col.field">
                 {{col.header}}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <ng-template pTemplate="body" let-invalid>
         <tr>
-            <td *ngFor="let col of columns">
-                {{rowData[col.field]}}
+            <td *ngFor="let col of cols">
+                {{invalid[col.field]}}
             </td>
         </tr>
     </ng-template>
