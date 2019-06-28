@@ -6,6 +6,7 @@ using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Interfaces;
 using Dwapi.SharedKernel.Model;
 
+
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
 {
     public interface IExtractHistoryRepository : IRepository<ExtractHistory,Guid>
