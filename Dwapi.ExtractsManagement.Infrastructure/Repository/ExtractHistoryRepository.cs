@@ -116,31 +116,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
         public int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract)
         {
             int count;
-            if (extract.TempTableName == "TempPatientExtracts")
-            {
-                var sql = $@"
-                    select count(PatientPK)
-                    from {extract.TempTableName}s where ErrorType=1 and a.SiteCode=SiteCode";
-
-                count = ExecQuery<int>(sql);
-
-                Log.Debug(sql);
-            }
-            else
-            {
-               var sql = $@"
-                    select count(PatientPK)
-                    from {extract.TempTableName}s a where a.PatientPk in (select PatientPK
-                    from {extract.MainName} where ErrorType=1 and a.SiteCode=SiteCode )
-            ";
+            var sql = $@"
+                    select count(id)
+                    from {extract.TempTableName}s a where CheckError=1";
 
             count = ExecQuery<int>(sql);
 
             Log.Debug(sql);
-            }
-
-           
-
+            
             DwhUpdateStatus(extractId, ExtractStatus.Excluded, count);
             //  DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount-count);
             DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount);
@@ -155,5 +138,29 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 
             return excludedCount;
         }
+
+
+
+        public int ProcessRejected(Guid extractId, int rejectedCount, DbExtract extract)
+        {
+            var sql = $@"
+                    select count(PatientPK)
+                    from {extract.TempTableName}s a where a.PatientPk in (select PatientPK
+                    from {extract.MainName} where ErrorType=1 and a.SiteCode=SiteCode )
+            ";
+
+            int count = ExecQuery<int>(sql);
+
+            Log.Debug(sql);
+
+            DwhUpdateStatus(extractId, ExtractStatus.Excluded, count);
+            //  DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount-count);
+            DwhUpdateStatus(extractId, ExtractStatus.Rejected, rejectedCount);
+
+            return count;
+        }
+
+
+
     }
 }

@@ -21,10 +21,9 @@
         <p-column field="display" header="Extract"></p-column>
         <p-column field="extractEvent.lastStatus" header="Status" ></p-column>
         <p-column field="extractEvent.found" header="(A) Found"></p-column>
-       <!-- <p-column field="extractEvent.loaded" header="Loaded" [style]="{'background-color': 'lightskyblue'}"></p-column> -->
-        <p-column field="extractEvent.rejected" header="(B) Flagged " [style]="{'background-color': 'tomato'}"></p-column>
-       <p-column field="extractEvent.excluded" header="(C) Rejected
-                                                           with errors "[style]="{'background-color': 'lightgray'}"></p-column>
+       <!-- <p-column field="extractEvent.loaded" header="Loaded" [style]="{'background-color': 'lightskyblue'}"></p-column>--> 
+        <p-column field="extractEvent.excluded" header="(B) Flagged " [style]="{'background-color': 'lightgray'}"></p-column>
+       <p-column field="extractEvent.rejected" header="(C) Rejected "[style]="{'background-color': 'tomato'}"></p-column>
         <p-column field="extractEvent.queued" header="(D) Queued (A - C)" [style]="{'background-color': 'orange'}"></p-column>
         <p-column field="extractEvent.sent" header="Sent" [style]="{'background-color': 'lightgreen'}"></p-column>
     </p-dataTable>
@@ -48,14 +47,14 @@
         <p-fieldset legend="KEY" [toggleable]="true">
             <span style="background-color:white "><b>*Found </b></span> => Number of records available in EMR for each dataset.<br />
             ------------------------------------------------------------------------------------------------------------------------------<br />
-            <span style="background-color:lightskyblue "><b>*Loaded </b></span>=> Number of valid records loaded from EMR for each dataset<br />
+           <!-- <span style="background-color:lightskyblue "><b>*Loaded </b></span>=> Number of valid records loaded from EMR for each dataset<br />-->
             ------------------------------------------------------------------------------------------------------------------------------<br />
-            <span style="background-color:lightgray "><b>*Not Loaded </b></span>=> Records associated with patients whose records were not loaded in the All Patient's
-            dataset because of errors. <br />
+            <span style="background-color:tomato "><b>*Rejected </b></span>=> Records in the extract that will not be sent to the <br/>
+            warehouse because they belong to a patient(s) with errors. <br />
             ------------------------------------------------------------------------------------------------------------------------------<br />
-            <span style="background-color:tomato"><b>*Flagged </b></span>=> Records that need to be cleaned in each dataset in the source EMR.<br/>
-            These records are available for review in the validation summary section.<br/>
-            For better data quality, site data managers should clean these records before sending to the datawarehouse<br />
+            <span style="background-color:lightgray"><b>*Flagged </b></span>=> Number of Unique patient records with one or more issues that need to be cleaned in the source EMR.<br/>
+            These issues are recorded for review in the validation summary section.<br/>
+            For better data quality, site data managers/HRIOs should clean these records before sending to the datawarehouse<br />
             ------------------------------------------------------------------------------------------------------------------------------<br />
             <span style="background-color:orange "><b>*Queued </b></span>=> Number of records in each dataset ready for sending to the data warehouse.
             These records will include flagged records that have not been cleaned.<br />

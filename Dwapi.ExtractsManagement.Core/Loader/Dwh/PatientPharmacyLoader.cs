@@ -44,7 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 queryBuilder.Append($" INNER JOIN PatientExtracts p ON ");
                 queryBuilder.Append($" s.PatientPK = p.PatientPK AND ");
                 queryBuilder.Append($" s.SiteCode = p.SiteCode ");
-                queryBuilder.Append($" WHERE s.CheckError = 0");
+                //queryBuilder.Append($" WHERE s.CheckError = 0");//load all the takaka
 
                 string query = queryBuilder.ToString();
                 var tempPatientPharmacyExtracts = _tempPatientPharmacyExtractRepository.GetFromSql(query);
