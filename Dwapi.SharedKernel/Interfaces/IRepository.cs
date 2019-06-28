@@ -29,6 +29,8 @@ namespace Dwapi.SharedKernel.Interfaces
         Task<int> SaveChangesAsync();
         void ExecCommand(string sql);
         TC ExecQuery<TC>(string sql);
+        IEnumerable<dynamic> ExecQueryMulti<dynamic>(string sql);
+
 
     }
 }
