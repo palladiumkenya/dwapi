@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -21,13 +22,15 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IExtractValidator _extractValidator;
         private readonly IPatientStatusLoader _patientStatusLoader;
         private readonly IClearDwhExtracts _clearDwhExtracts;
+        private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractPatientStatusHandler(IPatientStatusSourceExtractor patientStatusSourceExtractor, IExtractValidator extractValidator, IPatientStatusLoader patientStatusLoader, IClearDwhExtracts clearDwhExtracts)
+        public ExtractPatientStatusHandler(IPatientStatusSourceExtractor patientStatusSourceExtractor, IExtractValidator extractValidator, IPatientStatusLoader patientStatusLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository)
         {
             _patientStatusSourceExtractor = patientStatusSourceExtractor;
             _extractValidator = extractValidator;
             _patientStatusLoader = patientStatusLoader;
             _clearDwhExtracts = clearDwhExtracts;
+            _extractHistoryRepository = extractHistoryRepository;
         }
 
         public async Task<bool> Handle(ExtractPatientStatus request, CancellationToken cancellationToken)
@@ -42,6 +45,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             int loaded = await _patientStatusLoader.Load(request.Extract.Id, found);
 
             int rejected = found - loaded;
+
+            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected,request.Extract);
 
             //notify loaded
             DomainEvents.Dispatch(

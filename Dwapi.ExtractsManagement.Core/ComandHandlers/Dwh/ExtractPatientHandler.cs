@@ -7,6 +7,7 @@ using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
@@ -27,19 +28,21 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IPatientLoader _patientLoader;
         private readonly IClearDwhExtracts _clearDwhExtracts;
         private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
+        private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts, ITempPatientExtractRepository tempPatientExtractRepository)
+        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts, ITempPatientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
             _patientLoader = patientLoader;
             _clearDwhExtracts = clearDwhExtracts;
             _tempPatientExtractRepository = tempPatientExtractRepository;
+            _extractHistoryRepository = extractHistoryRepository;
         }
 
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
         {
-           
+
             //Extract
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
@@ -66,6 +69,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             int loaded = await _patientLoader.Load(request.Extract.Id, found);
 
             int rejected = found - loaded;
+
+            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected,0);
 
             //notify loaded
             DomainEvents.Dispatch(

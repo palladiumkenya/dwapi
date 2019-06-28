@@ -1,4 +1,5 @@
-﻿using Dwapi.SharedKernel.Model;
+﻿using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Model;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,6 +15,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public virtual string Emr { get; set; }
         public virtual string Project { get; set; }
         public virtual bool CheckError { get; set; }
+        public virtual ErrorType ErrorType { get; set; }
+
         [NotMapped]
         public bool HasError { get; set; }
         public override string ToString()

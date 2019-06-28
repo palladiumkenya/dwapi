@@ -6,6 +6,8 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Dwapi.SharedKernel.Model;
+using Serilog;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 {
@@ -82,13 +84,76 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
                 SaveChanges();
         }
 
-
-
         public void Complete(Guid extractId)
         {
             var history = new ExtractHistory(ExtractStatus.Idle,extractId);
             Create(history);
             SaveChanges();
+        }
+
+        //public int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract)
+        //{
+        //    var sql = $@"
+        //            select count(PatientPK)
+        //            from {extract.TempTableName}s a where a.PatientPk in (select PatientPK
+        //            from {extract.MainName} where ErrorType=1 and a.SiteCode=SiteCode )
+        //    ";
+
+        //    int count = ExecQuery<int>(sql);
+
+        //    Log.Debug(sql);
+
+        //    DwhUpdateStatus(extractId, ExtractStatus.Excluded, count);
+        //  //  DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount-count);
+        //  DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount);
+
+        //    return count;
+        //}
+
+
+
+
+        public int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract)
+        {
+            int count;
+            if (extract.TempTableName == "TempPatientExtracts")
+            {
+                var sql = $@"
+                    select count(PatientPK)
+                    from {extract.TempTableName}s where ErrorType=1 and a.SiteCode=SiteCode";
+
+                count = ExecQuery<int>(sql);
+
+                Log.Debug(sql);
+            }
+            else
+            {
+               var sql = $@"
+                    select count(PatientPK)
+                    from {extract.TempTableName}s a where a.PatientPk in (select PatientPK
+                    from {extract.MainName} where ErrorType=1 and a.SiteCode=SiteCode )
+            ";
+
+            count = ExecQuery<int>(sql);
+
+            Log.Debug(sql);
+            }
+
+           
+
+            DwhUpdateStatus(extractId, ExtractStatus.Excluded, count);
+            //  DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount-count);
+            DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount);
+
+            return count;
+        }
+
+        public int ProcessExcluded(Guid extractId, int rejectedCount, int excludedCount)
+        {
+            DwhUpdateStatus(extractId, ExtractStatus.Excluded, excludedCount);
+            DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount);
+
+            return excludedCount;
         }
     }
 }

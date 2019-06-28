@@ -5,6 +5,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -24,12 +25,14 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
         private readonly IHTSClientLinkageSourceExtractor _patientAdverseEventSourceExtractor;
         private readonly IHtsExtractValidator _extractValidator;
         private readonly IHTSClientLinkageLoader _patientAdverseEventLoader;
+        private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractHTSClientLinkageHandler(IHTSClientLinkageSourceExtractor patientAdverseEventSourceExtractor, IHtsExtractValidator extractValidator, IHTSClientLinkageLoader patientAdverseEventLoader)
+        public ExtractHTSClientLinkageHandler(IHTSClientLinkageSourceExtractor patientAdverseEventSourceExtractor, IHtsExtractValidator extractValidator, IHTSClientLinkageLoader patientAdverseEventLoader, IExtractHistoryRepository extractHistoryRepository)
         {
             _patientAdverseEventSourceExtractor = patientAdverseEventSourceExtractor;
             _extractValidator = extractValidator;
             _patientAdverseEventLoader = patientAdverseEventLoader;
+            _extractHistoryRepository = extractHistoryRepository;
         }
 
         public async Task<bool> Handle(ExtractHTSClientLinkage request, CancellationToken cancellationToken)
@@ -38,12 +41,14 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
             int found = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
-            await _extractValidator.Validate(request.Extract.Id, found, nameof(HTSClientLinkageExtract), $"{nameof(TempHTSClientLinkageExtract)}s");
+            await _extractValidator.Validate(request.Extract.Id, found, "HtsClientLinkageExtracts", "TempHtsClientLinkageExtracts");
 
             //Load
             int loaded = await _patientAdverseEventLoader.Load(request.Extract.Id, found);
 
             int rejected = found - loaded;
+
+            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected,request.Extract);
 
             //notify loaded
             DomainEvents.Dispatch(

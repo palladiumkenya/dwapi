@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
@@ -19,12 +20,16 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IPatientAdverseEventSourceExtractor _patientAdverseEventSourceExtractor;
         private readonly IExtractValidator _extractValidator;
         private readonly IPatientAdverseEventLoader _patientAdverseEventLoader;
+        private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractPatientAdverseEventHandler(IPatientAdverseEventSourceExtractor patientAdverseEventSourceExtractor, IExtractValidator extractValidator, IPatientAdverseEventLoader patientAdverseEventLoader)
+        public ExtractPatientAdverseEventHandler(IPatientAdverseEventSourceExtractor patientAdverseEventSourceExtractor,
+            IExtractValidator extractValidator, IPatientAdverseEventLoader patientAdverseEventLoader,
+            IExtractHistoryRepository extractHistoryRepository)
         {
             _patientAdverseEventSourceExtractor = patientAdverseEventSourceExtractor;
             _extractValidator = extractValidator;
             _patientAdverseEventLoader = patientAdverseEventLoader;
+            _extractHistoryRepository = extractHistoryRepository;
         }
 
         public async Task<bool> Handle(ExtractPatientAdverseEvent request, CancellationToken cancellationToken)
@@ -33,12 +38,15 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             int found = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
-            await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientAdverseEventExtract), $"{nameof(TempPatientAdverseEventExtract)}s");
+            await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientAdverseEventExtract),
+                $"{nameof(TempPatientAdverseEventExtract)}s");
 
             //Load
             int loaded = await _patientAdverseEventLoader.Load(request.Extract.Id, found);
 
             int rejected = found - loaded;
+
+            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected, request.Extract);
 
             //notify loaded
             DomainEvents.Dispatch(
