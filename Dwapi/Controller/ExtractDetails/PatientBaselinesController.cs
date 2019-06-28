@@ -61,7 +61,7 @@ namespace Dwapi.Controller.ExtractDetails
         {
             try
             {
-                var errorSummary = _errorSummaryRepository.GetAll().ToList();
+                var errorSummary = _errorSummaryRepository.GetAll().OrderByDescending(x=>x.Type).ToList();
                 return Ok(errorSummary);
             }
             catch (Exception e)

@@ -58,12 +58,14 @@ namespace Dwapi.Controller.ExtractDetails
         {
             try
             {
+
                 var sql = "SELECT v.Id, v.Extract, v.Field, v.Type, v.Summary, v.DateGenerated, v.PatientPK, v.FacilityId, " +
                     "v.PatientID, v.SiteCode, v.FacilityName, v.RecordId, t.DOB, t.Gender, t.LastVisit, t.RegistrationAtCCC " +
                     "FROM vTempPatientExtractErrorSummary AS v INNER JOIN TempPatientExtracts AS t ON v.PatientPK = t.PatientPK " +
                     "AND v.SiteCode = t.SiteCode";
 
                 var errorSummary = _tempPatientExtractRepository.ExecQueryMulti<dynamic>(sql).ToList();
+
                 return Ok(errorSummary);
             }
             catch (Exception e)
