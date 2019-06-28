@@ -38,7 +38,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         found, 0, 0, 0, 0)));
 
                 //load temp extracts without errors
-                var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false);
+             //   var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false );
+                var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.ErrorType==0);
 
                 const int take = 1000;
                 int skip = 0;
