@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.SharedKernel.Model
 {
@@ -17,43 +16,6 @@ namespace Dwapi.SharedKernel.Model
         public bool IsPriority { get; set; }
         [NotMapped]
         public string Emr { get; set; }
-
-        [NotMapped] public string MainName => GetMainName();
-        [NotMapped] public string TableName => GetName();
-        [NotMapped] public string TempTableName => GetTempName();
-
-        private string GetName()
-        {
-            if (Name.IsSameAs("PatientBaselineExtract"))
-                return "PatientBaselinesExtract";
-
-            if (Name.IsSameAs("PatientLabExtract"))
-                return "PatientLaboratoryExtract";
-
-            if (Name.IsSameAs("HTSClientExtract"))
-                return "HtsClientExtract";
-
-            if (Name.IsSameAs("HTSClientLinkageExtract"))
-                return "HtsClientLinkageExtract";
-
-            if (Name.IsSameAs("HTSClientPartnerExtract"))
-                return "HtsClientPartnerExtract";
-
-            return Name;
-        }
-
-        private string GetMainName()
-        {
-            if (Name.StartsWith("Hts"))
-                return "TempHtsClientExtracts";
-
-            return "TempPatientExtracts";
-        }
-
-        private string GetTempName()
-        {
-            return $"Temp{TableName}";
-        }
 
 
         public string GetCountSQL()

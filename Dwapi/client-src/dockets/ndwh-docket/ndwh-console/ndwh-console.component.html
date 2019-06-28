@@ -1,33 +1,29 @@
 <div class="card card-w-title">
-    <h1>National Data Warehouse <span style="color: lightgray">|</span> {{emrName}} <span style="font-size:13px ">{{emrVersion}}</span></h1>
-    <!--<p-growl [(value)]="notifications"></p-growl>-->
-    <p-toolbar>
-        <div class="ui-toolbar-group-left">
-            <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr()" label="Load from EMR"
-                    icon="ui-icon-file-download" class="green-btn"></button>
-            Include MPI Extracts <input type="checkbox" name="LoadMpi" [(checked)]="loadMpi" (change)="loadChange()">
-        </div>
+  <h1>National Data Warehouse <span style="color: lightgray">|</span> {{emrName}} <span style="font-size:13px ">{{emrVersion}}</span></h1>
+    <p-growl [(value)]="notifications"></p-growl>
+  <p-toolbar>
+      <div class="ui-toolbar-group-left">
+          <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr()" label="Load from EMR"
+                  icon="ui-icon-file-download" class="green-btn"></button>
+                  Include MPI Extracts <input type="checkbox" name="LoadMpi" [(checked)]="loadMpi" (change)="loadChange()">
+      </div>
 
-        <div class="ui-toolbar-group-right">
-            <input type="checkbox" name="SendMpi" [(checked)]="sendMpi&&canSendMpi" (change)="sendMpi = !sendMpi" [disabled]="!loadMpi||!canSendMpi"> Include MPI Extracts
-            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
-                    class="blue-btn"></button>
-        </div>
-    </p-toolbar>
+      <div class="ui-toolbar-group-right">
+          <input type="checkbox" name="SendMpi" [(checked)]="sendMpi&&canSendMpi" (change)="sendMpi = !sendMpi" [disabled]="!loadMpi||!canSendMpi"> Include MPI Extracts
+          <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
+                  class="blue-btn"></button>
+      </div>
+  </p-toolbar>
 
-
-
-    <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true" columnResizeMode="expand">
-        <p-column field="display" header="Extract"></p-column>
-        <p-column field="extractEvent.lastStatus" header="Status" ></p-column>
-        <p-column field="extractEvent.found" header="(A) Found"></p-column>
-       <!-- <p-column field="extractEvent.loaded" header="Loaded" [style]="{'background-color': 'lightskyblue'}"></p-column> -->
-        <p-column field="extractEvent.rejected" header="(B) Flagged " [style]="{'background-color': 'tomato'}"></p-column>
-       <p-column field="extractEvent.excluded" header="(C) Rejected
-                                                           with errors "[style]="{'background-color': 'lightgray'}"></p-column>
-        <p-column field="extractEvent.queued" header="(D) Queued (A - C)" [style]="{'background-color': 'orange'}"></p-column>
-        <p-column field="extractEvent.sent" header="Sent" [style]="{'background-color': 'lightgreen'}"></p-column>
-    </p-dataTable>
+  <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true" columnResizeMode = "expand">
+      <p-column field="display" header="Extract"></p-column>
+      <p-column field="extractEvent.lastStatus" header="Status"></p-column>
+      <p-column field="extractEvent.found" header="Found"></p-column>
+      <p-column field="extractEvent.loaded" header="Loaded"></p-column>
+      <p-column field="extractEvent.rejected" header="Rejected"></p-column>
+      <p-column field="extractEvent.queued" header="Queued"></p-column>
+      <p-column field="extractEvent.sent" header="Sent"></p-column>
+  </p-dataTable>
     <div class="ui-g" *ngIf="sendingManifest">
         <div class="ui-g-12">
             Stage 1 of 2: Sending manifest...
@@ -38,35 +34,9 @@
     <div class="ui-g" *ngIf="sending">
         <div class="ui-g-12">
             Stage 2 of 2: Sending Extracts, please wait ...
-            <p-progressBar showValue="true" [value]="sendEvent?.sentProgress"></p-progressBar>
+            <p-progressBar showValue = "true" [value]="sendEvent?.sentProgress"></p-progressBar>
         </div>
     </div>
-    <p-messages [(value)]="errorMessage"></p-messages>
-    <p-growl [(value)]="otherMessage"></p-growl>
-    <div>
-
-        <p-fieldset legend="KEY" [toggleable]="true">
-            <span style="background-color:white "><b>*Found </b></span> => Number of records available in EMR for each dataset.<br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
-            <span style="background-color:lightskyblue "><b>*Loaded </b></span>=> Number of valid records loaded from EMR for each dataset<br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
-            <span style="background-color:lightgray "><b>*Not Loaded </b></span>=> Records associated with patients whose records were not loaded in the All Patient's
-            dataset because of errors. <br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
-            <span style="background-color:tomato"><b>*Flagged </b></span>=> Records that need to be cleaned in each dataset in the source EMR.<br/>
-            These records are available for review in the validation summary section.<br/>
-            For better data quality, site data managers should clean these records before sending to the datawarehouse<br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
-            <span style="background-color:orange "><b>*Queued </b></span>=> Number of records in each dataset ready for sending to the data warehouse.
-            These records will include flagged records that have not been cleaned.<br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
-            <span style="background-color:lightgreen "><b>*Sent </b></span>=> Total number of records sent to the data warehouse.<br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
-
-        </p-fieldset>
-
-
-    </div>
-
-
+  <p-messages [(value)]="errorMessage"></p-messages>
+  <p-growl [(value)]="otherMessage"></p-growl>
 </div>

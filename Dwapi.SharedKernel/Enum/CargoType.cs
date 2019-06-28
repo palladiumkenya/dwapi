@@ -5,11 +5,4 @@
         Patient,
         Metrics
     }
-    public enum ErrorType
-    {
-        
-        Logical,
-        Required
-        
-    }
 }

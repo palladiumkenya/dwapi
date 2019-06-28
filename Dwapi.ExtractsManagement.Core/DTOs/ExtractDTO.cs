@@ -11,7 +11,6 @@ namespace Dwapi.ExtractsManagement.Core.DTOs
         public int? Found { get; set; }
         public int? Loaded { get; set; }
         public int? Rejected { get; set; }
-        public int? Excluded { get; set; }
         public int? Queued { get; set; }
         public int? Sent { get; set; }
 
@@ -19,13 +18,12 @@ namespace Dwapi.ExtractsManagement.Core.DTOs
         {
         }
 
-        public ExtractEventDTO(string lastStatus, int? found, int? loaded, int? sent,int? rejected,int? excluded)
+        public ExtractEventDTO(string lastStatus, int? found, int? loaded, int? sent)
         {
             LastStatus = lastStatus;
             Found = found;
             Loaded = loaded;
-            Rejected = rejected;
-            Excluded = excluded;
+            Rejected = Found - loaded;
             Sent = sent;
             Queued = Loaded - Sent;
         }
@@ -45,9 +43,7 @@ namespace Dwapi.ExtractsManagement.Core.DTOs
                 var found = GetStats(extractHistories, ExtractStatus.Found, ExtractStatus.Finding);
                 var loaded = GetStats(extractHistories, ExtractStatus.Loaded, ExtractStatus.Loading);
                 var sent = GetStats(extractHistories, ExtractStatus.Sent, ExtractStatus.Sending);
-                var rejected = GetStats(extractHistories, ExtractStatus.Rejected, ExtractStatus.Rejected);
-                var excluded = GetStats(extractHistories, ExtractStatus.Excluded, ExtractStatus.Excluded);
-                return new ExtractEventDTO(lastStatus, found, loaded, sent, rejected, excluded);
+                return new ExtractEventDTO(lastStatus, found, loaded, sent);
             }
 
             return eventDTO;

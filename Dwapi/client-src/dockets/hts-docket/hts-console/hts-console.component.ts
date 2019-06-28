@@ -373,6 +373,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this._hubConnection.on('ShowHtsSendProgressDone', (extractName: string) => {
+            console.log(`${extractName} DONE !`);
             this.extractSent.push(extractName);
             if (this.extractSent.length === 3) {
                 this.errorMessage = [];
@@ -411,6 +412,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             loadHtsFromEmrCommand: this.extractLoadCommand
         };
         return this.loadExtractsCommand;
+
     }
 
     private generateExtractClient(currentEmr: EmrSystem): ExtractProfile {

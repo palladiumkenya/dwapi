@@ -43,7 +43,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate)
         {
-            return DbSet.Where(predicate).AsNoTracking();
+            return DbSet.Where(predicate).AsNoTracking(); 
         }
 
         public virtual void Create(T entity)
@@ -176,16 +176,6 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         public Task<int> SaveChangesAsync()
         {
             return Context.SaveChangesAsync();
-        }
-
-        public void ExecCommand(string sql)
-        {
-            GetConnection().Execute(sql);
-        }
-
-        public TC ExecQuery<TC>(string sql)
-        {
-           return GetConnection().Query<TC>(sql).FirstOrDefault();
         }
     }
 }
