@@ -4,9 +4,9 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <Version>2.2.6</Version>
+    <Version>2.2.7</Version>
     <Company>Palladium Group</Company>
-    <Authors>Davidson Gikandi, Danson Koske</Authors>
+    <Authors>Davidson Gikandi, Danson Koske, Mwenda Gitonga, Brian Mwasi, Teddy Brian</Authors>
     <RepositoryUrl>https://github.com/palladiumkenya/DWAPI</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <NeutralLanguage>en-KE</NeutralLanguage>
@@ -15,6 +15,8 @@ Added payload compression on sending of dwah extracts
 Bached sending and await to 50 at a time
 </PackageReleaseNotes>
     <SignAssembly>false</SignAssembly>
+    <Description>Data Warehouse API Client. Transmit data from EMRs (IQCare, KenyaEMR, AMRS, ECARE) to NASCOP</Description>
+    <Copyright>Palladium Group</Copyright>
     <!--<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>-->
   </PropertyGroup>
 
