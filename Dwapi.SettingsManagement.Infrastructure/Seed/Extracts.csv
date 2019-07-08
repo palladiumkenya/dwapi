@@ -456,7 +456,7 @@ order by d.patient_id,fup.visit_date;"|dwhstage|0|PatientVisitExtract|7|a6221aa4
 
 
 48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"
-SELECT
+SELECT DISTINCT
  *,
  
  LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
@@ -571,7 +571,7 @@ ON
 Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial"|MPI|1|MasterPatientIndex|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
 
 48742EB0-6656-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"
-SELECT
+SELECT DISTINCT
  *,
 CONCAT(LEFT(Gender ,1), sxFirstName ,sxLastName ,LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y')))) AS sxPKValue,
 CONCAT( CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8),
