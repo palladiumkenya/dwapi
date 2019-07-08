@@ -21,7 +21,7 @@
         <p-column field="display" header="Extract"></p-column>
         <p-column field="extractEvent.lastStatus" header="Status" ></p-column>
         <p-column field="extractEvent.found" header="(A) Found"></p-column>
-       <!-- <p-column field="extractEvent.loaded" header="Loaded" [style]="{'background-color': 'lightskyblue'}"></p-column>--> 
+        <p-column field="extractEvent.loaded" header="Loaded" [style]="{'background-color': 'lightskyblue'}"></p-column>
         <p-column field="extractEvent.excluded" header="(B) Flagged " [style]="{'background-color': 'lightgray'}"></p-column>
        <p-column field="extractEvent.rejected" header="(C) Rejected "[style]="{'background-color': 'tomato'}"></p-column>
         <p-column field="extractEvent.queued" header="(D) Queued (A - C)" [style]="{'background-color': 'orange'}"></p-column>
@@ -47,7 +47,7 @@
         <p-fieldset legend="KEY" [toggleable]="true">
             <span style="background-color:white "><b>*Found </b></span> => Number of records available in EMR for each dataset.<br />
             ------------------------------------------------------------------------------------------------------------------------------<br />
-           <!-- <span style="background-color:lightskyblue "><b>*Loaded </b></span>=> Number of valid records loaded from EMR for each dataset<br />-->
+           <span style="background-color:lightskyblue "><b>*Loaded </b></span>=> Number of valid records loaded from EMR for each dataset<br />
             ------------------------------------------------------------------------------------------------------------------------------<br />
             <span style="background-color:tomato "><b>*Rejected </b></span>=> Records in the extract that will not be sent to the <br/>
             warehouse because they belong to a patient(s) with errors. <br />
