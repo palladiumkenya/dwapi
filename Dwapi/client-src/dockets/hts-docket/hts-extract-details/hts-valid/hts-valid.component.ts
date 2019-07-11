@@ -1,12 +1,4 @@
 import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
-import {NdwhPatientsExtractService} from '../../../services/ndwh-patients-extract.service';
-import {NdwhPatientArtService} from '../../../services/ndwh-patient-art.service';
-import {NdwhPatientBaselineService} from '../../../services/ndwh-patient-baseline.service';
-import {NdwhPatientLaboratoryService} from '../../../services/ndwh-patient-laboratory.service';
-import {NdwhPatientPharmacyService} from '../../../services/ndwh-patient-pharmacy.service';
-import {NdwhPatientStatusService} from '../../../services/ndwh-patient-status.service';
-import {NdwhPatientVisitService} from '../../../services/ndwh-patient-visit.service';
-import {NdwhPatientAdverseEventService} from '../../../services/ndwh-patient-adverse-event.service';
 import {Message} from 'primeng/api';
 import {Subscription} from 'rxjs/Subscription';
 import {HtsClientService} from '../../../services/hts-client.service';

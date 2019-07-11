@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.UploadManagement.Core.Model.Cbs.Dtos;
 
 namespace Dwapi.UploadManagement.Core.Exchange.Cbs
 {
@@ -16,7 +17,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Cbs
             Messages = messages;
         }
 
-        public static MpiMessageBag Create(List<MasterPatientIndex> patientIndices)
+        public static MpiMessageBag Create(List<MasterPatientIndexDto> patientIndices)
         {
             return new MpiMessageBag(MpiMessage.Create(patientIndices));
         }

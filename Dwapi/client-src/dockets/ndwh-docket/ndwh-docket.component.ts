@@ -11,15 +11,13 @@ import {EmrMetrics} from '../../settings/model/emr-metrics';
     templateUrl: './ndwh-docket.component.html',
     styleUrls: ['./ndwh-docket.component.scss']
 })
-export class NdwhDocketComponent implements OnInit {
+export class NdwhDocketComponent implements OnInit, OnDestroy {
 
     private _confirmationService: ConfirmationService;
     private _emrConfigService: EmrConfigService;
 
     public getEmr$: Subscription;
-    public getMiddleware$: Subscription;
     public emrSystem: EmrSystem;
-    public middlewareSystem: EmrSystem;
     public errorMessage: Message[];
     public otherMessage: Message[];
     public loadingData: boolean;
@@ -51,33 +49,15 @@ export class NdwhDocketComponent implements OnInit {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
+                    this.errorMessage.push({severity: 'error', summary: 'Error Loading Emr settings', detail: <any>e});
                     this.loadingData = false;
                 },
                 () => {
                     this.loadMetrics();
-                    // console.log(this.emrSystem);
                 }
             );
 
 
-    }
-
-    public loadMiddleware() {
-        this.getMiddleware$ = this._emrConfigService.getMiddleware()
-            .subscribe(
-                p => {
-                    this.middlewareSystem = p;
-                },
-                e => {
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error Loading data', detail: <any>e});
-                    this.loadingData = false;
-                },
-                () => {
-                    this.loadingData = false;
-                }
-            );
     }
 
     public loadMetrics(): void {
@@ -99,14 +79,9 @@ export class NdwhDocketComponent implements OnInit {
             );
     }
 
-    // tslint:disable-next-line:use-life-cycle-interface
     public ngOnDestroy(): void {
         if (this.getEmr$) {
             this.getEmr$.unsubscribe();
         }
-        if (this.getMiddleware$) {
-            this.getMiddleware$.unsubscribe();
-        }
     }
-
 }

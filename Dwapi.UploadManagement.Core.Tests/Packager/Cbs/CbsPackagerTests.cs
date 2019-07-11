@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.SharedKernel.Enum;
@@ -7,6 +8,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Packager.Cbs;
+using Dwapi.UploadManagement.Core.Profiles;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Dwapi.UploadManagement.Infrastructure.Reader;
 using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
@@ -40,6 +42,12 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
                 .AddTransient<IEmrMetricReader, EmrMetricReader>()
                 .AddTransient<ICbsPackager, CbsPackager>()
                 .BuildServiceProvider();
+
+            Mapper.Initialize(cfg =>
+                {
+                    cfg.AddProfile<MasterPatientIndexProfile>();
+                }
+            );
         }
 
 
@@ -69,6 +77,15 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
             Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.Metrics));
             Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Patient).Items} ");
             Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Metrics).Items} ");
+        }
+
+        [Test]
+        public void should_Generate_MpiDtos()
+        {
+            var manfiests = _packager.GenerateDtoMpi().ToList();
+            Assert.False(manfiests.Any(x=>!string.IsNullOrWhiteSpace(x.FirstName_Normalized)));
+            var m = manfiests.First();
+            Console.WriteLine($"{m} |{m.FirstName} ");
         }
     }
 }

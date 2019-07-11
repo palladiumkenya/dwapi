@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using AutoMapper.Data;
+using Dwapi.ExtractsManagement.Core.Profiles;
+using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
+using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
+using Dwapi.ExtractsManagement.Core.Profiles.Hts;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Exchange;
@@ -12,6 +18,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Packager.Cbs;
+using Dwapi.UploadManagement.Core.Profiles;
 using Dwapi.UploadManagement.Core.Services;
 using Dwapi.UploadManagement.Core.Services.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Data;
@@ -32,7 +39,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
         private readonly string _subId = "DWAPI";
         private readonly string url = "http://data.kenyahmis.org:6767";
 
-        private ICbsSendService _cbsSendService; 
+        private ICbsSendService _cbsSendService;
         private IServiceProvider _serviceProvider;
         private ManifestMessageBag _bag;
         private MpiMessageBag _mpiBag;
@@ -46,13 +53,13 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
                 .Build();
             var connectionString = config["ConnectionStrings:DwapiConnection"];
 
-            
+
             _serviceProvider = new ServiceCollection()
                 .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
                 .AddTransient<ICbsSendService,CbsSendService>()
             .AddTransient<ICbsPackager, CbsPackager>()
             .AddTransient<ICbsExtractReader, CbsExtractReader>()
-                
+
                 .BuildServiceProvider();
 
             /*
@@ -62,6 +69,13 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
 
             _bag = TestDataFactory.ManifestMessageBag(2,10001,10002);
             _mpiBag = TestDataFactory.MpiMessageBag(5, 10001, 10002);
+
+            Mapper.Initialize(cfg =>
+                {
+                    cfg.AddProfile<MasterPatientIndexProfile>();
+                }
+            );
+
         }
 
         [SetUp]
@@ -74,7 +88,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
             };
             _cbsSendService = _serviceProvider.GetService<ICbsSendService>();
         }
-       
+
         [Test]
         public void should_Send_Manifest()
         {

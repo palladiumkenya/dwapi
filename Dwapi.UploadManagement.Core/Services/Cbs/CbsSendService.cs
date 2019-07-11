@@ -42,7 +42,7 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
 
         public Task<List<SendMpiResponse>> SendMpiAsync(SendManifestPackageDTO sendTo)
         {
-            return SendMpiAsync(sendTo, MpiMessageBag.Create(_packager.GenerateMpi().ToList()));
+            return SendMpiAsync(sendTo, MpiMessageBag.Create(_packager.GenerateDtoMpi().ToList()));
         }
 
         public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage)
