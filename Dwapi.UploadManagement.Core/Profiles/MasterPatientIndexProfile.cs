@@ -13,9 +13,8 @@ namespace Dwapi.UploadManagement.Core.Profiles
         {
             CreateMap<MasterPatientIndex, MasterPatientIndexDto>()
                 .ForMember(d=>d.FirstName,o=>o.UseValue(string.Empty))
+                //   .ForMember(d=>d.FirstName,o=>o.UseValue(string.Empty))
                 .ForMember(d=>d.FirstName_Normalized,o=>o.UseValue(string.Empty));
-
-            //   .ForMember(d=>d.FirstName,o=>o.UseValue(string.Empty))
         }
     }
 }
