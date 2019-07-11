@@ -21,8 +21,8 @@ import {NdwhPatientsExtractService} from '../../services/ndwh-patients-extract.s
     templateUrl: './ndwh-extract-details.component.html',
     styleUrls: ['./ndwh-extract-details.component.scss']
 })
-export class NdwhExtractDetailsComponent implements OnInit, OnChanges {
-    @Input() emr: EmrSystem;
+export class NdwhExtractDetailsComponent implements OnInit {
+
     public getEmr$: Subscription;
     public extracts: Extract[] = [];
     public extractName: string;
@@ -31,18 +31,23 @@ export class NdwhExtractDetailsComponent implements OnInit, OnChanges {
     selectedIndex = 0;
     @ViewChild(TabView) tabView: TabView;
 
+    @Input()
+    set emr(emr: EmrSystem) {
+        this.emr = emr;
+        this.loadExtract();
+    }
+
     public constructor() {
     }
 
     public ngOnInit() {
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    loadExtract() {
         if (this.emr) {
             this.extracts = this.emr.extracts.filter(x => x.docketId === 'NDWH');
         }
     }
-
     onChange($event) {
         this.selectedIndex = $event.index;
         this.extractName = this.tabView.tabs[this.selectedIndex].header;

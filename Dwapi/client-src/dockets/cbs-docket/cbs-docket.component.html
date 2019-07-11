@@ -12,12 +12,10 @@
             <button pButton type="button" [disabled]="!canLoad" (click)="loadFromEmr()" label="Load from EMR" icon="ui-icon-file-download"
                 class="green-btn"></button>
         </div>
-        <!--
         <div class="ui-toolbar-group-right">
             <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send Warehouse"
                     icon="ui-icon-cloud-upload" class="blue-btn"></button>
         </div>
-        -->
     </p-toolbar>
     <p-dataTable [value]="extracts" selectionMode="single" resizableColumns="true">
         <p-column field="display" header="Extract"></p-column>

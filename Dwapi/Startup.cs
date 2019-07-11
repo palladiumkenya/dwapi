@@ -81,6 +81,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
 using Dwapi.UploadManagement.Core.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Packager.Hts;
+using Dwapi.UploadManagement.Core.Profiles;
 using Dwapi.UploadManagement.Core.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services.Dwh;
 using Dwapi.UploadManagement.Core.Services.Hts;
@@ -424,6 +425,7 @@ namespace Dwapi
                     cfg.AddProfile<TempMasterPatientIndexProfile>();
                     cfg.AddProfile<EmrProfiles>();
                     cfg.AddProfile<TempHtsExtractProfile>();
+                    cfg.AddProfile<MasterPatientIndexProfile>();
                 }
             );
 
