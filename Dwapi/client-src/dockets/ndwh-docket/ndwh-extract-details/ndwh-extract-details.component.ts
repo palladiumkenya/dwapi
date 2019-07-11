@@ -10,7 +10,7 @@ import {NdwhConsoleComponent} from '../ndwh-console/ndwh-console.component';
 import {EmrSystem} from '../../../settings/model/emr-system';
 import {EmrConfigService} from '../../../settings/services/emr-config.service';
 import {Subscription} from 'rxjs/Subscription';
-import {Message,} from 'primeng/api';
+import {Message} from 'primeng/api';
 import {TabView, TabPanel} from 'primeng/primeng';
 import {PatientExtract} from '../../models/patient-extract';
 import {NdwhPatientsExtractService} from '../../services/ndwh-patients-extract.service';
@@ -33,7 +33,9 @@ export class NdwhExtractDetailsComponent implements OnInit {
 
     @Input()
     set emr(emr: EmrSystem) {
-        this.extracts = emr.extracts.filter(x => x.docketId === 'NDWH');
+        if (emr) {
+            this.extracts = emr.extracts.filter(x => x.docketId === 'NDWH');
+        }
     }
 
     public constructor() {

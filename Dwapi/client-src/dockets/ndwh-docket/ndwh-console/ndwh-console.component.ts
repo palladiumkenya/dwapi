@@ -99,6 +99,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public getEmr$: Subscription;
     public loadMpi: boolean = false;
     public sendMpi: boolean = false;
+    public loading = false;
 
     public constructor(
         confirmationService: ConfirmationService,
@@ -121,13 +122,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public ngOnInit() {
         this.loadRegisrty();
-        // this.loadCbsRegisrty();
         this.liveOnInit();
-        // this.liveOnInitMpi();
         this.loadData();
     }
 
     public loadData(): void {
+        this.loadingData = true;
         this.canLoadFromEmr = this.canSend = false;
 
         if (this.emr) {
@@ -147,6 +147,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         if (this.centralRegistry) {
             this.canSend = true;
         }
+        this.loadingData = false;
     }
 
     public loadFromEmr(): void {
@@ -402,7 +403,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         });
 
         this._hubConnection.on('ShowDwhSendMessage', (message: any) => {
-            // console.log(message);
             if (message.error) {
                 this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: message.message});
             } else {

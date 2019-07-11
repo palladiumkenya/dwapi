@@ -15,8 +15,8 @@
         </div>
     </p-toolbar>
 
-    <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
-                 columnResizeMode="expand">
+    <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true" [loading]="loadingData" loadingIcon="fa-spinner fa-pulse"
+                  columnResizeMode="expand">
         <p-column field="display" header="Extract"></p-column>
         <p-column field="extractEvent.lastStatus" header="Status"></p-column>
         <p-column field="extractEvent.found" header="(A) Found"></p-column>
