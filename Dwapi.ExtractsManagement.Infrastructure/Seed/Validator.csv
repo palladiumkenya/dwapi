@@ -8,7 +8,7 @@ Id|Extract|Field|Type|Logic|Summary
 61bc219c-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|ExpectedReturn|Logical|ExpectedReturn IS NULL|ExpectedReturn is Required
 61bc32fe-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|LastRegimen|Logical|LastARTDate IS NOT NULL AND LastRegimen IS NULL|LastRegimen details missing
 61bbe1be-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|LastRegimenLine|Logical|LastARTDate IS NOT NULL AND LastRegimenLine IS NULL|LastRegimenLine details missing
-61bbe402-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|LastVisit|Logical|LastVisit < RegistrationDate|Last visit date before registration date
+61bbe402-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|LastVisit|Logical|LastVisit < RegistrationDate|Last visit date before Enrollment date
 61bc1d96-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|LastVisit|Logical|LastVisit IS NULL|LastVisit is Required
 6c5c63e4-2a95-11e7-93ae-92361f002671|TempPatientArtExtracts|PatientID|Required|PatientID IS NULL|PatientID Required
 6c5c6100-2a95-11e7-93ae-92361f002671|TempPatientArtExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
@@ -25,7 +25,8 @@ ce7b5f34-160f-11e7-93ae-92361f002671|TempPatientArtExtracts|StartRegimen|Logical
 6c5c66fa-2a95-11e7-93ae-92361f002671|TempPatientBaselinesExtracts|PatientID|Required|PatientID IS NULL|PatientID Required
 6c5c6600-2a95-11e7-93ae-92361f002671|TempPatientBaselinesExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 6c5c6812-2a95-11e7-93ae-92361f002671|TempPatientBaselinesExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
-61bbd49e-35a1-11e7-a919-92ebcb67fe33|TempPatientExtracts|DOB|Logical|DOB >= RegistrationAtCCC AND RegistrationAtCCC IS NOT Null|DoB After Date of Registration
+61bbd49e-35a1-11e7-a919-92ebcb67fe33|TempPatientExtracts|DOB|Logical|DOB > RegistrationAtCCC AND RegistrationAtCCC IS NOT Null|DoB After Date of Enrollment Date
+61bbd49e-35a1-11e7-a919-92ebcb67fe33|TempPatientExtracts|DOB|Logical|DOB = RegistrationAtCCC AND RegistrationAtCCC IS NOT Null|DoB same as Enrollment Date
 ce7b5c1e-160f-11e7-93ae-92361f002671|TempPatientExtracts|DOB|Required|DOB IS NULL|DOB Required
 ce7b571e-160f-11e7-93ae-92361f002671|TempPatientExtracts|Gender|Required|Gender IS NULL|Gender Required
 61bbe6d2-35a1-11e7-a919-92ebcb67fe33|TempPatientExtracts|LastVisit|Logical|LastVisit IS NULL|LastVisit is Required
