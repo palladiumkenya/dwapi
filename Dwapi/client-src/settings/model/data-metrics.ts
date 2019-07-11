@@ -3,5 +3,4 @@ export interface DataMetrics {
     LastVisitDate?: Date;
     LastLabTestDate?: Date;
     LastUpload?: Date;
-    
 }
