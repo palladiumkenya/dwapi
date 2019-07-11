@@ -121,9 +121,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public ngOnInit() {
         this.loadRegisrty();
-        this.loadCbsRegisrty();
+        // this.loadCbsRegisrty();
         this.liveOnInit();
-        this.liveOnInitMpi();
+        // this.liveOnInitMpi();
         this.loadData();
     }
 
@@ -146,30 +146,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.centralRegistry) {
             this.canSend = true;
-        }
-        this.cbsExtracts.forEach(extract => {
-            this.getStatus$ = this.cbsService.getStatus(extract.id)
-                .subscribe(
-                    p => {
-                        extract.extractEvent = p;
-                        if (extract) {
-                            if (extract.extractEvent) {
-                                this.canSendMpi = extract.extractEvent.queued > 0;
-                            }
-                        }
-                    },
-                    e => {
-                        this.errorMessage = [];
-                        this.errorMessage.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
-                    },
-                    () => {
-                    }
-                );
-        });
-        if (!this.loadMpi && !this.canSendMpi) {
-            this.sendMpi = false;
-        } else {
-            this.sendMpi = true;
         }
     }
 
@@ -254,26 +230,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                             summary: 'Error loading status ',
                             detail: <any>e
                         });
-                    },
-                    () => {
-                    }
-                );
-        });
-
-        this.cbsExtracts.forEach(extract => {
-            this.getStatus$ = this.cbsService.getStatus(extract.id)
-                .subscribe(
-                    p => {
-                        extract.extractEvent = p;
-                        if (extract) {
-                            if (extract.extractEvent) {
-                                this.canSendMpi = extract.extractEvent.queued > 0;
-                            }
-                        }
-                    },
-                    e => {
-                        this.errorMessage = [];
-                        this.errorMessage.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
                     },
                     () => {
                     }
