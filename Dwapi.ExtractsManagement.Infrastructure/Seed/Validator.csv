@@ -1,7 +1,7 @@
 Id|Extract|Field|Type|Logic|Summary
 61bbda3e-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB >= LastVisit AND LastVisit IS NOT NULL|DoB After LastVisit
 61bbe4f2-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB >= PreviousARTStartDate AND PreviousARTStartDate IS NOT NULL|DOB after PreviousARTStartDate
-61bbed08-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB > StartARTDate|DOB greater than StartARTDate
+61bbed08-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB > StartARTDate|DOB After than StartARTDate
 61bbf0a0-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB >=ExitDate AND ExitDate IS NOT NULL|DoB After ExitDate
 61bc2d9a-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB >=ExpectedReturn AND ExpectedReturn IS NOT NULL|DoB After ExpectedReturn
 61bbd912-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|ExitReason|Logical|ExitReason IS NULL AND ExitDate IS NOT NULL|Missing Exit Reason
@@ -12,8 +12,7 @@ Id|Extract|Field|Type|Logic|Summary
 61bc1d96-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|LastVisit|Logical|LastVisit IS NULL|LastVisit is Required
 6c5c63e4-2a95-11e7-93ae-92361f002671|TempPatientArtExtracts|PatientID|Required|PatientID IS NULL|PatientID Required
 6c5c6100-2a95-11e7-93ae-92361f002671|TempPatientArtExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
-61bbefba-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|PreviousARTStartDate|Logical|PatientSource='Transfer-in' AND PreviousARTStartDate IS NULL|Transfer-in Patient missing Previous Start ART Date
-61bc253e-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|PreviousARTStartDate|Logical|PatientSource='Transfer-in' AND PreviousARTRegimen IS NULL|Transfer-in Patient missing Previous Start ART Date
+
 6c5c64fc-2a95-11e7-93ae-92361f002671|TempPatientArtExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 ce7b5db8-160f-11e7-93ae-92361f002671|TempPatientArtExtracts|StartARTDate|Required|StartARTDate IS NULL|StartARTDate Required
 61bc1c9c-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|StartARTDate|Logical|StartARTDate > ExitDate AND ExitDate IS NOT NULL|StartARTDate after Exit Date
