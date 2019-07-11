@@ -33,8 +33,7 @@ export class NdwhExtractDetailsComponent implements OnInit {
 
     @Input()
     set emr(emr: EmrSystem) {
-        this.emr = emr;
-        this.loadExtract();
+        this.extracts = emr.extracts.filter(x => x.docketId === 'NDWH');
     }
 
     public constructor() {
@@ -43,11 +42,6 @@ export class NdwhExtractDetailsComponent implements OnInit {
     public ngOnInit() {
     }
 
-    loadExtract() {
-        if (this.emr) {
-            this.extracts = this.emr.extracts.filter(x => x.docketId === 'NDWH');
-        }
-    }
     onChange($event) {
         this.selectedIndex = $event.index;
         this.extractName = this.tabView.tabs[this.selectedIndex].header;
