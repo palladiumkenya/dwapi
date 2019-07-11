@@ -1,4 +1,4 @@
-import {Component, OnInit, OnChanges, SimpleChange, Input} from '@angular/core';
+import {Component, OnInit, OnChanges, SimpleChange, Input, OnDestroy} from '@angular/core';
 import {PatientExtract} from '../../../models/patient-extract';
 import {NdwhPatientsExtractService} from '../../../services/ndwh-patients-extract.service';
 import {NdwhPatientArtService} from '../../../services/ndwh-patient-art.service';
@@ -11,14 +11,14 @@ import {Message} from 'primeng/api';
 import {Subscription} from 'rxjs/Subscription';
 import {Extract} from '../../../../settings/model/extract';
 import {NdwhPatientAdverseEventService} from '../../../services/ndwh-patient-adverse-event.service';
+import {PageModel} from '../../../models/page-model';
 
 @Component({
     selector: 'liveapp-valid-record-details',
     templateUrl: './valid-record-details.component.html',
     styleUrls: ['./valid-record-details.component.scss']
 })
-export class ValidRecordDetailsComponent implements OnInit {
-
+export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     private _patientExtractsService: NdwhPatientsExtractService;
     private _patientArtService: NdwhPatientArtService;
     private _patientBaselineService: NdwhPatientBaselineService;
@@ -32,9 +32,12 @@ export class ValidRecordDetailsComponent implements OnInit {
     public errorMessage: Message[];
     public otherMessage: Message[];
     public getValid$: Subscription;
+    public getValidCount$: Subscription;
     private exName: string;
-
-    public loadingData = true;
+    public pageModel: PageModel;
+    public initialRows: number = 20;
+    public loadingData = false;
+    public recordCount = 0;
 
     constructor(patientExtractsService: NdwhPatientsExtractService, patientArtService: NdwhPatientArtService,
                 patientBaselineService: NdwhPatientBaselineService, patientLabService: NdwhPatientLaboratoryService,
@@ -66,36 +69,46 @@ export class ValidRecordDetailsComponent implements OnInit {
         }
     }
 
-
     ngOnInit() {
+
+        this.pageModel = {
+            page: 1,
+            pageSize: this.initialRows
+        };
+
         this.getPatientColumns();
-        this.getValidPatientExtracts();
+        this.getPatients();
     }
 
     public getValidExtracts(): void {
+        this.pageModel = {
+            page: 1,
+            pageSize: this.initialRows
+        };
+
         if (this.extract === 'All Patients') {
-            this.getValidPatientExtracts();
+            this.getPatients();
         }
         if (this.extract === 'ART Patients') {
-            this.getValidPatientArtExtracts();
+            this.getPatientsART();
         }
         if (this.extract === 'Patient Baselines') {
-            this.getValidPatientBaselineExtracts();
+            this.getPatientsBases();
         }
         if (this.extract === 'Patient Labs') {
-            this.getValidPatientLabExtracts();
+            this.getPatientsLabs();
         }
         if (this.extract === 'Patient Pharmacy') {
-            this.getValidPatientPharmacyExtracts();
+            this.getPatientsPharms();
         }
         if (this.extract === 'Patient Status') {
-            this.getValidPatientStatusExtracts();
+            this.getPatientsStats();
         }
         if (this.extract === 'Patient Visits') {
-            this.getValidPatientVisitExtracts();
+            this.getPatientsVisits();
         }
         if (this.extract === 'Patient Adverse Events') {
-            this.getValidPatientAdverseEventExtracts();
+            this.getPatientsAdverse();
         }
     }
 
@@ -126,11 +139,195 @@ export class ValidRecordDetailsComponent implements OnInit {
         }
     }
 
-    private getValidPatientExtracts(): void {
+    private getPatients(): void {
         this.loadingData = true;
-        this.getValid$ = this._patientExtractsService.loadValid().subscribe(
-            p => {
-                this.validExtracts = p;
+        this.getValidCount$ = this._patientExtractsService.loadValidCount()
+            .subscribe(
+                p => {
+                    console.log(`count:`, p);
+                    this.getValidPatientExtracts();
+                    this.recordCount = p;
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error Loading data',
+                        detail: <any>e
+                    });
+                },
+                () => {
+                    this.loadingData = false;
+                }
+            );
+    }
+
+    private getPatientsART(): void {
+        this.loadingData = true;
+        this.getValidCount$ = this._patientArtService.loadValidCount()
+            .subscribe(
+                p => {
+                    this.recordCount = p;
+                    console.log(`count ART:`, this.recordCount);
+                    this.getValidPatientArtExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error Loading data',
+                        detail: <any>e
+                    });
+                },
+                () => {
+                    this.loadingData = false;
+                }
+            );
+    }
+
+    private getPatientsBases(): void {
+        this.loadingData = true;
+
+        this.getValidCount$ = this._patientBaselineService.loadValidCount()
+            .subscribe(
+                p => {
+                    console.log(`count Base:`, p);
+                    this.getValidPatientBaselineExtracts();
+                    this.recordCount = p;
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error Loading data',
+                        detail: <any>e
+                    });
+                },
+                () => {
+                    this.loadingData = false;
+                }
+            );
+    }
+
+    private getPatientsLabs(): void {
+        this.loadingData = true;
+        this.getValidCount$ = this._patientLabService.loadValidCount()
+            .subscribe(
+                p => {
+                    this.recordCount = p;
+                    console.log(`count Lab:`, this.recordCount);
+                    this.getValidPatientLabExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error Loading data',
+                        detail: <any>e
+                    });
+                },
+                () => {
+                    this.loadingData = false;
+                }
+            );
+    }
+
+    private getPatientsPharms(): void {
+        this.loadingData = true;
+        this.getValidCount$ = this._patientPharmacyService.loadValidCount()
+            .subscribe(
+                p => {
+                    this.recordCount = p;
+                    console.log(`count Pharm:`, this.recordCount);
+                    this.getValidPatientPharmacyExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error Loading data',
+                        detail: <any>e
+                    });
+                },
+                () => {
+                    this.loadingData = false;
+                }
+            );
+    }
+
+    private getPatientsStats(): void {
+        this.loadingData = true;
+        this.getValidCount$ = this._patientStatusService.loadValidCount()
+            .subscribe(
+                p => {
+                    this.recordCount = p;
+                    console.log(`count: Stats`, this.recordCount);
+                    this.getValidPatientStatusExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error Loading data',
+                        detail: <any>e
+                    });
+                },
+                () => {
+                    this.loadingData = false;
+                }
+            );
+    }
+
+    private getPatientsVisits(): void {
+        this.loadingData = true;
+        this.getValidCount$ = this._patientVisitService.loadValidCount()
+            .subscribe(
+                p => {
+                    this.recordCount = p;
+                    console.log(`count: Visit`, this.recordCount);
+                    this.getValidPatientVisitExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error Loading data',
+                        detail: <any>e
+                    });
+                },
+                () => {
+                    this.loadingData = false;
+                }
+            );
+    }
+
+    private getPatientsAdverse(): void {
+        this.loadingData = true;
+        this.getValidCount$ = this._patientAdverseEventService.loadValidCount()
+            .subscribe(
+                p => {
+                    this.recordCount = p;
+                    console.log(`count: Adver`, this.recordCount);
+                    this.getValidPatientAdverseEventExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error Loading data',
+                        detail: <any>e
+                    });
+                },
+                () => {
+                    this.loadingData = false;
+                }
+            );
+    }
+
+    private getValidPatientExtracts(): void {
+        this.getValid$ = this._patientExtractsService.loadValid(this.pageModel).subscribe(
+            pc => {
+                this.validExtracts = pc;
             },
             e => {
                 this.errorMessage = [];
@@ -141,14 +338,13 @@ export class ValidRecordDetailsComponent implements OnInit {
                 });
             },
             () => {
-                this.loadingData = false;
             }
         );
     }
 
     private getValidPatientArtExtracts(): void {
         this.loadingData = true;
-        this.getValid$ = this._patientArtService.loadValid().subscribe(
+        this.getValid$ = this._patientArtService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -168,7 +364,7 @@ export class ValidRecordDetailsComponent implements OnInit {
 
     private getValidPatientBaselineExtracts(): void {
         this.loadingData = true;
-        this.getValid$ = this._patientBaselineService.loadValid().subscribe(
+        this.getValid$ = this._patientBaselineService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -188,7 +384,7 @@ export class ValidRecordDetailsComponent implements OnInit {
 
     private getValidPatientLabExtracts(): void {
         this.loadingData = true;
-        this.getValid$ = this._patientLabService.loadValid().subscribe(
+        this.getValid$ = this._patientLabService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -208,7 +404,7 @@ export class ValidRecordDetailsComponent implements OnInit {
 
     private getValidPatientPharmacyExtracts(): void {
         this.loadingData = true;
-        this.getValid$ = this._patientPharmacyService.loadValid().subscribe(
+        this.getValid$ = this._patientPharmacyService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -228,7 +424,7 @@ export class ValidRecordDetailsComponent implements OnInit {
 
     private getValidPatientStatusExtracts(): void {
         this.loadingData = true;
-        this.getValid$ = this._patientStatusService.loadValid().subscribe(
+        this.getValid$ = this._patientStatusService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -248,7 +444,7 @@ export class ValidRecordDetailsComponent implements OnInit {
 
     private getValidPatientVisitExtracts(): void {
         this.loadingData = true;
-        this.getValid$ = this._patientVisitService.loadValid().subscribe(
+        this.getValid$ = this._patientVisitService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -268,7 +464,7 @@ export class ValidRecordDetailsComponent implements OnInit {
 
     private getValidPatientAdverseEventExtracts(): void {
         this.loadingData = true;
-        this.getValid$ = this._patientAdverseEventService.loadValid().subscribe(
+        this.getValid$ = this._patientAdverseEventService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -524,4 +720,24 @@ export class ValidRecordDetailsComponent implements OnInit {
             {field: 'visitDate', header: 'Visit Date'}
         ];
     }
+
+
+    pageView(event: any) {
+        this.pageModel = {
+            page: event.first,
+            pageSize: event.rows
+        };
+        console.log(this.pageModel);
+    }
+
+    ngOnDestroy(): void {
+        if (this.getValid$) {
+            this.getValid$.unsubscribe();
+        }
+        if (this.getValidCount$) {
+            this.getValidCount$.unsubscribe();
+        }
+    }
+
+
 }

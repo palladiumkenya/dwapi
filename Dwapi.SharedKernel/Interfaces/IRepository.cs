@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
+using X.PagedList;
 
 namespace Dwapi.SharedKernel.Interfaces
 {
@@ -15,6 +16,7 @@ namespace Dwapi.SharedKernel.Interfaces
         T Get(Expression<Func<T, bool>> predicate);
         IEnumerable<T> GetAll();
         IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate);
+        Task<IPagedList<T>> GetAll(int? page, int pageSize);
         void Create(T entity);
         void Update(T entity);
         void CreateOrUpdate(T entity);
@@ -30,7 +32,7 @@ namespace Dwapi.SharedKernel.Interfaces
         void ExecCommand(string sql);
         TC ExecQuery<TC>(string sql);
         IEnumerable<dynamic> ExecQueryMulti<dynamic>(string sql);
-
+       Task<int> GetCount();
 
     }
 }

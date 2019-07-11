@@ -16,6 +16,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="NBuilder" Version="6.0.0" />
+    <PackageReference Include="X.PagedList" Version="7.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dwapi.SharedKernel.Infrastructure\Dwapi.SharedKernel.Infrastructure.csproj" />

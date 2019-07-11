@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import {PageModel} from '../models/page-model';
 
 @Injectable()
 export class NdwhPatientPharmacyService {
@@ -12,10 +13,15 @@ export class NdwhPatientPharmacyService {
       this._http = http;
   }
 
-  public loadValid(): Observable<any[]> {
-      return this._http.get<any>(this._url + '/loadValid')
-          .catch(this.handleError);
-  }
+    public loadValidCount(): Observable<number> {
+        return this._http.get<any>(this._url + `/ValidCount`)
+            .catch(this.handleError);
+    }
+
+    public loadValid(pageModel: PageModel): Observable<any[]> {
+        return this._http.get<any>(this._url + `/loadValid/${pageModel.page}/${pageModel.pageSize}`)
+            .catch(this.handleError);
+    }
 
   public loadErrors(): Observable<any[]> {
       return this._http.get<any>(this._url + '/loadErrors')
@@ -33,5 +39,4 @@ export class NdwhPatientPharmacyService {
       }
       return Observable.throw(err.error);
   }
-
 }

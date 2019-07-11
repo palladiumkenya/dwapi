@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Dwapi.Controller.ExtractDetails
 {
@@ -21,13 +22,30 @@ namespace Dwapi.Controller.ExtractDetails
             _errorSummaryRepository = errorSummaryRepository;
         }
 
-        [HttpGet("LoadValid")]
-        public IActionResult LoadValid()
+        [HttpGet("ValidCount")]
+        public async Task<IActionResult> GetValidCount()
         {
             try
             {
-                var tempPatientStatusExtracts = _patientStatusExtractRepository.GetAll().ToList();
-                return Ok(tempPatientStatusExtracts);
+                var count = await _patientStatusExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Patient Extracts";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("LoadValid/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadValid(int? page,int pageSize)
+        {
+            try
+            {
+                var tempPatientStatusExtracts = await _patientStatusExtractRepository.GetAll(page,pageSize);
+                return Ok(tempPatientStatusExtracts.ToList());
             }
             catch (Exception e)
             {

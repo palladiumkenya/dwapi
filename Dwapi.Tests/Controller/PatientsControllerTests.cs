@@ -16,6 +16,7 @@ namespace Dwapi.Tests.Controller
     {
         private PatientsController _patientsController;
 
+        private IPatientExtractRepository _patientExtractRepository;
         private ITempPatientExtractRepository _tempPatientExtractRepository;
         private ITempPatientExtractErrorSummaryRepository _errorSummaryRepository;
         private DbContextOptions<ExtractsContext> _options;
@@ -33,15 +34,16 @@ namespace Dwapi.Tests.Controller
         public void SetUp()
         {
             _context = new ExtractsContext(_options);
+            _patientExtractRepository = new PatientExtractRepository(_context);
             _tempPatientExtractRepository = new TempPatientExtractRepository(_context);
             _errorSummaryRepository = new TempPatientExtractErrorSummaryRepository(_context);
-            _patientsController = new PatientsController(_tempPatientExtractRepository, _errorSummaryRepository);
+            _patientsController = new PatientsController( _patientExtractRepository, _errorSummaryRepository,_tempPatientExtractRepository);
         }
 
         [Test]
         public void should_Get_All_Valid_Patients()
         {
-            var response = _patientsController.LoadValid();
+            var response = _patientsController.LoadValid(1,1).Result;
             var result = response as OkObjectResult;
 
             Assert.IsNotNull(result);

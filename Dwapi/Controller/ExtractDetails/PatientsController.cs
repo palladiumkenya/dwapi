@@ -4,6 +4,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Dwapi.Controller.ExtractDetails
 {
@@ -11,22 +12,41 @@ namespace Dwapi.Controller.ExtractDetails
     [Route("api/Patients")]
     public class PatientsController : Microsoft.AspNetCore.Mvc.Controller
     {
+        private readonly IPatientExtractRepository _patientExtractRepository;
         private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
         private readonly ITempPatientExtractErrorSummaryRepository _errorSummaryRepository;
 
-        public PatientsController(ITempPatientExtractRepository tempPatientExtractRepository, ITempPatientExtractErrorSummaryRepository errorSummaryRepository)
+        public PatientsController(IPatientExtractRepository patientExtractRepository, ITempPatientExtractErrorSummaryRepository errorSummaryRepository, ITempPatientExtractRepository tempPatientExtractRepository)
         {
-            _tempPatientExtractRepository = tempPatientExtractRepository;
+            _patientExtractRepository = patientExtractRepository;
             _errorSummaryRepository = errorSummaryRepository;
+            _tempPatientExtractRepository = tempPatientExtractRepository;
         }
 
-        [HttpGet("LoadValid")]
-        public IActionResult LoadValid()
+        [HttpGet("ValidCount")]
+        public async Task<IActionResult> GetValidCount()
         {
             try
             {
-                var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(n => !n.CheckError).ToList();
-                return Ok(tempPatientExtracts);
+                var count = await _patientExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Patient Extracts";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("LoadValid/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadValid(int? page,int pageSize)
+        {
+            try
+            {
+                var tempPatientExtracts = await _patientExtractRepository.GetAll(page,pageSize);
+                return Ok(tempPatientExtracts.ToList());
             }
             catch (Exception e)
             {
@@ -64,7 +84,7 @@ namespace Dwapi.Controller.ExtractDetails
                     "FROM vTempPatientExtractErrorSummary AS v INNER JOIN TempPatientExtracts AS t ON v.PatientPK = t.PatientPK " +
                     "AND v.SiteCode = t.SiteCode";
 
-                var errorSummary = _tempPatientExtractRepository.ExecQueryMulti<dynamic>(sql).OrderByDescending(x=>x.Type).ToList();
+                var errorSummary = _patientExtractRepository.ExecQueryMulti<dynamic>(sql).OrderByDescending(x=>x.Type).ToList();
 
                 return Ok(errorSummary);
             }

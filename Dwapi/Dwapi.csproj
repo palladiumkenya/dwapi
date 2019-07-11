@@ -43,6 +43,7 @@ Bached sending and await to 50 at a time
     <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="1.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
     <PackageReference Include="Hangfire" Version="1.6.21" />
+    <PackageReference Include="X.PagedList" Version="7.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dwapi.ExtractsManagement.Infrastructure\Dwapi.ExtractsManagement.Infrastructure.csproj" />

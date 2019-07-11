@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Observable} from 'rxjs/Observable';
+import {PageModel} from '../models/page-model';
 
 @Injectable()
 export class NdwhPatientsExtractService {
@@ -11,8 +12,13 @@ export class NdwhPatientsExtractService {
         this._http = http;
     }
 
-    public loadValid(): Observable<any[]> {
-        return this._http.get<any>(this._url + '/loadValid')
+    public loadValidCount(): Observable<number> {
+        return this._http.get<any>(this._url + `/ValidCount`)
+            .catch(this.handleError);
+    }
+
+    public loadValid(pageModel: PageModel): Observable<any[]> {
+        return this._http.get<any>(this._url + `/loadValid/${pageModel.page}/${pageModel.pageSize}`)
             .catch(this.handleError);
     }
 
@@ -24,7 +30,7 @@ export class NdwhPatientsExtractService {
     public loadValidations(): Observable<any[]> {
         return this._http.get<any>(this._url + '/LoadValidations')
             .catch(this.handleError);
-        }
+    }
 
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {

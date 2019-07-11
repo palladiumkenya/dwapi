@@ -1,7 +1,7 @@
-<p-table #dt [columns]="cols" [value]="invalidExtracts" autoLayout="true" [paginator]="true" [rows]="10">
+<p-table #dt [columns]="cols" [value]="invalidExtracts" autoLayout="true" [paginator]="true" [rows]="10" [loading]="loadingData" loadingIcon="fa-spinner fa-pulse">
     <ng-template pTemplate="caption">
         <div class="ui-helper-clearfix">
-            <button  type="button" pButton icon="ui-icon-cloud-download" iconPos="left" label="Export" (click)="dt.exportCSV()" style="float:left" class="blue-btn"></button>
+            <button [disabled]="canExport()"  type="button" pButton icon="ui-icon-cloud-download" iconPos="left" label="Export" (click)="dt.exportCSV()" style="float:left" class="blue-btn"></button>
         </div>
     </ng-template>
     <ng-template pTemplate="header" let-columns>
