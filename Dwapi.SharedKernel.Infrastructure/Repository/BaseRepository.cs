@@ -47,7 +47,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             return DbSet.Where(predicate).AsNoTracking();
         }
 
-        public Task<IPagedList<T>> GetAll(int? page, int pageSize)
+        public Task<IPagedList<T>> GetAll(int? page, int pageSize, string sortField="", int? sortOrder=1)
         {
             var entities = DbSet.AsNoTracking()
                 .OrderBy(x => x.Id);

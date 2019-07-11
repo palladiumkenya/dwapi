@@ -1,9 +1,11 @@
 <p-table #dt [value]="validExtracts" autoLayout="true" resizableColumns="true" columnResizeMode="expand"
          [totalRecords]="recordCount"
+         [rowsPerPageOptions]="[20,50,100,500]"
+         [lazy]="true"
          [paginator]="true"
          [rows]="initialRows"
          [loading]="loadingData"
-         (onPage)="pageView($event)">
+         (onLazyLoad)="pageView($event)">
     <ng-template pTemplate="caption">
     </ng-template>
     <ng-template pTemplate="header">

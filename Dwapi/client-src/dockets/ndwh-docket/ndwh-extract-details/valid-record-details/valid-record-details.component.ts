@@ -144,9 +144,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         this.getValidCount$ = this._patientExtractsService.loadValidCount()
             .subscribe(
                 p => {
-                    console.log(`count:`, p);
-                    this.getValidPatientExtracts();
                     this.recordCount = p;
+                    this.getValidPatientExtracts();
                 },
                 e => {
                     this.errorMessage = [];
@@ -168,7 +167,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.recordCount = p;
-                    console.log(`count ART:`, this.recordCount);
                     this.getValidPatientArtExtracts();
                 },
                 e => {
@@ -191,9 +189,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         this.getValidCount$ = this._patientBaselineService.loadValidCount()
             .subscribe(
                 p => {
-                    console.log(`count Base:`, p);
-                    this.getValidPatientBaselineExtracts();
                     this.recordCount = p;
+                    this.getValidPatientBaselineExtracts();
                 },
                 e => {
                     this.errorMessage = [];
@@ -215,7 +212,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.recordCount = p;
-                    console.log(`count Lab:`, this.recordCount);
                     this.getValidPatientLabExtracts();
                 },
                 e => {
@@ -238,7 +234,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.recordCount = p;
-                    console.log(`count Pharm:`, this.recordCount);
                     this.getValidPatientPharmacyExtracts();
                 },
                 e => {
@@ -261,7 +256,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.recordCount = p;
-                    console.log(`count: Stats`, this.recordCount);
                     this.getValidPatientStatusExtracts();
                 },
                 e => {
@@ -284,7 +278,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.recordCount = p;
-                    console.log(`count: Visit`, this.recordCount);
                     this.getValidPatientVisitExtracts();
                 },
                 e => {
@@ -307,7 +300,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.recordCount = p;
-                    console.log(`count: Adver`, this.recordCount);
                     this.getValidPatientAdverseEventExtracts();
                 },
                 e => {
@@ -724,10 +716,13 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
 
     pageView(event: any) {
         this.pageModel = {
-            page: event.first,
-            pageSize: event.rows
+            page: event.first / event.rows + 1,
+            pageSize: event.rows,
+            sortField: event.sortField,
+            sortOrder: event.sortOrder
         };
-        console.log(this.pageModel);
+        this.getPatientColumns();
+        this.getPatients();
     }
 
     ngOnDestroy(): void {
