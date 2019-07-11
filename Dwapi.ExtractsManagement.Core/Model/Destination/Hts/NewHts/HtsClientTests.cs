@@ -6,7 +6,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
 
             
-        public  class TempHtsClientTests : TempHTSExtract
+        public  class HtsClientTests : TempHTSExtract
         {
             public  int? EncounterId	 { get; set; }
             public  DateTime   TestDate	 { get; set; }

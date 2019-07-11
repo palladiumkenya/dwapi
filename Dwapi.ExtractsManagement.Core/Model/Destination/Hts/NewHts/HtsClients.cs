@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
-    public  class TempHtsClients : TempHTSExtract
+    public  class HtsClients : TempHTSExtract
     {
 
         public  DateTime  DoB	 { get; set; }

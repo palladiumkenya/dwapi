@@ -6,13 +6,13 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
 
             
-        public  class TempHtsClientTracing : TempHTSExtract
+        public  class HtsPartnerTracing : TempHTSExtract
         {
-            
-            
-            public  DateTime TracingType { get; set; }
-            public  DateTime TracingDate { get; set; }
-            public  string TracingOutcome { get; set; }
+           
+            public  string TraceType { get; set; }
+            public  DateTime TraceDate { get; set; }
+            public  string TraceOutcome { get; set; }
+            public  DateTime BookingDate { get; set; } 
                 
             public override string ToString()
             {

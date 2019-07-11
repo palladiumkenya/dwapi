@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
-    public  class TempHtsTestKits : TempHTSExtract
+    public  class HtsTestKits : TempHTSExtract
     {
 
         public  int EncounterId { get; set; }

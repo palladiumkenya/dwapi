@@ -6,7 +6,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
 
             
-        public  class TempHtsClientLinkage : TempHTSExtract
+        public  class HtsClientLinkage : TempHTSExtract
         {
 
             public  DateTime  DatePrefferedToBeEnrolled { get; set; }

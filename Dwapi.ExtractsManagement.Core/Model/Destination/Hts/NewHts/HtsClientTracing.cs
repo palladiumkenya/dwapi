@@ -6,7 +6,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
 
             
-        public  class TempHtsClientTracing : TempHTSExtract
+        public  class HtsClientTracing : TempHTSExtract
         {
             
             
@@ -20,3 +20,4 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
             }
         }
 }
+ 
