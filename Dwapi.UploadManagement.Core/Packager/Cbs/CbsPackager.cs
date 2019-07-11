@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
+using Dwapi.UploadManagement.Core.Model.Cbs.Dtos;
 
 namespace Dwapi.UploadManagement.Core.Packager.Cbs
 {
@@ -26,7 +28,6 @@ namespace Dwapi.UploadManagement.Core.Packager.Cbs
             var getPks = _cbsExtractReader.ReadAll()
                 .Select(x => new SitePatientProfile(x.SiteCode, x.FacilityName, x.PatientPk));
 
-
             return Manifest.Create(getPks);
         }
 
@@ -46,9 +47,10 @@ namespace Dwapi.UploadManagement.Core.Packager.Cbs
             return manifests;
         }
 
-        public IEnumerable<MasterPatientIndex> GenerateMpi()
+        public IEnumerable<MasterPatientIndexDto> GenerateDtoMpi()
         {
-            return _cbsExtractReader.ReadAll();
+            var mpis = _cbsExtractReader.ReadAll().ToList();
+            return Mapper.Map<List<MasterPatientIndexDto>>(mpis);
         }
     }
 }

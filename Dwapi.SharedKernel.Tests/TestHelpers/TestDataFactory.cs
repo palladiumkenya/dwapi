@@ -7,6 +7,7 @@ using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Exchange.Hts;
+using Dwapi.UploadManagement.Core.Model.Cbs.Dtos;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 using FizzWare.NBuilder;
 
@@ -84,7 +85,7 @@ namespace Dwapi.SharedKernel.Tests.TestHelpers
 
             foreach (var siteCode in siteCodes)
             {
-                var masterPatientIndices = Builder<MasterPatientIndex>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                var masterPatientIndices = Builder<MasterPatientIndexDto>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
                     .ToList();
                 list.Add(new MpiMessage(masterPatientIndices));
 
