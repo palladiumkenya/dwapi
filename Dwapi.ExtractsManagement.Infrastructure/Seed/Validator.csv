@@ -14,7 +14,7 @@ Id|Extract|Field|Type|Logic|Summary
 6c5c6100-2a95-11e7-93ae-92361f002671|TempPatientArtExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 
 6c5c64fc-2a95-11e7-93ae-92361f002671|TempPatientArtExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
-ce7b5db8-160f-11e7-93ae-92361f002671|TempPatientArtExtracts|StartARTDate|Required|StartARTDate IS NULL|StartARTDate Required
+ce7b5db8-160f-11e7-93ae-92361f002671|TempPatientArtExtracts|StartARTDate|Logical|StartARTDate IS NULL|StartARTDate Required
 61bc1c9c-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|StartARTDate|Logical|StartARTDate > ExitDate AND ExitDate IS NOT NULL|StartARTDate after Exit Date
 61bc228c-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|StartARTDate|Logical|StartARTDate < '1997-01-01'|StartARTDate out of expected range
 61bc2372-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|StartARTDate|Logical|StartARTDate > LastVisit|StartARTDate after last visit date
