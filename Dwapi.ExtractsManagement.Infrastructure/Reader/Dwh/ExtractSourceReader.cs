@@ -17,6 +17,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh
             throw new NotImplementedException();
         }
 
+
         public Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract)
         {
             var sourceConnection = GetConnection(protocol);
