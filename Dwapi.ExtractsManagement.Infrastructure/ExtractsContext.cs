@@ -134,8 +134,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
-            modelBuilder.Entity<HTSClientExtract>()
-                .HasKey(f => new {f.SiteCode, f.PatientPk,f.EncounterId});
+//            modelBuilder.Entity<HTSClientExtract>()
+//                .HasKey(f => new {f.SiteCode, f.PatientPk,f.EncounterId});
 
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
             DapperPlusManager.Entity<TempPatientArtExtract>().Key(x => x.Id).Table($"{nameof(TempPatientArtExtracts)}");

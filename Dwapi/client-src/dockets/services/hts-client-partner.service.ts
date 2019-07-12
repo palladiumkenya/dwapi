@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
+import {PageModel} from '../models/page-model';
 
 @Injectable()
 export class HtsClientPartnerService {
@@ -12,8 +13,13 @@ export class HtsClientPartnerService {
         this._http = http;
     }
 
-    public loadValid(): Observable<any[]> {
-        return this._http.get<any>(this._url + '/partner')
+    public loadValidCount(): Observable<number> {
+        return this._http.get<any>(this._url + `/partnercount`)
+            .catch(this.handleError);
+    }
+
+    public loadValid(pageModel: PageModel): Observable<any[]> {
+        return this._http.get<any>(this._url + `/partner/${pageModel.page}/${pageModel.pageSize}`)
             .catch(this.handleError);
     }
 
