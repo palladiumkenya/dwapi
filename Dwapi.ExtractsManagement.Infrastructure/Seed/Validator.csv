@@ -1,7 +1,7 @@
 Id|Extract|Field|Type|Logic|Summary
 61bbda3e-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB >= LastVisit AND LastVisit IS NOT NULL|DoB After LastVisit
 61bbe4f2-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB >= PreviousARTStartDate AND PreviousARTStartDate IS NOT NULL|DOB after PreviousARTStartDate
-61bbed08-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB > StartARTDate|DOB After than StartARTDate
+61bbed08-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB > StartARTDate|DOB After StartARTDate
 61bbf0a0-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB >=ExitDate AND ExitDate IS NOT NULL|DoB After ExitDate
 61bc2d9a-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|DOB|Logical|DOB >=ExpectedReturn AND ExpectedReturn IS NOT NULL|DoB After ExpectedReturn
 61bbd912-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|ExitReason|Logical|ExitReason IS NULL AND ExitDate IS NOT NULL|Missing Exit Reason
