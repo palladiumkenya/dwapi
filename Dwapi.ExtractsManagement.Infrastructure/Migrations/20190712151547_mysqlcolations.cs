@@ -36,6 +36,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                 migrationBuilder.Sql(@"alter table MasterPatientIndices convert to character set utf8 collate utf8_unicode_ci;");
                 migrationBuilder.Sql(@"alter table TempMasterPatientIndices convert to character set utf8 collate utf8_unicode_ci;");
+
             }
         }
 
