@@ -525,7 +525,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'facilityName', header: 'Facility Name'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
-            {field: 'dOB', header: 'DOB'},
+            {field: 'dob', header: 'DOB'},
             {field: 'ageEnrollment', header: 'Enrollment Age'},
             {field: 'ageARTStart', header: 'Age ART Start'},
             {field: 'ageLastVisit', header: 'Age Last Visit'},
