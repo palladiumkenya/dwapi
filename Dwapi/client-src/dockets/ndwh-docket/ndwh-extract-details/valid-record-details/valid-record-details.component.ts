@@ -64,13 +64,19 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             console.log(extract);
             this.cols = [];
             this.validExtracts = [];
+
+            this.pageModel = {
+                page: 1,
+                pageSize: this.initialRows
+            };
+
             this.getColumns();
             this.getValidExtracts();
         }
     }
 
     ngOnInit() {
-
+        this.exName = 'All Patients'
         this.pageModel = {
             page: 1,
             pageSize: this.initialRows
@@ -81,11 +87,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     }
 
     public getValidExtracts(): void {
-        this.pageModel = {
-            page: 1,
-            pageSize: this.initialRows
-        };
-
+        console.log('loading>', this.extract);
         if (this.extract === 'All Patients') {
             this.getPatients();
         }
@@ -721,8 +723,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             sortField: event.sortField,
             sortOrder: event.sortOrder
         };
-        this.getPatientColumns();
-        this.getPatients();
+        this.getColumns();
+        this.getValidExtracts();
     }
 
     ngOnDestroy(): void {

@@ -1,5 +1,12 @@
-<p-table #dt [value]="validExtracts" autoLayout="true" resizableColumns="true" columnResizeMode="expand" [paginator]="true" [rows]="5">
-     
+<p-table #dt [value]="validExtracts" autoLayout="true" resizableColumns="true" columnResizeMode="expand"
+         [totalRecords]="recordCount"
+         [rowsPerPageOptions]="[20,50,100,500]"
+         [lazy]="true"
+         [paginator]="true"
+         [rows]="initialRows"
+         [loading]="loadingData"
+         (onLazyLoad)="pageView($event)">
+
     <ng-template pTemplate="header">
         <tr>
             <th *ngFor="let col of cols" [pSortableColumn]="col.field">

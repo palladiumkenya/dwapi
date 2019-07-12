@@ -1,27 +1,32 @@
-import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange} from '@angular/core';
 import {Message} from 'primeng/api';
 import {Subscription} from 'rxjs/Subscription';
 import {HtsClientService} from '../../../services/hts-client.service';
 import {HtsClientLinkageService} from '../../../services/hts-client-linkage.service';
 import {HtsClientPartnerService} from '../../../services/hts-client-partner.service';
+import {PageModel} from '../../../models/page-model';
 
 @Component({
     selector: 'liveapp-hts-valid',
     templateUrl: './hts-valid.component.html',
     styleUrls: ['./hts-valid.component.scss']
 })
-export class HtsValidComponent implements OnInit, OnChanges {
-
-    @Input() extract: string;
+export class HtsValidComponent implements OnInit, OnDestroy {
     private htsClientService: HtsClientService;
     private htsClientLinkageService: HtsClientLinkageService;
     private htsClientPartnerService: HtsClientPartnerService;
 
     public validExtracts: any[] = [];
+    public recordCount = 0;
     public cols: any[];
     public errorMessage: Message[];
     public otherMessage: Message[];
     public getValid$: Subscription;
+    public getValidCount$: Subscription;
+    public pageModel: PageModel;
+    public initialRows: number = 20;
+    private exName: string;
+    public loadingData = false;
 
     constructor(htsClientService: HtsClientService, htsClientLinkageService: HtsClientLinkageService,
                 htsClientPartnerService: HtsClientPartnerService) {
@@ -30,27 +35,46 @@ export class HtsValidComponent implements OnInit, OnChanges {
         this.htsClientPartnerService = htsClientPartnerService;
     }
 
-    public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-        this.cols = [];
-        this.validExtracts = [];
-        this.getColumns();
-        this.getValidExtracts();
+    get extract(): string {
+        return this.exName;
+    }
+
+    @Input()
+    set extract(extract: string) {
+        if (extract) {
+            this.exName = extract;
+            console.log(extract);
+            this.cols = [];
+            this.validExtracts = [];
+            this.pageModel = {
+                page: 1,
+                pageSize: this.initialRows
+            };
+            this.getColumns();
+            this.getValidExtracts();
+        }
     }
 
     ngOnInit() {
+        this.exName = 'HTS Client Extracts';
+        this.pageModel = {
+            page: 1,
+            pageSize: this.initialRows
+        };
         this.getClientColumns();
-        this.getValidHtsClientExtracts();
+        this.getValidHtsClients();
     }
 
     public getValidExtracts(): void {
+        console.log('loading>', this.extract);
         if (this.extract === 'HTS Client Extracts') {
-            this.getValidHtsClientExtracts();
+            this.getValidHtsClients();
         }
         if (this.extract === 'HTS Linkage Extracts') {
-            this.getValidLinkageExtracts();
+            this.getValidLinkages();
         }
         if (this.extract === 'HTS Partner Extracts') {
-            this.getValidPartnerExtracts();
+            this.getValidPartners();
         }
     }
 
@@ -66,8 +90,30 @@ export class HtsValidComponent implements OnInit, OnChanges {
         }
     }
 
+    private getValidHtsClients(): void {
+        this.loadingData = true;
+        this.getValidCount$ = this.htsClientService.loadValidCount().subscribe(
+            p => {
+                this.recordCount = p;
+                this.getValidHtsClientExtracts();
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+                this.loadingData = false;
+            }
+        );
+    }
+
     private getValidHtsClientExtracts(): void {
-        this.getValid$ = this.htsClientService.loadValid().subscribe(
+        this.loadingData = true;
+        this.getValid$ = this.htsClientService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -80,12 +126,34 @@ export class HtsValidComponent implements OnInit, OnChanges {
                 });
             },
             () => {
+                this.loadingData = false;
+            }
+        );
+    }
+
+    private getValidLinkages(): void {
+        this.loadingData = true;
+        this.getValid$ = this.htsClientLinkageService.loadValidCount().subscribe(
+            p => {
+                this.recordCount = p;
+                this.getValidLinkageExtracts();
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+                this.loadingData = false;
             }
         );
     }
 
     private getValidLinkageExtracts(): void {
-        this.getValid$ = this.htsClientLinkageService.loadValid().subscribe(
+        this.getValid$ = this.htsClientLinkageService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -102,8 +170,29 @@ export class HtsValidComponent implements OnInit, OnChanges {
         );
     }
 
+    private getValidPartners(): void {
+        this.loadingData = true;
+        this.getValid$ = this.htsClientPartnerService.loadValidCount().subscribe(
+            p => {
+                this.recordCount = p;
+                this.getValidPartnerExtracts();
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+                this.loadingData = false;
+            }
+        );
+    }
+
     private getValidPartnerExtracts(): void {
-        this.getValid$ = this.htsClientPartnerService.loadValid().subscribe(
+        this.getValid$ = this.htsClientPartnerService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -231,5 +320,25 @@ export class HtsValidComponent implements OnInit, OnChanges {
             {field: 'isSent', header: 'isSent'},
             {field: 'id', header: 'id'}
         ];
+    }
+
+    pageView(event: any) {
+        this.pageModel = {
+            page: event.first / event.rows + 1,
+            pageSize: event.rows,
+            sortField: event.sortField,
+            sortOrder: event.sortOrder
+        };
+        this.getColumns();
+        this.getValidExtracts();
+    }
+
+    ngOnDestroy(): void {
+        if (this.getValid$) {
+            this.getValid$.unsubscribe();
+        }
+        if (this.getValidCount$) {
+            this.getValidCount$.unsubscribe();
+        }
     }
 }

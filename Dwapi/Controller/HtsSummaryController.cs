@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -40,13 +41,32 @@ namespace Dwapi.Controller
             _htsClientPartnerExtractErrorSummaryRepository = htsClientPartnerExtractErrorSummaryRepository;
         }
 
-        [HttpGet("client")]
-        public IActionResult LoadClientValid()
+
+
+        [HttpGet("clientcount")]
+        public async Task<IActionResult> GetValidCount()
         {
             try
             {
-                var tempPatientArtExtracts = _htsClientExtractRepository.GetAll().ToList();
-                return Ok(tempPatientArtExtracts);
+                var count = await _htsClientExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Clients";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("client/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadClientValid(int? page,int pageSize)
+        {
+            try
+            {
+                var tempPatientArtExtracts = await  _htsClientExtractRepository.GetAll(page,pageSize);
+                return Ok(tempPatientArtExtracts.ToList());
             }
             catch (Exception e)
             {
@@ -74,13 +94,30 @@ namespace Dwapi.Controller
             }
         }
 
-        [HttpGet("linkage")]
-        public IActionResult LoadLinkageValid()
+        [HttpGet("linkagecount")]
+        public async Task<IActionResult> GetLinkageCount()
         {
             try
             {
-                var tempPatientArtExtracts = _htsClientLinkageExtractRepository.GetAll().ToList();
-                return Ok(tempPatientArtExtracts);
+                var count = await _htsClientLinkageExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Linkages";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("linkage/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadLinkageValid(int? page,int pageSize)
+        {
+            try
+            {
+                var tempPatientArtExtracts = await _htsClientLinkageExtractRepository.GetAll(page,pageSize);
+                return Ok(tempPatientArtExtracts.ToList());
             }
             catch (Exception e)
             {
@@ -107,15 +144,30 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
-
-
-        [HttpGet("partner")]
-        public IActionResult LoadPartnerValid()
+        [HttpGet("partnercount")]
+        public async Task<IActionResult> GetPartnerCount()
         {
             try
             {
-                var tempPatientArtExtracts = _htsClientPartnerExtractRepository.GetAll().ToList();
-                return Ok(tempPatientArtExtracts);
+                var count = await _htsClientPartnerExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Patners";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("partner/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadPartnerValid(int? page,int pageSize)
+        {
+            try
+            {
+                var tempPatientArtExtracts =await _htsClientPartnerExtractRepository.GetAll(page, pageSize);
+                return Ok(tempPatientArtExtracts.ToList());
             }
             catch (Exception e)
             {
