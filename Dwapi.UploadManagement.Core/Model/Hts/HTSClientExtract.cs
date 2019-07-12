@@ -3,7 +3,7 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 
 namespace Dwapi.UploadManagement.Core.Model.Hts
 {
-    [Table("HTSClientExtracts")]
+    [Table("HtsClientExtracts")]
     public class HTSClientExtractView : HTSClientExtract
     {
     }
