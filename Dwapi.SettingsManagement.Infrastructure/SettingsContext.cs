@@ -39,17 +39,24 @@ namespace Dwapi.SettingsManagement.Infrastructure
             };
             SeederConfiguration.ResetConfiguration(csvConfig, null, typeof(SettingsContext).GetTypeInfo().Assembly);
 
-            Dockets.SeedDbSetIfEmpty($"{nameof(Dockets)}");
-            CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
-            EmrSystems.SeedDbSetIfEmpty($"{nameof(EmrSystems)}");
-            DatabaseProtocols.SeedDbSetIfEmpty($"{nameof(DatabaseProtocols)}");
-            RestProtocols.SeedDbSetIfEmpty($"{nameof(RestProtocols)}");
-            Resources.SeedDbSetIfEmpty($"{nameof(Resources)}");
+            if (!Dockets.Any())
+                Dockets.SeedDbSetIfEmpty($"{nameof(Dockets)}");
+            if (!CentralRegistries.Any())
+                CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
+            if (!EmrSystems.Any())
+                EmrSystems.SeedDbSetIfEmpty($"{nameof(EmrSystems)}");
+            if (!DatabaseProtocols.Any())
+                DatabaseProtocols.SeedDbSetIfEmpty($"{nameof(DatabaseProtocols)}");
+            if (!RestProtocols.Any())
+                RestProtocols.SeedDbSetIfEmpty($"{nameof(RestProtocols)}");
+            if (!Resources.Any())
+                Resources.SeedDbSetIfEmpty($"{nameof(Resources)}");
             var ex = Extracts.Where(e => e.EmrSystemId.ToString() == "a62216ee-0e85-11e8-ba89-0ed5f89f718b" ||
-            e.EmrSystemId.ToString() == "a6221856-0e85-11e8-ba89-0ed5f89f718b" ||
-            e.EmrSystemId.ToString() == "a6221857-0e85-11e8-ba89-0ed5f89f718b"
+                                         e.EmrSystemId.ToString() == "a6221856-0e85-11e8-ba89-0ed5f89f718b" ||
+                                         e.EmrSystemId.ToString() == "a6221857-0e85-11e8-ba89-0ed5f89f718b"
             );
             Extracts.RemoveRange(ex);
+            SaveChanges();
             Extracts.SeedFromResource($"{nameof(Extracts)}");
             SaveChanges();
         }

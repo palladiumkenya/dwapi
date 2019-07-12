@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -133,7 +134,6 @@ namespace Dwapi
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             var assemblyNames = Assembly.GetEntryAssembly().GetReferencedAssemblies();
             List<Assembly> assemblies = new List<Assembly>();
             foreach (var assemblyName in assemblyNames)
@@ -145,6 +145,9 @@ namespace Dwapi
 
             services.AddResponseCompression(options =>
             {
+
+
+
                 options.Providers.Add<GzipCompressionProvider>();
                 options.EnableForHttps = true;
                 options.MimeTypes =
@@ -358,6 +361,8 @@ namespace Dwapi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
+            Stopwatch stopWatch = Stopwatch.StartNew();
+
             //ServiceProvider = serviceProvider;
             app.UseResponseCompression();
             if (env.IsDevelopment())
@@ -444,6 +449,8 @@ namespace Dwapi
                 throw;
             }
 
+            stopWatch.Stop();
+
             Log.Debug(@"initializing Database [Complete]");
             Log.Debug(
                 @"---------------------------------------------------------------------------------------------------");
@@ -461,9 +468,7 @@ namespace Dwapi
 ");
             Log.Debug(
                 @"---------------------------------------------------------------------------------------------------");
-            Log.Debug("Dwapi started !");
-
-
+            Log.Debug($"Dwapi started in {stopWatch.ElapsedMilliseconds} ms");
         }
 
         public static void EnsureMigrationOfContext<T>(IServiceProvider app) where T : BaseContext
