@@ -26,7 +26,7 @@ ce7b5f34-160f-11e7-93ae-92361f002671|TempPatientArtExtracts|StartRegimen|Logical
 6c5c6600-2a95-11e7-93ae-92361f002671|TempPatientBaselinesExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 6c5c6812-2a95-11e7-93ae-92361f002671|TempPatientBaselinesExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 61bbd49e-35a1-11e7-a919-92ebcb67fe33|TempPatientExtracts|DOB|Logical|DOB > RegistrationAtCCC AND RegistrationAtCCC IS NOT Null|DoB After Date of Enrollment Date
-61bbd49e-35a1-11e7-a919-92ebcb67fe33|TempPatientExtracts|DOB|Logical|DOB = RegistrationAtCCC AND RegistrationAtCCC IS NOT Null|DoB same as Enrollment Date
+61bbd49e-35a1-11e7-a919-92ebcb69fe33|TempPatientExtracts|DOB|Logical|DOB = RegistrationAtCCC AND RegistrationAtCCC IS NOT Null|DoB same as Enrollment Date
 ce7b5c1e-160f-11e7-93ae-92361f002671|TempPatientExtracts|DOB|Required|DOB IS NULL|DOB Required
 ce7b571e-160f-11e7-93ae-92361f002671|TempPatientExtracts|Gender|Required|Gender IS NULL|Gender Required
 61bbe6d2-35a1-11e7-a919-92ebcb67fe33|TempPatientExtracts|LastVisit|Logical|LastVisit IS NULL|LastVisit is Required
