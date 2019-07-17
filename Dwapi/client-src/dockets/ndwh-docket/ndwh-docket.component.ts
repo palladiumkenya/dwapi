@@ -69,7 +69,7 @@ export class NdwhDocketComponent implements OnInit, OnDestroy {
                 },
                 e => {
                     this.metricMessages = [];
-                    //this.metricMessages.push({severity: 'warn', summary: 'Could not load EMR metrics', detail: <any>e});
+                    // this.metricMessages.push({severity: 'warn', summary: 'Could not load EMR metrics', detail: <any>e});
                 },
                 () => {
                     if (this.emrMetric) {
