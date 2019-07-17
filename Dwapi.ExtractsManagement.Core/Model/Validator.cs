@@ -94,7 +94,8 @@ namespace Dwapi.ExtractsManagement.Core.Model
                     UPDATE 
                         {Extract} 
                     SET 
-                        CheckError=1  , ErrorType={(int)GettErrorType()}
+                        CheckError=1  , 
+                        ErrorType=  CASE WHEN ErrorType=0 THEN {(int)GettErrorType()} ELSE ErrorType END
                     WHERE 
                         Id IN (SELECT RecordId FROM ValidationError WHERE ValidatorId='{Id}')";
 
