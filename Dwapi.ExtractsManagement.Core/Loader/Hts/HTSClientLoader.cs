@@ -36,7 +36,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
             try
             {
                 //load temp extracts without errors
-                var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false).ToList();
+                //var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false).ToList();
+                var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a => a.ErrorType == 0).ToList();
 
                 //Auto mapper
                 var extractRecords = Mapper.Map<List<TempHTSClientExtract>, List<HTSClientExtract>>(tempPatientExtracts);
