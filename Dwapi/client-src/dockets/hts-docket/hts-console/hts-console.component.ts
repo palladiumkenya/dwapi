@@ -128,7 +128,6 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         if (this.centralRegistry) {
             this.canSend = true;
         }
-
     }
 
     public loadFromEmr(): void {
