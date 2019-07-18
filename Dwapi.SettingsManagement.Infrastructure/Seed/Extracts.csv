@@ -998,7 +998,7 @@ FROM   ndwr_patient_pharmacy"|dwhstage|0|PatientPharmacyExtract|6|a6221aa5-0e85-
        NOW() AS AdverseEventEndDate,
        '' AS AdverseEventIsPregnant"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa5-0e85-11e8-ba89-0ed5f89f718b
 
-04b4205d-0ad4-47f2-a7a5-7774d7dade65|HTS Client Extracts|HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 'IQCare' as Emr, 'Kenya HMIS II' as Project,  p.HTSID as  [HtsNumber]
+04b4205d-0ad4-47f2-a7a5-7774d7dade65|HTS Client Extracts (Client tests)|HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 'IQCare' as Emr, 'Kenya HMIS II' as Project,  p.HTSID as  [HtsNumber]
       ,h.patientmastervisitid as EncounterId
 	  ,CAST(l.[VisitDate] AS date)  as VisitDate
 	  ,CAST(l.[DOB] as Date) as DoB
@@ -1028,7 +1028,7 @@ FROM   ndwr_patient_pharmacy"|dwhstage|0|PatientPharmacyExtract|6|a6221aa5-0e85-
   FROM HTS_LAB_Register l
   INNER JOIN tmp_PatientMaster p on  p.PatientPK=l.PatientPK
  inner join PatientEncounter h on h.PatientId=L.PATIENTID  AND   h.EncounterStarttime=l.VisitDate "|DWHStage|1|HTSClientExtract|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
-6f3ce1d9-6cfc-47d2-ad1b-73a6ee7ef909|HTS Client Extracts|HTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct e.patient_id as PatientPK, l.value_reference as SiteCode, lname.name as FacilityName, 'KenyaEMR' as Emr, 'Kenya HMIS II' as Project,
+6f3ce1d9-6cfc-47d2-ad1b-73a6ee7ef909|HTS Client Extracts (Client tests)|HTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct e.patient_id as PatientPK, l.value_reference as SiteCode, lname.name as FacilityName, 'KenyaEMR' as Emr, 'Kenya HMIS II' as Project,
 ident.identifier as HtsNumber, e.encounter_id as EncounterId, e.visit_date as VisitDate, p.DOB, p.Gender,p.marital_status AS MaritalStatus, patient_disabled as PatientDisabled,
 disability_type as DisabilityType, patient_consented as PatientConsented, population_type as PopulationType, key_population_type as KeyPopulationType,
 case when isnull(e.months_since_last_test) then 'No' else 'Yes' end as 'TestedBefore',e.months_since_last_test as MonthsLastTested,e.client_tested_as as ClientTestedAs,
