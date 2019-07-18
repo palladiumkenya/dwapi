@@ -15,7 +15,7 @@
     </p-toolbar>
 
     <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true" columnResizeMode="expand">
-        <p-column field="display" header="Extract"></p-column>
+        <p-column field="display" [style]="{'width': '220.985px'}" header="Extract"></p-column>
         <p-column field="extractEvent.lastStatus" header="Status" ></p-column>
         <p-column field="extractEvent.found" header="(A) Found"></p-column>
         <p-column field="extractEvent.loaded" header="Loaded" [style]="{'background-color': 'lightskyblue'}"></p-column>
