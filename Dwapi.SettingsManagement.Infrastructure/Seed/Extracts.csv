@@ -455,8 +455,7 @@ where d.unique_patient_no is not null
 order by d.patient_id,fup.visit_date;"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 
-48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"
-SELECT DISTINCT
+48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT
  *,
  
  LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
@@ -503,7 +502,7 @@ FROM
 SELECT
    -------Demographics
    Ptn_Pk,a.PatientPK,a.SiteCode,a.FacilityName,
-    a.[PatientID]Serial
+    case when a.HTSID is null then a.PatientID else a.HTSID end as Serial
 
       ,UPPER([dFirstName]) FirstName
    ,UPPER([dMiddleName]) MiddleName
@@ -553,18 +552,20 @@ SELECT
   FROM
   tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
   WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
+  Where len(a.htsid) > 0 or len(a.PatientID) > 0
  --ORDER BY PKV_2,Ptn_Pk  ASC
 ) X
 INNER JOIN
 (
 SELECT
   Ptn_Pk,
-    a.[PatientID]Serial
+    case when a.HTSID is null then a.PatientID else a.HTSID end as Serial
 FROM [dbo].[tmp_PatientMaster] a
   inner join [dbo].[mst_patient_decoded]mst on a.patientpk=mst.ptn_pk
   left  join (SELECT DISTINCT a.PatientPK, a.PatientID, a.RegistrationAtCCC, b.StartARTDate, b.StartRegimen, b.StartRegimenLine
   FROM dbo.tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
   WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
+  Where len(a.htsid) > 0 or len(a.PatientID) > 0 
 
 )Y
 ON
