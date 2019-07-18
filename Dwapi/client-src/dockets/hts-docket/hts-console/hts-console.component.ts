@@ -130,7 +130,6 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
-
     public loadFromEmr(): void {
         this.errorMessage = [];
         this.load$ = this._htsService
