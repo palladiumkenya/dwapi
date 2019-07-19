@@ -580,8 +580,6 @@ FacilityName,
 -- a.patient_clinic_number AS Serial
 -- X.Ptn_Pk AS Serial
 X.Serial
-
-
 ,FirstName
 , MiddleName
 ,LastName
@@ -759,16 +757,22 @@ id.identifier AS Serial
 FROM kenyaemr_datatools.patient_demographics a
 INNER JOIN openmrs.patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
 inner join (
-SELECT 
-@row_number:=CASE
-WHEN @patient_id = patient_id THEN @row_number + 1
-ELSE 1
-END AS num,
-@patient_id :=patient_id as patient_id,
+SELECT  c.patient_id,
+c.encounter_id, treatment_supporter_telephone, entry_point , treatment_supporter_address, date_confirmed_hiv_positive 
+from kenyaemr_datatools.hiv_enrollment  c
+INNER JOIN
+    (
+        SELECT patient_id, MAX(encounter_id) max_encounter_id
+        FROM kenyaemr_datatools.hiv_enrollment
+        GROUP BY patient_id
+    ) b ON c.patient_id = b.patient_id AND
+            c.encounter_id = b.max_encounter_id
 
-encounter_id, treatment_supporter_telephone, entry_point , treatment_supporter_address, date_confirmed_hiv_positive 
-from kenyaemr_datatools.hiv_enrollment where date_first_enrolled_in_care IS NOT NULL order by date_first_enrolled_in_care desc ) en
-on a.Patient_Id=en.patient_id and num=1
+  order by patient_id,date_created asc 
+
+
+ ) en
+on a.Patient_Id=en.patient_id
 LEFT JOIN
 (
 SELECT patient_id, MIN(date_started) AS date_started ,MIN(regimen_name) AS regimen_name, MIN(regimen_line) AS regimen_line
@@ -785,7 +789,8 @@ INNER JOIN openmrs.patient_identifier id ON a.patient_id = id.patient_id AND id.
 
 )Y
 ON
-Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial"|MPI|1|MasterPatientIndex|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial
+"|MPI|1|MasterPatientIndex|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 329bfbf4-d404-4dfd-88eb-6fb398c5f449|Patient Adverse Events|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT adv.PatientID,
        adv.PatientPK,
        adv.SiteCode,

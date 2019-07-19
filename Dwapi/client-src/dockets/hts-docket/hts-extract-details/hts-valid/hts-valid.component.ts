@@ -211,8 +211,8 @@ export class HtsValidComponent implements OnInit, OnDestroy {
 
     private getClientColumns(): void {
         this.cols = [
-            {field: 'encounterId', header: 'encounterId'},
-            {field: 'visitDate', header: 'visitDate'},
+            { field: 'htsNumber', header: 'htsNumber' },
+            { field: 'visitDate', header: 'visitDate' }, 
             {field: 'dob', header: 'dob'},
             {field: 'gender', header: 'gender'},
             {field: 'maritalStatus', header: 'maritalStatus'},
@@ -220,7 +220,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             {field: 'testedBefore', header: 'testedBefore'},
             {field: 'monthsLastTested', header: 'monthsLastTested'},
             {field: 'clientTestedAs', header: 'clientTestedAs'},
-            {field: 'strategyHTS', header: 'strategyHTS'},
+            { field: 'strategyHTS', header: 'EntryPoint'},
             {field: 'testKitName1', header: 'testKitName1'},
             {field: 'testKitLotNumber1', header: 'testKitLotNumber1'},
             {field: 'testKitExpiryDate1', header: 'testKitExpiryDate1'},
@@ -242,8 +242,8 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             {field: 'patientConsented', header: 'patientConsented'},
             {field: 'facilityName', header: 'facilityName'},
             {field: 'siteCode', header: 'siteCode'},
-            {field: 'patientPk', header: 'patientPk'},
-            {field: 'htsNumber', header: 'htsNumber'},
+            { field: 'patientPk', header: 'patientPk' },
+            { field: 'encounterId', header: 'encounterId' },
             {field: 'emr', header: 'emr'},
             {field: 'project', header: 'project'},
             {field: 'processed', header: 'processed'},
@@ -258,7 +258,8 @@ export class HtsValidComponent implements OnInit, OnDestroy {
 
     private getLinkageColumns(): void {
         this.cols = [
-            {field: 'phoneTracingDate', header: 'phoneTracingDate'},
+            { field: 'htsNumber', header: 'htsNumber' },
+            { field: 'phoneTracingDate', header: 'phoneTracingDate' },
             {field: 'physicalTracingDate', header: 'physicalTracingDate'},
             {field: 'tracingOutcome', header: 'tracingOutcome'},
             {field: 'cccNumber', header: 'cccNumber'},
@@ -268,7 +269,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             {field: 'facilityName', header: 'facilityName'},
             {field: 'siteCode', header: 'siteCode'},
             {field: 'patientPk', header: 'patientPk'},
-            {field: 'htsNumber', header: 'htsNumber'},
+            
             {field: 'emr', header: 'emr'},
             {field: 'project', header: 'project'},
             {field: 'processed', header: 'processed'},
@@ -283,7 +284,8 @@ export class HtsValidComponent implements OnInit, OnDestroy {
 
     private getPartnerColumns(): void {
         this.cols = [
-            {field: 'partnerPatientPk', header: 'partnerPatientPk'},
+            { field: 'htsNumber', header: 'htsNumber' },
+            { field: 'partnerPatientPk', header: 'partnerPatientPk' },
             {field: 'partnerPersonId', header: 'partnerPersonId'},
             {field: 'relationshipToIndexClient', header: 'relationshipToIndexClient'},
             {field: 'screenedForIpv', header: 'screenedForIpv'},
@@ -309,7 +311,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             {field: 'facilityName', header: 'facilityName'},
             {field: 'siteCode', header: 'siteCode'},
             {field: 'patientPk', header: 'patientPk'},
-            {field: 'htsNumber', header: 'htsNumber'},
+            
             {field: 'emr', header: 'emr'},
             {field: 'project', header: 'project'},
             {field: 'processed', header: 'processed'},
