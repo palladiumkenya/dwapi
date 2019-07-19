@@ -455,8 +455,7 @@ where d.unique_patient_no is not null
 order by d.patient_id,fup.visit_date;"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 
-48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"
-SELECT DISTINCT
+48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT
  *,
  
  LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
@@ -503,7 +502,7 @@ FROM
 SELECT
    -------Demographics
    Ptn_Pk,a.PatientPK,a.SiteCode,a.FacilityName,
-    a.[PatientID]Serial
+    case when a.HTSID is null then a.PatientID else a.HTSID end as Serial
 
       ,UPPER([dFirstName]) FirstName
    ,UPPER([dMiddleName]) MiddleName
@@ -553,176 +552,236 @@ SELECT
   FROM
   tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
   WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
+  Where len(a.htsid) > 0 or len(a.PatientID) > 0
  --ORDER BY PKV_2,Ptn_Pk  ASC
 ) X
 INNER JOIN
 (
 SELECT
   Ptn_Pk,
-    a.[PatientID]Serial
+    case when a.HTSID is null then a.PatientID else a.HTSID end as Serial
 FROM [dbo].[tmp_PatientMaster] a
   inner join [dbo].[mst_patient_decoded]mst on a.patientpk=mst.ptn_pk
   left  join (SELECT DISTINCT a.PatientPK, a.PatientID, a.RegistrationAtCCC, b.StartARTDate, b.StartRegimen, b.StartRegimenLine
   FROM dbo.tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
   WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
+  Where len(a.htsid) > 0 or len(a.PatientID) > 0 
 
 )Y
 ON
 Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial"|MPI|1|MasterPatientIndex|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
 
-48742EB0-6656-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"
-SELECT DISTINCT
- *,
+48742EB0-6656-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT
+-- -----Demographics
+X.Ptn_Pk,
+X.PatientPK,
+siteCode,
+FacilityName,
+-- a.patient_clinic_number AS Serial
+-- X.Ptn_Pk AS Serial
+X.Serial
+
+
+,FirstName
+, MiddleName
+,LastName
+, FirstName_Normalized
+, MiddleName_Normalized
+,LastName_Normalized
+,sxFirstName
+,sxLastName
+,sxMiddleName
+,dmFirstName
+, dmLastName
+, dmMiddleName
+, PatientPhoneNumber
+, PatientAlternatePhoneNumber
+,Gender
+,DOB
+,MaritalStatus
+-- -----Patient Address
+, PatientSource
+, PatientCounty
+, PatientSubCounty
+, PatientVillage
+-- -----Patient-Identifiers
+,PatientID
+,National_ID
+,NHIF_Number
+,Birth_Certificate
+,CCC_Number
+,TB_Number
+-- -----Next Of Kin
+,ContactName
+,ContactRelation
+, ContactPhoneNumber
+,ContactAddress
+, NokNationalId
+-- -----Additional Variables
+, DateConfirmedHIVPositive
+,StartARTDate
+,StartARTRegimenCode
+, StartARTRegimenDesc,
 CONCAT(LEFT(Gender ,1), sxFirstName ,sxLastName ,LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y')))) AS sxPKValue,
 CONCAT( CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8),
 CAST(CASE
-    WHEN  locate(';',dmFirstName )>0 THEN
-       SUBSTRING(dmFirstName , locate(';',dmFirstName )+1,LENGTH(dmFirstName ))
-    ELSE
-     dmFirstName
-    END AS CHAR CHARACTER SET utf8),
+WHEN locate(';',dmFirstName )>0 THEN
+SUBSTRING(dmFirstName , locate(';',dmFirstName )+1,LENGTH(dmFirstName ))
+ELSE
+dmFirstName
+END AS CHAR CHARACTER SET utf8),
 CAST(CASE
-    WHEN  locate(';',dmLastName )>0 THEN
-       SUBSTRING(dmLastName , locate(';',dmLastName )+1,LENGTH(dmLastName ))
-    ELSE
-     dmLastName
-    END AS CHAR CHARACTER SET utf8),
+WHEN locate(';',dmLastName )>0 THEN
+SUBSTRING(dmLastName , locate(';',dmLastName )+1,LENGTH(dmLastName ))
+ELSE
+dmLastName
+END AS CHAR CHARACTER SET utf8),
 CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y')))AS CHAR CHARACTER SET utf8)
-    
-    ) AS dmPKValue ,
-    
-CASE WHEN  locate(';',dmLastName )>0
-	 THEN
-		CONCAT(
-				  CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8)
-				, CAST(sxFirstName AS CHAR CHARACTER SET utf8)
-                , CAST(SUBSTRING(dmLastName , locate(';',dmLastName )+1,LENGTH(dmLastName )) AS CHAR CHARACTER SET utf8)
-                , CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y')))AS CHAR CHARACTER SET utf8)
-			  )
-     ELSE
-		CONCAT(
-				  CAST(LEFT(Gender ,1)AS CHAR CHARACTER SET utf8)
-				, CAST(sxFirstName AS CHAR CHARACTER SET utf8)
-                , CAST(dmLastName AS CHAR CHARACTER SET utf8)
-                , CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
-        	  )
-     END AS sxdmPKValue ,
-    CONCAT(
-				CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8)
-				,CAST(sxFirstName AS CHAR CHARACTER SET utf8)
-                ,CAST(sxLastName AS CHAR CHARACTER SET utf8)
-                ,CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d')))AS CHAR CHARACTER SET utf8)
-			  ) AS sxPKValueDoB ,
 
-	CONCAT(
+) AS dmPKValue ,
 
-			CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8),
-			CASE
-			WHEN locate(';',dmFirstName )>0 THEN
-			   CAST(SUBSTRING(dmFirstName , locate(';',dmFirstName )+1,LENGTH(dmFirstName )) AS CHAR CHARACTER SET utf8)
-			ELSE
-			 CAST(dmFirstName AS CHAR CHARACTER SET utf8)
-			END ,
-			CASE
-			WHEN locate(';',dmLastName )>0 THEN
-				CAST( SUBSTRING(dmLastName , locate(';',dmLastName )+1,LENGTH(dmLastName )) AS CHAR CHARACTER SET utf8)
-			ELSE
-			 CAST( dmLastName AS CHAR CHARACTER SET utf8)
-			END ,
-			
-			CAST( LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d'))) AS CHAR CHARACTER SET utf8)
-		) AS dmPKValueDoB ,
-  
-CASE WHEN  locate(';',dmLastName )>0 THEN
-    CONCAT(
-			CAST( LEFT(Gender ,1) AS CHAR CHARACTER SET utf8)
-            ,CAST(  sxFirstName  AS CHAR CHARACTER SET utf8)
-            , CAST( SUBSTRING(dmLastName ,locate(';',dmLastName )+1,LENGTH(dmLastName )) AS CHAR CHARACTER SET utf8)
-            ,CAST( LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d'))) AS CHAR CHARACTER SET utf8)
-		  )
-    ELSE
-		CONCAT(
-				CAST( LEFT(Gender ,1)AS CHAR CHARACTER SET utf8)
-			   , CAST( sxFirstName AS CHAR CHARACTER SET utf8),
-              CAST(  dmLastName AS CHAR CHARACTER SET utf8),
-               CAST( LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d'))) AS CHAR CHARACTER SET utf8)
-               )
-    END AS sxdmPKValueDoB
+CASE WHEN locate(';',dmLastName )>0
+THEN
+CONCAT(
+CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8)
+, CAST(sxFirstName AS CHAR CHARACTER SET utf8)
+, CAST(SUBSTRING(dmLastName , locate(';',dmLastName )+1,LENGTH(dmLastName )) AS CHAR CHARACTER SET utf8)
+, CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y')))AS CHAR CHARACTER SET utf8)
+)
+ELSE
+CONCAT(
+CAST(LEFT(Gender ,1)AS CHAR CHARACTER SET utf8)
+, CAST(sxFirstName AS CHAR CHARACTER SET utf8)
+, CAST(dmLastName AS CHAR CHARACTER SET utf8)
+, CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+)
+END AS sxdmPKValue ,
+CONCAT(
+CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8)
+,CAST(sxFirstName AS CHAR CHARACTER SET utf8)
+,CAST(sxLastName AS CHAR CHARACTER SET utf8)
+,CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d')))AS CHAR CHARACTER SET utf8)
+) AS sxPKValueDoB ,
 
+CONCAT(
 
+CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8),
+CASE
+WHEN locate(';',dmFirstName )>0 THEN
+CAST(SUBSTRING(dmFirstName , locate(';',dmFirstName )+1,LENGTH(dmFirstName )) AS CHAR CHARACTER SET utf8)
+ELSE
+CAST(dmFirstName AS CHAR CHARACTER SET utf8)
+END ,
+CASE
+WHEN locate(';',dmLastName )>0 THEN
+CAST( SUBSTRING(dmLastName , locate(';',dmLastName )+1,LENGTH(dmLastName )) AS CHAR CHARACTER SET utf8)
+ELSE
+CAST( dmLastName AS CHAR CHARACTER SET utf8)
+END ,
 
+CAST( LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d'))) AS CHAR CHARACTER SET utf8)
+) AS dmPKValueDoB ,
+
+CASE WHEN locate(';',dmLastName )>0 THEN
+CONCAT(
+CAST( LEFT(Gender ,1) AS CHAR CHARACTER SET utf8)
+,CAST( sxFirstName AS CHAR CHARACTER SET utf8)
+, CAST( SUBSTRING(dmLastName ,locate(';',dmLastName )+1,LENGTH(dmLastName )) AS CHAR CHARACTER SET utf8)
+,CAST( LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d'))) AS CHAR CHARACTER SET utf8)
+)
+ELSE
+CONCAT(
+CAST( LEFT(Gender ,1)AS CHAR CHARACTER SET utf8)
+, CAST( sxFirstName AS CHAR CHARACTER SET utf8),
+CAST( dmLastName AS CHAR CHARACTER SET utf8),
+CAST( LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d'))) AS CHAR CHARACTER SET utf8)
+)
+END AS sxdmPKValueDoB
 FROM
 (
 SELECT
-   -- -----Demographics
-  a.patient_id as Ptn_Pk,
-  a.patient_id as PatientPK,
-   (select value_reference from openmrs.location_attribute
- where location_id in (select property_value
- from openmrs.global_property
- where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
- 
- (select name from openmrs.location
- where location_id in (select property_value
- from openmrs.global_property
- where property='kenyaemr.defaultLocation'))   as FacilityName,
-  a.patient_clinic_number AS Serial
+-- -----Demographics
+a.patient_id as Ptn_Pk,
+a.patient_id as PatientPK,
+(select value_reference from openmrs.location_attribute
+where location_id in (select property_value
+from openmrs.global_property
+where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
 
-    ,UPPER(a.given_name ) as FirstName
-    ,UPPER(a.middle_name ) as MiddleName
-	,UPPER(family_name) as LastName
-    ,UPPER(REPLACE(given_name ,'0','O')) AS FirstName_Normalized
-	,UPPER(REPLACE(middle_name ,'0','O')) AS MiddleName_Normalized
-	,UPPER(REPLACE(family_name ,'0','O')) AS LastName_Normalized
-   ,SOUNDEX(UPPER(REPLACE(given_name ,'0','O'))) AS  sxFirstName
-   ,SOUNDEX(UPPER(REPLACE(family_name ,'0','O'))) AS sxLastName
-   ,SOUNDEX(UPPER(REPLACE(middle_name ,'0','O'))) AS sxMiddleName
-  , openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name ,'0','O'))) AS dmFirstName
-  , openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name ,'0','O'))) AS dmLastName
-  , openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name ,'0','O'))) AS dmMiddleName
-  ,a.phone_number AS PatientPhoneNumber
-   ,en.treatment_supporter_telephone AS PatientAlternatePhoneNumber
-   ,a.Gender
-   ,a.DOB
-   ,a.marital_status AS MaritalStatus
-   -- -----Patient Address
-   , en.entry_point AS PatientSource
-  ,NULL PatientCounty
-  ,NULL PatientSubCounty
-  ,NULL PatientVillage
-   -- -----Patient-Identifiers
-   ,patient_clinic_number AS PatientID
-   ,national_id_no AS National_ID
-   ,NULL as NHIF_Number
-   ,NULL as Birth_Certificate
-   ,a.patient_clinic_number AS CCC_Number
-   ,ltrim(rtrim(a.district_reg_no))TB_Number
-    -- -----Next Of Kin
-   ,LTRIM(RTRIM(next_of_kin)) AS ContactName
-   ,next_of_kin_relationship  AS  ContactRelation
-   ,treatment_supporter_telephone  as ContactPhoneNumber
-   ,treatment_supporter_address as ContactAddress
-   ,NULL AS  NokNationalId
-   -- -----Additional Variables
-   ,date_confirmed_hiv_positive AS DateConfirmedHIVPositive
-   ,X.date_started  AS StartARTDate
-   ,X.regimen_name AS StartARTRegimenCode
-   ,X.regimen_line  StartARTRegimenDesc
-  
-  FROM kenyaemr_datatools.patient_demographics  a
-  inner join kenyaemr_datatools.hiv_enrollment en ON a.Patient_Id=en.patient_id
-  LEFT JOIN
-  (
-	SELECT patient_id, MIN(date_started) AS date_started ,MIN(regimen_name) AS regimen_name, MIN(regimen_line) AS regimen_line
-	FROM kenyaemr_datatools.drug_event GROUP BY patient_id
-  ) X ON X.patient_id = a.Patient_id
+(select name from openmrs.location
+where location_id in (select property_value
+from openmrs.global_property
+where property='kenyaemr.defaultLocation')) as FacilityName,
+id.identifier AS Serial
+-- a.patient_clinic_number AS Serial
+
+,UPPER(a.given_name ) as FirstName
+,UPPER(a.middle_name ) as MiddleName
+,UPPER(family_name) as LastName
+,UPPER(REPLACE(given_name ,'0','O')) AS FirstName_Normalized
+,UPPER(REPLACE(middle_name ,'0','O')) AS MiddleName_Normalized
+,UPPER(REPLACE(family_name ,'0','O')) AS LastName_Normalized
+,SOUNDEX(UPPER(REPLACE(given_name ,'0','O'))) AS sxFirstName
+,SOUNDEX(UPPER(REPLACE(family_name ,'0','O'))) AS sxLastName
+,SOUNDEX(UPPER(REPLACE(middle_name ,'0','O'))) AS sxMiddleName
+, openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name ,'0','O'))) AS dmFirstName
+, openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name ,'0','O'))) AS dmLastName
+, openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name ,'0','O'))) AS dmMiddleName
+,a.phone_number AS PatientPhoneNumber
+,en.treatment_supporter_telephone AS PatientAlternatePhoneNumber
+,a.Gender
+,a.DOB
+,a.marital_status AS MaritalStatus
+-- -----Patient Address
+, en.entry_point AS PatientSource 
+,NULL PatientCounty
+,NULL PatientSubCounty
+,NULL PatientVillage
+-- -----Patient-Identifiers
+,patient_clinic_number AS PatientID
+,national_id_no AS National_ID
+,NULL as NHIF_Number
+,NULL as Birth_Certificate
+,a.patient_clinic_number AS CCC_Number
+,ltrim(rtrim(a.district_reg_no))TB_Number
+-- -----Next Of Kin
+,LTRIM(RTRIM(next_of_kin)) AS ContactName
+,next_of_kin_relationship AS ContactRelation
+,treatment_supporter_telephone as ContactPhoneNumber
+,treatment_supporter_address as ContactAddress
+,NULL AS NokNationalId
+-- -----Additional Variables
+,date_confirmed_hiv_positive AS DateConfirmedHIVPositive
+,X.date_started AS StartARTDate
+,X.regimen_name AS StartARTRegimenCode
+,X.regimen_line StartARTRegimenDesc
+
+FROM kenyaemr_datatools.patient_demographics a
+INNER JOIN openmrs.patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
+inner join (
+SELECT 
+@row_number:=CASE
+WHEN @patient_id = patient_id THEN @row_number + 1
+ELSE 1
+END AS num,
+@patient_id :=patient_id as patient_id,
+
+encounter_id, treatment_supporter_telephone, entry_point , treatment_supporter_address, date_confirmed_hiv_positive 
+from kenyaemr_datatools.hiv_enrollment where date_first_enrolled_in_care IS NOT NULL order by date_first_enrolled_in_care desc ) en
+on a.Patient_Id=en.patient_id and num=1
+LEFT JOIN
+(
+SELECT patient_id, MIN(date_started) AS date_started ,MIN(regimen_name) AS regimen_name, MIN(regimen_line) AS regimen_line
+FROM kenyaemr_datatools.drug_event GROUP BY patient_id
+) X ON X.patient_id = a.Patient_id
 ) X
 INNER JOIN
 (
 SELECT
- a.patient_id as Ptn_Pk,
-    a. patient_clinic_number Serial
-FROM kenyaemr_datatools.patient_demographics  a
+a.patient_id as Ptn_Pk,
+id.identifier AS Serial
+FROM kenyaemr_datatools.patient_demographics a
+INNER JOIN openmrs.patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
 
 )Y
 ON
@@ -1041,7 +1100,7 @@ FROM kenyaemr_etl.etl_hts_test e
 inner join kenyaemr_etl.etl_patient_demographics p on e.patient_id=p.patient_id
 inner join (select location_id,value_reference from openmrs.location_attribute where attribute_type_id=1) l on l.location_id = e.encounter_location
 inner join openmrs.location lname on lname.location_id=e.encounter_location
-inner join  openmrs.patient_identifier ident on ident.patient_id=e.patient_id and identifier_type = 3"|DWHStage|1|HTSClientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+inner join  openmrs.patient_identifier ident on ident.patient_id=e.patient_id and identifier_type = 6"|DWHStage|1|HTSClientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 fe1904c9-c7eb-4f5e-b45c-16ca046161bc|HTS Partner Extracts|HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"
 SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 'IQCare' as Emr, 'Kenya HMIS II' as Project,[HTS_Number] as HTSNumber, a.personid as PartnerPersonID, a.ptn_pk as PartnerPatientPk, age, pns.Gender as Sex,a.displayname as [RelationshipToIndexClient],[ScreenedForIPV],[IPVScreeningOutcome],[CurrentlyLivingWithIndexClient],[KnowledgeOfHIVStatus]
       ,[PNSApproach],SUBSTRING( Trace1 , LEN(Trace1) -  CHARINDEX('    ',REVERSE(Trace1)) + 2  , LEN(Trace1)  ) as Trace1Outcome, substring(Trace1, 1 , CHARINDEX('    ', Trace1)-1)as Trace1Type,
@@ -1120,7 +1179,7 @@ having max(encounter_id)) max_encounter on max_encounter.patient_id=pns.patient_
 
 inner join (select location_id,value_reference from openmrs.location_attribute where attribute_type_id=1) l on l.location_id = max_encounter.location_id
 inner join openmrs.location lname on lname.location_id=max_encounter.location_id
-inner join  openmrs.patient_identifier ident on ident.patient_id=pns.patient_related_to and identifier_type = 3"|DWHStage|1|HTSClientPartnerExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+inner join  openmrs.patient_identifier ident on ident.patient_id=pns.patient_related_to and identifier_type = 6"|DWHStage|1|HTSClientPartnerExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 cebfba5f-89e6-4fba-867b-fe817a5d5acc|HTS Linkage Extracts|HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 'IQCare' as Emr, 'Kenya HMIS II' as Project, p.HTSID as HTSNumber, [Phone Tracing] as PhoneTracingDate,[Physical Tracing] as PhysicalTracingDate,TracingOutcome,CCCNumber,l.FacilityName as EnrolledFacilityName,ReferalDate as ReferralDate, DateEnrolled
   FROM dbo.IQC_HIVTesting_Services_Referral_Linkage_Register l, tmp_PatientMaster p
   where p.PatientPK=l.ptn_pk"|DWHStage|1|HTSClientLinkageExtract|3|a6221983-0e85-11e8-ba89-0ed5f89f718b
@@ -1132,6 +1191,6 @@ inner join kenyaemr_etl.etl_patient_demographics p on ref.patient_id=p.patient_i
 inner join openmrs.encounter oe on oe.encounter_id=ref.encounter_id
 inner join (select location_id,value_reference from openmrs.location_attribute where attribute_type_id=1) l on l.location_id = oe.location_id
 inner join openmrs.location lname on lname.location_id=oe.location_id
-inner join  openmrs.patient_identifier ident on ident.patient_id=ref.patient_id and identifier_type = 3 
+inner join  openmrs.patient_identifier ident on ident.patient_id=ref.patient_id and identifier_type = 6 
 left outer join openmrs.obs o on o.encounter_id = ref.encounter_id and o.concept_id in (1542) and o.voided=0
 group by ref.encounter_id"|DWHStage|1|HTSClientLinkageExtract|3|a6221aa4-0e85-11e8-ba89-0ed5f89f718b

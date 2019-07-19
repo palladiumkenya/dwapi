@@ -39,7 +39,6 @@ ce7b571e-160f-11e7-93ae-92361f002671|TempPatientExtracts|Gender|Required|Gender 
 6c5c72b2-2a95-11e7-93ae-92361f002671|TempPatientLaboratoryExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 6c5c780c-2a95-11e7-93ae-92361f002671|TempPatientLaboratoryExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 61bbeed4-35a1-11e7-a919-92ebcb67fe33|TempPatientLaboratoryExtracts|TestName|Logical|TestName IS NULL|TestName is Required
-61bbebc8-35a1-11e7-a919-92ebcb67fe33|TempPatientPharmacyExtracts|DispenseDate|Logical|DispenseDate IS NULL|DispenseDate is required
 61bc2a52-35a1-11e7-a919-92ebcb67fe33|TempPatientPharmacyExtracts|Drug|Logical|Drug IS NULL|Drug Name is required
 6c5c7a0a-2a95-11e7-93ae-92361f002671|TempPatientPharmacyExtracts|PatientID|Required|PatientID IS NULL OR PatientID=''|PatientID Required
 6c5c791a-2a95-11e7-93ae-92361f002671|TempPatientPharmacyExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
