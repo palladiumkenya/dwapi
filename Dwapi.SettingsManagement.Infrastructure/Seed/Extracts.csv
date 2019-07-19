@@ -578,7 +578,9 @@ X.PatientPK,
 siteCode,
 FacilityName,
 -- a.patient_clinic_number AS Serial
-X.Ptn_Pk AS Serial
+-- X.Ptn_Pk AS Serial
+X.Serial
+
 
 ,FirstName
 , MiddleName
@@ -710,7 +712,8 @@ where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
 where location_id in (select property_value
 from openmrs.global_property
 where property='kenyaemr.defaultLocation')) as FacilityName,
-a.patient_clinic_number AS Serial
+id.identifier AS Serial
+-- a.patient_clinic_number AS Serial
 
 ,UPPER(a.given_name ) as FirstName
 ,UPPER(a.middle_name ) as MiddleName
@@ -754,6 +757,7 @@ a.patient_clinic_number AS Serial
 ,X.regimen_line StartARTRegimenDesc
 
 FROM kenyaemr_datatools.patient_demographics a
+INNER JOIN openmrs.patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
 inner join (
 SELECT 
 @row_number:=CASE
@@ -775,9 +779,9 @@ INNER JOIN
 (
 SELECT
 a.patient_id as Ptn_Pk,
-a. patient_clinic_number Serial
+id.identifier AS Serial
 FROM kenyaemr_datatools.patient_demographics a
-
+INNER JOIN openmrs.patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
 
 )Y
 ON
@@ -1096,7 +1100,7 @@ FROM kenyaemr_etl.etl_hts_test e
 inner join kenyaemr_etl.etl_patient_demographics p on e.patient_id=p.patient_id
 inner join (select location_id,value_reference from openmrs.location_attribute where attribute_type_id=1) l on l.location_id = e.encounter_location
 inner join openmrs.location lname on lname.location_id=e.encounter_location
-inner join  openmrs.patient_identifier ident on ident.patient_id=e.patient_id and identifier_type = 3"|DWHStage|1|HTSClientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+inner join  openmrs.patient_identifier ident on ident.patient_id=e.patient_id and identifier_type = 6"|DWHStage|1|HTSClientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 fe1904c9-c7eb-4f5e-b45c-16ca046161bc|HTS Partner Extracts|HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"
 SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 'IQCare' as Emr, 'Kenya HMIS II' as Project,[HTS_Number] as HTSNumber, a.personid as PartnerPersonID, a.ptn_pk as PartnerPatientPk, age, pns.Gender as Sex,a.displayname as [RelationshipToIndexClient],[ScreenedForIPV],[IPVScreeningOutcome],[CurrentlyLivingWithIndexClient],[KnowledgeOfHIVStatus]
       ,[PNSApproach],SUBSTRING( Trace1 , LEN(Trace1) -  CHARINDEX('    ',REVERSE(Trace1)) + 2  , LEN(Trace1)  ) as Trace1Outcome, substring(Trace1, 1 , CHARINDEX('    ', Trace1)-1)as Trace1Type,
@@ -1175,7 +1179,7 @@ having max(encounter_id)) max_encounter on max_encounter.patient_id=pns.patient_
 
 inner join (select location_id,value_reference from openmrs.location_attribute where attribute_type_id=1) l on l.location_id = max_encounter.location_id
 inner join openmrs.location lname on lname.location_id=max_encounter.location_id
-inner join  openmrs.patient_identifier ident on ident.patient_id=pns.patient_related_to and identifier_type = 3"|DWHStage|1|HTSClientPartnerExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+inner join  openmrs.patient_identifier ident on ident.patient_id=pns.patient_related_to and identifier_type = 6"|DWHStage|1|HTSClientPartnerExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 cebfba5f-89e6-4fba-867b-fe817a5d5acc|HTS Linkage Extracts|HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 'IQCare' as Emr, 'Kenya HMIS II' as Project, p.HTSID as HTSNumber, [Phone Tracing] as PhoneTracingDate,[Physical Tracing] as PhysicalTracingDate,TracingOutcome,CCCNumber,l.FacilityName as EnrolledFacilityName,ReferalDate as ReferralDate, DateEnrolled
   FROM dbo.IQC_HIVTesting_Services_Referral_Linkage_Register l, tmp_PatientMaster p
   where p.PatientPK=l.ptn_pk"|DWHStage|1|HTSClientLinkageExtract|3|a6221983-0e85-11e8-ba89-0ed5f89f718b
@@ -1187,6 +1191,6 @@ inner join kenyaemr_etl.etl_patient_demographics p on ref.patient_id=p.patient_i
 inner join openmrs.encounter oe on oe.encounter_id=ref.encounter_id
 inner join (select location_id,value_reference from openmrs.location_attribute where attribute_type_id=1) l on l.location_id = oe.location_id
 inner join openmrs.location lname on lname.location_id=oe.location_id
-inner join  openmrs.patient_identifier ident on ident.patient_id=ref.patient_id and identifier_type = 3 
+inner join  openmrs.patient_identifier ident on ident.patient_id=ref.patient_id and identifier_type = 6 
 left outer join openmrs.obs o on o.encounter_id = ref.encounter_id and o.concept_id in (1542) and o.voided=0
 group by ref.encounter_id"|DWHStage|1|HTSClientLinkageExtract|3|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
