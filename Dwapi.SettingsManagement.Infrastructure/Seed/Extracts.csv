@@ -27,7 +27,7 @@ FROM
  IQC_m6CD4.m6CD4Date, CAST(GETDATE() AS DATE) AS DateExtracted
  , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
 
-FROM
+FROM 
 
  tmp_PatientMaster LEFT OUTER JOIN
 
