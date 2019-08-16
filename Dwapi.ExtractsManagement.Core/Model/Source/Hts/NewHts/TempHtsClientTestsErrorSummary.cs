@@ -7,7 +7,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
     public class TempHtsClientTestsErrorSummary : TempHTSExtractErrorSummary
     {
         public int? EncounterId { get; set; }
-        public int? TestId { get; set; }
         public DateTime? TestDate { get; set; }
         public string EverTestedForHiv { get; set; }
         public int MonthsSinceLastTest { get; set; }

@@ -13,6 +13,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public  string TestKitLotNumber2 { get; set; }
         public  string TestKitExpiry2{ get; set; }
         public  string TestResult2 { get; set; }
-        public  int? TestId { get; set; }
     }
 }

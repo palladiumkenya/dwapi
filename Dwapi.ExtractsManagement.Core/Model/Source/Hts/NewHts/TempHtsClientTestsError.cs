@@ -10,7 +10,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         [NotMapped]
         public virtual ICollection<TempHtsClientTestsErrorSummary> TempHtsClientTestsErrorSummaries { get; set; } = new List<TempHtsClientTestsErrorSummary>();
         public int? EncounterId { get; set; }
-        public int? TestId { get; set; }
         public DateTime? TestDate { get; set; }
         public string EverTestedForHiv { get; set; }
         public int MonthsSinceLastTest { get; set; }

@@ -17,8 +17,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public string TestKitName2 { get; set; }
         public string TestKitLotNumber2 { get; set; }
         public string TestKitExpiry2 { get; set; }
-        public string TestResult2 { get; set; }
-        public int? TestId { get; set; }
+        public string TestResult2 { get; set; } 
         public string FacilityName { get; set; }
         public virtual int? SiteCode { get; set; }
         public virtual int? PatientPk { get; set; }
