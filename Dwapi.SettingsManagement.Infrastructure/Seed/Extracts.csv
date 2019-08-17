@@ -1187,7 +1187,7 @@ inner join openmrs.location lname on lname.location_id=max_encounter.location_id
 inner join  openmrs.patient_identifier ident on ident.patient_id=pns.patient_related_to and identifier_type = 6"|DWHStage|1|HTSClientPartnerExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 cebfba5f-89e6-4fba-867b-fe817a5d5acc|HTS Linkage Extracts|OLD_HTS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 'IQCare' as Emr, 'Kenya HMIS II' as Project, p.HTSID as HTSNumber, [Phone Tracing] as PhoneTracingDate,[Physical Tracing] as PhysicalTracingDate,TracingOutcome,CCCNumber,l.FacilityName as EnrolledFacilityName,ReferalDate as ReferralDate, DateEnrolled
   FROM dbo.IQC_HIVTesting_Services_Referral_Linkage_Register l, tmp_PatientMaster p
-  where p.PatientPK=l.ptn_pk"|DWHStage|1|HTSClientLinkageExtract|3|a6221983-0e85-11e8-ba89-0ed5f89f718b
+  where p.PatientPK=l.ptn_pk"|DWHStage|1|HTSClientsLinkageExtract|3|a6221983-0e85-11e8-ba89-0ed5f89f718b
 911c69b6-14d0-4e37-804e-8c7d5a939694|HTS Linkage Extracts|OLD_HTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select DISTINCT distinct ref.patient_id as PatientPK, l.value_reference as SiteCode, lname.name as FacilityName, 'KenyaEMR' as Emr, 'Kenya HMIS II' as Project,
 ident.identifier as HTSNumber, null as 'PhoneTracingDate', null as 'PhysicalTracingDate', tracing_status as 'tracingOutcome',ccc_number as CCCNumber,
 facility_linked_to as EnrolledFacilityName,ref.visit_date as ReferralDate, enrollment_date as dateEnrolled
@@ -1198,7 +1198,7 @@ inner join (select location_id,value_reference from openmrs.location_attribute w
 inner join openmrs.location lname on lname.location_id=oe.location_id
 inner join  openmrs.patient_identifier ident on ident.patient_id=ref.patient_id and identifier_type = 6 
 left outer join openmrs.obs o on o.encounter_id = ref.encounter_id and o.concept_id in (1542) and o.voided=0
-group by ref.encounter_id"|DWHStage|1|HTSClientLinkageExtract|3|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+group by ref.encounter_id"|DWHStage|1|HTSClientsLinkageExtract|3|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 Id|Display|DocketId|EmrSystemId|ExtractSql|Destination|IsPriority|Name|Rank|DatabaseProtocolId
 HTSCE1D9-6CFC-47D2-AD1B-73A6EE7EF901|Hts Clients|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|select distinct h.PatientPk,

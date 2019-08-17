@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
+namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
 {
 
             
-        public  class HtsPartnerNotificationServices : TempHTSExtract
+        public  class HtsPartnerNotificationServices : HtsExtract
         {
             public  int? EncounterId	 { get; set; }
             public  DateTime   TestDate	 { get; set; }
@@ -23,11 +23,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
             public  string  ClientSelfTested	 { get; set; }
             public  string   CoupleDiscordant	 { get; set; }
             public  string   TestType	 { get; set; }
-            public  string   Consent	 { get; set; }
-                
-            public override string ToString()
-            {
-                return $"{SiteCode}-{HtsNumber}";
-            }
+            public  string   Consent	 { get; set; } 
         }
 }

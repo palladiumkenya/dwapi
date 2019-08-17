@@ -4,10 +4,12 @@ using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Destination;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
+using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.SharedKernel.Infrastructure;
 using EFCore.Seeder.Configuration;
 using EFCore.Seeder.Extensions;
@@ -70,17 +72,49 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHTSClientPartnerExtract> TempHtsClientPartnerExtracts { get; set; }
         public DbSet<TempHTSClientLinkageExtract> TempHtsClientLinkageExtracts { get; set; }
 
+        public DbSet<TempHtsClients> TempHtsClientsExtracts { get; set; }
+        public DbSet<TempHtsClientTests> TempHtsClientTestsExtracts { get; set; }
+        public DbSet<TempHtsClientTracing> TempHtsClientTracingExtracts { get; set; }
+        public DbSet<TempHtsPartnerTracing> TempHtsPartnerTracingExtracts { get; set; }
+        public DbSet<TempHtsTestKits> TempHtsTestKitsExtracts { get; set; }
+        public DbSet<TempHtsClientLinkage> TempHtsClientsLinkageExtracts { get; set; }
+        public DbSet<TempHtsPartnerNotificationServices> TempHtsPartnerNotificationServicesExtracts { get; set; }
+
         public DbSet<HTSClientExtract> HtsClientExtracts { get; set; }
         public DbSet<HTSClientPartnerExtract> HtsClientPartnerExtracts { get; set; }
         public DbSet<HTSClientLinkageExtract> HtsClientLinkageExtracts { get; set; }
+
+        public DbSet<HtsClients> HtsClientsExtracts { get; set; }
+        public DbSet<HtsClientTests> HtsClientTestsExtracts { get; set; }
+        public DbSet<HtsClientTracing> HtsClientTracingExtracts { get; set; }
+        public DbSet<HtsPartnerTracing> HtsPartnerTracingExtracts { get; set; }
+        public DbSet<HtsTestKits> HtsTestKitsExtracts { get; set; }
+        public DbSet<HtsClientLinkage> HtsClientsLinkageExtracts { get; set; }
+        public DbSet<HtsPartnerNotificationServices> HtsPartnerNotificationServicesExtracts { get; set; }
 
         public DbSet<TempHTSClientExtractError> TempHtsClientExtractErrors { get; set; }
         public DbSet<TempHTSClientPartnerExtractError> TempHtsClientPartnerExtractErrors { get; set; }
         public DbSet<TempHTSClientLinkageExtractError> TempHtsClientLinkageExtractErrors { get; set; }
 
+        public DbSet<TempHtsClientsError> TempHtsClientsExtractsErrors { get; set; }
+        public DbSet<TempHtsClientTestsError> TempHtsClientTestsExtractsErrors { get; set; }
+        public DbSet<TempHtsClientTracingError> TempHtsClientTracingExtractsErrors { get; set; }
+        public DbSet<TempHtsPartnerTracingError> TempHtsPartnerTracingExtractsErrors { get; set; }
+        public DbSet<TempHtsTestKitsError> TempHtsTestKitsExtractsErrors { get; set; }
+        public DbSet<TempHtsClientLinkageError> TempHtsClientsLinkageExtractsErrors { get; set; }
+        public DbSet<TempHtsPartnerNotificationServicesError> TempHtsPartnerNotificationServicesExtractsErrors { get; set; }
+
         public DbSet<TempHTSClientExtractErrorSummary> TempHtsClientExtractErrorSummaries { get; set; }
         public DbSet<TempHTSClientPartnerExtractErrorSummary> TempHtsClientPartnerExtractErrorSummaries { get; set; }
         public DbSet<TempHTSClientLinkageExtractErrorSummary> TempHtsClientLinkageExtractErrorSummaries { get; set; }
+
+        public DbSet<TempHtsClientsErrorSummary> TempHtsClientsExtractsErrorSummaries { get; set; }
+        public DbSet<TempHtsClientTestsErrorSummary> TempHtsClientTestsExtractsErrorSummaries { get; set; }
+        public DbSet<TempHtsClientTracingErrorSummary> TempHtsClientTracingExtractsErrorSummaries { get; set; }
+        public DbSet<TempHtsPartnerTracingErrorSummary> TempHtsPartnerTracingExtractsErrorSummaries { get; set; }
+        public DbSet<TempHtsTestKitsErrorSummary> TempHtsTestKitsExtractsErrorSummaries { get; set; }
+        public DbSet<TempHtsClientLinkageErrorSummary> TempHtsClientsLinkageExtractsErrorSummaries { get; set; }
+        public DbSet<TempHtsPartnerNotificationServicesErrorSummary> TempHtsPartnerNotificationServicesExtractsErrorSummaries { get; set; }
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
 
@@ -172,9 +206,25 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<HTSClientLinkageExtract>().Key(x => x.Id).Table($"{nameof(HtsClientLinkageExtracts)}");
             DapperPlusManager.Entity<HTSClientPartnerExtract>().Key(x => x.Id).Table($"{nameof(HtsClientPartnerExtracts)}");
 
+            DapperPlusManager.Entity<HtsClients>().Key(x => x.Id).Table($"{nameof(HtsClientsExtracts)}");
+            DapperPlusManager.Entity<HtsClientTests>().Key(x => x.Id).Table($"{nameof(HtsClientTestsExtracts)}");
+            DapperPlusManager.Entity<HtsClientTracing>().Key(x => x.Id).Table($"{nameof(HtsClientTracingExtracts)}");
+            DapperPlusManager.Entity<HtsPartnerNotificationServices>().Key(x => x.Id).Table($"{nameof(HtsPartnerNotificationServicesExtracts)}");
+            DapperPlusManager.Entity<HtsClientLinkage>().Key(x => x.Id).Table($"{nameof(HtsClientsLinkageExtracts)}");
+            DapperPlusManager.Entity<HtsTestKits>().Key(x => x.Id).Table($"{nameof(HtsTestKitsExtracts)}");
+            DapperPlusManager.Entity<HtsPartnerTracing>().Key(x => x.Id).Table($"{nameof(HtsPartnerTracingExtracts)}");
+
             DapperPlusManager.Entity<TempHTSClientExtract>().Key(x => x.Id).Table($"{nameof(TempHtsClientExtracts)}");
             DapperPlusManager.Entity<TempHTSClientLinkageExtract>().Key(x => x.Id).Table($"{nameof(TempHtsClientLinkageExtracts)}");
             DapperPlusManager.Entity<TempHTSClientPartnerExtract>().Key(x => x.Id).Table($"{nameof(TempHtsClientPartnerExtracts)}");
+
+            DapperPlusManager.Entity<TempHtsClients>().Key(x => x.Id).Table($"{nameof(TempHtsClientsExtracts)}");
+            DapperPlusManager.Entity<TempHtsClientTests>().Key(x => x.Id).Table($"{nameof(TempHtsClientTestsExtracts)}");
+            DapperPlusManager.Entity<TempHtsClientTracing>().Key(x => x.Id).Table($"{nameof(TempHtsClientTracingExtracts)}");
+            DapperPlusManager.Entity<TempHtsPartnerNotificationServices>().Key(x => x.Id).Table($"{nameof(TempHtsPartnerNotificationServicesExtracts)}");
+            DapperPlusManager.Entity<TempHtsClientLinkage>().Key(x => x.Id).Table($"{nameof(TempHtsClientsLinkageExtracts)}");
+            DapperPlusManager.Entity<TempHtsTestKits>().Key(x => x.Id).Table($"{nameof(TempHtsTestKitsExtracts)}");
+            DapperPlusManager.Entity<TempHtsPartnerTracing>().Key(x => x.Id).Table($"{nameof(TempHtsPartnerTracingExtracts)}");
         }
 
         public override void EnsureSeeded()
