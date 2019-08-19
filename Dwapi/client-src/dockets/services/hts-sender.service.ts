@@ -34,6 +34,41 @@ export class HtsSenderService {
             .catch(this.handleError);
     }
 
+    public sendClientsExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/clients`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public sendClientTestsExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/clienttests`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public sendClientsLinkageExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/clientslinkage`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public sendTestKitsExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/testkits`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public sendClientTracingExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/clienttracing`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public sendPartnerTracingExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/partnertracing`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public sendPartnerNotificationServicesExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/partnernotificationservices`, sendPackage)
+            .catch(this.handleError);
+    }
+
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {
             return Observable.throw('no record(s) found');

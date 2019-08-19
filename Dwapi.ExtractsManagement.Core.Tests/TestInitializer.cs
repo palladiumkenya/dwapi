@@ -119,7 +119,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
 
                 .AddTransient<ICleanCbsExtracts, CleanCbsExtracts>()
                 .AddTransient<IClearDwhExtracts, ClearDwhExtracts>()
-                .AddTransient<ICleanHtsExtracts, CleanHtsExtracts>()
+                .AddTransient<IClearHtsExtracts, ClearHtsExtracts>()
 
                 .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
                 .AddTransient<IExtractSourceReader, ExtractSourceReader>()
@@ -197,7 +197,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
 
                 .AddTransient<ICleanCbsExtracts, CleanCbsExtracts>()
                 .AddTransient<IClearDwhExtracts, ClearDwhExtracts>()
-                .AddTransient<ICleanHtsExtracts, CleanHtsExtracts>()
+                .AddTransient<IClearHtsExtracts, ClearHtsExtracts>()
 
                 .AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>()
                 .AddTransient<IExtractSourceReader, ExtractSourceReader>()

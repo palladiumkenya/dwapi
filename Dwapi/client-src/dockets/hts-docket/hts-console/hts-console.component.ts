@@ -79,6 +79,14 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private extractClientLinkage: ExtractProfile;
     private extractClientPartner: ExtractProfile;
 
+    private extractClients: ExtractProfile;
+    private extractClientTests: ExtractProfile;
+    private extractClientsLinkage: ExtractProfile;
+    private extractTestKits: ExtractProfile;
+    private extractClientTracing: ExtractProfile;
+    private extractPartnerTracing: ExtractProfile;
+    private extractPartnerNotificationServices: ExtractProfile;
+
     private extractProfile: ExtractProfile;
     private extractProfiles: ExtractProfile[] = [];
     public centralRegistry: CentralRegistry;
@@ -213,7 +221,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                     this.canSendPatients = true;
                     this.sendingManifest = false;
                     this.updateEvent();
-                    this.sendClientExtract();
+                    this.sendClientsExtract();
                 },
                 e => {
                     this.errorMessage = [];
@@ -222,6 +230,159 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});
 
+                }
+            );
+    }
+
+    public sendClientsExtract(): void {
+        this.sendEvent = { sentProgress: 0 };
+        this.sending = true;
+        this.errorMessage = [];
+        this.patientPackage = this.getClientsExtractPackage();
+        this.send$ = this._htsSenderService.sendClientsExtracts(this.patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendClientTestsExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending client', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+    public sendClientTestsExtracts(): void {
+        this.sendEvent = { sentProgress: 0 };
+        this.sending = true;
+        this.errorMessage = [];
+        this.patientPackage = this.getClientTestsExtractPackage();
+        this.send$ = this._htsSenderService.sendClientTestsExtracts(this.patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendTestKitsExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending client tests', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+    public sendTestKitsExtracts(): void {
+        this.sendEvent = { sentProgress: 0 };
+        this.sending = true;
+        this.errorMessage = [];
+        this.patientPackage = this.getTestKitsExtractPackage();
+        this.send$ = this._htsSenderService.sendTestKitsExtracts(this.patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendClientTracingExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending test kits', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+    public sendClientTracingExtracts(): void {
+        this.sendEvent = { sentProgress: 0 };
+        this.sending = true;
+        this.errorMessage = [];
+        this.patientPackage = this.getClientTracingExtractPackage();
+        this.send$ = this._htsSenderService.sendClientTracingExtracts(this.patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendPartnerTracingExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending client tracing', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+    public sendPartnerTracingExtracts(): void {
+        this.sendEvent = { sentProgress: 0 };
+        this.sending = true;
+        this.errorMessage = [];
+        this.patientPackage = this.getPartnerTracingExtractPackage();
+        this.send$ = this._htsSenderService.sendPartnerTracingExtracts(this.patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendPartnerNotificationServicesExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending partner tracing', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+    public sendPartnerNotificationServicesExtracts(): void {
+        this.sendEvent = { sentProgress: 0 };
+        this.sending = true;
+        this.errorMessage = [];
+        this.patientPackage = this.getPartnerNotificationServicesExtractPackage();
+        this.send$ = this._htsSenderService.sendPartnerNotificationServicesExtracts(this.patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendClientLinkageExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending partner notification service', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+    public sendClientLinkageExtracts(): void {
+        this.sendEvent = { sentProgress: 0 };
+        this.sending = true;
+        this.errorMessage = [];
+        this.patientPackage = this.getClientsLinkageExtractPackage();
+        this.send$ = this._htsSenderService.sendClientLinkageExtracts(this.patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending client linkage', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
                 }
             );
     }
@@ -328,6 +489,61 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         };
     }
 
+    private getClientsExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'HtsClientsExtracts').id,
+            extractName: 'HtsClientsExtracts'
+        };
+    }
+
+    private getPartnerNotificationServicesExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'HtsPartnerNotificationServicesExtracts').id,
+            extractName: 'HtsPartnerNotificationServicesExtracts'
+        };
+    }
+
+    private getPartnerTracingExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'HtsPartnerTracingExtracts').id,
+            extractName: 'HtsPartnerTracingExtracts'
+        };
+    }
+
+    private getClientTracingExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'HtsClientTracingExtracts').id,
+            extractName: 'HtsClientTracingExtracts'
+        };
+    }
+
+    private getTestKitsExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'HtsTestKitsExtracts').id,
+            extractName: 'HtsTestKitsExtracts'
+        };
+    }
+
+    private getClientsLinkageExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'HtsClientsLinkageExtracts').id,
+            extractName: 'HtsClientsLinkageExtracts'
+        };
+    }
+
+    private getClientTestsExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'HtsClientTestsExtracts').id,
+            extractName: 'HtsClientTestsExtracts'
+        };
+    }
 
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
@@ -400,9 +616,14 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private generateExtractLoadCommand(currentEmr: EmrSystem): LoadHtsExtracts {
-        this.extractProfiles.push(this.generateExtractClient(currentEmr));
-        this.extractProfiles.push(this.generateExtractClientLinkage(currentEmr));
-        this.extractProfiles.push(this.generateExtractClientPartner(currentEmr));
+        this.extractProfiles.push(this.generateExtractClients(currentEmr));
+        this.extractProfiles.push(this.generateExtractClientTests(currentEmr));
+        this.extractProfiles.push(this.generateExtractPartnerNotificationServices(currentEmr));
+        this.extractProfiles.push(this.generateExtractTestKits(currentEmr));
+        this.extractProfiles.push(this.generateExtractClientsLinkage(currentEmr));
+        this.extractProfiles.push(this.generateExtractPartnerTracing(currentEmr));
+        this.extractProfiles.push(this.generateExtractClientTracing(currentEmr));
+
         this.extractLoadCommand = {
             extracts: this.extractProfiles
         };
@@ -411,6 +632,69 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             loadHtsFromEmrCommand: this.extractLoadCommand
         };
         return this.loadExtractsCommand;
+    }
+
+    private generateExtractClients(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientsExtracts').databaseProtocolId;
+        this.extractClients = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'HtsClientsExtracts')
+        };
+        return this.extractClients;
+    }
+
+    private generateExtractClientTests(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientTestsExtracts').databaseProtocolId;
+        this.extractClientTests = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'HtsClientTestsExtracts')
+        };
+        return this.extractClientTests;
+    }
+
+    private generateExtractPartnerNotificationServices(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsPartnerNotificationServicesExtracts').databaseProtocolId;
+        this.extractPartnerNotificationServices = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'HtsPartnerNotificationServicesExtracts')
+        };
+        return this.extractPartnerNotificationServices;
+    }
+
+    private generateExtractTestKits(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsTestKitsExtracts').databaseProtocolId;
+        this.extractTestKits = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'HtsTestKitsExtracts')
+        };
+        return this.extractTestKits;
+    }
+
+    private generateExtractClientsLinkage(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientsLinkageExtracts').databaseProtocolId;
+        this.extractClientsLinkage = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'HtsClientsLinkageExtracts')
+        };
+        return this.extractClientsLinkage;
+    }
+
+    private generateExtractPartnerTracing(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsPartnerTracingExtracts').databaseProtocolId;
+        this.extractPartnerTracing = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'HtsPartnerTracingExtracts')
+        };
+        return this.extractPartnerTracing;
+    }
+
+    private generateExtractClientTracing(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientTracingExtracts').databaseProtocolId;
+        this.extractClientTracing = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'HtsClientTracingExtracts')
+        };
+        return this.extractClientTracing;
     }
 
     private generateExtractClient(currentEmr: EmrSystem): ExtractProfile {

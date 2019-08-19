@@ -141,8 +141,15 @@ import {HtsValidComponent} from '../dockets/hts-docket/hts-extract-details/hts-v
 import {HtsSenderService} from '../dockets/services/hts-sender.service';
 import {HtsClientService} from '../dockets/services/hts-client.service';
 import {HtsClientPartnerService} from '../dockets/services/hts-client-partner.service';
-import {HtsClientLinkageService} from '../dockets/services/hts-client-linkage.service';
+import {HtsClientLinkageService } from '../dockets/services/hts-client-linkage.service';
 
+import { HtsClientsService } from '../dockets/services/hts-clients.service';
+import { HtsClientTestsService } from '../dockets/services/hts-client-tests.service';
+import { HtsClientsLinkageService } from '../dockets/services/hts-clients-linkage.service';
+import { HtsTestKitsService } from '../dockets/services/hts-test-kits.service';
+import { HtsClientTracingService } from '../dockets/services/hts-client-tracing.service';
+import { HtsPartnerTracingService } from '../dockets/services/hts-partner-tracing.service';
+import { HtsPartnerNotificationServicesService } from '../dockets/services/hts-partner-notification-services.service';
 
 @NgModule({
     imports: [
@@ -268,7 +275,8 @@ import {HtsClientLinkageService} from '../dockets/services/hts-client-linkage.se
         CbsService, NdwhPatientArtService, NdwhPatientBaselineService, NdwhPatientLaboratoryService, NdwhPatientPharmacyService,
         NdwhPatientStatusService, NdwhPatientVisitService,
         SetupService, MpiSearchService, NdwhPatientAdverseEventService, AppDetailsService, HtsService, HtsSenderService,
-        HtsClientService, HtsClientPartnerService, HtsClientLinkageService
+        HtsClientsService, HtsClientTestsService, HtsClientsLinkageService, HtsTestKitsService, HtsClientTracingService, HtsPartnerTracingService,
+        HtsPartnerNotificationServicesService, HtsClientService, HtsClientPartnerService, HtsClientLinkageService
     ],
     bootstrap: [AppComponent]
 })

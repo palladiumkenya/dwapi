@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
 {
     [Table("vTempHtsClientLinkageErrorSummary")]
-    public class TempHtsClientLinkageErrorSummary : TempHtsExtractErrorSummary
+    public class TempHtsClientLinkageErrorSummary : TempHTSExtractErrorSummary
     { 
         public DateTime? DatePrefferedToBeEnrolled { get; set; }
         public string FacilityReferredTo { get; set; }

@@ -31,4 +31,12 @@
     <ProjectReference Include="..\Dwapi.ExtractsManagement.Core\Dwapi.ExtractsManagement.Core.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel.Infrastructure\Dwapi.SharedKernel.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <HintPath>System</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <HintPath>System.Drawing</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@ using System;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
@@ -15,7 +16,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Cbs.MasterPatientIndex", b =>
                 {
@@ -882,6 +884,364 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("HtsClientPartnerExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClientLinkage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateEnrolled");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime>("DatePrefferedToBeEnrolled");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("EnrolledFacilityName");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("FacilityReferredTo");
+
+                    b.Property<string>("HandedOverTo");
+
+                    b.Property<string>("HandedOverToCadre");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int>("PatientPk");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<DateTime>("ReferralDate");
+
+                    b.Property<string>("ReportedCCCNumber");
+
+                    b.Property<DateTime>("ReportedStartARTDate");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HtsClientsLinkageExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClients", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("County");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime>("DoB");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Gender");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<string>("KeyPopulationType");
+
+                    b.Property<string>("MaritalStatus");
+
+                    b.Property<string>("PatientDisabled");
+
+                    b.Property<int>("PatientPk");
+
+                    b.Property<string>("PopulationType");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("SubCounty");
+
+                    b.Property<string>("Ward");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HtsClientsExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClientTests", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClientSelfTested");
+
+                    b.Property<string>("ClientTestedAs");
+
+                    b.Property<string>("Consent");
+
+                    b.Property<string>("CoupleDiscordant");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("EncounterId");
+
+                    b.Property<string>("EntryPoint");
+
+                    b.Property<string>("EverTestedForHiv");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("FinalTestResult");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int>("MonthsSinceLastTest");
+
+                    b.Property<string>("PatientGivenResult");
+
+                    b.Property<int>("PatientPk");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("TbScreening");
+
+                    b.Property<DateTime>("TestDate");
+
+                    b.Property<string>("TestResult1");
+
+                    b.Property<string>("TestResult2");
+
+                    b.Property<string>("TestStrategy");
+
+                    b.Property<string>("TestType");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HtsClientTestsExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClientTracing", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int>("PatientPk");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<DateTime>("TracingDate");
+
+                    b.Property<string>("TracingOutcome");
+
+                    b.Property<DateTime>("TracingType");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HtsClientTracingExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsPartnerNotificationServices", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClientSelfTested");
+
+                    b.Property<string>("ClientTestedAs");
+
+                    b.Property<string>("Consent");
+
+                    b.Property<string>("CoupleDiscordant");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("EncounterId");
+
+                    b.Property<string>("EntryPoint");
+
+                    b.Property<string>("EverTestedForHiv");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("FinalTestResult");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int>("MonthsSinceLastTest");
+
+                    b.Property<string>("PatientGivenResult");
+
+                    b.Property<int>("PatientPk");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("TbScreening");
+
+                    b.Property<DateTime>("TestDate");
+
+                    b.Property<string>("TestResult1");
+
+                    b.Property<string>("TestResult2");
+
+                    b.Property<string>("TestStrategy");
+
+                    b.Property<string>("TestType");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HtsPartnerNotificationServicesExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsPartnerTracing", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("BookingDate");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int>("PatientPk");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<DateTime>("TraceDate");
+
+                    b.Property<string>("TraceOutcome");
+
+                    b.Property<string>("TraceType");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HtsPartnerTracingExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsTestKits", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("EncounterId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int>("PatientPk");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<int>("TestId");
+
+                    b.Property<string>("TestKitExpiry1");
+
+                    b.Property<string>("TestKitExpiry2");
+
+                    b.Property<string>("TestKitLotNumber1");
+
+                    b.Property<string>("TestKitLotNumber2");
+
+                    b.Property<string>("TestKitName1");
+
+                    b.Property<string>("TestKitName2");
+
+                    b.Property<string>("TestResult1");
+
+                    b.Property<string>("TestResult2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HtsTestKitsExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.ExtractHistory", b =>
@@ -2413,6 +2773,340 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("vTempPatientVisitExtractErrorSummary");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts.TempHtsClientLinkage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime?>("DateEnrolled");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("DatePrefferedToBeEnrolled");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("EnrolledFacilityName");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("FacilityReferredTo");
+
+                    b.Property<string>("HandedOverTo");
+
+                    b.Property<string>("HandedOverToCadre");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int?>("PatientPk");
+
+                    b.Property<string>("Project");
+
+                    b.Property<DateTime?>("ReferralDate");
+
+                    b.Property<string>("ReportedCCCNumber");
+
+                    b.Property<DateTime?>("ReportedStartARTDate");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempHtsClientsLinkageExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts.TempHtsClients", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("County");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Dob");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Gender");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<string>("KeyPopulationType");
+
+                    b.Property<string>("MaritalStatus");
+
+                    b.Property<string>("PatientDisabled");
+
+                    b.Property<int?>("PatientPk");
+
+                    b.Property<string>("PopulationType");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("SubCounty");
+
+                    b.Property<string>("Ward");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempHtsClientsExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts.TempHtsClientTests", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("ClientSelfTested");
+
+                    b.Property<string>("ClientTestedAs");
+
+                    b.Property<string>("Consent");
+
+                    b.Property<string>("CoupleDiscordant");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("EncounterId");
+
+                    b.Property<string>("EntryPoint");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("EverTestedForHiv");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("FinalTestResult");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int>("MonthsSinceLastTest");
+
+                    b.Property<string>("PatientGivenResult");
+
+                    b.Property<int?>("PatientPk");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("TbScreening");
+
+                    b.Property<DateTime?>("TestDate");
+
+                    b.Property<string>("TestResult1");
+
+                    b.Property<string>("TestResult2");
+
+                    b.Property<string>("TestStrategy");
+
+                    b.Property<string>("TestType");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempHtsClientTestsExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts.TempHtsClientTracing", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int?>("PatientPk");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<DateTime?>("TracingDate");
+
+                    b.Property<string>("TracingOutcome");
+
+                    b.Property<DateTime?>("TracingType");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempHtsClientTracingExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts.TempHtsPartnerNotificationServices", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("Age");
+
+                    b.Property<string>("CccNumber");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("CurrentlyLivingWithIndexClient");
+
+                    b.Property<DateTime?>("DateElicited");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Dob");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("FacilityLinkedTo");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<string>("IpvScreeningOutcome");
+
+                    b.Property<string>("KnowledgeOfHivStatus");
+
+                    b.Property<DateTime?>("LinkDateLinkedToCare");
+
+                    b.Property<string>("LinkedToCare");
+
+                    b.Property<string>("MaritalStatus");
+
+                    b.Property<int?>("PartnerPatientPk");
+
+                    b.Property<int?>("PartnerPersonID");
+
+                    b.Property<int?>("PatientPk");
+
+                    b.Property<string>("PnsApproach");
+
+                    b.Property<string>("PnsConsent");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("RelationsipToIndexClient");
+
+                    b.Property<string>("ScreenedForIpv");
+
+                    b.Property<string>("Sex");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempHtsPartnerNotificationServicesExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts.TempHtsPartnerTracing", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("BookingDate");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int?>("PartnerPersonId");
+
+                    b.Property<int?>("PatientPk");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<DateTime?>("TraceDate");
+
+                    b.Property<string>("TraceOutcome");
+
+                    b.Property<string>("TraceType");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempHtsPartnerTracingExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts.TempHtsTestKits", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("EncounterId");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<int?>("PatientPk");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("TestKitExpiry1");
+
+                    b.Property<string>("TestKitExpiry2");
+
+                    b.Property<string>("TestKitLotNumber1");
+
+                    b.Property<string>("TestKitLotNumber2");
+
+                    b.Property<string>("TestKitName1");
+
+                    b.Property<string>("TestKitName2");
+
+                    b.Property<string>("TestResult1");
+
+                    b.Property<string>("TestResult2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempHtsTestKitsExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Hts.TempHTSClientExtract", b =>

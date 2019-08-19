@@ -14,11 +14,21 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Hts
 
         Task<List<SendMpiResponse>> SendClientsAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> SendClientsAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
+        Task<List<SendMpiResponse>> SendClientTestsAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> SendClientTestsAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
+        Task<List<SendMpiResponse>> SendTestKitsAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> SendTestKitsAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
+        Task<List<SendMpiResponse>> SendClientTracingAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> SendClientTracingAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
+        Task<List<SendMpiResponse>> SendPartnerTracingAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> SendPartnerTracingAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
+        Task<List<SendMpiResponse>> SendPartnerNotificationServicesAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> SendPartnerNotificationServicesAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
 
-        Task<List<SendMpiResponse>> SendClientLinkagesAsync(SendManifestPackageDTO sendTo);
-        Task<List<SendMpiResponse>> SendClientLinkagesAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
+        Task<List<SendMpiResponse>> SendClientsLinkagesAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> SendClientsLinkagesAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
 
-        Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo);
-        Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
+        //Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo);
+        //Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
     }
 }
