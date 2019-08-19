@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
+namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
 {
-    public  class HtsClients : TempHTSExtract
+    public  class HtsClients : HtsExtract
     {
 
         public  DateTime  DoB	 { get; set; }
@@ -16,10 +16,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public  string County	 { get; set; }
         public  string  SubCounty	 { get; set; }
         public  string Ward	 { get; set; }
-        
-        public override string ToString()
-        {
-            return $"{SiteCode}-{HtsNumber}";
-        }
     }
 }

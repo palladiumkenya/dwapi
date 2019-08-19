@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System; 
 
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
-{
-
-            
-        public  class TempHtsClientTests : TempHTSExtract
+namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
+{            
+        public  class TempHtsClientTests : TempHtsExtract
         {
             public  int? EncounterId	 { get; set; }
-            public  DateTime   TestDate	 { get; set; }
+            public  DateTime?   TestDate	 { get; set; }
             public  string   EverTestedForHiv { get; set; }
             public  int   MonthsSinceLastTest { get; set; }
             public  string    ClientTestedAs	 { get; set; }
@@ -24,10 +20,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
             public  string   CoupleDiscordant	 { get; set; }
             public  string   TestType	 { get; set; }
             public  string   Consent	 { get; set; }
-                
-            public override string ToString()
-            {
-                return $"{SiteCode}-{HtsNumber}";
-            }
+            
         }
 }

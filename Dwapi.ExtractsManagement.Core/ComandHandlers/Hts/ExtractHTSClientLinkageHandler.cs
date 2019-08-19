@@ -50,7 +50,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
                 _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract);
 
 
-            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected,request.Extract);
+            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected, request.Extract);
 
             //notify loaded
             DomainEvents.Dispatch(

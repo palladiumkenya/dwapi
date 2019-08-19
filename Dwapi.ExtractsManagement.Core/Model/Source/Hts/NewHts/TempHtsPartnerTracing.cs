@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System; 
 
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
+namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
 {
-
-            
-        public  class TempHtsPartnerTracing : TempHTSExtract
-        {
-           
-            public  string TraceType { get; set; }
-            public  DateTime TraceDate { get; set; }
-            public  string TraceOutcome { get; set; }
-            public  DateTime BookingDate { get; set; }
-                
-            public override string ToString()
-            {
-                return $"{SiteCode}-{HtsNumber}";
-            }
-        }
+    public  class TempHtsPartnerTracing : TempHtsExtract
+    {
+        public  string TraceType { get; set; }
+        public int? PartnerPersonId { get; set; }
+        public  DateTime? TraceDate { get; set; }
+        public  string TraceOutcome { get; set; }
+        public  DateTime? BookingDate { get; set; }
+    }
 }

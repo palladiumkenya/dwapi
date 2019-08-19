@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
+namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
 {
 
             
-        public  class HtsClientLinkage : TempHTSExtract
+        public  class HtsClientLinkage : HtsExtract
         {
 
             public  DateTime  DatePrefferedToBeEnrolled { get; set; }
@@ -18,10 +18,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
             public  DateTime DateEnrolled { get; set; }
             public  string ReportedCCCNumber { get; set; }
             public  DateTime ReportedStartARTDate { get; set; }
-                
-            public override string ToString()
-            {
-                return $"{SiteCode}-{HtsNumber}";
-            }
         }
 }

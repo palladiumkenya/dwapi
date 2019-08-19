@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
+namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
 {
-    public  class HtsTestKits : TempHTSExtract
+    public  class HtsTestKits : HtsExtract
     {
 
         public  int EncounterId { get; set; }
@@ -16,10 +16,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public  string TestKitLotNumber2 { get; set; }
         public  string TestKitExpiry2{ get; set; }
         public  string TestResult2 { get; set; }
-        public  int TestId { get; set; }
-        public override string ToString()
-        {
-            return $"{SiteCode}-{HtsNumber}";
-        }
+        public  int TestId { get; set; } 
     }
 }
