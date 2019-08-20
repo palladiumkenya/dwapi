@@ -24,9 +24,14 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<PatientVisitExtractView> ClientPatientVisitExtracts { get; set; }
         public virtual DbSet<PatientAdverseEventView> ClientPatientAdverseEventExtracts { get; set; }
 
-        public virtual DbSet<HTSClientExtractView> ClientExtracts { get; set; }
-        public virtual DbSet<HTSClientLinkageExtractView> ClientLinkageExtracts { get; set; }
-        public virtual DbSet<HTSClientPartnerExtractView> ClientPartnerExtracts { get; set; }
+        public virtual DbSet<HtsClientsExtractView> ClientExtracts { get; set; }
+        public virtual DbSet<HtsClientsLinkageExtractView> ClientLinkageExtracts { get; set; }
+        public virtual DbSet<HtsPartnerTracingExtractView> PartnerTracingExtracts { get; set; }
+        public virtual DbSet<HtsTestKitsExtractView> TestKitsExtracts { get; set; }
+        public virtual DbSet<HtsClientTestsExtractView> ClientTestsExtracts { get; set; }
+        public virtual DbSet<HtsPartnerNotificationServicesExtractView> PartnerNotificationServicesExtracts { get; set; }
+        public virtual DbSet<HtsClientTracingExtractView> ClientTracingExtracts { get; set; }
+
 
         public virtual DbSet<EmrMetricView> EmrMetrics { get; set; }
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
@@ -82,12 +87,20 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
                 .IsRequired()
                 .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
 
-            modelBuilder.Entity<HTSClientExtractView>()
+            modelBuilder.Entity<HtsClientsExtractView>()
                 .HasKey(f => f.Id );
-            modelBuilder.Entity<HTSClientLinkageExtractView>()
+            modelBuilder.Entity<HtsClientTestsExtractView>()
                 .HasKey(f => f.Id );
-            modelBuilder.Entity<HTSClientPartnerExtractView>()
+            modelBuilder.Entity<HtsTestKitsExtractView>()
                 .HasKey(f => f.Id );
+            modelBuilder.Entity<HtsPartnerNotificationServicesExtractView>()
+                .HasKey(f => f.Id);
+            modelBuilder.Entity<HtsClientTracingExtractView>()
+                .HasKey(f => f.Id);
+            modelBuilder.Entity<HtsPartnerTracingExtractView>()
+                .HasKey(f => f.Id);
+            modelBuilder.Entity<HtsClientsLinkageExtractView>()
+                .HasKey(f => f.Id);
         }
     }
 }

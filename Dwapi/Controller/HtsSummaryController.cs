@@ -11,22 +11,45 @@ namespace Dwapi.Controller
     [Route("api/HtsSummary")]
     public class HtsSummaryController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly ITempHTSClientExtractRepository _tempHtsClientExtractRepository;
-        private readonly IHTSClientExtractRepository _htsClientExtractRepository;
-        private readonly ITempHTSClientExtractErrorSummaryRepository _htsClientExtractErrorSummaryRepository;
+        private readonly ITempHtsClientsExtractRepository _tempHtsClientExtractRepository;
+        private readonly IHtsClientsExtractRepository _htsClientExtractRepository;
+        private readonly ITempHtsClientsExtractErrorSummaryRepository _htsClientExtractErrorSummaryRepository;
 
-        private readonly ITempHTSClientLinkageExtractRepository _tempHtsClientLinkageExtractRepository;
-        private readonly IHTSClientLinkageExtractRepository _htsClientLinkageExtractRepository;
-        private readonly ITempHTSClientLinkageExtractErrorSummaryRepository _htsClientLinkageExtractErrorSummaryRepository;
+        private readonly ITempHtsClientTestsExtractRepository _tempHtsClientTestsExtractRepository;
+        private readonly IHtsClientTestsExtractRepository _htsClientTestsExtractRepository;
+        private readonly ITempHtsClientTestsErrorSummaryRepository _htsClientTestsExtractErrorSummaryRepository;
 
-        private readonly ITempHTSClientPartnerExtractRepository _tempHtsClientPartnerExtractRepository;
-        private readonly IHTSClientPartnerExtractRepository _htsClientPartnerExtractRepository;
-        private readonly ITempHTSClientPartnerExtractErrorSummaryRepository _htsClientPartnerExtractErrorSummaryRepository;
+        private readonly ITempHtsTestKitsExtractRepository _tempTestKitsExtractRepository;
+        private readonly IHtsTestKitsExtractRepository _htsTestKitsExtractRepository;
+        private readonly ITempHtsTestKitsErrorSummaryRepository _htsTestKitsExtractErrorSummaryRepository;
+
+        private readonly ITempHtsClientTracingExtractRepository _tempHtsClientTracingExtractRepository;
+        private readonly IHtsClientTracingExtractRepository _htsClientTracingExtractRepository;
+        private readonly ITempHtsClientTracingErrorSummaryRepository _htsClientTracingExtractErrorSummaryRepository;
+
+        private readonly ITempHtsPartnerTracingExtractRepository _tempHtsPartnerTracingExtractRepository;
+        private readonly IHtsPartnerTracingExtractRepository _htsPartnerTracingExtractRepository;
+        private readonly ITempHtsPartnerTracingErrorSummaryRepository _htsPartnerTracingExtractErrorSummaryRepository;
+
+        private readonly ITempHtsClientsLinkageExtractRepository _tempHtsClientLinkageExtractRepository;
+        private readonly IHtsClientsLinkageExtractRepository _htsClientLinkageExtractRepository;
+        private readonly ITempHtsClientLinkageErrorSummaryRepository _htsClientLinkageExtractErrorSummaryRepository;
+
+        private readonly ITempHtsPartnerNotificationServicesExtractRepository _tempHtsPartnerNotificationServicesExtractRepository;
+        private readonly IHtsPartnerNotificationServicesExtractRepository _htsPartnerNotificationServicesExtractRepository;
+        private readonly ITempHtsPartnerNotificationServicesErrorSummaryRepository _htsPartnerNotificationServicesExtractErrorSummaryRepository;
+
+       
 
         public HtsSummaryController(
-            ITempHTSClientExtractRepository tempHtsClientExtractRepository, IHTSClientExtractRepository htsClientExtractRepository, ITempHTSClientExtractErrorSummaryRepository htsClientExtractErrorSummaryRepository,
-            ITempHTSClientLinkageExtractRepository tempHtsClientLinkageExtractRepository, IHTSClientLinkageExtractRepository htsClientLinkageExtractRepository, ITempHTSClientLinkageExtractErrorSummaryRepository htsClientLinkageExtractErrorSummaryRepository,
-            ITempHTSClientPartnerExtractRepository tempHtsClientPartnerExtractRepository, IHTSClientPartnerExtractRepository htsClientPartnerExtractRepository, ITempHTSClientPartnerExtractErrorSummaryRepository htsClientPartnerExtractErrorSummaryRepository)
+            ITempHtsClientsExtractRepository tempHtsClientExtractRepository, IHtsClientsExtractRepository htsClientExtractRepository, ITempHtsClientsExtractErrorSummaryRepository htsClientExtractErrorSummaryRepository,
+            ITempHtsClientTestsExtractRepository tempHtsClientTestsExtractRepository, IHtsClientTestsExtractRepository htsClientTestsExtractRepository, ITempHtsClientTestsErrorSummaryRepository htsClientTestsExtractErrorSummaryRepository,
+            ITempHtsTestKitsExtractRepository tempTestKitsExtractRepository, IHtsTestKitsExtractRepository htsTestKitsExtractRepository, ITempHtsTestKitsErrorSummaryRepository htsTestKitsExtractErrorSummaryRepository,
+            ITempHtsClientTracingExtractRepository tempHtsClientTracingExtractRepository, IHtsClientTracingExtractRepository htsClientTracingExtractRepository, ITempHtsClientTracingErrorSummaryRepository htsClientTracingExtractErrorSummaryRepository,
+            ITempHtsPartnerTracingExtractRepository tempHtsPartnerTracingExtractRepository, IHtsPartnerTracingExtractRepository htsPartnerTracingExtractRepository, ITempHtsPartnerTracingErrorSummaryRepository htsPartnerTracingExtractErrorSummaryRepository,
+            ITempHtsClientsLinkageExtractRepository tempHtsClientLinkageExtractRepository, IHtsClientsLinkageExtractRepository htsClientLinkageExtractRepository, ITempHtsClientLinkageErrorSummaryRepository htsClientLinkageExtractErrorSummaryRepository,
+            ITempHtsPartnerNotificationServicesExtractRepository tempHtsPartnerNotificationServicesExtractRepository, IHtsPartnerNotificationServicesExtractRepository htsPartnerNotificationServicesExtractRepository,
+            ITempHtsPartnerNotificationServicesErrorSummaryRepository htsPartnerNotificationServicesExtractErrorSummaryRepository)
         {
             _tempHtsClientExtractRepository = tempHtsClientExtractRepository;
             _htsClientExtractRepository = htsClientExtractRepository;
@@ -36,12 +59,27 @@ namespace Dwapi.Controller
             _htsClientLinkageExtractRepository = htsClientLinkageExtractRepository;
             _htsClientLinkageExtractErrorSummaryRepository = htsClientLinkageExtractErrorSummaryRepository;
 
-            _tempHtsClientPartnerExtractRepository = tempHtsClientPartnerExtractRepository;
-            _htsClientPartnerExtractRepository = htsClientPartnerExtractRepository;
-            _htsClientPartnerExtractErrorSummaryRepository = htsClientPartnerExtractErrorSummaryRepository;
+            _tempHtsClientTestsExtractRepository = tempHtsClientTestsExtractRepository;
+            _htsClientTestsExtractRepository = htsClientTestsExtractRepository;
+            _htsClientTestsExtractErrorSummaryRepository = htsClientTestsExtractErrorSummaryRepository;
+
+            _tempHtsPartnerTracingExtractRepository = tempHtsPartnerTracingExtractRepository;
+            _htsPartnerTracingExtractRepository = htsPartnerTracingExtractRepository;
+            _htsPartnerTracingExtractErrorSummaryRepository = htsPartnerTracingExtractErrorSummaryRepository;
+
+            _tempTestKitsExtractRepository = tempTestKitsExtractRepository;
+            _htsTestKitsExtractRepository = htsTestKitsExtractRepository;
+            _htsTestKitsExtractErrorSummaryRepository = htsTestKitsExtractErrorSummaryRepository;
+
+            _tempHtsClientTracingExtractRepository = tempHtsClientTracingExtractRepository;
+            _htsClientTracingExtractRepository = htsClientTracingExtractRepository;
+            _htsClientTracingExtractErrorSummaryRepository = htsClientTracingExtractErrorSummaryRepository;
+
+            _tempHtsPartnerNotificationServicesExtractRepository = tempHtsPartnerNotificationServicesExtractRepository;
+            _htsPartnerNotificationServicesExtractRepository = htsPartnerNotificationServicesExtractRepository;
+            _htsPartnerNotificationServicesExtractErrorSummaryRepository = htsPartnerNotificationServicesExtractErrorSummaryRepository;
         }
-
-
+        
 
         [HttpGet("clientcount")]
         public async Task<IActionResult> GetValidCount()
@@ -65,8 +103,8 @@ namespace Dwapi.Controller
         {
             try
             {
-                var tempPatientArtExtracts = await  _htsClientExtractRepository.GetAll(page,pageSize);
-                return Ok(tempPatientArtExtracts.ToList());
+                var tempClientExtracts = await  _htsClientExtractRepository.GetAll(page,pageSize);
+                return Ok(tempClientExtracts.ToList());
             }
             catch (Exception e)
             {
@@ -144,51 +182,255 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
-        [HttpGet("partnercount")]
-        public async Task<IActionResult> GetPartnerCount()
+        [HttpGet("partnertrackingcount")]
+        public async Task<IActionResult> GetPartnerTrackingCount()
         {
             try
             {
-                var count = await _htsClientPartnerExtractRepository.GetCount();
+                var count = await _htsPartnerTracingExtractRepository.GetCount();
                 return Ok(count);
             }
             catch (Exception e)
             {
-                var msg = $"Error loading valid Patners";
+                var msg = $"Error loading valid Partner Tracking";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);
             }
         }
 
-        [HttpGet("partner/{page}/{pageSize}")]
-        public async Task<IActionResult> LoadPartnerValid(int? page,int pageSize)
+        [HttpGet("partnertracking/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadPartnerTrackingValid(int? page,int pageSize)
         {
             try
             {
-                var tempPatientArtExtracts =await _htsClientPartnerExtractRepository.GetAll(page, pageSize);
-                return Ok(tempPatientArtExtracts.ToList());
+                var count =await _htsPartnerTracingExtractRepository.GetAll(page, pageSize);
+                return Ok(count.ToList());
             }
             catch (Exception e)
             {
-                var msg = $"Error loading valid Partner Extracts";
+                var msg = $"Error loading valid Partner Tracking";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);
             }
         }
 
-        [HttpGet("partnervalidations")]
-        public IActionResult LoadPartnerValidations()
+        [HttpGet("partnertrackingvalidations")]
+        public IActionResult LoadPartnerTrackingValidations()
         {
             try
             {
-                var errorSummary = _htsClientPartnerExtractErrorSummaryRepository.GetAll().ToList();
+                var errorSummary = _htsPartnerTracingExtractErrorSummaryRepository.GetAll().ToList();
                 return Ok(errorSummary);
             }
             catch (Exception e)
             {
-                var msg = $"Error loading Partner error summary";
+                var msg = $"Error loading Partner Tracking error summary";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("clienttrackingcount")]
+        public async Task<IActionResult> GetClientTrackingCount()
+        {
+            try
+            {
+                var count = await _htsClientTracingExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Client Tracking";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("clienttracking/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadClientTrackingValid(int? page, int pageSize)
+        {
+            try
+            {
+                var count = await _htsClientTracingExtractRepository.GetAll(page, pageSize);
+                return Ok(count.ToList());
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Client Tracking";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("clienttrackingvalidations")]
+        public IActionResult LoadClientTrackingValidations()
+        {
+            try
+            {
+                var errorSummary = _htsClientTracingExtractErrorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading Client Tracking error summary";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("testkitscount")]
+        public async Task<IActionResult> GetTestKitsCount()
+        {
+            try
+            {
+                var count = await _htsTestKitsExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Test Kits";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("testkits/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadTestKitsValid(int? page, int pageSize)
+        {
+            try
+            {
+                var count = await _htsTestKitsExtractRepository.GetAll(page, pageSize);
+                return Ok(count.ToList());
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Test Kits";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("testkitsvalidations")]
+        public IActionResult LoadTestKitsValidations()
+        {
+            try
+            {
+                var errorSummary = _htsTestKitsExtractErrorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading Test  Kits error summary";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("pnscount")]
+        public async Task<IActionResult> GetPNSCount()
+        {
+            try
+            {
+                var count = await _htsPartnerNotificationServicesExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Partner Notification Services";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("pns/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadPNSValid(int? page, int pageSize)
+        {
+            try
+            {
+                var count = await _htsPartnerNotificationServicesExtractRepository.GetAll(page, pageSize);
+                return Ok(count.ToList());
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Partner Notification Services";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("pnsvalidations")]
+        public IActionResult LoadPNSValidations()
+        {
+            try
+            {
+                var errorSummary = _htsPartnerNotificationServicesExtractErrorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading Partner Notification Services error summary";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("clienttestscount")]
+        public async Task<IActionResult> GetClientTestsCount()
+        {
+            try
+            {
+                var count = await _htsClientTestsExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Client Tests";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("clienttests/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadClientTestsValid(int? page, int pageSize)
+        {
+            try
+            {
+                var count = await _htsClientTestsExtractRepository.GetAll(page, pageSize);
+                return Ok(count.ToList());
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Client Tests";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("clienttestsvalidations")]
+        public IActionResult LoadClientTestsValidations()
+        {
+            try
+            {
+                var errorSummary = _htsClientTestsExtractErrorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading Client Tests error summary";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

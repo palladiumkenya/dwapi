@@ -103,11 +103,11 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         }
 
         [Test]
-        public void should_Send_Linkages()
+        public void should_Send_cLinkages()
         {
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _htsSendService.SendClientLinkagesAsync(sendTo, _clientBag).Result;
+            var responses = _htsSendService.SendClientsLinkagesAsync(sendTo, _clientBag).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)
@@ -117,11 +117,67 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         }
 
         [Test]
-        public void should_Send_Partners()
+        public void should_Send_ClientTest()
         {
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _htsSendService.SendClientPartnersAsync(sendTo, _clientBag).Result;
+            var responses = _htsSendService.SendClientTestsAsync(sendTo, _clientBag).Result;
+            Assert.NotNull(responses);
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+            foreach (var sendManifestResponse in responses)
+            {
+                Console.WriteLine(sendManifestResponse);
+            }
+        }
+
+        [Test]
+        public void should_Send_TestKits()
+        {
+            var sendTo = new SendManifestPackageDTO(_registry);
+
+            var responses = _htsSendService.SendTestKitsAsync(sendTo, _clientBag).Result;
+            Assert.NotNull(responses);
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+            foreach (var sendManifestResponse in responses)
+            {
+                Console.WriteLine(sendManifestResponse);
+            }
+        }
+
+        [Test]
+        public void should_Send_ClientTracing()
+        {
+            var sendTo = new SendManifestPackageDTO(_registry);
+
+            var responses = _htsSendService.SendClientTracingAsync(sendTo, _clientBag).Result;
+            Assert.NotNull(responses);
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+            foreach (var sendManifestResponse in responses)
+            {
+                Console.WriteLine(sendManifestResponse);
+            }
+        }
+
+        [Test]
+        public void should_Send_PartnerTracing()
+        {
+            var sendTo = new SendManifestPackageDTO(_registry);
+
+            var responses = _htsSendService.SendPartnerTracingAsync(sendTo, _clientBag).Result;
+            Assert.NotNull(responses);
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+            foreach (var sendManifestResponse in responses)
+            {
+                Console.WriteLine(sendManifestResponse);
+            }
+        }
+
+        [Test]
+        public void should_Send_PartnerNotificationServices()
+        {
+            var sendTo = new SendManifestPackageDTO(_registry);
+
+            var responses = _htsSendService.SendPartnerNotificationServicesAsync(sendTo, _clientBag).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)

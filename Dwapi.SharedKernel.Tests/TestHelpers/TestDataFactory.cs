@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
@@ -108,16 +108,28 @@ namespace Dwapi.SharedKernel.Tests.TestHelpers
 
             foreach (var siteCode in siteCodes)
             {
-                var clients = Builder<HTSClientExtract>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                var clients = Builder<HtsClients>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
                     .ToList();
-                var linkages = Builder<HTSClientLinkageExtract>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                var linkages = Builder<HtsClientLinkage>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
                     .ToList();
-                var partners = Builder<HTSClientPartnerExtract>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                var ctracing = Builder<HtsClientTracing>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                    .ToList();
+                var ptracing = Builder<HtsPartnerTracing>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                    .ToList();
+                var pns = Builder<HtsPartnerNotificationServices>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                    .ToList();
+                var tkits = Builder<HtsTestKits>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
+                    .ToList();
+                var ctests = Builder<HtsClientTests>.CreateListOfSize(count).All().With(x => x.SiteCode = siteCode).Build()
                     .ToList();
 
                 list.Add(new HtsMessage(clients));
+                list.Add(new HtsMessage(ctests));
+                list.Add(new HtsMessage(tkits));
+                list.Add(new HtsMessage(ctracing));
+                list.Add(new HtsMessage(ptracing));
+                list.Add(new HtsMessage(pns));
                 list.Add(new HtsMessage(linkages));
-                list.Add(new HtsMessage(partners));
             }
             return list;
         }

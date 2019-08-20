@@ -18,19 +18,38 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Hts
             _context = context;
         }
 
-        public IEnumerable<HTSClientExtractView> ReadAllClients()
+        public IEnumerable<HtsClientsExtractView> ReadAllClients()
         {
             return _context.ClientExtracts.Where(x=>!x.IsSent).AsNoTracking();
         }
 
-        public IEnumerable<HTSClientPartnerExtractView> ReadAllPartners()
+        public IEnumerable<HtsClientTestsExtractView> ReadAllClientTests()
         {
-            return _context.ClientPartnerExtracts.Where(x=>!x.IsSent).AsNoTracking();
+            return _context.ClientTestsExtracts.Where(x=>!x.IsSent).AsNoTracking();
         }
 
-        public IEnumerable<HTSClientLinkageExtractView> ReadAllLinkages()
+        public IEnumerable<HtsTestKitsExtractView> ReadAllTestKits()
         {
-            return _context.ClientLinkageExtracts.Where(x=>!x.IsSent).AsNoTracking();
+            return _context.TestKitsExtracts.Where(x=>!x.IsSent).AsNoTracking();
+        }
+
+        public IEnumerable<HtsClientTracingExtractView> ReadAllClientTracing()
+        {
+            return _context.ClientTracingExtracts.Where(x => !x.IsSent).AsNoTracking();
+        }
+
+        public IEnumerable<HtsPartnerTracingExtractView> ReadAllPartnerTracing()
+        {
+            return _context.PartnerTracingExtracts.Where(x => !x.IsSent).AsNoTracking();
+        }
+
+        public IEnumerable<HtsPartnerNotificationServicesExtractView> ReadAllPartnerNotificationServices()
+        {
+            return _context.PartnerNotificationServicesExtracts.Where(x => !x.IsSent).AsNoTracking();
+        }
+        public IEnumerable<HtsClientsLinkageExtractView> ReadAllClientsLinkage()
+        {
+            return _context.ClientLinkageExtracts.Where(x => !x.IsSent).AsNoTracking();
         }
     }
 }

@@ -1,37 +1,57 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.UploadManagement.Core.Exchange.Hts
 {
     public class HtsMessage
     {
-        public List<HTSClientExtract> Clients { get; set; }=new List<HTSClientExtract>();
-        public List<HTSClientLinkageExtract> ClientLinkages { get; set; }=new List<HTSClientLinkageExtract>();
-        public List<HTSClientPartnerExtract> ClientPartners { get; set; }=new List<HTSClientPartnerExtract>();
+        public List<HtsClients> Clients { get; set; }=new List<HtsClients>();
+        public List<HtsClientTests> ClientTests { get; set; }=new List<HtsClientTests>();
+        public List<HtsClientTracing> ClientTracing { get; set; }=new List<HtsClientTracing>();
+        public List<HtsPartnerTracing> PartnerTracing { get; set; } = new List<HtsPartnerTracing>();
+        public List<HtsPartnerNotificationServices> PartnerNotificationServices { get; set; } = new List<HtsPartnerNotificationServices>();
+        public List<HtsTestKits> TestKits { get; set; } = new List<HtsTestKits>();
+        public List<HtsClientLinkage> ClientLinkage { get; set; } = new List<HtsClientLinkage>();
 
         public HtsMessage()
         {
         }
 
-        public HtsMessage(List<HTSClientExtract> clients)
+        public HtsMessage(List<HtsClients> clients)
         {
             Clients = clients;
         }
-        public HtsMessage(List<HTSClientLinkageExtract> links)
+        public HtsMessage(List<HtsClientLinkage> clientsLinkage)
         {
-            ClientLinkages = links;
+            ClientLinkage = clientsLinkage;
         }
-        public HtsMessage(List<HTSClientPartnerExtract> partnerExtracts)
+        public HtsMessage(List<HtsClientTests> clientTests)
         {
-            ClientPartners = partnerExtracts;
+            ClientTests = clientTests;
+        }
+        public HtsMessage(List<HtsClientTracing> clientTracing)
+        {
+            ClientTracing = clientTracing;
+        }
+        public HtsMessage(List<HtsPartnerTracing> partnerTracing)
+        {
+            PartnerTracing = partnerTracing;
+        }
+        public HtsMessage(List<HtsPartnerNotificationServices> partnerNotificationServices)
+        {
+            PartnerNotificationServices = partnerNotificationServices;
+        }
+        public HtsMessage(List<HtsTestKits> testKits)
+        {
+            TestKits = testKits;
         }
 
-        public static List<HtsMessage> Create(List<HTSClientExtract> masterPatientIndices)
+        public static List<HtsMessage> Create(List<HtsClients> clients)
         {
             var list=new List<HtsMessage>();
-            var chunks = masterPatientIndices.ToList().ChunkBy(500);
+            var chunks = clients.ToList().ChunkBy(500);
             foreach (var chunk in chunks)
             {
                 list.Add(new HtsMessage(chunk));
@@ -40,10 +60,10 @@ namespace Dwapi.UploadManagement.Core.Exchange.Hts
             return list;
         }
 
-        public static List<HtsMessage> Create(List<HTSClientLinkageExtract> links)
+        public static List<HtsMessage> Create(List<HtsClientTests> tests)
         {
             var list=new List<HtsMessage>();
-            var chunks = links.ToList().ChunkBy(500);
+            var chunks = tests.ToList().ChunkBy(500);
             foreach (var chunk in chunks)
             {
                 list.Add(new HtsMessage(chunk));
@@ -52,10 +72,58 @@ namespace Dwapi.UploadManagement.Core.Exchange.Hts
             return list;
         }
 
-        public static List<HtsMessage> Create(List<HTSClientPartnerExtract> partnerExtracts)
+        public static List<HtsMessage> Create(List<HtsClientTracing> cTracing)
         {
             var list=new List<HtsMessage>();
-            var chunks = partnerExtracts.ToList().ChunkBy(500);
+            var chunks = cTracing.ToList().ChunkBy(500);
+            foreach (var chunk in chunks)
+            {
+                list.Add(new HtsMessage(chunk));
+            }
+
+            return list;
+        }
+
+        public static List<HtsMessage> Create(List<HtsPartnerTracing> pTracing)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = pTracing.ToList().ChunkBy(500);
+            foreach (var chunk in chunks)
+            {
+                list.Add(new HtsMessage(chunk));
+            }
+
+            return list;
+        }
+
+        public static List<HtsMessage> Create(List<HtsPartnerNotificationServices> pns)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = pns.ToList().ChunkBy(500);
+            foreach (var chunk in chunks)
+            {
+                list.Add(new HtsMessage(chunk));
+            }
+
+            return list;
+        }
+
+        public static List<HtsMessage> Create(List<HtsClientLinkage> link)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = link.ToList().ChunkBy(500);
+            foreach (var chunk in chunks)
+            {
+                list.Add(new HtsMessage(chunk));
+            }
+
+            return list;
+        }
+
+        public static List<HtsMessage> Create(List<HtsTestKits> testkits)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = testkits.ToList().ChunkBy(500);
             foreach (var chunk in chunks)
             {
                 list.Add(new HtsMessage(chunk));

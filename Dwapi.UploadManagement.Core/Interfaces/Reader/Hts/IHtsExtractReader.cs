@@ -5,8 +5,12 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Hts
 {
     public interface IHtsExtractReader
     {
-        IEnumerable<HTSClientExtractView> ReadAllClients();
-        IEnumerable<HTSClientPartnerExtractView> ReadAllPartners();
-        IEnumerable<HTSClientLinkageExtractView> ReadAllLinkages();
+        IEnumerable<HtsClientsExtractView> ReadAllClients();
+        IEnumerable<HtsClientTestsExtractView> ReadAllClientTests();
+        IEnumerable<HtsTestKitsExtractView> ReadAllTestKits();
+        IEnumerable<HtsClientTracingExtractView> ReadAllClientTracing();
+        IEnumerable<HtsPartnerTracingExtractView> ReadAllPartnerTracing();
+        IEnumerable<HtsPartnerNotificationServicesExtractView> ReadAllPartnerNotificationServices();
+        IEnumerable<HtsClientsLinkageExtractView> ReadAllClientsLinkage();
     }
 }
