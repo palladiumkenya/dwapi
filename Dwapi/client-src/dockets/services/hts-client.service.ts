@@ -33,5 +33,5 @@ export class HtsClientService {
             return Observable.throw('no record(s) found');
         }
         return Observable.throw(err.error);
-    }
+    } 
 }

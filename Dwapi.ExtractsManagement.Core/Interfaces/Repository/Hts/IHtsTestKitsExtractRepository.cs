@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.SharedKernel.Interfaces;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts
 {
-    public interface IHtsTestKitsExtractRepository : IRepository<TempHtsTestKits, Guid>
+    public interface IHtsTestKitsExtractRepository : IRepository<HtsTestKits, Guid>
     {
-        Task Clear();
-        bool BatchInsert(IEnumerable<TempHtsTestKits> extracts);
+        bool BatchInsert(IEnumerable<HtsTestKits> extracts);
+        IEnumerable<HtsTestKits> GetView();
+        void UpdateSendStatus(List<SentItem> sentItems);
     }
 }

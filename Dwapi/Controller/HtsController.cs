@@ -102,7 +102,7 @@ namespace Dwapi.Controller
 
         // POST: api/DwhExtracts/patients
         [HttpPost("clients")]
-        public IActionResult SendClientExtracts([FromBody] SendManifestPackageDTO packageDto)
+        public IActionResult sendClientsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
             if (!packageDto.IsValid())
                 return BadRequest();
@@ -120,14 +120,14 @@ namespace Dwapi.Controller
         }
 
         // POST: api/DwhExtracts/patients
-        [HttpPost("linkages")]
-        public IActionResult SendClientLinkageExtracts([FromBody] SendManifestPackageDTO packageDto)
+        [HttpPost("clienttests")]
+        public IActionResult sendClientTestsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
             if (!packageDto.IsValid())
                 return BadRequest();
             try
             {
-                _htsSendService.SendClientLinkagesAsync(packageDto);
+                _htsSendService.SendClientTestsAsync(packageDto);
                 return Ok();
             }
             catch (Exception e)
@@ -139,14 +139,14 @@ namespace Dwapi.Controller
         }
 
         // POST: api/DwhExtracts/patients
-        [HttpPost("partners")]
-        public IActionResult SendClientPartnerExtracts([FromBody] SendManifestPackageDTO packageDto)
+        [HttpPost("testkits")]
+        public IActionResult sendTestKitsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
             if (!packageDto.IsValid())
                 return BadRequest();
             try
             {
-                _htsSendService.SendClientPartnersAsync(packageDto);
+                _htsSendService.SendTestKitsAsync(packageDto);
                 return Ok();
             }
             catch (Exception e)
@@ -156,5 +156,83 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("clienttracing")]
+        public IActionResult sendClientTracingExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsSendService.SendClientTracingAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("partnertracing")]
+        public IActionResult sendPartnerTracingExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsSendService.SendPartnerTracingAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("partnernotificationservices")]
+        public IActionResult sendPartnerNotificationServicesExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsSendService.SendPartnerNotificationServicesAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("clientslinkage")]
+        public IActionResult SendClientLinkageExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsSendService.SendClientsLinkagesAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        
     }
 }

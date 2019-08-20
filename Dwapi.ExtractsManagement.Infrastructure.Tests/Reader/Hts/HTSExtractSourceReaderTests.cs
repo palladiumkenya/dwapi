@@ -4,6 +4,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -30,6 +31,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
         [TestCase(nameof(HTSClientExtract))]
         [TestCase(nameof(HTSClientLinkageExtract))]
         [TestCase(nameof(HTSClientPartnerExtract))]
+
+        [TestCase(nameof(HtsClients))]
+        [TestCase(nameof(HtsClientTests))]
+        [TestCase(nameof(HtsClientTracing))]
+        [TestCase(nameof(HtsPartnerTracing))]
+        [TestCase(nameof(HtsPartnerNotificationServices))]
+        [TestCase(nameof(HtsClientTests))]
+        [TestCase(nameof(HtsClientLinkage))]
+
         public void should_Execute_Reader_MsSql(string extractName)
         {
             var extract =
@@ -45,6 +55,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
         [TestCase(nameof(HTSClientExtract))]
         [TestCase(nameof(HTSClientLinkageExtract))]
         [TestCase(nameof(HTSClientPartnerExtract))]
+
+        [TestCase(nameof(HtsClients))]
+        [TestCase(nameof(HtsClientTests))]
+        [TestCase(nameof(HtsClientTracing))]
+        [TestCase(nameof(HtsPartnerTracing))]
+        [TestCase(nameof(HtsPartnerNotificationServices))]
+        [TestCase(nameof(HtsClientTests))]
+        [TestCase(nameof(HtsClientLinkage))]
         public void should_Execute_Reader_MySql(string extractName)
         {
             var extract =

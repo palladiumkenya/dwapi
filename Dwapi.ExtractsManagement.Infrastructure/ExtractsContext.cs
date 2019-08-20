@@ -72,17 +72,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHTSClientPartnerExtract> TempHtsClientPartnerExtracts { get; set; }
         public DbSet<TempHTSClientLinkageExtract> TempHtsClientLinkageExtracts { get; set; }
 
-        public DbSet<TempHtsClients> TempHtsClientsExtracts { get; set; }
-        public DbSet<TempHtsClientTests> TempHtsClientTestsExtracts { get; set; }
-        public DbSet<TempHtsClientTracing> TempHtsClientTracingExtracts { get; set; }
-        public DbSet<TempHtsPartnerTracing> TempHtsPartnerTracingExtracts { get; set; }
-        public DbSet<TempHtsTestKits> TempHtsTestKitsExtracts { get; set; }
-        public DbSet<TempHtsClientLinkage> TempHtsClientsLinkageExtracts { get; set; }
-        public DbSet<TempHtsPartnerNotificationServices> TempHtsPartnerNotificationServicesExtracts { get; set; }
-
         public DbSet<HTSClientExtract> HtsClientExtracts { get; set; }
         public DbSet<HTSClientPartnerExtract> HtsClientPartnerExtracts { get; set; }
         public DbSet<HTSClientLinkageExtract> HtsClientLinkageExtracts { get; set; }
+
+        public DbSet<TempHTSClientExtractError> TempHtsClientExtractErrors { get; set; }
+        public DbSet<TempHTSClientPartnerExtractError> TempHtsClientPartnerExtractErrors { get; set; }
+        public DbSet<TempHTSClientLinkageExtractError> TempHtsClientLinkageExtractErrors { get; set; }
 
         public DbSet<HtsClients> HtsClientsExtracts { get; set; }
         public DbSet<HtsClientTests> HtsClientTestsExtracts { get; set; }
@@ -92,9 +88,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<HtsClientLinkage> HtsClientsLinkageExtracts { get; set; }
         public DbSet<HtsPartnerNotificationServices> HtsPartnerNotificationServicesExtracts { get; set; }
 
-        public DbSet<TempHTSClientExtractError> TempHtsClientExtractErrors { get; set; }
-        public DbSet<TempHTSClientPartnerExtractError> TempHtsClientPartnerExtractErrors { get; set; }
-        public DbSet<TempHTSClientLinkageExtractError> TempHtsClientLinkageExtractErrors { get; set; }
+        public DbSet<TempHtsClients> TempHtsClientsExtracts { get; set; }
+        public DbSet<TempHtsClientTests> TempHtsClientTestsExtracts { get; set; }
+        public DbSet<TempHtsClientTracing> TempHtsClientTracingExtracts { get; set; }
+        public DbSet<TempHtsPartnerTracing> TempHtsPartnerTracingExtracts { get; set; }
+        public DbSet<TempHtsTestKits> TempHtsTestKitsExtracts { get; set; }
+        public DbSet<TempHtsClientLinkage> TempHtsClientsLinkageExtracts { get; set; }
+        public DbSet<TempHtsPartnerNotificationServices> TempHtsPartnerNotificationServicesExtracts { get; set; }
+
+
+        
 
         public DbSet<TempHtsClientsError> TempHtsClientsExtractsErrors { get; set; }
         public DbSet<TempHtsClientTestsError> TempHtsClientTestsExtractsErrors { get; set; }
@@ -115,6 +118,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsTestKitsErrorSummary> TempHtsTestKitsExtractsErrorSummaries { get; set; }
         public DbSet<TempHtsClientLinkageErrorSummary> TempHtsClientsLinkageExtractsErrorSummaries { get; set; }
         public DbSet<TempHtsPartnerNotificationServicesErrorSummary> TempHtsPartnerNotificationServicesExtractsErrorSummaries { get; set; }
+
+
+
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
 

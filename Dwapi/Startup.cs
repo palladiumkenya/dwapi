@@ -324,22 +324,68 @@ namespace Dwapi
             services.AddScoped<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>();
             services.AddScoped<ITempHTSClientLinkageExtractRepository, TempHTSClientLinkageExtractRepository>();
             services.AddScoped<ITempHTSClientPartnerExtractRepository, TempHTSClientPartnerExtractRepository>();
+
             services.AddScoped<IHTSClientExtractRepository, HTSClientExtractRepository>();
             services.AddScoped<IHTSClientLinkageExtractRepository, HTSClientLinkageExtractRepository>();
             services.AddScoped<IHTSClientPartnerExtractRepository, HTSClientPartnerExtractRepository>();
+
+            services.AddScoped<ITempHtsClientsExtractRepository, TempHtsClientsExtractRepository>();
+            services.AddScoped<ITempHtsClientsLinkageExtractRepository, TempHtsClientsLinkageExtractRepository>();
+            services.AddScoped<ITempHtsClientTestsExtractRepository, TempHtsClientTestsExtractRepository>();
+            services.AddScoped<ITempHtsTestKitsExtractRepository, TempHtsTestKitsExtractRepository>();
+            services.AddScoped<ITempHtsClientTracingExtractRepository, TempHtsClientTracingExtractRepository>();
+            services.AddScoped<ITempHtsPartnerTracingExtractRepository, TempHtsPartnerTracingExtractRepository>();
+            services.AddScoped<ITempHtsPartnerNotificationServicesExtractRepository, TempHtsPartnerNotificationServicesExtractRepository>();
+            
+            services.AddScoped<IHtsClientsExtractRepository, HtsClientsExtractRepository>();
+            services.AddScoped<IHtsClientsLinkageExtractRepository, HtsClientsLinkageExtractRepository>();
+            services.AddScoped<IHtsClientTestsExtractRepository, HtsClientTestsExtractRepository>();
+            services.AddScoped<IHtsTestKitsExtractRepository, HtsTestKitsExtractRepository>();
+            services.AddScoped<IHtsClientTracingExtractRepository, HtsClientTracingExtractRepository>();
+            services.AddScoped<IHtsPartnerTracingExtractRepository, HtsPartnerTracingExtractRepository>();
+            services.AddScoped<IHtsPartnerNotificationServicesExtractRepository, HtsPartnerNotificationServicesExtractRepository>();
 
             services.AddScoped<ITempHTSClientExtractErrorSummaryRepository, TempHTSClientExtractErrorSummaryRepository>();
             services.AddScoped<ITempHTSClientLinkageExtractErrorSummaryRepository, TempHTSClientLinkageExtractErrorSummaryRepository>();
             services.AddScoped<ITempHTSClientPartnerExtractErrorSummaryRepository, TempHTSClientPartnerExtractErrorSummaryRepository>();
 
+            services.AddScoped<ITempHtsClientsExtractErrorSummaryRepository, TempHtsClientsExtractErrorSummaryRepository>();
+            services.AddScoped<ITempHtsClientLinkageErrorSummaryRepository, TempHtsClientsLinkageExtractErrorSummaryRepository>();
+            services.AddScoped<ITempHtsClientTestsErrorSummaryRepository, TempHtsClientTestsExtractErrorSummaryRepository>();
+            services.AddScoped<ITempHtsTestKitsErrorSummaryRepository, TempHtsTestKitsExtractErrorSummaryRepository>();
+            services.AddScoped<ITempHtsClientTracingErrorSummaryRepository, TempHtsClientTracingExtractErrorSummaryRepository>();
+            services.AddScoped<ITempHtsPartnerTracingErrorSummaryRepository, TempHtsPartnerTracingExtractErrorSummaryRepository>();
+            services.AddScoped<ITempHtsPartnerNotificationServicesErrorSummaryRepository, TempHtsPartnerNotificationServicesExtractErrorSummaryRepository>();
+
             services.AddScoped<ICleanHtsExtracts, CleanHtsExtracts>();
+            services.AddScoped<IClearHtsExtracts, ClearHtsExtracts>();
+
             services.AddScoped<IHTSExtractSourceReader, HTSExtractSourceReader>();
+
             services.AddScoped<IHTSClientSourceExtractor, HTSClientSourceExtractor>();
             services.AddScoped<IHTSClientLinkageSourceExtractor, HTSClientLinkageSourceExtractor>();
             services.AddScoped<IHTSClientPartnerSourceExtractor, HTSClientPartnerSourceExtractor>();
+
+            services.AddScoped<IHtsClientsSourceExtractor, HtsClientsSourceExtractor>();
+            services.AddScoped<IHtsClientTestsSourceExtractor, HtsClientTestsSourceExtractor>();
+            services.AddScoped<IHtsClientsLinkageSourceExtractor, HtsClientsLinkageSourceExtractor>();
+            services.AddScoped<IHtsTestKitsSourceExtractor, HtsTestKitsSourceExtractor>();
+            services.AddScoped<IHtsClientTracingSourceExtractor, HtsClientTracingSourceExtractor>();
+            services.AddScoped<IHtsPartnerTracingSourceExtractor, HtsPartnerTracingSourceExtractor>();
+            services.AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor>();
+
             services.AddScoped<IHTSClientLoader, HTSClientLoader>();
             services.AddScoped<IHTSClientLinkageLoader, HTSClientLinkageLoader>();
             services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();
+
+            services.AddScoped<IHtsClientsLoader, HtsClientsLoader>();
+            services.AddScoped<IHtsClientTestsLoader, HtsClientTestsLoader>();
+            services.AddScoped<IHtsClientsLinkageLoader, HtsClientsLinkageLoader>();
+            services.AddScoped<IHtsTestKitsLoader,   HtsTestKitsLoader>();
+            services.AddScoped<IHtsClientTracingLoader, HtsClientTracingLoader>();
+            services.AddScoped<IHtsPartnerTracingLoader, HtsPartnerTracingLoader>();
+            services.AddScoped<IHtsPartnerNotificationServicesLoader, HtsPartnerNotificationServicesLoader >();
+
             services.AddScoped<IHtsPackager, HtsPackager>();
             services.AddScoped<IHtsSendService, HtsSendService>();
             services.AddScoped<IHtsExtractValidator, HtsExtractValidator>();

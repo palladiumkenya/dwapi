@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.SharedKernel.Interfaces;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts
 {
-    public interface IHtsPartnerNotificationServicesExtractRepository : IRepository<TempHtsPartnerNotificationServices, Guid>
+    public interface IHtsPartnerNotificationServicesExtractRepository : IRepository<HtsPartnerNotificationServices, Guid>
     {
-        Task Clear();
-        bool BatchInsert(IEnumerable<TempHtsPartnerNotificationServices> extracts);
+        bool BatchInsert(IEnumerable<HtsPartnerNotificationServices> extracts);
+        IEnumerable<HtsPartnerNotificationServices> GetView();
+        void UpdateSendStatus(List<SentItem> sentItems);
     }
 
 }
