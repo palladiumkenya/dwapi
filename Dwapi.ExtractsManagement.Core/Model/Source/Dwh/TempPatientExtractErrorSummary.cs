@@ -29,6 +29,18 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         [NotMapped]
         public DateTime? LastVisit { get; set; }
 
+        public string Orphan { get; set; }
+        public string Inschool { get; set; }
+        public string PatientType { get; set; }
+        public string PopulationType { get; set; }
+        public string KeyPopulationType { get; set; }
+        public string PatientResidentCounty { get; set; }
+        public string PatientResidentSubCounty { get; set; }
+        public string PatientResidentLocation { get; set; }
+        public string PatientResidentSubLocation { get; set; }
+        public string PatientResidentWard { get; set; }
+        public string PatientResidentVillage { get; set; }
+
         //public override void AddHeader(Row row)
         //{
         //    base.AddHeader(row);

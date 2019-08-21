@@ -8,16 +8,16 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 {
     public class ClearAllHTSExtractsHandler : IRequestHandler<ClearAllHTSExtracts,bool>
     {
-        private readonly ICleanHtsExtracts _cleanHtsExtracts;
+        private readonly IClearHtsExtracts _cleanHtsExtracts;
 
-        public ClearAllHTSExtractsHandler(ICleanHtsExtracts cleanHtsExtracts)
+        public ClearAllHTSExtractsHandler(IClearHtsExtracts cleanHtsExtracts)
         {
             _cleanHtsExtracts = cleanHtsExtracts;
         }
 
         public async Task<bool> Handle(ClearAllHTSExtracts request, CancellationToken cancellationToken)
         {
-            await _cleanHtsExtracts.Clean(request.ExtractIds);
+            await _cleanHtsExtracts.Clear(request.ExtractIds);
             return true;
         }
     }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
 {
-    [Table("vTempHtsPartnerNotificationServicesErrorSummary")]
+    [Table("vTempHtsPartnerNotificationServicesExtractErrorSummary")]
     public class TempHtsPartnerNotificationServicesErrorSummary : TempHTSExtractErrorSummary
     {
         public int? PartnerPatientPk { get; set; }

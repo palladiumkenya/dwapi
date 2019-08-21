@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
 {
-    [Table("vTempHtsClientTestsErrorSummary")]
+    [Table("vTempHtsClientTestsExtractErrorSummary")]
     public class TempHtsClientTestsErrorSummary : TempHTSExtractErrorSummary
     {
         public int? EncounterId { get; set; }

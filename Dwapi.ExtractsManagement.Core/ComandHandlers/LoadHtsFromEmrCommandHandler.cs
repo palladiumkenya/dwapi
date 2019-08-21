@@ -29,7 +29,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             //Generate extract patient command
             if (patientProfile != null)
             {
-                var extractPatient = new ExtractHTSClient()
+                var extractPatient = new ExtractHtsClients()
                 {
                     //todo check if extracts from all emrs are loaded
                     Extract = patientProfile.Extract,
@@ -49,34 +49,81 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
         private async Task<bool> ExtractAll(LoadHtsFromEmrCommand request, CancellationToken cancellationToken)
         {
-            Task<bool> linkageTask = null, partnerTask = null;
-            // HTSClientLinkageExtract
-            var patientArtProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HTSClientLinkageExtract");
-            if (null != patientArtProfile)
+            Task<bool> ClientTestTask = null, TestKitTask = null, ClientTracingTask = null, PartnerTracingTask = null, PNSTask = null, ClientLinkageTask = null;
+            // HtsClientTestExtract
+            var HtsClientTestExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientTestsExtract");
+            if (null != HtsClientTestExtractProfile)
             {
-                var patientArtCommand = new ExtractHTSClientLinkage()
+                var command = new ExtractHtsClientTests()
                 {
-                    Extract = patientArtProfile?.Extract,
-                    DatabaseProtocol = patientArtProfile?.DatabaseProtocol
+                    Extract = HtsClientTestExtractProfile?.Extract,
+                    DatabaseProtocol = HtsClientTestExtractProfile?.DatabaseProtocol
                 };
-                linkageTask = _mediator.Send(patientArtCommand, cancellationToken);
+                ClientTestTask = _mediator.Send(command, cancellationToken);
             }
 
-            // HTSClientPartnerExtract
-            var patientBaselinesProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HTSClientPartnerExtract");
-            if (null != patientBaselinesProfile)
+            // HtsTestKitsExtract
+            var HtsTestKitsExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsTestKitsExtract");
+            if (null != HtsTestKitsExtractProfile)
             {
-                var patientBaselinesCommand = new ExtractHTSClientPartner()
+                var command = new ExtractHtsTestKits()
                 {
-                    Extract = patientBaselinesProfile?.Extract,
-                    DatabaseProtocol = patientBaselinesProfile?.DatabaseProtocol
+                    Extract = HtsTestKitsExtractProfile?.Extract,
+                    DatabaseProtocol = HtsTestKitsExtractProfile?.DatabaseProtocol
                 };
-                partnerTask = _mediator.Send(patientBaselinesCommand, cancellationToken);
+                TestKitTask = _mediator.Send(command, cancellationToken);
             }
 
+            // HtsClientTracingExtract
+            var HtsClientTracingExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientTracingExtract");
+            if (null != HtsClientTracingExtractProfile)
+            {
+                var command = new ExtractHtsClientTracing()
+                {
+                    Extract = HtsClientTracingExtractProfile?.Extract,
+                    DatabaseProtocol = HtsClientTracingExtractProfile?.DatabaseProtocol
+                };
+                ClientTracingTask = _mediator.Send(command, cancellationToken);
+            }
+
+            // HtsPartnerTracingExtract
+            var HtsPartnerTracingExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsPartnerTracingExtract");
+            if (null != HtsPartnerTracingExtractProfile)
+            {
+                var command = new ExtractHtsPartnerTracing()
+                {
+                    Extract = HtsPartnerTracingExtractProfile?.Extract,
+                    DatabaseProtocol = HtsPartnerTracingExtractProfile?.DatabaseProtocol
+                };
+                PartnerTracingTask = _mediator.Send(command, cancellationToken);
+            }
+
+            // HtsPNSExtract
+            var HtsPNSExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsPartnerNotificationServicesExtract");
+            if (null != HtsPNSExtractProfile)
+            {
+                var command = new ExtractHtsPartnerNotificationServices()
+                {
+                    Extract = HtsPNSExtractProfile?.Extract,
+                    DatabaseProtocol = HtsPNSExtractProfile?.DatabaseProtocol
+                };
+                PNSTask = _mediator.Send(command, cancellationToken);
+            }
+
+            // HtsClientLinkageExtract
+            var HtsClientLinkageExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientLinkageExtract");
+            if (null != HtsClientLinkageExtractProfile)
+            {
+                var command = new ExtractHtsClientsLinkage()
+                {
+                    Extract = HtsClientLinkageExtractProfile?.Extract,
+                    DatabaseProtocol = HtsClientLinkageExtractProfile?.DatabaseProtocol
+                };
+                ClientLinkageTask = _mediator.Send(command, cancellationToken);
+            }
 
             // await all tasks
-            var ts = new List<Task<bool>> { linkageTask, partnerTask};
+            var ts = new List<Task<bool>> { ClientTestTask, TestKitTask, ClientTracingTask, PartnerTracingTask, PNSTask, ClientLinkageTask };
             var result = await Task.WhenAll(ts);
 
             return result.All(x=>x);
