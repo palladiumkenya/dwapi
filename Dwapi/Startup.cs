@@ -357,14 +357,14 @@ namespace Dwapi
             services.AddScoped<ITempHtsPartnerTracingErrorSummaryRepository, TempHtsPartnerTracingExtractErrorSummaryRepository>();
             services.AddScoped<ITempHtsPartnerNotificationServicesErrorSummaryRepository, TempHtsPartnerNotificationServicesExtractErrorSummaryRepository>();
 
-            services.AddScoped<ICleanHtsExtracts, CleanHtsExtracts>();
+            //services.AddScoped<ICleanHtsExtracts, CleanHtsExtracts>();
             services.AddScoped<IClearHtsExtracts, ClearHtsExtracts>();
 
             services.AddScoped<IHTSExtractSourceReader, HTSExtractSourceReader>();
 
-            services.AddScoped<IHTSClientSourceExtractor, HTSClientSourceExtractor>();
+            /*services.AddScoped<IHTSClientSourceExtractor, HTSClientSourceExtractor>();
             services.AddScoped<IHTSClientLinkageSourceExtractor, HTSClientLinkageSourceExtractor>();
-            services.AddScoped<IHTSClientPartnerSourceExtractor, HTSClientPartnerSourceExtractor>();
+            services.AddScoped<IHTSClientPartnerSourceExtractor, HTSClientPartnerSourceExtractor>();*/
 
             services.AddScoped<IHtsClientsSourceExtractor, HtsClientsSourceExtractor>();
             services.AddScoped<IHtsClientTestsSourceExtractor, HtsClientTestsSourceExtractor>();
@@ -374,9 +374,9 @@ namespace Dwapi
             services.AddScoped<IHtsPartnerTracingSourceExtractor, HtsPartnerTracingSourceExtractor>();
             services.AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor>();
 
-            services.AddScoped<IHTSClientLoader, HTSClientLoader>();
+            /*services.AddScoped<IHTSClientLoader, HTSClientLoader>();
             services.AddScoped<IHTSClientLinkageLoader, HTSClientLinkageLoader>();
-            services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();
+            services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
 
             services.AddScoped<IHtsClientsLoader, HtsClientsLoader>();
             services.AddScoped<IHtsClientTestsLoader, HtsClientTestsLoader>();

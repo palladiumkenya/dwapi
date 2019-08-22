@@ -224,8 +224,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     TestKitName2 = table.Column<string>(nullable: true),
                     TestKitLotNumber2 = table.Column<string>(nullable: true),
                     TestKitExpiry2 = table.Column<string>(nullable: true),
-                    TestResult2 = table.Column<string>(nullable: true),
-                    TestId = table.Column<int>(nullable: false)
+                    TestResult2 = table.Column<string>(nullable: true)
+                    //,TestId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

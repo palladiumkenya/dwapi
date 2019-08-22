@@ -29,6 +29,17 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? PreviousARTStartDate { get; set; }
         public string StatusAtCCC { get; set; }
         public string StatusAtPMTCT { get; set; }
+        public string Orphan { get; set; }
+        public string Inschool { get; set; }
+        public string PatientType { get; set; }
+        public string PopulationType { get; set; }
+        public string KeyPopulationType { get; set; }
+        public string PatientResidentCounty { get; set; }
+        public string PatientResidentSubCounty { get; set; }
+        public string PatientResidentLocation { get; set; }
+        public string PatientResidentSubLocation { get; set; }
+        public string PatientResidentWard { get; set; }
+        public string PatientResidentVillage { get; set; }
         public string StatusAtTBClinic { get; set; }
         [NotMapped]
         public virtual ICollection<TempPatientExtractErrorSummary> TempPatientExtractErrorSummaries { get; set; } = new List<TempPatientExtractErrorSummary>();

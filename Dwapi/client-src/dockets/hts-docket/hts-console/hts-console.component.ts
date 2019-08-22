@@ -635,69 +635,69 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private generateExtractClients(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientsExtracts').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientExtract').databaseProtocolId;
         this.extractClients = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsClientsExtracts')
+            extract: this.extracts.find(x => x.name === 'HtsClientExtract')
         };
         return this.extractClients;
     }
 
     private generateExtractClientTests(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientTestsExtracts').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientTestsExtract').databaseProtocolId;
         this.extractClientTests = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsClientTestsExtracts')
+            extract: this.extracts.find(x => x.name === 'HtsClientTestsExtract')
         };
         return this.extractClientTests;
     }
 
     private generateExtractPartnerNotificationServices(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsPartnerNotificationServicesExtracts').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsPartnerNotificationServicesExtract').databaseProtocolId;
         this.extractPartnerNotificationServices = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsPartnerNotificationServicesExtracts')
+            extract: this.extracts.find(x => x.name === 'HtsPartnerNotificationServicesExtract')
         };
         return this.extractPartnerNotificationServices;
     }
 
     private generateExtractTestKits(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsTestKitsExtracts').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsTestKitsExtract').databaseProtocolId;
         this.extractTestKits = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsTestKitsExtracts')
+            extract: this.extracts.find(x => x.name === 'HtsTestKitsExtract')
         };
         return this.extractTestKits;
     }
 
     private generateExtractClientsLinkage(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientsLinkageExtracts').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientLinkageExtract').databaseProtocolId;
         this.extractClientsLinkage = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsClientsLinkageExtracts')
+            extract: this.extracts.find(x => x.name === 'HtsClientLinkageExtract')
         };
         return this.extractClientsLinkage;
     }
 
     private generateExtractPartnerTracing(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsPartnerTracingExtracts').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsPartnerTracingExtract').databaseProtocolId;
         this.extractPartnerTracing = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsPartnerTracingExtracts')
+            extract: this.extracts.find(x => x.name === 'HtsPartnerTracingExtract')
         };
         return this.extractPartnerTracing;
     }
 
     private generateExtractClientTracing(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientTracingExtracts').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientTracingExtract').databaseProtocolId;
         this.extractClientTracing = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsClientTracingExtracts')
+            extract: this.extracts.find(x => x.name === 'HtsClientTracingExtract')
         };
         return this.extractClientTracing;
     }
 
-    private generateExtractClient(currentEmr: EmrSystem): ExtractProfile {
+    /*private generateExtractClient(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientExtract').databaseProtocolId;
         this.extractClient = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
@@ -722,7 +722,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             extract: this.extracts.find(x => x.name === 'HTSClientPartnerExtract')
         };
         return this.extractClientPartner;
-    }
+    }*/
 
     private getSendPackage(docketId: string): SendPackage {
         return {

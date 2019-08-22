@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
@@ -46,19 +46,39 @@ namespace Dwapi.UploadManagement.Core.Packager.Hts
             return manifests;
         }
 
-        public IEnumerable<HTSClientExtract> GenerateClients()
+        public IEnumerable<HtsClients> GenerateClients()
         {
             return _htsExtractReader.ReadAllClients();
         }
 
-        public IEnumerable<HTSClientPartnerExtract> GeneratePartners()
+        public IEnumerable<HtsClientTests> GenerateClientTests()
         {
-            return _htsExtractReader.ReadAllPartners();
+            return _htsExtractReader.ReadAllClientTests();
         }
 
-        public IEnumerable<HTSClientLinkageExtract> GenerateLinkages()
+        public IEnumerable<HtsClientTracing> GenerateClientTracing()
         {
-            return _htsExtractReader.ReadAllLinkages();
+            return _htsExtractReader.ReadAllClientTracing();
+        }
+
+        public IEnumerable<HtsPartnerTracing> GeneratePartnerTracing()
+        {
+            return _htsExtractReader.ReadAllPartnerTracing();
+        }
+
+        public IEnumerable<HtsPartnerNotificationServices> GeneratePartnerNotificationServices()
+        {
+            return _htsExtractReader.ReadAllPartnerNotificationServices();
+        }
+
+        public IEnumerable<HtsClientLinkage> GenerateClientLinkage()
+        {
+            return _htsExtractReader.ReadAllClientsLinkage();
+        }
+
+        public IEnumerable<HtsTestKits> GenerateTestKits()
+        {
+            return _htsExtractReader.ReadAllTestKits();
         }
     }
 }

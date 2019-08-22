@@ -19,7 +19,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public string County { get; set; }
         public string SubCounty { get; set; }
         public string Ward { get; set; }
-        public string FacilityName { get; set; }
         public virtual int? SiteCode { get; set; }
         public virtual int? PatientPk { get; set; }
         public virtual string HtsNumber { get; set; }
