@@ -60,33 +60,35 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
 
             var truncates = new List<string>
             {
-                nameof(ExtractsContext.TempHtsClientsExtracts),
-                nameof(ExtractsContext.TempHtsTestKitsExtracts),
+                nameof(ExtractsContext.TempHtsClientTestsExtracts),
                 nameof(ExtractsContext.TempHtsTestKitsExtracts),
                 nameof(ExtractsContext.TempHtsClientLinkageExtracts),
                 nameof(ExtractsContext.TempHtsPartnerTracingExtracts),
                 nameof(ExtractsContext.TempHtsClientTracingExtracts),
                 nameof(ExtractsContext.TempHtsPartnerNotificationServicesExtracts),
+                nameof(ExtractsContext.TempHtsClientsExtracts),
 
-                nameof(ExtractsContext.HtsClientsExtracts),
-                nameof(ExtractsContext.HtsTestKitsExtracts),
+                nameof(ExtractsContext.HtsClientTestsExtracts),
                 nameof(ExtractsContext.HtsTestKitsExtracts),
                 nameof(ExtractsContext.HtsClientLinkageExtracts),
                 nameof(ExtractsContext.HtsPartnerTracingExtracts),
                 nameof(ExtractsContext.HtsClientTracingExtracts),
                 nameof(ExtractsContext.HtsPartnerNotificationServicesExtracts),
+                nameof(ExtractsContext.HtsClientsExtracts),
 
-                nameof(ExtractsContext.TempHtsClientLinkageExtracts),
+                /*nameof(ExtractsContext.TempHtsClientLinkageExtracts),
                 nameof(ExtractsContext.TempHtsClientPartnerExtracts),
                 nameof(ExtractsContext.TempHtsClientExtracts),
                 nameof(ExtractsContext.HtsClientLinkageExtracts),
                 nameof(ExtractsContext.HtsClientPartnerExtracts),
-                nameof(ExtractsContext.HtsClientExtracts)
+                nameof(ExtractsContext.HtsClientExtracts)*/
             };
 
             //   var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };
 
-            var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"TRUNCATE TABLE {x};"));
+            //var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"TRUNCATE TABLE {x};"));
+
+            var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"DELETE FROM {x};"));
 
             foreach (var truncateCommand in truncateCommands)
             {

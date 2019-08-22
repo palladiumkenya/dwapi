@@ -9,7 +9,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
     {
         [NotMapped]
         public virtual ICollection<TempHtsClientTracingErrorSummary> TempHtsClientTracingErrorSummaries { get; set; } = new List<TempHtsClientTracingErrorSummary>();
-        public DateTime? TracingType { get; set; }
+        public string TracingType { get; set; }
         public DateTime? TracingDate { get; set; }
         public string TracingOutcome { get; set; }
         public string FacilityName { get; set; }

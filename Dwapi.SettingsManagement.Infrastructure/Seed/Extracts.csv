@@ -1,20 +1,44 @@
 Id|Display|DocketId|EmrSystemId|ExtractSql|Destination|IsPriority|Name|Rank|DatabaseProtocolId
-a6222210-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a62216ee-0e85-11e8-ba89-0ed5f89f718b|select [Id],[shr],[date_created],[status],[status_date],[uuid] FROM [psmart_store] WHERE UPPER(Status) = 'PENDING'|PSmartStage|1|pSmart|1|a6221982-0e85-11e8-ba89-0ed5f89f718b
-a6226eb4-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a6221856-0e85-11e8-ba89-0ed5f89f718b|select id,shr,date_created,status,status_date,uuid FROM psmart_store where upper(status) = 'PENDING'|PSmartStage|1|pSmart|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-329bfbf4-d404-4dfd-88eb-6fb398c64249|All Patients|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT	PatientID, PatientPK, FacilityID, SiteCode, FacilityName, SatelliteName, Gender, DOB, RegistrationDate, RegistrationAtCCC, RegistrationAtPMTCT, RegistrationAtTBClinic, PatientSource, Region, District, Village, ContactRelation, LastVisit, MaritalStatus, EducationLevel, DateConfirmedHIVPositive, PreviousARTExposure, PreviousARTStartDate, StatusAtCCC, StatusAtPMTCT, StatusAtTBClinic, 'IQCare' AS EMR, 'Kenya HMIS II' AS Project, CAST(GETDATE() AS DATE) AS DateExtracted,newid() as ID FROM  	tmp_PatientMaster AS a WHERE a.RegistrationAtCCC IS NOT NULL"|dwhstage|1|PatientExtract|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
+a6222210-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"select [Id],[shr],[date_created],[status],[status_date],[uuid] FROM [psmart_store] WHERE UPPER(Status) = 'PENDING'"|PSmartStage|1|pSmart|1|a6221982-0e85-11e8-ba89-0ed5f89f718b
+a6226eb4-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select id,shr,date_created,status,status_date,uuid FROM psmart_store where upper(status) = 'PENDING'"|PSmartStage|1|pSmart|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+329bfbf4-d404-4dfd-88eb-6fb398c64249|All Patients|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT	
+ PatientID, PatientPK, FacilityID, SiteCode, FacilityName, SatelliteName,
+ Gender, DOB, RegistrationDate, RegistrationAtCCC, RegistrationAtPMTCT, 
+ RegistrationAtTBClinic, PatientSource, Region, District, Village, ContactRelation, LastVisit, 
+ MaritalStatus, EducationLevel, DateConfirmedHIVPositive, PreviousARTExposure, 
+ PreviousARTStartDate, StatusAtCCC, StatusAtPMTCT, StatusAtTBClinic, 'IQCare' AS EMR, 'Kenya HMIS II' AS Project, 
+ PatientType, 
+	PopulationCategory as PopulationType, 
+	'' AS KeyPopulationType,
+	Orphan, InSchool, 
+	County AS PatientResidentCounty ,
+	SubCounty AS PatientResidentSubCounty, 
+	Ward AS PatientResidentLocation ,
+	'' AS PatientResidentSubLocation,
+	Ward AS PatientResidentWard ,
+	Village AS PatientResidentVillage,    
+	ARTTransferInDate as TransferInDate,   
+	CAST(GETDATE() AS DATE) AS DateExtracted,
+	newid() as ID 
+  FROM  	tmp_PatientMaster AS a WHERE a.RegistrationAtCCC IS NOT NULL"|dwhstage|1|PatientExtract|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
 41742eb0-5856-e811-8e16-9cb6d0da773c|ART Patients|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
 
- a.PatientPK, a.PatientID, c.FacilityID, c.SiteCode, a.FacilityName, a.DOB, a.AgeEnrollment, a.AgeARTStart, a.AgeLastVisit, a.RegistrationDate, a.PatientSource, a.Gender, a.StartARTDate, a.PreviousARTStartDate,
-
- a.PreviousARTRegimen, a.StartARTAtThisFacility, a.StartRegimen, a.StartRegimenLine, a.LastARTDate, a.LastRegimen, a.LastRegimenLine, a.Duration, a.ExpectedReturn, a.Provider, a.LastVisit, a.ExitReason,
+ a.PatientPK, a.PatientID, c.FacilityID, c.SiteCode, 
+ a.FacilityName, a.DOB, a.AgeEnrollment, a.AgeARTStart, 
+ a.AgeLastVisit, a.RegistrationDate, a.PatientSource, a.Gender, a.StartARTDate, a.PreviousARTStartDate,
+  REPLACE(REPLACE(REPLACE (a.PreviousARTRegimen,'/', '+'),'LPV+r','LPV/r'), 'ATV+r','ATV/r') AS PreviousARTRegimen,
+  a.StartARTAtThisFacility, 
+ REPLACE(REPLACE(REPLACE (a.StartRegimen,'/', '+'),'LPV+r','LPV/r'), 'ATV+r','ATV/r') AS StartRegimen,
+  a.StartRegimenLine, a.LastARTDate, 
+  REPLACE(REPLACE(REPLACE (a.LastRegimen,'/', '+'),'LPV+r','LPV/r'), 'ATV+r','ATV/r') AS LastRegimen,
+   a.LastRegimenLine, a.Duration, a.ExpectedReturn, a.Provider, a.LastVisit, a.ExitReason,
 
  a.ExitDate, CAST(GETDATE() AS DATE) AS DateExtracted
  , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
 
 FROM
-
- tmp_ARTPatients AS a INNER JOIN
-
+ tmp_ARTPatients AS a 
+ INNER JOIN
  tmp_PatientMaster AS c ON a.PatientPK = c.PatientPK where c.RegistrationAtCCC is not null"|dwhStage|0|PatientArtExtract|2|a6221983-0e85-11e8-ba89-0ed5f89f718b
 42742eb0-5856-e811-8e16-9cb6d0da773c|Patient Baselines|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
 
@@ -30,34 +54,32 @@ FROM
 FROM 
 
  tmp_PatientMaster LEFT OUTER JOIN
-
     IQC_bCD4 ON tmp_PatientMaster.PatientPK = IQC_bCD4.PatientPK LEFT OUTER JOIN
-
     IQC_bWAB ON tmp_PatientMaster.PatientPK = IQC_bWAB.PatientPK LEFT OUTER JOIN
-
     IQC_bWHO ON tmp_PatientMaster.PatientPK = IQC_bWHO.PatientPK LEFT OUTER JOIN
-
     IQC_lastCD4 ON tmp_PatientMaster.PatientPK = IQC_lastCD4.PatientPK LEFT OUTER JOIN
-
     IQC_eWAB ON tmp_PatientMaster.PatientPK = IQC_eWAB.PatientPK LEFT OUTER JOIN
-
     IQC_eWHO ON tmp_PatientMaster.PatientPK = IQC_eWHO.PatientPK LEFT OUTER JOIN
-
     IQC_lastWAB ON tmp_PatientMaster.PatientPK = IQC_lastWAB.PatientPK LEFT OUTER JOIN
-
     IQC_eCD4 ON tmp_PatientMaster.PatientPK = IQC_eCD4.PatientPK LEFT OUTER JOIN
-
     IQC_lastWHO ON tmp_PatientMaster.PatientPK = IQC_lastWHO.PatientPK LEFT OUTER JOIN
-
     IQC_m12CD4 ON tmp_PatientMaster.PatientPK = IQC_m12CD4.PatientPK LEFT OUTER JOIN
-
     IQC_m6CD4 ON tmp_PatientMaster.PatientPK = IQC_m6CD4.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhStage|0|PatientBaselineExtract|3|a6221983-0e85-11e8-ba89-0ed5f89f718b
 43742eb0-5856-e811-8e16-9cb6d0da773c|Patient Status|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
- tmp_PatientMaster.PatientID, tmp_LastStatus.PatientPK, tmp_PatientMaster.SiteCode, tmp_PatientMaster.FacilityName, tmp_PatientMaster.FacilityID as FacilityId, tmp_LastStatus.ExitDescription, tmp_LastStatus.ExitDate, tmp_LastStatus.ExitReason,
+ pm.PatientID, ls.PatientPK, pm.SiteCode, 
+ pm.FacilityName, pm.FacilityID as FacilityId, 
+ '' AS ExitDescription, 
+ MAX(ls.ExitDate) AS ExitDate, 
+ (SELECT TOP 1 ExitReason from tmp_LastStatus S 
+	WHERE S.PatientPK=ls.PatientPK AND ExitDate= MAX(ls.ExitDate)) AS ExitReason,
  CAST(GETDATE() AS DATE) AS DateExtracted, 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
 FROM
- tmp_LastStatus INNER JOIN
- tmp_PatientMaster ON tmp_LastStatus.PatientPK = tmp_PatientMaster.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhStage|0|PatientStatusExtract|4|a6221983-0e85-11e8-ba89-0ed5f89f718b
+ tmp_LastStatus ls
+ INNER JOIN
+ tmp_PatientMaster pm ON ls.PatientPK = pm.PatientPK 
+ where pm.RegistrationAtCCC is not null
+ GROUP BY  pm.PatientID, ls.PatientPK, pm.SiteCode, pm.FacilityName, pm.FacilityID 
+ order by PatientPK"|dwhStage|0|PatientStatusExtract|4|a6221983-0e85-11e8-ba89-0ed5f89f718b
 44742eb0-5856-e811-8e16-9cb6d0da773c|Patient Labs|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
  tmp_PatientMaster.PatientID, tmp_Labs.PatientPK, tmp_PatientMaster.FacilityID, tmp_PatientMaster.SiteCode, tmp_PatientMaster.FacilityName, tmp_PatientMaster.SatelliteName, tmp_Labs.VisitID,
  tmp_Labs.OrderedbyDate, tmp_Labs.ReportedbyDate, tmp_Labs.TestName, tmp_Labs.EnrollmentTest, tmp_Labs.TestResult, CAST(GETDATE() AS DATE) AS DateExtracted,
@@ -66,19 +88,18 @@ FROM
  tmp_Labs INNER JOIN
  tmp_PatientMaster ON tmp_Labs.PatientPK = tmp_PatientMaster.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientLabExtract|5|a6221983-0e85-11e8-ba89-0ed5f89f718b
 46742eb0-5856-e811-8e16-9cb6d0da773c|Patient Pharmacy|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
-
- tmp_PatientMaster.PatientID, tmp_PatientMaster.FacilityID, tmp_PatientMaster.SiteCode, tmp_Pharmacy.PatientPK, tmp_Pharmacy.VisitID, tmp_Pharmacy.Drug, tmp_Pharmacy.Provider,
-
- tmp_Pharmacy.DispenseDate, tmp_Pharmacy.Duration, tmp_Pharmacy.ExpectedReturn, tmp_Pharmacy.TreatmentType, tmp_Pharmacy.RegimenLine, tmp_Pharmacy.PeriodTaken,
-
- tmp_Pharmacy.ProphylaxisType, CAST(GETDATE() AS DATE) AS DateExtracted
+ pm.PatientID, pm.FacilityID, pm.SiteCode, 
+ ph.PatientPK, ph.VisitID, 
+  CASE WHEN ph.TreatmentType='ART'
+ THEN  REPLACE(REPLACE(REPLACE ( ph.Drug,'/', '+'),'LPV+r','LPV/r'), 'ATV+r','ATV/r') 
+ ELSE ph.Drug END as drug, ph.Provider,
+ ph.DispenseDate, ph.Duration, ph.ExpectedReturn, ph.TreatmentType, ph.RegimenLine, ph.PeriodTaken,
+  ph.ProphylaxisType, CAST(GETDATE() AS DATE) AS DateExtracted
  , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
-
 FROM
-
- tmp_Pharmacy INNER JOIN
-
-    tmp_PatientMaster ON tmp_Pharmacy.PatientPK = tmp_PatientMaster.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientPharmacyExtract|6|a6221983-0e85-11e8-ba89-0ed5f89f718b
+ tmp_Pharmacy Ph 
+ INNER JOIN
+    tmp_PatientMaster pm ON ph.PatientPK = pm.PatientPK where pm.RegistrationAtCCC is not null"|dwhstage|0|PatientPharmacyExtract|6|a6221983-0e85-11e8-ba89-0ed5f89f718b
 47742eb0-5856-e811-8e16-9cb6d0da773c|Patient Visits|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
  REPLACE(tmp_PatientMaster.PatientID, ' ', '') AS PatientID, tmp_PatientMaster.FacilityName, tmp_PatientMaster.FacilityID as FacilityId, tmp_PatientMaster.SiteCode, tmp_ClinicalEncounters.PatientPK, tmp_ClinicalEncounters.VisitID,
  tmp_ClinicalEncounters.VisitDate, tmp_ClinicalEncounters.Service, tmp_ClinicalEncounters.VisitType, tmp_ClinicalEncounters.WHOStage, tmp_ClinicalEncounters.WABStage, tmp_ClinicalEncounters.Pregnant,
@@ -87,11 +108,17 @@ FROM
  AS SubstitutionSecondlineRegimenDate, NULL AS SubstitutionSecondlineRegimenReason, NULL AS SecondlineRegimenChangeDate, NULL AS SecondlineRegimenChangeReason,
  tmp_ClinicalEncounters.FamilyPlanningMethod, tmp_ClinicalEncounters.PwP, tmp_ClinicalEncounters.GestationAge, tmp_ClinicalEncounters.NextAppointmentDate, CAST(GETDATE() AS DATE)
  AS DateExtracted
- , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
+ , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project, 
+ PopulationCategory as PopulationType, 
+	NULL AS KeyPopulationType,
+	NULL AS StabilityAssessment,
+	NULL AS DifferentiatedCare
 FROM
  tmp_ClinicalEncounters INNER JOIN
  tmp_PatientMaster ON tmp_PatientMaster.PatientPK = tmp_ClinicalEncounters.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientVisitExtract|7|a6221983-0e85-11e8-ba89-0ed5f89f718b
-3A742EB0-5856-E811-8E16-9CB6D0DA773C|All Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|" select CASE WHEN prg.program='TB' THEN prg.status  ELSE null end  AS StatusAtTBClinic, 
+3A742EB0-5856-E811-8E16-9CB6D0DA773C|All Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 
+
+CASE WHEN prg.program='TB' THEN prg.status  ELSE null end  AS StatusAtTBClinic, 
 CASE WHEN prg.program='PMTCT' THEN prg.status  ELSE null end  AS  StatusAtPMTCT,
 CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
 
@@ -186,10 +213,12 @@ CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
                                 patAd.address6 AS PatientResidentLocation,  -- patAd.address6
                                 patAd.address5 AS PatientResidentSubLocation, -- patAd.address5
                                 patAd.address4 AS PatientResidentWard,  -- patAd.address4
-                                patAd.city_village AS PatientResidentVillage  -- -- patAd.city_village               
+                                patAd.city_village AS PatientResidentVillage,  -- -- patAd.city_village
+                                
+                                min(hiv.transfer_in_date) as TransferInDate
                             
                                
-                                 
+                               
 from kenyaemr_etl.etl_hiv_enrollment hiv
 inner join  kenyaemr_etl.etl_patient_demographics d on hiv.patient_id=d.patient_id
 left outer join kenyaemr_etl.etl_mch_enrollment mch on mch.patient_id=d.patient_id
@@ -209,7 +238,7 @@ left join
 ) as prg on prg.patient_id = d.patient_id 
 where unique_patient_no is not null
 group by d.patient_id 
-order by d.patient_id "|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.DOB,
        d.Gender, '' AS Provider,
        d.unique_patient_no as PatientID,
@@ -283,8 +312,7 @@ from kenyaemr_etl.etl_hiv_enrollment hiv
                                             and cn.locale='en'
 where d.unique_patient_no is not null
 group by d.patient_id
-having min(hiv.visit_date) is not null and reg.art_start_date is not null;
-"|dwhstage|0|PatientArtExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+having min(hiv.visit_date) is not null and reg.art_start_date is not null;"|dwhstage|0|PatientArtExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3C742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Baselines|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select value_reference from location_attribute
@@ -375,8 +403,7 @@ else '' end as ExitReason,*/
  'Kenya HMIS II' as Project,
 CAST(now() as Date) AS DateExtracted,
 max(disc.visit_date) AS ExitDate,
-mid(max(concat(disc.visit_date,case
-when disc.discontinuation_reason is not null then cn.name
+mid(max(concat(disc.visit_date,case when disc.discontinuation_reason is not null then cn.name
 else '' end  )),20) as ExitReason
 from kenyaemr_etl.etl_patient_program_discontinuation disc
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=disc.patient_id
@@ -384,12 +411,12 @@ left outer join concept_name cn on cn.concept_id=disc.discontinuation_reason  an
 and cn.locale='en'
 where d.unique_patient_no is not null 
 group by PatientID  
-order by disc.visit_date ASC"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+order by disc.visit_date ASC;"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as patientID, d.patient_id as patientPK, l.encounter_id as visitID,
 l.visit_date as orderedByDate,l.visit_date as reportedByDate, (select value_reference from location_attribute
 where location_id in (select property_value
 from global_property
-where property='kenyaemr.defaultLocation') and attribute_type_id=1) as facilityID,
+where property='kenyaemr.defaultLocation') and attribute_type_id=1) as facilityID2,
 (select value_reference from location_attribute
 where location_id in (select property_value
 from global_property
@@ -403,18 +430,19 @@ case
 when c.datatype_id=2 then cn2.name
 else
  l.test_result
-end as TestResult, '' as enrollmentTest,
+end as TestResult, 
+'' as enrollmentTest,
  'KenyaEMR' as Emr,
  'Kenya HMIS II' as Project,
 CAST(now() as Date) AS DateExtracted
 from kenyaemr_etl.etl_laboratory_extract l
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=l.patient_id
-join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'
-and cn.locale='en'
+join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
 join concept c on c.concept_id = l.lab_test
 left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
-and cn2.locale='en' where d.unique_patient_no is not null;"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS Provider,'' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
+and cn2.locale='en' where d.unique_patient_no is not null"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select
+ '' AS Provider,'' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select name from location
 where location_id in (select property_value
@@ -425,7 +453,10 @@ where location_id in (select property_value
 from global_property
 where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
 ph.visit_id as VisitID,
-if(cn2.name is not null, cn2.name,cn.name) as Drug,
+-- if(cn2.name is not null, cn2.name,cn.name) as Drug,
+case 
+	when is_arv=1 then drg.drugreg 
+	else if(cn2.name is not null, cn2.name,cn.name) END  as Drug,
 ph.visit_date as DispenseDate,
 duration,
 duration as PeriodTaken,
@@ -439,6 +470,12 @@ fup.next_appointment_date as ExpectedReturn,
 	  WHEN is_dapsone =1  THEN 'DAPSON' END AS ProphylaxisType,
 CAST(now() as Date) AS DateExtracted
 from kenyaemr_etl.etl_pharmacy_extract ph
+left join 
+(select  patient_id, visit_id,visit_date,encounter_id,
+replace(replace(replace(group_concat(cn2.name SEPARATOR '/'),'/','+'),'LPV+R','LPV/R'),'ATV+R','ATV/R') as drugreg from kenyaemr_etl.etl_pharmacy_extract  ph
+left outer join concept_name cn2 on cn2.concept_id=ph.drug  and cn2.concept_name_type='SHORT'
+and cn2.locale='en' where is_arv = '1'
+GROUP BY patient_id, visit_id,visit_date,encounter_id) drg ON drg.patient_id=ph.patient_id AND drg.visit_id=ph.visit_id AND drg.visit_date=ph.visit_date AND drg.encounter_id =ph.encounter_id
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=ph.patient_id
 left outer join concept_name cn on cn.concept_id=ph.drug  and cn.concept_name_type='FULLY_SPECIFIED'
 and cn.locale='en'
@@ -446,10 +483,11 @@ left outer join concept_name cn2 on cn2.concept_id=ph.drug  and cn2.concept_name
 and cn.locale='en'
 left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph.encounter_id
 and fup.patient_id=ph.patient_id
-where unique_patient_no is not null
+where unique_patient_no is not null  and (is_arv=1 OR is_ctx=1 OR is_dapsone =1 )
+group by  ph.patient_id,ph.visit_date,ph.visit_id
 order by ph.patient_id,ph.visit_date;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select
- '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
+'' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select name from location
 where location_id in (select property_value
@@ -464,20 +502,20 @@ fup.visit_date as VisitDate,
 'Out Patient' as Service,
 fup.visit_scheduled as VisitType,
 case fup.who_stage
- when 1220 then 'WHO I'
- when 1221 then 'WHO II'
- when 1222 then 'WHO III'
- when 1223 then 'WHO IV'
- when 1204 then 'WHO I'
- when 1205 then 'WHO II'
- when 1206 then 'WHO III'
- when 1207 then 'WHO IV'
+when 1220 then 'WHO I'
+when 1221 then 'WHO II'
+when 1222 then 'WHO III'
+when 1223 then 'WHO IV'
+when 1204 then 'WHO I'
+when 1205 then 'WHO II'
+when 1206 then 'WHO III'
+when 1207 then 'WHO IV'
   else ''
 end as WHOStage,
 '' as WABStage,
 case fup.pregnancy_status
- when 1065 then 'Yes'
- when 1066 then 'No'
+when 1065 then 'Yes'
+when 1066 then 'No'
 end as Pregnant,
 fup.last_menstrual_period as LMP,
 fup.expected_delivery_date as EDD,
@@ -516,25 +554,44 @@ else ''
 end )as PWP,
 if(fup.last_menstrual_period is not null, timestampdiff(week,fup.last_menstrual_period,fup.visit_date),'') as GestationAge,
 fup.next_appointment_date AS NextAppointmentDate,
- 'KenyaEMR' as Emr,
- 'Kenya HMIS II' as Project,
- NULL AS SubstitutionFirstlineRegimenDate,
- NULL AS SubstitutionFirstlineRegimenReason,
- NULL AS SubstitutionSecondlineRegimenDate,
- NULL AS SubstitutionSecondlineRegimenReason,
- NULL AS SecondlineRegimenChangeDate,
- NULL AS SecondlineRegimenChangeReason,
+'KenyaEMR' as Emr,
+'Kenya HMIS II' as Project,
+
+fup.substitution_first_line_regimen_date AS SubstitutionFirstlineRegimenDate,
+fup.substitution_first_line_regimen_reason AS SubstitutionFirstlineRegimenReason,
+fup.substitution_second_line_regimen_date AS SubstitutionSecondlineRegimenDate,
+fup.substitution_second_line_regimen_reason AS SubstitutionSecondlineRegimenReason,
+fup.second_line_regimen_change_date AS SecondlineRegimenChangeDate,
+fup.second_line_regimen_change_reason AS SecondlineRegimenChangeReason,
+
+ 
+ CASE fup.stability 
+ WHEN 1 THEN 'Stable' 
+ WHEN 2 THEN 'Not Stable' END as StabilityAssessment,  
+ 
+dc.name as DifferentiatedCare, 
+CASE 
+               WHEN fup.key_population_type  IS NOT NULL AND fup.key_population_type  !=1175
+               THEN 'Key population'
+    ELSE pt.name  END as PopulationType,
+    
+case fup.key_population_type 
+WHEN 105 THEN 'PWID'
+WHEN 160578 THEN 'MSM'
+WHEN 160579  THEN 'FSW' 
+WHEN 1175 THEN 'N/A'
+ELSE fup.key_population_type  END as KeyPopulationType, 
+ 
 CAST(now() as Date) AS DateExtracted
 from kenyaemr_etl.etl_patient_demographics d
 join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=d.patient_id
+left join openmrs.concept_name dc on dc.concept_id =  fup.differentiated_care and dc.concept_name_type='FULLY_SPECIFIED'
+left join openmrs.concept_name pt on fup.population_type = pt.concept_id AND pt.concept_name_type='FULLY_SPECIFIED'
 where d.unique_patient_no is not null
 order by d.patient_id,fup.visit_date;"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-
-
 48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT
  *,
- 
- LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
+LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
 LEFT([Gender],1)+
     CASE
     WHEN CHARINDEX(';',[dmFirstName])>0 THEN
@@ -646,7 +703,6 @@ FROM [dbo].[tmp_PatientMaster] a
 )Y
 ON
 Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial"|MPI|1|MasterPatientIndex|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
-
 48742EB0-6656-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT
 -- -----Demographics
 X.Ptn_Pk,
@@ -885,8 +941,6 @@ Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial
        adv.Pregnancy AS AdverseEventIsPregnant
 FROM IQC_AdverseEvents adv
      INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK where p.RegistrationAtCCC is not null"|dwhstage|0|PatientAdverseEventExtract|8|a6221983-0e85-11e8-ba89-0ed5f89f718b
-
-
 a6226eb4-0e85-11e8-ba89-6fb398c5f449|Patient Adverse Events|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT '' AS PatientID,
        '' AS PatientPK,
        '' AS SiteCode,
@@ -903,7 +957,6 @@ a6226eb4-0e85-11e8-ba89-6fb398c5f449|Patient Adverse Events|NDWH|a6221856-0e85-1
 	   NOW() AS AdverseEventStartDate,
        NOW() AS AdverseEventEndDate,
        '' AS AdverseEventIsPregnant"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-
 953cd910-23bb-11e9-ab14-d663bd873d93|Patient Status|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT patientid,
        patientpk,
        sitecode,
@@ -1153,7 +1206,7 @@ Disability as PatientDisabled,
 County,
 SubCounty,
 Ward from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
-on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientExtract|1|A6221983-0E85-11E8-BA89-0ED5F89F718B
+on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientExtract|1|A6221982-0E85-11E8-BA89-0ED5F89F718B
 
 8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT  distinct
 	t.patient_id as PatientPK,
@@ -1206,7 +1259,7 @@ clientSelfTestesd as ClientSelfTested,
 CoupleDiscordant,
 TestType,
 case when Consent=1 then 'Yes' else 'No' end as Consent from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
-on h.PatientPK=p.PatientPK"|DWHStage|0|HtsClientTestsExtract|2|A6221983-0E85-11E8-BA89-0ED5F89F718B
+on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTestsExtract|2|A6221982-0E85-11E8-BA89-0ED5F89F718B
 
 8578afbc-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
 	t.patient_id as PatientPK,
@@ -1242,7 +1295,7 @@ LEFT JOIN
   openmrs.location SN ON SN.location_id =t.encounter_location
 LEFT JOIN openmrs.patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
 from openmrs.patient_identifier_type
-where name='OpenMRS ID')"|DWHStage|0|HtsClientTestsExtract|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+where name='OpenMRS ID')"|DWHStage|1|HtsClientTestsExtract|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578b0f2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct r.ptn_pk as PatientPK,SiteCode,
 p.FacilityName,
@@ -1262,7 +1315,7 @@ r.ArtStartDate as ReportedStartARTDate
   FROM tmp_Referral_Linkage_Register r 
   inner join tmp_PatientMaster p on r.ptn_pk=p.PatientPK
   inner join patient pat on pat.ptn_pk=r.ptn_pk
-  left join Referral ref on pat.personid=ref.personid"|DWHStage|0|HtsClientLinkageExtract|3|A6221983-0E85-11E8-BA89-0ED5F89F718B
+  left join Referral ref on pat.personid=ref.personid"|DWHStage|1|HtsClientLinkageExtract|3|A6221982-0E85-11E8-BA89-0ED5F89F718B
   
 8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT htsrl.patient_id as PatientPK,
 	SC.value_reference AS SiteCode,
@@ -1290,7 +1343,7 @@ LEFT JOIN
 from openmrs.patient_identifier_type
 where name='OpenMRS ID')  
 LEFT JOIN 
-	kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =htsrl.patient_id"|DWHStage|0|HtsClientLinkageExtract|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+	kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =htsrl.patient_id"|DWHStage|1|HtsClientLinkageExtract|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
   
 8578b5a2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct p.PatientPK,
 SiteCode,
@@ -1308,7 +1361,7 @@ TestKitLotNumber_2 as TestKitLotNumber2,
 TestKitExpiryDate_2 as TestKitExpiry2, 
 TestResultsHTS_2 as TestResult2 
 from tmp_HTS_LAB_register h inner join tmp_PatientMaster p
-on h.PatientPK=p.PatientPK"|DWHStage|0|HtsTestKitsExtract|4|A6221983-0E85-11E8-BA89-0ED5F89F718B
+on h.PatientPK=p.PatientPK"|DWHStage|1|HtsTestKitsExtract|4|A6221982-0E85-11E8-BA89-0ED5F89F718B
 
 8578b700-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
     t.patient_id AS PatientPK,
@@ -1335,7 +1388,7 @@ LEFT JOIN
   openmrs.location SN ON SN.location_id =t.encounter_location
 LEFT JOIN openmrs.patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
 from openmrs.patient_identifier_type
-where name='OpenMRS ID')"|DWHStage|0|HtsTestKitsExtract|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+where name='OpenMRS ID')"|DWHStage|1|HtsTestKitsExtract|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578b836-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tracing|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.PatientPK, a.SiteCode, a. TracingType, a.TracingDate, 
 a.FacilityName,a.Emr,a.Project, a.HTSNumber AS HtsNumber, a.TracingOutcome from (select h.PatientPK,
@@ -1352,7 +1405,7 @@ from tmp_HTS_LAB_register h
 inner join tmp_PatientMaster tp on tp.PatientPK =h.Patientpk 
 inner join patient pt on pt.ptn_pk=h.Patientpk
 inner join Tracing tr on tr.personid=pt.id) a
-where a.Tpe='Enrolment'"|DWHStage|0|HtsClientTracingExtract|5|A6221983-0E85-11E8-BA89-0ED5F89F718B
+where a.Tpe='Enrolment'"|DWHStage|1|HtsClientTracingExtract|5|A6221982-0E85-11E8-BA89-0ED5F89F718B
 
 8578b962-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
 	ht.patient_id as PatientPK,
@@ -1376,14 +1429,15 @@ LEFT JOIN
  openmrs.patient_identifier id ON id.patient_id = htsrl.patient_id AND id.identifier_type = (select patient_identifier_type_id 
 from openmrs.patient_identifier_type
 where name='OpenMRS ID')  
- WHERE SC.value_reference IS NOT NULL"|DWHStage|0|HtsClientTracingExtract|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+ WHERE SC.value_reference IS NOT NULL"|DWHStage|1|HtsClientTracingExtract|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
-8578ba84-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Tracing|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select a.IndexPatientPK as PatientPK, a.HtsNumber, a.PartnerPersonId, a. TraceType,a.TraceDate,   a.FacilityName,a.Emr,a.Project, a.SiteCode,a.TracingOutcome, a.BookingDate from (select pr.IndexPtn_pk as IndexPatientPK, tp.HTSID as HtsNumber, 
+8578ba84-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Tracing|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select a.IndexPatientPK as PatientPK, a.HtsNumber, 
+a.PartnerPersonId, a. TraceType,a.TraceDate,   a.FacilityName,a.Emr,a.Project, a.SiteCode,a.TraceOutcome, a.BookingDate from (select pr.IndexPtn_pk as IndexPatientPK, tp.HTSID as HtsNumber, 
 pr.PersonId as PartnerPersonId,
 TraceType = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.Mode),
 DateTracingDone as TraceDate,
 FacilityName,'IQCare' as Emr,'Kenya HMIS II' as Project,tp.SiteCode,
-TracingOutcome = (Select Top 1 ItemName From LookupItemView WHERE ItemId = tr.Outcome),
+TraceOutcome = (Select Top 1 ItemName From LookupItemView WHERE ItemId = tr.Outcome),
 Tpe = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.TracingType), tr.datebookedTesting as BookingDate
 from   (select pr.PersonId, pat.ptn_pk, ptIndex.ptn_pk as IndexPtn_pk
 from PersonRelationship pr  
@@ -1391,7 +1445,7 @@ left join patient ptIndex on ptIndex.id=pr.PatientId
 left join patient pat on pat.PersonId=pr.PersonId) pr 
 inner join Tracing tr on tr.personid=pr.PersonId
 inner join tmp_PatientMaster tp on tp.PatientPK =pr.IndexPtn_pk ) a
-where a.Tpe='Partner'"|DWHStage|0|HtsPartnerTracingExtract|6|A6221983-0E85-11E8-BA89-0ED5F89F718B
+where a.Tpe='Partner'"|DWHStage|1|HtsPartnerTracingExtract|6|A6221982-0E85-11E8-BA89-0ED5F89F718B
 
 8578bbba-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select 
 unique_patient_no as PatientPK,
@@ -1405,7 +1459,7 @@ facility_linked_to as FacilityName,
 null AS SiteCode,
 status as TraceOutcome,
 appointment_date as BookingDate
-from openmrs.kenyaemr_hiv_testing_client_trace ct" |DWHStage|0|HtsPartnerTracingExtract|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+from openmrs.kenyaemr_hiv_testing_client_trace ct" |DWHStage|1|HtsPartnerTracingExtract|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578bce6-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 
 'IQCare' as Emr, 'Kenya HMIS II' as Project,HTS_Number as HtsNumber, a.ptn_pk as PartnerPatientPk,a.personid as PartnerPersonID,DATEDIFF(year, a.dateofbirth, getdate()) as Age, pns.Gender as Sex,a.displayname as RelationsipToIndexClient, ScreenedForIPV as ScreenedForIpv, IPVScreeningOutcome as IpvScreeningOutcome, CurrentlyLivingWithIndexClient, KnowledgeOfHIVStatus as KnowledgeOfHivStatus, PNSApproach as PnsApproach , PNSConsent as PnsConsent, Linked as LinkedToCare, DateLinkedToCare as LinkDateLinkedToCare,CCCNo as CccNumber, FacilityLinkedTo, a.dateofbirth as Dob, pns.Date as DateElicited, pns.MaritalStatus
@@ -1417,7 +1471,7 @@ left join patient ptIndex on ptIndex.id=pr.PatientId
 left join patient pat on pat.PersonId=pr.PersonId) as a
   
   left join IQC_PNS_Register pns on a.IndexPtn_pk=pns.ptn_pk  
-  INNER JOIN tmp_PatientMaster p on  pns.HTS_Number =p.HTSID"|DWHStage|0|HtsPartnerNotificationServicesExtract|7|A6221983-0E85-11E8-BA89-0ED5F89F718B
+  INNER JOIN tmp_PatientMaster p on  pns.HTS_Number =p.HTSID"|DWHStage|1|HtsPartnerNotificationServicesExtract|7|A6221982-0E85-11E8-BA89-0ED5F89F718B
 
 
 8578c042-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 
@@ -1430,4 +1484,4 @@ left join patient ptIndex on ptIndex.id=pr.PatientId
 left join patient pat on pat.PersonId=pr.PersonId) as a
   
   left join IQC_PNS_Register pns on a.IndexPtn_pk=pns.ptn_pk  
-  INNER JOIN tmp_PatientMaster p on  pns.HTS_Number =p.HTSID"|DWHStage|0|HtsPartnerNotificationServicesExtract|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+  INNER JOIN tmp_PatientMaster p on  pns.HTS_Number =p.HTSID"|DWHStage|1|HtsPartnerNotificationServicesExtract|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B

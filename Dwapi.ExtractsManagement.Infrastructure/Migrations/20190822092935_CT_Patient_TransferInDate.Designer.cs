@@ -4,14 +4,16 @@ using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20190822092935_CT_Patient_TransferInDate")]
+    partial class CT_Patient_TransferInDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -965,16 +967,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteCode", "PatientPk");
-
                     b.ToTable("HtsClientsLinkageExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClients", b =>
                 {
-                    b.Property<int>("SiteCode");
-
-                    b.Property<int>("PatientPk");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("County");
 
@@ -990,13 +989,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber");
 
-                    b.Property<Guid>("Id");
-
                     b.Property<string>("KeyPopulationType");
 
                     b.Property<string>("MaritalStatus");
 
                     b.Property<string>("PatientDisabled");
+
+                    b.Property<int>("PatientPk");
 
                     b.Property<string>("PopulationType");
 
@@ -1006,6 +1005,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<int>("SiteCode");
+
                     b.Property<string>("Status");
 
                     b.Property<DateTime?>("StatusDate");
@@ -1014,9 +1015,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Ward");
 
-                    b.HasKey("SiteCode", "PatientPk");
-
-                    b.HasAlternateKey("Id");
+                    b.HasKey("Id");
 
                     b.ToTable("HtsClientsExtracts");
                 });
@@ -1082,8 +1081,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteCode", "PatientPk");
-
                     b.ToTable("HtsClientTestsExtracts");
                 });
 
@@ -1118,11 +1115,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("TracingOutcome");
 
-                    b.Property<string>("TracingType");
+                    b.Property<DateTime>("TracingType");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SiteCode", "PatientPk");
 
                     b.ToTable("HtsClientTracingExtracts");
                 });
@@ -1188,8 +1183,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteCode", "PatientPk");
-
                     b.ToTable("HtsPartnerNotificationServicesExtracts");
                 });
 
@@ -1229,8 +1222,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("TraceType");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SiteCode", "PatientPk");
 
                     b.ToTable("HtsPartnerTracingExtracts");
                 });
@@ -1281,8 +1272,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("TestResult2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SiteCode", "PatientPk");
 
                     b.ToTable("HtsTestKitsExtracts");
                 });
@@ -3395,7 +3384,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("TracingOutcome");
 
-                    b.Property<string>("TracingType");
+                    b.Property<DateTime?>("TracingType");
 
                     b.HasKey("Id");
 
@@ -3427,7 +3416,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("TracingOutcome");
 
-                    b.Property<string>("TracingType");
+                    b.Property<DateTime?>("TracingType");
 
                     b.HasKey("Id");
 
@@ -3461,7 +3450,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("TracingOutcome");
 
-                    b.Property<string>("TracingType");
+                    b.Property<DateTime?>("TracingType");
 
                     b.Property<string>("Type");
 
@@ -4601,54 +4590,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
                         .WithMany("PatientVisitExtracts")
                         .HasForeignKey("SiteCode", "PatientPK")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClientLinkage", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClients")
-                        .WithMany("HtsClientLinkages")
-                        .HasForeignKey("SiteCode", "PatientPk")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClientTests", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClients")
-                        .WithMany("HtsClientTestss")
-                        .HasForeignKey("SiteCode", "PatientPk")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClientTracing", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClients")
-                        .WithMany("HtsClientTracings")
-                        .HasForeignKey("SiteCode", "PatientPk")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsPartnerNotificationServices", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClients")
-                        .WithMany("HtsPartnerNotificationServicess")
-                        .HasForeignKey("SiteCode", "PatientPk")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsPartnerTracing", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClients")
-                        .WithMany("HtsPartnerTracings")
-                        .HasForeignKey("SiteCode", "PatientPk")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsTestKits", b =>
-                {
-                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClients")
-                        .WithMany("HtsTestKitss")
-                        .HasForeignKey("SiteCode", "PatientPk")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

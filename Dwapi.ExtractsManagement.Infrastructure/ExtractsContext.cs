@@ -174,8 +174,48 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
-//            modelBuilder.Entity<HTSClientExtract>()
-//                .HasKey(f => new {f.SiteCode, f.PatientPk,f.EncounterId});
+            //Hts relationships 
+            modelBuilder.Entity<HtsClients>()
+                .HasKey(f => new { f.SiteCode, f.PatientPk });
+
+            modelBuilder.Entity<HtsClients>()
+                .HasMany(c => c.HtsClientTestss)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPk});
+
+            modelBuilder.Entity<HtsClients>()
+                .HasMany(c => c.HtsClientTracings)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
+
+            modelBuilder.Entity<HtsClients>()
+                .HasMany(c => c.HtsTestKitss)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
+
+            modelBuilder.Entity<HtsClients>()
+                .HasMany(c => c.HtsPartnerNotificationServicess)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
+
+            modelBuilder.Entity<HtsClients>()
+                .HasMany(c => c.HtsClientLinkages)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
+
+            modelBuilder.Entity<HtsClients>()
+                .HasMany(c => c.HtsPartnerTracings)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
+
+            //            modelBuilder.Entity<HTSClientExtract>()
+            //                .HasKey(f => new {f.SiteCode, f.PatientPk,f.EncounterId});
 
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
             DapperPlusManager.Entity<TempPatientArtExtract>().Key(x => x.Id).Table($"{nameof(TempPatientArtExtracts)}");

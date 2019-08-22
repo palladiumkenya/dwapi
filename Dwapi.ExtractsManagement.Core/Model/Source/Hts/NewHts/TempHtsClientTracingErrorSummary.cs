@@ -6,7 +6,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
     [Table("vTempHtsClientTracingExtractErrorSummary")]
     public class TempHtsClientTracingErrorSummary : TempHTSExtractErrorSummary
     {
-        public DateTime? TracingType { get; set; }
+        public string TracingType { get; set; }
         public DateTime? TracingDate { get; set; }
         public string TracingOutcome { get; set; }
     }
