@@ -1206,7 +1206,7 @@ clientSelfTestesd as ClientSelfTested,
 CoupleDiscordant,
 TestType,
 case when Consent=1 then 'Yes' else 'No' end as Consent from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
-on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTestsExtract|2|A6221983-0E85-11E8-BA89-0ED5F89F718B
+on h.PatientPK=p.PatientPK"|DWHStage|0|HtsClientTestsExtract|2|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578afbc-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
 	t.patient_id as PatientPK,
@@ -1242,7 +1242,7 @@ LEFT JOIN
   openmrs.location SN ON SN.location_id =t.encounter_location
 LEFT JOIN openmrs.patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
 from openmrs.patient_identifier_type
-where name='OpenMRS ID')"|DWHStage|1|HtsClientTestsExtract|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+where name='OpenMRS ID')"|DWHStage|0|HtsClientTestsExtract|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578b0f2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct r.ptn_pk as PatientPK,SiteCode,
 p.FacilityName,
@@ -1262,7 +1262,7 @@ r.ArtStartDate as ReportedStartARTDate
   FROM tmp_Referral_Linkage_Register r 
   inner join tmp_PatientMaster p on r.ptn_pk=p.PatientPK
   inner join patient pat on pat.ptn_pk=r.ptn_pk
-  left join Referral ref on pat.personid=ref.personid"|DWHStage|1|HtsClientLinkageExtract|3|A6221983-0E85-11E8-BA89-0ED5F89F718B
+  left join Referral ref on pat.personid=ref.personid"|DWHStage|0|HtsClientLinkageExtract|3|A6221983-0E85-11E8-BA89-0ED5F89F718B
   
 8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT htsrl.patient_id as PatientPK,
 	SC.value_reference AS SiteCode,
@@ -1290,7 +1290,7 @@ LEFT JOIN
 from openmrs.patient_identifier_type
 where name='OpenMRS ID')  
 LEFT JOIN 
-	kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =htsrl.patient_id"|DWHStage|1|HtsClientLinkageExtract|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+	kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =htsrl.patient_id"|DWHStage|0|HtsClientLinkageExtract|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
   
 8578b5a2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct p.PatientPK,
 SiteCode,
@@ -1308,7 +1308,7 @@ TestKitLotNumber_2 as TestKitLotNumber2,
 TestKitExpiryDate_2 as TestKitExpiry2, 
 TestResultsHTS_2 as TestResult2 
 from tmp_HTS_LAB_register h inner join tmp_PatientMaster p
-on h.PatientPK=p.PatientPK"|DWHStage|1|HtsTestKitsExtract|4|A6221983-0E85-11E8-BA89-0ED5F89F718B
+on h.PatientPK=p.PatientPK"|DWHStage|0|HtsTestKitsExtract|4|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578b700-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
     t.patient_id AS PatientPK,
@@ -1335,7 +1335,7 @@ LEFT JOIN
   openmrs.location SN ON SN.location_id =t.encounter_location
 LEFT JOIN openmrs.patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
 from openmrs.patient_identifier_type
-where name='OpenMRS ID')"|DWHStage|1|HtsTestKitsExtract|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+where name='OpenMRS ID')"|DWHStage|0|HtsTestKitsExtract|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578b836-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tracing|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.PatientPK, a.SiteCode, a. TracingType, a.TracingDate, 
 a.FacilityName,a.Emr,a.Project, a.HTSNumber AS HtsNumber, a.TracingOutcome from (select h.PatientPK,
@@ -1352,7 +1352,7 @@ from tmp_HTS_LAB_register h
 inner join tmp_PatientMaster tp on tp.PatientPK =h.Patientpk 
 inner join patient pt on pt.ptn_pk=h.Patientpk
 inner join Tracing tr on tr.personid=pt.id) a
-where a.Tpe='Enrolment'"|DWHStage|1|HtsClientTracingExtract|5|A6221983-0E85-11E8-BA89-0ED5F89F718B
+where a.Tpe='Enrolment'"|DWHStage|0|HtsClientTracingExtract|5|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578b962-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
 	ht.patient_id as PatientPK,
@@ -1376,7 +1376,7 @@ LEFT JOIN
  openmrs.patient_identifier id ON id.patient_id = htsrl.patient_id AND id.identifier_type = (select patient_identifier_type_id 
 from openmrs.patient_identifier_type
 where name='OpenMRS ID')  
- WHERE SC.value_reference IS NOT NULL"|DWHStage|1|HtsClientTracingExtract|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+ WHERE SC.value_reference IS NOT NULL"|DWHStage|0|HtsClientTracingExtract|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578ba84-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Tracing|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select a.IndexPatientPK as PatientPK, a.HtsNumber, a.PartnerPersonId, a. TraceType,a.TraceDate,   a.FacilityName,a.Emr,a.Project, a.SiteCode,a.TracingOutcome, a.BookingDate from (select pr.IndexPtn_pk as IndexPatientPK, tp.HTSID as HtsNumber, 
 pr.PersonId as PartnerPersonId,
@@ -1391,7 +1391,7 @@ left join patient ptIndex on ptIndex.id=pr.PatientId
 left join patient pat on pat.PersonId=pr.PersonId) pr 
 inner join Tracing tr on tr.personid=pr.PersonId
 inner join tmp_PatientMaster tp on tp.PatientPK =pr.IndexPtn_pk ) a
-where a.Tpe='Partner'"|DWHStage|1|HtsPartnerTracingExtract|6|A6221983-0E85-11E8-BA89-0ED5F89F718B
+where a.Tpe='Partner'"|DWHStage|0|HtsPartnerTracingExtract|6|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578bbba-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select 
 unique_patient_no as PatientPK,
@@ -1405,7 +1405,7 @@ facility_linked_to as FacilityName,
 null AS SiteCode,
 status as TraceOutcome,
 appointment_date as BookingDate
-from openmrs.kenyaemr_hiv_testing_client_trace ct" |DWHStage|1|HtsPartnerTracingExtract|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+from openmrs.kenyaemr_hiv_testing_client_trace ct" |DWHStage|0|HtsPartnerTracingExtract|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578bce6-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 
 'IQCare' as Emr, 'Kenya HMIS II' as Project,HTS_Number as HtsNumber, a.ptn_pk as PartnerPatientPk,a.personid as PartnerPersonID,DATEDIFF(year, a.dateofbirth, getdate()) as Age, pns.Gender as Sex,a.displayname as RelationsipToIndexClient, ScreenedForIPV as ScreenedForIpv, IPVScreeningOutcome as IpvScreeningOutcome, CurrentlyLivingWithIndexClient, KnowledgeOfHIVStatus as KnowledgeOfHivStatus, PNSApproach as PnsApproach , PNSConsent as PnsConsent, Linked as LinkedToCare, DateLinkedToCare as LinkDateLinkedToCare,CCCNo as CccNumber, FacilityLinkedTo, a.dateofbirth as Dob, pns.Date as DateElicited, pns.MaritalStatus
@@ -1417,7 +1417,7 @@ left join patient ptIndex on ptIndex.id=pr.PatientId
 left join patient pat on pat.PersonId=pr.PersonId) as a
   
   left join IQC_PNS_Register pns on a.IndexPtn_pk=pns.ptn_pk  
-  INNER JOIN tmp_PatientMaster p on  pns.HTS_Number =p.HTSID"|DWHStage|1|HtsPartnerNotificationServicesExtract|7|A6221983-0E85-11E8-BA89-0ED5F89F718B
+  INNER JOIN tmp_PatientMaster p on  pns.HTS_Number =p.HTSID"|DWHStage|0|HtsPartnerNotificationServicesExtract|7|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 
 8578c042-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct p.PatientPK, p.SiteCode, p.FacilityName, 
@@ -1430,4 +1430,4 @@ left join patient ptIndex on ptIndex.id=pr.PatientId
 left join patient pat on pat.PersonId=pr.PersonId) as a
   
   left join IQC_PNS_Register pns on a.IndexPtn_pk=pns.ptn_pk  
-  INNER JOIN tmp_PatientMaster p on  pns.HTS_Number =p.HTSID"|DWHStage|1|HtsPartnerNotificationServicesExtract|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+  INNER JOIN tmp_PatientMaster p on  pns.HTS_Number =p.HTSID"|DWHStage|0|HtsPartnerNotificationServicesExtract|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
