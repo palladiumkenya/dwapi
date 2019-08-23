@@ -14,17 +14,17 @@ export class HtsPartnerNotificationServicesService {
     }
 
     public loadValidCount(): Observable<number> {
-        return this._http.get<any>(this._url + `/partnernotificationservicescount`)
+        return this._http.get<any>(this._url + `/pnscount`)
             .catch(this.handleError);
     }
 
     public loadValid(pageModel: PageModel): Observable<any[]> {
-        return this._http.get<any>(this._url + `/partnernotificationservices/${pageModel.page}/${pageModel.pageSize}`)
+        return this._http.get<any>(this._url + `/pns/${pageModel.page}/${pageModel.pageSize}`)
             .catch(this.handleError);
     }
 
     public loadValidations(): Observable<any[]> {
-        return this._http.get<any>(this._url + '/partnernotificationservicesvalidations')
+        return this._http.get<any>(this._url + '/pnsvalidations')
             .catch(this.handleError);
     }
 

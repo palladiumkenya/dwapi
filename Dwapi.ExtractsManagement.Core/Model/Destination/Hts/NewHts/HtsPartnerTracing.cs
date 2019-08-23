@@ -10,8 +10,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
         {
            
             public  string TraceType { get; set; }
-            public  DateTime TraceDate { get; set; }
+            public  DateTime? TraceDate { get; set; }
             public  string TraceOutcome { get; set; }
-            public  DateTime BookingDate { get; set; }  
+            public  DateTime? BookingDate { get; set; }  
         }
 }

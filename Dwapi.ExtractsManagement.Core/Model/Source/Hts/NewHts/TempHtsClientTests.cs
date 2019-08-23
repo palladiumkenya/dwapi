@@ -7,7 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
             public  int? EncounterId	 { get; set; }
             public  DateTime?   TestDate	 { get; set; }
             public  string   EverTestedForHiv { get; set; }
-            public  int   MonthsSinceLastTest { get; set; }
+            public  int?   MonthsSinceLastTest { get; set; }
             public  string    ClientTestedAs	 { get; set; }
             public   string  EntryPoint	 { get; set; }
             public   string  TestStrategy	 { get; set; }

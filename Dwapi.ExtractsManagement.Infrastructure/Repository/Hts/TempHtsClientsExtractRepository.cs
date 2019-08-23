@@ -62,7 +62,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
             {
                 nameof(ExtractsContext.TempHtsClientTestsExtracts),
                 nameof(ExtractsContext.TempHtsTestKitsExtracts),
-                nameof(ExtractsContext.TempHtsClientLinkageExtracts),
+                nameof(ExtractsContext.TempHtsClientsLinkageExtracts),
                 nameof(ExtractsContext.TempHtsPartnerTracingExtracts),
                 nameof(ExtractsContext.TempHtsClientTracingExtracts),
                 nameof(ExtractsContext.TempHtsPartnerNotificationServicesExtracts),
@@ -70,7 +70,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
 
                 nameof(ExtractsContext.HtsClientTestsExtracts),
                 nameof(ExtractsContext.HtsTestKitsExtracts),
-                nameof(ExtractsContext.HtsClientLinkageExtracts),
+                nameof(ExtractsContext.HtsClientsLinkageExtracts),
                 nameof(ExtractsContext.HtsPartnerTracingExtracts),
                 nameof(ExtractsContext.HtsClientTracingExtracts),
                 nameof(ExtractsContext.HtsPartnerNotificationServicesExtracts),

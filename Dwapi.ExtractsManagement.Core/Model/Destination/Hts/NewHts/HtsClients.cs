@@ -7,7 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
     public  class HtsClients : HtsExtract
     {
 
-        public  DateTime  DoB	 { get; set; }
+        public  DateTime?  DoB	 { get; set; }
         public  string  Gender	 { get; set; }
         public  string MaritalStatus	 { get; set; }
         public  string  PopulationType	 { get; set; }

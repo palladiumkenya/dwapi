@@ -7,7 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
     public  class HtsTestKits : HtsExtract
     {
 
-        public  int EncounterId { get; set; }
+        public  int? EncounterId { get; set; }
         public  string TestKitName1 { get; set; }
         public  string TestKitLotNumber1 { get; set; }
         public  string TestKitExpiry1 { get; set; }
