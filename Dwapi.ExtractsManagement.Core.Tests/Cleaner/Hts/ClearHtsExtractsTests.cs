@@ -116,8 +116,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Hts
             Assert.True(context.Set<HtsPartnerNotificationServices>().Any());
             Assert.True(context.Set<HtsPartnerTracing>().Any());
 
-            var cleanCbsExtracts = serviceProvider.GetService<ICleanHtsExtracts>();
-            cleanCbsExtracts.Clean(extractIds.ToList()).Wait();
+            var cleanCbsExtracts = serviceProvider.GetService<IClearHtsExtracts>();
+            cleanCbsExtracts.Clear(extractIds.ToList()).Wait();
 
             Assert.False(context.Set<TempHtsClients>().Any());
             Assert.False(context.Set<TempHtsClientLinkage>().Any());

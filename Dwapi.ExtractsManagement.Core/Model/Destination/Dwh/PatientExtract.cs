@@ -41,6 +41,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string PatientResidentSubLocation { get; set; }
         public string PatientResidentWard { get; set; }
         public string PatientResidentVillage { get; set; }
+        public DateTime? TransferInDate { get; set; }
 
         public virtual ICollection<PatientArtExtract> PatientArtExtracts { get; set; } = new List<PatientArtExtract>();
         public virtual ICollection<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; } = new List<PatientBaselinesExtract>();

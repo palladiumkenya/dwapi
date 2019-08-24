@@ -25,7 +25,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public virtual string Emr { get; set; }
         public virtual string Project { get; set; }
         public virtual bool CheckError { get; set; }
-        public virtual DateTime DateExtracted { get; set; } = DateTime.Now;
+        public virtual DateTime? DateExtracted { get; set; } = DateTime.Now;
         [NotMapped]
         public virtual bool HasError { get; set; }
         public Guid Id { get; set; }

@@ -74,7 +74,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.exName = 'HTS Client Extracts';
+        this.exName = 'Hts Clients';
         this.pageModel = {
             page: 1,
             pageSize: this.initialRows
@@ -85,49 +85,49 @@ export class HtsValidComponent implements OnInit, OnDestroy {
 
     public getValidExtracts(): void {
         console.log('loading>', this.extract);
-        if (this.extract === 'HTS Client Extracts') {
+        if (this.extract === 'Hts Clients') {
             this.getValidHtsClients();
         }
-        if (this.extract === 'HTS Client Linkages Extracts') {
+        if (this.extract === 'Hts Client Linkage') {
             this.getValidLinkages();
         }
-        if (this.extract === 'HTS Client Tracing Extracts') {
+        if (this.extract === 'Hts Client Tracing') {
             this.getValidClientTracing();
         }
-        if (this.extract === 'HTS Partner Tracing Extracts') {
+        if (this.extract === 'Hts Partner Tracing') {
             this.getValidPartnerTracing();
         }
-        if (this.extract === 'HTS Test Kits Extracts') {
+        if (this.extract === 'Hts Test Kits') {
             this.getValidTestKits();
         }
-        if (this.extract === 'HTS Client Tests Extracts') {
+        if (this.extract === 'Hts Client Tests') {
             this.getValidClientTests();
         }
-        if (this.extract === 'HTS Partner Notification Services Extracts') {
-            this.getValidPartnerTracingExtracts();
+        if (this.extract === 'Hts Partner Notification Services') {
+            this.getValidPartnerNotificationServices();
         }
     }
 
     private getColumns(): void {
-        if (this.extract === 'HTS Client Extracts') {
+        if (this.extract === 'Hts Clients') {
             this.getClientsColumns();
         }
-        if (this.extract === 'HTS Client Linkages Extracts') {
+        if (this.extract === 'Hts Client Linkage') {
             this.getClientLinkagesColumns();
         }
-        if (this.extract === 'HTS Client Tracing Extracts') {
+        if (this.extract === 'Hts Client Tracing') {
             this.getClientTracingColumns();
         }
-        if (this.extract === 'HTS Partner Tracing Extracts') {
+        if (this.extract === 'Hts Partner Tracing') {
             this.getPartnerTracingColumns();
         }
-        if (this.extract === 'HTS Test Kits Extracts') {
+        if (this.extract === 'Hts Test Kits') {
             this.getTestKitsColumns();
         }
-        if (this.extract === 'HTS Client Tests Extracts') {
+        if (this.extract === 'Hts Client Tests') {
             this.getClientTestsColumns();
         }
-        if (this.extract === 'HTS Partner Notification Services Extracts') {
+        if (this.extract === 'Hts Partner Notification Services') {
             this.getPartnerNotificationServicesColumns();
         }
     }
@@ -368,13 +368,12 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         );
     }
 
-
-    private getValidPartnerNotificationServicesService(): void {
+    private getValidPartnerNotificationServices(): void {
         this.loadingData = true;
         this.getValid$ = this.htsPartnerNotificationServicesService.loadValidCount().subscribe(
             p => {
                 this.recordCount = p;
-                this.getValiPartnerNotificationServicesServiceExtracts();
+                this.getValidPartnerNotificationServicesExtracts();
             },
             e => {
                 this.errorMessage = [];
@@ -390,7 +389,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         );
     }
 
-    private getValiPartnerNotificationServicesServiceExtracts(): void {
+    private getValidPartnerNotificationServicesExtracts(): void {
         this.getValid$ = this.htsPartnerNotificationServicesService.loadValid(this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
@@ -408,147 +407,111 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         );
     }
 
+    
     private getClientsColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'Dob', header: 'Dob' },
-            { field: 'Gender', header: 'Gender' },
-            { field: 'MaritalStatus', header: 'Marital Status' },
-            { field: 'PopulationType', header: 'Population Type' },
-            { field: 'KeyPopulationType', header: 'Key Population Type' },
-            { field: 'County', header: 'County' },
-            { field: 'SubCounty', header: 'SubCounty' },
-            { field: 'Ward', header: 'Ward' },
+            //{ field: 'summary', header: 'Summary' },
+            { field: 'patientPk', header: 'PatientPK' }, 
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'doB', header: 'Dob' },
+            { field: 'gender', header: 'Gender' },
+            { field: 'maritalStatus', header: 'Marital Status' },
+            { field: 'populationType', header: 'Population Type' },
+            { field: 'keyPopulationType', header: 'Key Population Type' },
+            { field: 'county', header: 'County' },
+            { field: 'subCounty', header: 'SubCounty' },
+            { field: 'ward', header: 'Ward' },
+            
 
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+           
         ];
     }
 
     private getClientTestsColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'TestDate', header: 'Test Date' },
-            { field: 'EverTestedForHiv', header: 'Ever Tested For Hiv' },
-            { field: 'MonthsSinceLastTest', header: 'Months Since Last Test' },
-            { field: 'ClientTestedAs', header: 'Client Tested As' },
-            { field: 'EntryPoint', header: 'Entry Point' },
-            { field: 'TestStrategy', header: 'Test Strategy' },
-            { field: 'TestResult1', header: 'Test Result 1' },
-            { field: 'TestResult2', header: 'Test Result 2' },
-
-            { field: 'FinalTestResult', header: 'Final Test Result' },
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+            //{ field: 'Summary', header: 'Summary' },
+            { field: 'patientPk', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'testDate', header: 'Test Date' },
+            { field: 'everTestedForHiv', header: 'Ever Tested For Hiv' },
+            { field: 'monthsSinceLastTest', header: 'Months Since Last Test' },
+            { field: 'clientTestedAs', header: 'Client Tested As' },
+            { field: 'entryPoint', header: 'Entry Point' },
+            { field: 'testStrategy', header: 'Test Strategy' },
+            { field: 'testResult1', header: 'Test Result 1' },
+            { field: 'testResult2', header: 'Test Result 2' },
+            { field: 'finalTestResult', header: 'Final Test Result' },
+             
         ];
     }
 
     private getClientLinkagesColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'PhoneTracingDate', header: 'Phone Tracing Date' },
-            { field: 'PhysicalTracingDate', header: 'Physical Tracing Date' },
-            { field: 'TracingOutcome', header: 'Tracing Outcome' },
-            { field: 'CccNumber', header: 'Ccc Number' },
-            { field: 'EnrolledFacilityName', header: 'Enrolled Facility Name' },
-            { field: 'ReferralDate', header: 'Referral Date' },
-            { field: 'DateEnrolled', header: 'Date Enrolled' },
-
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+            //{ field: 'Summary', header: 'Summary' },
+            { field: 'patientPk', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'phoneTracingDate', header: 'Phone Tracing Date' },
+            { field: 'physicalTracingDate', header: 'Physical Tracing Date' },
+            { field: 'tracingOutcome', header: 'Tracing Outcome' },
+            { field: 'cccNumber', header: 'Ccc Number' },
+            { field: 'enrolledFacilityName', header: 'Enrolled Facility Name' },
+            { field: 'referralDate', header: 'Referral Date' },
+            { field: 'dateEnrolled', header: 'Date Enrolled' }, 
         ];
     }
 
     private getTestKitsColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'TestKitName1', header: 'Test Kit Name 1' },
-            { field: 'TestKitLotNumber1', header: 'Test Kit Lot Number 1' },
-            { field: 'TestKitExpiry1', header: 'Test Kit Expiry 1' },
-            { field: 'TestResult1', header: 'Test Result 1' },
-            { field: 'TestKitName2', header: 'Test Kit Name 2' },
-            { field: 'TestKitLotNumber2', header: 'Test Kit Lot Number 2' },
-            { field: 'TestKitExpiry2', header: 'Test Kit Expiry 2' },
-            { field: 'TestResult2', header: 'Test Result 2' },
-
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+            //{ field: 'Summary', header: 'Summary' },
+            { field: 'patientPk', header: 'PatientPK' },
+            { field: 'testKitName1', header: 'Test Kit Name 1' },
+            { field: 'testKitLotNumber1', header: 'Test Kit Lot Number 1' },
+            { field: 'testKitExpiry1', header: 'Test Kit Expiry 1' },
+            { field: 'testResult1', header: 'Test Result 1' },
+            { field: 'testKitName2', header: 'Test Kit Name 2' },
+            { field: 'testKitLotNumber2', header: 'Test Kit Lot Number 2' },
+            { field: 'testKitExpiry2', header: 'Test Kit Expiry 2' },
+            { field: 'testResult2', header: 'Test Result 2' },  
         ];
     }
 
     private getClientTracingColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'TracingType', header: 'Tracing Type' },
-            { field: 'TracingDate', header: 'Tracing Date' },
-            { field: 'TracingOutcome', header: 'Tracing Outcome' },
-
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+            //{ field: 'Summary', header: 'Summary' },
+            { field: 'patientPk', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'tracingType', header: 'Tracing Type' },
+            { field: 'tracingDate', header: 'Tracing Date' },
+            { field: 'tracingOutcome', header: 'Tracing Outcome' },  
         ];
     }
 
     private getPartnerTracingColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'TraceType', header: 'Trace Type' },
-            { field: 'TraceDate', header: 'Trace Date' },
-            { field: 'TraceOutcome', header: 'Trace Outcome' },
-            { field: 'BookingDate', header: 'Booking Date' },
-
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+            //{ field: 'Summary', header: 'Summary' },
+            { field: 'patientPk', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'traceType', header: 'Trace Type' },
+            { field: 'traceDate', header: 'Trace Date' },
+            { field: 'traceOutcome', header: 'Trace Outcome' },
+            { field: 'bookingDate', header: 'Booking Date' },  
         ];
     }
 
     private getPartnerNotificationServicesColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'TestDate', header: 'Test Date' },
-            { field: 'EntryPoint', header: 'Entry Point' },
-            { field: 'TestStrategy', header: 'Test Strategy' },
-            { field: 'TestResult1', header: 'Test Result 1' },
-            { field: 'TestResult2', header: 'Test Result 2' },
-            { field: 'FinalTestResult', header: 'Final Test Result' },
-            { field: 'ClientSelfTested', header: 'Client Self Tested' },
-            { field: 'FinalTestResult', header: 'Final Test Result' },
+            //{ field: 'Summary', header: 'Summary' },
+            { field: 'patientPk', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'partnerPersonID', header: 'Partner Person ID' },
+            { field: 'age', header: 'Age' },
+            { field: 'sex', header: 'Sex' },
+            { field: 'relationsipToIndexClient', header: 'Relationsip To Index Client' },
+            { field: 'screenedForIpv', header: 'Screened For IPV' },
+            { field: 'ipvScreeningOutcome', header: 'IPV Screening Outcome' },
+            { field: 'currentlyLivingWithIndexClient', header: 'currently Living With Index Client' },
+            { field: 'pnsConsent', header: 'PNS Consent' }, 
 
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
         ];
     }
 

@@ -8,21 +8,23 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
             
         public  class HtsPartnerNotificationServices : HtsExtract
         {
-            public  int? EncounterId	 { get; set; }
-            public  DateTime   TestDate	 { get; set; }
-            public  string   EverTestedForHiv { get; set; }
-            public  int   MonthsSinceLastTest { get; set; }
-            public  string    ClientTestedAs	 { get; set; }
-            public   string  EntryPoint	 { get; set; }
-            public   string  TestStrategy	 { get; set; }
-            public   string  TestResult1	 { get; set; }
-            public  string   TestResult2	 { get; set; }
-            public   string  FinalTestResult	 { get; set; }
-            public   string  PatientGivenResult	 { get; set; }
-            public   string  TbScreening	 { get; set; }
-            public  string  ClientSelfTested	 { get; set; }
-            public  string   CoupleDiscordant	 { get; set; }
-            public  string   TestType	 { get; set; }
-            public  string   Consent	 { get; set; } 
+            public int? PartnerPatientPk { get; set; }
+            public int? PartnerPersonID { get; set; }
+            public int? Age { get; set; }
+            public string Sex { get; set; }
+            public string RelationsipToIndexClient { get; set; }
+            public string ScreenedForIpv { get; set; }
+            public string IpvScreeningOutcome { get; set; }
+            public string CurrentlyLivingWithIndexClient { get; set; }
+            public string KnowledgeOfHivStatus { get; set; }
+            public string PnsApproach { get; set; }
+            public string PnsConsent { get; set; }
+            public string LinkedToCare { get; set; }
+            public DateTime? LinkDateLinkedToCare { get; set; }
+            public string CccNumber { get; set; }
+            public string FacilityLinkedTo { get; set; }
+            public DateTime? Dob { get; set; }
+            public DateTime? DateElicited { get; set; }
+            public string MaritalStatus { get; set; }
         }
 }

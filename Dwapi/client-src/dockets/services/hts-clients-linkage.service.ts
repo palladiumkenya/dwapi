@@ -14,17 +14,17 @@ export class HtsClientsLinkageService {
     }
 
     public loadValidCount(): Observable<number> {
-        return this._http.get<any>(this._url + `/clientslinkagecount`)
+        return this._http.get<any>(this._url + `/linkagecount`)
             .catch(this.handleError);
     }
 
     public loadValid(pageModel: PageModel): Observable<any[]> {
-        return this._http.get<any>(this._url + `/clientslinkage/${pageModel.page}/${pageModel.pageSize}`)
+        return this._http.get<any>(this._url + `/linkage/${pageModel.page}/${pageModel.pageSize}`)
             .catch(this.handleError);
     }
 
     public loadValidations(): Observable<any[]> {
-        return this._http.get<any>(this._url + '/clientslinkagevalidations')
+        return this._http.get<any>(this._url + '/linkagevalidations')
             .catch(this.handleError);
     }
 

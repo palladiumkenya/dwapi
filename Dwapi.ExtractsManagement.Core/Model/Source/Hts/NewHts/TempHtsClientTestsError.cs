@@ -12,7 +12,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public int? EncounterId { get; set; }
         public DateTime? TestDate { get; set; }
         public string EverTestedForHiv { get; set; }
-        public int MonthsSinceLastTest { get; set; }
+        public int? MonthsSinceLastTest { get; set; }
         public string ClientTestedAs { get; set; }
         public string EntryPoint { get; set; }
         public string TestStrategy { get; set; }
@@ -32,7 +32,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public virtual string Emr { get; set; }
         public virtual string Project { get; set; }
         public virtual bool CheckError { get; set; }
-        public virtual DateTime DateExtracted { get; set; } = DateTime.Now;
+        public virtual DateTime? DateExtracted { get; set; } = DateTime.Now;
         [NotMapped]
         public virtual bool HasError { get; set; }
         public Guid Id { get; set; }

@@ -182,7 +182,7 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
-        [HttpGet("partnertrackingcount")]
+        [HttpGet("partnertracingcount")]
         public async Task<IActionResult> GetPartnerTrackingCount()
         {
             try
@@ -199,7 +199,7 @@ namespace Dwapi.Controller
             }
         }
 
-        [HttpGet("partnertracking/{page}/{pageSize}")]
+        [HttpGet("partnertracing/{page}/{pageSize}")]
         public async Task<IActionResult> LoadPartnerTrackingValid(int? page,int pageSize)
         {
             try
@@ -216,7 +216,7 @@ namespace Dwapi.Controller
             }
         }
 
-        [HttpGet("partnertrackingvalidations")]
+        [HttpGet("partnertracingvalidations")]
         public IActionResult LoadPartnerTrackingValidations()
         {
             try
@@ -233,7 +233,7 @@ namespace Dwapi.Controller
             }
         }
 
-        [HttpGet("clienttrackingcount")]
+        [HttpGet("clienttracingcount")]
         public async Task<IActionResult> GetClientTrackingCount()
         {
             try
@@ -250,7 +250,7 @@ namespace Dwapi.Controller
             }
         }
 
-        [HttpGet("clienttracking/{page}/{pageSize}")]
+        [HttpGet("clienttracing/{page}/{pageSize}")]
         public async Task<IActionResult> LoadClientTrackingValid(int? page, int pageSize)
         {
             try
@@ -267,7 +267,7 @@ namespace Dwapi.Controller
             }
         }
 
-        [HttpGet("clienttrackingvalidations")]
+        [HttpGet("clienttracingvalidations")]
         public IActionResult LoadClientTrackingValidations()
         {
             try
