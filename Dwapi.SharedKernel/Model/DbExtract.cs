@@ -31,7 +31,7 @@ namespace Dwapi.SharedKernel.Model
                 return "PatientLaboratoryExtract";
 
             if (Name.IsSameAs("HTSClientExtract"))
-                return "HtsClientExtract";
+                return "HtsClientsExtract";
 
             if (Name.IsSameAs("HTSClientLinkageExtract"))
                 return "HtsClientLinkageExtract";
@@ -45,7 +45,7 @@ namespace Dwapi.SharedKernel.Model
         private string GetMainName()
         {
             if (Name.StartsWith("Hts"))
-                return "TempHtsClientExtracts";
+                return "TempHtsClientsExtracts";
 
             return "TempPatientExtracts";
         }

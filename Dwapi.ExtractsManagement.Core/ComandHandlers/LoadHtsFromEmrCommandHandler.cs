@@ -25,7 +25,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
             await _mediator.Send(new ClearAllHTSExtracts(extractIds), cancellationToken);
 
-            var patientProfile = request.Extracts.FirstOrDefault(x=>x.Extract.IsPriority);
+            //var patientProfile = request.Extracts.FirstOrDefault(x=>x.Extract.IsPriority);
+            var patientProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientExtract");
             //Generate extract patient command
             if (patientProfile != null)
             {
@@ -49,7 +50,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
         private async Task<bool> ExtractAll(LoadHtsFromEmrCommand request, CancellationToken cancellationToken)
         {
-            Task<bool> ClientTestTask = null, TestKitTask = null, ClientTracingTask = null, PartnerTracingTask = null, PNSTask = null, ClientLinkageTask = null;
+            Task<bool>  ClientTestTask = null, TestKitTask = null, ClientTracingTask = null, PartnerTracingTask = null, PNSTask = null, ClientLinkageTask = null;
+             
             // HtsClientTestExtract
             var HtsClientTestExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientTestsExtract");
             if (null != HtsClientTestExtractProfile)

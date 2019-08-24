@@ -1208,8 +1208,15 @@ SubCounty,
 Ward from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
 on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientExtract|1|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
-8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT  distinct
-	t.patient_id as PatientPK,
+8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select * from (SELECT 
+( 
+                CASE PatientPK 
+                WHEN @curPatientPK 
+                THEN @curRow := @curRow + 1 
+                ELSE @curRow := 1 AND @curPatientPK := PatientPK END
+              )  AS rank ,a.* 
+FROM (
+SELECT  distinct t.patient_id as PatientPK,
 	SC.value_reference AS SiteCode,
 	SN.name as FacilityName,
 	'KenyaEMR' as Emr,
@@ -1235,7 +1242,8 @@ LEFT JOIN
 LEFT JOIN openmrs.person_address A ON A.person_id=d.patient_id
 LEFT JOIN openmrs.patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
 from openmrs.patient_identifier_type
-where name='OpenMRS ID')"|DWHStage|1|HtsClientExtract|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+where name='OpenMRS ID')) a)b
+where b.rank=1"|DWHStage|1|HtsClientExtract|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578ae7c-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct h.PatientPK,
 SiteCode, 

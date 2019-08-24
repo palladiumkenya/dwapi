@@ -61,27 +61,27 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
         [Test]
         public void should_Load_From_Temp_MsSQL()
         {
-            Assert.False(_extractsContext.HtsClientExtracts.Any());
+            Assert.False(_extractsContext.HtsClientsExtracts.Any());
             var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(HtsClients)));
 
             var loader = TestInitializer.ServiceProvider.GetService<IHtsClientsLoader>();
 
             var loadCount = loader.Load(extract.Id, 0).Result;
-            Assert.True(_extractsContext.HtsClientExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContext.HtsClientExtracts.Count()}");
+            Assert.True(_extractsContext.HtsClientsExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContext.HtsClientsExtracts.Count()}");
         }
 
         [Test]
         public void should_Load_From_Temp_MySQL()
         {
-            Assert.False(_extractsContextMySql.HtsClientExtracts.Any());
+            Assert.False(_extractsContextMySql.HtsClientsExtracts.Any());
             var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(HtsClients)));
 
             var loader = TestInitializer.ServiceProviderMysql.GetService<IHtsClientsLoader>();
 
             var loadCount = loader.Load(extract.Id, 0).Result;
-            Assert.True(_extractsContextMySql.HtsClientExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContextMySql.HtsClientExtracts.Count()}");
+            Assert.True(_extractsContextMySql.HtsClientsExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContextMySql.HtsClientsExtracts.Count()}");
         }
     }
 }
