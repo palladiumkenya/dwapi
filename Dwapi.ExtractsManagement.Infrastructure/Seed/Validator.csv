@@ -63,8 +63,7 @@ aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEven
 4f62bd1b-674f-48cb-bb49-9d26497eb4de|TempHtsClientsExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk Required
 4f62bd1b-674f-48cb-bb50-9d26497eb4de|TempHtsClientsExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 4f62bd1b-674f-48cb-bb69-9d26497eb4de|TempHtsClientsExtracts|Dob|Required|Dob IS NULL|DOB is Required
-4f62bd1b-674f-48cb-bb70-9d26497eb4de|TempHtsClientsExtracts|Gender|Required|Gender IS NULL|Gender is Required
-4f62bd9b-674f-48cb-bb71-9d26497eb4de|TempHtsClientsExtracts|HtsNumber|Logical|HtsNumber IS NULL|HtsNumber is Required
+4f62bd1b-674f-48cb-bb70-9d26497eb4de|TempHtsClientsExtracts|Gender|Required|Gender IS NULL|Gender is Required 
 
 4f62bd2b-674f-48cb-bb49-9d26497eb4de|TempHtsClientTestsExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk Required
 4f62bd2b-674f-48cb-bb50-9d26497eb4de|TempHtsClientTestsExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
@@ -72,28 +71,22 @@ aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEven
 4f62bd2b-674f-48cb-bb73-9d26497eb4de|TempHtsClientTestsExtracts|TestResult1|Logical|TestResult1 IS NULL|TestResult1 is Required
 4f62bd2b-674f-48cb-bb74-9d26497eb4de|TempHtsClientTestsExtracts|FinalTestResult|Logical|FinalTestResult IS NULL|FinalTestResult is Required
 4f62bd2b-674f-48cb-bb75-9d26497eb4de|TempHtsClientTestsExtracts|TestResult2|Logical|TestResult2 IS NULL AND TestResult1 = 'Positive' |TestResult1 is positive and TestResult2 is Missing
-4f62bd9b-674f-48cb-bb72-9d26497eb4de|TempHtsClientTestsExtracts|HtsNumber|Logical|HtsNumber IS NULL|HtsNumber is Required
 
 4f62bd3b-674f-48cb-bb77-9d26497eb4de|TempHtsPartnerNotificationServicesExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk is Required
 4f62bd3b-674f-48cb-bb78-9d26497eb4de|TempHtsPartnerNotificationServicesExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
-4f62bd9b-674f-48cb-bb73-9d26497eb4de|TempHtsPartnerNotificationServicesExtracts|HtsNumber|Logical|HtsNumber IS NULL|HtsNumber is Required
 
 4f62bd4b-674f-48cb-bb80-9d26497eb4de|TempHtsClientTracingExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk is Required
 4f62bd4b-674f-48cb-bb81-9d26497eb4de|TempHtsClientTracingExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
-4f62bd9b-674f-48cb-bb74-9d26497eb4de|TempHtsClientTracingExtracts|HtsNumber|Logical|HtsNumber IS NULL|HtsNumber is Required
 
 4f62bd5b-674f-48cb-bb83-9d26497eb4de|TempHtsPartnerTracingExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk is Required
 4f62bd5b-674f-48cb-bb84-9d26497eb4de|TempHtsPartnerTracingExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
-4f62bd9b-674f-48cb-bb75-9d26497eb4de|TempHtsPartnerTracingExtracts|HtsNumber|Logical|HtsNumber IS NULL|HtsNumber is Required
 
 4f62bd7b-674f-48cb-bb83-9d26497eb4de|TempHtsTestKitsExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk is Required
 4f62bd7b-674f-48cb-bb84-9d26497eb4de|TempHtsTestKitsExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required 
 4f62bd7b-674f-48cb-bb73-9d26497eb4de|TempHtsTestKitsExtracts|TestResult1|Logical|TestResult1 IS NULL|TestResult1 is Required 
 4f62bd7b-674f-48cb-bb75-9d26497eb4de|TempHtsTestKitsExtracts|TestResult2|Logical|TestResult2 IS NULL AND TestResult1 = 'Positive' |TestResult1 is positive and TestResult2 is Missing
-4f62bd9b-674f-48cb-bb77-9d26497eb4de|TempHtsTestKitsExtracts|HtsNumber|Logical|HtsNumber IS NULL|HtsNumber is Required
 
 4f62bd8b-674f-48cb-bb83-9d26497eb4de|TempHtsClientsLinkageExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk is Required
 4f62bd8b-674f-48cb-bb84-9d26497eb4de|TempHtsClientsLinkageExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required 
-4f62bd9b-674f-48cb-bb78-9d26497eb4de|TempHtsClientsLinkageExtracts|HtsNumber|Logical|HtsNumber IS NULL|HtsNumber is Required
 
 
