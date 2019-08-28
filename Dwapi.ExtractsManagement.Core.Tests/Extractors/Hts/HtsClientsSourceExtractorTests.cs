@@ -29,7 +29,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Hts
         public void should_Exract_From_Reader_MsSql()
         {
             Assert.False(_extractsContext.TempHtsClientExtracts.Any());
-            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(HtsClients)));
+            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(HtsClients) + "Extracts"));
 
             var extractor = TestInitializer.ServiceProvider.GetService<IHtsClientsSourceExtractor>();
 
@@ -42,7 +42,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Hts
         public void should_Exract_From_Reader_MySql()
         {
             Assert.False(_extractsContextMySql.TempHtsClientExtracts.Any());
-            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(HtsClients)));
+            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(HtsClients) + "Extracts"));
 
             var extractor = TestInitializer.ServiceProviderMysql.GetService<IHtsClientsSourceExtractor>();
 

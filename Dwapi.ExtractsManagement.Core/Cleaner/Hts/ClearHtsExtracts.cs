@@ -32,13 +32,13 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Hts
 
             await _historyRepository.ClearHistory(extractIds);
 
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTests), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsTestKits), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsPartnerNotificationServices), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTracing), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsPartnerTracing), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientLinkage), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients), "clearing...")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTests)+"Extracts", "clearing...")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsTestKits) + "Extracts", "clearing...")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsPartnerNotificationServices) + "Extracts", "clearing...")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTracing) + "Extracts", "clearing...")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsPartnerTracing) + "Extracts", "clearing...")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientLinkage) + "Extracts", "clearing...")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients) + "Extracts", "clearing...")));
 
 
             foreach (var extractId in extractIds)
@@ -55,13 +55,13 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Hts
                 DomainEvents.Dispatch(new HtsStatusNotification(extractId, ExtractStatus.Cleared));
             }
 
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTests), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsTestKits), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsPartnerNotificationServices), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTracing), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsPartnerTracing), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientLinkage), "clearing...")));
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients), "clearing...")));
+            //DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTests), "clearing...")));
+            //DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsTestKits), "clearing...")));
+            //DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsPartnerNotificationServices), "clearing...")));
+            //DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTracing), "clearing...")));
+            //DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsPartnerTracing), "clearing...")));
+            //DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientLinkage), "clearing...")));
+            //DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients), "clearing...")));
 
         }
     }

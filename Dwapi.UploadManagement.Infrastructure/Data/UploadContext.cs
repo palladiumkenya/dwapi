@@ -89,7 +89,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
 
             modelBuilder.Entity<HtsClientsExtractView>()
                 .HasKey(f => f.Id );
-            modelBuilder.Entity<HtsClientTestsExtractView>()
+            /*modelBuilder.Entity<HtsClientTestsExtractView>()
                 .HasKey(f => f.Id );
             modelBuilder.Entity<HtsTestKitsExtractView>()
                 .HasKey(f => f.Id );
@@ -100,7 +100,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
             modelBuilder.Entity<HtsPartnerTracingExtractView>()
                 .HasKey(f => f.Id);
             modelBuilder.Entity<HtsClientsLinkageExtractView>()
-                .HasKey(f => f.Id);
+                .HasKey(f => f.Id);*/
         }
     }
 }

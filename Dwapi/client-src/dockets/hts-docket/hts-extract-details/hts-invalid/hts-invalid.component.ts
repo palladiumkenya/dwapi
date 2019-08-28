@@ -302,6 +302,7 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
         this.cols = [
             { field: 'summary', header: 'Summary' },
             { field: 'patientPK', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
             { field: 'testKitName1', header: 'Test Kit Name 1' },
             { field: 'testKitLotNumber1', header: 'Test Kit Lot Number 1' },
             { field: 'testKitExpiry1', header: 'Test Kit Expiry 1' },

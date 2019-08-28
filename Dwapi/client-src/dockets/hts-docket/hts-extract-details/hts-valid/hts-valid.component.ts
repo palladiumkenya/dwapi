@@ -464,6 +464,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         this.cols = [
             //{ field: 'Summary', header: 'Summary' },
             { field: 'patientPk', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
             { field: 'testKitName1', header: 'Test Kit Name 1' },
             { field: 'testKitLotNumber1', header: 'Test Kit Lot Number 1' },
             { field: 'testKitExpiry1', header: 'Test Kit Expiry 1' },

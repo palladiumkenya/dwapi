@@ -56,8 +56,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 
             //Load
             int loaded = await _patientLoader.Load(request.Extract.Id, found);
-
-            int rejected =
+             
+            int rejected = 
                 _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract);
 
 
@@ -66,7 +66,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
             //notify loaded
             DomainEvents.Dispatch(
                 new HtsExtractActivityNotification(request.Extract.Id, new ExtractProgress(
-                    nameof(HtsClients),
+                    nameof(HtsClients) + "Extracts",
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));
 

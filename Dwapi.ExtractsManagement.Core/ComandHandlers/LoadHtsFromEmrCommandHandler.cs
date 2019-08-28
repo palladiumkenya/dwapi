@@ -24,9 +24,9 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             var extractIds = request.Extracts.Select(x => x.Extract.Id).ToList();
 
             await _mediator.Send(new ClearAllHTSExtracts(extractIds), cancellationToken);
-
+            
             //var patientProfile = request.Extracts.FirstOrDefault(x=>x.Extract.IsPriority);
-            var patientProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientExtract");
+            var patientProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClient");
             //Generate extract patient command
             if (patientProfile != null)
             {
@@ -53,7 +53,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             Task<bool>  ClientTestTask = null, TestKitTask = null, ClientTracingTask = null, PartnerTracingTask = null, PNSTask = null, ClientLinkageTask = null;
              
             // HtsClientTestExtract
-            var HtsClientTestExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientTestsExtract");
+            var HtsClientTestExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientTests");
             if (null != HtsClientTestExtractProfile)
             {
                 var command = new ExtractHtsClientTests()
@@ -65,7 +65,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             }
 
             // HtsTestKitsExtract
-            var HtsTestKitsExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsTestKitsExtract");
+            var HtsTestKitsExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsTestKits");
             if (null != HtsTestKitsExtractProfile)
             {
                 var command = new ExtractHtsTestKits()
@@ -77,7 +77,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             }
 
             // HtsClientTracingExtract
-            var HtsClientTracingExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientTracingExtract");
+            var HtsClientTracingExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientTracing");
             if (null != HtsClientTracingExtractProfile)
             {
                 var command = new ExtractHtsClientTracing()
@@ -89,7 +89,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             }
 
             // HtsPartnerTracingExtract
-            var HtsPartnerTracingExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsPartnerTracingExtract");
+            var HtsPartnerTracingExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsPartnerTracing");
             if (null != HtsPartnerTracingExtractProfile)
             {
                 var command = new ExtractHtsPartnerTracing()
@@ -101,7 +101,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             }
 
             // HtsPNSExtract
-            var HtsPNSExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsPartnerNotificationServicesExtract");
+            var HtsPNSExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsPartnerNotificationServices");
             if (null != HtsPNSExtractProfile)
             {
                 var command = new ExtractHtsPartnerNotificationServices()
@@ -113,7 +113,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             }
 
             // HtsClientLinkageExtract
-            var HtsClientLinkageExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientLinkageExtract");
+            var HtsClientLinkageExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientLinkage");
             if (null != HtsClientLinkageExtractProfile)
             {
                 var command = new ExtractHtsClientsLinkage()

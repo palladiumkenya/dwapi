@@ -39,11 +39,15 @@ namespace Dwapi.SharedKernel.Model
             if (Name.IsSameAs("HTSClientPartnerExtract"))
                 return "HtsClientPartnerExtract";
 
+            if (Name.IsSameAs("HtsClient"))
+                return "HtsClientsExtract";
+           
             return Name;
         }
 
         private string GetMainName()
-        {
+        { 
+
             if (Name.StartsWith("Hts"))
                 return "TempHtsClientsExtracts";
 
@@ -52,6 +56,20 @@ namespace Dwapi.SharedKernel.Model
 
         private string GetTempName()
         {
+            if (Name.IsSameAs("HtsClient"))
+                return "TempHtsClientsExtract";
+            if (Name.IsSameAs("HtsClientTests"))
+                return "TempHtsClientTestsExtract";
+            if (Name.IsSameAs("HtsTestKits"))
+                return "TempHtsTestKitsExtract";
+            if (Name.IsSameAs("HtsClientTracing"))
+                return "TempHtsClientTracingExtract";
+            if (Name.IsSameAs("HtsPartnerTracing"))
+                return "TempHtsPartnerTracingExtract";
+            if (Name.IsSameAs("HtsPartnerNotificationServices"))
+                return "TempHtsPartnerNotificationServicesExtract";
+            if (Name.IsSameAs("HtsClientLinkage"))
+                return "TempHtsClientsLinkageExtract";
             return $"Temp{TableName}";
         }
 
