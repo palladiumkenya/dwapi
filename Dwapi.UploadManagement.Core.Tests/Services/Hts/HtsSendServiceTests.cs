@@ -27,7 +27,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
     {
         private readonly string _authToken = @"1983aeda-1a96-30e9-adc0-fa7ae01bbebc";
         private readonly string _subId = "DWAPI";
-        private readonly string url = "http://localhost:5000";
+        private readonly string url = "http://dwapicentral.westeurope.cloudapp.azure.com:7777";
 
         private IHtsSendService _htsSendService;
         private IServiceProvider _serviceProvider;

@@ -41,7 +41,7 @@ namespace Dwapi.SharedKernel.Model
 
             if (Name.IsSameAs("HtsClient"))
                 return "HtsClientsExtract";
-           
+
             return Name;
         }
 
@@ -50,6 +50,7 @@ namespace Dwapi.SharedKernel.Model
 
             if (Name.StartsWith("Hts"))
                 return "TempHtsClientsExtracts";
+            
 
             return "TempPatientExtracts";
         }

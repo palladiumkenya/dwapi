@@ -95,7 +95,7 @@ export class RegistryConfigComponent implements OnInit, OnDestroy , OnChanges {
             .subscribe(
                 p => {
                     this.isVerfied = p;
-                    console.log(p);
+                    //console.log(p);
                     if (this.isVerfied) {
                         this.centralRegistry.name = this.isVerfied.registryName;
                     }

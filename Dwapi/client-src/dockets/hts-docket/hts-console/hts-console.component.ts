@@ -377,7 +377,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.sending = true;
         this.errorMessage = [];
         this.patientPackage = this.getClientsLinkageExtractPackage();
-        this.send$ = this._htsSenderService.sendClientLinkageExtracts(this.patientPackage)
+        this.send$ = this._htsSenderService.sendClientsLinkageExtracts(this.patientPackage)
             .subscribe(
                 p => {
                     // this.sendResponse = p;
@@ -544,7 +544,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private getClientTestsExtractPackage(): SendPackage {
-        console.log(this.extracts.find(x => x.name === 'HtsClientTests'));
+        //console.log(this.extracts.find(x => x.name === 'HtsClientTests'));
         return {
             destination: this.centralRegistry,
             extractId: this.extracts.find(x => x.name === 'HtsClientTests').id,
@@ -596,8 +596,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this._hubConnection.on('ShowHtsSendProgressDone', (extractName: string) => {
-            this.extractSent.push(extractName);
-            if (this.extractSent.length === 3) {
+            this.extractSent.push(extractName); 
+            if (this.extractSent.length === 7) {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
                 this.updateEvent();
@@ -642,6 +642,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private generateExtractClients(currentEmr: EmrSystem): ExtractProfile {
+        //console.log(this.extracts);
         const selectedProtocal = this.extracts.find(x => x.name === 'HtsClient').databaseProtocolId;
         this.extractClients = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],

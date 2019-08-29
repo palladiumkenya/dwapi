@@ -61,13 +61,13 @@ export class SetupComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.appDatabase = p;
-                    console.log('load', this.appDatabase) ;
+                    //console.log('load', this.appDatabase) ;
                 },
                 e => {
                     this.dbMessages.push({severity: 'error', summary: 'Error Loading', detail: <any>e});
-                    console.log('b4', this.databaseForm.invalid) ;
+                    //console.log('b4', this.databaseForm.invalid) ;
                     this.databaseForm.reset();
-                    console.log('after', this.databaseForm.invalid) ;
+                    //console.log('after', this.databaseForm.invalid) ;
                 },
                 () => {
                     if (this.appDatabase) {
@@ -117,7 +117,7 @@ export class SetupComponent implements OnInit, OnDestroy {
     public saveDatabase(): void {
         this.dbMessages = [];
         this.sysMessages = [];
-        console.log('save', this.databaseForm.value) ;
+        //console.log('save', this.databaseForm.value) ;
         this.saveDatabase$ = this._configService.saveDatabase(this.databaseForm.value)
             .subscribe(
                 p => {

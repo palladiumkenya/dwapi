@@ -20,7 +20,7 @@ export class RegistryManagerComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this.get$ = this.route.params.subscribe(params => {
                 this.docketId = params['docketId'];
-                console.log(this.docketId);
+                //console.log(this.docketId);
             }
         );
     }

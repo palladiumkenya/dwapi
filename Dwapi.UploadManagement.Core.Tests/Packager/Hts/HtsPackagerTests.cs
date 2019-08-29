@@ -73,5 +73,57 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Hts
             Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Patient).Items} ");
             Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Metrics).Items} ");
         }
+
+        [Test]
+        public void should_Generate_ClientTests()
+        {
+            var manfiests = _packager.GenerateClientTests();
+            Assert.True(manfiests.Any());
+          
+        }
+
+        [Test]
+        public void should_Generate_TestKits()
+        {
+            var manfiests = _packager.GenerateTestKits();
+            Assert.True(manfiests.Any());
+
+        }
+
+        [Test]
+        public void should_Generate_PNS()
+        {
+            var manfiests = _packager.GeneratePartnerNotificationServices();
+            Assert.True(manfiests.Any());
+
+        }
+        [Test]
+        public void should_Generate_PartnerTracing()
+        {
+            var manfiests = _packager.GeneratePartnerTracing();
+            Assert.True(manfiests.Any());
+
+        }
+        [Test]
+        public void should_Generate_Linkage()
+        {
+            var manfiests = _packager.GenerateClientLinkage();
+            Assert.True(manfiests.Any());
+
+        }
+        [Test]
+        public void should_Generate_ClientTracking()
+        {
+            var manfiests = _packager.GenerateClientTracing();
+            Assert.True(manfiests.Any());
+
+        }
+        [Test]
+        public void should_Generate_Clients()
+        {
+            var manfiests = _packager.GenerateClients();
+            Assert.True(manfiests.Any());
+
+        }
     }
 }

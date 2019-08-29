@@ -26,7 +26,7 @@ export class CbsService {
     }
 
     public extract(extract: ExtractPatient): Observable<boolean> {
-        console.log(extract);
+        //console.log(extract);
         return this._http.post<boolean>(this._url + '/extract', extract)
             .catch(this.handleError);
     }

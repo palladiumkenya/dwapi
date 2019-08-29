@@ -25,7 +25,7 @@ export class NdwhExtractService {
     }
 
     public load(extracts: LoadFromEmrCommand): Observable<boolean> {
-        console.log(extracts);
+        //console.log(extracts);
         return this._http.post<boolean>(this._url + '/load', extracts)
             .catch(this.handleError);
     }

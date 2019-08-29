@@ -239,7 +239,7 @@ left join
 where unique_patient_no is not null
 group by d.patient_id 
 order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.DOB,
+39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|" select '' AS SatelliteName, 0 AS FacilityId, d.DOB,
        d.Gender, '' AS Provider,
        d.unique_patient_no as PatientID,
        d.patient_id as PatientPK,
@@ -270,7 +270,10 @@ order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5
        reg.art_start_date as StartARTAtThisFacility,
        reg.regimen as StartRegimen,
        reg.regimen_line as StartRegimenLine,
-       reg.last_art_date as LastARTDate,
+      -- reg.last_art_date as LastARTDate,
+	   case 
+		when reg.latest_vis_date is not null then reg.latest_vis_date else  reg.last_art_date end as LastARTDate,
+     
        reg.last_regimen as LastRegimen,
        reg.last_regimen_line as LastRegimenLine,
        reg.latest_tca as ExpectedReturn,
@@ -301,6 +304,7 @@ from kenyaemr_etl.etl_hiv_enrollment hiv
                                      max(if(discontinued,1,0))as alternative_regimen
                               from kenyaemr_etl.etl_drug_event e
                                      join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id
+                                     left join  kenyaemr_etl.etl_pharmacy_extract ph on ph.patient_id = e.patient_id and is_arv=1
                               group by e.patient_id) e
                                left outer join kenyaemr_etl.etl_patient_program_discontinuation d on d.patient_id=e.patient_id
                                left outer join kenyaemr_etl.etl_hiv_enrollment enr on enr.patient_id=e.patient_id
