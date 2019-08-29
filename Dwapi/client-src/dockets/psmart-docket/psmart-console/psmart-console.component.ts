@@ -83,7 +83,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public loadFromEmr(): void {
         this.errorMessage = [];
-        console.log(this.emr);
+        //console.log(this.emr);
         this.load$ = this._psmartExtractService.load(this.getExtractProtocols(this.emr))
             .subscribe(
                 p => {
@@ -112,7 +112,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.errorMessage.push({severity: 'error', summary: 'Error loading regisrty ', detail: <any>e});
                 },
                 () => {
-                    console.log(this.centralRegistry.name);
+                    //console.log(this.centralRegistry.name);
                 }
             );
     }
@@ -155,7 +155,7 @@ export class PsmartConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                 },
                 () => {
-                    console.log(this.sendResponse);
+                    //console.log(this.sendResponse);
                     this.updateEvent();
                     if (this.sendResponse) {
                         if (this.sendResponse.isSending) {

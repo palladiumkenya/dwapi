@@ -195,7 +195,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                 });
             },
             () => {
-                console.log(this.centralRegistry.name);
+                //console.log(this.centralRegistry.name);
                 if (this.centralRegistry) {
                     this.canSend = true;
                 }

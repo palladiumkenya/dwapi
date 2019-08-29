@@ -61,7 +61,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     set extract(extract: string) {
         if (extract) {
             this.exName = extract;
-            console.log(extract);
+            //console.log(extract);
             this.cols = [];
             this.validExtracts = [];
 
@@ -87,7 +87,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     }
 
     public getValidExtracts(): void {
-        console.log('loading>', this.extract);
+        //console.log('loading>', this.extract);
         if (this.extract === 'All Patients') {
             this.getPatients();
         }

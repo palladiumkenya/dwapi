@@ -257,6 +257,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public sendClientTestsExtracts(): void {
+        this.sendStage = 2;
         this.sendEvent = { sentProgress: 0 };
         this.sending = true;
         this.errorMessage = [];
@@ -279,6 +280,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public sendTestKitsExtracts(): void {
+        this.sendStage = 3;
         this.sendEvent = { sentProgress: 0 };
         this.sending = true;
         this.errorMessage = [];
@@ -301,6 +303,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public sendClientTracingExtracts(): void {
+        this.sendStage = 4;
         this.sendEvent = { sentProgress: 0 };
         this.sending = true;
         this.errorMessage = [];
@@ -323,6 +326,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public sendPartnerTracingExtracts(): void {
+        this.sendStage = 5;
         this.sendEvent = { sentProgress: 0 };
         this.sending = true;
         this.errorMessage = [];
@@ -345,6 +349,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public sendPartnerNotificationServicesExtracts(): void {
+        this.sendStage = 6;
         this.sendEvent = { sentProgress: 0 };
         this.sending = true;
         this.errorMessage = [];
@@ -367,11 +372,12 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public sendClientLinkageExtracts(): void {
+        this.sendStage = 7;
         this.sendEvent = { sentProgress: 0 };
         this.sending = true;
         this.errorMessage = [];
         this.patientPackage = this.getClientsLinkageExtractPackage();
-        this.send$ = this._htsSenderService.sendClientLinkageExtracts(this.patientPackage)
+        this.send$ = this._htsSenderService.sendClientsLinkageExtracts(this.patientPackage)
             .subscribe(
                 p => {
                     // this.sendResponse = p;
@@ -387,7 +393,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
 
-    public sendClientExtract(): void {
+    /*public sendClientExtract(): void {
         this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
@@ -397,7 +403,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 p => {
                     // this.sendResponse = p;
                     this.updateEvent();
-                    this.sendClientLinkageExtract();
+                    this.sendClientTestsExtracts();
                 },
                 e => {
                     this.errorMessage = [];
@@ -414,7 +420,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
-        this.patientPackage = this.getClientLinkageExtractPackage();
+        this.patientPackage = this.getClientsLinkageExtractPackage();
         this.send$ = this._htsSenderService.sendClientLinkageExtracts(this.patientPackage)
             .subscribe(
                 p => {
@@ -431,9 +437,9 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
                 }
             );
-    }
+    }*/
 
-    public sendClientPartnerExtract(): void {
+    /*public sendClientPartnerExtract(): void {
         this.sendStage = 4;
         this.sendEvent = {sentProgress: 0};
         this.sending = true;
@@ -456,92 +462,93 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
                 }
             );
-    }
+    }*/
 
     private getSendManifestPackage(): SendPackage {
-        return {
+         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HTSClientExtract').id
+            extractId: this.extracts.find(x => x.name === 'HtsClient').id
         };
     }
 
     private getClientExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HTSClientExtract').id,
-            extractName: 'HTSClientExtract'
+            extractId: this.extracts.find(x => x.name === 'HtsClient').id,
+            extractName: 'HtsClient'
         };
     }
 
-    private getClientLinkageExtractPackage(): SendPackage {
+    /*private getClientLinkageExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HTSClientLinkageExtract').id,
-            extractName: 'HTSClientLinkageExtract'
+            extractId: this.extracts.find(x => x.name === 'HtsClientLinkage').id,
+            extractName: 'HtsClientLinkage'
         };
     }
 
     private getClientPartnerExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HTSClientPartnerExtract').id,
-            extractName: 'HTSClientPartnerExtract'
+            extractId: this.extracts.find(x => x.name === 'HtsPartnerTracing').id,
+            extractName: 'HtsPartnerTracing'
         };
-    }
+    }*/
 
     private getClientsExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HtsClientsExtracts').id,
-            extractName: 'HtsClientsExtracts'
+            extractId: this.extracts.find(x => x.name === 'HtsClient').id,
+            extractName: 'HtsClient'
         };
     }
 
     private getPartnerNotificationServicesExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HtsPartnerNotificationServicesExtracts').id,
-            extractName: 'HtsPartnerNotificationServicesExtracts'
+            extractId: this.extracts.find(x => x.name === 'HtsPartnerNotificationServices').id,
+            extractName: 'HtsPartnerNotificationServices'
         };
     }
 
     private getPartnerTracingExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HtsPartnerTracingExtracts').id,
-            extractName: 'HtsPartnerTracingExtracts'
+            extractId: this.extracts.find(x => x.name === 'HtsPartnerTracing').id,
+            extractName: 'HtsPartnerTracing'
         };
     }
 
     private getClientTracingExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HtsClientTracingExtracts').id,
-            extractName: 'HtsClientTracingExtracts'
+            extractId: this.extracts.find(x => x.name === 'HtsClientTracing').id,
+            extractName: 'HtsClientTracing'
         };
     }
 
     private getTestKitsExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HtsTestKitsExtracts').id,
-            extractName: 'HtsTestKitsExtracts'
+            extractId: this.extracts.find(x => x.name === 'HtsTestKits').id,
+            extractName: 'HtsTestKits'
         };
     }
 
     private getClientsLinkageExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HtsClientsLinkageExtracts').id,
-            extractName: 'HtsClientsLinkageExtracts'
+            extractId: this.extracts.find(x => x.name === 'HtsClientLinkage').id,
+            extractName: 'HtsClientLinkage'
         };
     }
 
     private getClientTestsExtractPackage(): SendPackage {
+        //console.log(this.extracts.find(x => x.name === 'HtsClientTests'));
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HtsClientTestsExtracts').id,
-            extractName: 'HtsClientTestsExtracts'
+            extractId: this.extracts.find(x => x.name === 'HtsClientTests').id,
+            extractName: 'HtsClientTests'
         };
     }
 
@@ -589,8 +596,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this._hubConnection.on('ShowHtsSendProgressDone', (extractName: string) => {
-            this.extractSent.push(extractName);
-            if (this.extractSent.length === 3) {
+            this.extractSent.push(extractName); 
+            if (this.extractSent.length === 7) {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
                 this.updateEvent();
@@ -635,64 +642,65 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private generateExtractClients(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientExtract').databaseProtocolId;
+        //console.log(this.extracts);
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClient').databaseProtocolId;
         this.extractClients = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsClientExtract')
+            extract: this.extracts.find(x => x.name === 'HtsClient')
         };
         return this.extractClients;
     }
 
     private generateExtractClientTests(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientTestsExtract').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientTests').databaseProtocolId;
         this.extractClientTests = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsClientTestsExtract')
-        };
+            extract: this.extracts.find(x => x.name === 'HtsClientTests')
+        }; 
         return this.extractClientTests;
     }
 
     private generateExtractPartnerNotificationServices(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsPartnerNotificationServicesExtract').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsPartnerNotificationServices').databaseProtocolId;
         this.extractPartnerNotificationServices = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsPartnerNotificationServicesExtract')
+            extract: this.extracts.find(x => x.name === 'HtsPartnerNotificationServices')
         };
         return this.extractPartnerNotificationServices;
     }
 
     private generateExtractTestKits(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsTestKitsExtract').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsTestKits').databaseProtocolId;
         this.extractTestKits = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsTestKitsExtract')
+            extract: this.extracts.find(x => x.name === 'HtsTestKits')
         };
         return this.extractTestKits;
     }
 
     private generateExtractClientsLinkage(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientLinkageExtract').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientLinkage').databaseProtocolId;
         this.extractClientsLinkage = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsClientLinkageExtract')
+            extract: this.extracts.find(x => x.name === 'HtsClientLinkage')
         };
         return this.extractClientsLinkage;
     }
 
     private generateExtractPartnerTracing(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsPartnerTracingExtract').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsPartnerTracing').databaseProtocolId;
         this.extractPartnerTracing = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsPartnerTracingExtract')
+            extract: this.extracts.find(x => x.name === 'HtsPartnerTracing')
         };
         return this.extractPartnerTracing;
     }
 
     private generateExtractClientTracing(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientTracingExtract').databaseProtocolId;
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsClientTracing').databaseProtocolId;
         this.extractClientTracing = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'HtsClientTracingExtract')
+            extract: this.extracts.find(x => x.name === 'HtsClientTracing')
         };
         return this.extractClientTracing;
     }

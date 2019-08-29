@@ -22,7 +22,7 @@ export class PsmartExtractService {
     }
 
     public load(extracts: ExtractDatabaseProtocol[]): Observable<boolean> {
-        console.log(extracts);
+        //console.log(extracts);
         return this._http.post<boolean>(this._url + '/load', extracts[0])
             .catch(this.handleError);
     }

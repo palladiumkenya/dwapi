@@ -243,130 +243,113 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
 
     private getClientsColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'Dob', header: 'Dob' },
-            { field: 'Gender', header: 'Gender' },
-            { field: 'MaritalStatus', header: 'Marital Status' },
-            { field: 'PopulationType', header: 'Population Type' },
-            { field: 'KeyPopulationType', header: 'Key Population Type' },
-            { field: 'County', header: 'County' },
-            { field: 'SubCounty', header: 'SubCounty' },
-            { field: 'Ward', header: 'Ward' },
-            
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+            { field: 'summary', header: 'Summary' },
+            { field: 'patientPK', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'doB', header: 'Dob' },
+            { field: 'gender', header: 'Gender' },
+            { field: 'maritalStatus', header: 'Marital Status' },
+            { field: 'populationType', header: 'Population Type' },
+            { field: 'keyPopulationType', header: 'Key Population Type' },
+            { field: 'county', header: 'County' },
+            { field: 'subCounty', header: 'SubCounty' },
+            { field: 'ward', header: 'Ward' },
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' }
         ];
     }
 
     private getClientTestsColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'TestDate', header: 'Test Date' },
-            { field: 'EverTestedForHiv', header: 'Ever Tested For Hiv' },
-            { field: 'MonthsSinceLastTest', header: 'Months Since Last Test' },
-            { field: 'ClientTestedAs', header: 'Client Tested As' },
-            { field: 'EntryPoint', header: 'Entry Point' },
-            { field: 'TestStrategy', header: 'Test Strategy' },
-            { field: 'TestResult1', header: 'Test Result 1' },
-            { field: 'TestResult2', header: 'Test Result 2' },
-
-            { field: 'FinalTestResult', header: 'Final Test Result'},
-            { field: 'PatientPK', header: 'PatientPK' }, 
-            {field: 'RecordId', header: 'Record Id'},
-            {field: 'Id', header: 'Id'},
-            {field: 'Extract', header: 'Extract'},
-            {field: 'Field', header: 'Field'},
-            {field: 'Type', header: 'Type'}
+            { field: 'summary', header: 'Summary' },
+            { field: 'patientPK', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'testDate', header: 'Test Date' },
+            { field: 'everTestedForHiv', header: 'Ever Tested For Hiv' },
+            { field: 'monthsSinceLastTest', header: 'Months Since Last Test' },
+            { field: 'clientTestedAs', header: 'Client Tested As' },
+            { field: 'entryPoint', header: 'Entry Point' },
+            { field: 'testStrategy', header: 'Test Strategy' },
+            { field: 'testResult1', header: 'Test Result 1' },
+            { field: 'testResult2', header: 'Test Result 2' },
+            { field: 'finalTestResult', header: 'Final Test Result' },
+            {field: 'extract', header: 'Extract'},
+            {field: 'field', header: 'Field'},
+            {field: 'type', header: 'Type'}
         ];
     }
 
     private getClientLinkagesColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'PhoneTracingDate', header: 'Phone Tracing Date'},
-            { field: 'PhysicalTracingDate', header: 'Physical Tracing Date'},
-            { field: 'TracingOutcome', header: 'Tracing Outcome'},
-            { field: 'CccNumber', header: 'Ccc Number' },
-            { field: 'EnrolledFacilityName', header: 'Enrolled Facility Name' },
-            { field: 'ReferralDate', header: 'Referral Date' },
-            { field: 'DateEnrolled', header: 'Date Enrolled' },
-
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+            { field: 'summary', header: 'Summary' },
+            { field: 'patientPK', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'phoneTracingDate', header: 'Phone Tracing Date' },
+            { field: 'physicalTracingDate', header: 'Physical Tracing Date' },
+            { field: 'tracingOutcome', header: 'Tracing Outcome' },
+            { field: 'cccNumber', header: 'Ccc Number' },
+            { field: 'enrolledFacilityName', header: 'Enrolled Facility Name' },
+            { field: 'referralDate', header: 'Referral Date' },
+            { field: 'dateEnrolled', header: 'Date Enrolled' }, 
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' }
         ];
     }
 
     private getTestKitsColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'TestKitName1', header: 'Test Kit Name 1' },
-            { field: 'TestKitLotNumber1', header: 'Test Kit Lot Number 1' },
-            { field: 'TestKitExpiry1', header: 'Test Kit Expiry 1' },
-            { field: 'TestResult1', header: 'Test Result 1' },
-            { field: 'TestKitName2', header: 'Test Kit Name 2' },
-            { field: 'TestKitLotNumber2', header: 'Test Kit Lot Number 2' },
-            { field: 'TestKitExpiry2', header: 'Test Kit Expiry 2' },
-            { field: 'TestResult2', header: 'Test Result 2' },
-
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+            { field: 'summary', header: 'Summary' },
+            { field: 'patientPK', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'testKitName1', header: 'Test Kit Name 1' },
+            { field: 'testKitLotNumber1', header: 'Test Kit Lot Number 1' },
+            { field: 'testKitExpiry1', header: 'Test Kit Expiry 1' },
+            { field: 'testResult1', header: 'Test Result 1' },
+            { field: 'testKitName2', header: 'Test Kit Name 2' },
+            { field: 'testKitLotNumber2', header: 'Test Kit Lot Number 2' },
+            { field: 'testKitExpiry2', header: 'Test Kit Expiry 2' },
+            { field: 'testResult2', header: 'Test Result 2' },
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' }
         ];
     }
 
     private getClientTracingColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'TracingType', header: 'Tracing Type' },
-            { field: 'TracingDate', header: 'Tracing Date' },
-            { field: 'TracingOutcome', header: 'Tracing Outcome' },
-
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+            { field: 'summary', header: 'Summary' },
+            { field: 'patientPK', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'tracingType', header: 'Tracing Type' },
+            { field: 'tracingDate', header: 'Tracing Date' },
+            { field: 'tracingOutcome', header: 'Tracing Outcome' },  
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' }
         ];
     }
 
     private getPartnerTracingColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
-            { field: 'HtsNumber', header: 'Hts Number' },
-            { field: 'TraceType', header: 'Trace Type' },
-            { field: 'TraceDate', header: 'Trace Date' },
-            { field: 'TraceOutcome', header: 'Trace Outcome' },
-            { field: 'BookingDate', header: 'Booking Date' },
-
-            { field: 'PatientPK', header: 'PatientPK' },
-            { field: 'RecordId', header: 'Record Id' },
-            { field: 'Id', header: 'Id' },
-            { field: 'Extract', header: 'Extract' },
-            { field: 'Field', header: 'Field' },
-            { field: 'Type', header: 'Type' }
+            { field: 'summary', header: 'Summary' },
+            { field: 'patientPK', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'traceType', header: 'Trace Type' },
+            { field: 'traceDate', header: 'Trace Date' },
+            { field: 'traceOutcome', header: 'Trace Outcome' },
+            { field: 'bookingDate', header: 'Booking Date' },  
+            { field: 'extract', header: 'Extract' },
+            { field: 'field', header: 'Field' },
+            { field: 'type', header: 'Type' }
         ];
     }
 
     private getPartnerNotificationServicesColumns(): void {
         this.cols = [
             { field: 'Summary', header: 'Summary' },
-            { field: 'patientPk', header: 'PatientPK' },
+            { field: 'patientPK', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
             { field: 'partnerPersonID', header: 'Partner Person ID' },
             { field: 'age', header: 'Age' },

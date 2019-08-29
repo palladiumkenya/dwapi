@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
 {
+    [Table("HtsClientTestsExtracts")]
 
-            
-        public  class HtsClientTests : HtsExtract
+    public  class HtsClientTests : HtsExtract
         {
             public  int? EncounterId	 { get; set; }
             public  DateTime?   TestDate	 { get; set; }

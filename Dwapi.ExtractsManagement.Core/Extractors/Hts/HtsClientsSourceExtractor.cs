@@ -35,7 +35,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
         {
             int batch = 500;
 
-            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients), "extracting...")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients) + "Extracts", "extracting...")));
             //DomainEvents.Dispatch(new CbsStatusNotification(extract.Id,ExtractStatus.Loading));
 
             var list = new List<TempHtsClients>();
@@ -61,7 +61,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 
                         try
                         {
-                            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients), "extracting...", totalCount, count, 0, 0, 0)));
+                            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients)+"Extracts", "extracting...", totalCount, count, 0, 0, 0)));
                         }
                         catch (Exception e)
                         {
@@ -87,7 +87,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
             try
             {
 
-                DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients), "extracted", totalCount, 0, 0, 0, 0)));
+                DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients)+"Extracts", "extracted", totalCount, 0, 0, 0, 0)));
                 DomainEvents.Dispatch(new HtsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
                 DomainEvents.Dispatch(new HtsStatusNotification(extract.Id, ExtractStatus.Loaded, totalCount));
             }

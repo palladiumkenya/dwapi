@@ -120,7 +120,7 @@ export class DatabaseProtocolConfigComponent implements OnInit, OnChanges, OnDes
     }
 
     public makeDefault(): void {
-        console.log(this.selectedEmr);
+        //console.log(this.selectedEmr);
         this.protocolErrorMessage = [];
         this.otherMessage = [];
         this.makeDefault$ = this._protocolConfigService.makeEmrDefault(this.selectedEmr)
@@ -157,7 +157,7 @@ export class DatabaseProtocolConfigComponent implements OnInit, OnChanges, OnDes
     }
 
     public confirmDefault() {
-        console.log(this.selectedEmr.id);
+        //console.log(this.selectedEmr.id);
         this._confirmationService.confirm({
 
             message: `Do you want to set ${this.selectedEmr.name} as default?`,

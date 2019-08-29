@@ -61,7 +61,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
     set extract(extract: string) {
         if (extract) {
             this.exName = extract;
-            console.log(extract);
+            //console.log(extract);
             this.cols = [];
             this.validExtracts = [];
             this.pageModel = {
@@ -84,7 +84,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
     }
 
     public getValidExtracts(): void {
-        console.log('loading>', this.extract);
+        //console.log('loading>', this.extract);
         if (this.extract === 'Hts Clients') {
             this.getValidHtsClients();
         }
@@ -464,6 +464,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         this.cols = [
             //{ field: 'Summary', header: 'Summary' },
             { field: 'patientPk', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
             { field: 'testKitName1', header: 'Test Kit Name 1' },
             { field: 'testKitLotNumber1', header: 'Test Kit Lot Number 1' },
             { field: 'testKitExpiry1', header: 'Test Kit Expiry 1' },

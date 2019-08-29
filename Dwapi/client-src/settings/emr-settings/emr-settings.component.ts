@@ -96,7 +96,7 @@ export class EmrSettingsComponent implements OnInit, OnDestroy {
                 },
                 () => {
                     this.loadingData = false;
-                    console.log(this.emrs);
+                    //console.log(this.emrs);
                 }
             );
     }
