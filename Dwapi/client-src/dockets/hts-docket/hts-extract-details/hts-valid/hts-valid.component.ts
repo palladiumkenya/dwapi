@@ -495,7 +495,8 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'traceType', header: 'Trace Type' },
             { field: 'traceDate', header: 'Trace Date' },
             { field: 'traceOutcome', header: 'Trace Outcome' },
-            { field: 'bookingDate', header: 'Booking Date' },  
+            { field: 'bookingDate', header: 'Booking Date' },
+            { field: 'partnerPersonId', header: 'Partner Person Id' },
         ];
     }
 
