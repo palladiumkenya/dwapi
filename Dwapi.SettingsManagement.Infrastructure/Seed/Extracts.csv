@@ -1339,6 +1339,8 @@ r.ArtStartDate as ReportedStartARTDate
 	htsrl.art_start_date as ReportedStartARTDate
 FROM 
 	kenyaemr_etl.etl_hts_referral_and_linkage htsrl 
+INNER JOIN 
+	kenyaemr_etl.etl_hts_test t ON htsrl.patient_id=t.patient_id
 LEFT JOIN 
 	 openmrs.location_attribute SC ON SC.location_id = htsrl.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN 
@@ -1424,6 +1426,8 @@ where a.Tpe='Enrolment'"|DWHStage|1|HtsClientTracing|5|A6221983-0E85-11E8-BA89-0
 	htsrl.tracing_status as TracingOutcome
 FROM 
 	kenyaemr_etl.etl_hts_test ht
+INNER JOIN 
+	kenyaemr_etl.etl_hts_test t ON ht.patient_id=t.patient_id
 LEFT  JOIN 	
 	kenyaemr_etl.etl_hts_referral_and_linkage htsrl  ON ht.patient_id=htsrl.patient_id
 LEFT JOIN 
@@ -1453,7 +1457,7 @@ inner join tmp_PatientMaster tp on tp.PatientPK =pr.IndexPtn_pk ) a
 where a.Tpe='Partner'"|DWHStage|1|HtsPartnerTracing|6|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578bbba-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select distinct
-pc.patient_id as PatientPK,
+t.patient_id as PatientPK,
 id.identifier as HtsNumber,
 client_id as PartnerPersonId,
 contact_type as TraceType,
@@ -1490,7 +1494,7 @@ LEFT JOIN
   WHERE c.finalResultHTS = 'Positive' AND pns.personid IS NOT NULL "|DWHStage|1|HtsPartnerNotificationServices|7|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 
-8578c042-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|" SELECT 
+8578c042-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
 DISTINCT 
                t.patient_id AS PatientPK,
                SC.value_reference AS SiteCode,
@@ -1501,7 +1505,7 @@ DISTINCT
                openmrs.patient_id AS PartnerPatientPk,
                ohpc.id AS PartnerPersonId,
     YEAR(ohpc.date_created)-YEAR(ohpc.birth_date)  AS Age,
-               ohpc.sex AS Gender,
+               ohpc.sex,
                CASE ohpc.relationship_type  
                                               WHEN 970          THEN  'parent (Mother)'
                                               WHEN 971           THEN  'parent(Father)'
@@ -1510,7 +1514,7 @@ DISTINCT
                                               WHEN 561          THEN  'spouse'
             WHEN 163565  THEN  'partner'
                                               WHEN 162221  THEN  'cowife' 
-               END     AS RelationshipToIndexClient,
+               END     AS RelationsipToIndexClient,
     
     /*Screened for IPV? CASE?*/
                CASE WHEN ohpc.ipv_outcome IS NOT NUll THEN 'Yes' ELSE 'No' END AS  ScreenedForIpv,
@@ -1521,14 +1525,14 @@ DISTINCT
                                WHEN 1066 THEN 'No'
                END AS CurrentlyLivingWithIndexClient, 
     /*knowledgeof HIV Status*/
-    ohpc.baseline_hiv_status, 
+    ohpc.baseline_hiv_status as KnowledgeOfHivStatus,  
     
 pnsApprocah.name AS  PnsApproach,
 ohpc.consented_contact_listing as  PnsConsent,
-'' LinkedToCare,
-'' LinkDateLinkedToCare,
-'' CccNumber,
-'' FacilityLinkedTo,
+NULL LinkedToCare,
+NULL LinkDateLinkedToCare,
+NULL CccNumber,
+NULL FacilityLinkedTo,
 ohpc.birth_date as DoB,
 ohpc.date_created as DateElicited ,
 marital.name as  MaritalStatus

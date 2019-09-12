@@ -339,7 +339,8 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
             { field: 'traceType', header: 'Trace Type' },
             { field: 'traceDate', header: 'Trace Date' },
             { field: 'traceOutcome', header: 'Trace Outcome' },
-            { field: 'bookingDate', header: 'Booking Date' },  
+            { field: 'bookingDate', header: 'Booking Date' },
+            { field: 'PartnerPersonId', header: 'Partner Person Id' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' }
