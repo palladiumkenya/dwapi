@@ -33,11 +33,11 @@ namespace Dwapi.SharedKernel.Exchange
 
         public static IEnumerable<DwhManifest> Create(IEnumerable<SitePatientProfile> profiles)
         {
-            var getPks = profiles.ToList();
-            var list=new List<DwhManifest>();
+            var getPks = profiles.ToList().GroupBy(x => x.SiteCode).ToList();
+            var list = new List<DwhManifest>();
 
-            if(getPks.Any())
-                list.Add(new DwhManifest(getPks.First().SiteCode,getPks.Select(x=>x.PatientPk).ToList()));
+            foreach (var pk in getPks)
+                list.Add(new DwhManifest(pk.First().SiteCode, pk.Select(x => x.PatientPk).ToList()));
 
             return list;
         }
