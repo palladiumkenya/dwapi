@@ -41,7 +41,22 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.StatusAtPMTCT, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.StatusAtPMTCT))))
                 .ForMember(x => x.StatusAtTBClinic, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.StatusAtTBClinic))))
                 .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.Emr))))
+                .ForMember(x => x.Inschool, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.Inschool))))
+                .ForMember(x => x.KeyPopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.KeyPopulationType))))
+                .ForMember(x => x.Orphan, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.Orphan))))
+                .ForMember(x => x.PatientResidentCounty, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PatientResidentCounty))))
+                .ForMember(x => x.PatientResidentLocation, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PatientResidentLocation))))
+                .ForMember(x => x.PatientResidentSubCounty, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PatientResidentSubCounty))))
+                .ForMember(x => x.PatientResidentSubLocation, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PatientResidentSubLocation))))
+                .ForMember(x => x.PatientResidentVillage, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PatientResidentVillage))))
+                .ForMember(x => x.PatientResidentWard, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PatientResidentWard))))
+                .ForMember(x => x.PatientType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PatientType))))
+                .ForMember(x => x.PopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PopulationType))))
+                .ForMember(x => x.TransferInDate, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.TransferInDate))))
                 .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.Project))));
+            
+
+
 
             CreateMap<TempPatientExtract, PatientExtract>()
                .ForMember(x => x.DatePreviousARTStart, o => o.MapFrom(s => s.PreviousARTStartDate));
@@ -203,6 +218,12 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.FamilyPlanningMethod, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.FamilyPlanningMethod))))
                 .ForMember(x => x.PwP, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.PwP))))
                 .ForMember(x => x.GestationAge, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.GestationAge))))
+
+                .ForMember(x => x.DifferentiatedCare, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.DifferentiatedCare))))
+                .ForMember(x => x.KeyPopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.KeyPopulationType))))
+                .ForMember(x => x.PopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.PopulationType))))
+                .ForMember(x => x.StabilityAssessment, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.StabilityAssessment))))
+
                 .ForMember(x => x.NextAppointmentDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.NextAppointmentDate))));
 
             CreateMap<TempPatientVisitExtract, PatientVisitExtract>();

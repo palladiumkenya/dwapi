@@ -283,18 +283,17 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
     private getClientLinkagesColumns(): void {
         this.cols = [
             { field: 'summary', header: 'Summary' },
-            { field: 'patientPK', header: 'PatientPK' },
+            { field: 'patientPk', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
-            { field: 'phoneTracingDate', header: 'Phone Tracing Date' },
-            { field: 'physicalTracingDate', header: 'Physical Tracing Date' },
-            { field: 'tracingOutcome', header: 'Tracing Outcome' },
-            { field: 'cccNumber', header: 'Ccc Number' },
+            { field: 'datePrefferedToBeEnrolled', header: 'Date Preffered To Be Enrolled' },
+            { field: 'facilityReferredTo', header: 'Facility Referred To' },
+            { field: 'handedOverTo', header: 'Handed Over To' },
+            { field: 'handedOverToCadre', header: 'Handed Over To Cadre' },
+            { field: 'reportedCCCNumber', header: 'Reported Ccc Number' },
+            { field: 'reportedStartARTDate', header: 'Reported ART Start Date' },
             { field: 'enrolledFacilityName', header: 'Enrolled Facility Name' },
             { field: 'referralDate', header: 'Referral Date' },
             { field: 'dateEnrolled', header: 'Date Enrolled' }, 
-            { field: 'extract', header: 'Extract' },
-            { field: 'field', header: 'Field' },
-            { field: 'type', header: 'Type' }
         ];
     }
 
