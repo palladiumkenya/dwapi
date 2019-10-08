@@ -111,8 +111,8 @@ FROM
  , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project, 
  PopulationCategory as PopulationType, 
 	NULL AS KeyPopulationType,
-	NULL AS StabilityAssessment,
-	NULL AS DifferentiatedCare
+	StabilityAssessment AS StabilityAssessment,
+	DifferentiatedCare AS DifferentiatedCare
 FROM
  tmp_ClinicalEncounters INNER JOIN
  tmp_PatientMaster ON tmp_PatientMaster.PatientPK = tmp_ClinicalEncounters.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientVisitExtract|7|a6221983-0e85-11e8-ba89-0ed5f89f718b
@@ -1204,13 +1204,14 @@ HTSID as HtsNumber  ,
 h.DOB as Dob,
 h.Gender,
 h.MaritalStatus,
-case when h.KeyPop='NA' then 'General Population' else 'Key Population' end as PopulationType,
-case when h.KeyPop!='NA' then h.KeyPop else null end as KeyPopulationType,
+case when trim(h.KeyPop) in ('SW','PWID','MSM','Other','MSW','FSW') then 'Key Population' else 'General Population' end as PopulationType,
+trim(h.KeyPop)  as KeyPopulationType,
 Disability as PatientDisabled,
 County,
 SubCounty,
 Ward from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
-on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F89F718B
+on h.PatientPK=p.PatientPK
+order by KeyPopulationType"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT  distinct d.patient_id as PatientPK,
 	SC.value_reference AS SiteCode,
@@ -1293,6 +1294,8 @@ on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-
 	t.patient_consented as Consent
 FROM 
 	kenyaemr_etl.etl_hts_test t
+inner join 
+	kenyaemr_etl.etl_patient_demographics demographics on t.patient_id=demographics.patient_id
 LEFT JOIN 
 	 openmrs.location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN 
@@ -1389,6 +1392,8 @@ on h.PatientPK=p.PatientPK"|DWHStage|1|HtsTestKits|4|A6221983-0E85-11E8-BA89-0ED
 
 FROM 
 	kenyaemr_etl.etl_hts_test t
+inner join 
+	kenyaemr_etl.etl_patient_demographics demographics on t.patient_id=demographics.patient_id
 LEFT JOIN 
 	 openmrs.location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN 
@@ -1554,3 +1559,19 @@ left JOIN openmrs.patient openmrs ON  openmrs.patient_id = id.patient_id
 left join openmrs.concept_name marital ON marital.concept_id = ohpc.marital_status and marital.locale='en' and marital.concept_name_type = 'FULLY_SPECIFIED'
 left join openmrs.concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach and pnsApprocah.locale='en' and pnsApprocah.concept_name_type = 'FULLY_SPECIFIED'
  "|DWHStage|1|HtsPartnerNotificationServices|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+6a90e0cb-fa2e-4ff0-bdfb-648129bb8018|Hts Clients|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|1|HtsClient|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+3134c7ce-1631-4814-a992-9c671e1d7850|Hts Test Kits|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsTestKits|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+cf76e4d9-f6c8-41b0-a53e-7cebea2577a1|Hts Client Linkage|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsClientLinkage|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+266decc1-cd51-4d8f-b5d5-f7cfea44265b|Hts Client Tracing|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsClientTracing|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+a9e926d7-f731-42e1-8ad8-100882dbfced|Hts Partner Notification Services|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|6|HtsPartnerNotificationServices|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+faeab472-bda9-4e8d-a387-c5a46a6b6151|Hts Client Tests|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsClientTests|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+9956c7a0-de98-41ab-b706-87cf67b1667a|Hts Partner Tracing|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsPartnerTracing|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+9417ef02-f38b-4fe7-bef2-d7ee746db889|All Patients|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|1|PatientExtract|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+8dc57269-3161-4b97-9904-764fbf3deaa9|Patient Adverse Events|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientAdverseEventExtract|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+4b097da8-3e4c-43f5-ae49-4126f6164ae1|ART Patients|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientArtExtract|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+78931894-be1d-41ba-9399-fb36418a378b|Patient Baselines|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientBaselineExtract|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+28be878d-d532-4d73-9043-a1575519fb79|Patient Labs|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientLabExtract|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+972507a1-b19b-473f-8686-d56f144b5ac5|Patient Pharmacy|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientPharmacyExtract|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+889047d5-03ff-45e9-b75c-96d0de105a44|Patient Status|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientStatusExtract|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+cec33081-4ed0-45a9-a644-dfd6bff08674|Patient Visit|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientVisitExtract|8|A6221AA4-0E85-11E8-BA89-0ED5F89F718B

@@ -193,6 +193,24 @@ namespace Dwapi.SettingsManagement.Core.Services
                 };
                 defaultExtracts.Add(defaultMpiExtract);
             }
+            var htsExtract = _extractRepository.GetAllByEmr(GetDefault().Id, "HTS").ToList();
+            
+            foreach (var extract in htsExtract)
+            {
+                var defaultExtract = new Extract()
+                {
+                    Id = Guid.NewGuid(),
+                    ExtractSql = "",
+                    Name = extract.Name,
+                    Emr = extract.Emr,
+                    Destination = extract.Destination,
+                    Display = extract.Display,
+                    DocketId = extract.DocketId,
+                    IsPriority = extract.IsPriority,
+                    Rank = extract.Rank
+                };
+                defaultExtracts.Add(defaultExtract);
+            }
 
 
             return defaultExtracts;

@@ -31,7 +31,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 columns: new[] { "SiteCode", "PatientPk" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_HtsPartnerNotificationServicesExtracts_SiteCode_PatientPk",
+                name: "IX_HtsPNSExtracts_SiteCode_PatientPk",
                 table: "HtsPartnerNotificationServicesExtracts",
                 columns: new[] { "SiteCode", "PatientPk" });
 
@@ -51,7 +51,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 columns: new[] { "SiteCode", "PatientPk" });
 
             migrationBuilder.AddForeignKey(
-                name: "FK_HtsClientsLinkageExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsClientsLinkageExtracts_SiteCode_PatientPk",
                 table: "HtsClientsLinkageExtracts",
                 columns: new[] { "SiteCode", "PatientPk" },
                 principalTable: "HtsClientsExtracts",
@@ -59,7 +59,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_HtsClientTestsExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsClientTestsExtracts_SiteCode_PatientPk",
                 table: "HtsClientTestsExtracts",
                 columns: new[] { "SiteCode", "PatientPk" },
                 principalTable: "HtsClientsExtracts",
@@ -67,7 +67,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_HtsClientTracingExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsClientTracingExtracts_SiteCode_PatientPk",
                 table: "HtsClientTracingExtracts",
                 columns: new[] { "SiteCode", "PatientPk" },
                 principalTable: "HtsClientsExtracts",
@@ -75,7 +75,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_HtsPartnerNotificationServicesExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsPNSExtracts_SiteCode_PatientPk",
                 table: "HtsPartnerNotificationServicesExtracts",
                 columns: new[] { "SiteCode", "PatientPk" },
                 principalTable: "HtsClientsExtracts",
@@ -83,7 +83,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_HtsPartnerTracingExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsPartnerTracingExtracts_SiteCode_PatientPk",
                 table: "HtsPartnerTracingExtracts",
                 columns: new[] { "SiteCode", "PatientPk" },
                 principalTable: "HtsClientsExtracts",
@@ -91,7 +91,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_HtsTestKitsExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsTestKitsExtracts_SiteCode_PatientPk",
                 table: "HtsTestKitsExtracts",
                 columns: new[] { "SiteCode", "PatientPk" },
                 principalTable: "HtsClientsExtracts",
@@ -102,27 +102,27 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_HtsClientsLinkageExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsClientsLinkageExtracts_SiteCode_PatientPk",
                 table: "HtsClientsLinkageExtracts");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_HtsClientTestsExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsClientTestsExtracts_SiteCode_PatientPk",
                 table: "HtsClientTestsExtracts");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_HtsClientTracingExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsClientTracingExtracts_SiteCode_PatientPk",
                 table: "HtsClientTracingExtracts");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_HtsPartnerNotificationServicesExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsPNSExtracts_SiteCode_PatientPk",
                 table: "HtsPartnerNotificationServicesExtracts");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_HtsPartnerTracingExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsPartnerTracingExtracts_SiteCode_PatientPk",
                 table: "HtsPartnerTracingExtracts");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_HtsTestKitsExtracts_HtsClientsExtracts_SiteCode_PatientPk",
+                name: "FK_HtsTestKitsExtracts_SiteCode_PatientPk",
                 table: "HtsTestKitsExtracts");
 
             migrationBuilder.DropIndex(
@@ -134,7 +134,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 table: "HtsPartnerTracingExtracts");
 
             migrationBuilder.DropIndex(
-                name: "IX_HtsPartnerNotificationServicesExtracts_SiteCode_PatientPk",
+                name: "IX_HtsPNSExtracts_SiteCode_PatientPk",
                 table: "HtsPartnerNotificationServicesExtracts");
 
             migrationBuilder.DropIndex(
