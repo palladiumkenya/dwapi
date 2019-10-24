@@ -1204,8 +1204,8 @@ HTSID as HtsNumber  ,
 h.DOB as Dob,
 h.Gender,
 h.MaritalStatus,
-case when trim(h.KeyPop) in ('SW','PWID','MSM','Other','MSW','FSW') then 'Key Population' else 'General Population' end as PopulationType,
-trim(h.KeyPop)  as KeyPopulationType,
+case when LTRIM(h.KeyPop) in ('SW','PWID','MSM','Other','MSW','FSW') then 'Key Population' else 'General Population' end as PopulationType,
+LTRIM(h.KeyPop)  as KeyPopulationType,
 Disability as PatientDisabled,
 County,
 SubCounty,
@@ -1266,7 +1266,7 @@ TestType,
 case when Consent='1' or Consent='Yes' then 'Yes' else 'No' end as Consent from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
 on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
-8578afbc-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
+8578afbc-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT DISTINCT 
 	t.patient_id as PatientPK,
 	SC.value_reference AS SiteCode,
 	 SN.name as FacilityName,
@@ -1325,7 +1325,7 @@ r.ArtStartDate as ReportedStartARTDate
   inner join patient pat on pat.ptn_pk=r.ptn_pk
   left join Referral ref on pat.personid=ref.personid"|DWHStage|1|HtsClientLinkage|3|A6221983-0E85-11E8-BA89-0ED5F89F718B
   
-8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT htsrl.patient_id as PatientPK,
+8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT DISTINCT htsrl.patient_id as PatientPK,
 	SC.value_reference AS SiteCode,
 	SN.name as FacilityName,
 	'KenyaEMR' as Emr,
@@ -1373,7 +1373,7 @@ TestResultsHTS_2 as TestResult2
 from tmp_HTS_LAB_register h inner join tmp_PatientMaster p
 on h.PatientPK=p.PatientPK"|DWHStage|1|HtsTestKits|4|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
-8578b700-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
+8578b700-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT DISTINCT 
     t.patient_id AS PatientPK,
 	SC.value_reference AS SiteCode,
 	SN.name as FacilityName,
@@ -1419,7 +1419,7 @@ inner join patient pt on pt.ptn_pk=h.Patientpk
 inner join Tracing tr on tr.personid=pt.id) a
 where a.Tpe='Enrolment'"|DWHStage|1|HtsClientTracing|5|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
-8578b962-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
+8578b962-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT DISTINCT 
 	ht.patient_id as PatientPK,
 	SC.value_reference AS SiteCode,
 	htsrl.tracing_type as TracingType,
@@ -1461,7 +1461,7 @@ inner join Tracing tr on tr.personid=pr.PersonId
 inner join tmp_PatientMaster tp on tp.PatientPK =pr.IndexPtn_pk ) a
 where a.Tpe='Partner'"|DWHStage|1|HtsPartnerTracing|6|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
-8578bbba-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select distinct
+8578bbba-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select distinct 
 t.patient_id as PatientPK,
 id.identifier as HtsNumber,
 client_id as PartnerPersonId,
@@ -1560,18 +1560,18 @@ left join openmrs.concept_name marital ON marital.concept_id = ohpc.marital_stat
 left join openmrs.concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach and pnsApprocah.locale='en' and pnsApprocah.concept_name_type = 'FULLY_SPECIFIED'
  "|DWHStage|1|HtsPartnerNotificationServices|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
-6a90e0cb-fa2e-4ff0-bdfb-648129bb8018|Hts Clients|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|1|HtsClient|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-3134c7ce-1631-4814-a992-9c671e1d7850|Hts Test Kits|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsTestKits|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-cf76e4d9-f6c8-41b0-a53e-7cebea2577a1|Hts Client Linkage|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsClientLinkage|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-266decc1-cd51-4d8f-b5d5-f7cfea44265b|Hts Client Tracing|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsClientTracing|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-a9e926d7-f731-42e1-8ad8-100882dbfced|Hts Partner Notification Services|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|6|HtsPartnerNotificationServices|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-faeab472-bda9-4e8d-a387-c5a46a6b6151|Hts Client Tests|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsClientTests|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-9956c7a0-de98-41ab-b706-87cf67b1667a|Hts Partner Tracing|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsPartnerTracing|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-9417ef02-f38b-4fe7-bef2-d7ee746db889|All Patients|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|1|PatientExtract|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-8dc57269-3161-4b97-9904-764fbf3deaa9|Patient Adverse Events|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientAdverseEventExtract|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-4b097da8-3e4c-43f5-ae49-4126f6164ae1|ART Patients|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientArtExtract|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-78931894-be1d-41ba-9399-fb36418a378b|Patient Baselines|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientBaselineExtract|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-28be878d-d532-4d73-9043-a1575519fb79|Patient Labs|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientLabExtract|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-972507a1-b19b-473f-8686-d56f144b5ac5|Patient Pharmacy|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientPharmacyExtract|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-889047d5-03ff-45e9-b75c-96d0de105a44|Patient Status|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientStatusExtract|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-cec33081-4ed0-45a9-a644-dfd6bff08674|Patient Visit|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientVisitExtract|8|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+6a90e0cb-fa2e-4ff0-bdfb-648129bb8018|Hts Clients|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|" "|DWHStage|1|HtsClient|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+3134c7ce-1631-4814-a992-9c671e1d7850|Hts Test Kits|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|" "|DWHStage|0|HtsTestKits|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+cf76e4d9-f6c8-41b0-a53e-7cebea2577a1|Hts Client Linkage|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|0|HtsClientLinkage|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+266decc1-cd51-4d8f-b5d5-f7cfea44265b|Hts Client Tracing|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|0|HtsClientTracing|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+a9e926d7-f731-42e1-8ad8-100882dbfced|Hts Partner Notification Services|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|0|HtsPartnerNotificationServices|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+faeab472-bda9-4e8d-a387-c5a46a6b6151|Hts Client Tests|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|0|HtsClientTests|0|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+9956c7a0-de98-41ab-b706-87cf67b1667a|Hts Partner Tracing|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|" "|DWHStage|0|HtsPartnerTracing|0|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+9417ef02-f38b-4fe7-bef2-d7ee746db889|All Patients|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|" "|DWHStage|1|PatientExtract|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+8dc57269-3161-4b97-9904-764fbf3deaa9|Patient Adverse Events|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|" "|DWHStage|0|PatientAdverseEventExtract|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+4b097da8-3e4c-43f5-ae49-4126f6164ae1|ART Patients|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|" "|DWHStage|0|PatientArtExtract|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+78931894-be1d-41ba-9399-fb36418a378b|Patient Baselines|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|" "|DWHStage|0|PatientBaselineExtract|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+28be878d-d532-4d73-9043-a1575519fb79|Patient Labs|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|" "|DWHStage|0|PatientLabExtract|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+972507a1-b19b-473f-8686-d56f144b5ac5|Patient Pharmacy|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|0|PatientPharmacyExtract|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+889047d5-03ff-45e9-b75c-96d0de105a44|Patient Status|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|" "|DWHStage|0|PatientStatusExtract|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+cec33081-4ed0-45a9-a644-dfd6bff08674|Patient Visit|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|" "|DWHStage|0|PatientVisitExtract|8|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
