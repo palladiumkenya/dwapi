@@ -469,6 +469,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("Reason");
+
                     b.Property<DateTime?>("ReportedByDate");
 
                     b.Property<string>("SatelliteName");
@@ -2287,6 +2289,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("Reason");
+
                     b.Property<DateTime?>("ReportedByDate");
 
                     b.Property<string>("SatelliteName");
@@ -2331,6 +2335,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("Reason");
+
                     b.Property<DateTime?>("ReportedByDate");
 
                     b.Property<string>("SatelliteName");
@@ -2370,6 +2376,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("PatientID");
 
                     b.Property<int?>("PatientPK");
+
+                    b.Property<string>("Reason");
 
                     b.Property<Guid>("RecordId");
 

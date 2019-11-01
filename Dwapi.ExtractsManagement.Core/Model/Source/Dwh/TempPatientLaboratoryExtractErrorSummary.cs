@@ -6,7 +6,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     [Table("vTempPatientLaboratoryExtractErrorSummary")]
     public class TempPatientLaboratoryExtractErrorSummary: TempExtractErrorSummary
     {
-
+        public string Reason { get; set; }
         public int? VisitId { get; set; }
         public DateTime? OrderedByDate { get; set; }
         public DateTime? ReportedByDate { get; set; }

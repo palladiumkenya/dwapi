@@ -143,6 +143,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.OrderedByDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientLaboratoryExtract.OrderedByDate))))
                 .ForMember(x => x.ReportedByDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientLaboratoryExtract.ReportedByDate))))
                 .ForMember(x => x.TestName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientLaboratoryExtract.TestName))))
+                .ForMember(x => x.Reason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientLaboratoryExtract.Reason))))
                 .ForMember(x => x.EnrollmentTest, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientLaboratoryExtract.EnrollmentTest))))
                 .ForMember(x => x.TestResult, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientLaboratoryExtract.TestResult))));
 

@@ -395,7 +395,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
             {field: 'facilityName', header: 'Facility Name'},
-
+            {field: 'reason', header: 'Lab Reason' },
             {field: 'enrollmentTest', header: 'Enrollment Test'},
             {field: 'testResult', header: 'Test Result'},
             {field: 'visitId', header: 'Visit Id'}
