@@ -11,6 +11,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
     {
         public string FacilityName { get; set; }
         public string SatelliteName { get; set; }
+        public string Reason { get; set; }
         public int? VisitId { get; set; }
         public DateTime? OrderedByDate { get; set; }
         public DateTime? ReportedByDate { get; set; }

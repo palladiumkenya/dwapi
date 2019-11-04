@@ -82,7 +82,7 @@ FROM
  order by PatientPK"|dwhStage|0|PatientStatusExtract|4|a6221983-0e85-11e8-ba89-0ed5f89f718b
 44742eb0-5856-e811-8e16-9cb6d0da773c|Patient Labs|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
  tmp_PatientMaster.PatientID, tmp_Labs.PatientPK, tmp_PatientMaster.FacilityID, tmp_PatientMaster.SiteCode, tmp_PatientMaster.FacilityName, tmp_PatientMaster.SatelliteName, tmp_Labs.VisitID,
- tmp_Labs.OrderedbyDate, tmp_Labs.ReportedbyDate, tmp_Labs.TestName, tmp_Labs.EnrollmentTest, tmp_Labs.TestResult, CAST(GETDATE() AS DATE) AS DateExtracted,
+ tmp_Labs.OrderedbyDate, tmp_Labs.ReportedbyDate, tmp_Labs.TestName, tmp_Labs.EnrollmentTest, tmp_Labs.TestResult, tmp_Labs.Reasons as Reason,CAST(GETDATE() AS DATE) AS DateExtracted,
    'IQCare' AS EMR, 'Kenya HMIS II' AS Project
 FROM
  tmp_Labs INNER JOIN
@@ -117,7 +117,6 @@ FROM
  tmp_ClinicalEncounters INNER JOIN
  tmp_PatientMaster ON tmp_PatientMaster.PatientPK = tmp_ClinicalEncounters.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientVisitExtract|7|a6221983-0e85-11e8-ba89-0ed5f89f718b
 3A742EB0-5856-E811-8E16-9CB6D0DA773C|All Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 
-
 CASE WHEN prg.program='TB' THEN prg.status  ELSE null end  AS StatusAtTBClinic, 
 CASE WHEN prg.program='PMTCT' THEN prg.status  ELSE null end  AS  StatusAtPMTCT,
 CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
@@ -173,10 +172,8 @@ CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
                                  
                                  'KenyaEMR' as Emr,
                                  'Kenya HMIS II' as Project,
-                                 CAST(now() as Date) AS DateExtracted,
                                  
                                
-                                 -- Baseline Patient_Type 
                                 CASE hiv.patient_type 
 									WHEN 160563 THEN 'Transfer in'
 									WHEN 164144	THEN 'New client'
@@ -186,7 +183,6 @@ CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
                                 
        
                                  
-                                 -- Baseline PopulationType 
                                  (select CASE   
 									WHEN f.key_population_type  IS NOT NULL AND f.key_population_type  !=1175
 										THEN 'Key population'
@@ -195,8 +191,7 @@ CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
 									left join openmrs.concept_name pt on f.population_type = pt.concept_id AND pt.concept_name_type='FULLY_SPECIFIED'
 								WHERE f.encounter_id=min(enr.encounter_id)) AS PopulationType,
                                                                                                
-                                 -- Baseline Key_Population_Type
-								(select 
+                                 (select 
 									case f.key_population_type 
 									WHEN 105 THEN 'PWID'
 									WHEN 160578 THEN 'MSM'
@@ -206,18 +201,18 @@ CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
                                 
                                 from  kenyaemr_etl.etl_patient_hiv_followup f
 								WHERE f.encounter_id=min(enr.encounter_id)) AS KeyPopulationType, 
-                                
+                                case orp.value_coded when 1 THEN 'Yes' when 2 THEN 'No' ELSE null END as  'Orphan', 
+                                case sch.value_coded when 1 THEN 'Yes' when 2 THEN 'No' ELSE null END as 'InSchool', 
 								/*New Locations */
-                                patAd.county_district AS  PatientResidentCounty, -- county_district 
-                                patAd.state_province AS PatientResidentSubCounty, --  patAd.state_province
-                                patAd.address6 AS PatientResidentLocation,  -- patAd.address6
-                                patAd.address5 AS PatientResidentSubLocation, -- patAd.address5
-                                patAd.address4 AS PatientResidentWard,  -- patAd.address4
-                                patAd.city_village AS PatientResidentVillage,  -- -- patAd.city_village
-                                
-                                min(hiv.transfer_in_date) as TransferInDate
-                            
-                               
+                                patAd.county_district AS  PatientResidentCounty,  
+                                patAd.state_province AS PatientResidentSubCounty,  
+                                patAd.address6 AS PatientResidentLocation,   
+                                patAd.address5 AS PatientResidentSubLocation,  
+                                patAd.address4 AS PatientResidentWard,   
+                                patAd.city_village AS PatientResidentVillage,   
+                                min(hiv.transfer_in_date) as TransferInDate,
+								CAST(now() as Date) AS DateExtracted,
+								UUID() as ID
                                
 from kenyaemr_etl.etl_hiv_enrollment hiv
 inner join  kenyaemr_etl.etl_patient_demographics d on hiv.patient_id=d.patient_id
@@ -227,14 +222,18 @@ left outer join kenyaemr_etl.etl_tb_enrollment tb on tb.patient_id=d.patient_id
 left outer join kenyaemr_etl.etl_drug_event de on de.patient_id = d.patient_id 
 left join openmrs.concept_name ts on ts.concept_id=hiv.relationship_of_treatment_supporter and ts.concept_name_type = 'FULLY_SPECIFIED' and ts.locale='en'    
 left join openmrs.person_address patAd ON patAd.person_id=d.patient_id and patAd.voided = 0 
-
+left join (select distinct person_id, value_coded
+	from openmrs.obs
+    where concept_id=5629 and voided=0) sch on  sch.person_id = d.patient_id 
+left join (select distinct person_id, value_coded
+	from openmrs.obs
+    where concept_id=11704 and voided=0) orp on  sch.person_id = d.patient_id 
 left join 
 (
-	select Patient_Id, 
-	(case program_id when 1 then 'TB' when 2 then 'HIV' when 3 then 'PMTCT' when 4 then 'PMTCT' else '' end) as program , 
+	select Patient_Id,   program , 
 	if(mid(max(concat(date_enrolled,date_completed)), 20) is null, 'Active', 'Inactive') as status  
-	from openmrs.patient_program 
-	group by Patient_Id,program_id
+	from kenyaemr_etl.etl_patient_program
+	group by Patient_Id,program
 ) as prg on prg.patient_id = d.patient_id 
 where unique_patient_no is not null
 group by d.patient_id 
@@ -417,7 +416,7 @@ where d.unique_patient_no is not null
 group by PatientID  
 order by disc.visit_date ASC;"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as patientID, d.patient_id as patientPK, l.encounter_id as visitID,
-l.visit_date as orderedByDate,l.visit_date as reportedByDate, (select value_reference from location_attribute
+l.visit_date as orderedByDate,l.visit_date as reportedByDate, null as reason, (select value_reference from location_attribute
 where location_id in (select property_value
 from global_property
 where property='kenyaemr.defaultLocation') and attribute_type_id=1) as facilityID2,
@@ -1488,7 +1487,7 @@ LEFT JOIN
 	openmrs.location SN ON SN.location_id =t.encounter_location;" |DWHStage|1|HtsPartnerTracing|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578bce6-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|" SELECT distinct pns.ptn_pk as PatientPK,a.SiteCode,a.FacilityName,
-'IQCare' as Emr, 'Kenya HMIS II' as Project,HTS_Number as HtsNumber, pd.PatientPK as PartnerPatientPk,pns.personid as PartnerPersonID,pns.Age, pns.Gender as Sex, RelationsipToIndexClient, ScreenedForIPV as ScreenedForIpv, IPVScreeningOutcome as IpvScreeningOutcome, CurrentlyLivingWithIndexClient, KnowledgeOfHIVStatus as KnowledgeOfHivStatus, PNSApproach as PnsApproach , PNSConsent as PnsConsent, Linked as LinkedToCare, b.dateEnrolled as LinkDateLinkedToCare,b.CCCNumber as CccNumber, b.FacilityEnrolled as FacilityLinkedTo, DATEADD(yy,-pns.Age,pns.Date) as Dob, pns.Date as DateElicited, pns.MaritalStatus
+'IQCare' as Emr, 'Kenya HMIS II' as Project,HTS_Number as HtsNumber, pd.PatientPK as PartnerPatientPk,pns.personid as PartnerPersonID,pns.AgeYears as Age, pns.PNSSex as Sex, RelationsipToIndexClient, ScreenedForIPV as ScreenedForIpv, IPVScreeningOutcome as IpvScreeningOutcome, CurrentlyLivingWithIndexClient, KnowledgeOfHIVStatus as KnowledgeOfHivStatus, PNSApproach as PnsApproach , PNSConsent as PnsConsent, Linked as LinkedToCare, b.dateEnrolled as LinkDateLinkedToCare,b.CCCNumber as CccNumber, b.FacilityEnrolled as FacilityLinkedTo, DATEADD(yy,-pns.Age,pns.Date) as Dob, pns.Date as DateElicited, pns.MaritalStatus
   FROM  tmp_PNS_Register pns 
     INNER JOIN dbo.tmp_HTS_LAB_register AS c ON pns.Ptn_pk = c.PatientPK
 	INNER JOIN tmp_PatientMaster AS a ON pns.Ptn_pk = a.PatientPK
@@ -1507,7 +1506,7 @@ DISTINCT
                'KenyaEMR' as Emr,
                'Kenya HMIS II' AS Project,
                id.identifier AS HtsNumber,
-               openmrs.patient_id AS PartnerPatientPk,
+               ohpc.patient_id AS PartnerPatientPk,
                ohpc.id AS PartnerPersonId,
     YEAR(ohpc.date_created)-YEAR(ohpc.birth_date)  AS Age,
                ohpc.sex,
@@ -1516,7 +1515,7 @@ DISTINCT
                                               WHEN 971           THEN  'parent(Father)'
                                               WHEN 972          THEN  'sibling'
                                               WHEN 1528        THEN  'Child'
-                                              WHEN 561          THEN  'spouse'
+                                              WHEN 5617          THEN  'spouse'
             WHEN 163565  THEN  'partner'
                                               WHEN 162221  THEN  'cowife' 
                END     AS RelationsipToIndexClient,
@@ -1559,19 +1558,3 @@ left JOIN openmrs.patient openmrs ON  openmrs.patient_id = id.patient_id
 left join openmrs.concept_name marital ON marital.concept_id = ohpc.marital_status and marital.locale='en' and marital.concept_name_type = 'FULLY_SPECIFIED'
 left join openmrs.concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach and pnsApprocah.locale='en' and pnsApprocah.concept_name_type = 'FULLY_SPECIFIED'
  "|DWHStage|1|HtsPartnerNotificationServices|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-
-6a90e0cb-fa2e-4ff0-bdfb-648129bb8018|Hts Clients|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|1|HtsClient|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-3134c7ce-1631-4814-a992-9c671e1d7850|Hts Test Kits|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsTestKits|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-cf76e4d9-f6c8-41b0-a53e-7cebea2577a1|Hts Client Linkage|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsClientLinkage|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-266decc1-cd51-4d8f-b5d5-f7cfea44265b|Hts Client Tracing|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsClientTracing|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-a9e926d7-f731-42e1-8ad8-100882dbfced|Hts Partner Notification Services|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|6|HtsPartnerNotificationServices|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-faeab472-bda9-4e8d-a387-c5a46a6b6151|Hts Client Tests|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsClientTests|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-9956c7a0-de98-41ab-b706-87cf67b1667a|Hts Partner Tracing|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|HtsPartnerTracing|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-9417ef02-f38b-4fe7-bef2-d7ee746db889|All Patients|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|1|PatientExtract|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-8dc57269-3161-4b97-9904-764fbf3deaa9|Patient Adverse Events|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientAdverseEventExtract|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-4b097da8-3e4c-43f5-ae49-4126f6164ae1|ART Patients|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientArtExtract|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-78931894-be1d-41ba-9399-fb36418a378b|Patient Baselines|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientBaselineExtract|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-28be878d-d532-4d73-9043-a1575519fb79|Patient Labs|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientLabExtract|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-972507a1-b19b-473f-8686-d56f144b5ac5|Patient Pharmacy|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientPharmacyExtract|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-889047d5-03ff-45e9-b75c-96d0de105a44|Patient Status|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientStatusExtract|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
-cec33081-4ed0-45a9-a644-dfd6bff08674|Patient Visit|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select "|DWHStage|0|PatientVisitExtract|8|A6221AA4-0E85-11E8-BA89-0ED5F89F718B

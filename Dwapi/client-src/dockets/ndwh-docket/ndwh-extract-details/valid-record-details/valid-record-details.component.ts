@@ -604,7 +604,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'visitId', header: 'VisitId'},
             {field: 'orderedByDate', header: 'Ordered By Date'},
             {field: 'reportedByDate', header: 'Reported By Date'},
-            {field: 'testName', header: 'Test Name'},
+            { field: 'testName', header: 'Test Name' },
+            { field: 'reason', header: 'Lab Reason' },
             {field: 'enrollmentTest', header: 'Enrollment Test'},
             {field: 'testResult', header: 'Test Result'},
             {field: 'dateExtracted', header: 'Date Extracted'}
