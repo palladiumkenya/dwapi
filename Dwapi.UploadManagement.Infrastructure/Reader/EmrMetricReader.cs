@@ -19,5 +19,10 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader
         {
             return _context.EmrMetrics.AsNoTracking();
         }
+
+        public IEnumerable<AppMetricView> ReadAppAll()
+        {
+            return _context.AppMetrics.AsNoTracking();
+        }
     }
 }

@@ -34,6 +34,8 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
 
 
         public virtual DbSet<EmrMetricView> EmrMetrics { get; set; }
+        public virtual DbSet<AppMetricView> AppMetrics { get; set; }
+
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
 
