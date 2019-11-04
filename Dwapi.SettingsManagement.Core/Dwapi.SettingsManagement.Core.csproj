@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="MediatR" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />

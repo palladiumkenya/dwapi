@@ -7,6 +7,7 @@ using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
+using Dwapi.UploadManagement.Core.Model;
 using Dwapi.UploadManagement.Core.Model.Cbs.Dtos;
 
 namespace Dwapi.UploadManagement.Core.Packager.Cbs
@@ -34,6 +35,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Cbs
         public IEnumerable<Manifest> GenerateWithMetrics()
         {
             var metrics = _metricReader.ReadAll().FirstOrDefault();
+            var appMetrics = _metricReader.ReadAppAll().ToList();
             var manifests = Generate().ToList();
 
             if (null != metrics)
@@ -41,6 +43,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Cbs
                 foreach (var manifest in manifests)
                 {
                     manifest.AddCargo(metrics);
+                    manifest.AddAppToCargo<AppMetricView>(appMetrics);
                 }
             }
 

@@ -6,5 +6,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader
     public interface IEmrMetricReader
     {
         IEnumerable<EmrMetricView> ReadAll();
+        IEnumerable<AppMetricView> ReadAppAll();
     }
 }
