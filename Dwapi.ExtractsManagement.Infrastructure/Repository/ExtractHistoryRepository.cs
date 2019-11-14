@@ -81,7 +81,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
         {
                 var history = new ExtractHistory(status, stats, statusInfo, extractId);
                 Create(history);
-                SaveChanges();
+                SaveChanges(); 
         }
 
         public void Complete(Guid extractId)
@@ -119,13 +119,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
             var sql = $@"
                     select count(id)
                     from {extract.TempTableName}s a where CheckError=1";
-
-            count = ExecQuery<int>(sql);
-
-            Log.Debug(sql);
             
+            count = ExecQuery<int>(sql);
+            Log.Debug(sql); 
+
             DwhUpdateStatus(extractId, ExtractStatus.Excluded, count);
-            //  DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount-count);
+            //  DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount-count); 
             DwhUpdateStatus(extractId, ExtractStatus.Rejected,rejectedCount);
 
             return count;
@@ -143,14 +142,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 
         public int ProcessRejected(Guid extractId, int rejectedCount, DbExtract extract)
         {
-            var sql = $@"
-                    select count(PatientPK)
-                    from {extract.TempTableName}s a where a.PatientPk in (select PatientPK
-                    from {extract.MainName} where ErrorType=1 and a.SiteCode=SiteCode )
-            ";
+            var sql = $@" select count(a.PatientPK)
+                    from {extract.TempTableName}s a 
+                    inner join {extract.MainName} b on a.PatientPK=b.PatientPK and a.SiteCode=b.SiteCode
+                    where a.ErrorType=1";
+            
 
             int count = ExecQuery<int>(sql);
-
             Log.Debug(sql);
 
             DwhUpdateStatus(extractId, ExtractStatus.Excluded, count);

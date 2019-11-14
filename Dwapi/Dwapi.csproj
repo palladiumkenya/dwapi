@@ -17,7 +17,13 @@ Bached sending and await to 50 at a time
     <SignAssembly>false</SignAssembly>
     <Description>Data Warehouse API Client. Transmit data from EMRs (IQCare, KenyaEMR, AMRS, ECARE) to NASCOP</Description>
     <Copyright>Palladium Group</Copyright>
+    <StartupObject></StartupObject>
     <!--<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>-->
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="client-src\settings\model\data-metrics.ts" />
