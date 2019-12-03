@@ -5,7 +5,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     public partial class Alter_Lab_View : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        { 
             migrationBuilder.Sql(@"
 	            ALTER view vTempPatientLaboratoryExtractError as
 	            SELECT        *
