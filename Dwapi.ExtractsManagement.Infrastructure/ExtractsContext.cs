@@ -271,6 +271,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempHtsClientLinkage>().Key(x => x.Id).Table($"{nameof(TempHtsClientsLinkageExtracts)}");
             DapperPlusManager.Entity<TempHtsTestKits>().Key(x => x.Id).Table($"{nameof(TempHtsTestKitsExtracts)}");
             DapperPlusManager.Entity<TempHtsPartnerTracing>().Key(x => x.Id).Table($"{nameof(TempHtsPartnerTracingExtracts)}");
+
+            DapperPlusManager.MapperFactory = mapper => mapper.BatchTimeout(6000);
         }
 
         public override void EnsureSeeded()

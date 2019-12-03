@@ -135,7 +135,7 @@ CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
                                  case d.gender when 'M' then 'Male' when 'F' then 'Female' end  as Gender,
                                  d.dob as DOB,
                                  CAST(min(hiv.visit_date) as Date) as RegistrationDate,
-                                 CAST(min(hiv.visit_date)as Date) as RegistrationAtCCC,
+                                 coalesce(date_first_enrolled_in_care,min(hiv.visit_date)) as RegistrationAtCCC,
                                  CAST(min(mch.visit_date)as Date) as RegistrationATPMTCT,
                                  CAST(min(tb.visit_date)as Date) as RegistrationAtTBClinic,
                                  case  max(hiv.entry_point)
@@ -250,7 +250,7 @@ order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5
         where location_id in (select property_value
                               from global_property
                               where property='kenyaemr.defaultLocation')) as FacilityName,
-       min(hiv.visit_date) as RegistrationDate,
+       coalesce(date_first_enrolled_in_care,min(hiv.visit_date)) as RegistrationDate,
        case  max(hiv.entry_point)
          when 160542 then 'OPD'
          when 160563 then 'Other'
