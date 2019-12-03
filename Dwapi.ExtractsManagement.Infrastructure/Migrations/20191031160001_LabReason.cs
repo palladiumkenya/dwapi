@@ -22,7 +22,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Reason",
-                table: "TempPatientLaboratoryExtracts"); 
+                table: "TempPatientLaboratoryExtracts");
 
             migrationBuilder.DropColumn(
                 name: "Reason",
