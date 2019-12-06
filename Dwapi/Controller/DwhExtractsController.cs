@@ -5,6 +5,7 @@ using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Dwh;
 using Dwapi.Models;
+using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
@@ -53,6 +54,11 @@ namespace Dwapi.Controller
         public async Task<IActionResult> Load([FromBody]LoadExtracts request)
         {
             if (!ModelState.IsValid) return BadRequest();
+
+            var ver = GetType().Assembly.GetName().Version;
+            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            await _mediator.Publish(new ExtractLoaded("CareTreatment", version));
+
             if (!request.LoadMpi)
             {
                 var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
@@ -97,6 +103,11 @@ namespace Dwapi.Controller
         {
             if (!packageDto.IsValid())
                 return BadRequest();
+
+            var ver = GetType().Assembly.GetName().Version;
+            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            await _mediator.Publish(new ExtractSent("CareTreatment", version));
+
             try
             {
                 if (!packageDto.SendMpi)
@@ -104,7 +115,8 @@ namespace Dwapi.Controller
                     var result = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage);
                     return Ok(result);
                 }
-                var mpiTask = _cbsSendService.SendManifestAsync(packageDto.MpiPackage);
+
+                var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage);
                 var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage);
                 return Ok();
             }

@@ -12,6 +12,7 @@ using Dwapi.Hubs.Cbs;
 using Dwapi.Hubs.Dwh;
 using Dwapi.Hubs.Hts;
 using Dwapi.Models;
+using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
@@ -52,6 +53,11 @@ namespace Dwapi.Controller
         public async Task<IActionResult> Load([FromBody] LoadHtsExtracts request)
         {
             if (!ModelState.IsValid) return BadRequest();
+
+            var ver = GetType().Assembly.GetName().Version;
+            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            await _mediator.Publish(new ExtractLoaded("HivTestingService", version));
+
             var result = await _mediator.Send(request.LoadHtsFromEmrCommand, HttpContext.RequestAborted);
             return Ok(result);
         }
@@ -89,6 +95,9 @@ namespace Dwapi.Controller
             try
             {
                 var result = await _htsSendService.SendManifestAsync(packageDto);
+                var ver = GetType().Assembly.GetName().Version;
+                string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+                await _mediator.Publish(new ExtractSent("HivTestingService", version));
                 return Ok(result);
             }
             catch (Exception e)
@@ -233,6 +242,6 @@ namespace Dwapi.Controller
             }
         }
 
-        
+
     }
 }
