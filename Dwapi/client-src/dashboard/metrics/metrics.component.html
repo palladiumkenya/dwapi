@@ -1,0 +1,20 @@
+<div class="ui-g">
+    <div class="ui-g-12">
+        <p-messages [(value)]="sysMessages"></p-messages>
+        <div class="ui-g-12">
+            <div class="card card-w-title">
+                <h1>DWAPI Metrics</h1>
+                <p-dataTable [value]="appMetrics">
+                    <p-column field="name" header="Docket"></p-column>
+                    <p-column field="action" header="Activity"></p-column>
+                    <p-column field="lastAction" header="Date">
+                        <ng-template let-col let-detail="rowData" pTemplate="body">
+                            {{detail.timeAgo ? (detail.lastAction|date: 'medium') :''}}
+                        </ng-template>
+                    </p-column>
+                    <p-column field="timeAgo" header=""></p-column>
+                </p-dataTable>
+            </div>
+        </div>
+    </div>
+</div>

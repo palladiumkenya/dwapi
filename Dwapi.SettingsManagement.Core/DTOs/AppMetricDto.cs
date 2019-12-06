@@ -1,4 +1,5 @@
 using System;
+using Humanizer;
 
 namespace Dwapi.SettingsManagement.Core.DTOs
 {
@@ -8,6 +9,7 @@ namespace Dwapi.SettingsManagement.Core.DTOs
         public string Action { get;  }
         public DateTime LastAction { get;  }
         public int Rank { get;  }
+        public string TimeAgo => GetTimeAgo();
 
         public AppMetricDto(string name, string action, DateTime lastAction, int rank)
         {
@@ -15,6 +17,14 @@ namespace Dwapi.SettingsManagement.Core.DTOs
             Action = action;
             LastAction = lastAction;
             Rank = rank;
+        }
+
+        private string GetTimeAgo()
+        {
+            if (LastAction.Year == 1983)
+                return string.Empty;
+
+            return LastAction.Humanize(false);
         }
     }
 }
