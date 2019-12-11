@@ -1217,7 +1217,7 @@ order by KeyPopulationType"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F
 	d.marital_status as MaritalStatus,
 	t.population_type as PopulationType,
 	t.key_population_type as KeyPopulationType,
-	t.patient_disabled as PatientDisabled,
+	t.disability_type as PatientDisabled,
 	A.county_district as County,
 	A.state_province as SubCounty,
 	A.address4 as Ward
@@ -1324,19 +1324,21 @@ r.ArtStartDate as ReportedStartARTDate
 	'KenyaEMR' as Emr,
 	'Kenya HMIS II' AS Project,
 	id.identifier AS HtsNumber,
-	htsrl.enrollment_date as DatePrefferedToBeEnrolled,
-	htsrl.facility_linked_to as FacilityReferredTo,
+	ref.date_to_enrol as DatePrefferedToBeEnrolled,
+	ref.facility_referred_to as FacilityReferredTo,
 	htsrl.provider_handed_to as HandedOverTo,
 	NULL HandedOverToCadre,
 	htsrl.facility_linked_to as EnrolledFacilityName,
-	htsrl.visit_date as ReferralDate,
-	EN.visit_date as DateEnrolled,
+	ref.visit_date as ReferralDate,
+	htsrl.enrollment_date as DateEnrolled,
 	htsrl.ccc_number as ReportedCCCNumber,
 	htsrl.art_start_date as ReportedStartARTDate
 FROM 
 	kenyaemr_etl.etl_hts_referral_and_linkage htsrl 
 INNER JOIN 
 	kenyaemr_etl.etl_hts_test t ON htsrl.patient_id=t.patient_id
+LEFT JOIN 
+	kenyaemr_etl.etl_hts_referral ref ON htsrl.patient_id=ref.patient_id
 LEFT JOIN 
 	 openmrs.location_attribute SC ON SC.location_id = htsrl.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN 
