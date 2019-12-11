@@ -1531,10 +1531,10 @@ DISTINCT
     
 pnsApprocah.name AS  PnsApproach,
 ohpc.consented_contact_listing as  PnsConsent,
-NULL LinkedToCare,
-NULL LinkDateLinkedToCare,
-NULL CccNumber,
-NULL FacilityLinkedTo,
+case when ctrace.status is null then 'N' else 'Y' end as LinkedToCare,
+ctrace.encounter_date as  LinkDateLinkedToCare,
+ctrace.unique_patient_no as CccNumber,
+ctrace.facility_linked_to as FacilityLinkedTo,
 ohpc.birth_date as DoB,
 ohpc.date_created as DateElicited ,
 marital.name as  MaritalStatus
@@ -1553,6 +1553,7 @@ LEFT JOIN
 from openmrs.patient_identifier_type
 where name='OpenMRS ID')  
 left JOIN openmrs.patient openmrs ON  openmrs.patient_id = id.patient_id
+left JOIN openmrs.kenyaemr_hiv_testing_client_trace ctrace ON  ctrace.client_id = ohpc.id and ctrace.status='Contacted and Linked'
 left join openmrs.concept_name marital ON marital.concept_id = ohpc.marital_status and marital.locale='en' and marital.concept_name_type = 'FULLY_SPECIFIED'
 left join openmrs.concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach and pnsApprocah.locale='en' and pnsApprocah.concept_name_type = 'FULLY_SPECIFIED'
  "|DWHStage|1|HtsPartnerNotificationServices|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
