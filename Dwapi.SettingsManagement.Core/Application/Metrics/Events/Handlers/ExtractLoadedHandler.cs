@@ -20,6 +20,7 @@ namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events.Handlers
         {
             var metric = new AppMetric(notification.Version, notification.Name,
                 JsonConvert.SerializeObject(notification));
+            _repository.Clear(notification.Name,"NoLoaded");
             _repository.Create(metric);
             _repository.SaveChanges();
             return Task.CompletedTask;

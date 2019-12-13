@@ -92,12 +92,14 @@ namespace Dwapi.Controller
         {
             if (!packageDto.IsValid())
                 return BadRequest();
+
+            var ver = GetType().Assembly.GetName().Version;
+            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            await _mediator.Publish(new ExtractSent("HivTestingService", version));
+
             try
             {
                 var result = await _htsSendService.SendManifestAsync(packageDto);
-                var ver = GetType().Assembly.GetName().Version;
-                string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
-                await _mediator.Publish(new ExtractSent("HivTestingService", version));
                 return Ok(result);
             }
             catch (Exception e)
