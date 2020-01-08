@@ -1318,37 +1318,33 @@ r.ArtStartDate as ReportedStartARTDate
   inner join patient pat on pat.ptn_pk=r.ptn_pk
   left join Referral ref on pat.personid=ref.personid"|DWHStage|1|HtsClientLinkage|3|A6221983-0E85-11E8-BA89-0ED5F89F718B
   
-8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT  distinct htsrl.patient_id as PatientPK,
-	SC.value_reference AS SiteCode,
-	SN.name as FacilityName,
-	'KenyaEMR' as Emr,
-	'Kenya HMIS II' AS Project,
-	id.identifier AS HtsNumber,
-	ref.date_to_enrol as DatePrefferedToBeEnrolled,
-	ref.facility_referred_to as FacilityReferredTo,
-	htsrl.provider_handed_to as HandedOverTo,
-	NULL HandedOverToCadre,
-	htsrl.facility_linked_to as EnrolledFacilityName,
-	ref.visit_date as ReferralDate,
-	htsrl.enrollment_date as DateEnrolled,
-	htsrl.ccc_number as ReportedCCCNumber,
-	htsrl.art_start_date as ReportedStartARTDate
-FROM 
-	kenyaemr_etl.etl_hts_referral_and_linkage htsrl 
-INNER JOIN 
-	kenyaemr_etl.etl_hts_test t ON htsrl.patient_id=t.patient_id
-LEFT JOIN 
-	kenyaemr_etl.etl_hts_referral ref ON htsrl.patient_id=ref.patient_id
-LEFT JOIN 
-	 openmrs.location_attribute SC ON SC.location_id = htsrl.encounter_location AND SC.attribute_type_id=1
-LEFT JOIN 
-  openmrs.location SN ON SN.location_id =htsrl.encounter_location
-LEFT JOIN 
- openmrs.patient_identifier id ON id.patient_id = htsrl.patient_id AND id.identifier_type = (select patient_identifier_type_id 
+8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.patient_id, SC.value_reference AS SiteCode,
+SN.name as FacilityName,
+'KenyaEMR' as Emr,
+'Kenya HMIS II' AS Project,
+id.identifier AS HtsNumber,
+ref.date_to_enrol as DatePrefferedToBeEnrolled,
+ref.facility_referred_to as FacilityReferredTo,
+htsrl.provider_handed_to as HandedOverTo,
+NULL HandedOverToCadre,
+htsrl.facility_linked_to as EnrolledFacilityName,
+ref.visit_date as ReferralDate,
+htsrl.enrollment_date as DateEnrolled,
+htsrl.ccc_number as ReportedCCCNumber,
+htsrl.art_start_date as ReportedStartARTDate from (
+select patient_id from kenyaemr_etl.etl_hts_referral_and_linkage htsrl union select patient_id from kenyaemr_etl.etl_hts_referral t) a
+left join kenyaemr_etl.etl_hts_referral_and_linkage htsrl on a.patient_id=htsrl.patient_id
+left join kenyaemr_etl.etl_hts_referral ref on a.patient_id=ref.patient_id
+LEFT JOIN
+openmrs.location_attribute SC ON (SC.location_id = htsrl.encounter_location or SC.location_id=ref.encounter_location ) AND SC.attribute_type_id=1
+LEFT JOIN
+openmrs.location SN ON (SN.location_id =htsrl.encounter_location or SN.location_id =ref.encounter_location )
+LEFT JOIN
+openmrs.patient_identifier id ON (id.patient_id = htsrl.patient_id or id.patient_id = ref.patient_id ) AND id.identifier_type = (select patient_identifier_type_id
 from openmrs.patient_identifier_type
-where name='OpenMRS ID')  
-LEFT JOIN 
-	kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =htsrl.patient_id"|DWHStage|1|HtsClientLinkage|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+where name='OpenMRS ID')
+LEFT JOIN
+kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =htsrl.patient_id;"|DWHStage|1|HtsClientLinkage|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
   
 8578b5a2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct p.PatientPK,
 SiteCode,
@@ -1486,8 +1482,14 @@ LEFT JOIN
 LEFT JOIN 
 	openmrs.location SN ON SN.location_id =t.encounter_location;" |DWHStage|1|HtsPartnerTracing|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
-8578bce6-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|" SELECT distinct pns.ptn_pk as PatientPK,a.SiteCode,a.FacilityName,
-'IQCare' as Emr, 'Kenya HMIS II' as Project,HTS_Number as HtsNumber, pd.PatientPK as PartnerPatientPk,pns.personid as PartnerPersonID,pns.AgeYears as Age, pns.PNSSex as Sex, RelationsipToIndexClient, ScreenedForIPV as ScreenedForIpv, IPVScreeningOutcome as IpvScreeningOutcome, CurrentlyLivingWithIndexClient, KnowledgeOfHIVStatus as KnowledgeOfHivStatus, PNSApproach as PnsApproach , PNSConsent as PnsConsent, Linked as LinkedToCare, b.dateEnrolled as LinkDateLinkedToCare,b.CCCNumber as CccNumber, b.FacilityEnrolled as FacilityLinkedTo, DATEADD(yy,-pns.Age,pns.Date) as Dob, pns.Date as DateElicited, pns.MaritalStatus
+8578bce6-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct pns.ptn_pk as PatientPK,a.SiteCode,a.FacilityName,
+'IQCare' as Emr, 'Kenya HMIS II' as Project,HTS_Number as HtsNumber, pd.PatientPK as PartnerPatientPk,pns.personid as PartnerPersonID,
+pns.AgeYears as Age, pns.PNSSex as Sex, RelationsipToIndexClient, ScreenedForIPV as ScreenedForIpv, 
+IPVScreeningOutcome as IpvScreeningOutcome, CurrentlyLivingWithIndexClient, KnowledgeOfHIVStatus as KnowledgeOfHivStatus, 
+PNSApproach as PnsApproach , PNSConsent as PnsConsent, Linked as LinkedToCare, b.dateEnrolled as LinkDateLinkedToCare,
+b.CCCNumber as CccNumber, b.FacilityEnrolled as FacilityLinkedTo, pd.dateofbirth as Dob, 
+pns.Date as DateElicited, 
+pns.MaritalStatus
   FROM  tmp_PNS_Register pns 
     INNER JOIN dbo.tmp_HTS_LAB_register AS c ON pns.Ptn_pk = c.PatientPK
 	INNER JOIN tmp_PatientMaster AS a ON pns.Ptn_pk = a.PatientPK
@@ -1495,7 +1497,7 @@ LEFT JOIN
     LEFT JOIN tmp_Referral_Linkage_Register b ON pc.PatientPK = b.ptn_pk
 
     LEFT JOIN tmp_PersonDetails pd ON pd.PersonID = pns.personid
-  WHERE c.finalResultHTS = 'Positive' AND pns.personid IS NOT NULL "|DWHStage|1|HtsPartnerNotificationServices|7|A6221983-0E85-11E8-BA89-0ED5F89F718B
+  WHERE c.finalResultHTS = 'Positive' AND pns.personid IS NOT NULL"|DWHStage|1|HtsPartnerNotificationServices|7|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 
 8578c042-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT 
@@ -1559,3 +1561,643 @@ left JOIN openmrs.kenyaemr_hiv_testing_client_trace ctrace ON  ctrace.client_id 
 left join openmrs.concept_name marital ON marital.concept_id = ohpc.marital_status and marital.locale='en' and marital.concept_name_type = 'FULLY_SPECIFIED'
 left join openmrs.concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach and pnsApprocah.locale='en' and pnsApprocah.concept_name_type = 'FULLY_SPECIFIED'
  "|DWHStage|1|HtsPartnerNotificationServices|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+
+
+290bd21c-3089-11ea-978f-2e728ce88125|Master Patient Index|CBS|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
+*
+, LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue]
+, LEFT([Gender],1) + CASE 
+	WHEN CHARINDEX(';',[dmFirstName])>0 THEN 
+	SUBSTRING([dmFirstName],CHARINDEX(';',[dmFirstName])+1,LEN([dmFirstName]))
+	ELSE [dmFirstName] END +
+	CASE 
+	WHEN CHARINDEX(';',[dmLastName])>0 THEN 
+	SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))
+	ELSE [dmLastName] END + LTRIM(RTRIM(STR(YEAR(DOB)))) AS [dmPKValue]
+, CASE WHEN CHARINDEX(';',[dmLastName])>0 THEN 
+LEFT([Gender],1)+ [sxFirstName]+ SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))+LTRIM(RTRIM(STR(YEAR(DOB))))
+ELSE 
+LEFT([Gender],1)+ [sxFirstName]+[dmLastName]+LTRIM(RTRIM(STR(YEAR(DOB))))
+END AS [sxdmPKValue], 
+LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112)))) AS [sxPKValueDoB], 
+LEFT([Gender],1)+
+CASE 
+WHEN CHARINDEX(';',[dmFirstName])>0 THEN 
+SUBSTRING([dmFirstName],CHARINDEX(';',[dmFirstName])+1,LEN([dmFirstName]))
+ELSE 
+[dmFirstName] 
+END +
+CASE 
+WHEN CHARINDEX(';',[dmLastName])>0 THEN 
+SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))
+ELSE 
+[dmLastName] 
+END +LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112)))) AS [dmPKValueDoB], 
+CASE WHEN CHARINDEX(';',[dmLastName])>0 THEN 
+LEFT([Gender],1)+ [sxFirstName]+ SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))+LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112))))
+ELSE 
+LEFT([Gender],1)+ [sxFirstName]+[dmLastName]+LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112))))
+END AS [sxdmPKValueDoB] 
+
+FROM 
+(
+SELECT  
+-------Demographics
+a.Ptn_Pk
+,a.PatientPK
+,a.SiteCode
+,a.FacilityName
+,a.[PatientID]Serial
+,UPPER(c.FirstName) FirstName
+,UPPER(C.MidName) MiddleName
+,UPPER(c.LastName) LastName
+,dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.FirstName,'0','O'))) AS [FirstName_Normalized]
+,dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.MidName,'0','O'))) AS [MiddleName_Normalized]
+,dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.LastName,'0','O'))) AS [LastName_Normalized]
+,SOUNDEX(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.FirstName,'0','O')))) AS  [sxFirstName]
+,SOUNDEX(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.LastName,'0','O')))) AS [sxLastName]
+,SOUNDEX(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.MidName,'0','O')))) AS sxMiddleName 
+,[dmFirstName]= dbo.fn_getPatientNameDoubleMetaphone(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.FirstName,'0','O'))))
+,[dmLastName] = dbo.fn_getPatientNameDoubleMetaphone(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.MidName,'0','O'))))
+,dmMiddleName = dbo.fn_getPatientNameDoubleMetaphone(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.LastName,'0','O'))))
+,a.[PhoneNumber]PatientPhoneNumber
+,NULL PatientAlternatePhoneNumber
+,a.[Gender]
+,a.[DOB]
+,a.[MaritalStatus]
+-------Patient Address 
+,a.[PatientSource]
+,(Select top 1 Region FROM IQC_SiteDetails) PatientCounty
+,(Select top 1 District FROM IQC_SiteDetails)PatientSubCounty
+,[Village]PatientVillage
+-------Patient-Identifiers
+, a.PatientID
+,c.NationalId [NationalId] 
+,NULL as [NHIF_Number]
+,NULL as [Birth_Certificate]
+,a.[PatientID] [CCC_Number]
+,NULL[TB_Number]
+-------Next Of Kin
+   
+,LTRIM(RTRIM(ContactName)) AS ContactName
+,[ContactRelation] AS  ContactRelation
+,[ContactPhoneNumber] as ContactPhoneNumber
+,[ContactAddress] as ContactAddress
+, NULL AS  NokNationalId
+-------Additional Variables
+, HIVDiagnosisDate DateConfirmedHIVPositive
+,b.[StartARTDate]
+,[StartRegimen]StartARTRegimenCode
+,[StartRegimenLine]StartARTRegimenDesc
+  
+FROM [dbo].[tmp_PatientMaster] a 
+inner join Patient bb on a.PatientPK = bb.Id
+inner join Person_Decoded c ON bb.PersonId = c.PersonID
+left  join 
+  
+(SELECT DISTINCT a.PatientPK
+, a.PatientID
+, a.RegistrationAtCCC
+, b.StartARTDate
+, b.StartRegimen
+, 'First Line' StartRegimenLine
+FROM 
+tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
+WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
+) X 
+INNER JOIN 
+(
+SELECT 
+a.PatientPK
+,a.[PatientID] Serial
+FROM [dbo].[tmp_PatientMaster] a 
+left  join (SELECT DISTINCT a.PatientPK, a.PatientID, a.RegistrationAtCCC, b.StartARTDate, b.StartRegimen, 'First Line' StartRegimenLine
+FROM dbo.tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
+WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
+
+)Y
+ON 
+Y.PatientPK = X.PatientPK AND Y.Serial= X.Serial
+"|MPI|0|MasterPatientIndex|1|a6221988-0e85-11e8-ba89-0ed5f89f718b
+
+290bd4b0-3089-11ea-978f-2e728ce88125|Hts Clients|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"select distinct h.PatientPk,
+SiteCode,
+FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+HTSID as HtsNumber  ,
+h.DOB as Dob,
+h.Gender,
+h.MaritalStatus,
+case when LTRIM(h.KeyPop) in ('SW','PWID','MSM','Other','MSW','FSW') then 'Key Population' else 'General Population' end as PopulationType,
+LTRIM(h.KeyPop)  as KeyPopulationType,
+Disability as PatientDisabled,
+County,
+SubCounty,
+Ward from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
+on h.PatientPK=p.PatientPK
+order by KeyPopulationType"|dwhstage|0|HtsClient|1|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bd780-3089-11ea-978f-2e728ce88125|Hts Client Tests|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"select distinct h.PatientPK,
+SiteCode, 
+FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+p.HTSID as HtsNumber,
+HTSEncounterId as EncounterId,
+VisitDate as TestDate,
+TestedBefore as EverTestedForHiv,
+WhenLastTested as MonthsSinceLastTest,
+ClientTestedAs,
+TestEntryPoint as EntryPoint,
+StrategyHTS as TestStrategy,
+FinalTestOneResult as TestResult1,
+FinalResultTestTwo as TestResult2,
+finalResultHTS as FinalTestResult,
+FinalResultsGiven as PatientGivenResult,
+TBScreeningHTS as TbScreening,
+clientSelfTestesd as ClientSelfTested,
+CoupleDiscordant,
+TestType,
+case when Consent='1' or Consent='Yes' then 'Yes' else 'No' end as Consent from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
+on h.PatientPK=p.PatientPK"|dwhstage|0|HtsClientTests|2|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bd8e8-3089-11ea-978f-2e728ce88125|Hts Client Linkage|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT distinct r.ptn_pk as PatientPK,SiteCode,
+p.FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+p.HTSID as HtsNumber,
+ref.referraldate as DatePrefferedToBeEnrolled,
+case when ref.tofacility=99999 then 'Other Facility'else (
+select name from FacilityList where MFLCode=ref.tofacility ) end as FacilityReferredTo,
+HandedOverTo,
+HandedOverToCadre,
+r.FacilityEnrolled as EnrolledFacilityName,
+ref.createdate as ReferralDate,
+dateEnrolled as DateEnrolled,
+r.CCCNumber as ReportedCCCNumber,
+r.ArtStartDate as ReportedStartARTDate
+  FROM tmp_Referral_Linkage_Register r 
+  inner join tmp_PatientMaster p on r.ptn_pk=p.PatientPK
+  inner join tmp_HTS_LAB_register plab on r.ptn_pk=plab.PatientPK
+  inner join patient pat on pat.ptn_pk=r.ptn_pk
+  left join Referral ref on pat.personid=ref.personid"|dwhstage|0|HtsClientLinkage|3|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bda28-3089-11ea-978f-2e728ce88125|Hts Test Kits|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"select distinct p.PatientPK,
+SiteCode,
+p.FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+p.HTSID as HtsNumber,
+HTSEncounterId as EncounterId,
+TestKitName1,
+TestKitLotNumber1,
+TestKitExpiryDate1 as TestKitExpiry1,
+TestResultsHTS1 as TestResult1,
+TestKitName_2 as TestKitName2,
+TestKitLotNumber_2 as TestKitLotNumber2,
+TestKitExpiryDate_2 as TestKitExpiry2, 
+TestResultsHTS_2 as TestResult2 
+from tmp_HTS_LAB_register h inner join tmp_PatientMaster p
+on h.PatientPK=p.PatientPK"|dwhstage|0|HtsTestKits|4|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bdb54-3089-11ea-978f-2e728ce88125|Hts Client Tracing|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"select distinct a.PatientPK, a.SiteCode, a. TracingType, a.TracingDate, 
+a.FacilityName,a.Emr,a.Project, a.HTSNumber AS HtsNumber, a.TracingOutcome from (select h.PatientPK,
+tp.SiteCode, 
+TracingType = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.Mode),
+DateTracingDone as TracingDate,
+FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+tp.HTSID as HTSNumber,
+Tpe = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.TracingType),
+TracingOutcome = (Select Top 1 ItemName From LookupItemView WHERE ItemId = tr.Outcome)
+from tmp_HTS_LAB_register h
+inner join tmp_PatientMaster tp on tp.PatientPK =h.Patientpk 
+inner join patient pt on pt.ptn_pk=h.Patientpk
+inner join Tracing tr on tr.personid=pt.id) a
+where a.Tpe='Enrolment'"|dwhstage|0|HtsClientTracing|5|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bdc8a-3089-11ea-978f-2e728ce88125|Hts Partner Tracing|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"select a.IndexPatientPK as PatientPK, a.HtsNumber
+,   a.PartnerPersonId, a. TraceType,a.TraceDate,   a.FacilityName,a.Emr,a.Project, a.SiteCode,a.TraceOutcome, a.BookingDate 
+from (select pr.IndexPtn_pk as IndexPatientPK
+, tp.HTSID as HtsNumber
+,   pr.PersonId as PartnerPersonId
+,  TraceType = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.Mode)
+,  DateTracingDone as TraceDate
+,  FacilityName
+,'IQCare' as Emr
+,'Kenya HMIS II' as Project
+,tp.SiteCode
+,  TraceOutcome = (Select Top 1 ItemName From LookupItemView WHERE ItemId = tr.Outcome)
+,  Tpe = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.TracingType), tr.datebookedTesting as BookingDate  
+from   (select pr.PersonId
+	, pat.ptn_pk
+	, ptIndex.ptn_pk as IndexPtn_pk  
+	from PersonRelationship pr    
+left join patient ptIndex on ptIndex.id=pr.PatientId  
+left join patient pat on pat.PersonId=pr.PersonId) pr 
+  
+inner join Tracing tr on tr.personid=pr.PersonId  
+inner join tmp_PatientMaster tp on tp.Ptn_Pk =pr.IndexPtn_pk ) a  where a.Tpe='Partner'"|dwhstage|0|HtsPartnerTracing|6|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bddb6-3089-11ea-978f-2e728ce88125|Hts Partner Notification Services|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT distinct pns.ptn_pk as PatientPK
+,a.SiteCode,a.FacilityName
+,  'IQCare' as Emr, 'Kenya HMIS II' as Project
+,HTS_Number as HtsNumber
+, pd.Ptn_Pk as PartnerPatientPk
+, pns.personid as PartnerPersonID
+, pns.Age, pns.Gender as Sex
+, RelationsipToIndexClient
+, ScreenedForIPV as ScreenedForIpv
+, IPVScreeningOutcome as IpvScreeningOutcome
+, CurrentlyLivingWithIndexClient
+, KnowledgeOfHIVStatus as KnowledgeOfHivStatus
+, PNSApproach as PnsApproach 
+, PNSConsent as PnsConsent
+, Linked as LinkedToCare
+, b.dateEnrolled as LinkDateLinkedToCare
+, b.CCCNumber as CccNumber
+, b.FacilityEnrolled as FacilityLinkedTo
+, DATEADD(yy,-pns.Age,pns.Date) as Dob
+, pns.Date as DateElicited, pns.MaritalStatus    
+FROM  tmp_PNS_Register pns       
+	INNER JOIN dbo.tmp_HTS_LAB_register AS c ON pns.Ptn_pk = c.PatientPK   
+	INNER JOIN tmp_PatientMaster AS a ON pns.Ptn_pk = a.Ptn_Pk   
+	LEFT JOIN dbo.tmp_HTS_LAB_register AS pc ON pns.PersonID = pc.PersonID      
+	LEFT JOIN tmp_Referral_Linkage_Register b ON pc.PatientPK = b.ptn_pk        
+	LEFT JOIN Person pd ON pd.Id = pns.personid    
+WHERE c.finalResultHTS = 'Positive' AND pns.personid IS NOT NULL"|dwhstage|0|HtsPartnerNotificationServices|7|a6221988-0e85-11e8-ba89-0ed5f89f718b
+
+b6299cbc-3055-11ea-978f-2e728ce88125|All Patients|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"WITH locator
+     AS (SELECT Pat.id                  PatientPK,
+                look.NAME               PatientType,
+                pop.populationcategory  PopulationType,
+                ''                      AS KeyPopulationType,
+                CASE
+                  WHEN ovc.orphan = 1 THEN 'Yes'
+                  ELSE 'No'
+                END                     AS Orphan,
+                CASE
+                  WHEN ovc.inschool = 1 THEN 'Yes'
+                  ELSE 'No'
+                END                     AS InSchool,
+                county.countyname       AS PatientResidentCounty,
+                subcounty.subcountyname AS PatientResidentSubCounty,
+                loc.location            AS PatientResidentLocation,
+                loc.sublocation         PatientResidentSubLocation,
+                ward.wardname           AS PatientResidentWard,
+                loc.village             AS PatientResidentVillage
+         FROM   patient pat
+                LEFT JOIN person per
+                       ON per.id = pat.personid
+                LEFT JOIN lookupitem look
+                       ON look.id = pat.patienttype
+                LEFT JOIN patientpopulationview pop
+                       ON pop.patientpk = Pat.ptn_pk
+                LEFT JOIN [patientovcstatus] ovc
+                       ON ovc.personid = pat.personid
+                LEFT JOIN personlocation loc
+                       ON loc.personid = Pat.personid
+                          AND loc.deleteflag = 0
+                LEFT JOIN county
+                       ON county.countyid = loc.county
+                LEFT JOIN county subcounty
+                       ON subcounty.subcountyid = loc.subcounty
+                LEFT JOIN county ward
+                       ON ward.wardid = loc.ward
+         GROUP  BY Pat.id,
+                   look.NAME,
+                   patienttype,
+                   loc.location,
+                   loc.sublocation,
+                   pop.populationcategory,
+                   orphan,
+                   inschool,
+                   county.countyname,
+                   subcounty.subcountyname,
+                   loc.sublocation,
+                   ward.wardname,
+                   loc.village),
+     transferin
+     AS (SELECT a.id PatientPK,
+                b.transferindate
+         FROM   patient a
+                LEFT JOIN patienttransferin b
+                       ON a.id = b.patientid
+                LEFT JOIN lookupitem c
+                       ON b.currenttreatment = c.id
+         WHERE  patienttype = 260)
+SELECT patientid,
+       a.patientpk,
+       (SELECT TOP 1 facilityid
+        FROM   iqc_sitedetails) FacilityID,
+       sitecode,
+       facilityname,
+       satellitename,
+       gender,
+       dob,
+       registrationdate,
+       registrationatccc,
+       registrationatpmtct,
+       NULL                     RegistrationAtTBClinic,
+       patientsource,
+       (SELECT TOP 1 region
+        FROM   iqc_sitedetails) Region,
+       (SELECT TOP 1 district
+        FROM   iqc_sitedetails) District,
+       village,
+       contactrelation,
+       lastvisit,
+       maritalstatus,
+       NULL                     EducationLevel,
+       hivdiagnosisdate         DateConfirmedHIVPositive,
+       NULL                     PreviousARTExposure,
+       NULL                     PreviousARTStartDate,
+       CASE
+         WHEN dbo.Fn_activeccc(Getdate(), a.patientpk) = 1 THEN 'Active'
+         ELSE NULL
+       END                      AS StatusAtCCC,
+       NULL                     StatusAtPMTCT,
+       NULL                     StatusAtTBClinic,
+       'IQCare'                 AS EMR,
+       'CHAP Uzima'             AS Project,
+       b.patienttype,
+       b.populationtype,
+       ''                       KeyPopulationType,
+       b.orphan,
+       b.inschool,
+       b.patientresidentcounty,
+       b.patientresidentsubcounty,
+       b.patientresidentlocation,
+       b.patientresidentsublocation,
+       b.patientresidentward,
+       b.patientresidentvillage,
+       c.transferindate,
+       Cast(Getdate() AS DATE)  AS DateExtracted,
+       Newid()                  AS ID
+FROM   tmp_patientmaster AS a
+       LEFT JOIN locator b
+              ON a.patientpk = b.patientpk
+       LEFT JOIN transferin c
+              ON a.patientpk = c.patientpk
+WHERE  a.registrationatccc IS NOT NULL 
+"|dwhstage|1|PatientExtract|1|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a1a8-3055-11ea-978f-2e728ce88125|ART Patients|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"with arvPharmacy as (select PatientPK
+, MIN(DateDispensed) DateDispensed 
+from tmp_ARVPharmacy
+GROUP BY PatientPK)
+
+, lastDispense as (select a.PatientPK, max(Duration) Duration 
+from tmp_ARVPharmacy a inner join (
+select PatientPK
+, MAX(DateDispensed) DateDispensed 
+from tmp_ARVPharmacy
+GROUP BY PatientPK) b on a.PatientPK = b.PatientPK and a.DateDispensed = b.DateDispensed
+group by a.PatientPK)
+
+SELECT   
+
+ a.PatientPK
+ , a.PatientID
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityID
+ , b.SiteCode
+ , a.FacilityName
+ , a.DOB
+ , a.AgeEnrollment
+ , a.AgeARTStart
+ , a.AgeLastVisit
+ , a.RegistrationDate
+ , a.PatientSource
+ , a.Gender
+ , a.StartARTDate
+ , case when c.DateDispensed < a.StartARTDate then c.DateDispensed else a.StartARTDate end PreviousARTStartDate
+ , NULL PreviousARTRegimen
+ , c.DateDispensed StartARTAtThisFacility
+ , a.StartRegimen
+ , 'First Line' StartRegimenLine
+ , a.LastARTDate
+ , a.LastRegimen
+ , case a.LastRegimenLine when 1 then 'First Line' when 2 then 'Second Line' else null end as LastRegimenLine
+ , d.Duration
+ , a.ExpectedReturn
+ , 'USG' [Provider]
+ , a.LastVisit
+ , a.ExitReason
+ , a.ExitDate
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+
+FROM            
+tmp_ARTPatients AS a INNER JOIN tmp_PatientMaster AS b ON a.PatientPK = b.PatientPK
+LEFT JOIN arvPharmacy c ON a.PatientPK = c.PatientPK
+LEFT JOIN lastDispense d on a.PatientPK = d.PatientPK"|dwhstage|0|PatientArtExtract|2|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a32e-3055-11ea-978f-2e728ce88125|Patient Baselines|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
+a.PatientPK
+, a.PatientID
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityID
+ , a.SiteCode
+ , IQC_bCD4.bCD4
+ , IQC_bCD4.bCD4Date
+ , NULL bWAB
+ , NULL bWABDate
+ , IQC_bWHO.bWHO
+ , IQC_bWHO.bWHODate
+ , NULL eWAB
+ , NULL eWABDate
+ , IQC_eCD4.eCD4
+ , IQC_eCD4.eCD4Date
+ , IQC_eWHO.eWHO
+ , IQC_eWHO.eWHODate
+ , IQC_lastWHO.lastWHO
+ , IQC_lastWHO.lastWHODate
+ , NULL lastWAB
+ , NULL lastWABDate
+ , IQC_lastCD4.lastCD4
+ , IQC_lastCD4.lastCD4Date
+ , IQC_m12CD4.m12CD4
+ , IQC_m12CD4.m12CD4Date
+ , IQC_m6CD4.m6CD4
+ , IQC_m6CD4.m6CD4Date
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+
+FROM            
+
+ tmp_PatientMaster a LEFT OUTER JOIN
+    IQC_bCD4 ON a.PatientPK = IQC_bCD4.PatientPK LEFT OUTER JOIN
+    IQC_bWHO ON a.PatientPK = IQC_bWHO.PatientPK LEFT OUTER JOIN
+    IQC_lastCD4 ON a.PatientPK = IQC_lastCD4.PatientPK LEFT OUTER JOIN
+    IQC_eWHO ON a.PatientPK = IQC_eWHO.PatientPK LEFT OUTER JOIN
+    IQC_eCD4 ON a.PatientPK = IQC_eCD4.PatientPK LEFT OUTER JOIN
+    IQC_lastWHO ON a.PatientPK = IQC_lastWHO.PatientPK LEFT OUTER JOIN
+    IQC_m12CD4 ON a.PatientPK = IQC_m12CD4.PatientPK LEFT OUTER JOIN
+    IQC_m6CD4 ON a.PatientPK = IQC_m6CD4.PatientPK"|dwhstage|0|PatientBaselineExtract|3|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a46e-3055-11ea-978f-2e728ce88125|Patient Status|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT   
+ b.PatientID
+ , a.PatientPK
+ , b.SiteCode
+ , b.FacilityName
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityId
+ , a.ExitDescription
+ , a.ExitDate
+ , a.ExitReason
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+FROM            
+ tmp_LastStatus a INNER JOIN tmp_PatientMaster b ON a.PatientPK = b.PatientPK"|dwhstage|0|PatientStatusExtract|4|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a5a4-3055-11ea-978f-2e728ce88125|Patient Labs|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT   
+ b.PatientID
+ , a.PatientPK
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityID
+ , b.SiteCode
+ , b.FacilityName
+ , b.SatelliteName
+ , a.VisitID
+ , a.OrderedbyDate
+ , a.ReportedbyDate
+ , a.TestName
+ , a.EnrollmentTest
+ , a.TestResult
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+FROM           
+ tmp_Labs a INNER JOIN
+ tmp_PatientMaster b ON a.PatientPK = b.PatientPK"|dwhstage|0|PatientLabExtract|5|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a6da-3055-11ea-978f-2e728ce88125|Patient Pharmacy|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
+ b.PatientID
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityID
+ , b.SiteCode
+ , a.PatientPK
+ , d.Id VisitID
+ , a.Drug
+ , 'USG' Provider
+ , a.DateDispensed DispenseDate
+ , a.Duration
+ , DATEADD(dd,a.Duration,a.DateDispensed) ExpectedReturn
+ , a.TreatmentType
+ , case c.RegimenLine when 1 then 'First Line' when 2 then 'Second Line' else null end as RegimenLine
+ , NULL PeriodTaken
+ , a.ProphylaxisType
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+
+FROM            
+
+ tmp_Pharmacy a INNER JOIN
+ tmp_PatientMaster b ON a.PatientPK = b.PatientPK
+ LEFT JOIN tmp_ARVPharmacy c on a.PatientPK = c.PatientPK and a.DateDispensed = c.DateDispensed
+ LEFT JOIN PatientMasterVisit d on a.PatientPK = d.PatientId and a.DateDispensed = cast(d.VisitDate as date)"|dwhstage|0|PatientPharmacyExtract|6|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a810-3055-11ea-978f-2e728ce88125|Patient Visits|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"with OIs as (select a.PatientId PatientPK
+, b.[Name] OI
+, a.PatientMasterVisitId
+  from PatientOI a inner join LookupItem b on a.OIId = b.Id 
+where b.Name != 'Asymptomatic'
+)
+
+, Adherence as (select a.PatientId, a.PatientMasterVisitId
+, case AdherenceType when 34 then 'ARV Adherence' when 35 then 'CTX Adherence' 
+end as AdherenceCategory
+, c.[Name] Adherence
+from AdherenceOutcome a 
+left join LookupItem c on a.Score = c.Id)
+
+SELECT   
+ REPLACE(b.PatientID, ' ', '') AS PatientID
+ , b.FacilityName
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityId
+ , b.SiteCode
+ , a.PatientPK
+ , c.Id VisitID
+ , a.VisitDate
+ , a.Service
+ , a.VisitType
+ , a.WHOStage
+ , NULL WABStage
+ , a.Pregnant
+ , a.LMP
+ , a.EDD
+ , a.Height
+ , a.[Weight]
+ , cast(a.BPS as varchar(3)) + '/' + cast(a.BPD as varchar(3)) BP
+ , d.OI
+ , case when d.OI is not null then a.VisitDate else null end OIDate
+ , e.Adherence
+ , e.AdherenceCategory
+ , NULL AS SubstitutionFirstlineRegimenDate
+ , NULL AS SubstitutionFirstlineRegimenReason
+ , NULL AS SubstitutionSecondlineRegimenDate
+ , NULL AS SubstitutionSecondlineRegimenReason
+ , NULL AS SecondlineRegimenChangeDate
+ , NULL AS SecondlineRegimenChangeReason
+ 
+ , NULL FamilyPlanningMethod
+ , NULL PwP
+ , NULL GestationAge
+ , a.NextAppointmentDate
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+FROM            
+ tmp_ClinicalEncounters a INNER JOIN tmp_PatientMaster b ON a.PatientPK = b.PatientPK
+ LEFT JOIN PatientMasterVisit c on a.PatientPK = c.PatientId and a.VisitDate = cast(c.VisitDate as date) 
+ LEFT JOIN OIs d on c.Id = d.PatientMasterVisitId
+ LEFT JOIN Adherence e on c.Id = e.PatientMasterVisitId"|dwhstage|0|PatientVisitExtract|7|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629ab26-3055-11ea-978f-2e728ce88125|Patient Adverse Events|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"with adv
+as
+(SELECT distinct p.PatientID,
+       p.PatientPK,
+       a.FacilityId AS SiteCode,
+       c.VisitDate,
+       r.Regimen,
+       b.EventName AS AdverseEvent,
+       b.EventCause AS AdverseEventCause,
+       lk.ItemName AS Severity,
+       b.Action AS ActionTaken,
+       lk1.ItemName AS ClinicalOutcome,
+       d.OutcomeDate AS AdverseEventEndDate,
+       preg.PregnancyStatus AS Pregnancy
+FROM dbo.Patient AS a
+INNER JOIN dbo.tmp_PatientMaster AS p ON a.Id = p.PatientPK
+INNER JOIN dbo.AdverseEvent AS b ON a.Id = b.PatientId
+INNER JOIN dbo.PatientMasterVisit AS c ON b.PatientMasterVisitId = c.Id
+LEFT OUTER JOIN dbo.PatientAdverseEventOutcome AS d ON a.Id = d.Id
+LEFT OUTER JOIN dbo.LookupItemView AS lk ON b.Severity = lk.ItemId
+LEFT OUTER JOIN dbo.LookupItemView AS lk1 ON d.OutComeId = lk1.ItemId
+LEFT OUTER JOIN
+  (SELECT DISTINCT a.PatientId,
+                   a.PatientMasterVisitId,
+                   c.VisitDate,
+                   lk.DisplayName AS Regimen
+   FROM dbo.ARVTreatmentTracker AS a
+   INNER JOIN dbo.PatientMasterVisit AS c ON a.PatientMasterVisitId = c.Id
+   LEFT OUTER JOIN dbo.LookupItemView AS lk ON a.RegimenId = lk.ItemId) AS r ON r.PatientId = a.Id
+AND c.Id = r.PatientMasterVisitId
+LEFT OUTER JOIN
+  (SELECT dbo.PregnancyIndicator.PatientId,
+          dbo.PregnancyIndicator.PatientMasterVisitId,
+          lk.DisplayName AS PregnancyStatus,
+          dbo.PregnancyIndicator.VisitDate
+   FROM dbo.PregnancyIndicator
+   INNER JOIN dbo.LookupItemView AS lk ON lk.ItemId = dbo.PregnancyIndicator.PregnancyStatusId) AS preg ON preg.PatientId = a.Id
+AND c.Id = preg.PatientMasterVisitId)
+
+SELECT adv.PatientID, 
+       adv.PatientPK, 
+       adv.SiteCode,
+	   (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityID, 
+       'IQCare' AS EMR, 
+       'CHAP Uzima' AS Project, 
+       adv.VisitDate, 
+       adv.Regimen AS AdverseEventRegimen, 
+       adv.AdverseEvent, 
+       adv.AdverseEventCause, 
+       adv.Severity, 
+       adv.ActionTaken AS AdverseEventActionTaken, 
+       adv.ClinicalOutcome AS AdverseEventClinicalOutcome, 
+	   adv.VisitDate AS AdverseEventStartDate, 
+       adv.AdverseEventEndDate, 
+       adv.Pregnancy AS AdverseEventIsPregnant
+FROM adv
+     INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK"|dwhstage|0|PatientAdverseEventExtract|8|a6221988-0e85-11e8-ba89-0ed5f89f718b
+	 
