@@ -54,7 +54,8 @@ namespace Dwapi.SettingsManagement.Infrastructure
                 Resources.SeedDbSetIfEmpty($"{nameof(Resources)}");
             var ex = Extracts.Where(e => e.EmrSystemId.ToString() == "a62216ee-0e85-11e8-ba89-0ed5f89f718b" ||
                                          e.EmrSystemId.ToString() == "a6221856-0e85-11e8-ba89-0ed5f89f718b" ||
-                                         e.EmrSystemId.ToString() == "a6221857-0e85-11e8-ba89-0ed5f89f718b"
+                                         e.EmrSystemId.ToString() == "a6221857-0e85-11e8-ba89-0ed5f89f718b" ||
+                                         e.EmrSystemId.ToString() == "926F49B8-305D-11EA-978F-2E728CE88125"
             );
             Extracts.RemoveRange(ex);
             SaveChanges();
