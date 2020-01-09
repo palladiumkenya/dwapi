@@ -7,6 +7,7 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Repositories
 {
     public interface IAppMetricRepository : IRepository<AppMetric, Guid>
     {
+        void Clear(string area, string action);
         IEnumerable<AppMetric> LoadCurrent();
     }
 }

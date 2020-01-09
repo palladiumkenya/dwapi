@@ -161,13 +161,15 @@ namespace Dwapi.Controller
         {
             if (!packageDTO.IsValid())
                 return BadRequest();
+
+            var ver = GetType().Assembly.GetName().Version;
+            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            await _mediator.Publish(new ExtractSent("MasterPatientIndex", version));
+
+
             try
             {
                 await _cbsSendService.SendManifestAsync(packageDTO);
-
-                var ver = GetType().Assembly.GetName().Version;
-                string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
-                await _mediator.Publish(new ExtractSent("MasterPatientIndex", version));
                 return Ok();
             }
             catch (Exception e)

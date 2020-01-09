@@ -14,6 +14,16 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
         {
         }
 
+        public void Clear(string area, string action)
+        {
+            var ctLoaded = DbSet.Where(x => x.Name == area && x.LogValue.Contains(action));
+            if (ctLoaded.Any())
+            {
+                DbSet.RemoveRange(ctLoaded);
+                SaveChanges();
+            }
+        }
+
         public IEnumerable<AppMetric> LoadCurrent()
         {
             var list = new List<AppMetric>();

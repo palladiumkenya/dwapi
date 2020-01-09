@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
@@ -31,13 +32,25 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         public IEnumerable<DwhManifest> GenerateWithMetrics()
         {
             var metrics = _metricReader.ReadAll().FirstOrDefault();
+            var appMetrics = _metricReader.ReadAppAll().ToList();
             var manifests = Generate().ToList();
 
             if (null != metrics)
             {
                 foreach (var manifest in manifests)
                 {
-                    manifest.AddCargo(metrics);
+                    manifest.AddCargo(CargoType.Metrics, metrics);
+                }
+            }
+
+            if (appMetrics.Any())
+            {
+                foreach (var manifest in manifests)
+                {
+                    foreach (var m in appMetrics)
+                    {
+                        manifest.AddCargo(CargoType.AppMetrics, m);
+                    }
                 }
             }
 
