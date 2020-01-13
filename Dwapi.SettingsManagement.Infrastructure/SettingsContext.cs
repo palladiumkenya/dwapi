@@ -26,6 +26,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Docket> Dockets { get; set; }
         public DbSet<Extract> Extracts { get; set; }
+        public DbSet<AppMetric> AppMetrics  { get; set; }
 
         public override void EnsureSeeded()
         {

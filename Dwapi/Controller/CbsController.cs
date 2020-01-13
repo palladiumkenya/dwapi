@@ -7,6 +7,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.Hubs.Cbs;
+using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
@@ -29,7 +30,7 @@ namespace Dwapi.Controller
         private readonly IMasterPatientIndexRepository _masterPatientIndexRepository;
         private readonly ICbsSendService _cbsSendService;
         private readonly IMpiSearchService _mpiSearchService;
-        
+
 
         public CbsController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<CbsActivity> hubContext, IMasterPatientIndexRepository masterPatientIndexRepository,
@@ -49,7 +50,14 @@ namespace Dwapi.Controller
         public async Task<IActionResult> Load([FromBody] ExtractMasterPatientIndex request)
         {
             if (!ModelState.IsValid) return BadRequest();
+
+            var ver = GetType().Assembly.GetName().Version;
+            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            await _mediator.Publish(new ExtractLoaded("MasterPatientIndex", version));
+
             var result = await _mediator.Send(request, HttpContext.RequestAborted);
+
+
             return Ok(result);
         }
 
@@ -153,6 +161,12 @@ namespace Dwapi.Controller
         {
             if (!packageDTO.IsValid())
                 return BadRequest();
+
+            var ver = GetType().Assembly.GetName().Version;
+            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            await _mediator.Publish(new ExtractSent("MasterPatientIndex", version));
+
+
             try
             {
                 await _cbsSendService.SendManifestAsync(packageDTO);
@@ -204,5 +218,6 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
     }
 }

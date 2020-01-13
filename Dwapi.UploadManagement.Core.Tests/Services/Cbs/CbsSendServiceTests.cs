@@ -37,7 +37,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
     {
         private readonly string _authToken = @"1983aeda-6a96-11e8-adc0-fa7ae01bbebc";
         private readonly string _subId = "DWAPI";
-        private readonly string url = "http://data.kenyahmis.org:6767";
+        private readonly string url = "http://localhost:6767";
 
         private ICbsSendService _cbsSendService;
         private IServiceProvider _serviceProvider;

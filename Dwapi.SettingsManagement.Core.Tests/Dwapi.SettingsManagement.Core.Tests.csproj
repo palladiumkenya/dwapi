@@ -6,6 +6,9 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="Dapper.Contrib" Version="1.50.5" />
+    <PackageReference Include="Humanizer.Core" Version="2.7.9" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
@@ -20,6 +23,17 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dwapi.SettingsManagement.Core\Dwapi.SettingsManagement.Core.csproj" />
+    <ProjectReference Include="..\Dwapi.SettingsManagement.Infrastructure\Dwapi.SettingsManagement.Infrastructure.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="appsettings.mysql.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 </Project>

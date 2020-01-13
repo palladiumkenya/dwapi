@@ -57,6 +57,21 @@ namespace Dwapi.SharedKernel.Exchange
             Cargoes.Add(new Cargo(type, items, Id));
         }
 
+        public void AddAppToCargo<T>(List<T> metrics)
+        {
+            if(null==metrics)
+                return;
+
+            if (metrics.Any())
+            {
+                foreach (var metric  in metrics)
+                {
+                    var items = JsonConvert.SerializeObject(metric);
+                    Cargoes.Add(new Cargo(CargoType.AppMetrics, items, Id));
+                }
+            }
+        }
+
 
         public override string ToString()
         {

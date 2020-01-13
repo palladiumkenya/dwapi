@@ -336,7 +336,7 @@ namespace Dwapi
             services.AddScoped<ITempHtsClientTracingExtractRepository, TempHtsClientTracingExtractRepository>();
             services.AddScoped<ITempHtsPartnerTracingExtractRepository, TempHtsPartnerTracingExtractRepository>();
             services.AddScoped<ITempHtsPartnerNotificationServicesExtractRepository, TempHtsPartnerNotificationServicesExtractRepository>();
-            
+
             services.AddScoped<IHtsClientsExtractRepository, HtsClientsExtractRepository>();
             services.AddScoped<IHtsClientsLinkageExtractRepository, HtsClientsLinkageExtractRepository>();
             services.AddScoped<IHtsClientTestsExtractRepository, HtsClientTestsExtractRepository>();
@@ -398,6 +398,8 @@ namespace Dwapi
             services.AddScoped<IEmrMetricRepository, EmrMetricRepository>();
             services.AddScoped<IEmrMetricsService, EmrMetricsService>();
             services.AddScoped<IEmrMetricReader, EmrMetricReader>();
+
+            services.AddScoped<IAppMetricRepository, AppMetricRepository>();
 
             var container = new Container();
             container.Populate(services);

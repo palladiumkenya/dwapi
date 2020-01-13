@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Newtonsoft.Json;
 
@@ -8,8 +10,9 @@ namespace Dwapi.SharedKernel.Exchange
     public class DwhManifest
     {
         public int SiteCode { get; set; }
-        public List<int> PatientPks { get; set; } =new List<int>();
+        public List<int> PatientPks { get; set; } = new List<int>();
         public string Metrics { get; set; }
+        public List<FacMetric> FacMetrics { get; set; } = new List<FacMetric>();
 
         public DwhManifest()
         {
@@ -33,13 +36,25 @@ namespace Dwapi.SharedKernel.Exchange
 
         public static IEnumerable<DwhManifest> Create(IEnumerable<SitePatientProfile> profiles)
         {
-            var getPks = profiles.ToList();
-            var list=new List<DwhManifest>();
 
-            if(getPks.Any())
-                list.Add(new DwhManifest(getPks.First().SiteCode,getPks.Select(x=>x.PatientPk).ToList()));
+            var getPks = profiles.ToList();
+            var list = new List<DwhManifest>();
+
+            if (getPks.Any())
+                list.Add(new DwhManifest(getPks.First().SiteCode, getPks.Select(x => x.PatientPk).ToList()));
 
             return list;
+
+            // multi site setup
+            /*
+            var getPks = profiles.ToList().GroupBy(x => x.SiteCode).ToList();
+            var list = new List<DwhManifest>();
+
+            foreach (var pk in getPks)
+                list.Add(new DwhManifest(pk.First().SiteCode, pk.Select(x => x.PatientPk).ToList()));
+
+            return list;
+            */
         }
 
         public void AddCargo(Metric metric)
@@ -48,6 +63,16 @@ namespace Dwapi.SharedKernel.Exchange
                 return;
             var items = JsonConvert.SerializeObject(metric);
             Metrics = items;
+        }
+
+        public void AddCargo(CargoType cargoType, object metric)
+        {
+            if (null == metric)
+                return;
+
+            var items = JsonConvert.SerializeObject(metric);
+
+            FacMetrics.Add(new FacMetric(cargoType,items));
         }
     }
 }
