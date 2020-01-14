@@ -7,7 +7,21 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
+            {
+                migrationBuilder.Sql(@"CREATE TABLE `AppMetrics` (
+                    `Id` char(36) NOT NULL,
+                    `Version` longtext NULL,
+                    `Name` longtext NULL,
+                    `LogDate` datetime NOT NULL,
+                    `LogValue` longtext NULL,
+                    `Status` int NOT NULL,
+                    CONSTRAINT `PK_AppMetrics` PRIMARY KEY (`Id`)
+                );");
+            }
+            else
+            {
+                migrationBuilder.CreateTable(
                 name: "AppMetrics",
                 columns: table => new
                 {
@@ -22,6 +36,8 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AppMetrics", x => x.Id);
                 });
+            }
+                
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
