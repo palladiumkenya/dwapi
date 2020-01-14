@@ -67,10 +67,10 @@ namespace Dwapi.SettingsManagement.Infrastructure
             RestProtocols.SeedDbSetIfEmpty($"{nameof(RestProtocols)}");
             Resources.SeedDbSetIfEmpty($"{nameof(Resources)}");
             SaveChanges();
-            var ex = Extracts.Where(e => e.EmrSystemId.ToString() == "a62216ee-0e85-11e8-ba89-0ed5f89f718b" ||
-                                         e.EmrSystemId.ToString() == "a6221856-0e85-11e8-ba89-0ed5f89f718b" ||
-                                         e.EmrSystemId.ToString() == "a6221857-0e85-11e8-ba89-0ed5f89f718b" ||
-                                         e.EmrSystemId.ToString() == "926F49B8-305D-11EA-978F-2E728CE88125"
+            var ex = Extracts.Where(e => e.EmrSystemId ==new Guid( "a62216ee-0e85-11e8-ba89-0ed5f89f718b") ||
+                                         e.EmrSystemId == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b") ||
+                                         e.EmrSystemId == new Guid("a6221857-0e85-11e8-ba89-0ed5f89f718b") ||
+                                         e.EmrSystemId == new Guid("926f49b8-305d-11ea-978f-2e728ce88125")
             );
             Extracts.RemoveRange(ex);
             SaveChanges();
