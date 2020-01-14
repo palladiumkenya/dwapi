@@ -12,6 +12,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Seed\DatabaseProtocols.csv" />
     <EmbeddedResource Include="Seed\CentralRegistries.csv" />
+    <EmbeddedResource Include="Seed\DatabaseProtocolsNew.csv" />
+    <EmbeddedResource Include="Seed\EmrSystemsNew.csv" />
     <EmbeddedResource Include="Seed\Extracts.csv" />
     <EmbeddedResource Include="Seed\EmrSystems.csv" />
     <EmbeddedResource Include="Seed\Dockets.csv" />
