@@ -6,6 +6,7 @@ using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Hts;
+using Dwapi.UploadManagement.Core.Model;
 
 namespace Dwapi.UploadManagement.Core.Packager.Hts
 {
@@ -33,6 +34,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Hts
         public IEnumerable<Manifest> GenerateWithMetrics()
         {
             var metrics = _metricReader.ReadAll().FirstOrDefault();
+            var appMetrics = _metricReader.ReadAppAll().ToList();
             var manifests = Generate().ToList();
 
             if (null != metrics)
@@ -40,6 +42,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Hts
                 foreach (var manifest in manifests)
                 {
                     manifest.AddCargo(metrics);
+                    manifest.AddAppToCargo<AppMetricView>(appMetrics);
                 }
             }
 

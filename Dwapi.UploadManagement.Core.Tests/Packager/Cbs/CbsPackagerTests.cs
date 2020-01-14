@@ -75,8 +75,10 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
             var m = manfiests.First();
             Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.Patient));
             Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.Metrics));
+            Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.AppMetrics));
             Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Patient).Items} ");
             Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Metrics).Items} ");
+            Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.AppMetrics).Items} ");
         }
 
         [Test]
