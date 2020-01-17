@@ -202,8 +202,13 @@ namespace Dwapi
             {
                 if (provider == DatabaseProvider.MySql)
                 {
-                    services.AddDbContext<SettingsContext>(o => o.UseMySql(connectionString,
-                        x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
+                    services.AddDbContext<SettingsContext>(o =>
+                    {
+                        o.UseMySql(connectionString,
+                           x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name));
+                        o.EnableSensitiveDataLogging(false);
+                    }
+                    );
                     services.AddDbContext<ExtractsContext>(o => o.UseMySql(connectionString,
                         x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<UploadContext>(o => o.UseMySql(connectionString,
@@ -212,8 +217,16 @@ namespace Dwapi
 
                 if (provider == DatabaseProvider.MsSql)
                 {
-                    services.AddDbContext<SettingsContext>(o => o.UseSqlServer(connectionString,
-                        x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name)));
+                    services.AddDbContext<SettingsContext>(
+                        o => {
+                            o.UseSqlServer(connectionString,
+                      x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name));
+                            o.EnableSensitiveDataLogging(false);
+                      
+
+                        }
+
+                        );
                     services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString,
                         x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString,
