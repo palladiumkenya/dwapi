@@ -1318,7 +1318,7 @@ r.ArtStartDate as ReportedStartARTDate
   inner join patient pat on pat.ptn_pk=r.ptn_pk
   left join Referral ref on pat.personid=ref.personid"|DWHStage|1|HtsClientLinkage|3|A6221983-0E85-11E8-BA89-0ED5F89F718B
   
-8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.patient_id, SC.value_reference AS SiteCode,
+8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.patient_id as PatientPK, SC.value_reference AS SiteCode,
 SN.name as FacilityName,
 'KenyaEMR' as Emr,
 'Kenya HMIS II' AS Project,
@@ -1344,7 +1344,8 @@ openmrs.patient_identifier id ON (id.patient_id = htsrl.patient_id or id.patient
 from openmrs.patient_identifier_type
 where name='OpenMRS ID')
 LEFT JOIN
-kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =htsrl.patient_id;"|DWHStage|1|HtsClientLinkage|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =htsrl.patient_id
+where a.patient_id in (select patient_id from kenyaemr_etl.etl_hts_test);"|DWHStage|1|HtsClientLinkage|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
   
 8578b5a2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct p.PatientPK,
 SiteCode,
