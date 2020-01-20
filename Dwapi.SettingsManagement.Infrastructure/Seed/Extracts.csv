@@ -1424,7 +1424,7 @@ where a.Tpe='Enrolment'"|DWHStage|1|HtsClientTracing|5|A6221983-0E85-11E8-BA89-0
 FROM 
 	kenyaemr_etl.etl_hts_test ht
 INNER JOIN 
-	etl_hts_test t ON ht.patient_id=t.patient_id
+	kenyaemr_etl.etl_hts_test t ON ht.patient_id=t.patient_id
 LEFT  JOIN 	
 	kenyaemr_etl.etl_hts_referral_and_linkage htsrl  ON ht.patient_id=htsrl.patient_id
 LEFT JOIN 
