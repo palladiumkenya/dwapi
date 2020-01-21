@@ -188,7 +188,7 @@ CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
 										THEN 'Key population'
 									WHEN f.key_population_type  =1175 THEN 'General Population'
 									ELSE pt.name  END  from  kenyaemr_etl.etl_patient_hiv_followup f
-									left join openmrs.concept_name pt on f.population_type = pt.concept_id AND pt.concept_name_type='FULLY_SPECIFIED'
+									left join concept_name pt on f.population_type = pt.concept_id AND pt.concept_name_type='FULLY_SPECIFIED'
 								WHERE f.encounter_id=min(enr.encounter_id)) AS PopulationType,
                                                                                                
                                  (select 
@@ -217,13 +217,13 @@ left outer join kenyaemr_etl.etl_mch_enrollment mch on mch.patient_id=d.patient_
 left outer join kenyaemr_etl.etl_patient_hiv_followup enr on enr.patient_id=d.patient_id
 left outer join kenyaemr_etl.etl_tb_enrollment tb on tb.patient_id=d.patient_id
 left outer join kenyaemr_etl.etl_drug_event de on de.patient_id = d.patient_id 
-left join openmrs.concept_name ts on ts.concept_id=hiv.relationship_of_treatment_supporter and ts.concept_name_type = 'FULLY_SPECIFIED' and ts.locale='en'    
-left join openmrs.person_address patAd ON patAd.person_id=d.patient_id and patAd.voided = 0 
+left join concept_name ts on ts.concept_id=hiv.relationship_of_treatment_supporter and ts.concept_name_type = 'FULLY_SPECIFIED' and ts.locale='en'    
+left join person_address patAd ON patAd.person_id=d.patient_id and patAd.voided = 0 
 left join (select distinct person_id, value_coded
-	from openmrs.obs
+	from obs
     where concept_id=5629 and voided=0) sch on  sch.person_id = d.patient_id 
 left join (select distinct person_id, value_coded
-	from openmrs.obs
+	from obs
     where concept_id=11704 and voided=0) orp on  sch.person_id = d.patient_id 
 left join 
 (
@@ -583,8 +583,8 @@ ELSE fup.key_population_type  END as KeyPopulationType
 
 from kenyaemr_etl.etl_patient_demographics d
 join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=d.patient_id
-left join openmrs.concept_name dc on dc.concept_id =  fup.differentiated_care and dc.concept_name_type='FULLY_SPECIFIED'
-left join openmrs.concept_name pt on fup.population_type = pt.concept_id AND pt.concept_name_type='FULLY_SPECIFIED'
+left join concept_name dc on dc.concept_id =  fup.differentiated_care and dc.concept_name_type='FULLY_SPECIFIED'
+left join concept_name pt on fup.population_type = pt.concept_id AND pt.concept_name_type='FULLY_SPECIFIED'
 where d.unique_patient_no is not null and fup.visit_date > '1990-01-01'  "|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT
  *,
@@ -830,14 +830,14 @@ SELECT
 -- -----Demographics
 a.patient_id as Ptn_Pk,
 a.patient_id as PatientPK,
-(select value_reference from openmrs.location_attribute
+(select value_reference from location_attribute
 where location_id in (select property_value
-from openmrs.global_property
+from global_property
 where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
 
-(select name from openmrs.location
+(select name from location
 where location_id in (select property_value
-from openmrs.global_property
+from global_property
 where property='kenyaemr.defaultLocation')) as FacilityName,
 id.identifier AS Serial
 -- a.patient_clinic_number AS Serial
@@ -851,9 +851,9 @@ id.identifier AS Serial
 ,SOUNDEX(UPPER(REPLACE(given_name ,'0','O'))) AS sxFirstName
 ,SOUNDEX(UPPER(REPLACE(family_name ,'0','O'))) AS sxLastName
 ,SOUNDEX(UPPER(REPLACE(middle_name ,'0','O'))) AS sxMiddleName
-, openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name ,'0','O'))) AS dmFirstName
-, openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name ,'0','O'))) AS dmLastName
-, openmrs.fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name ,'0','O'))) AS dmMiddleName
+, fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name ,'0','O'))) AS dmFirstName
+, fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name ,'0','O'))) AS dmLastName
+, fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name ,'0','O'))) AS dmMiddleName
 ,a.phone_number AS PatientPhoneNumber
 ,en.treatment_supporter_telephone AS PatientAlternatePhoneNumber
 ,a.Gender
@@ -884,7 +884,7 @@ id.identifier AS Serial
 ,X.regimen_line StartARTRegimenDesc
 
 FROM kenyaemr_datatools.patient_demographics a
-INNER JOIN openmrs.patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
+INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
 inner join (
 SELECT  c.patient_id,
 c.encounter_id, treatment_supporter_telephone, entry_point , treatment_supporter_address, date_confirmed_hiv_positive 
@@ -914,7 +914,7 @@ SELECT
 a.patient_id as Ptn_Pk,
 id.identifier AS Serial
 FROM kenyaemr_datatools.patient_demographics a
-INNER JOIN openmrs.patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
+INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
 
 )Y
 ON
@@ -1226,12 +1226,12 @@ kenyaemr_etl.etl_patient_demographics  d
 INNER JOIN 
 kenyaemr_etl.etl_hts_test t ON d.patient_id=t.patient_id
 LEFT JOIN 
- openmrs.location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+ location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN 
-  openmrs.location SN ON SN.location_id =t.encounter_location
-LEFT JOIN openmrs.person_address A ON A.person_id=d.patient_id
-LEFT JOIN openmrs.patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
-from openmrs.patient_identifier_type
+  location SN ON SN.location_id =t.encounter_location
+LEFT JOIN person_address A ON A.person_id=d.patient_id
+LEFT JOIN patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
+from patient_identifier_type
 where name='OpenMRS ID') 
 group by d.patient_id"|DWHStage|1|HtsClient|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
@@ -1290,11 +1290,11 @@ FROM
 inner join 
 	kenyaemr_etl.etl_patient_demographics demographics on t.patient_id=demographics.patient_id
 LEFT JOIN 
-	 openmrs.location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+	 location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN 
-  openmrs.location SN ON SN.location_id =t.encounter_location
-LEFT JOIN openmrs.patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
-from openmrs.patient_identifier_type
+  location SN ON SN.location_id =t.encounter_location
+LEFT JOIN patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
+from patient_identifier_type
 where name='OpenMRS ID')"|DWHStage|1|HtsClientTests|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578b0f2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct r.ptn_pk as PatientPK,SiteCode,
@@ -1336,12 +1336,12 @@ select patient_id from kenyaemr_etl.etl_hts_referral_and_linkage htsrl union sel
 left join kenyaemr_etl.etl_hts_referral_and_linkage htsrl on a.patient_id=htsrl.patient_id
 left join kenyaemr_etl.etl_hts_referral ref on a.patient_id=ref.patient_id
 LEFT JOIN
-openmrs.location_attribute SC ON (SC.location_id = htsrl.encounter_location or SC.location_id=ref.encounter_location ) AND SC.attribute_type_id=1
+location_attribute SC ON (SC.location_id = htsrl.encounter_location or SC.location_id=ref.encounter_location ) AND SC.attribute_type_id=1
 LEFT JOIN
-openmrs.location SN ON (SN.location_id =htsrl.encounter_location or SN.location_id =ref.encounter_location )
+location SN ON (SN.location_id =htsrl.encounter_location or SN.location_id =ref.encounter_location )
 LEFT JOIN
-openmrs.patient_identifier id ON (id.patient_id = htsrl.patient_id or id.patient_id = ref.patient_id ) AND id.identifier_type = (select patient_identifier_type_id
-from openmrs.patient_identifier_type
+patient_identifier id ON (id.patient_id = htsrl.patient_id or id.patient_id = ref.patient_id ) AND id.identifier_type = (select patient_identifier_type_id
+from patient_identifier_type
 where name='OpenMRS ID')
 LEFT JOIN
 kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =htsrl.patient_id
@@ -1387,11 +1387,11 @@ FROM
 inner join 
 	kenyaemr_etl.etl_patient_demographics demographics on t.patient_id=demographics.patient_id
 LEFT JOIN 
-	 openmrs.location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+	 location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN 
-  openmrs.location SN ON SN.location_id =t.encounter_location
-LEFT JOIN openmrs.patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
-from openmrs.patient_identifier_type
+  location SN ON SN.location_id =t.encounter_location
+LEFT JOIN patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
+from patient_identifier_type
 where name='OpenMRS ID')"|DWHStage|1|HtsTestKits|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578b836-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tracing|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.PatientPK, a.SiteCode, a. TracingType, a.TracingDate, 
@@ -1428,12 +1428,12 @@ INNER JOIN
 LEFT  JOIN 	
 	kenyaemr_etl.etl_hts_referral_and_linkage htsrl  ON ht.patient_id=htsrl.patient_id
 LEFT JOIN 
-  openmrs.location SN ON SN.location_id =htsrl.encounter_location
+  location SN ON SN.location_id =htsrl.encounter_location
 LEFT JOIN 
-	 openmrs.location_attribute SC ON SC.location_id = htsrl.encounter_location AND SC.attribute_type_id=1
+	 location_attribute SC ON SC.location_id = htsrl.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN 
- openmrs.patient_identifier id ON id.patient_id = htsrl.patient_id AND id.identifier_type = (select patient_identifier_type_id 
-from openmrs.patient_identifier_type
+ patient_identifier id ON id.patient_id = htsrl.patient_id AND id.identifier_type = (select patient_identifier_type_id 
+from patient_identifier_type
 where name='OpenMRS ID')  
  WHERE SC.value_reference IS NOT NULL"|DWHStage|1|HtsClientTracing|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
@@ -1476,12 +1476,12 @@ inner join
 inner join 
 	kenyaemr_hiv_testing_client_trace tc on pc.id=tc.client_id
 LEFT JOIN 
-	openmrs.patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
-	from openmrs.patient_identifier_type where name='OpenMRS ID')
+	patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
+	from patient_identifier_type where name='OpenMRS ID')
 LEFT JOIN 
-	 openmrs.location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+	 location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN 
-	openmrs.location SN ON SN.location_id =t.encounter_location;" |DWHStage|1|HtsPartnerTracing|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+	location SN ON SN.location_id =t.encounter_location;" |DWHStage|1|HtsPartnerTracing|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578bce6-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct pns.ptn_pk as PatientPK,a.SiteCode,a.FacilityName,
 'IQCare' as Emr, 'Kenya HMIS II' as Project,HTS_Number as HtsNumber, pd.PatientPK as PartnerPatientPk,pns.personid as PartnerPersonID,
@@ -1548,19 +1548,19 @@ marital.name as  MaritalStatus
   FROM 
                kenyaemr_etl.etl_hts_test t 
 INNER JOIN 
-        openmrs.kenyaemr_hiv_testing_patient_contact ohpc ON ohpc.patient_related_to=t.patient_id
+        kenyaemr_hiv_testing_patient_contact ohpc ON ohpc.patient_related_to=t.patient_id
 LEFT JOIN 
-                openmrs.location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+                location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN
-  openmrs.location SN ON SN.location_id =t.encounter_location
+  location SN ON SN.location_id =t.encounter_location
   LEFT JOIN 
-               openmrs.patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
-from openmrs.patient_identifier_type
+               patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id 
+from patient_identifier_type
 where name='OpenMRS ID')  
-left JOIN openmrs.patient openmrs ON  openmrs.patient_id = id.patient_id
-left JOIN openmrs.kenyaemr_hiv_testing_client_trace ctrace ON  ctrace.client_id = ohpc.id and ctrace.status='Contacted and Linked'
-left join openmrs.concept_name marital ON marital.concept_id = ohpc.marital_status and marital.locale='en' and marital.concept_name_type = 'FULLY_SPECIFIED'
-left join openmrs.concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach and pnsApprocah.locale='en' and pnsApprocah.concept_name_type = 'FULLY_SPECIFIED'
+left JOIN patient openmrs ON  openmrs.patient_id = id.patient_id
+left JOIN kenyaemr_hiv_testing_client_trace ctrace ON  ctrace.client_id = ohpc.id and ctrace.status='Contacted and Linked'
+left join concept_name marital ON marital.concept_id = ohpc.marital_status and marital.locale='en' and marital.concept_name_type = 'FULLY_SPECIFIED'
+left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach and pnsApprocah.locale='en' and pnsApprocah.concept_name_type = 'FULLY_SPECIFIED'
  "|DWHStage|1|HtsPartnerNotificationServices|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 
