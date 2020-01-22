@@ -36,25 +36,25 @@ namespace Dwapi.SharedKernel.Exchange
 
         public static IEnumerable<DwhManifest> Create(IEnumerable<SitePatientProfile> profiles)
         {
-
+            /*
             var getPks = profiles.ToList();
             var list = new List<DwhManifest>();
 
             if (getPks.Any())
                 list.Add(new DwhManifest(getPks.First().SiteCode, getPks.Select(x => x.PatientPk).ToList()));
 
-            return list;
+            return list;*/
 
             // multi site setup
-            /*
-            var getPks = profiles.ToList().GroupBy(x => x.SiteCode).ToList();
+            
+            var groupPKsBySiteCode = profiles.ToList().GroupBy(x => x.SiteCode).ToList();
             var list = new List<DwhManifest>();
 
-            foreach (var pk in getPks)
+            foreach (var pk in groupPKsBySiteCode)
                 list.Add(new DwhManifest(pk.First().SiteCode, pk.Select(x => x.PatientPk).ToList()));
 
             return list;
-            */
+            
         }
 
         public void AddCargo(Metric metric)

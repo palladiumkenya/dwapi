@@ -2201,4 +2201,26 @@ SELECT adv.PatientID,
        adv.Pregnancy AS AdverseEventIsPregnant
 FROM adv
      INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK"|dwhstage|0|PatientAdverseEventExtract|8|a6221988-0e85-11e8-ba89-0ed5f89f718b
+
+72d51b17-eb57-49f8-88fe-f79fd2299b7b|Hts Clients|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|1|HtsClient|1|a6221989-0e85-11e8-ba89-0ed5f89f718b
+64748a19-0a4c-4065-bf0e-3e963f0f4133|Hts Test Kits|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|HtsTestKits|2|a6221989-0e85-11e8-ba89-0ed5f89f718b
+4cf5649a-e085-4661-a982-a53b6f320f0b|Hts Client Linkage|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|HtsClientLinkage|3|a6221989-0e85-11e8-ba89-0ed5f89f718b
+d3ab4970-0e03-443f-a3b5-f453692dbece|Hts Client Tracing|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|HtsClientTracing|4|a6221989-0e85-11e8-ba89-0ed5f89f718b
+6620d2f7-b365-4c5b-83d6-c95dafc5dd47|Hts Partner Notification Services|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|HtsPartnerNotificationServices|5|a6221989-0e85-11e8-ba89-0ed5f89f718b
+e454753b-2c01-4c4d-aee1-06b9e44ff26d|Hts Partner Tracing|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|HtsPartnerTracing|6|a6221989-0e85-11e8-ba89-0ed5f89f718b
+2c71eb3c-b4e3-4ce8-bdae-6265a312c3c1|Hts Test Kits|HTS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|HtsTestKits|7|a6221989-0e85-11e8-ba89-0ed5f89f718b
+
+bab42ea7-e672-4c1b-a1b3-f2160de40845|Master Patient Index|CBS|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|MPI|1|MasterPatientIndex|1|a6221989-0e85-11e8-ba89-0ed5f89f718b
+
+3253e133-e110-4d8e-b669-3832b244f6e0|All Patients|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|1|PatientExtract|1|a6221989-0e85-11e8-ba89-0ed5f89f718b
+90a68c9f-72ad-48c4-b0eb-35ab9dc6f07d|Patient Visits|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|PatientVisitExtract|7|a6221989-0e85-11e8-ba89-0ed5f89f718b
+5a7f8b7f-59e4-4364-8aa0-f7a94a4e6483|Patient Adverse Events|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|PatientAdverseEventExtract|8|a6221989-0e85-11e8-ba89-0ed5f89f718b
+127ca0c5-86d8-46ba-98e1-57f224d99c23|Patient Baselines|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|PatientBaselineExtract|6|a6221989-0e85-11e8-ba89-0ed5f89f718b
+362dc8ad-9ff8-4622-994b-53761af6aae9|Patient Status|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|PatientStatusExtract|5|a6221989-0e85-11e8-ba89-0ed5f89f718b
+1cd45f9f-bc5d-4f85-b2cd-1581cbf1a01e|Patient Labs|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|PatientLabExtract|4|a6221989-0e85-11e8-ba89-0ed5f89f718b
+64c5d42a-c3ed-457a-951a-fdb22f14b6b7|Patient Pharmacy|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|PatientPharmacyExtract|3|a6221989-0e85-11e8-ba89-0ed5f89f718b
+c7ef8319-50b3-4d1d-9dcd-386e61ea8afe|ART Patients|NDWH|a6221859-0e85-11e8-ba89-0ed5f89f718b|"select null"|DWHStage|0|PatientArtExtract|2|a6221989-0e85-11e8-ba89-0ed5f89f718b
+
+
+
 	 
