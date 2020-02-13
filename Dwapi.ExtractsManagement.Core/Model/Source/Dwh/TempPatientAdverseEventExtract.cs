@@ -1,8 +1,9 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
-    
+
     public class TempPatientAdverseEventExtract : TempExtract
     {
         public string AdverseEvent { get; set; }
@@ -15,5 +16,12 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string AdverseEventActionTaken { get; set; }
         public bool? AdverseEventIsPregnant { get; set; }
         public DateTime? VisitDate { get; set; }
+
+        public bool HasData()
+        {
+            return !string.IsNullOrWhiteSpace(PatientID) &&
+                   !PatientPK.HasValue &&
+                   SiteCode.HasValue;
+        }
     }
 }

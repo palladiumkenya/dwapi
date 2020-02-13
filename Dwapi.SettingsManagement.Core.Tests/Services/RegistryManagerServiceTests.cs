@@ -10,7 +10,7 @@ namespace Dwapi.SettingsManagement.Core.Tests.Services
     [TestFixture]
     public class RegistryManagerServiceTests
     {
-        private readonly string _authToken = @"268DFA3EB92BC53FAE94A048E23112A1";
+        private readonly string _authToken = @"1983aeda-6a96-11e8-adc0-fa7ae01bbebc";
         private IRegistryManagerService _registryManagerService;
         private CentralRegistry _centralRegistry;
 
@@ -18,7 +18,7 @@ namespace Dwapi.SettingsManagement.Core.Tests.Services
         public void Setup()
         {
             _registryManagerService=new RegistryManagerService(null);
-            _centralRegistry=new CentralRegistry("hAPI", "http://52.178.24.227:8026", "PSMART", _authToken);
+            _centralRegistry=new CentralRegistry("CBS Registry", "http://auth.kenyahmis.org:6767", "CBS", _authToken);
 
         }
 

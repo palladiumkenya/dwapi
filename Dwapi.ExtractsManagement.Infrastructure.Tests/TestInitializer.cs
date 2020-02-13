@@ -150,6 +150,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             KenyaEmrDbProtocol.Host = KenyaEmrDatabase.Server;
             KenyaEmrDbProtocol.Username = KenyaEmrDatabase.User;
             KenyaEmrDbProtocol.Password = KenyaEmrDatabase.Password;
+            KenyaEmrDbProtocol.Port = (int?) KenyaEmrDatabase.Port;
         }
 
         private void RegisterLicence()

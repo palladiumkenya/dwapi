@@ -52,17 +52,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
             reader.Close();
         }
 
-        [TestCase(nameof(HTSClientExtract))]
-        [TestCase(nameof(HTSClientLinkageExtract))]
-        [TestCase(nameof(HTSClientPartnerExtract))]
-
-        [TestCase(nameof(HtsClients))]
+        [TestCase(nameof(HtsClientLinkage))]
+        [TestCase("HtsClient")]
         [TestCase(nameof(HtsClientTests))]
         [TestCase(nameof(HtsClientTracing))]
-        [TestCase(nameof(HtsPartnerTracing))]
         [TestCase(nameof(HtsPartnerNotificationServices))]
-        [TestCase(nameof(HtsClientTests))]
-        [TestCase(nameof(HtsClientLinkage))]
+        [TestCase(nameof(HtsPartnerTracing))]
+        [TestCase(nameof(HtsTestKits))]
         public void should_Execute_Reader_MySql(string extractName)
         {
             var extract =
