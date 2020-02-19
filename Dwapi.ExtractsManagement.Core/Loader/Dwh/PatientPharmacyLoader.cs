@@ -30,6 +30,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
         public async Task<int> Load(Guid extractId, int found)
         {
+            int count = 0;
+
             try
             {
                 DomainEvents.Dispatch(
@@ -40,21 +42,24 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                 //load temp extracts without errors
                 StringBuilder queryBuilder = new StringBuilder();
-                queryBuilder.Append($" SELECT * FROM {nameof(TempPatientPharmacyExtract)}s s");
+                queryBuilder.Append($" SELECT s.* FROM {nameof(TempPatientPharmacyExtract)}s s");
                 queryBuilder.Append($" INNER JOIN PatientExtracts p ON ");
                 queryBuilder.Append($" s.PatientPK = p.PatientPK AND ");
                 queryBuilder.Append($" s.SiteCode = p.SiteCode ");
                 //queryBuilder.Append($" WHERE s.CheckError = 0");//load all the takaka
-
-                string query = queryBuilder.ToString();
-                var tempPatientPharmacyExtracts = _tempPatientPharmacyExtractRepository.GetFromSql(query);
-
                 const int take = 10000;
-                int skip = 0;
-                var count = tempPatientPharmacyExtracts.Count();
-                while (skip < count)
+                var eCount = await  _tempPatientPharmacyExtractRepository.GetCount(queryBuilder.ToString());
+                var pageCount = _tempPatientPharmacyExtractRepository.PageCount(take, eCount);
+
+                int page = 1;
+                while (page <= pageCount)
                 {
-                    var batch = tempPatientPharmacyExtracts.Skip(skip).Take(take).ToList();
+                    var tempPatientPharmacyExtracts =await
+                        _tempPatientPharmacyExtractRepository.GetAll(queryBuilder.ToString(), page, take);
+
+                    var batch = tempPatientPharmacyExtracts.ToList();
+                    count += batch.Count();
+
                     //Auto mapper
                     var extractRecords = Mapper.Map<List<TempPatientPharmacyExtract>, List<PatientPharmacyExtract>>(batch);
                     foreach (var record in extractRecords)
@@ -69,12 +74,12 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         return 0;
                     }
                     Log.Debug("saved batch");
-                    skip = skip + take;
+                    page++;
                     DomainEvents.Dispatch(
                         new ExtractActivityNotification(extractId, new DwhProgress(
                             nameof(PatientPharmacyExtract),
                             nameof(ExtractStatus.Loading),
-                            found, skip, 0, 0, 0)));
+                            found, count, 0, 0, 0)));
                 }
                 return count;
             }

@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -15,14 +14,14 @@ using NUnit.Framework;
 namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Dwh
 {
     [TestFixture]
-    public class PatientStatusLoaderTests
+    public class PatientVisitsLoaderTests
     {
         private ExtractsContext _extractsContext, _extractsContextMySql;
         private DbProtocol _iQtoolsDb, _kenyaEmrDb;
         [OneTimeSetUp]
         public void Init()
         {
-            var extractIds = TestInitializer.Iqtools.Extracts.Where(x => x.DocketId.IsSameAs("NDWH")).Select(x => x.Id)
+            var extractIds = TestInitializer.Iqtools.Extracts.Where(x => Extentions.IsSameAs(x.DocketId, "NDWH")).Select(x => x.Id)
                 .ToList();
             var cleaner = TestInitializer.ServiceProvider.GetService<IClearDwhExtracts>();
             cleaner.Clear(extractIds);
@@ -36,14 +35,14 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Dwh
             _extractsContextMySql = TestInitializer.ServiceProviderMysql.GetService<ExtractsContext>();
 
             var patients = Builder<PatientExtract>.CreateListOfSize(1).All().With(x => x.SiteCode = 1).With(x => x.PatientPK = 1).Build().ToList();
-            var tempMpis = Builder<TempPatientStatusExtract>.CreateListOfSize(1).All().With(x => x.SiteCode = 1).With(x => x.PatientPK = 1).With(x => x.CheckError = false).Build().ToList();
+            var tempMpis = Builder<TempPatientVisitExtract>.CreateListOfSize(1).All().With(x => x.SiteCode = 1).With(x => x.PatientPK = 1).With(x => x.CheckError = false).Build().ToList();
 
             _extractsContext.PatientExtracts.AddRange(patients);
-            _extractsContext.TempPatientStatusExtracts.AddRange(tempMpis);
+            _extractsContext.TempPatientVisitExtracts.AddRange(tempMpis);
             _extractsContext.SaveChanges();
 
             _extractsContextMySql.PatientExtracts.AddRange(patients);
-            _extractsContextMySql.TempPatientStatusExtracts.AddRange(tempMpis);
+            _extractsContextMySql.TempPatientVisitExtracts.AddRange(tempMpis);
             _extractsContextMySql.SaveChanges();
 
             _iQtoolsDb = TestInitializer.Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
@@ -62,27 +61,27 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Dwh
         [Test]
         public void should_Load_From_Temp_MsSQL()
         {
-            Assert.False(_extractsContext.PatientStatusExtracts.Any());
-            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(PatientStatusExtract)));
+            Assert.False(_extractsContext.PatientVisitExtracts.Any());
+            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(PatientVisitExtract)));
 
-            var loader = TestInitializer.ServiceProvider.GetService<IPatientStatusLoader>();
+            var loader = TestInitializer.ServiceProvider.GetService<IPatientVisitLoader>();
 
             var loadCount = loader.Load(extract.Id, 0).Result;
-            Assert.True(_extractsContext.PatientStatusExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContext.PatientStatusExtracts.Count()}");
+            Assert.True(_extractsContext.PatientVisitExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContext.PatientVisitExtracts.Count()}");
         }
 
         [Test]
         public void should_Load_From_Temp_MySQL()
         {
-            Assert.False(_extractsContextMySql.PatientStatusExtracts.Any());
-            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(PatientStatusExtract)));
+            Assert.False(_extractsContextMySql.PatientVisitExtracts.Any());
+            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(PatientVisitExtract)));
 
-            var loader = TestInitializer.ServiceProviderMysql.GetService<IPatientStatusLoader>();
+            var loader = TestInitializer.ServiceProviderMysql.GetService<IPatientVisitLoader>();
 
             var loadCount = loader.Load(extract.Id, 0).Result;
-            Assert.True(_extractsContextMySql.PatientStatusExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContextMySql.PatientStatusExtracts.Count()}");
+            Assert.True(_extractsContextMySql.PatientVisitExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContextMySql.PatientVisitExtracts.Count()}");
         }
     }
 }
