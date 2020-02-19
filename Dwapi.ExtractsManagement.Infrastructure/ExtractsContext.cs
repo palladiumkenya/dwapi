@@ -243,7 +243,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<PatientAdverseEventExtract>().Key(x => x.Id)
                 .Table($"{nameof(PatientAdverseEventExtracts)}");
             DapperPlusManager.Entity<PatientExtract>().Key(x => x.Id).Table($"{nameof(PatientExtracts)}");
-            DapperPlusManager.Entity<MasterPatientIndex>().Key(x => x.Id).Table($"{nameof(MasterPatientIndices)}");
+            DapperPlusManager.Entity<MasterPatientIndex>().Key(x => x.Id).Table($"{nameof(MasterPatientIndices)}").BatchTimeout(360);
             DapperPlusManager.Entity<TempMasterPatientIndex>().Key(x => x.Id)
                 .Table($"{nameof(TempMasterPatientIndices)}");
             DapperPlusManager.Entity<EmrMetric>().Key(x => x.Id).Table($"{nameof(EmrMetric)}");
