@@ -57,7 +57,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public Task<IPagedList<T>> GetAll(string sql, int? page, int pageSize)
         {
-            var entities = DbSet.FromSql(sql)
+            var entities = DbSet.AsNoTracking().FromSql(sql)
                 .OrderBy(x => x.Id);
 
             return entities.ToPagedListAsync(page ?? 1, pageSize);
@@ -217,7 +217,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public Task<int> GetCount(string sql)
         {
-            return DbSet.FromSql(sql).Select(x => x.Id).CountAsync();
+            return DbSet.AsNoTracking().FromSql(sql).Select(x => x.Id).CountAsync();
         }
 
         public int PageCount(int batchSize, long totalRecords)
