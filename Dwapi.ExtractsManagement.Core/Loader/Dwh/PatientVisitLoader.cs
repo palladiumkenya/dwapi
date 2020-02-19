@@ -48,7 +48,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                 var tempPatientVisitExtracts = _tempPatientVisitExtractRepository.GetFromSql(query.ToString());
 
-                const int take = 1000;
+                const int take = 10000;
                 int skip = 0;
                 var count = tempPatientVisitExtracts.Count();
                 while (skip < count)

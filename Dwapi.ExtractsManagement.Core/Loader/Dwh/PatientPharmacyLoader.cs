@@ -49,7 +49,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 string query = queryBuilder.ToString();
                 var tempPatientPharmacyExtracts = _tempPatientPharmacyExtractRepository.GetFromSql(query);
 
-                const int take = 1000;
+                const int take = 10000;
                 int skip = 0;
                 var count = tempPatientPharmacyExtracts.Count();
                 while (skip < count)
