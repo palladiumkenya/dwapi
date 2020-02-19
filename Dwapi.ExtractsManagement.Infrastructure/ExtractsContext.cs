@@ -97,7 +97,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsPartnerNotificationServices> TempHtsPartnerNotificationServicesExtracts { get; set; }
 
 
-        
+
 
         public DbSet<TempHtsClientsError> TempHtsClientsExtractsErrors { get; set; }
         public DbSet<TempHtsClientTestsError> TempHtsClientTestsExtractsErrors { get; set; }
@@ -174,7 +174,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
-            //Hts relationships 
+            //Hts relationships
             modelBuilder.Entity<HtsClients>()
                 .HasKey(f => new { f.SiteCode, f.PatientPk });
 
@@ -224,11 +224,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempPatientLaboratoryExtract>().Key(x => x.Id)
                 .Table($"{nameof(TempPatientLaboratoryExtracts)}");
             DapperPlusManager.Entity<TempPatientPharmacyExtract>().Key(x => x.Id)
-                .Table($"{nameof(TempPatientPharmacyExtracts)}");
+                .Table($"{nameof(TempPatientPharmacyExtracts)}").BatchTimeout(360);;
             DapperPlusManager.Entity<TempPatientStatusExtract>().Key(x => x.Id)
                 .Table($"{nameof(TempPatientStatusExtracts)}");
             DapperPlusManager.Entity<TempPatientVisitExtract>().Key(x => x.Id)
-                .Table($"{nameof(TempPatientVisitExtracts)}");
+                .Table($"{nameof(TempPatientVisitExtracts)}").BatchTimeout(360);;
             DapperPlusManager.Entity<TempPatientAdverseEventExtract>().Key(x => x.Id)
                 .Table($"{nameof(TempPatientAdverseEventExtracts)}");
             DapperPlusManager.Entity<PatientArtExtract>().Key(x => x.Id).Table($"{nameof(PatientArtExtracts)}");
@@ -237,9 +237,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<PatientLaboratoryExtract>().Key(x => x.Id)
                 .Table($"{nameof(PatientLaboratoryExtracts)}");
             DapperPlusManager.Entity<PatientPharmacyExtract>().Key(x => x.Id)
-                .Table($"{nameof(PatientPharmacyExtracts)}");
+                .Table($"{nameof(PatientPharmacyExtracts)}").BatchTimeout(360);
             DapperPlusManager.Entity<PatientStatusExtract>().Key(x => x.Id).Table($"{nameof(PatientStatusExtracts)}");
-            DapperPlusManager.Entity<PatientVisitExtract>().Key(x => x.Id).Table($"{nameof(PatientVisitExtracts)}");
+            DapperPlusManager.Entity<PatientVisitExtract>().Key(x => x.Id).Table($"{nameof(PatientVisitExtracts)}").BatchTimeout(360);
             DapperPlusManager.Entity<PatientAdverseEventExtract>().Key(x => x.Id)
                 .Table($"{nameof(PatientAdverseEventExtracts)}");
             DapperPlusManager.Entity<PatientExtract>().Key(x => x.Id).Table($"{nameof(PatientExtracts)}");
@@ -272,7 +272,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempHtsTestKits>().Key(x => x.Id).Table($"{nameof(TempHtsTestKitsExtracts)}");
             DapperPlusManager.Entity<TempHtsPartnerTracing>().Key(x => x.Id).Table($"{nameof(TempHtsPartnerTracingExtracts)}");
 
-            DapperPlusManager.MapperFactory = mapper => mapper.BatchTimeout(6000);
+           // DapperPlusManager.MapperFactory = mapper => mapper.BatchTimeout(6000);
         }
 
         public override void EnsureSeeded()
