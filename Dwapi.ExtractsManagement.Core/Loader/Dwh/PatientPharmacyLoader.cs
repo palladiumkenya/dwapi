@@ -47,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 queryBuilder.Append($" s.PatientPK = p.PatientPK AND ");
                 queryBuilder.Append($" s.SiteCode = p.SiteCode ");
                 //queryBuilder.Append($" WHERE s.CheckError = 0");//load all the takaka
-                const int take = 10000;
+                const int take = 5000;
                 var eCount = await  _tempPatientPharmacyExtractRepository.GetCount(queryBuilder.ToString());
                 var pageCount = _tempPatientPharmacyExtractRepository.PageCount(take, eCount);
 
