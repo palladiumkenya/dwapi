@@ -919,7 +919,7 @@ where name ='OpenMRS ID')
 
 )Y
 ON
-Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial
+Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial 
 "|MPI|1|MasterPatientIndex|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 329bfbf4-d404-4dfd-88eb-6fb398c5f449|Patient Adverse Events|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT adv.PatientID,
        adv.PatientPK,
