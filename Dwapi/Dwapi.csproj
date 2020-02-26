@@ -27,6 +27,9 @@ Bached sending and await to 50 at a time
   </PropertyGroup>
   <ItemGroup>
     <None Remove="client-src\settings\model\data-metrics.ts" />
+    <None Update="kenyahmis.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

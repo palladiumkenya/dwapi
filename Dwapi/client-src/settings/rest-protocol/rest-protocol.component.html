@@ -25,6 +25,20 @@
                     <input pInputText id="url" name="url" required
                            [(ngModel)]="dbDialog.url" />
                 </div>
+                <div class="ui-g-12 ui-md-3 ui-label">
+                    <label for="url">User</label>
+                </div>
+                <div class="ui-g-12 ui-md-9">
+                    <input pInputText id="userName" name="userName"
+                           [(ngModel)]="dbDialog.userName" />
+                </div>
+                <div class="ui-g-12 ui-md-3 ui-label">
+                    <label for="url">Password</label>
+                </div>
+                <div class="ui-g-12 ui-md-9">
+                    <input pInputText id="password" name="password" type="password"
+                           [(ngModel)]="dbDialog.password" />
+                </div>
             </div>
             <div class="ui-g-12 ui-lg-12">
                 <div class="ui-g-12 ui-md-3">

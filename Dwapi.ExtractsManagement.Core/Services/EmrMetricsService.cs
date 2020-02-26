@@ -1,5 +1,7 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
@@ -25,6 +27,12 @@ namespace Dwapi.ExtractsManagement.Core.Services
         public async Task<EmrMetricSource> Read(AuthProtocol authProtocol, string url)
         {
             EmrMetricSource metricSoruce = null;
+
+            if (authProtocol.HasAuth)
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{authProtocol.UserName}:{authProtocol.Password}")));
+            }
 
             if (authProtocol.HasToken)
             {
