@@ -881,13 +881,15 @@ id.identifier AS Serial
 ,X.date_started AS StartARTDate
 ,X.regimen_name AS StartARTRegimenCode
 ,X.regimen_line StartARTRegimenDesc
+
 FROM kenyaemr_datatools.patient_demographics a
-INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = (SELECT patient_identifier_type_id FROM openmrs.patient_identifier_type where name='Unique Patient Number') 
-inner join (
+INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = (SELECT patient_identifier_type_id FROM openmrs.patient_identifier_type
+where name ='OpenMRS ID')
+left join (
 SELECT  c.patient_id,
 c.encounter_id, treatment_supporter_telephone, entry_point , treatment_supporter_address, date_confirmed_hiv_positive 
 from kenyaemr_datatools.hiv_enrollment  c
-INNER JOIN
+left JOIN
     (
         SELECT patient_id, MAX(encounter_id) max_encounter_id
         FROM kenyaemr_datatools.hiv_enrollment
@@ -912,7 +914,8 @@ SELECT
 a.patient_id as Ptn_Pk,
 id.identifier AS Serial
 FROM kenyaemr_datatools.patient_demographics a
-INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = (SELECT patient_identifier_type_id FROM openmrs.patient_identifier_type where name='Unique Patient Number') 
+INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = (SELECT patient_identifier_type_id FROM openmrs.patient_identifier_type
+where name ='OpenMRS ID')
 
 )Y
 ON
