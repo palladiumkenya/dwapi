@@ -883,12 +883,13 @@ id.identifier AS Serial
 ,X.regimen_line StartARTRegimenDesc
 
 FROM kenyaemr_datatools.patient_demographics a
-INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
-inner join (
+INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = (SELECT patient_identifier_type_id FROM openmrs.patient_identifier_type
+where name ='OpenMRS ID')
+left join (
 SELECT  c.patient_id,
 c.encounter_id, treatment_supporter_telephone, entry_point , treatment_supporter_address, date_confirmed_hiv_positive 
 from kenyaemr_datatools.hiv_enrollment  c
-INNER JOIN
+left JOIN
     (
         SELECT patient_id, MAX(encounter_id) max_encounter_id
         FROM kenyaemr_datatools.hiv_enrollment
@@ -913,11 +914,12 @@ SELECT
 a.patient_id as Ptn_Pk,
 id.identifier AS Serial
 FROM kenyaemr_datatools.patient_demographics a
-INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = 6 
+INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = (SELECT patient_identifier_type_id FROM openmrs.patient_identifier_type
+where name ='OpenMRS ID')
 
 )Y
 ON
-Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial
+Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial 
 "|MPI|1|MasterPatientIndex|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 329bfbf4-d404-4dfd-88eb-6fb398c5f449|Patient Adverse Events|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT adv.PatientID,
        adv.PatientPK,
