@@ -111,6 +111,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
         this.loadData();
+        this.emrVersion = this.emrVer;
     }
 
     public ngOnInit() {

@@ -5,6 +5,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Infrastructure.Migrations;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -27,6 +28,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
         [OneTimeSetUp]
         public void Init()
         {
+            TestInitializer.InitDb();
+            TestInitializer.InitMysQLDb();
             _settingsContext = TestInitializer.ServiceProvider.GetService<SettingsContext>();
             _settingsContextMysql = TestInitializer.ServiceProviderMysql.GetService<SettingsContext>();
 
@@ -37,12 +40,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
 
         [TestCase(nameof(PatientExtract))]
         [TestCase(nameof(PatientArtExtract))]
-      
         [TestCase(nameof(PatientPharmacyExtract))]
         [TestCase(nameof(PatientStatusExtract))]
         [TestCase(nameof(PatientVisitExtract))]
         [TestCase("PatientLabExtract")]
         [TestCase("PatientBaselineExtract")]
+        [TestCase(nameof(PatientAdverseEventExtract))]
         public void should_Execute_Reader_MsSql(string extractName)
         {
             var extract = TestInitializer.Iqtools.Extracts.First(x => x.DocketId.IsSameAs("NDWH")&&x.Name.IsSameAs(extractName));
@@ -52,7 +55,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
             Assert.True(reader.HasRows);
             reader.Close();
         }
-        
+
         [TestCase(nameof(PatientExtract))]
         [TestCase(nameof(PatientArtExtract))]
         [TestCase(nameof(PatientPharmacyExtract))]
@@ -60,6 +63,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
         [TestCase(nameof(PatientVisitExtract))]
         [TestCase("PatientLabExtract")]
         [TestCase("PatientBaselineExtract")]
+        [TestCase(nameof(PatientAdverseEventExtract))]
         public void should_Execute_Reader_MySql(string extractName)
         {
             var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.DocketId.IsSameAs("NDWH") && x.Name.IsSameAs(extractName));

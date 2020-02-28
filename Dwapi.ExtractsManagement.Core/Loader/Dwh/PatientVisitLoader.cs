@@ -30,6 +30,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
         public async Task<int> Load(Guid extractId, int found)
         {
+            int count = 0;
+
             try
             {
                 DomainEvents.Dispatch(
@@ -40,20 +42,24 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                 //load temp extracts without errors
                 StringBuilder query = new StringBuilder();
-                query.Append($" SELECT * FROM {nameof(TempPatientVisitExtract)}s s");
+                query.Append($" SELECT s.* FROM {nameof(TempPatientVisitExtract)}s s");
                 query.Append($" INNER JOIN PatientExtracts p ON ");
                 query.Append($" s.PatientPK = p.PatientPK AND ");
                 query.Append($" s.SiteCode = p.SiteCode ");
                 //query.Append($" WHERE s.CheckError = 0"); //load all the takaka
+                const int take = 5000;
+                var eCount = await  _tempPatientVisitExtractRepository.GetCount(query.ToString());
+                var pageCount = _tempPatientVisitExtractRepository.PageCount(take, eCount);
 
-                var tempPatientVisitExtracts = _tempPatientVisitExtractRepository.GetFromSql(query.ToString());
-
-                const int take = 1000;
-                int skip = 0;
-                var count = tempPatientVisitExtracts.Count();
-                while (skip < count)
+                int page = 1;
+                while (page <= pageCount)
                 {
-                    var batch = tempPatientVisitExtracts.Skip(skip).Take(take).ToList();
+                    var tempPatientVisitExtracts =await
+                        _tempPatientVisitExtractRepository.GetAll(query.ToString(), page, take);
+
+                    var batch = tempPatientVisitExtracts.ToList();
+                    count += batch.Count();
+
                     //Auto mapper
                     var extractRecords = Mapper.Map<List<TempPatientVisitExtract>, List<PatientVisitExtract>>(batch);
                     foreach (var record in extractRecords)
@@ -68,12 +74,12 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         return 0;
                     }
                     Log.Debug("saved batch");
-                    skip = skip + take;
+                    page++;
                     DomainEvents.Dispatch(
                         new ExtractActivityNotification(extractId, new DwhProgress(
                             nameof(PatientVisitExtract),
                             nameof(ExtractStatus.Loading),
-                            found, skip , 0, 0, 0)));
+                            found, count , 0, 0, 0)));
                 }
                 return count;
             }

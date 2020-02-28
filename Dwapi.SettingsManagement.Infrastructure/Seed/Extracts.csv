@@ -699,7 +699,8 @@ FROM [dbo].[tmp_PatientMaster] a
 )Y
 ON
 Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial"|MPI|1|MasterPatientIndex|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
-48742EB0-6656-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT
+48742EB0-6656-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"
+SELECT DISTINCT
 -- -----Demographics
 X.Ptn_Pk,
 X.PatientPK,

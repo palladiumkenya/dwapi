@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
 {
     [TestFixture]
-    public class PatientArtSourceExtractorTests
+    public class PatientAdverseEventSourceExtractorTests
     {
         private ExtractsContext _extractsContext, _extractsContextMySql;
         private DbProtocol _iQtoolsDb, _kenyaEmrDb;
@@ -43,30 +43,30 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
         [Test]
         public void should_Exract_From_Reader_MsSql()
         {
-            Assert.False(_extractsContext.TempPatientArtExtracts.Any());
+            Assert.False(_extractsContext.TempPatientAdverseEventExtracts.Any());
 
-            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(PatientArtExtract)));
+            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(PatientAdverseEventExtract)));
 
-            var extractor = TestInitializer.ServiceProvider.GetService<IPatientArtSourceExtractor>();
+            var extractor = TestInitializer.ServiceProvider.GetService<IPatientAdverseEventSourceExtractor>();
 
             var recordcount = extractor.Extract(extract, _iQtoolsDb).Result;
-            Assert.True(_extractsContext.TempPatientArtExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContext.TempPatientArtExtracts.Count()}");
+            Assert.True(_extractsContext.TempPatientAdverseEventExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContext.TempPatientAdverseEventExtracts.Count()}");
         }
 
         [Test]
         public void should_Exract_From_Reader_MySql()
         {
 
-            Assert.False(_extractsContextMySql.TempPatientArtExtracts.ToList().Count>0);
+            Assert.False(_extractsContextMySql.TempPatientAdverseEventExtracts.ToList().Count>0);
 
-            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(PatientArtExtract)));
+            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(PatientAdverseEventExtract)));
 
-            var extractor = TestInitializer.ServiceProviderMysql.GetService<IPatientArtSourceExtractor>();
+            var extractor = TestInitializer.ServiceProviderMysql.GetService<IPatientAdverseEventSourceExtractor>();
 
             var recordcount = extractor.Extract(extract, _kenyaEmrDb).Result;
-            Assert.True(_extractsContextMySql.TempPatientArtExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContextMySql.TempPatientArtExtracts.Count()}");
+            Assert.True(_extractsContextMySql.TempPatientAdverseEventExtracts.Any());
+            Console.WriteLine($"extracted {_extractsContextMySql.TempPatientAdverseEventExtracts.Count()}");
         }
     }
 }

@@ -100,6 +100,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>()
                 .AddTransient<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>()
                 .AddTransient<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>()
+                .AddTransient<ITempPatientAdverseEventExtractRepository, TempPatientAdverseEventExtractRepository>()
 
                 .AddTransient<IPatientExtractRepository, PatientExtractRepository>()
                 .AddTransient<IPatientArtExtractRepository, PatientArtExtractRepository>()
@@ -108,6 +109,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientPharmacyExtractRepository, PatientPharmacyExtractRepository>()
                 .AddTransient<IPatientStatusExtractRepository, PatientStatusExtractRepository>()
                 .AddTransient<IPatientVisitExtractRepository, PatientVisitExtractRepository>()
+                .AddTransient<IPatientAdverseEventExtractRepository, PatientAdverseEventExtractRepository>()
 
                 .AddTransient<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>()
                 .AddTransient<ITempHTSClientLinkageExtractRepository, TempHTSClientLinkageExtractRepository>()
@@ -132,6 +134,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientPharmacySourceExtractor, PatientPharmacySourceExtractor>()
                 .AddTransient<IPatientVisitSourceExtractor, PatientVisitSourceExtractor>()
                 .AddTransient<IPatientLaboratorySourceExtractor, PatientLaboratorySourceExtractor>()
+                .AddTransient<IPatientAdverseEventSourceExtractor, PatientAdverseEventSourceExtractor>()
 
                 .AddTransient<IHTSClientSourceExtractor, HTSClientSourceExtractor>()
                 .AddTransient<IHTSClientLinkageSourceExtractor, HTSClientLinkageSourceExtractor>()
@@ -147,6 +150,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientPharmacyLoader, PatientPharmacyLoader>()
                 .AddTransient<IPatientStatusLoader, PatientStatusLoader>()
                 .AddTransient<IPatientVisitLoader, PatientVisitLoader>()
+                .AddTransient<IPatientAdverseEventLoader, PatientAdverseEventLoader>()
 
 
                 .AddTransient<IHTSClientLoader, HTSClientLoader>()
@@ -177,6 +181,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>()
                 .AddTransient<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>()
                 .AddTransient<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>()
+                .AddTransient<ITempPatientAdverseEventExtractRepository, TempPatientAdverseEventExtractRepository>()
 
                 .AddTransient<IPatientExtractRepository, PatientExtractRepository>()
                 .AddTransient<IPatientArtExtractRepository, PatientArtExtractRepository>()
@@ -185,7 +190,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientPharmacyExtractRepository, PatientPharmacyExtractRepository>()
                 .AddTransient<IPatientStatusExtractRepository, PatientStatusExtractRepository>()
                 .AddTransient<IPatientVisitExtractRepository, PatientVisitExtractRepository>()
-
+                .AddTransient<IPatientAdverseEventExtractRepository, PatientAdverseEventExtractRepository>()
 
                 .AddTransient<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>()
                 .AddTransient<ITempHTSClientLinkageExtractRepository, TempHTSClientLinkageExtractRepository>()
@@ -210,6 +215,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientPharmacySourceExtractor, PatientPharmacySourceExtractor>()
                 .AddTransient<IPatientVisitSourceExtractor, PatientVisitSourceExtractor>()
                 .AddTransient<IPatientLaboratorySourceExtractor, PatientLaboratorySourceExtractor>()
+                .AddTransient<IPatientAdverseEventSourceExtractor, PatientAdverseEventSourceExtractor>()
 
                 .AddTransient<IHTSClientSourceExtractor, HTSClientSourceExtractor>()
                 .AddTransient<IHTSClientLinkageSourceExtractor, HTSClientLinkageSourceExtractor>()
@@ -226,6 +232,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .AddTransient<IPatientPharmacyLoader, PatientPharmacyLoader>()
                 .AddTransient<IPatientStatusLoader, PatientStatusLoader>()
                 .AddTransient<IPatientVisitLoader, PatientVisitLoader>()
+                .AddTransient<IPatientAdverseEventLoader, PatientAdverseEventLoader>()
 
                 .AddTransient<IHTSClientLoader, HTSClientLoader>()
                 .AddTransient<IHTSClientLinkageLoader, HTSClientLinkageLoader>()
@@ -241,73 +248,6 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             ServiceProvider = serviceProvider;
             ServiceProviderMysql = serviceProviderMysql;
 
-            var settingsContext = serviceProvider.GetService<SettingsContext>();
-            var settingsContextMysql = serviceProviderMysql.GetService<SettingsContext>();
-            var extractsContext = serviceProvider.GetService<ExtractsContext>();
-            var extractsContextMysql = serviceProviderMysql.GetService<ExtractsContext>();
-
-            Iqtools = settingsContext.EmrSystems
-                .Include(x => x.DatabaseProtocols)
-                .Include(x => x.Extracts)
-                .First(x => x.Id == new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"));
-
-            KenyaEmr = settingsContextMysql.EmrSystems
-                .Include(x => x.DatabaseProtocols)
-                .Include(x => x.Extracts)
-                .First(x => x.Id == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"));
-
-            Validator = extractsContext.Validator.First();
-
-            var dbmanager = ServiceProvider.GetService<IAppDatabaseManager>();
-
-            IqToolsDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,
-                DatabaseProvider.MsSql);
-
-            IQtoolsDbProtocol =
-                Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
-            IQtoolsDbProtocol.Host = IqToolsDatabase.Server;
-            IQtoolsDbProtocol.Username = IqToolsDatabase.User;
-            IQtoolsDbProtocol.Password = IqToolsDatabase.Password;
-
-            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContextMysql.Database.GetDbConnection().ConnectionString, DatabaseProvider.MySql);
-
-
-            KenyaEmrDbProtocol = KenyaEmr.DatabaseProtocols.First();
-            KenyaEmrDbProtocol.Host = KenyaEmrDatabase.Server;
-            KenyaEmrDbProtocol.Username = KenyaEmrDatabase.User;
-            KenyaEmrDbProtocol.Password = KenyaEmrDatabase.Password;
-            /*try
-            {
-                settingsContext.Database.Migrate();
-                settingsContext.EnsureSeeded();
-
-                settingsContextMysql.Database.Migrate();
-                settingsContextMysql.EnsureSeeded();
-
-                extractsContext.Database.Migrate();
-                extractsContext.EnsureSeeded();
-
-                extractsContextMysql.Database.Migrate();
-                extractsContextMysql.EnsureSeeded();
-
-                Iqtools = settingsContext.EmrSystems
-                    .Include(x => x.DatabaseProtocols)
-                    .Include(x => x.Extracts)
-                    .First(x => x.Id == new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"));
-
-                KenyaEmr = settingsContextMysql.EmrSystems
-                    .Include(x => x.DatabaseProtocols)
-                    .Include(x => x.Extracts)
-                    .First(x => x.Id == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"));
-
-                Validator = extractsContext.Validator.First();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }*/
-
-
             Mapper.Initialize(cfg =>
                 {
                     cfg.AddDataReaderMapping();
@@ -320,6 +260,72 @@ namespace Dwapi.ExtractsManagement.Core.Tests
 
         }
 
+          public static void InitDb()
+        {
+            var settingsContext = ServiceProvider.GetService<SettingsContext>();
+            var extractsContext = ServiceProvider.GetService<ExtractsContext>();
+
+            //settingsContext.Database.EnsureDeleted();
+            settingsContext.Database.Migrate();
+            settingsContext.EnsureSeeded();
+
+           // extractsContext.Database.EnsureDeleted();
+            extractsContext.Database.Migrate();
+            extractsContext.EnsureSeeded();
+
+
+            Iqtools = settingsContext.EmrSystems
+                .Include(x => x.DatabaseProtocols)
+                .Include(x => x.Extracts)
+                .First(x => x.Id == new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"));
+
+            Validator = extractsContext.Validator.First();
+
+
+            var dbmanager = ServiceProvider.GetService<IAppDatabaseManager>();
+
+            IqToolsDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,
+                DatabaseProvider.MsSql);
+
+            IQtoolsDbProtocol =
+                Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
+            IQtoolsDbProtocol.Host = IqToolsDatabase.Server;
+            IQtoolsDbProtocol.Username = IqToolsDatabase.User;
+            IQtoolsDbProtocol.Password = IqToolsDatabase.Password;
+        }
+
+        public static void InitMysQLDb()
+        {
+            var settingsContextMysql = ServiceProviderMysql.GetService<SettingsContext>();
+            var extractsContextMysql = ServiceProviderMysql.GetService<ExtractsContext>();
+
+            //settingsContextMysql.Database.EnsureDeleted();
+            settingsContextMysql.Database.Migrate();
+            settingsContextMysql.EnsureSeeded();
+
+            //extractsContextMysql.Database.EnsureDeleted();
+            extractsContextMysql.Database.Migrate();
+            extractsContextMysql.EnsureSeeded();
+
+            KenyaEmr = settingsContextMysql.EmrSystems
+                .Include(x => x.DatabaseProtocols)
+                .Include(x => x.Extracts)
+                .First(x => x.Id == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"));
+
+            Validator = extractsContextMysql.Validator.First();
+
+
+            var dbmanager= ServiceProvider.GetService<IAppDatabaseManager>();
+
+            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContextMysql.Database.GetDbConnection().ConnectionString, DatabaseProvider.MySql);
+
+
+            KenyaEmrDbProtocol = KenyaEmr.DatabaseProtocols.First();
+            KenyaEmrDbProtocol.Host = KenyaEmrDatabase.Server;
+            KenyaEmrDbProtocol.Username = KenyaEmrDatabase.User;
+            KenyaEmrDbProtocol.Password = KenyaEmrDatabase.Password;
+            KenyaEmrDbProtocol.Port = (int?) KenyaEmrDatabase.Port;
+        }
 
         private void RegisterLicence()
         {

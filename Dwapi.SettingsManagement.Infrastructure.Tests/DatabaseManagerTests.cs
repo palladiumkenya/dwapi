@@ -67,7 +67,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         {
             TestInitializer.InitDbMsSql();
             var extract = Builder<Extract>.CreateNew().Build();
-            extract.ExtractSql = @"SELECT * FROM psmart_store";
+            extract.ExtractSql = @"SELECT * FROM tmp_Cohort";
 
             var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
             var verified = _databaseManager.VerifyQuery(extract, databaseProtocol);
@@ -81,7 +81,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         {
             TestInitializer.InitDbMySql();
             var extract = Builder<Extract>.CreateNew().Build();
-            extract.ExtractSql = @"SELECT * FROM psmart_store";
+            extract.ExtractSql = @"SELECT * FROM concept_class";
 
             var databaseProtocol = TestInitializer.KenyaEmrDbProtocol;
             var verified = _databaseManager.VerifyQuery(extract, databaseProtocol);

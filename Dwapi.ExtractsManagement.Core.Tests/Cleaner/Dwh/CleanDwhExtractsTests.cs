@@ -25,6 +25,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
         [OneTimeSetUp]
         public void Init()
         {
+            TestInitializer.InitDb();
+            TestInitializer.InitMysQLDb();
+
             _serviceProvider = TestInitializer.ServiceProvider;
             _serviceProviderMysql = TestInitializer.ServiceProviderMysql;
 
@@ -48,6 +51,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
 
             var ts = Builder<TempPatientStatusExtract>.CreateListOfSize(2).Build().ToList();
             var s = Builder<PatientStatusExtract>.CreateListOfSize(2).Build().ToList();
+
+            var tad = Builder<TempPatientAdverseEventExtract>.CreateListOfSize(2).Build().ToList();
+            var ad = Builder<PatientAdverseEventExtract>.CreateListOfSize(2).Build().ToList();
 
             var ve = Builder<ValidationError>.CreateListOfSize(2).All().With(x=>x.ValidatorId=TestInitializer.Validator.Id).Build().ToList();
 
@@ -74,6 +80,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
 
             _extractsContext.TempPatientVisitExtracts.AddRange(tv);
             _extractsContext.PatientVisitExtracts.AddRange(v);
+
+            _extractsContext.TempPatientAdverseEventExtracts.AddRange(tad);
+            _extractsContext.PatientAdverseEventExtracts.AddRange(ad);
+
             _extractsContext.ValidationError.AddRange(ve);
 
             _extractsContext.SaveChanges();
@@ -100,6 +110,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
 
             _extractsContextMysql.TempPatientVisitExtracts.AddRange(tv);
             _extractsContextMysql.PatientVisitExtracts.AddRange(v);
+
+            _extractsContextMysql.TempPatientAdverseEventExtracts.AddRange(tad);
+            _extractsContextMysql.PatientAdverseEventExtracts.AddRange(ad);
 
             _extractsContextMysql.ValidationError.AddRange(ve);
 
@@ -137,12 +150,16 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
 
             Assert.True(context.Set<TempPatientLaboratoryExtract>().Any());
             Assert.True(context.Set<PatientLaboratoryExtract>().Any());
-        
+
             Assert.True(context.Set<TempPatientStatusExtract>().Any());
             Assert.True(context.Set<PatientStatusExtract>().Any());
 
             Assert.True(context.Set<TempPatientVisitExtract>().Any());
             Assert.True(context.Set<PatientVisitExtract>().Any());
+
+            Assert.True(context.Set<TempPatientAdverseEventExtract>().Any());
+            Assert.True(context.Set<PatientAdverseEventExtract>().Any());
+
             Assert.True(context.Set<ValidationError>().Any());
 
 
@@ -169,6 +186,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
 
             Assert.False(context.Set<TempPatientVisitExtract>().Any());
             Assert.False(context.Set<PatientVisitExtract>().Any());
+
+            Assert.False(context.Set<TempPatientAdverseEventExtract>().Any());
+            Assert.False(context.Set<PatientAdverseEventExtract>().Any());
+
             Assert.False(context.Set<ValidationError>().Any());
 
             Console.WriteLine(context.Database.ProviderName);

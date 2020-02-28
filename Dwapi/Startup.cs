@@ -97,6 +97,7 @@ using Hangfire.MemoryStorage;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
@@ -222,7 +223,7 @@ namespace Dwapi
                             o.UseSqlServer(connectionString,
                       x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name));
                             o.EnableSensitiveDataLogging(false);
-                      
+
 
                         }
 
@@ -430,6 +431,15 @@ namespace Dwapi
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseCors(
                     builder => builder.AllowAnyOrigin()
@@ -451,6 +461,7 @@ namespace Dwapi
                 }
             });
 
+            // app.UseHttpsRedirection();
             app.UseMvcWithDefaultRoute();
             app.UseDefaultFiles();
 

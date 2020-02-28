@@ -55,6 +55,14 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             return entities.ToPagedListAsync(page ?? 1, pageSize);
         }
 
+        public Task<IPagedList<T>> GetAll(string sql, int? page, int pageSize)
+        {
+            var entities = DbSet.AsNoTracking().FromSql(sql)
+                .OrderBy(x => x.Id);
+
+            return entities.ToPagedListAsync(page ?? 1, pageSize);
+        }
+
         public virtual void Create(T entity)
         {
             if (null != entity)
@@ -205,6 +213,22 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         public Task<int> GetCount()
         {
             return DbSet.AsNoTracking().Select(x => x.Id).CountAsync();
+        }
+
+        public Task<int> GetCount(string sql)
+        {
+            return DbSet.AsNoTracking().FromSql(sql).Select(x => x.Id).CountAsync();
+        }
+
+        public int PageCount(int batchSize, long totalRecords)
+        {
+            if (totalRecords > 0) {
+                if (totalRecords < batchSize) {
+                    return 1;
+                }
+                return (int)Math.Ceiling(totalRecords / (double)batchSize);
+            }
+            return 0;
         }
     }
 }

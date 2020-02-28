@@ -33,7 +33,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
-            int batch = 1000;
+            int batch = 5000;
 
             var list = new List<TempPatientPharmacyExtract>();
 
@@ -56,7 +56,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                         _extractRepository.BatchInsert(list);
 
                         count = 0;
-                   
+
 
                         DomainEvents.Dispatch(
                             new ExtractActivityNotification(extract.Id, new DwhProgress(
