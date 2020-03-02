@@ -479,14 +479,6 @@ and cn2.locale='en' where is_ctx=1 OR is_dapsone= 1
 GROUP BY patient_id, visit_id,visit_date,encounter_id
 UNION
 
-select patient_id, visit_id,visit_date,encounter_id,drug,is_arv, is_ctx,is_dapsone,
-replace(replace(replace(group_concat(cn2.name SEPARATOR '/'),'/','+'),'LPV+R','LPV/R'),'ATV+R','ATV/R') as drugreg,frequency,
-'' as DispenseDate,''duration,''PeriodTaken,
-''ExpectedReturn, 'ARV' AS TreatmentType,'' as RegimenLine,NULL as ProphylaxisType from kenyaemr_etl.etl_pharmacy_extract ph
-left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
-and cn2.locale='en' where is_arv = '1'
-GROUP BY patient_id, visit_id,visit_date,encounter_id
-UNION
 SELECT patient_id,''visit_id,visit_date,encounter_id,regimen drug,1 as is_arv, 0 as is_ctx, 0 as is_dapsone, regimen_name as drugreg, '' frequency, date_started as DispenseDate,''duration,''PeriodTaken,
 ''ExpectedReturn, 'ARV' AS TreatmentType,regimen_line as RegimenLine,NULL as ProphylaxisType FROM kenyaemr_etl.etl_drug_event
 GROUP BY patient_id, visit_id,visit_date,encounter_id
@@ -499,7 +491,6 @@ and cn.locale='en'
 left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph.encounter_id
 and fup.patient_id=ph.patient_id
 where unique_patient_no is not null and (is_arv=1 OR is_ctx=1 OR is_dapsone =1 ) and drugreg is not null
-group by ph.patient_id,ph.visit_date,ph.visit_id
 order by ph.patient_id,ph.visit_date;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct
 '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
