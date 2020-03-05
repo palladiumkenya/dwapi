@@ -567,7 +567,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
-                `https://${document.location.hostname}:${environment.port}/HtsActivity`
+                `${window.location.protocol}//${document.location.hostname}:${environment.port}/HtsActivity`
             )
             .configureLogging(LogLevel.Trace)
             .build();
@@ -608,7 +608,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this._hubConnection.on('ShowHtsSendProgressDone', (extractName: string) => {
-            this.extractSent.push(extractName); 
+            this.extractSent.push(extractName);
             if (this.extractSent.length === 7) {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
@@ -668,7 +668,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.extractClientTests = {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'HtsClientTests')
-        }; 
+        };
         return this.extractClientTests;
     }
 

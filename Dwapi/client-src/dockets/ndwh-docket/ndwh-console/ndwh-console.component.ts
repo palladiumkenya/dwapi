@@ -367,7 +367,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
-                `https://${document.location.hostname}:${environment.port}/ExtractActivity`
+                `${window.location.protocol}//${document.location.hostname}:${environment.port}/ExtractActivity`
             )
             .configureLogging(LogLevel.Error)
             .build();
@@ -423,7 +423,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     private liveOnInitMpi() {
         this._hubConnectionMpi = new HubConnectionBuilder()
-            .withUrl(`https://${document.location.hostname}:${environment.port}/cbsactivity`)
+            .withUrl(`${window.location.protocol}//${document.location.hostname}:${environment.port}/cbsactivity`)
             .configureLogging(LogLevel.Trace)
             .build();
         this._hubConnectionMpi.serverTimeoutInMilliseconds = 120000;
