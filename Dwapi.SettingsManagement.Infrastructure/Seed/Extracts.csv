@@ -1328,7 +1328,7 @@ r.ArtStartDate as ReportedStartARTDate
   inner join patient pat on pat.ptn_pk=r.ptn_pk
   left join Referral ref on pat.personid=ref.personid"|DWHStage|1|HtsClientLinkage|3|A6221983-0E85-11E8-BA89-0ED5F89F718B
   
-8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select a.patient_id as PatientPK,
+8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.patient_id as PatientPK,
 SC.value_reference AS SiteCode,
 SN.name as FacilityName,
 'KenyaEMR' as Emr,
