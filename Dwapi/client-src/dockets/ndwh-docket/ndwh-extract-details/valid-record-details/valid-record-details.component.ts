@@ -106,7 +106,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         if (this.extract === 'Patient Status') {
             this.getPatientsStats();
         }
-        if (this.extract === 'Patient Visits') {
+        if (this.extract === 'Patient Visit') {
             this.getPatientsVisits();
         }
         if (this.extract === 'Patient Adverse Events') {
@@ -133,7 +133,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         if (this.extract === 'Patient Status') {
             this.getPatientStatusColumns();
         }
-        if (this.extract === 'Patient Visits') {
+        if (this.extract === 'Patient Visit') {
             this.getPatientVisitColumns();
         }
         if (this.extract === 'Patient Adverse Events') {

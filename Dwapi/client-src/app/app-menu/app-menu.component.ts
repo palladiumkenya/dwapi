@@ -24,7 +24,7 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Registry', icon: 'cloud', items: [
                             {label: 'Care and Treatment', icon: 'cloud', routerLink: ['/registry', 'NDWH']},
-                            {label: 'PSmart', icon: 'credit_card', routerLink: ['/registry', 'PSMART']},
+                            //{label: 'PSmart', icon: 'credit_card', routerLink: ['/registry', 'PSMART']},
                             {label: 'Master Patient Index', icon: 'search', routerLink: ['/registry', 'CBS']},
                             {label: 'HIV Testing Services', icon: 'local_hospital', routerLink: ['/registry', 'HTS']}
                         ]
@@ -36,7 +36,7 @@ export class AppMenuComponent implements OnInit {
                 label: 'Dockets', icon: 'dashboard',
                 items: [
                     { label: 'Care and Treatment', icon: 'cloud', routerLink: ['/datawarehouse']},
-                    {label: 'PSmart', icon: 'credit_card', routerLink: ['/psmart']},
+                    //{label: 'PSmart', icon: 'credit_card', routerLink: ['/psmart']},
                     {label: 'Master Patient Index', icon: 'search', routerLink: ['/cbs']},
                     {label: 'HIV Testing Services', icon: 'local_hospital', routerLink: ['/hts']}
                 ]

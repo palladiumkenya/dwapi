@@ -461,7 +461,7 @@ namespace Dwapi
                 }
             });
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseMvcWithDefaultRoute();
             app.UseDefaultFiles();
 

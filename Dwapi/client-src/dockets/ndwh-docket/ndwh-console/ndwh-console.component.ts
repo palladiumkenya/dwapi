@@ -42,6 +42,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public emrName: string;
     public emrVersion: string;
+    public minEMRVersion: string;
 
     private _confirmationService: ConfirmationService;
     private _ndwhExtractService: NdwhExtractService;
@@ -143,6 +144,15 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.updateEvent();
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
+            if (this.emrName == 'KenyaEMR') {
+                this.minEMRVersion = '(The minimum version EMR is 17.0.1)';
+            }
+            else if (this.emrName === 'IQCare') {
+                this.minEMRVersion = '(The minimum version EMR is 2.2.1)';
+            }
+            else {
+                this.minEMRVersion = '';
+            }
         }
         if (this.centralRegistry) {
             this.canSend = true;
@@ -357,7 +367,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
-                `http://${document.location.hostname}:${environment.port}/ExtractActivity`
+                `https://${document.location.hostname}:${environment.port}/ExtractActivity`
             )
             .configureLogging(LogLevel.Error)
             .build();
@@ -413,7 +423,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     private liveOnInitMpi() {
         this._hubConnectionMpi = new HubConnectionBuilder()
-            .withUrl(`http://${document.location.hostname}:${environment.port}/cbsactivity`)
+            .withUrl(`https://${document.location.hostname}:${environment.port}/cbsactivity`)
             .configureLogging(LogLevel.Trace)
             .build();
         this._hubConnectionMpi.serverTimeoutInMilliseconds = 120000;
