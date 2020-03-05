@@ -37,6 +37,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public emrName: string;
     public emrVersion: string;
+    public minEMRVersion: string;
 
     private _confirmationService: ConfirmationService;
     private _htsService: HtsService;
@@ -133,6 +134,16 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             this.updateEvent();
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
+
+            if (this.emrName == 'KenyaEMR') {
+                this.minEMRVersion = '(The minimum version EMR is 17.0.1)';
+            }
+            else if (this.emrName === 'IQCare') {
+                this.minEMRVersion = '(The minimum version EMR is 2.2.1)';
+            }
+            else {
+                this.minEMRVersion = '';
+            }
         }
         if (this.centralRegistry) {
             this.canSend = true;
@@ -556,7 +567,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
-                `http://${document.location.hostname}:${environment.port}/HtsActivity`
+                `https://${document.location.hostname}:${environment.port}/HtsActivity`
             )
             .configureLogging(LogLevel.Trace)
             .build();

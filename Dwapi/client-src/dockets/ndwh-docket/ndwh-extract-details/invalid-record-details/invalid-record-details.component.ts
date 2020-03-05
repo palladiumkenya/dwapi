@@ -89,7 +89,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
         if (this.extract === 'Patient Status') {
             this.getInvalidPatientStatusExtracts();
         }
-        if (this.extract === 'Patient Visits') {
+        if (this.extract === 'Patient Visit') {
             this.getInvalidPatientVisitExtracts();
         }
         if (this.extract === 'Patient Adverse Events') {
@@ -116,7 +116,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
         if (this.extract === 'Patient Status') {
             this.getPatientStatusColumns();
         }
-        if (this.extract === 'Patient Visits') {
+        if (this.extract === 'Patient Visit') {
             this.getPatientVisitColumns();
         }
         if (this.extract === 'Patient Adverse Events') {

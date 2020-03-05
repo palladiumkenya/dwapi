@@ -22,6 +22,7 @@ export class MpiSearchComponent implements OnInit, OnDestroy  {
     public loadRegistry$: Subscription;
     public emrSystem: EmrSystem;
     public messages: Message[];
+    public minEMRVersion: string;
     public notifications: Message[];
     private _emrConfigService: EmrConfigService;
     private _mpiSearchService: MpiSearchService;

@@ -45,6 +45,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     public emrSystem: EmrSystem;
     public emrMetric: EmrMetrics;
     public emrVersion: string;
+    public minEMRVersion: string;
     public extracts: Extract[];
     public dbProtocol: DatabaseProtocol;
     public extract: Extract;
@@ -95,7 +96,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
 
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
-            .withUrl(`http://${document.location.hostname}:${environment.port}/cbsactivity`)
+            .withUrl(`https://${document.location.hostname}:${environment.port}/cbsactivity`)
             .configureLogging(LogLevel.Trace)
             .build();
         this._hubConnection.serverTimeoutInMilliseconds = 120000;
@@ -144,6 +145,16 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     this.loadMetrics();
                     if (this.emrSystem) {
                         this.emrVersion = this.emrSystem.version;
+
+                        if (this.emrSystem.name == 'KenyaEMR') {
+                            this.minEMRVersion = '(The minimum version EMR is 17.0.1)';
+                        }
+                        else if (this.emrSystem.name === 'IQCare') {
+                            this.minEMRVersion = '(The minimum version EMR is 2.2.1)';
+                        }
+                        else {
+                            this.minEMRVersion = '';
+                        }
 
                         if (this.emrSystem.extracts) {
                             this.extracts = this.emrSystem.extracts.filter(x => x.docketId === 'CBS');
