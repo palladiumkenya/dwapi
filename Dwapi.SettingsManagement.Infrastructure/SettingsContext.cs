@@ -70,8 +70,12 @@ namespace Dwapi.SettingsManagement.Infrastructure
                 DatabaseProtocols.SeedFromResource($"{nameof(DatabaseProtocols)}New");
 
             var restEndpoints = RestProtocols.ToList();
-            RestProtocols.RemoveRange(restEndpoints);
-            SaveChanges();
+            if (restEndpoints.All(x => x.Url.Contains("https://palladiumkenya.github.io/dwapi/stuff")))
+            {
+                RestProtocols.RemoveRange(restEndpoints);
+                SaveChanges();
+            }
+
             RestProtocols.SeedDbSetIfEmpty($"{nameof(RestProtocols)}");
             Resources.SeedDbSetIfEmpty($"{nameof(Resources)}");
             SaveChanges();
