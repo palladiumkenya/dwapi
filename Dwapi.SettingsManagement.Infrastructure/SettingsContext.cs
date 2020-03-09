@@ -47,27 +47,39 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
             if (!Dockets.Any())
                 Dockets.SeedDbSetIfEmpty($"{nameof(Dockets)}");
-            if (!CentralRegistries.Any())
-                CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
+
+            var reg = CentralRegistries.ToList();
+            if (reg.Any())
+            {
+                CentralRegistries.RemoveRange(reg);
+                SaveChanges();
+            }
+
+            CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
+
             if (!EmrSystems.Any())
                 EmrSystems.SeedDbSetIfEmpty($"{nameof(EmrSystems)}");
 
-            if (!EmrSystems.Any(x=>x.Id==new Guid("926f49b8-305d-11ea-978f-2e728ce88125")))
+            if (!EmrSystems.Any(x => x.Id == new Guid("926f49b8-305d-11ea-978f-2e728ce88125")))
                 EmrSystems.SeedFromResource($"{nameof(EmrSystems)}New");
 
             if (!DatabaseProtocols.Any())
                 DatabaseProtocols.SeedDbSetIfEmpty($"{nameof(DatabaseProtocols)}");
 
-            if (!DatabaseProtocols.Any(x=>x.EmrSystemId==new Guid("926f49b8-305d-11ea-978f-2e728ce88125")))
+            if (!DatabaseProtocols.Any(x => x.EmrSystemId == new Guid("926f49b8-305d-11ea-978f-2e728ce88125")))
                 DatabaseProtocols.SeedFromResource($"{nameof(DatabaseProtocols)}New");
 
             var restEndpoints = RestProtocols.ToList();
-            RestProtocols.RemoveRange(restEndpoints);
-            SaveChanges();
+            if (restEndpoints.All(x => x.Url.Contains("https://palladiumkenya.github.io/dwapi/stuff")))
+            {
+                RestProtocols.RemoveRange(restEndpoints);
+                SaveChanges();
+            }
+
             RestProtocols.SeedDbSetIfEmpty($"{nameof(RestProtocols)}");
             Resources.SeedDbSetIfEmpty($"{nameof(Resources)}");
             SaveChanges();
-            var ex = Extracts.Where(e => e.EmrSystemId ==new Guid( "a62216ee-0e85-11e8-ba89-0ed5f89f718b") ||
+            var ex = Extracts.Where(e => e.EmrSystemId == new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b") ||
                                          e.EmrSystemId == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b") ||
                                          e.EmrSystemId == new Guid("a6221857-0e85-11e8-ba89-0ed5f89f718b") ||
                                          e.EmrSystemId == new Guid("926f49b8-305d-11ea-978f-2e728ce88125")

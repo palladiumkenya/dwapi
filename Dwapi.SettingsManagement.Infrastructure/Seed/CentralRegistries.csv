@@ -1,5 +1,5 @@
 Id|AuthToken|Url|Name|SubscriberId|DocketId
 a6221bc6-0e85-11e8-ba89-0ed5f89f718b|268DFA3EB92BC53FAE94A048E23112A1|http://52.178.24.227:8026|Card Registry|DWAPI|PSMART
-a6222bc6-0e85-11e8-ba89-0ed5f89f718b|1ba47c2a-6e05-11e8-adc0-fa7ae01bbebc|http://data.kenyahmis.org:81/dwapi|NDWH Registry|DWAPI|NDWH
-a6223bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae01bbebc|http://data.kenyahmis.org:6767|CBS Registry|DWAPI|CBS
-a6224bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-1a96-30e9-adc0-fa7ae01bbebc|http://data.kenyahmis.org:7777|HTS Registry|DWAPI|HTS
+a6222bc6-0e85-11e8-ba89-0ed5f89f718b|1ba47c2a-6e05-11e8-adc0-fa7ae01bbebc|https://data.kenyahmis.org:444/dwapi|NDWH Registry|DWAPI|NDWH
+a6223bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae01bbebc|https://data.kenyahmis.org:6763|CBS Registry|DWAPI|CBS
+a6224bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-1a96-30e9-adc0-fa7ae01bbebc|https://data.kenyahmis.org:7773|HTS Registry|DWAPI|HTS
