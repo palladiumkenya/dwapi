@@ -64,7 +64,7 @@ FLUSH PRIVILEGES;
 
 1. Start DWAPI
 
-On your browser open dwapi on `http://localhost:5757`
+On your browser open dwapi on `https://localhost:5753`
 
 2. Configure your data sources and verify registries
 
