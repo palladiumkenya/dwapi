@@ -24,7 +24,7 @@
 #### a) New Installation
  Install DWAPI
  ```sh
-sudo docker run --name dwapi -p 5757:5757 -d --restart unless-stopped kenyahmis/dwapi:latest
+sudo docker run --name dwapi -p 5757:5757 -p 5753:5753 -d --restart unless-stopped kenyahmis/dwapi:latest
 ```
 
 #### b) Upgrading Existing Installation
@@ -33,7 +33,7 @@ sudo docker run --name dwapi -p 5757:5757 -d --restart unless-stopped kenyahmis/
 sudo docker pull kenyahmis/dwapi
 sudo docker stop dwapi
 sudo docker rm dwapi
-sudo docker run --name dwapi -p 5757:5757 -d --restart unless-stopped kenyahmis/dwapi:latest
+sudo docker run --name dwapi -p 5757:5757 -p 5753:5753 -d --restart unless-stopped kenyahmis/dwapi:latest
 ```
 
 # MySQL Setup
