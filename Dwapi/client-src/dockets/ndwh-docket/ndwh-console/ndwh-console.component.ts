@@ -324,7 +324,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         if (dwhMan !== null) {
             return this.dwhManifestPackage = {
                 destination: this.centralRegistry,
-                extractId: dwhMan.id
+                extractId: dwhMan.id,
+                emrSetup: this.emr.emrSetup
             };
         }
         return this.dwhManifestPackage;

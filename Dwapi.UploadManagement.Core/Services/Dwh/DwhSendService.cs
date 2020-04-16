@@ -103,7 +103,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
         {
-            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateWithMetrics().ToList()));
+            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.EmrSetup).ToList()));
         }
 
         public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, DwhManifestMessageBag messageBag)
@@ -225,7 +225,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 httpResponseMessages.Add(response);
                                 _baselineCount += baselineMessage.BaselinesExtracts.Count;
                                 sentPatientBaselines.AddRange(baselineMessage.BaselinesExtracts.Select(x => x.Id).ToList());
-                            
+
                             }
                             catch (Exception e)
                             {
@@ -381,7 +381,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             httpResponseMessages.Clear();
                             UpdateUiNumbers(ExtractStatus.Sending);
                         }
-                        
+
                     }
                     //update extract sent field
                     BackgroundJob.Enqueue(() => UpdateExtractSent(ExtractType.Patient, sentPatients));

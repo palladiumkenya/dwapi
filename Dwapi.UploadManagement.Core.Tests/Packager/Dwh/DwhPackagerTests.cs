@@ -3,6 +3,7 @@ using System.Linq;
 using CsvHelper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
@@ -59,7 +60,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         [Test]
         public void should_Generate_Manifest()
         {
-            var manfiests = _packager.Generate().ToList();
+            var manfiests = _packager.Generate(EmrSetup.SingleFacility).ToList();
             Assert.True(manfiests.Any());
             var m = manfiests.First();
             Assert.True(m.PatientPks.Any());
@@ -69,7 +70,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         [Test]
         public void should_Generate_Manifest_With_Metrics()
         {
-            var manfiests = _packager.GenerateWithMetrics().ToList();
+            var manfiests = _packager.GenerateWithMetrics(EmrSetup.SingleFacility).ToList();
             Assert.True(manfiests.Any());
             var m = manfiests.First();
             Assert.True(m.PatientPks.Any());

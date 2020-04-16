@@ -1,6 +1,7 @@
 import {DatabaseProtocol} from './database-protocol';
 import {RestProtocol} from './rest-protocol';
 import {Extract} from './extract';
+import {EmrSetup} from "./emr-setup";
 
 export interface EmrSystem {
     id?: string;
@@ -11,4 +12,5 @@ export interface EmrSystem {
     databaseProtocols?: DatabaseProtocol[];
     restProtocols?: RestProtocol[];
     extracts?: Extract[];
+    emrSetup?: EmrSetup;
 }

@@ -6,6 +6,7 @@ using Dwapi.UploadManagement.Core.Model.Hts;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Dapper;
+using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.UploadManagement.Infrastructure.Reader.Hts
 {
@@ -73,6 +74,32 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Hts
                 .ToList()
                 .Where(x => !x.IsSent);
             //return _context.ClientLinkageExtracts.Where(x => !x.IsSent).AsNoTracking();
+        }
+
+        public IEnumerable<Site> GetSites()
+        {
+            var sql = @"
+                SELECT
+                    SiteCode,MAX(FacilityName) AS SiteName,Count(Id) AS PatientCount
+                FROM
+                    HtsClientsExtracts
+                GROUP BY
+                    SiteCode
+            ";
+            return _context.Database.GetDbConnection()
+                .Query<Site>(sql).ToList();
+        }
+
+        public IEnumerable<SitePatientProfile> GetSitePatientProfiles()
+        {
+            var sql = @"
+                SELECT
+                   SiteCode,FacilityName AS SiteName,PatientPk
+                FROM
+                    HtsClientsExtracts
+            ";
+            return _context.Database.GetDbConnection()
+                .Query<SitePatientProfile>(sql).ToList();
         }
     }
 }

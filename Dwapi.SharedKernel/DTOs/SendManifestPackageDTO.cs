@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 
@@ -11,6 +12,7 @@ namespace Dwapi.SharedKernel.DTOs
         public Guid ExtractId { get; set; }
         public string ExtractName { get; set; }
         public string Endpoint { get; private set; }
+        public EmrSetup EmrSetup { get; set; }
 
         public SendManifestPackageDTO()
         {

@@ -34,27 +34,32 @@ namespace Dwapi.SharedKernel.Exchange
             return $"{SiteCode}-{PatientPks.Count}";
         }
 
-        public static IEnumerable<DwhManifest> Create(IEnumerable<SitePatientProfile> profiles)
+        public static IEnumerable<DwhManifest> Create(IEnumerable<SitePatientProfile> profiles, EmrSetup emrSetup,
+            IEnumerable<Site> sites)
         {
-
-            var getPks = profiles.ToList();
             var list = new List<DwhManifest>();
 
-            if (getPks.Any())
-                list.Add(new DwhManifest(getPks.First().SiteCode, getPks.Select(x => x.PatientPk).ToList()));
-
-            return list;
+            if (emrSetup == EmrSetup.SingleFacility)
+            {
+                var site = sites.OrderByDescending(x => x.PatientCount).First();
+                var manifest = new DwhManifest(site.SiteCode, profiles.Select(x => x.PatientPk).ToList());
+                list.Add(manifest);
+                return list;
+            }
 
             // multi site setup
-            /*
-            var getPks = profiles.ToList().GroupBy(x => x.SiteCode).ToList();
-            var list = new List<DwhManifest>();
 
-            foreach (var pk in getPks)
-                list.Add(new DwhManifest(pk.First().SiteCode, pk.Select(x => x.PatientPk).ToList()));
+            foreach (var site in sites)
+            {
+                var pks = profiles
+                    .Where(x => x.SiteCode == site.SiteCode)
+                    .Select(x => x.PatientPk)
+                    .ToList();
+                var manifest = new DwhManifest(site.SiteCode, pks);
+                list.Add(manifest);
+            }
 
             return list;
-            */
         }
 
         public void AddCargo(Metric metric)

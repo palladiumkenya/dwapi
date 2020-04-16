@@ -55,7 +55,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Hts
         [Test]
         public void should_Generate_Manifest()
         {
-            var manfiests = _packager.Generate();
+            var manfiests = _packager.Generate(EmrSetup.SingleFacility);
             Assert.True(manfiests.Any());
             var m = manfiests.First();
             Assert.True(m.Cargoes.Any());
@@ -65,7 +65,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Hts
         [Test]
         public void should_Generate_Manifest_With_Metrics()
         {
-            var manfiests = _packager.GenerateWithMetrics();
+            var manfiests = _packager.GenerateWithMetrics(EmrSetup.SingleFacility);
             Assert.True(manfiests.Any());
             var m = manfiests.First();
             Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.Patient));

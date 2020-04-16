@@ -22,18 +22,19 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         }
 
 
-        public IEnumerable<DwhManifest> Generate()
+        public IEnumerable<DwhManifest> Generate(EmrSetup emrSetup)
         {
-            var patientProfiles = _reader.ReadProfiles();
+            var sites = _reader.GetSites();
+            var patientProfiles = _reader.GetSitePatientProfiles();
 
-            return DwhManifest.Create(patientProfiles);
+            return DwhManifest.Create(patientProfiles, emrSetup, sites);
         }
 
-        public IEnumerable<DwhManifest> GenerateWithMetrics()
+        public IEnumerable<DwhManifest> GenerateWithMetrics(EmrSetup emrSetup)
         {
             var metrics = _metricReader.ReadAll().FirstOrDefault();
             var appMetrics = _metricReader.ReadAppAll().ToList();
-            var manifests = Generate().ToList();
+            var manifests = Generate(emrSetup).ToList();
 
             if (null != metrics)
             {

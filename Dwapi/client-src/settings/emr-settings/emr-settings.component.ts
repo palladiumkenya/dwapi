@@ -50,7 +50,7 @@ export class EmrSettingsComponent implements OnInit, OnDestroy {
         this._confirmationService = confirmationService;
         this._emrConfigService = emrConfigService;
         this.items = [
-            {label: 'Default', icon: 'ui-icon-check', command: () => this.makeDefault()},
+            {label: 'Default', icon: 'fa-check', command: () => this.makeDefault()},
             {label: 'Delete', icon: 'fa-close', command: () => this.confirmDelete()}
         ];
     }

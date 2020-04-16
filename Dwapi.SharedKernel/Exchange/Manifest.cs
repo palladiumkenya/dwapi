@@ -26,20 +26,38 @@ namespace Dwapi.SharedKernel.Exchange
             SiteCode = siteCode;
         }
 
-        private Manifest(int siteCode, string name)
+        private Manifest(Site site)
         {
-            SiteCode = siteCode;
-            Name = name;
+            SiteCode = site.SiteCode;
+            Name = site.SiteName;
         }
 
-        public static IEnumerable<Manifest> Create(IEnumerable<SitePatientProfile> profiles,
-            CargoType type = CargoType.Patient)
+        public static IEnumerable<Manifest> Create(IEnumerable<SitePatientProfile> profiles, EmrSetup emrSetup,
+            IEnumerable<Site> sites, CargoType type = CargoType.Patient)
         {
             var manifests = new List<Manifest>();
-            var p = profiles.ToList();
-            var m = new Manifest(p.First().SiteCode, p.First().SiteName);
-            m.AddCargo(p.Select(x => x.PatientPk).ToList());
-            manifests.Add(m);
+
+            if (emrSetup == EmrSetup.SingleFacility)
+            {
+                var site = sites.OrderByDescending(x => x.PatientCount).First();
+                var manifest = new Manifest(site);
+                manifest.AddCargo(profiles.Select(x => x.PatientPk).ToList());
+                manifests.Add(manifest);
+                return manifests;
+            }
+
+            // multi site setup
+
+            foreach (var site in sites)
+            {
+                var manifest=new Manifest(site);
+                var pks = profiles
+                    .Where(x => x.SiteCode == site.SiteCode)
+                    .Select(x => x.PatientPk)
+                    .ToList();
+                manifest.AddCargo(pks);
+                manifests.Add(manifest);
+            }
             return manifests;
         }
 
@@ -71,7 +89,6 @@ namespace Dwapi.SharedKernel.Exchange
                 }
             }
         }
-
 
         public override string ToString()
         {

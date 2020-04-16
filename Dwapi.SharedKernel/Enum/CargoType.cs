@@ -6,11 +6,4 @@
         Metrics,
         AppMetrics
     }
-    public enum ErrorType
-    {
-
-        Logical,
-        Required
-
-    }
 }

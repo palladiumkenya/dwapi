@@ -8,7 +8,12 @@
                              (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
                     <p-header>EMR Systems</p-header>
                     <p-footer>showing {{recordCount}} EMR(s)</p-footer>
-                    <p-column field="name" header="Name"></p-column>
+                    <p-column field="name" header="Name">
+                        <ng-template let-col let-emr="rowData" pTemplate="body">
+                            <span [style.color]="emr['isDefault']?'red':'black'" [style.font-weight]="emr['isDefault']?'bold':'normal'">{{emr[col.field]}}</span>
+                        </ng-template>
+
+                    </p-column>
                     <p-column styleClass="col-button" header="Actions ">
                         <ng-template let-emr="rowData" pTemplate="body">
                             <p-splitButton (onDropdownClick)="selectEmr(emr)" label="Actions" icon="ui-icon-settings"  [model]="items"></p-splitButton>

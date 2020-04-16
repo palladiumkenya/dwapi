@@ -10,7 +10,7 @@ namespace Dwapi.UploadManagement.Core.Model.Cbs.Dtos
         public string FacilityName { get; set; }
         public string Serial { get; set; }
 
-        public string FirstName { get;  }
+        public string FirstName { get; set; }
 
         public string MiddleName { get; set; }
 

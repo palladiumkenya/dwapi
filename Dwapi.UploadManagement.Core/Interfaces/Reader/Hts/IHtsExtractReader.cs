@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Model.Hts;
 
 namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Hts
@@ -12,5 +13,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Hts
         IEnumerable<HtsPartnerTracingExtractView> ReadAllPartnerTracing();
         IEnumerable<HtsPartnerNotificationServicesExtractView> ReadAllPartnerNotificationServices();
         IEnumerable<HtsClientsLinkageExtractView> ReadAllClientsLinkage();
+        IEnumerable<Site> GetSites();
+        IEnumerable<SitePatientProfile> GetSitePatientProfiles();
     }
 }

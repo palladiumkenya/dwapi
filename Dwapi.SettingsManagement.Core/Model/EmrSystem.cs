@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.SettingsManagement.Core.Model
@@ -22,6 +23,7 @@ namespace Dwapi.SettingsManagement.Core.Model
         public ICollection<DatabaseProtocol> DatabaseProtocols { get; set; } = new List<DatabaseProtocol>();
         public ICollection<RestProtocol> RestProtocols { get; set; } = new List<RestProtocol>();
         public ICollection<Extract> Extracts { get; set; } = new List<Extract>();
+        public EmrSetup EmrSetup { get; set; }
 
 
 

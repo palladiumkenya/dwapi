@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  port: '5753'
+  port: '5757'
 };

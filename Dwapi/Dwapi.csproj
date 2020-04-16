@@ -69,5 +69,18 @@ Bached sending and await to 50 at a time
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="client-src\settings\model\data-metrics.ts" />
+    <TypeScriptCompile Include="client-src\settings\model\emr-setup.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="mysql-appsettings.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+      <Content Update="mssql-appsettings.json">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
   </ItemGroup>
 </Project>

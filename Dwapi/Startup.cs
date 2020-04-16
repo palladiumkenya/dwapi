@@ -434,6 +434,7 @@ namespace Dwapi
             else
             {
                 app.UseHsts();
+                app.UseHttpsRedirection();
             }
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -461,7 +462,7 @@ namespace Dwapi
                 }
             });
 
-            app.UseHttpsRedirection();
+
             app.UseMvcWithDefaultRoute();
             app.UseDefaultFiles();
 

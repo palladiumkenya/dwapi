@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Model.Dwh;
@@ -45,6 +46,32 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 .AsNoTracking()
                 .SingleOrDefault(x => x.Id == id);
             return patientExtractView;
+        }
+
+        public IEnumerable<Site> GetSites()
+        {
+            var sql = @"
+                SELECT
+                    SiteCode,MAX(FacilityName) AS SiteName,Count(Id) AS PatientCount
+                FROM
+                    PatientExtracts
+                GROUP BY
+                    SiteCode
+            ";
+            return _context.Database.GetDbConnection()
+                .Query<Site>(sql).ToList();
+        }
+
+        public IEnumerable<SitePatientProfile> GetSitePatientProfiles()
+        {
+            var sql = @"
+                SELECT
+                   SiteCode,FacilityName AS SiteName,PatientPk
+                FROM
+                    PatientExtracts
+            ";
+            return _context.Database.GetDbConnection()
+                .Query<SitePatientProfile>(sql).ToList();
         }
     }
 }

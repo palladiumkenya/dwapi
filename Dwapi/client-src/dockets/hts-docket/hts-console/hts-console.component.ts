@@ -477,9 +477,10 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }*/
 
     private getSendManifestPackage(): SendPackage {
-         return {
+        return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'HtsClient').id
+            extractId: this.extracts.find(x => x.name === 'HtsClient').id,
+            emrSetup: this.emr.emrSetup
         };
     }
 

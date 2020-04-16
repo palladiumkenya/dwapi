@@ -2,6 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
@@ -24,19 +25,19 @@ namespace Dwapi.UploadManagement.Core.Packager.Cbs
         }
 
 
-        public IEnumerable<Manifest>  Generate()
+        public IEnumerable<Manifest> Generate(EmrSetup emrSetup)
         {
-            var getPks = _cbsExtractReader.ReadAll()
-                .Select(x => new SitePatientProfile(x.SiteCode, x.FacilityName, x.PatientPk));
+            var sites = _cbsExtractReader.GetSites();
+            var profiles = _cbsExtractReader.GetSitePatientProfiles();
 
-            return Manifest.Create(getPks);
+            return Manifest.Create(profiles, emrSetup,sites);
         }
 
-        public IEnumerable<Manifest> GenerateWithMetrics()
+        public IEnumerable<Manifest> GenerateWithMetrics(EmrSetup emrSetup)
         {
             var metrics = _metricReader.ReadAll().FirstOrDefault();
             var appMetrics = _metricReader.ReadAppAll().ToList();
-            var manifests = Generate().ToList();
+            var manifests = Generate(emrSetup).ToList();
 
             if (null != metrics)
             {

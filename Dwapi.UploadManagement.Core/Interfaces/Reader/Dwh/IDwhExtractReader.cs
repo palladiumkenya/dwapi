@@ -11,5 +11,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh
         IEnumerable<Guid> ReadAllIds();
         PatientExtractView Read(Guid id);
 
+        IEnumerable<Site> GetSites();
+        IEnumerable<SitePatientProfile> GetSitePatientProfiles();
+
     }
 }
