@@ -1,34 +1,42 @@
-﻿
-using System;
-using Dwapi.SettingsManagement.Core.Interfaces.Services;
-using Dwapi.SettingsManagement.Core.Model;
-using Dwapi.SettingsManagement.Core.Services;
+﻿using Dwapi.SettingsManagement.Core.Interfaces.Services;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Serilog;
 
 namespace Dwapi.SettingsManagement.Core.Tests.Services
 {
     [TestFixture]
     public class RegistryManagerServiceTests
     {
-        private readonly string _authToken = @"1983aeda-6a96-11e8-adc0-fa7ae01bbebc";
         private IRegistryManagerService _registryManagerService;
-        private CentralRegistry _centralRegistry;
+
+        [OneTimeSetUp]
+        public void Init()
+        {
+            TestInitializer.ClearDb();
+        }
 
         [SetUp]
         public void Setup()
         {
-            _registryManagerService=new RegistryManagerService(null);
-            _centralRegistry=new CentralRegistry("CBS Registry", "http://auth.kenyahmis.org:6767", "CBS", _authToken);
-
+            _registryManagerService = TestInitializer.ServiceProvider.GetService<IRegistryManagerService>();
         }
 
         [Test]
+        public void should_GetByDocket()
+        {
+           var  centralRegistry = _registryManagerService.GetByDocket("CBS");
+           Assert.NotNull(centralRegistry);
+        }
+
+        // [Test]
         public void should_Verify()
         {
-            var verified = _registryManagerService.Verify(_centralRegistry).Result;
+            var  centralRegistry = _registryManagerService.GetByDocket("CBS");
+            var verified = _registryManagerService.Verify(centralRegistry).Result;
             Assert.True(verified.Verified);
             Assert.False(string.IsNullOrEmpty(verified.RegistryName));
-            Console.WriteLine(verified);
+            Log.Debug($"{verified}");
         }
     }
 }

@@ -1,18 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Dwapi.SettingsManagement.Core.Application.Metrics.Queries;
+using Dapper;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Queries.Handlers;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
-using Dwapi.SettingsManagement.Core.Model;
+using Dwapi.SettingsManagement.Core.Interfaces.Services;
+using Dwapi.SettingsManagement.Core.Services;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
-using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
+using Dwapi.SharedKernel.Utility;
 using MediatR;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Serilog;
 using Z.Dapper.Plus;
 
 namespace Dwapi.SettingsManagement.Core.Tests
@@ -21,16 +27,109 @@ namespace Dwapi.SettingsManagement.Core.Tests
     public class TestInitializer
     {
         public static IServiceProvider ServiceProvider;
+        public static string MsSqlConnectionString;
+        public static string MySqlConnectionString;
+        public static string EmrConnectionString;
+        public static string ConnectionString;
 
         [OneTimeSetUp]
         public void Setup()
         {
-            ServiceProvider = new ServiceCollection()
-                .AddDbContext<SettingsContext>(x => x.UseInMemoryDatabase("demodwapi"))
-                .AddTransient<IAppMetricRepository, AppMetricRepository>()
-                .AddMediatR(typeof(GetAppMetricHandler))
-                .BuildServiceProvider();
+            SqlMapper.AddTypeHandler<Guid>(new GuidTypeHandler());
+            RegisterLicence();
+            RemoveTestsFilesDbs();
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            EmrConnectionString= GenerateConnection(config,"emrConnection",false);
+            ConnectionString = GenerateConnection(config,"dwapiConnection");
+            MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
+            MySqlConnectionString = config.GetConnectionString("mysqlConnection");
+
+            var connection = new SqliteConnection(ConnectionString);
+            connection.Open();
+
+            var services = new ServiceCollection().AddDbContext<SettingsContext>(x => x.UseSqlite(connection));
+            services.AddTransient<IDatabaseManager, DatabaseManager>();
+            services.AddTransient<IAppDatabaseManager, AppDatabaseManager>();
+            services.AddTransient<IDatabaseManager, DatabaseManager>();
+            services.AddTransient<IAppDatabaseManager, AppDatabaseManager>();
+            services.AddTransient<IAppMetricRepository,AppMetricRepository>();
+            services.AddTransient<ICentralRegistryRepository,CentralRegistryRepository>();
+            services.AddTransient<IDatabaseProtocolRepository,DatabaseProtocolRepository>();
+            services.AddTransient<IDocketRepository,DocketRepository>();
+            services.AddTransient<IEmrSystemRepository,EmrSystemRepository>();
+            services.AddTransient<IExtractRepository,ExtractRepository>();
+            services.AddTransient<IRestProtocolRepository,RestProtocolRepository>();
+            services.AddTransient<IEmrManagerService,EmrManagerService>();
+            services.AddTransient<IExtractManagerService,ExtractManagerService>();
+            services.AddTransient<IRegistryManagerService,RegistryManagerService>();
+            services.AddMediatR(typeof(GetAppMetricHandler));
+            ServiceProvider = services.BuildServiceProvider();
         }
 
+        public static void ClearDb()
+        {
+            var context = ServiceProvider.GetService<SettingsContext>();
+            context.Database.EnsureCreated();
+            context.EnsureSeeded();
+        }
+        public static void SeedData(params IEnumerable<object>[] entities)
+        {
+            var context = ServiceProvider.GetService<SettingsContext>();
+            foreach (IEnumerable<object> t in entities)
+            {
+                context.AddRange(t);
+            }
+            context.SaveChanges();
+        }
+
+
+        private void RegisterLicence()
+        {
+            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
+            if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
+            {
+                throw new Exception(licenseErrorMessage);
+            }
+        }
+
+        private string GenerateConnection(IConfigurationRoot config, string name, bool createNew = true)
+        {
+            var dir = $"{TestContext.CurrentContext.TestDirectory.HasToEndWith(@"/")}";
+
+            var connectionString = config.GetConnectionString(name)
+                .Replace("#dir#", dir)
+                .ToOsStyle();
+
+            if (createNew)
+                return connectionString.Replace(".db", $"{DateTime.Now.Ticks}.db");
+
+            return connectionString;
+        }
+
+        private void RemoveTestsFilesDbs()
+        {
+            string[] keyFiles =
+                { "dwapi.db","emr.db"};
+            string[] keyDirs = { @"TestArtifacts/Database".ToOsStyle()};
+
+            foreach (var keyDir in keyDirs)
+            {
+                DirectoryInfo di = new DirectoryInfo(keyDir);
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    if (!keyFiles.Contains(file.Name))
+                        file.Delete();
+                }
+            }
+        }
     }
 }

@@ -4,7 +4,8 @@ using System.IO;
 using System.Linq;
 using Dapper;
 using Dwapi.SettingsManagement.Core.Interfaces;
-using Dwapi.SettingsManagement.Core.Model;
+using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
+using Dwapi.SettingsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.Data.Sqlite;
@@ -21,21 +22,10 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
     public class TestInitializer
     {
         public static IServiceProvider ServiceProvider;
-        public static IServiceProvider ServiceProviderMysql;
-        public static EmrSystem Iqtools;
-        public static EmrSystem KenyaEmr;
-
-        public static AppDatabase IqToolsDatabase;
-        public static AppDatabase KenyaEmrDatabase;
-        public static DatabaseProtocol IQtoolsDbProtocol;
-        public static DatabaseProtocol KenyaEmrDbProtocol;
-
         public static string MsSqlConnectionString;
         public static string MySqlConnectionString;
-
         public static string EmrConnectionString;
         public static string ConnectionString;
-
 
         [OneTimeSetUp]
         public void Setup()
@@ -64,6 +54,13 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
             var services = new ServiceCollection().AddDbContext<SettingsContext>(x => x.UseSqlite(connection));
             services.AddTransient<IDatabaseManager, DatabaseManager>();
             services.AddTransient<IAppDatabaseManager, AppDatabaseManager>();
+            services.AddTransient<IAppMetricRepository,AppMetricRepository>();
+            services.AddTransient<ICentralRegistryRepository,CentralRegistryRepository>();
+            services.AddTransient<IDatabaseProtocolRepository,DatabaseProtocolRepository>();
+            services.AddTransient<IDocketRepository,DocketRepository>();
+            services.AddTransient<IEmrSystemRepository,EmrSystemRepository>();
+            services.AddTransient<IExtractRepository,ExtractRepository>();
+            services.AddTransient<IRestProtocolRepository,RestProtocolRepository>();
             ServiceProvider = services.BuildServiceProvider();
         }
 
