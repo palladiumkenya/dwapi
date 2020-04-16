@@ -31,6 +31,12 @@ namespace Dwapi.SettingsManagement.Core.Model
             Port = port;
         }
 
+        public AppDatabase(string database, DatabaseProvider provider)
+        {
+            Database = database;
+            Provider = provider;
+        }
+
         public override string ToString()
         {
             return $"{Provider} | {Server}{(Port > 0 ? $":{Port}" : "")}";

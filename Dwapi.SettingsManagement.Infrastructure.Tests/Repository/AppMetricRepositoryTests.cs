@@ -1,14 +1,9 @@
-﻿
-
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
-using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
-using FizzWare.NBuilder;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NUnit.Framework;

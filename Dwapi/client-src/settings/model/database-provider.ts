@@ -1,4 +1,5 @@
 export enum DatabaseProvider {
     MsSql,
-    MySql
+    MySql,
+    Other
 }

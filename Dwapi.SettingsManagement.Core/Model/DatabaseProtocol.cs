@@ -26,6 +26,10 @@ namespace Dwapi.SettingsManagement.Core.Model
             EmrSystemId = emrSystemId;
         }
 
+        public DatabaseProtocol(DatabaseType databaseType, string databaseName) : base(databaseType, databaseName)
+        {
+        }
+
         public void UpdateTo(DatabaseProtocol emrSystem)
         {
             DatabaseType = emrSystem.DatabaseType;

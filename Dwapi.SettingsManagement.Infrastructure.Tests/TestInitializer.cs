@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Dapper;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Model;
-using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
+using Dwapi.SharedKernel.Utility;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Serilog;
 using Z.Dapper.Plus;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Tests
@@ -27,75 +33,56 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         public static string MsSqlConnectionString;
         public static string MySqlConnectionString;
 
+        public static string EmrConnectionString;
+        public static string ConnectionString;
+
+
         [OneTimeSetUp]
         public void Setup()
         {
+            SqlMapper.AddTypeHandler<Guid>(new GuidTypeHandler());
             RegisterLicence();
+            RemoveTestsFilesDbs();
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .CreateLogger();
+
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var mysqlConfig = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.mysql.json")
-                .Build();
+            EmrConnectionString= GenerateConnection(config,"emrConnection",false);
+            ConnectionString = GenerateConnection(config,"dwapiConnection");
+            MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
+            MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
-            ServiceProvider = new ServiceCollection()
-                .AddDbContext<SettingsContext>(x =>
-                    x.UseSqlServer(MsSqlConnectionString = config["ConnectionStrings:DwapiConnection"]))
-                .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
-                .BuildServiceProvider();
+            var connection = new SqliteConnection(ConnectionString);
+            connection.Open();
 
-            ServiceProviderMysql = new ServiceCollection()
-                .AddDbContext<SettingsContext>(x =>
-                    x.UseMySql(MySqlConnectionString = mysqlConfig["ConnectionStrings:DwapiConnection"]))
-                .AddTransient<IAppDatabaseManager, AppDatabaseManager>()
-                .BuildServiceProvider();
+            var services = new ServiceCollection().AddDbContext<SettingsContext>(x => x.UseSqlite(connection));
+            services.AddTransient<IDatabaseManager, DatabaseManager>();
+            services.AddTransient<IAppDatabaseManager, AppDatabaseManager>();
+            ServiceProvider = services.BuildServiceProvider();
         }
 
-        public static void InitConnections()
+        public static void ClearDb()
         {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            MsSqlConnectionString = config["ConnectionStrings:DwapiConnection"];
-
-            var mysqlConfig = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.mysql.json")
-                .Build();
-
-            MySqlConnectionString = mysqlConfig["ConnectionStrings:DwapiConnection"];
+            var context = ServiceProvider.GetService<SettingsContext>();
+            context.Database.EnsureCreated();
+            context.EnsureSeeded();
         }
-        public static void InitDbMsSql()
+        public static void SeedData(params IEnumerable<object>[] entities)
         {
-            var  settingsContext=ServiceProvider.GetService<SettingsContext>();
-            var dbmanager = ServiceProvider.GetService<IAppDatabaseManager>();
-            Iqtools = settingsContext.EmrSystems.Include(x => x.DatabaseProtocols).FirstOrDefault(x=>x.Name=="IQCare");
-
-            IqToolsDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,
-                DatabaseProvider.MsSql);
-
-            IQtoolsDbProtocol =
-                Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
-            IQtoolsDbProtocol.Host = IqToolsDatabase.Server;
-            IQtoolsDbProtocol.Username = IqToolsDatabase.User;
-            IQtoolsDbProtocol.Password = IqToolsDatabase.Password;
+            var context = ServiceProvider.GetService<SettingsContext>();
+            foreach (IEnumerable<object> t in entities)
+            {
+                context.AddRange(t);
+            }
+            context.SaveChanges();
         }
-        public static void InitDbMySql()
-        {
-            var settingsContext = ServiceProviderMysql.GetService<SettingsContext>();
-            var dbmanager = ServiceProviderMysql.GetService<IAppDatabaseManager>();
-            KenyaEmr = settingsContext.EmrSystems.Include(x => x.DatabaseProtocols).FirstOrDefault(x=>x.Name=="KenyaEMR");
-            KenyaEmrDatabase = dbmanager.ReadConnection(settingsContext.Database.GetDbConnection().ConnectionString,
-                DatabaseProvider.MySql);
 
-            KenyaEmrDbProtocol = KenyaEmr.DatabaseProtocols.First();
-            KenyaEmrDbProtocol.Host = KenyaEmrDatabase.Server;
-            KenyaEmrDbProtocol.Username = KenyaEmrDatabase.User;
-            KenyaEmrDbProtocol.Password = KenyaEmrDatabase.Password;
-            KenyaEmrDbProtocol.Port = (int?) KenyaEmrDatabase.Port;
-
-        }
 
         private void RegisterLicence()
         {
@@ -103,6 +90,37 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
             if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
             {
                 throw new Exception(licenseErrorMessage);
+            }
+        }
+
+        private string GenerateConnection(IConfigurationRoot config, string name, bool createNew = true)
+        {
+            var dir = $"{TestContext.CurrentContext.TestDirectory.HasToEndWith(@"/")}";
+
+            var connectionString = config.GetConnectionString(name)
+                .Replace("#dir#", dir)
+                .ToOsStyle();
+
+            if (createNew)
+                return connectionString.Replace(".db", $"{DateTime.Now.Ticks}.db");
+
+            return connectionString;
+        }
+
+        private void RemoveTestsFilesDbs()
+        {
+            string[] keyFiles =
+                { "dwapi.db","emr.db"};
+            string[] keyDirs = { @"TestArtifacts/Database".ToOsStyle()};
+
+            foreach (var keyDir in keyDirs)
+            {
+                DirectoryInfo di = new DirectoryInfo(keyDir);
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    if (!keyFiles.Contains(file.Name))
+                        file.Delete();
+                }
             }
         }
     }

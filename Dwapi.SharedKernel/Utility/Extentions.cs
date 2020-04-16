@@ -104,5 +104,22 @@ namespace Dwapi.SharedKernel.Utility
 
             return finalString;
         }
+
+        public static string ToOsStyle(this string value)
+        {
+            if (value == null)
+                return string.Empty;
+
+            if(Environment.OSVersion.Platform==PlatformID.Unix||Environment.OSVersion.Platform==PlatformID.MacOSX)
+                return value.Replace(@"\", @"/");
+
+            return value.Replace(@"/", @"\");
+        }
+
+        public static string HasToEndWith(this string value, string end)
+        {
+            return HasToEndsWith(value, end);
+        }
+
     }
 }

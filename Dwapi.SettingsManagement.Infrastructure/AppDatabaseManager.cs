@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
+using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
 
 namespace Dwapi.SettingsManagement.Infrastructure
@@ -12,6 +13,15 @@ namespace Dwapi.SettingsManagement.Infrastructure
         public bool VerfiyServer(AppDatabase appDatabase)
         {
             bool isConnected = false;
+
+            if (appDatabase.Provider == DatabaseProvider.Other)
+            {
+                using (var cn = new SqliteConnection(appDatabase.Database))
+                {
+                    cn.Open();
+                    isConnected = cn.State == ConnectionState.Open;
+                }
+            }
 
             if (appDatabase.Provider == DatabaseProvider.MsSql)
             {
@@ -50,13 +60,22 @@ namespace Dwapi.SettingsManagement.Infrastructure
                 }
             }
 
-
             return isConnected;
         }
 
         public bool Verfiy(AppDatabase appDatabase)
         {
             bool isConnected = false;
+
+            if (appDatabase.Provider == DatabaseProvider.Other)
+            {
+                using (var cn = new SqliteConnection(appDatabase.Database))
+                {
+                    cn.Open();
+                    isConnected = cn.State == ConnectionState.Open;
+                }
+            }
+
             if (appDatabase.Provider == DatabaseProvider.MsSql)
             {
                 var sb = new SqlConnectionStringBuilder();
@@ -105,6 +124,11 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
         public string BuildConncetion(AppDatabase appDatabase)
         {
+            if (appDatabase.Provider == DatabaseProvider.Other)
+            {
+                return appDatabase.Database;
+            }
+
             if (appDatabase.Provider == DatabaseProvider.MsSql)
             {
                 var sb = new SqlConnectionStringBuilder();
@@ -137,6 +161,11 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
         public AppDatabase ReadConnection(string connectionString, DatabaseProvider provider)
         {
+            if (provider == DatabaseProvider.Other)
+            {
+                var sb = new SqliteConnectionStringBuilder(connectionString);
+                return new AppDatabase(sb.ConnectionString, provider);
+            }
 
             if (provider == DatabaseProvider.MsSql)
             {
@@ -152,10 +181,5 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
             return null;
         }
-
-//        private static string sanitize(this string con)
-//        {
-//
-//        }
     }
 }

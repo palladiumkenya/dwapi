@@ -6,6 +6,7 @@ using Dapper;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
+using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using Serilog;
 
@@ -19,10 +20,13 @@ namespace Dwapi.SettingsManagement.Infrastructure
         {
             get { return _connectionError; }
         }
-       
+
         public IDbConnection GetConnection(DatabaseProtocol databaseProtocol)
         {
             var connectionString = databaseProtocol.GetConnectionString();
+
+            if (databaseProtocol.DatabaseType == DatabaseType.Sqlite)
+                return new SqliteConnection(connectionString);
 
             if (databaseProtocol.DatabaseType == DatabaseType.MicrosoftSQL)
                 return new SqlConnection(connectionString);

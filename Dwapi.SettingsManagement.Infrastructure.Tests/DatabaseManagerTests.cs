@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Dwapi.SettingsManagement.Core.Interfaces;
+﻿using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Model;
+using Dwapi.SharedKernel.Enum;
 using FizzWare.NBuilder;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Serilog;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Tests
 {
@@ -11,83 +12,42 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
     public class DatabaseManagerTests
     {
         private IDatabaseManager _databaseManager;
+        private DatabaseProtocol _databaseProtocol;
 
         [SetUp]
         public void SetUp()
         {
-            _databaseManager = new DatabaseManager();
+            _databaseManager = TestInitializer.ServiceProvider.GetService<IDatabaseManager>();
+            _databaseProtocol=new DatabaseProtocol(DatabaseType.Sqlite,TestInitializer.EmrConnectionString.Replace("DataSource=",""));
         }
 
         [Test]
         public void should_GetConnection()
         {
-            TestInitializer.InitDbMsSql();
-            var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
-            var connection = _databaseManager.GetConnection(databaseProtocol);
+            var connection = _databaseManager.GetConnection(_databaseProtocol);
             Assert.NotNull(connection);
 
-            Console.WriteLine($"connections Found:[{connection.ConnectionString}] | {databaseProtocol.DatabaseType}");
+            Log.Debug($"connections Found:[{connection.ConnectionString}] | {_databaseProtocol.DatabaseType}");
         }
 
         [Test]
         public void should_VerifyConnection()
         {
-            TestInitializer.InitDbMsSql();
-            var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
-            var connected = _databaseManager.VerifyConnection(databaseProtocol);
+            var connected = _databaseManager.VerifyConnection(_databaseProtocol);
             Assert.True(connected);
 
-            Console.WriteLine($"connection OK:[{databaseProtocol}] | {databaseProtocol.DatabaseType}");
+            Log.Debug($"connection OK:[{_databaseProtocol}] | {_databaseProtocol.DatabaseType}");
         }
 
         [Test]
-        public void should_MySQL_GetConnection()
+        public void should_Verify_Query()
         {
-            TestInitializer.InitDbMySql();
-            var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
-            var connection = _databaseManager.GetConnection(databaseProtocol);
-            Assert.NotNull(connection);
-
-            Console.WriteLine($"connections Found:[{connection.ConnectionString}] | {databaseProtocol.DatabaseType}");
-        }
-
-        [Test]
-        public void should_MySQL_VerifyConnection()
-        {
-            TestInitializer.InitDbMySql();
-            var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
-            var connected = _databaseManager.VerifyConnection(databaseProtocol);
-            Assert.True(connected);
-
-            Console.WriteLine($"connection OK:[{databaseProtocol}] | {databaseProtocol.DatabaseType}");
-        }
-
-        [Test]
-        public void should_Verify_MSSQL_Query()
-        {
-            TestInitializer.InitDbMsSql();
             var extract = Builder<Extract>.CreateNew().Build();
-            extract.ExtractSql = @"SELECT * FROM tmp_Cohort";
-
-            var databaseProtocol = TestInitializer.IQtoolsDbProtocol;
-            var verified = _databaseManager.VerifyQuery(extract, databaseProtocol);
+            extract.ExtractSql = @"SELECT * FROM TempPatientExtracts";
+            var verified = _databaseManager.VerifyQuery(extract, _databaseProtocol);
             Assert.True(verified);
 
-            Console.WriteLine($"{extract} query [{extract.ExtractSql}] OK | {databaseProtocol.DatabaseType}");
-        }
-
-        [Test]
-        public void should_Verify_MySQL_Query()
-        {
-            TestInitializer.InitDbMySql();
-            var extract = Builder<Extract>.CreateNew().Build();
-            extract.ExtractSql = @"SELECT * FROM concept_class";
-
-            var databaseProtocol = TestInitializer.KenyaEmrDbProtocol;
-            var verified = _databaseManager.VerifyQuery(extract, databaseProtocol);
-            Assert.True(verified);
-
-            Console.WriteLine($"{extract} query [{extract.ExtractSql}] OK | {databaseProtocol.DatabaseType}");
+            Log.Debug($"{extract} query [{extract.ExtractSql}] OK | {_databaseProtocol.DatabaseType}");
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Dwapi.SharedKernel.Model
         public string AdvancedProperties { get; set; }
 
         [NotMapped] public string DatabaseTypeName => $"{DatabaseType}";
-        
+
 
         public DbProtocol()
         {
@@ -41,7 +41,12 @@ namespace Dwapi.SharedKernel.Model
             Password = password;
             DatabaseName = databaseName;
         }
-      
+        public DbProtocol(DatabaseType databaseType,  string databaseName)
+        {
+            DatabaseType = databaseType;
+            DatabaseName = databaseName;
+        }
+
         public void UpdateTo(DbProtocol emrSystem)
         {
             DatabaseType = emrSystem.DatabaseType;
@@ -55,6 +60,10 @@ namespace Dwapi.SharedKernel.Model
         {
             string connectionString = string.Empty;
 
+            if (DatabaseType==DatabaseType.Sqlite)
+            {
+                connectionString = $@"Data Source={DatabaseName};";
+            }
             if (DatabaseType==DatabaseType.MicrosoftSQL)
             {
                 connectionString = $@"Data Source={Host};Initial Catalog={DatabaseName};User ID={Username};Password={Password};";
@@ -64,7 +73,7 @@ namespace Dwapi.SharedKernel.Model
                 Port = Port > 0 ? Port : 3306;
                 connectionString = $@"Server={Host};Port={Port};Database={DatabaseName};Uid={Username};Pwd={Password};";
             }
-          
+
             connectionString = connectionString.HasToEndsWith(";");
 
             connectionString = string.IsNullOrWhiteSpace(AdvancedProperties)
@@ -74,7 +83,7 @@ namespace Dwapi.SharedKernel.Model
             return connectionString;
         }
 
-     
+
         public override string ToString()
         {
             return $"{GetConnectionString()})";

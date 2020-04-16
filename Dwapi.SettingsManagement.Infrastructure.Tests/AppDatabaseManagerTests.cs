@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SharedKernel.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Serilog;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Tests
 {
@@ -12,6 +12,13 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
     public class AppDatabaseManagerTests
     {
         private IAppDatabaseManager _dbManager;
+
+        [OneTimeSetUp]
+        public void Init()
+        {
+            TestInitializer.ClearDb();
+        }
+
         [SetUp]
         public void SetUp()
         {
@@ -20,15 +27,17 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
 
         [TestCase(DatabaseProvider.MsSql)]
         [TestCase(DatabaseProvider.MySql)]
+        [TestCase(DatabaseProvider.Other)]
         public void should_ReadConnection_To_DbProtocol(DatabaseProvider provider)
         {
             var dbprotocol = _dbManager.ReadConnection(GetConnection(provider), provider);
             Assert.NotNull(dbprotocol);
-            Console.WriteLine(dbprotocol);
+            Log.Debug($"{dbprotocol}");
         }
 
         [TestCase(DatabaseProvider.MsSql)]
         [TestCase(DatabaseProvider.MySql)]
+        [TestCase(DatabaseProvider.Other)]
         public void should_BuildConnection_From_DbProtocol(DatabaseProvider provider)
         {
             var dbprotocol = _dbManager.ReadConnection(GetConnection(provider), provider);
@@ -36,21 +45,19 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
 
             var cn = _dbManager.BuildConncetion(dbprotocol);
             Assert.False(string.IsNullOrEmpty(cn));
-            Console.WriteLine(dbprotocol);
-            Console.WriteLine($"    {cn}");
+            Log.Debug($"{dbprotocol}");
+            Log.Debug($"    {cn}");
         }
 
-        [TestCase(DatabaseProvider.MsSql)]
-        [TestCase(DatabaseProvider.MySql)]
+        [TestCase(DatabaseProvider.Other)]
         public void should_verify_Connection_From_ConnectionString(DatabaseProvider provider)
         {
           var cn = _dbManager.Verfiy(GetConnection(provider),provider);
             Assert.True(cn);
-            Console.WriteLine($" Connected [{provider}] >>> {GetConnection(provider)} <<<");
+            Log.Debug($" Connected [{provider}] >>> {GetConnection(provider)} <<<");
         }
 
-        [TestCase(DatabaseProvider.MsSql)]
-        [TestCase(DatabaseProvider.MySql)]
+        [TestCase(DatabaseProvider.Other)]
         public void should_verify_Server_Connection_From_DbProtocol(DatabaseProvider provider)
         {
             var dbprotocol = _dbManager.ReadConnection(GetConnection(provider), provider);
@@ -58,11 +65,10 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
 
             var cn = _dbManager.VerfiyServer(dbprotocol);
             Assert.True(cn);
-            Console.WriteLine($" Connected [{dbprotocol}]");
+            Log.Debug($" Connected [{dbprotocol}]");
         }
 
-        [TestCase(DatabaseProvider.MsSql)]
-        [TestCase(DatabaseProvider.MySql)]
+        [TestCase(DatabaseProvider.Other)]
         public void should_verify_Server_Database_Connection_From_DbProtocol(DatabaseProvider provider)
         {
             var dbprotocol = _dbManager.ReadConnection(GetConnection(provider), provider);
@@ -70,11 +76,10 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
 
             var cn = _dbManager.Verfiy(dbprotocol);
             Assert.True(cn);
-            Console.WriteLine($" Connected [{dbprotocol}]");
+            Log.Debug($" Connected [{dbprotocol}]");
         }
 
-        [TestCase(DatabaseProvider.MsSql)]
-        [TestCase(DatabaseProvider.MySql)]
+        [TestCase(DatabaseProvider.Other)]
         public void should_Read_Data_Using_Connection_String(DatabaseProvider provider)
         {
             var dbprotocol = _dbManager.ReadConnection(GetConnection(provider), provider);
@@ -82,47 +87,37 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
 
             var cn = _dbManager.BuildConncetion(dbprotocol);
             var optionsBuilder = new DbContextOptionsBuilder<SettingsContext>();
-            if (provider == DatabaseProvider.MsSql)
-                optionsBuilder.UseSqlServer(cn);
-            if (provider == DatabaseProvider.MySql)
-                optionsBuilder.UseMySql(cn);
+            if (provider == DatabaseProvider.Other)
+                optionsBuilder.UseSqlite(cn);
 
             using (var context = new SettingsContext(optionsBuilder.Options))
             {
-                Console.WriteLine(context.Database.ProviderName);
+                Log.Debug(context.Database.ProviderName);
 
-                var facilities = context.EmrSystems.Include(x => x.Extracts).ToList();
-                Assert.True(facilities.Any());
-                Assert.True(facilities.First().Extracts.Any());
-
-                foreach (var facility in facilities)
+                var emrSystems = context.EmrSystems.Include(x => x.Extracts).ToList();
+                Assert.True(emrSystems.Any());
+                foreach (var facility in emrSystems)
                 {
-                    Console.WriteLine(facility);
-                    foreach (var clinic in facility.Extracts)
-                    {
-                        Console.WriteLine($" > {clinic}");
-                    }
+                    Log.Debug($"{facility}");
                 }
-
             }
-
         }
 
         private string GetConnection(DatabaseProvider provider)
         {
-
-
+            if (provider == DatabaseProvider.Other)
+            {
+                return TestInitializer.ConnectionString;
+            }
+            if (provider == DatabaseProvider.MsSql)
+            {
+                return TestInitializer.MsSqlConnectionString;
+            }
             if (provider == DatabaseProvider.MySql)
             {
-                if(string.IsNullOrWhiteSpace(TestInitializer.MySqlConnectionString))
-                    TestInitializer.InitConnections();
                 return TestInitializer.MySqlConnectionString;
             }
-
-            if(string.IsNullOrWhiteSpace(TestInitializer.MsSqlConnectionString))
-                TestInitializer.InitConnections();
-
-            return TestInitializer.MsSqlConnectionString;
+            return string.Empty;
         }
     }
 }
