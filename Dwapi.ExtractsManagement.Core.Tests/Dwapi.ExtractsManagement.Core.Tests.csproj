@@ -6,6 +6,9 @@
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="appsettings.mysql.json" />
+    <None Update="TestArtifacts\Database\emr.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />

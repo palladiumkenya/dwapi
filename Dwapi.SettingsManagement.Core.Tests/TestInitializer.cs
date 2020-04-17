@@ -56,11 +56,12 @@ namespace Dwapi.SettingsManagement.Core.Tests
             var connection = new SqliteConnection(ConnectionString);
             connection.Open();
 
-            var services = new ServiceCollection().AddDbContext<SettingsContext>(x => x.UseSqlite(connection));
-            services.AddTransient<IDatabaseManager, DatabaseManager>();
+            var services = new ServiceCollection();
+            services.AddDbContext<SettingsContext>(x => x.UseSqlite(connection));
+
             services.AddTransient<IAppDatabaseManager, AppDatabaseManager>();
             services.AddTransient<IDatabaseManager, DatabaseManager>();
-            services.AddTransient<IAppDatabaseManager, AppDatabaseManager>();
+
             services.AddTransient<IAppMetricRepository,AppMetricRepository>();
             services.AddTransient<ICentralRegistryRepository,CentralRegistryRepository>();
             services.AddTransient<IDatabaseProtocolRepository,DatabaseProtocolRepository>();
@@ -68,10 +69,13 @@ namespace Dwapi.SettingsManagement.Core.Tests
             services.AddTransient<IEmrSystemRepository,EmrSystemRepository>();
             services.AddTransient<IExtractRepository,ExtractRepository>();
             services.AddTransient<IRestProtocolRepository,RestProtocolRepository>();
+
             services.AddTransient<IEmrManagerService,EmrManagerService>();
             services.AddTransient<IExtractManagerService,ExtractManagerService>();
             services.AddTransient<IRegistryManagerService,RegistryManagerService>();
+
             services.AddMediatR(typeof(GetAppMetricHandler));
+
             ServiceProvider = services.BuildServiceProvider();
         }
 
