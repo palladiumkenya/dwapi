@@ -6,6 +6,9 @@
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="appsettings.mysql.json" />
+    <None Update="TestArtifacts\Database\dwapi.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
@@ -41,9 +44,6 @@
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="TestArtifacts\Database\dwapi.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Remove="TestArtifacts\Database\emr.db" />
     <Content Include="TestArtifacts\Database\emr.db">

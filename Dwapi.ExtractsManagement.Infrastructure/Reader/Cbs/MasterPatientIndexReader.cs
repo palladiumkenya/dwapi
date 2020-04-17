@@ -13,6 +13,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs
 {
     public class MasterPatientIndexReader : IMasterPatientIndexReader
     {
+        public IDbConnection Connection { get; private set; }
+
         public int Find(DbProtocol protocol, DbExtract extract)
         {
             throw new NotImplementedException();
@@ -30,7 +32,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs
             if (sourceConnection.State != ConnectionState.Open)
                 sourceConnection.Open();
 
+            Connection = sourceConnection;
+
             var commandDefinition = new CommandDefinition(extract.ExtractSql, null, null, 0);
+            if(sourceConnection is SqliteConnection)
+                  return sourceConnection.ExecuteReaderAsync(commandDefinition);
             return sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection);
         }
 

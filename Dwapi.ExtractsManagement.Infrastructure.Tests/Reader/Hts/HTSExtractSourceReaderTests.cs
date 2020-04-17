@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
-using Dwapi.UploadManagement.Core.Model.Hts;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;

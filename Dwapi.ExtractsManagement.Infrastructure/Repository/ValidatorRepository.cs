@@ -22,8 +22,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
             var sqlExtractNames = @"SELECT distinct name FROM Extracts where DocketId=@DocketId";
 
             var extractNames = GetConnection()
-                .Query<dynamic>(sqlExtractNames, new {DocketId = docketId})
-                .Select(x => $"Temp{x.name}s")
+                .Query<string>(sqlExtractNames, new {DocketId = docketId})
+                .Select(x => $"Temp{x}s")
                 .ToList();
 
             var sql = @"
@@ -36,8 +36,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 
         public IEnumerable<Validator> GetByExtract(string extract)
         {
-            return Context.Validator
-                .Where(x => x.Extract.ToLower() == extract.ToLower());
+            return null;
+            // return Context.Validator
+            //     .Where(x => x.Extract.ToLower() == extract.ToLower());
         }
     }
 }

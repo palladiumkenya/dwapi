@@ -12,10 +12,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <None Remove="TestArtifacts\Database\emr.db" />
     <Content Include="TestArtifacts\Database\emr.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="TestArtifacts\Database\emr.db" />
     <None Remove="TestArtifacts\Database\dwapi.db" />
     <Content Include="TestArtifacts\Database\dwapi.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -45,6 +45,10 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
 
             using (var rdr = await _reader.ExecuteReader(dbProtocol, extract))
             {
+
+              if(_reader.Connection.State!=ConnectionState.Open)
+                  _reader.Connection.Open();
+
                 while (rdr.Read())
                 {
                     totalCount++;
@@ -66,7 +70,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
                         catch (Exception e)
                         {
                             Log.Error(e,"Notification error");
-                            
+
                         }
                         count = 0;
                         list =new List<TempMasterPatientIndex>();
@@ -86,7 +90,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
 
             try
             {
-        
+
                 DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracted", totalCount, 0, 0, 0, 0)));
                 DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
                 DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Loaded,totalCount));

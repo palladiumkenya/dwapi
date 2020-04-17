@@ -19,6 +19,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
     {
         private IMapper _mapper;
 
+
+        public IDbConnection Connection { get; private set; }
         public int Find(DbProtocol protocol, DbExtract extract)
         {
             Log.Debug($"Finding {nameof(PsmartSource)}...");

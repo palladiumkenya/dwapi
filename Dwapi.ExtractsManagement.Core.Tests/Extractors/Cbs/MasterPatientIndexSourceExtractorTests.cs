@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Tests.TestArtifacts;
 using Dwapi.ExtractsManagement.Infrastructure;
+using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,59 +16,35 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
     [TestFixture]
     public class MasterPatientIndexSourceExtractorTests
     {
-        private ExtractsContext _extractsContext,_extractsContextMySql;
-        private DbProtocol _iQtoolsDb, _kenyaEmrDb;
+        private IMasterPatientIndexSourceExtractor _extractor;
+        private List<Extract> _extracts;
+        private DbProtocol _protocol;
+        private ExtractsContext _extractsContext;
+
         [OneTimeSetUp]
         public void Init()
         {
-            var extractId = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(MasterPatientIndex))).Id;
-            var cleaner = TestInitializer.ServiceProvider.GetService<ICleanCbsExtracts>();
-            cleaner.Clean(extractId);
-
-            var extractIdMySql = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(MasterPatientIndex))).Id;
-            var cleanerMySql = TestInitializer.ServiceProviderMysql.GetService<ICleanCbsExtracts>();
-            cleanerMySql.Clean(extractIdMySql);
-
+            TestInitializer.ClearDb();
+            TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
+            _protocol = TestInitializer.Protocol;
+            _extracts=TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("CBS")).ToList();
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
-            _extractsContextMySql = TestInitializer.ServiceProviderMysql.GetService<ExtractsContext>();
-            
-            _iQtoolsDb = TestInitializer.Iqtools.DatabaseProtocols.First(x => x.DatabaseName.ToLower().Contains("iqtools".ToLower()));
-            _iQtoolsDb.Host = ".\\Koske14";
-            _iQtoolsDb.Username = "sa";
-            _iQtoolsDb.Password = "maun";
-
-            _kenyaEmrDb = TestInitializer.KenyaEmr.DatabaseProtocols.First();
-            _kenyaEmrDb.Host = "127.0.0.1";
-            _kenyaEmrDb.Username = "root";
-            _kenyaEmrDb.Password = "test";
-            _kenyaEmrDb.DatabaseName = "openmrs";
         }
 
+        [SetUp]
+        public void SetUp()
+        {
+            _extractor = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexSourceExtractor>();
+        }
 
-        [Test]
-        public void should_Exract_From_Reader_MsSql()
+        [TestCase(nameof(MasterPatientIndex))]
+        public void should_Exract(string name)
         {
             Assert.False(_extractsContext.TempMasterPatientIndices.Any());
-            var extract = TestInitializer.Iqtools.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
-
-            var extractor = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexSourceExtractor>();
-
-            var recordcount=extractor.Extract(extract, _iQtoolsDb).Result;
+            var extract = _extracts.First(x => x.Name.IsSameAs(name));
+            var recordcount=_extractor.Extract(extract,_protocol).Result;
             Assert.True(_extractsContext.TempMasterPatientIndices.Any());
             Console.WriteLine($"extracted {_extractsContext.TempMasterPatientIndices.Count()}");
-        }
-
-        [Test]
-        public void should_Exract_From_Reader_MySql()
-        {
-            Assert.False(_extractsContextMySql.TempMasterPatientIndices.Any());
-            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
-
-            var extractor = TestInitializer.ServiceProviderMysql.GetService<IMasterPatientIndexSourceExtractor>();
-
-            var recordcount = extractor.Extract(extract, _kenyaEmrDb).Result;
-            Assert.True(_extractsContextMySql.TempMasterPatientIndices.Any());
-            Console.WriteLine($"extracted {_extractsContextMySql.TempMasterPatientIndices.Count()}");
         }
     }
 }

@@ -24,36 +24,20 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
     [Category("Dwh")]
     public class DwhPackagerTests
     {
-        private IServiceProvider _serviceProvider;
         private IDwhPackager _packager;
         private Guid _pid;
 
         [OneTimeSetUp]
         public void Init()
         {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var connectionString = config["ConnectionStrings:DwapiConnection"];
-
-            _serviceProvider = new ServiceCollection()
-                .AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(o => o.UseSqlServer(connectionString))
-                .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
-                .AddTransient<IDwhExtractReader, DwhExtractReader>()
-                .AddTransient<IEmrMetricReader, EmrMetricReader>()
-                .AddTransient<IDwhPackager, DwhPackager>()
-                .BuildServiceProvider();
-
-            var ctx = _serviceProvider.GetService<UploadContext>();
-            var art= ctx.ClientPatientArtExtracts.First();
-            _pid = ctx.ClientPatientExtracts.First(x => x.PatientPK == art.PatientPK && x.SiteCode == art.SiteCode).Id;
+            TestInitializer.ClearDb();
         }
 
 
         [SetUp]
         public void SetUp()
         {
-            _packager = _serviceProvider.GetService<IDwhPackager>();
+            _packager = TestInitializer.ServiceProvider.GetService<IDwhPackager>();
 
         }
 
@@ -62,9 +46,24 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         {
             var manfiests = _packager.Generate(EmrSetup.SingleFacility).ToList();
             Assert.True(manfiests.Any());
+            Assert.True(manfiests.Count==1);
             var m = manfiests.First();
             Assert.True(m.PatientPks.Any());
             Console.WriteLine($"{m}");
+        }
+
+        [Test]
+        public void should_Generate_Multi_Manifest()
+        {
+            var manfiests = _packager.Generate(EmrSetup.MultiFacility).ToList();
+            Assert.True(manfiests.Any());
+            Assert.True(manfiests.Count>1);
+            foreach (var m in manfiests)
+            {
+                Assert.True(m.PatientPks.Any());
+                Console.WriteLine($"{m}");
+            }
+
         }
 
         [Test]

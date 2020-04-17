@@ -26,7 +26,6 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         {
             var sites = _reader.GetSites();
             var patientProfiles = _reader.GetSitePatientProfiles();
-
             return DwhManifest.Create(patientProfiles, emrSetup, sites);
         }
 

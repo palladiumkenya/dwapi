@@ -9,6 +9,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using Serilog;
@@ -40,7 +41,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs
             {
                 await truncateCommand;
             }
-          
+
             CloseConnection(cn);
         }
 
@@ -56,13 +57,21 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs
                     using (var connection = new MySqlConnection(cn))
                     {
                         connection.BulkInsert(extracts);
-                      
+
                     }
                 }
 
                 if (GetConnectionProvider() == DatabaseProvider.MsSql)
                 {
                     using (var connection = new SqlConnection(cn))
+                    {
+                        connection.BulkInsert(extracts);
+                    }
+                }
+
+                if (GetConnectionProvider() == DatabaseProvider.Other)
+                {
+                    using (var connection = new SqliteConnection(cn))
                     {
                         connection.BulkInsert(extracts);
                     }
@@ -81,6 +90,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs
 
         private Task<int> GetSqlCommand(IDbConnection cn, string sql)
         {
+            if (cn is SqliteConnection)
+            {
+                return cn.ExecuteAsync(sql.Replace("TRUNCATE TABLE","DELETE FROM"));
+            }
             return cn.ExecuteAsync(sql);
         }
     }

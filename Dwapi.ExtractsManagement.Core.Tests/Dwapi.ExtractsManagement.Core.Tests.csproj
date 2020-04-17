@@ -6,7 +6,9 @@
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="appsettings.mysql.json" />
-    <None Update="TestArtifacts\Database\emr.db">
+    <None Remove="Extractors\Dwh\**" />
+    <None Remove="Extractors\Hts\**" />
+    <None Update="TestArtifacts\Database\dwapi.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -30,6 +32,7 @@
     <PackageReference Include="NUnit" Version="3.11.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="X.PagedList" Version="7.6.0" />
   </ItemGroup>
   <ItemGroup>
@@ -45,9 +48,37 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="appsettings.mysql.json">
+    <Content Include="TestArtifacts\Database\emr.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Loader\Hts\HTSClientLinkageLoaderTests.cs" />
+    <Compile Remove="Loader\Hts\HTSClientLoaderTests.cs" />
+    <Compile Remove="Loader\Hts\HTSClientPartnerLoaderTests.cs" />
+    <Compile Remove="Loader\Hts\HtsClientsLinkageLoaderTests.cs" />
+    <Compile Remove="Loader\Hts\HtsClientsLoaderTests.cs" />
+    <Compile Remove="Loader\Hts\HtsClientTestsLoaderTests.cs" />
+    <Compile Remove="Loader\Hts\HtsClientTracingLoaderTests.cs" />
+    <Compile Remove="Loader\Hts\HtsPartnerNotificationServicesLoaderTests.cs" />
+    <Compile Remove="Loader\Hts\HtsPartnerTracingLoaderTests.cs" />
+    <Compile Remove="Loader\Hts\HtsTestKitsLoaderTests.cs" />
+    <Compile Remove="Loader\Dwh\PatientArtLoaderTests.cs" />
+    <Compile Remove="Loader\Dwh\PatientBaselineLoaderTests.cs" />
+    <Compile Remove="Loader\Dwh\PatientLaboratoryLoaderTests.cs" />
+    <Compile Remove="Loader\Dwh\PatientLoaderTests.cs" />
+    <Compile Remove="Loader\Dwh\PatientPharmacyLoaderTests.cs" />
+    <Compile Remove="Loader\Dwh\PatientStatusLoaderTests.cs" />
+    <Compile Remove="Loader\Dwh\PatientVisitsLoaderTests.cs" />
+    <Compile Remove="Extractors\Dwh\**" />
+    <Compile Remove="Extractors\Hts\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Loader\Dwh" />
+    <Folder Include="Loader\Hts" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Extractors\Dwh\**" />
+    <EmbeddedResource Remove="Extractors\Hts\**" />
   </ItemGroup>
 </Project>

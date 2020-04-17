@@ -15,13 +15,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Cbs
     public class MasterPatientIndexRepositoryTests
     {
         private IMasterPatientIndexRepository _repository;
-        private List<MasterPatientIndex> _patientIndices;
+        private ExtractsContext _context;
+        private List<MasterPatientIndex> _indices;
         [OneTimeSetUp]
         public void Init()
         {
             TestInitializer.ClearDb();
-            _patientIndices = TestData.GenerateMpis();
-            TestInitializer.SeedData(_patientIndices);
+            _indices = TestData.GenerateMpis();
+            TestInitializer.SeedData<ExtractsContext>(_indices);
+            _context = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
         }
 
         [SetUp]
@@ -30,21 +32,22 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Cbs
             _repository = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexRepository>();
         }
 
+
         [Test]
-        public void should_GetView_MsSQL()
+        public void should_GetViewL()
         {
-            var patientIndices = _repository.GetView().ToList();
-            Assert.True(patientIndices.Any());
+            var mpis = _repository.GetView().ToList();
+            Assert.True(mpis.Any());
         }
 
         [Test]
-        public void should_Update_Sent_Items_MsSQL()
+        public void shoul_Update_Sent_Items()
         {
-            var mpiIds = _patientIndices.Select(x => x.Id).ToList();
+            var mpiIds = _indices.Select(x => x.Id).ToList();
             var  sentItems = mpiIds.Select(x => new SentItem(x, SendStatus.Sent)).ToList();
             _repository.UpdateSendStatus(sentItems);
 
-            _repository=TestInitializer.ServiceProvider.GetService<IMasterPatientIndexRepository>();
+            _repository = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexRepository>();
             var updated = _repository.GetAll(x => x.Status == $"{nameof(SendStatus.Sent)}").ToList();
             Assert.True(updated.Count==2);
         }

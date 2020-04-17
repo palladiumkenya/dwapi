@@ -7,7 +7,7 @@ using Dwapi.SettingsManagement.Core.Model;
 using FizzWare.NBuilder;
 using Newtonsoft.Json;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
+namespace Dwapi.UploadManagement.Core.Tests.TestArtifacts
 {
     public class TestData
     {

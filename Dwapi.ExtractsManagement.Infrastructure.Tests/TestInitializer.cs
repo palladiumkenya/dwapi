@@ -71,7 +71,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                 .Build();
 
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
-            ConnectionString = GenerateConnection(config, "dwapiConnection");
+            ConnectionString = GenerateConnection(config, "dwapiConnection", false);
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
@@ -233,8 +233,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
         public static void ClearDb()
         {
             var context = ServiceProvider.GetService<SettingsContext>();
-            context.Database.EnsureCreated();
             context.EnsureSeeded();
+
+            var econtext = ServiceProvider.GetService<ExtractsContext>();
+            econtext.EnsureSeeded();
         }
 
         public static void SeedData(params IEnumerable<object>[] entities)
@@ -250,7 +252,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             Protocol = context.DatabaseProtocols.AsNoTracking().First(x => x.DatabaseType == DatabaseType.Sqlite);
             Extracts = context.Extracts.AsNoTracking().Where(x => x.DatabaseProtocolId == Protocol.Id).ToList();
         }
-
+        public static void SeedData<T>(params IEnumerable<object>[] entities) where T:DbContext
+        {
+            var context = ServiceProvider.GetService<T>();
+            foreach (IEnumerable<object> t in entities)
+            {
+                context.AddRange(t);
+            }
+            context.SaveChanges();
+        }
         private void RegisterLicence()
         {
             DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
