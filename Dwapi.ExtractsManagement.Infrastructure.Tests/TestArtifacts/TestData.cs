@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.SettingsManagement.Core.Model;
+using FizzWare.NBuilder;
 using Newtonsoft.Json;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
 {
     public class TestData
     {
-        public static EmrSystem GenerateEmrSystem(string conection)
+        public static List<EmrSystem> GenerateEmrSystems(string connectionString)
         {
             var emr = JsonConvert.DeserializeObject<EmrSystem>(EmrJson());
             emr.Id=Guid.NewGuid();
@@ -15,12 +19,26 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
             var db = JsonConvert.DeserializeObject<DatabaseProtocol>(DbJson());
             db.Id=Guid.NewGuid();
             db.EmrSystemId = emr.Id;
-            db.DatabaseName = conection;
+            db.DatabaseName = connectionString;
             emr.DatabaseProtocols.Add(db);
 
             emr.Extracts= GetExtracts(emr.Id, db.Id);
 
-            return emr;
+            return new List<EmrSystem> {emr};
+        }
+
+        public static List<MasterPatientIndex> GenerateMpis(int count = 2)
+        {
+          return Builder<MasterPatientIndex>.CreateListOfSize(count).All().With(x => x.Status = "").Build().ToList();
+        }
+
+        public static List<ValidationError> GenerateErrors(int count=2)
+        {
+          return Builder<ValidationError>.CreateListOfSize(count)
+            .All()
+            .With(x=>x.ValidatorId=new Guid("6c5c70be-2a95-11e7-93ae-92361f002671"))
+            .Build()
+            .ToList();
         }
 
         private static string EmrJson()
@@ -28,7 +46,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
             string Json =@"
                  {
                     ^Id^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^,
-                    ^Name^: ^KenyaEMR^,
+                    ^Name^: ^KenyaCare^,
                     ^Version^: ^1^,
                     ^IsMiddleware^: false,
                     ^IsDefault^: true,
@@ -49,7 +67,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
                       }
             ";
 
-            return Json;
+            return Json.Replace("^", "\"");
         }
 
         private static List<Extract> GetExtracts(Guid emr,Guid dbId)
@@ -66,7 +84,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
 
         private static string ExJson()
         {
-            return @"
+          var Json= @"
             [
     {
       ^Id^: ^8578AD00-C34B-11E9-9CB5-2A2AE2DBCCE4^,
@@ -262,6 +280,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
     }
   ]
             ";
+
+            return Json.Replace("^", "\"");
         }
     }
 }

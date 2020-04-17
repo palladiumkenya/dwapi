@@ -62,7 +62,7 @@ namespace Dwapi.SharedKernel.Model
 
             if (DatabaseType==DatabaseType.Sqlite)
             {
-                connectionString = $@"Data Source={DatabaseName};";
+                connectionString = $@"Data Source={DatabaseName.Replace("Data Source=","")};";
             }
             if (DatabaseType==DatabaseType.MicrosoftSQL)
             {

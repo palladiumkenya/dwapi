@@ -1,16 +1,13 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
-using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
-using Dwapi.ExtractsManagement.Infrastructure.Migrations;
-using Dwapi.SettingsManagement.Infrastructure;
+using Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts;
+using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
-using MySql.Data.MySqlClient;
 using NUnit.Framework;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
@@ -19,41 +16,23 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
     [Category("Dwh")]
     public class ExtractSourceReaderTests
     {
-        private SettingsContext _settingsContext;
-        private SettingsContext _settingsContextMysql;
-        private DbProtocol _iQtoolsDb, _kenyaEmrDb;
-
         private IExtractSourceReader _reader;
+        private List<Extract> _extracts;
+        private DbProtocol _protocol;
 
         [OneTimeSetUp]
         public void Init()
         {
-            TestInitializer.InitDb();
-            TestInitializer.InitMysQLDb();
-            _settingsContext = TestInitializer.ServiceProvider.GetService<SettingsContext>();
-            _settingsContextMysql = TestInitializer.ServiceProviderMysql.GetService<SettingsContext>();
-
-            _iQtoolsDb = TestInitializer.IQtoolsDbProtocol;
-            _kenyaEmrDb = TestInitializer.KenyaEmrDbProtocol;
-
+            TestInitializer.ClearDb();
+            TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
+            _protocol = TestInitializer.Protocol;
+            _extracts=TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("NDWH")).ToList();
         }
 
-        [TestCase(nameof(PatientExtract))]
-        [TestCase(nameof(PatientArtExtract))]
-        [TestCase(nameof(PatientPharmacyExtract))]
-        [TestCase(nameof(PatientStatusExtract))]
-        [TestCase(nameof(PatientVisitExtract))]
-        [TestCase("PatientLabExtract")]
-        [TestCase("PatientBaselineExtract")]
-        [TestCase(nameof(PatientAdverseEventExtract))]
-        public void should_Execute_Reader_MsSql(string extractName)
+        [SetUp]
+        public void SetUp()
         {
-            var extract = TestInitializer.Iqtools.Extracts.First(x => x.DocketId.IsSameAs("NDWH")&&x.Name.IsSameAs(extractName));
             _reader = TestInitializer.ServiceProvider.GetService<IExtractSourceReader>();
-            var reader = _reader.ExecuteReader(_iQtoolsDb, extract).Result as SqlDataReader;
-            Assert.NotNull(reader);
-            Assert.True(reader.HasRows);
-            reader.Close();
         }
 
         [TestCase(nameof(PatientExtract))]
@@ -64,11 +43,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
         [TestCase("PatientLabExtract")]
         [TestCase("PatientBaselineExtract")]
         [TestCase(nameof(PatientAdverseEventExtract))]
-        public void should_Execute_Reader_MySql(string extractName)
+        public void should_Execute_Reader(string name)
         {
-            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.DocketId.IsSameAs("NDWH") && x.Name.IsSameAs(extractName));
-            _reader = TestInitializer.ServiceProviderMysql.GetService<IExtractSourceReader>();
-            var reader = _reader.ExecuteReader(_kenyaEmrDb, extract).Result as MySqlDataReader;
+            var extract = _extracts.First(x => x.Name.IsSameAs(name));
+            var reader = _reader.ExecuteReader(_protocol, extract).Result as SqliteDataReader;
             Assert.NotNull(reader);
             Assert.True(reader.HasRows);
             reader.Close();

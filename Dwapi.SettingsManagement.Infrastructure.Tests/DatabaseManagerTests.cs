@@ -18,7 +18,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
         public void SetUp()
         {
             _databaseManager = TestInitializer.ServiceProvider.GetService<IDatabaseManager>();
-            _databaseProtocol=new DatabaseProtocol(DatabaseType.Sqlite,TestInitializer.EmrConnectionString.Replace("DataSource=",""));
+            _databaseProtocol=new DatabaseProtocol(DatabaseType.Sqlite,TestInitializer.EmrConnectionString);
         }
 
         [Test]

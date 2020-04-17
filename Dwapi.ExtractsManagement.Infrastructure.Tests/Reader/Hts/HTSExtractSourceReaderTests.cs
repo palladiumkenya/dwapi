@@ -1,15 +1,15 @@
-﻿using System.Data.SqlClient;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
-using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
-using Dwapi.SettingsManagement.Infrastructure;
+using Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts;
+using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using Dwapi.UploadManagement.Core.Model.Hts;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
-using MySql.Data.MySqlClient;
 using NUnit.Framework;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
@@ -19,37 +19,23 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
     public class HTSExtractSourceReaderTests
     {
 
-        private IHTSExtractSourceReader _reader;
+        private IExtractSourceReader _reader;
+        private List<Extract> _extracts;
+        private DbProtocol _protocol;
 
         [OneTimeSetUp]
         public void Init()
         {
-            TestInitializer.InitDb();
-            TestInitializer.InitMysQLDb();
+            TestInitializer.ClearDb();
+            TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
+            _protocol = TestInitializer.Protocol;
+            _extracts=TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("HTS")).ToList();
         }
 
-        [TestCase(nameof(HTSClientExtract))]
-        [TestCase(nameof(HTSClientLinkageExtract))]
-        [TestCase(nameof(HTSClientPartnerExtract))]
-
-        [TestCase(nameof(HtsClients))]
-        [TestCase(nameof(HtsClientTests))]
-        [TestCase(nameof(HtsClientTracing))]
-        [TestCase(nameof(HtsPartnerTracing))]
-        [TestCase(nameof(HtsPartnerNotificationServices))]
-        [TestCase(nameof(HtsClientTests))]
-        [TestCase(nameof(HtsClientLinkage))]
-
-        public void should_Execute_Reader_MsSql(string extractName)
+        [SetUp]
+        public void SetUp()
         {
-            var extract =
-                TestInitializer.Iqtools.Extracts.First(x =>
-                    x.DocketId.IsSameAs("HTS") && x.Name.IsSameAs(extractName));
-            _reader = TestInitializer.ServiceProvider.GetService<IHTSExtractSourceReader>();
-            var reader = _reader.ExecuteReader(TestInitializer.IQtoolsDbProtocol, extract).Result as SqlDataReader;
-            Assert.NotNull(reader);
-            Assert.True(reader.HasRows);
-            reader.Close();
+            _reader = TestInitializer.ServiceProvider.GetService<IExtractSourceReader>();
         }
 
         [TestCase(nameof(HtsClientLinkage))]
@@ -59,13 +45,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
         [TestCase(nameof(HtsPartnerNotificationServices))]
         [TestCase(nameof(HtsPartnerTracing))]
         [TestCase(nameof(HtsTestKits))]
-        public void should_Execute_Reader_MySql(string extractName)
+        public void should_Execute_Reader_MsSql(string name)
         {
-            var extract =
-                TestInitializer.KenyaEmr.Extracts.First(
-                    x => x.DocketId.IsSameAs("HTS") && x.Name.IsSameAs(extractName));
-            _reader = TestInitializer.ServiceProviderMysql.GetService<IHTSExtractSourceReader>();
-            var reader = _reader.ExecuteReader(TestInitializer.KenyaEmrDbProtocol, extract).Result as MySqlDataReader;
+            var extract = _extracts.First(x => x.Name.IsSameAs(name));
+            var reader = _reader.ExecuteReader(_protocol, extract).Result as SqliteDataReader;
             Assert.NotNull(reader);
             Assert.True(reader.HasRows);
             reader.Close();

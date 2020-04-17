@@ -6,6 +6,7 @@ using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
+using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh
@@ -37,6 +38,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh
         public IDbConnection GetConnection(DbProtocol databaseProtocol)
         {
             var connectionString = databaseProtocol.GetConnectionString();
+
+            if (databaseProtocol.DatabaseType == DatabaseType.Sqlite)
+                return new SqliteConnection(connectionString);
 
             if (databaseProtocol.DatabaseType == DatabaseType.MicrosoftSQL)
                 return new System.Data.SqlClient.SqlConnection(connectionString);

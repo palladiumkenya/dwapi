@@ -5,6 +5,7 @@ using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using Serilog;
@@ -41,6 +42,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Hts
             Log.Debug(new string('+',40));
             Log.Debug(connectionString);
             Log.Debug(new string('+',40));
+
+            if (databaseProtocol.DatabaseType == DatabaseType.Sqlite)
+                return new SqliteConnection(connectionString);
 
             if (databaseProtocol.DatabaseType == DatabaseType.MicrosoftSQL)
                 return new System.Data.SqlClient.SqlConnection(connectionString);

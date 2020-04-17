@@ -14,6 +14,7 @@ using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
 {
+    [Obsolete("Class is obsolete,use TempHtsClientsExtractRepository")]
     public class TempHTSClientExtractRepository : BaseRepository<TempHTSClientExtract, Guid>, ITempHTSClientExtractRepository
     {
         public TempHTSClientExtractRepository(ExtractsContext context) : base(context)

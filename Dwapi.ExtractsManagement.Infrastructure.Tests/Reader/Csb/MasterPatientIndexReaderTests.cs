@@ -1,14 +1,13 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
-using Dwapi.SettingsManagement.Infrastructure;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts;
+using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
-using MySql.Data.MySqlClient;
 using NUnit.Framework;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
@@ -17,44 +16,33 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
     [Category("Cbs")]
     public class MasterPatientIndexReaderTests
     {
-        private SettingsContext _settingsContext;
-        private SettingsContext _settingsContextMysql;
-        private DbProtocol _iQtoolsDb, _kenyaEmrDb;
-        
         private IMasterPatientIndexReader _reader;
+        private List<Extract> _extracts;
+        private DbProtocol _protocol;
 
         [OneTimeSetUp]
         public void Init()
         {
-            _settingsContext = TestInitializer.ServiceProvider.GetService<SettingsContext>();
-            _settingsContextMysql = TestInitializer.ServiceProviderMysql.GetService<SettingsContext>();
-            _iQtoolsDb = TestInitializer.IQtoolsDbProtocol;
-            _kenyaEmrDb = TestInitializer.KenyaEmrDbProtocol;
+            TestInitializer.ClearDb();
+            TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
+            _protocol = TestInitializer.Protocol;
+            _extracts=TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("CBS")).ToList();
         }
 
-
-        [Test]
-        public void should_Execute_Reader_MsSql()
+        [SetUp]
+        public void SetUp()
         {
-            var extract = TestInitializer.Iqtools.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
-
             _reader = TestInitializer.ServiceProvider.GetService<IMasterPatientIndexReader>();
-            var reader = _reader.ExecuteReader(_iQtoolsDb, extract).Result as SqlDataReader;
+        }
+
+        [TestCase(nameof(MasterPatientIndex))]
+        public void should_Execute_Reader(string name)
+        {
+            var extract = _extracts.First(x => x.Name.IsSameAs(name));
+            var reader = _reader.ExecuteReader(_protocol, extract).Result as SqliteDataReader;
             Assert.NotNull(reader);
             Assert.True(reader.HasRows);
             reader.Close();
         }
-
-        [Test]
-        public void should_Execute_Reader_MySql()
-        {
-            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.DocketId.IsSameAs("CBS"));
-
-            _reader = TestInitializer.ServiceProviderMysql.GetService<IMasterPatientIndexReader>();
-            var reader = _reader.ExecuteReader(_kenyaEmrDb, extract).Result as MySqlDataReader;
-            Assert.NotNull(reader);
-            Assert.True(reader.HasRows);
-            reader.Close();
-        }   
     }
 }
