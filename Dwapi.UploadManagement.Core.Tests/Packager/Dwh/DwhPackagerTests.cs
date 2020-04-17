@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AutoMapper;
 using CsvHelper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure;
@@ -9,6 +10,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Packager.Dwh;
+using Dwapi.UploadManagement.Core.Profiles;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Dwapi.UploadManagement.Infrastructure.Reader;
 using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
@@ -31,6 +33,11 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         public void Init()
         {
             TestInitializer.ClearDb();
+            Mapper.Initialize(cfg =>
+                {
+                    cfg.AddProfile<MasterPatientIndexProfile>();
+                }
+            );
         }
 
 

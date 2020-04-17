@@ -55,19 +55,27 @@ using Dwapi.SettingsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
 using Dwapi.SharedKernel.Utility;
+using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
+using Dwapi.UploadManagement.Core.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Packager.Dwh;
+using Dwapi.UploadManagement.Core.Packager.Hts;
 using Dwapi.UploadManagement.Core.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services.Dwh;
 using Dwapi.UploadManagement.Core.Services.Hts;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Dwapi.UploadManagement.Infrastructure.Reader;
+using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Reader.Dwh;
+using Dwapi.UploadManagement.Infrastructure.Reader.Hts;
 using MediatR;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -117,10 +125,16 @@ namespace Dwapi.UploadManagement.Core.Tests
             var services = new ServiceCollection();
 
             services.AddDbContext<SettingsContext>(x => x.UseSqlite(connection));
+            services.AddDbContext<ExtractsContext>(x => x.UseSqlite(connection));
             services.AddDbContext<UploadContext>(x => x.UseSqlite(connection));
             services
                 .AddTransient<IDwhExtractReader, DwhExtractReader>()
                 .AddTransient<IEmrMetricReader, EmrMetricReader>()
+                .AddTransient<ICbsExtractReader, CbsExtractReader>()
+                .AddTransient<IHtsExtractReader, HtsExtractReader>()
+                .AddTransient<IEmrMetricReader, EmrMetricReader>()
+                .AddTransient<ICbsPackager, CbsPackager>()
+                .AddTransient<IHtsPackager, HtsPackager>()
                 .AddTransient<IDwhPackager, DwhPackager>();
             ServiceProvider = services.BuildServiceProvider();
         }

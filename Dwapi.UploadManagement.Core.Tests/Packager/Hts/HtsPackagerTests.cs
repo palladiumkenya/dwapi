@@ -24,42 +24,42 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Hts
     [Category("Hts")]
     public class HtsPackagerTests
     {
-        private IServiceProvider _serviceProvider;
         private IHtsPackager _packager;
 
         [OneTimeSetUp]
         public void Init()
         {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var connectionString = config["ConnectionStrings:DwapiConnection"];
-
-            _serviceProvider = new ServiceCollection()
-                .AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(o => o.UseSqlServer(connectionString))
-                .AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString))
-                .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
-                .AddTransient<IHtsExtractReader, HtsExtractReader>()
-                .AddTransient<IEmrMetricReader, EmrMetricReader>()
-                .AddTransient<IHtsPackager, HtsPackager>()
-                .BuildServiceProvider();
+            TestInitializer.ClearDb();
         }
-
-
         [SetUp]
         public void SetUp()
         {
-            _packager = _serviceProvider.GetService<IHtsPackager>();
+            _packager = TestInitializer.ServiceProvider.GetService<IHtsPackager>();
         }
 
         [Test]
         public void should_Generate_Manifest()
         {
-            var manfiests = _packager.Generate(EmrSetup.SingleFacility);
+            var manfiests = _packager.Generate(EmrSetup.SingleFacility).ToList();
             Assert.True(manfiests.Any());
+            Assert.True(manfiests.Count==1);
             var m = manfiests.First();
             Assert.True(m.Cargoes.Any());
-            Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First().Items} ");
+            Console.WriteLine($"{m}");
+        }
+
+        [Test]
+        public void should_Generate_Multi_Manifest()
+        {
+            var manfiests = _packager.Generate(EmrSetup.MultiFacility).ToList();
+            Assert.True(manfiests.Any());
+            Assert.True(manfiests.Count>1);
+            foreach (var m in manfiests)
+            {
+                Assert.True(m.Cargoes.Any());
+                Console.WriteLine($"{m}");
+            }
+
         }
 
         [Test]
