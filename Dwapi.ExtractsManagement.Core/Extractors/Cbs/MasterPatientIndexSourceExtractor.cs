@@ -46,9 +46,6 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
             using (var rdr = await _reader.ExecuteReader(dbProtocol, extract))
             {
 
-              if(_reader.Connection.State!=ConnectionState.Open)
-                  _reader.Connection.Open();
-
                 while (rdr.Read())
                 {
                     totalCount++;
