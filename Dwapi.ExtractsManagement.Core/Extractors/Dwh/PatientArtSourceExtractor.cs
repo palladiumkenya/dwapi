@@ -55,7 +55,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                         _extractRepository.BatchInsert(list);
 
                         count = 0;
-                   
+
 
                         DomainEvents.Dispatch(
                             new ExtractActivityNotification(extract.Id, new DwhProgress(
@@ -82,6 +82,11 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                     loaded, 0, 0, 0, 0)));
 
             return loaded;
+        }
+
+        public Task<int> ReadExtract(DbExtract extract, DbProtocol dbProtocol)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

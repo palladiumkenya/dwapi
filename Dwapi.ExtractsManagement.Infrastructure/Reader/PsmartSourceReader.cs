@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Data;
+using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Model.Source;
 using Dwapi.SharedKernel.Enum;
@@ -21,6 +22,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
 
 
         public IDbConnection Connection { get; private set; }
+        public object CommandDefinition { get; private set; }
+
         public int Find(DbProtocol protocol, DbExtract extract)
         {
             Log.Debug($"Finding {nameof(PsmartSource)}...");
@@ -96,6 +99,19 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
         public Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract)
         {
             throw new NotImplementedException();
+        }
+
+        public void PrepReader(DbProtocol protocol, DbExtract extract)
+        {
+            var sourceConnection = GetConnection(protocol);
+            if (null == sourceConnection)
+                throw new Exception("Data connection not initialized");
+
+            if (null == extract)
+                throw new Exception("Extract settings not configured");
+
+            Connection = sourceConnection;
+            CommandDefinition = new CommandDefinition(extract.ExtractSql, null, null, 0);
         }
 
         public IDbConnection GetConnection(DbProtocol databaseProtocol)

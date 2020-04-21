@@ -85,5 +85,10 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
             return loaded;
         }
+
+        public Task<int> ReadExtract(DbExtract extract, DbProtocol dbProtocol)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

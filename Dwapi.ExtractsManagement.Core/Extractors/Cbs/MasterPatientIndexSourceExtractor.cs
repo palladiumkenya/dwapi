@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
@@ -98,6 +99,82 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
 
             }
 
+            return totalCount;
+        }
+
+        public async Task<int> ReadExtract(DbExtract extract, DbProtocol dbProtocol)
+        {
+            int batch = 500;
+
+            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracting...")));
+            //DomainEvents.Dispatch(new CbsStatusNotification(extract.Id,ExtractStatus.Loading));
+
+            var list = new List<TempMasterPatientIndex>();
+
+            int count = 0;
+            int totalCount = 0;
+
+            _reader.PrepReader(dbProtocol, extract);
+            var sourceConnection = _reader.Connection;
+            var commandDefinition = new CommandDefinition(extract.ExtractSql, null, null, 0);
+
+            using (sourceConnection)
+            {
+                if (sourceConnection.State != ConnectionState.Open)
+                    sourceConnection.Open();
+                using (var rdr=await sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection))
+                {
+                    while (rdr.Read())
+                    {
+                        totalCount++;
+                        count++;
+                        // AutoMapper profiles
+                        var extractRecord = Mapper.Map<IDataRecord, TempMasterPatientIndex>(rdr);
+                        extractRecord.Id = LiveGuid.NewGuid();
+                        list.Add(extractRecord);
+
+                        if (count == batch)
+                        {
+                            // TODO: batch and save
+                            _extractRepository.BatchInsert(list);
+
+                            try
+                            {
+                                DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracting...",totalCount,count,0,0,0)));
+                            }
+                            catch (Exception e)
+                            {
+                                Log.Error(e,"Notification error");
+
+                            }
+                            count = 0;
+                            list =new List<TempMasterPatientIndex>();
+                        }
+
+                        // TODO: Notify progress...
+
+
+                    }
+
+                    if (count > 0)
+                    {
+                        _extractRepository.BatchInsert(list);
+                    }
+                    _extractRepository.CloseConnection();
+                }
+            }
+
+            try
+            {
+
+                DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracted", totalCount, 0, 0, 0, 0)));
+                DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
+                DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Loaded,totalCount));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Notification error");
+            }
             return totalCount;
         }
     }

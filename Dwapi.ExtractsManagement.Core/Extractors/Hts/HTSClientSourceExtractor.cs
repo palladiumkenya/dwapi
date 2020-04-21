@@ -103,5 +103,10 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 
             return totalCount;
         }
+
+        public Task<int> ReadExtract(DbExtract extract, DbProtocol dbProtocol)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

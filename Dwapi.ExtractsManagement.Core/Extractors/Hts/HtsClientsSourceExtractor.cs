@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
-using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts; 
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
@@ -98,6 +98,11 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
             }
 
             return totalCount;
+        }
+
+        public Task<int> ReadExtract(DbExtract extract, DbProtocol dbProtocol)
+        {
+            throw new NotImplementedException();
         }
     }
 }

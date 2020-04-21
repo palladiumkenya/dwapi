@@ -18,7 +18,7 @@ using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 {
- 
+
     public class HtsClientsLinkageSourceExtractor : IHtsClientsLinkageSourceExtractor
     {
         private readonly IHTSExtractSourceReader _reader;
@@ -99,6 +99,11 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
             }
 
             return totalCount;
+        }
+
+        public Task<int> ReadExtract(DbExtract extract, DbProtocol dbProtocol)
+        {
+            throw new NotImplementedException();
         }
     }
 }
