@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
@@ -16,9 +15,9 @@ using Serilog;
 namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Hts
 {
     [TestFixture]
-    public class HtsClientsLinkageSourceExtractorTests
+    public class HtsPartnerNotificationServicesSourceExtractorTests
     {
-        private IHtsClientsLinkageSourceExtractor _extractor;
+        private IHtsPartnerNotificationServicesSourceExtractor _extractor;
         private List<Extract> _extracts;
         private DbProtocol _protocol;
         private ExtractsContext _extractsContext;
@@ -29,25 +28,25 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Hts
             TestInitializer.ClearDb();
             TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
             _protocol = TestInitializer.Protocol;
-            _extracts = TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("HTS")).ToList();
+            _extracts = TestInitializer.Extracts.Where(x => Extentions.IsSameAs(x.DocketId, "HTS")).ToList();
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
         }
 
         [SetUp]
         public void SetUp()
         {
-            _extractor = TestInitializer.ServiceProvider.GetService<IHtsClientsLinkageSourceExtractor>();
+            _extractor = TestInitializer.ServiceProvider.GetService<IHtsPartnerNotificationServicesSourceExtractor>();
         }
 
-        [TestCase(nameof(HtsClientLinkage))]
+        [TestCase(nameof(HtsPartnerNotificationServices))]
         public void should_Extract(string name)
         {
-            Assert.False(_extractsContext.TempHtsClientsLinkageExtracts.Any());
+            Assert.False(_extractsContext.TempHtsPartnerNotificationServicesExtracts.Any());
             var extract = _extracts.First(x => x.Name.IsSameAs(name));
             var count = _extractor.Extract(extract, _protocol).Result;
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
-            Assert.AreEqual(count,_extractsContext.TempHtsClientsLinkageExtracts.Count());
-            Log.Debug($"extracted {_extractsContext.TempHtsClientsLinkageExtracts.Count()}");
+            Assert.AreEqual(count,_extractsContext.TempHtsPartnerNotificationServicesExtracts.Count());
+            Log.Debug($"extracted {_extractsContext.TempHtsPartnerNotificationServicesExtracts.Count()}");
         }
     }
 }

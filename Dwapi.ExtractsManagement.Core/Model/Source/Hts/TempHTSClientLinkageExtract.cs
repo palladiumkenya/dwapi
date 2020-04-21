@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
+    [Obsolete("Class is obsolete,use TempHtsClientLinkage")]
     public class TempHTSClientLinkageExtract : TempHTSExtract
     {
         public DateTime? PhoneTracingDate { get; set; }

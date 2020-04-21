@@ -6,6 +6,8 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
@@ -40,6 +42,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
                         return true;
                     }
                 }
+
+                if (Context.Database.IsSqlite())
+                {
+                    using (var connection = new SqliteConnection(cn))
+                    {
+                        connection.BulkInsert(extracts);
+                        return true;
+                    }
+                }
+
                 return false;
             }
             catch (Exception e)

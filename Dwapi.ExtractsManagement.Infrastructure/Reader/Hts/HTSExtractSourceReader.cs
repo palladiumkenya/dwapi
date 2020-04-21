@@ -39,6 +39,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Hts
 
             if(sourceConnection is SqliteConnection)
                 return Task.FromResult<IDataReader>(sourceConnection.ExecuteReader(commandDefinition));
+
             return sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection);
         }
 

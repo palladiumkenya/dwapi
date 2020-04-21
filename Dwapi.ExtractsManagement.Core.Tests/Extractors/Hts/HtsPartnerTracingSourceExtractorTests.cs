@@ -1,53 +1,52 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
+using Dwapi.ExtractsManagement.Core.Tests.TestArtifacts;
 using Dwapi.ExtractsManagement.Infrastructure;
+using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Hts
-{ 
+{
     [TestFixture]
     public class HtsPartnerTracingSourceExtractorTests
     {
-        private ExtractsContext _extractsContext, _extractsContextMySql;
-        private DbProtocol _iQtoolsDb, _kenyaEmrDb;
+        private IHtsPartnerTracingSourceExtractor _extractor;
+        private List<Extract> _extracts;
+        private DbProtocol _protocol;
+        private ExtractsContext _extractsContext;
+
+        [OneTimeSetUp]
+        public void Init()
+        {
+            TestInitializer.ClearDb();
+            TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
+            _protocol = TestInitializer.Protocol;
+            _extracts = TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("HTS")).ToList();
+            _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
+        }
 
         [SetUp]
         public void SetUp()
         {
+            _extractor = TestInitializer.ServiceProvider.GetService<IHtsPartnerTracingSourceExtractor>();
+        }
+
+        [TestCase(nameof(HtsPartnerTracing))]
+        public void should_Extract(string name)
+        {
+            Assert.False(_extractsContext.TempHtsPartnerTracingExtracts.Any());
+            var extract = _extracts.First(x => x.Name.IsSameAs(name));
+            var count = _extractor.Extract(extract, _protocol).Result;
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
-            _extractsContextMySql = TestInitializer.ServiceProviderMysql.GetService<ExtractsContext>();
-            _iQtoolsDb = TestInitializer.IQtoolsDbProtocol;
-            _kenyaEmrDb = TestInitializer.KenyaEmrDbProtocol;
-        }
-        [Test]
-        public void should_Exract_From_Reader_MsSql()
-        {
-            Assert.False(_extractsContext.TempHtsClientPartnerExtracts.Any());
-            var extract = TestInitializer.Iqtools.Extracts.First(x => x.Name.IsSameAs(nameof(HtsPartnerTracing)));
-
-            var extractor = TestInitializer.ServiceProvider.GetService<IHtsPartnerTracingSourceExtractor>();
-
-            var recordcount = extractor.Extract(extract, _iQtoolsDb).Result;
-            Assert.True(_extractsContext.TempHtsClientPartnerExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContext.TempHtsClientExtracts.Count()}");
-        }
-
-        [Test]
-        public void should_Exract_From_Reader_MySql()
-        {
-            Assert.False(_extractsContextMySql.TempHtsClientPartnerExtracts.Any());
-            var extract = TestInitializer.KenyaEmr.Extracts.First(x => x.Name.IsSameAs(nameof(HtsPartnerTracing)));
-
-            var extractor = TestInitializer.ServiceProviderMysql.GetService<IHtsPartnerTracingSourceExtractor>();
-
-            var recordcount = extractor.Extract(extract, _kenyaEmrDb).Result;
-            Assert.True(_extractsContextMySql.TempHtsClientPartnerExtracts.Any());
-            Console.WriteLine($"extracted {_extractsContextMySql.TempHtsClientPartnerExtracts.Count()}");
+            Assert.AreEqual(count,_extractsContext.TempHtsPartnerTracingExtracts.Count());
+            Log.Debug($"extracted {_extractsContext.TempHtsPartnerTracingExtracts.Count()}");
         }
     }
 }

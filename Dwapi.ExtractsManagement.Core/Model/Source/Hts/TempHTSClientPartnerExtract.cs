@@ -2,6 +2,7 @@
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
+    [Obsolete]
     public class TempHTSClientPartnerExtract : TempHTSExtract
     {
         public int? PartnerPatientPk { get; set; }

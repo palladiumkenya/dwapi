@@ -11,6 +11,7 @@ using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
 {
+    [Obsolete]
     public class TempHTSClientPartnerExtractRepository: BaseRepository<TempHTSClientPartnerExtract, Guid>, ITempHTSClientPartnerExtractRepository
     {
         public TempHTSClientPartnerExtractRepository(ExtractsContext context) : base(context)

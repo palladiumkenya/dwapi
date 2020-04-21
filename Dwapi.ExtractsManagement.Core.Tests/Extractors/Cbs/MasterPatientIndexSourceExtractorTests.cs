@@ -10,6 +10,7 @@ using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
 {
@@ -43,8 +44,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
             Assert.False(_extractsContext.TempMasterPatientIndices.Any());
             var extract = _extracts.First(x => x.Name.IsSameAs(name));
             var count = _extractor.Extract(extract, _protocol).Result;
+            _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
             Assert.AreEqual(count,_extractsContext.TempMasterPatientIndices.Count());
-            Console.WriteLine($"extracted {_extractsContext.TempMasterPatientIndices.Count()}");
+            Log.Debug($"extracted {_extractsContext.TempMasterPatientIndices.Count()}");
         }
     }
 }

@@ -228,13 +228,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services.AddTransient<IHtsExtractValidator, HtsExtractValidator>();
             #endregion
             ServiceProvider = services.BuildServiceProvider();
+
+            var context = ServiceProvider.GetService<SettingsContext>();
+            context.EnsureSeeded();
         }
 
         public static void ClearDb()
         {
-            var context = ServiceProvider.GetService<SettingsContext>();
-            context.EnsureSeeded();
-
             var econtext = ServiceProvider.GetService<ExtractsContext>();
             econtext.EnsureSeeded();
         }

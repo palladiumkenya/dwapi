@@ -6,7 +6,6 @@
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="appsettings.mysql.json" />
-    <None Remove="Extractors\Hts\**" />
     <None Update="TestArtifacts\Database\dwapi.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -50,21 +49,5 @@
     <Content Include="TestArtifacts\Database\emr.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Loader\Hts\HTSClientLinkageLoaderTests.cs" />
-    <Compile Remove="Loader\Hts\HTSClientLoaderTests.cs" />
-    <Compile Remove="Loader\Hts\HTSClientPartnerLoaderTests.cs" />
-    <Compile Remove="Loader\Hts\HtsClientsLinkageLoaderTests.cs" />
-    <Compile Remove="Loader\Hts\HtsClientsLoaderTests.cs" />
-    <Compile Remove="Loader\Hts\HtsClientTestsLoaderTests.cs" />
-    <Compile Remove="Loader\Hts\HtsClientTracingLoaderTests.cs" />
-    <Compile Remove="Loader\Hts\HtsPartnerNotificationServicesLoaderTests.cs" />
-    <Compile Remove="Loader\Hts\HtsPartnerTracingLoaderTests.cs" />
-    <Compile Remove="Loader\Hts\HtsTestKitsLoaderTests.cs" />
-    <Compile Remove="Extractors\Hts\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="Extractors\Hts\**" />
   </ItemGroup>
 </Project>

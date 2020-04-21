@@ -36,12 +36,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Csb
         }
 
         [TestCase(nameof(MasterPatientIndex))]
-        public void should_Prep_Reader(string name)
+        public void should_Execute_Reader(string name)
         {
             var extract = _extracts.First(x => x.Name.IsSameAs(name));
-            var reader = _reader.ExecuteReader(_protocol, extract).Result as SqliteDataReader;
+            var reader = _reader.ExecuteReader(_protocol, extract).Result;
             Assert.NotNull(reader);
-            Assert.True(reader.HasRows);
+            reader.Read();
+            Assert.NotNull(reader[0]);
             reader.Close();
         }
     }
