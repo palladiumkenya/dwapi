@@ -79,13 +79,20 @@ namespace Dwapi.SettingsManagement.Infrastructure
             RestProtocols.SeedDbSetIfEmpty($"{nameof(RestProtocols)}");
             Resources.SeedDbSetIfEmpty($"{nameof(Resources)}");
             SaveChanges();
-            var ex = Extracts.Where(e => e.EmrSystemId == new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b") ||
-                                         e.EmrSystemId == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b") ||
-                                         e.EmrSystemId == new Guid("a6221857-0e85-11e8-ba89-0ed5f89f718b") ||
-                                         e.EmrSystemId == new Guid("926f49b8-305d-11ea-978f-2e728ce88125")
-            );
-            Extracts.RemoveRange(ex);
-            SaveChanges();
+
+            var managedEmrs = new List<Guid>
+            {
+                new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"),
+                new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"),
+                new Guid("a6221857-0e85-11e8-ba89-0ed5f89f718b"),
+                new Guid("926f49b8-305d-11ea-978f-2e728ce88125")
+            };
+           managedEmrs.ForEach(x =>
+           {
+               var sql = $"DELETE FROM {nameof(Extracts)} WHERE {nameof(Extract.EmrSystemId)} = '{x}'";
+               Database.ExecuteSqlCommand(sql);
+           });
+
             Extracts.SeedFromResource($"{nameof(Extracts)}");
             SaveChanges();
         }

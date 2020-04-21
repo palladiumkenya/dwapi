@@ -101,18 +101,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
             throw new NotImplementedException();
         }
 
-        public void PrepReader(DbProtocol protocol, DbExtract extract)
-        {
-            var sourceConnection = GetConnection(protocol);
-            if (null == sourceConnection)
-                throw new Exception("Data connection not initialized");
-
-            if (null == extract)
-                throw new Exception("Extract settings not configured");
-
-            Connection = sourceConnection;
-            CommandDefinition = new CommandDefinition(extract.ExtractSql, null, null, 0);
-        }
 
         public IDbConnection GetConnection(DbProtocol databaseProtocol)
         {

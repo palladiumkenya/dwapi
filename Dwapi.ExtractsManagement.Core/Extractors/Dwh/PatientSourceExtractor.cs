@@ -32,6 +32,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
+            // TODO: PLEASE FIND OUT WHY LOADED COUNT
             int batch = 500;
 
             var list = new List<TempPatientExtract>();
@@ -81,11 +82,6 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                     loaded, 0, 0, 0, 0)));
 
             return loaded;
-        }
-
-        public Task<int> ReadExtract(DbExtract extract, DbProtocol dbProtocol)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AutoMapper;
+using AutoMapper.Data;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
@@ -34,6 +36,10 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Hts;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Dwh;
 using Dwapi.ExtractsManagement.Core.Loader.Hts;
+using Dwapi.ExtractsManagement.Core.Profiles;
+using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
+using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
+using Dwapi.ExtractsManagement.Core.Profiles.Hts;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader;
@@ -59,6 +65,7 @@ using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
+using Dwapi.UploadManagement.Core.Profiles;
 using Dwapi.UploadManagement.Core.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services.Dwh;
 using Dwapi.UploadManagement.Core.Services.Hts;
@@ -101,7 +108,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .Build();
 
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
-            ConnectionString = GenerateConnection(config, "dwapiConnection",false);
+            ConnectionString = GenerateCopyConnection(config, "dwapiConnection");
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
@@ -325,12 +332,25 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddMediatR(typeof(LoadFromEmrCommand));
 
             ServiceProvider = services.BuildServiceProvider();
+
+              Mapper.Initialize(cfg =>
+                            {
+                                cfg.AddDataReaderMapping();
+                                cfg.AddProfile<TempExtractProfile>();
+                                cfg.AddProfile<TempMasterPatientIndexProfile>();
+                                cfg.AddProfile<EmrProfiles>();
+                                cfg.AddProfile<TempHtsExtractProfile>();
+                                cfg.AddProfile<MasterPatientIndexProfile>();
+                            }
+                        );
+
+              var context = ServiceProvider.GetService<SettingsContext>();
+              context.EnsureSeeded();
+
         }
 
         public static void ClearDb()
         {
-            var context = ServiceProvider.GetService<SettingsContext>();
-            context.EnsureSeeded();
 
             var econtext = ServiceProvider.GetService<ExtractsContext>();
             econtext.EnsureSeeded();
@@ -378,8 +398,25 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             if (createNew)
                 return connectionString.Replace(".db", $"{DateTime.Now.Ticks}.db");
 
+
             return connectionString;
         }
+
+        private string GenerateCopyConnection(IConfigurationRoot config, string name)
+        {
+            var dir = $"{TestContext.CurrentContext.TestDirectory.HasToEndWith(@"/")}";
+
+            var connectionString = config.GetConnectionString(name)
+                .Replace("#dir#", dir)
+                .ToOsStyle();
+
+            var cn = connectionString.Split("=");
+            var newCn = connectionString.Replace(".db", $"{DateTime.Now.Ticks}.db");
+            var db = newCn.Split("=");
+            File.Copy(cn[1], db[1], true);
+            return newCn;
+        }
+
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =

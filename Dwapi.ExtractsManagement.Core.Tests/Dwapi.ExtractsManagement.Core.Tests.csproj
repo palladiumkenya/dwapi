@@ -6,7 +6,6 @@
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="appsettings.mysql.json" />
-    <None Remove="Extractors\Dwh\**" />
     <None Remove="Extractors\Hts\**" />
     <None Update="TestArtifacts\Database\dwapi.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -63,22 +62,9 @@
     <Compile Remove="Loader\Hts\HtsPartnerNotificationServicesLoaderTests.cs" />
     <Compile Remove="Loader\Hts\HtsPartnerTracingLoaderTests.cs" />
     <Compile Remove="Loader\Hts\HtsTestKitsLoaderTests.cs" />
-    <Compile Remove="Loader\Dwh\PatientArtLoaderTests.cs" />
-    <Compile Remove="Loader\Dwh\PatientBaselineLoaderTests.cs" />
-    <Compile Remove="Loader\Dwh\PatientLaboratoryLoaderTests.cs" />
-    <Compile Remove="Loader\Dwh\PatientLoaderTests.cs" />
-    <Compile Remove="Loader\Dwh\PatientPharmacyLoaderTests.cs" />
-    <Compile Remove="Loader\Dwh\PatientStatusLoaderTests.cs" />
-    <Compile Remove="Loader\Dwh\PatientVisitsLoaderTests.cs" />
-    <Compile Remove="Extractors\Dwh\**" />
     <Compile Remove="Extractors\Hts\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Loader\Dwh" />
-    <Folder Include="Loader\Hts" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="Extractors\Dwh\**" />
     <EmbeddedResource Remove="Extractors\Hts\**" />
   </ItemGroup>
 </Project>

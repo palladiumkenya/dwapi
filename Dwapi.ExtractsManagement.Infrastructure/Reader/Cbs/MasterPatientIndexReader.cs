@@ -33,21 +33,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs
 
             Connection = sourceConnection;
             var commandDefinition = new CommandDefinition(extract.ExtractSql, null, null, 0);
-            if(sourceConnection is SqliteConnection)
-                  return sourceConnection.ExecuteReaderAsync(commandDefinition);
+            if (sourceConnection is SqliteConnection)
+                return Task.FromResult<IDataReader>(sourceConnection.ExecuteReader(commandDefinition));
             return sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection);
-        }
-
-        public void PrepReader(DbProtocol protocol, DbExtract extract)
-        {
-            var sourceConnection = GetConnection(protocol);
-            if (null == sourceConnection)
-                throw new Exception("Data connection not initialized");
-
-            if (null == extract)
-                throw new Exception("Extract settings not configured");
-
-            Connection = sourceConnection;
         }
 
         public IDbConnection GetConnection(DbProtocol databaseProtocol)

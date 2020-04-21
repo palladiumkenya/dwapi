@@ -27,7 +27,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
             TestInitializer.ClearDb();
             TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
             _protocol = TestInitializer.Protocol;
-            _extracts=TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("CBS")).ToList();
+            _extracts = TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("CBS")).ToList();
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
         }
 
@@ -38,12 +38,12 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Cbs
         }
 
         [TestCase(nameof(MasterPatientIndex))]
-        public void should_Exract(string name)
+        public void should_Extract(string name)
         {
             Assert.False(_extractsContext.TempMasterPatientIndices.Any());
             var extract = _extracts.First(x => x.Name.IsSameAs(name));
-            var recordcount=_extractor.Extract(extract,_protocol).Result;
-            Assert.True(_extractsContext.TempMasterPatientIndices.Any());
+            var count = _extractor.Extract(extract, _protocol).Result;
+            Assert.AreEqual(count,_extractsContext.TempMasterPatientIndices.Count());
             Console.WriteLine($"extracted {_extractsContext.TempMasterPatientIndices.Count()}");
         }
     }

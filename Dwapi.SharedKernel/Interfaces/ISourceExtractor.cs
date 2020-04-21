@@ -6,7 +6,5 @@ namespace Dwapi.SharedKernel.Interfaces
     public interface ISourceExtractor<T>
     {
         Task<int> Extract(DbExtract extract, DbProtocol dbProtocol);
-        Task<int> ReadExtract(DbExtract extract, DbProtocol dbProtocol);
-
     }
 }
