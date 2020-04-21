@@ -14,41 +14,75 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Hts
-{ 
+{
     public class HtsPartnerTracingLoader : IHtsPartnerTracingLoader
     {
-        private readonly IHtsPartnerTracingExtractRepository _patientExtractRepository;
-        private readonly ITempHtsPartnerTracingExtractRepository _tempPatientExtractRepository;
+        private readonly IHtsPartnerTracingExtractRepository _htsPartnerTracingExtractRepository;
+        private readonly ITempHtsPartnerTracingExtractRepository _tempHtsPartnerTracingExtractRepository;
         private int Found { get; set; }
         private Guid ExtractId { get; set; }
 
-        public HtsPartnerTracingLoader(IHtsPartnerTracingExtractRepository patientExtractRepository, ITempHtsPartnerTracingExtractRepository tempPatientExtractRepository)
+        public HtsPartnerTracingLoader(IHtsPartnerTracingExtractRepository htsPartnerTracingExtractRepository, ITempHtsPartnerTracingExtractRepository tempHtsPartnerTracingExtractRepository)
         {
-            _patientExtractRepository = patientExtractRepository;
-            _tempPatientExtractRepository = tempPatientExtractRepository;
+            _htsPartnerTracingExtractRepository = htsPartnerTracingExtractRepository;
+            _tempHtsPartnerTracingExtractRepository = tempHtsPartnerTracingExtractRepository;
         }
 
-        public Task<int> Load()
+        public async Task<int> Load()
         {
+            int count = 0;
             try
             {
-                //load temp extracts without errors
-                //var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false).ToList();
-                var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a => a.ErrorType == 0).ToList();
+             /*
+                   DomainEvents.Dispatch(
+                    new ExtractActivityNotification(extractId, new DwhProgress(
+                        nameof(PatientExtract),
+                        nameof(ExtractStatus.Loading),
+                        found, 0, 0, 0, 0)));
 
-                //Auto mapper
-                var extractRecords = Mapper.Map<List<TempHtsPartnerTracing>, List<HtsPartnerTracing>>(tempPatientExtracts);
+                 */
 
-                //Batch Insert
-                _patientExtractRepository.BatchInsert(extractRecords);
-                Log.Debug("saved batch");
+                const int take = 1000;
+                var eCount = await  _tempHtsPartnerTracingExtractRepository.GetCleanCount();
+                var pageCount = _tempHtsPartnerTracingExtractRepository.PageCount(take, eCount);
 
+                int page = 1;
+                while (page <= pageCount)
+                {
+                    var tempHtsPartnerTracings =await
+                        _tempHtsPartnerTracingExtractRepository.GetAll(a => a.ErrorType == 0, page, take);
+
+                    var batch = tempHtsPartnerTracings.ToList();
+                    count += batch.Count;
+                    //Auto mapper
+                    var extractRecords = Mapper.Map<List<TempHtsPartnerTracing>, List<HtsPartnerTracing>>(batch);
+                    foreach (var record in extractRecords)
+                    {
+                        record.Id = LiveGuid.NewGuid();
+                    }
+                    //Batch Insert
+                    var inserted = _htsPartnerTracingExtractRepository.BatchInsert(extractRecords);
+                    if (!inserted)
+                    {
+                        Log.Error($"Extract {nameof(HtsPartnerTracing)} not Loaded");
+                        return 0;
+                    }
+                    Log.Debug("saved batch");
+                    page++;
+                    /*
+                    DomainEvents.Dispatch(
+                        new ExtractActivityNotification(extractId, new DwhProgress(
+                            nameof(PatientExtract),
+                            nameof(ExtractStatus.Loading),
+                            found, count, 0, 0, 0)));
+                    */
+                }
                 DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsPartnerTracing), "Loading...", Found, 0, 0, 0, 0)));
-                return Task.FromResult(tempPatientExtracts.Count);
-
+                return count;
             }
             catch (Exception e)
             {

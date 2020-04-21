@@ -10,5 +10,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts
     {
         Task Clear();
         bool BatchInsert(IEnumerable<TempHtsPartnerNotificationServices> extracts);
+        Task<int> GetCleanCount();
     }
 }

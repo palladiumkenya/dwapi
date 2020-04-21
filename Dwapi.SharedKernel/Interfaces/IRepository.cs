@@ -18,6 +18,7 @@ namespace Dwapi.SharedKernel.Interfaces
         IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate);
         Task<IPagedList<T>> GetAll(int? page, int pageSize,string sortField="",int? sortOrder=1);
         Task<IPagedList<T>> GetAll(string sql, int? page, int pageSize);
+        Task<IPagedList<T>> GetAll(Expression<Func<T, bool>> predicate,int? page, int pageSize);
         void Create(T entity);
         void Update(T entity);
         void CreateOrUpdate(T entity);

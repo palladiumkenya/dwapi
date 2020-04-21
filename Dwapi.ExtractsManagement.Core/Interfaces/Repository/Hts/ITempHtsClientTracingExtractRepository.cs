@@ -5,10 +5,11 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.SharedKernel.Interfaces;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts
-{ 
+{
     public interface ITempHtsClientTracingExtractRepository : IRepository<TempHtsClientTracing, Guid>
     {
         Task Clear();
         bool BatchInsert(IEnumerable<TempHtsClientTracing> extracts);
+        Task<int> GetCleanCount();
     }
 }

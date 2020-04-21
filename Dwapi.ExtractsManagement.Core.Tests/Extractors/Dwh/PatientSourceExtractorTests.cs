@@ -47,7 +47,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
         {
             Assert.False(_extractsContext.TempPatientExtracts.Any());
             var extract = _extracts.First(x => x.Name.IsSameAs(name));
+
             var count = _extractor.Extract(extract, _protocol).Result;
+
+            Assert.True(count > 0);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
             Assert.AreEqual(count,_extractsContext.TempPatientExtracts.Count());
             Log.Debug($"extracted {_extractsContext.TempPatientExtracts.Count()}");

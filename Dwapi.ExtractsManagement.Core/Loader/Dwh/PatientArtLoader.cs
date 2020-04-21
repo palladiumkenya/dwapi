@@ -30,6 +30,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
         public async Task<int> Load(Guid extractId, int found)
         {
+            int count = 0;
+
             try
             {
                 DomainEvents.Dispatch(
@@ -38,24 +40,26 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         nameof(ExtractStatus.Loading),
                         found, 0, 0, 0, 0)));
 
-                //load temp extracts without errors
-                StringBuilder querybuilder = new StringBuilder();
-                querybuilder.Append($" SELECT * FROM {nameof(TempPatientArtExtract)}s s");
-                querybuilder.Append($" INNER JOIN PatientExtracts p ON ");
-                querybuilder.Append($" s.PatientPK = p.PatientPK AND ");
-                querybuilder.Append($" s.SiteCode = p.SiteCode ");
-                //querybuilder.Append($" WHERE s.CheckError = 0");
 
-                string query = querybuilder.ToString();
-
-                var tempPatientArtExtracts = _tempPatientArtExtractRepository.GetFromSql(query);
+                StringBuilder query = new StringBuilder();
+                query.Append($" SELECT * FROM {nameof(TempPatientArtExtract)}s s");
+                query.Append($" INNER JOIN PatientExtracts p ON ");
+                query.Append($" s.PatientPK = p.PatientPK AND ");
+                query.Append($" s.SiteCode = p.SiteCode ");
 
                 const int take = 1000;
-                int skip = 0;
-                var count = tempPatientArtExtracts.Count();
-                while (skip < count)
+                var eCount = await  _tempPatientArtExtractRepository.GetCount(query.ToString());
+                var pageCount = _tempPatientArtExtractRepository.PageCount(take, eCount);
+
+                int page = 1;
+                while (page <= pageCount)
                 {
-                    var batch = tempPatientArtExtracts.Skip(skip).Take(take).ToList();
+                    var tempPatientArtExtracts =await
+                        _tempPatientArtExtractRepository.GetAll(query.ToString(), page, take);
+
+                    var batch = tempPatientArtExtracts.ToList();
+                    count += batch.Count;
+
                     //Auto mapper
                     var extractRecords = Mapper.Map<List<TempPatientArtExtract>, List<PatientArtExtract>>(batch);
                     foreach (var record in extractRecords)
@@ -70,15 +74,14 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         return 0;
                     }
                     Log.Debug("saved batch");
-                    skip = skip + take;
+                    page++;
                     DomainEvents.Dispatch(
                         new ExtractActivityNotification(extractId, new DwhProgress(
                             nameof(PatientArtExtract),
                             nameof(ExtractStatus.Loading),
-                            found, skip, 0, 0, 0)));
+                            found, count, 0, 0, 0)));
                 }
                 return count;
-
             }
             catch (Exception e)
             {

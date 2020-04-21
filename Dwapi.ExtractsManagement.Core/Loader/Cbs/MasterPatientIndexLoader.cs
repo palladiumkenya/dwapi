@@ -43,6 +43,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Cbs
                 var extractRecords = Mapper.Map<List<TempMasterPatientIndex>, List<MasterPatientIndex>>(tempPatientExtracts);
 
                 //Batch Insert
+                // TODO PLEASE PAGE DIS
                 _patientExtractRepository.BatchInsert(extractRecords);
                 Log.Debug("saved batch");
 

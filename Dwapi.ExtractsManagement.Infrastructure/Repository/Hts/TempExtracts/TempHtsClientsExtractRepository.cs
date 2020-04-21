@@ -115,10 +115,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
               */
             CloseConnection(cn);
         }
-
+        public Task<int> GetCleanCount()
+        {
+            return DbSet.AsNoTracking()
+                .Where(a => a.ErrorType == 0)
+                .Select(x => x.Id)
+                .CountAsync();
+        }
         private Task<int> GetSqlCommand(IDbConnection cn, string sql)
         {
             return cn.ExecuteAsync(sql);
         }
+
     }
 }

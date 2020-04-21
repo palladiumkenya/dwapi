@@ -18,6 +18,7 @@ using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Hts
 {
+    [Obsolete]
     public class HTSClientLoader : IHTSClientLoader
     {
         private readonly IHTSClientExtractRepository _patientExtractRepository;

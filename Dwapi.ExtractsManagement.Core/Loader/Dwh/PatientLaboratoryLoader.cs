@@ -41,13 +41,12 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         nameof(ExtractStatus.Loading),
                         found, 0, 0, 0, 0)));
 
-                //load temp extracts without errors
                 StringBuilder query = new StringBuilder();
                 query.Append($" SELECT s.* FROM {nameof(TempPatientLaboratoryExtract)}s s");
                 query.Append($" INNER JOIN PatientExtracts p ON ");
                 query.Append($" s.PatientPK = p.PatientPK AND ");
                 query.Append($" s.SiteCode = p.SiteCode ");
-                //query.Append($" WHERE s.CheckError = 0"); //load all the takaka
+
                 const int take = 5000;
                 var eCount = await  _tempPatientLaboratoryExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempPatientLaboratoryExtractRepository.PageCount(take, eCount);

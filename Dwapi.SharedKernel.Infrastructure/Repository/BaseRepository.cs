@@ -10,6 +10,7 @@ using Dapper;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Dwapi.SharedKernel.Enum;
+using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using X.PagedList;
 
@@ -58,6 +59,15 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         public Task<IPagedList<T>> GetAll(string sql, int? page, int pageSize)
         {
             var entities = DbSet.AsNoTracking().FromSql(sql)
+                .OrderBy(x => x.Id);
+
+            return entities.ToPagedListAsync(page ?? 1, pageSize);
+        }
+
+        public Task<IPagedList<T>> GetAll(Expression<Func<T, bool>> predicate, int? page, int pageSize)
+        {
+            var entities = DbSet.AsNoTracking()
+                .Where(predicate)
                 .OrderBy(x => x.Id);
 
             return entities.ToPagedListAsync(page ?? 1, pageSize);
@@ -115,6 +125,14 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
                 {
                     results = connection.Query<T>(query);
 
+                }
+            }
+
+            if (Context.Database.IsSqlite())
+            {
+                using (var connection = new SqliteConnection(cn))
+                {
+                    results = connection.Query<T>(query);
                 }
             }
 

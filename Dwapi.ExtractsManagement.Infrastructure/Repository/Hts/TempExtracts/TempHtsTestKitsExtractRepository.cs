@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
@@ -62,6 +63,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
                 Log.Error(e, "Failed batch insert");
                 return false;
             }
+        }
+
+        public Task<int> GetCleanCount()
+        {
+            return DbSet.AsNoTracking()
+                .Where(a => a.ErrorType == 0)
+                .Select(x => x.Id)
+                .CountAsync();
         }
     }
 }

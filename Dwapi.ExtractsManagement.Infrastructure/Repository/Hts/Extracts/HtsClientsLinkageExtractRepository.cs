@@ -7,12 +7,14 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
-{ 
+{
     public class HtsClientsLinkageExtractRepository : BaseRepository<HtsClientLinkage, Guid>, IHtsClientsLinkageExtractRepository
     {
         public HtsClientsLinkageExtractRepository(ExtractsContext context) : base(context)
@@ -35,6 +37,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
                 if (Context.Database.ProviderName.ToLower().Contains("MySql".ToLower()))
                 {
                     using (var connection = new MySqlConnection(cn))
+                    {
+                        connection.BulkInsert(extracts);
+                        return true;
+                    }
+                }
+                if (Context.Database.IsSqlite())
+                {
+                    using (var connection = new SqliteConnection(cn))
                     {
                         connection.BulkInsert(extracts);
                         return true;

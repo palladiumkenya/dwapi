@@ -29,6 +29,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
         public async Task<int> Load(Guid extractId, int found)
         {
+            int count = 0;
+
             try
             {
                 DomainEvents.Dispatch(
@@ -37,16 +39,18 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         nameof(ExtractStatus.Loading),
                         found, 0, 0, 0, 0)));
 
-                //load temp extracts without errors
-             //   var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false );
-                var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.ErrorType==0);
-
                 const int take = 1000;
-                int skip = 0;
-                var count = tempPatientExtracts.Count();
-                while (skip < count)
+                var eCount = await  _tempPatientExtractRepository.GetCleanCount();
+                var pageCount = _tempPatientExtractRepository.PageCount(take, eCount);
+
+                int page = 1;
+                while (page <= pageCount)
                 {
-                    var batch = tempPatientExtracts.Skip(skip).Take(take).ToList();
+                    var tempPatientExtracts =await
+                        _tempPatientExtractRepository.GetAll(a => a.ErrorType == 0, page, take);
+
+                    var batch = tempPatientExtracts.ToList();
+                    count += batch.Count;
                     //Auto mapper
                     var extractRecords = Mapper.Map<List<TempPatientExtract>, List<PatientExtract>>(batch);
                     foreach (var record in extractRecords)
@@ -61,12 +65,12 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         return 0;
                     }
                     Log.Debug("saved batch");
-                    skip = skip + take;
+                    page++;
                     DomainEvents.Dispatch(
                         new ExtractActivityNotification(extractId, new DwhProgress(
                             nameof(PatientExtract),
                             nameof(ExtractStatus.Loading),
-                            found, skip, 0, 0, 0)));
+                            found, count, 0, 0, 0)));
                 }
                 return count;
             }

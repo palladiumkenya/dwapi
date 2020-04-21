@@ -40,13 +40,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         nameof(ExtractStatus.Loading),
                         found, 0, 0, 0, 0)));
 
-                //load temp extracts without errors
+
                 StringBuilder query = new StringBuilder();
                 query.Append($" SELECT s.* FROM {nameof(TempPatientVisitExtract)}s s");
                 query.Append($" INNER JOIN PatientExtracts p ON ");
                 query.Append($" s.PatientPK = p.PatientPK AND ");
                 query.Append($" s.SiteCode = p.SiteCode ");
-                //query.Append($" WHERE s.CheckError = 0"); //load all the takaka
+
                 const int take = 5000;
                 var eCount = await  _tempPatientVisitExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempPatientVisitExtractRepository.PageCount(take, eCount);
@@ -58,7 +58,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         _tempPatientVisitExtractRepository.GetAll(query.ToString(), page, take);
 
                     var batch = tempPatientVisitExtracts.ToList();
-                    count += batch.Count();
+                    count += batch.Count;
 
                     //Auto mapper
                     var extractRecords = Mapper.Map<List<TempPatientVisitExtract>, List<PatientVisitExtract>>(batch);
