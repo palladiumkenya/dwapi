@@ -67,6 +67,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private readonly ExtractEventDTO _patientVisitExtractStatus;
         private readonly ExtractEventDTO _patientAdverseEventExtractStatus;
 
+        public HttpClient Client { get; set; }
+
         public DwhSendService(IDwhPackager packager, IDwhExtractReader reader, IExtractStatusService extractStatusService, IEmrSystemRepository emrSystemRepository)
         {
             _packager = packager;
@@ -100,7 +102,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             _patientAdverseEventExtractStatus = _extractStatusService.GetStatus(_patientAdverseEventExtract.Id);
 
         }
-
         public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
         {
             return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.EmrSetup).ToList()));
@@ -113,7 +114,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             };
-            var client = new HttpClient(handler);
+            var client =Client ?? new HttpClient(handler);
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
             foreach (var message in messageBag.Messages)
@@ -152,7 +153,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 {
                     AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
                 };
-                using (var client = new HttpClient(handler))
+                using (var client = Client ?? new HttpClient(handler))
                 {
                     client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
                     client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Http;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Tests.TestHelpers;
+using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Exchange.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Hts;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
 using Dwapi.UploadManagement.Core.Packager.Hts;
 using Dwapi.UploadManagement.Core.Services.Hts;
@@ -17,7 +20,9 @@ using Dwapi.UploadManagement.Infrastructure.Reader.Hts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
+using Serilog;
 
 namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
 {
@@ -25,42 +30,13 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
     [Category("Hts")]
     public class HtsSendServiceTests
     {
-        private readonly string _authToken = @"1983aeda-1a96-30e9-adc0-fa7ae01bbebc";
+        private readonly string _authToken = Guid.NewGuid().ToString();
         private readonly string _subId = "DWAPI";
-        private readonly string url = "http://dwapicentral.westeurope.cloudapp.azure.com:7777";
+        private readonly string url = "https://kenyahmis.org/api";
 
-        private IHtsSendService _htsSendService;
-        private IServiceProvider _serviceProvider;
-        private ManifestMessageBag _bag;
-        private HtsMessageBag _clientBag;
+        private IHtsSendService _sendService;
         private CentralRegistry _registry;
-
-        [OneTimeSetUp]
-        public void Init()
-        {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var connectionString = config["ConnectionStrings:DwapiConnection"];
-
-
-            _serviceProvider = new ServiceCollection()
-                .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
-                .AddTransient<IHtsSendService,HtsSendService>()
-            .AddTransient<IHtsPackager, HtsPackager>()
-                .AddTransient<IEmrMetricReader, EmrMetricReader>()
-                .AddTransient<IHtsExtractReader, HtsExtractReader>()
-
-                .BuildServiceProvider();
-
-            /*
-                22704|TOGONYE DISPENSARY|KIRINYAGA
-                22696|HERTLANDS MEDICAL CENTRE|NAROK
-            */
-
-            _bag = TestDataFactory.ManifestMessageBag(2,10001,10002);
-            _clientBag = TestDataFactory.HtsMessageBag(5, 10001, 10002);
-        }
+        private Mock<HttpMessageHandler> _manifestHandlerMock,_handlerMock;
 
         [SetUp]
         public void SetUp()
@@ -70,44 +46,45 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
                 AuthToken = _authToken,
                 SubscriberId = _subId
             };
-            _htsSendService = _serviceProvider.GetService<IHtsSendService>();
+            _sendService =TestInitializer.ServiceProvider.GetService<IHtsSendService>();
+            _manifestHandlerMock = MockHelpers.HttpHandler(new StringContent("{"+$"\"{nameof(SendManifestResponse.FacilityKey)}\":\"{Guid.Empty}\""+"}"));
+            _handlerMock = MockHelpers.HttpHandler(new StringContent("{"+$"\"{nameof(SendMpiResponse.BatchKey)}\":\"{Guid.Empty}\""+"}"));
         }
 
         [Test]
         public void should_Send_Manifest()
         {
-            var sendTo=new SendManifestPackageDTO(_registry);
+            _sendService.Client = new HttpClient(_manifestHandlerMock.Object);
+            var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _htsSendService.SendManifestAsync(sendTo, _bag).Result;
+            var responses = _sendService.SendManifestAsync(sendTo).Result;
+
             Assert.NotNull(responses);
-            Assert.False(responses.Select(x=>x.IsValid()).Any(x=>false));
-            foreach (var sendManifestResponse in responses)
-            {
-                Console.WriteLine(sendManifestResponse);
-            }
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+            responses.ForEach(sendManifestResponse => Log.Debug($"SENT! > {sendManifestResponse}"));
         }
 
 
         [Test]
         public void should_Send_Clients()
         {
+            _sendService.Client = new HttpClient(_handlerMock.Object);
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _htsSendService.SendClientsAsync(sendTo, _clientBag).Result;
+            var responses = _sendService.SendClientsLinkagesAsync(sendTo).Result;
+
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
-            foreach (var sendManifestResponse in responses)
-            {
-                Console.WriteLine(sendManifestResponse);
-            }
+            responses.ForEach(sendMpiResponse => Log.Debug($"SENT! > {sendMpiResponse}"));
         }
 
         [Test]
         public void should_Send_cLinkages()
         {
+            _sendService.Client = new HttpClient(_handlerMock.Object);
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _htsSendService.SendClientsLinkagesAsync(sendTo, _clientBag).Result;
+            var responses = _sendService.SendClientsLinkagesAsync(sendTo).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)
@@ -119,9 +96,10 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         [Test]
         public void should_Send_ClientTest()
         {
+            _sendService.Client = new HttpClient(_handlerMock.Object);
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _htsSendService.SendClientTestsAsync(sendTo, _clientBag).Result;
+            var responses = _sendService.SendClientTestsAsync(sendTo).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)
@@ -133,9 +111,10 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         [Test]
         public void should_Send_TestKits()
         {
+            _sendService.Client = new HttpClient(_handlerMock.Object);
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _htsSendService.SendTestKitsAsync(sendTo, _clientBag).Result;
+            var responses = _sendService.SendTestKitsAsync(sendTo).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)
@@ -147,9 +126,10 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         [Test]
         public void should_Send_ClientTracing()
         {
+            _sendService.Client = new HttpClient(_handlerMock.Object);
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _htsSendService.SendClientTracingAsync(sendTo, _clientBag).Result;
+            var responses = _sendService.SendClientTracingAsync(sendTo).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)
@@ -161,9 +141,10 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         [Test]
         public void should_Send_PartnerTracing()
         {
+            _sendService.Client = new HttpClient(_handlerMock.Object);
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _htsSendService.SendPartnerTracingAsync(sendTo, _clientBag).Result;
+            var responses = _sendService.SendPartnerTracingAsync(sendTo).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)
@@ -175,9 +156,10 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
         [Test]
         public void should_Send_PartnerNotificationServices()
         {
+            _sendService.Client = new HttpClient(_handlerMock.Object);
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _htsSendService.SendPartnerNotificationServicesAsync(sendTo, _clientBag).Result;
+            var responses = _sendService.SendPartnerNotificationServicesAsync(sendTo).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)

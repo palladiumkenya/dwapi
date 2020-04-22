@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Exchange;
@@ -9,6 +10,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Hts
 {
     public interface IHtsSendService
     {
+        HttpClient Client { get; set; }
+
         Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo);
         Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag messageBag);
 

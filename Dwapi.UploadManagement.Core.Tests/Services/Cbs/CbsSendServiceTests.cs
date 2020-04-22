@@ -47,7 +47,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
         private readonly string _subId = "DWAPI";
         private readonly string url = "https://kenyahmis.org/api";
 
-        private ICbsSendService _cbsSendService;
+        private ICbsSendService _sendService;
         private CentralRegistry _registry;
         private Mock<HttpMessageHandler> _manifestHandlerMock,_mpiHandlerMock;
 
@@ -59,21 +59,19 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
                 AuthToken = _authToken,
                 SubscriberId = _subId
             };
-
-            _cbsSendService =TestInitializer.ServiceProvider.GetService<ICbsSendService>();
-            _manifestHandlerMock = MockHelpers.HttpHandler(new StringContent(""));
-            _mpiHandlerMock = MockHelpers.HttpHandler(new StringContent(""));
-
+            _sendService =TestInitializer.ServiceProvider.GetService<ICbsSendService>();
+            _manifestHandlerMock = MockHelpers.HttpHandler(new StringContent("{"+$"\"{nameof(SendManifestResponse.FacilityKey)}\":\"{Guid.Empty}\""+"}"));
+            _mpiHandlerMock = MockHelpers.HttpHandler(new StringContent("{"+$"\"{nameof(SendMpiResponse.BatchKey)}\":\"{Guid.Empty}\""+"}"));
         }
 
         [Test]
         public void should_Send_Manifest()
         {
-            var httpClient = new HttpClient(_manifestHandlerMock.Object);
-            _cbsSendService.Client = httpClient;
+            _sendService.Client = new HttpClient(_manifestHandlerMock.Object);
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _cbsSendService.SendManifestAsync(sendTo).Result;
+            var responses = _sendService.SendManifestAsync(sendTo).Result;
+
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             responses.ForEach(sendManifestResponse => Log.Debug($"SENT! > {sendManifestResponse}"));
@@ -82,22 +80,14 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
         [Test]
         public void should_Send_Mpi()
         {
-            _mpiHandlerMock = _manifestHandlerMock;
-            _mpiHandlerMock..ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{"+$"\"{nameof(SendManifestResponse.FacilityKey)}\":\"{Guid.Empty}\""+"}"),
-                })
-                .Verifiable();
+            _sendService.Client = new HttpClient(_mpiHandlerMock.Object);
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _cbsSendService.SendMpiAsync(sendTo).Result;
+            var responses = _sendService.SendMpiAsync(sendTo).Result;
+
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
-            foreach (var sendManifestResponse in responses)
-            {
-                Console.WriteLine(sendManifestResponse);
-            }
+            responses.ForEach(sendMpiResponse => Log.Debug($"SENT! > {sendMpiResponse}"));
         }
      }
 }
