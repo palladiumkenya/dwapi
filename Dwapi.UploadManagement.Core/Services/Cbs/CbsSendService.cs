@@ -29,6 +29,8 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
         private readonly string _endPoint;
         private readonly ICbsPackager _packager;
 
+        public HttpClient Client { get; set; }
+
         public CbsSendService(ICbsPackager packager)
         {
             _packager = packager;
@@ -49,7 +51,7 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
         {
             var responses=new List<SendManifestResponse>();
 
-            var client = new HttpClient();
+            var client = Client ?? new HttpClient();
 
             foreach (var message in manifestMessage.Messages)
             {
@@ -82,7 +84,8 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
         {
             var responses = new List<SendMpiResponse>();
 
-            var client = new HttpClient();
+            var client = Client ?? new HttpClient();
+
             int sendCound=0;
             int count = 0;
             int total = messageBag.Messages.Count;

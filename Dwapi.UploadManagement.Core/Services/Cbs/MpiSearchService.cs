@@ -10,6 +10,7 @@ using Serilog;
 
 namespace Dwapi.UploadManagement.Core.Services.Cbs
 {
+    [Obsolete]
     public class MpiSearchService : IMpiSearchService
     {
         private readonly string _endPoint;

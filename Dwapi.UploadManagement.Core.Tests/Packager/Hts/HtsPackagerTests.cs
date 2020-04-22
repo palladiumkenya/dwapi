@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Serilog;
 
 namespace Dwapi.UploadManagement.Core.Tests.Packager.Hts
 {
@@ -26,11 +27,6 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Hts
     {
         private IHtsPackager _packager;
 
-        [OneTimeSetUp]
-        public void Init()
-        {
-            TestInitializer.ClearDb();
-        }
         [SetUp]
         public void SetUp()
         {
@@ -40,92 +36,115 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Hts
         [Test]
         public void should_Generate_Manifest()
         {
-            var manfiests = _packager.Generate(EmrSetup.SingleFacility).ToList();
-            Assert.True(manfiests.Any());
-            Assert.True(manfiests.Count==1);
-            var m = manfiests.First();
+            var manifests = _packager.Generate(EmrSetup.SingleFacility).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count==1);
+            var m = manifests.First();
             Assert.True(m.Cargoes.Any());
-            Console.WriteLine($"{m}");
+            Log.Debug($"{m}");
         }
 
         [Test]
         public void should_Generate_Multi_Manifest()
         {
-            var manfiests = _packager.Generate(EmrSetup.MultiFacility).ToList();
-            Assert.True(manfiests.Any());
-            Assert.True(manfiests.Count>1);
-            foreach (var m in manfiests)
+            var manifests = _packager.Generate(EmrSetup.MultiFacility).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count>1);
+            foreach (var m in manifests)
             {
                 Assert.True(m.Cargoes.Any());
-                Console.WriteLine($"{m}");
+                Log.Debug($"{m}");
             }
-
         }
 
         [Test]
         public void should_Generate_Manifest_With_Metrics()
         {
-            var manfiests = _packager.GenerateWithMetrics(EmrSetup.SingleFacility);
+            var manifests = _packager.GenerateWithMetrics(EmrSetup.SingleFacility).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count == 1);
+            var m = manifests.First();
+            Assert.True(m.Cargoes.Any(x => x.Type == CargoType.Patient));
+            Assert.True(m.Cargoes.Any(x => x.Type == CargoType.Metrics));
+            Assert.True(m.Cargoes.Any(x => x.Type == CargoType.AppMetrics));
+            Log.Debug($"{m}");
+            m.Cargoes.ForEach(c =>
+            {
+                Log.Debug($"{c.Type}");
+                Log.Debug($"     {c.Items} ");
+            });
+        }
+
+        [Test]
+        public void should_Generate_Multi_Manifest_With_Metrics()
+        {
+            var manfiests = _packager.GenerateWithMetrics(EmrSetup.MultiFacility).ToList();
             Assert.True(manfiests.Any());
-            var m = manfiests.First();
-            Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.Patient));
-            Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.Metrics));
-            Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.AppMetrics));
-            //Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Patient).Items} ");
-            Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Metrics).Items} ");
-            Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.AppMetrics).Items} ");
+            Assert.True(manfiests.Count>1);
+            foreach (var m in manfiests)
+            {
+                Assert.True(m.Cargoes.Any(x => x.Type == CargoType.Patient));
+                Assert.True(m.Cargoes.Any(x => x.Type == CargoType.Metrics));
+                Assert.True(m.Cargoes.Any(x => x.Type == CargoType.AppMetrics));
+                Log.Debug($"{m}");
+                m.Cargoes.ForEach(c =>
+                {
+                    Log.Debug($"{c.Type}");
+                    Log.Debug($"     {c.Items} ");
+                });
+            }
+        }
+
+        [Test]
+        public void should_Generate_Clients()
+        {
+            var clients = _packager.GenerateClients();
+            Assert.True(clients.Any());
         }
 
         [Test]
         public void should_Generate_ClientTests()
         {
-            var manfiests = _packager.GenerateClientTests();
-            Assert.True(manfiests.Any());
-
+            var tests = _packager.GenerateClientTests();
+            Assert.True(tests.Any());
         }
 
         [Test]
         public void should_Generate_TestKits()
         {
-            var manfiests = _packager.GenerateTestKits();
-            Assert.True(manfiests.Any());
-
+            var kits = _packager.GenerateTestKits();
+            Assert.True(kits.Any());
         }
 
         [Test]
-        public void should_Generate_PNS()
+        public void should_Generate_ClientTracings()
         {
-            var manfiests = _packager.GeneratePartnerNotificationServices();
-            Assert.True(manfiests.Any());
-
+            var clientTracing = _packager.GenerateClientTracing();
+            Assert.True(clientTracing.Any());
         }
+
         [Test]
         public void should_Generate_PartnerTracing()
         {
-            var manfiests = _packager.GeneratePartnerTracing();
-            Assert.True(manfiests.Any());
+            var tracing = _packager.GeneratePartnerTracing();
+            Assert.True(tracing.Any());
 
         }
+        [Test]
+        public void should_Generate_PNS()
+        {
+            var partnerNotificationServices = _packager.GeneratePartnerNotificationServices();
+            Assert.True(partnerNotificationServices.Any());
+
+        }
+
         [Test]
         public void should_Generate_Linkage()
         {
-            var manfiests = _packager.GenerateClientLinkage();
-            Assert.True(manfiests.Any());
+            var linkages = _packager.GenerateClientLinkage();
+            Assert.True(linkages.Any());
 
         }
-        [Test]
-        public void should_Generate_ClientTracking()
-        {
-            var manfiests = _packager.GenerateClientTracing();
-            Assert.True(manfiests.Any());
 
-        }
-        [Test]
-        public void should_Generate_Clients()
-        {
-            var manfiests = _packager.GenerateClients();
-            Assert.True(manfiests.Any());
-
-        }
     }
 }

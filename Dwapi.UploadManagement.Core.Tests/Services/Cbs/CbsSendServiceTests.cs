@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Profiles;
@@ -27,7 +31,11 @@ using FizzWare.NBuilder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using Moq.Protected;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
+using Serilog;
 
 namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
 {
@@ -35,48 +43,13 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
     [Category("Cbs")]
     public class CbsSendServiceTests
     {
-        private readonly string _authToken = @"1983aeda-6a96-11e8-adc0-fa7ae01bbebc";
+        private readonly string _authToken = Guid.NewGuid().ToString();
         private readonly string _subId = "DWAPI";
-        private readonly string url = "http://localhost:6767";
+        private readonly string url = "https://kenyahmis.org/api";
 
         private ICbsSendService _cbsSendService;
-        private IServiceProvider _serviceProvider;
-        private ManifestMessageBag _bag;
-        private MpiMessageBag _mpiBag;
         private CentralRegistry _registry;
-
-        [OneTimeSetUp]
-        public void Init()
-        {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var connectionString = config["ConnectionStrings:DwapiConnection"];
-
-
-            _serviceProvider = new ServiceCollection()
-                .AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString))
-                .AddTransient<ICbsSendService,CbsSendService>()
-            .AddTransient<ICbsPackager, CbsPackager>()
-            .AddTransient<ICbsExtractReader, CbsExtractReader>()
-
-                .BuildServiceProvider();
-
-            /*
-                22704|TOGONYE DISPENSARY|KIRINYAGA
-                22696|HERTLANDS MEDICAL CENTRE|NAROK
-            */
-
-            _bag = TestDataFactory.ManifestMessageBag(2,10001,10002);
-            _mpiBag = TestDataFactory.MpiMessageBag(5, 10001, 10002);
-
-            Mapper.Initialize(cfg =>
-                {
-                    cfg.AddProfile<MasterPatientIndexProfile>();
-                }
-            );
-
-        }
+        private Mock<HttpMessageHandler> _manifestHandlerMock,_mpiHandlerMock;
 
         [SetUp]
         public void SetUp()
@@ -86,30 +59,39 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
                 AuthToken = _authToken,
                 SubscriberId = _subId
             };
-            _cbsSendService = _serviceProvider.GetService<ICbsSendService>();
+
+            _cbsSendService =TestInitializer.ServiceProvider.GetService<ICbsSendService>();
+            _manifestHandlerMock = MockHelpers.HttpHandler(new StringContent(""));
+            _mpiHandlerMock = MockHelpers.HttpHandler(new StringContent(""));
+
         }
 
         [Test]
         public void should_Send_Manifest()
         {
-            var sendTo=new SendManifestPackageDTO(_registry);
+            var httpClient = new HttpClient(_manifestHandlerMock.Object);
+            _cbsSendService.Client = httpClient;
+            var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _cbsSendService.SendManifestAsync(sendTo, _bag).Result;
+            var responses = _cbsSendService.SendManifestAsync(sendTo).Result;
             Assert.NotNull(responses);
-            Assert.False(responses.Select(x=>x.IsValid()).Any(x=>false));
-            foreach (var sendManifestResponse in responses)
-            {
-                Console.WriteLine(sendManifestResponse);
-            }
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+            responses.ForEach(sendManifestResponse => Log.Debug($"SENT! > {sendManifestResponse}"));
         }
-
 
         [Test]
         public void should_Send_Mpi()
         {
+            _mpiHandlerMock = _manifestHandlerMock;
+            _mpiHandlerMock..ReturnsAsync(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent("{"+$"\"{nameof(SendManifestResponse.FacilityKey)}\":\"{Guid.Empty}\""+"}"),
+                })
+                .Verifiable();
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _cbsSendService.SendMpiAsync(sendTo, _mpiBag).Result;
+            var responses = _cbsSendService.SendMpiAsync(sendTo).Result;
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
             foreach (var sendManifestResponse in responses)
@@ -117,5 +99,5 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Cbs
                 Console.WriteLine(sendManifestResponse);
             }
         }
-    }
+     }
 }

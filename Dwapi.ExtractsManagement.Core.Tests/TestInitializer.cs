@@ -95,6 +95,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests
         public void Setup()
         {
             SqlMapper.AddTypeHandler<Guid>(new GuidTypeHandler());
+            SqlMapper.AddTypeHandler(new NullableLongHandler());
+            SqlMapper.AddTypeHandler(new NullableIntHandler());
+
             RegisterLicence();
             RemoveTestsFilesDbs();
 
