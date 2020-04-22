@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Serilog;
 
 namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
 {
@@ -25,15 +26,8 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
     {
         private ICbsPackager _packager;
 
-        [OneTimeSetUp]
-        public void Init()
-        {
-            TestInitializer.ClearDb();
-        }
-
-
         [SetUp]
-        public void SetUp()
+        public void Init()
         {
             _packager = TestInitializer.ServiceProvider.GetService<ICbsPackager>();
         }
@@ -41,40 +35,63 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
         [Test]
         public void should_Generate_Manifest()
         {
-            var manfiests = _packager.Generate(EmrSetup.SingleFacility).ToList();
-            Assert.True(manfiests.Any());
-            Assert.True(manfiests.Count==1);
-            var m = manfiests.First();
+            var manifests = _packager.Generate(EmrSetup.SingleFacility).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count==1);
+            var m = manifests.First();
             Assert.True(m.Cargoes.Any());
-            Console.WriteLine($"{m}");
+            Log.Debug($"{m}");
         }
 
         [Test]
         public void should_Generate_Multi_Manifest()
         {
-            var manfiests = _packager.Generate(EmrSetup.MultiFacility).ToList();
-            Assert.True(manfiests.Any());
-            Assert.True(manfiests.Count>1);
-            foreach (var m in manfiests)
+            var manifests = _packager.Generate(EmrSetup.MultiFacility).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count>1);
+            foreach (var m in manifests)
             {
                 Assert.True(m.Cargoes.Any());
-                Console.WriteLine($"{m}");
+                Log.Debug($"{m}");
             }
-
         }
 
         [Test]
         public void should_Generate_Manifest_With_Metrics()
         {
-            var manfiests = _packager.GenerateWithMetrics(EmrSetup.SingleFacility);
+            var manifests = _packager.GenerateWithMetrics(EmrSetup.SingleFacility).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count == 1);
+            var m = manifests.First();
+            Assert.True(m.Cargoes.Any(x => x.Type == CargoType.Patient));
+            Assert.True(m.Cargoes.Any(x => x.Type == CargoType.Metrics));
+            Assert.True(m.Cargoes.Any(x => x.Type == CargoType.AppMetrics));
+            Log.Debug($"{m}");
+            m.Cargoes.ForEach(c =>
+            {
+                Log.Debug($"{c.Type}");
+                Log.Debug($"     {c.Items} ");
+            });
+        }
+
+        [Test]
+        public void should_Generate_Multi_Manifest_With_Metrics()
+        {
+            var manfiests = _packager.GenerateWithMetrics(EmrSetup.MultiFacility).ToList();
             Assert.True(manfiests.Any());
-            var m = manfiests.First();
-            Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.Patient));
-            Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.Metrics));
-            Assert.True(m.Cargoes.Any(x=>x.Type==CargoType.AppMetrics));
-            Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Patient).Items} ");
-            Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.Metrics).Items} ");
-            Console.WriteLine($"{m} |{m.Cargoes.First().Type} < {m.Cargoes.First(x=>x.Type==CargoType.AppMetrics).Items} ");
+            Assert.True(manfiests.Count>1);
+            foreach (var m in manfiests)
+            {
+                Assert.True(m.Cargoes.Any(x => x.Type == CargoType.Patient));
+                Assert.True(m.Cargoes.Any(x => x.Type == CargoType.Metrics));
+                Assert.True(m.Cargoes.Any(x => x.Type == CargoType.AppMetrics));
+                Log.Debug($"{m}");
+                m.Cargoes.ForEach(c =>
+                {
+                    Log.Debug($"{c.Type}");
+                    Log.Debug($"     {c.Items} ");
+                });
+            }
         }
 
         [Test]

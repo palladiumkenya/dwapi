@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.UploadManagement.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Serilog;
@@ -10,6 +13,14 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader
     public class DwhExtractReaderTests
     {
         private IDwhExtractReader _reader;
+        private Guid _pid;
+
+        [OneTimeSetUp]
+        public void Init()
+        {
+            var context= TestInitializer.ServiceProvider.GetService<UploadContext>();
+            _pid = context.ClientPatientExtracts.AsNoTracking().First().Id;
+        }
 
         [SetUp]
         public void SetUp()
@@ -29,6 +40,14 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader
         {
             var extractViews = _reader.ReadAllIds().ToList();
             Assert.True(extractViews.Any());
+        }
+
+        [Test]
+        public void should_Read_By_Ids()
+        {
+            var extractViews = _reader.Read(_pid);
+            Assert.NotNull(extractViews);
+            Assert.True(extractViews.PatientArtExtracts.Any());
         }
 
         [Test]

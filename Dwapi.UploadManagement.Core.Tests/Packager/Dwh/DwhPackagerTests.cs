@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Serilog;
 
 namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
 {
@@ -32,65 +33,84 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         [OneTimeSetUp]
         public void Init()
         {
-            TestInitializer.ClearDb();
-            Mapper.Initialize(cfg =>
-                {
-                    cfg.AddProfile<MasterPatientIndexProfile>();
-                }
-            );
+            var context= TestInitializer.ServiceProvider.GetService<UploadContext>();
+            _pid = context.ClientPatientExtracts.AsNoTracking().First().Id;
         }
-
 
         [SetUp]
         public void SetUp()
         {
             _packager = TestInitializer.ServiceProvider.GetService<IDwhPackager>();
-
         }
 
         [Test]
         public void should_Generate_Manifest()
         {
-            var manfiests = _packager.Generate(EmrSetup.SingleFacility).ToList();
-            Assert.True(manfiests.Any());
-            Assert.True(manfiests.Count==1);
-            var m = manfiests.First();
+            var manifests = _packager.Generate(EmrSetup.SingleFacility).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count==1);
+            var m = manifests.First();
             Assert.True(m.PatientPks.Any());
-            Console.WriteLine($"{m}");
+            Log.Debug($"{m}");
         }
 
         [Test]
         public void should_Generate_Multi_Manifest()
         {
-            var manfiests = _packager.Generate(EmrSetup.MultiFacility).ToList();
-            Assert.True(manfiests.Any());
-            Assert.True(manfiests.Count>1);
-            foreach (var m in manfiests)
+            var manifests = _packager.Generate(EmrSetup.MultiFacility).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count>1);
+            foreach (var m in manifests)
             {
                 Assert.True(m.PatientPks.Any());
-                Console.WriteLine($"{m}");
+                Log.Debug($"{m}");
             }
-
         }
 
         [Test]
         public void should_Generate_Manifest_With_Metrics()
         {
-            var manfiests = _packager.GenerateWithMetrics(EmrSetup.SingleFacility).ToList();
-            Assert.True(manfiests.Any());
-            var m = manfiests.First();
+            var manifests = _packager.GenerateWithMetrics(EmrSetup.SingleFacility).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count==1);
+            var m = manifests.First();
             Assert.True(m.PatientPks.Any());
-            Assert.False(string.IsNullOrWhiteSpace(m.Metrics));
-            Console.WriteLine($"{m}");
-            Console.WriteLine(m.Metrics);
+            Assert.True(m.FacMetrics.Any(x => x.CargoType == CargoType.Metrics));
+            Assert.True(m.FacMetrics.Any(x => x.CargoType == CargoType.AppMetrics));
+            Log.Debug($"{m}");
+            m.FacMetrics.ForEach(c =>
+            {
+                Log.Debug($"{c.CargoType}");
+                Log.Debug($"     {c.Metric} ");
+            });
+        }
+
+        [Test]
+        public void should_Generate_Multi_Manifest_With_Metrics()
+        {
+            var manifests = _packager.GenerateWithMetrics(EmrSetup.MultiFacility).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count > 1);
+            foreach (var m in manifests)
+            {
+                Assert.True(m.PatientPks.Any());
+                Assert.True(m.FacMetrics.Any(x => x.CargoType == CargoType.Metrics));
+                Assert.True(m.FacMetrics.Any(x => x.CargoType == CargoType.AppMetrics));
+                Log.Debug($"{m}");
+                m.FacMetrics.ForEach(c =>
+                {
+                    Log.Debug($"{c.CargoType}");
+                    Log.Debug($"     {c.Metric} ");
+                });
+            }
         }
 
         [Test]
         public void should_Generate_Extracts()
         {
-            var manfiests = _packager.GenerateExtracts(_pid);
-            Assert.NotNull(manfiests);
-            Assert.True(manfiests.PatientArtExtracts.Any());
+            var extracts = _packager.GenerateExtracts(_pid);
+            Assert.NotNull(extracts);
+            Assert.True(extracts.PatientArtExtracts.Any());
         }
     }
 }
