@@ -52,6 +52,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
             _extractor = TestInitializer.ServiceProvider.GetService<IHtsPartnerTracingSourceExtractor>();
             _extract = _extracts.First(x => x.Name.IsSameAs(nameof(HtsPartnerTracing)));
             _count = _extractor.Extract(_extract, _protocol).Result;
+
+
         }
 
         [Test]
