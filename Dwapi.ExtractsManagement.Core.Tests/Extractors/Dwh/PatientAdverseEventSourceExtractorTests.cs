@@ -43,15 +43,15 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
         [TestCase(nameof(PatientAdverseEventExtract))]
         public void should_Extract(string name)
         {
-            Assert.False(_extractsContext.PatientAdverseEventExtracts.Any());
+            Assert.False(_extractsContext.TempPatientAdverseEventExtracts.Any());
             var extract = _extracts.First(x => x.Name.IsSameAs(name));
 
             var count = _extractor.Extract(extract, _protocol).Result;
 
             Assert.True(count > 0);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
-            Assert.AreEqual(count,_extractsContext.PatientAdverseEventExtracts.Count());
-            Log.Debug($"extracted {_extractsContext.PatientAdverseEventExtracts.Count()}");
+            Assert.AreEqual(count,_extractsContext.TempPatientAdverseEventExtracts.Count());
+            Log.Debug($"extracted {_extractsContext.TempPatientAdverseEventExtracts.Count()}");
         }
     }
 }

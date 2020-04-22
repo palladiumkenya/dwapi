@@ -16,5 +16,10 @@
             SiteName = siteName;
             PatientPk = patientPk;
         }
+
+        public override string ToString()
+        {
+            return $"{PatientPk}|{SiteCode}|{SiteName} ";
+        }
     }
 }

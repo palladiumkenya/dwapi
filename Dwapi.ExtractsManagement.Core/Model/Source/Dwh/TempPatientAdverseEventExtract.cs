@@ -20,7 +20,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public bool HasData()
         {
             return !string.IsNullOrWhiteSpace(PatientID) &&
-                   !PatientPK.HasValue &&
+                   PatientPK.HasValue &&
                    SiteCode.HasValue;
         }
     }
