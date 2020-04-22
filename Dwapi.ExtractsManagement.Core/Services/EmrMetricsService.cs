@@ -18,6 +18,13 @@ namespace Dwapi.ExtractsManagement.Core.Services
     {
         private HttpClient _httpClient;
         private readonly IEmrMetricRepository _emrMetricRepository;
+
+        public HttpClient Client
+        {
+            get { return _httpClient; }
+            set { _httpClient = value; }
+        }
+
         public EmrMetricsService(IEmrMetricRepository emrMetricRepository)
         {
             _emrMetricRepository = emrMetricRepository;
