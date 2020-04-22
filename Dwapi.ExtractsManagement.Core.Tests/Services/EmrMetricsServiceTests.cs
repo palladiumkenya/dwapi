@@ -79,16 +79,11 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Services
 
             var metrics = _metricsService.Read(_authProtocol, _url).Result;
 
-
             var savedMetrics = _emrMetricRepository.GetAll().First();
-
             Assert.NotNull(metrics);
-
             Assert.NotNull(savedMetrics);
-
             Assert.AreEqual(metrics.EmrName,savedMetrics.EmrName);
             Assert.AreEqual(metrics.EmrVersion    ,savedMetrics.EmrVersion);
-
             Console.WriteLine(metrics);
         }
     }
