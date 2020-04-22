@@ -21,8 +21,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
     [TestFixture]
     public class HtsClientTracingLoaderTests
     {
-        private IHtsClientsLinkageLoader _loader;
-        private IHtsClientsLinkageSourceExtractor _extractor;
+        private IHtsClientTracingLoader _loader;
+        private IHtsClientTracingSourceExtractor _extractor;
         private List<Extract> _extracts;
         private DbProtocol _protocol;
         private ExtractsContext _extractsContext;
@@ -48,9 +48,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
         [SetUp]
         public void SetUp()
         {
-            _loader = TestInitializer.ServiceProvider.GetService<IHtsClientsLinkageLoader>();
-            _extractor = TestInitializer.ServiceProvider.GetService<IHtsClientsLinkageSourceExtractor>();
-            _extract = _extracts.First(x => x.Name.IsSameAs(nameof(HtsClientLinkage)));
+            _loader = TestInitializer.ServiceProvider.GetService<IHtsClientTracingLoader>();
+            _extractor = TestInitializer.ServiceProvider.GetService<IHtsClientTracingSourceExtractor>();
+            _extract = _extracts.First(x => x.Name.IsSameAs(nameof(HtsClientTracing)));
             _count = _extractor.Extract(_extract, _protocol).Result;
         }
 
@@ -58,14 +58,14 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
         public void should_Load()
         {
             Assert.True(_count > 0);
-            Assert.False(_extractsContext.HtsClientsLinkageExtracts.Any());
+            Assert.False(_extractsContext.HtsClientTracingExtracts.Any());
 
             var count = _loader.Load(_extract.Id,_count).Result;
 
-            Assert.True(count >= _count);
+            Assert.True(count > 0);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
-            Assert.AreEqual(count,_extractsContext.HtsClientsLinkageExtracts.Count());
-            Log.Debug($"Temp {_count} Main {_extractsContext.HtsClientsLinkageExtracts.Count()}");
+            Assert.AreEqual(count,_extractsContext.HtsClientTracingExtracts.Count());
+            Log.Debug($"Temp {_count} Main {_extractsContext.HtsClientTracingExtracts.Count()}");
         }
     }
 }

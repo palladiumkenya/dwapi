@@ -56,7 +56,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
 
             var count = _loader.Load(_extract.Id,_count).Result;
 
-            Assert.True(count >= _count);
+            Assert.True(count > 0);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
             Assert.AreEqual(count,_extractsContext.HtsClientsExtracts.Count());
             Log.Debug($"Temp {_count} Main {_extractsContext.HtsClientsExtracts.Count()}");
