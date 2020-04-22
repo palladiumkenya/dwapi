@@ -9,6 +9,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Tests.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Moq.Protected;
@@ -34,23 +35,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Services
             _emrMetricRepository = TestInitializer.ServiceProvider.GetService<IEmrMetricRepository>();
             _metricsService = TestInitializer.ServiceProvider.GetService<IEmrMetricsService>();
 
-             _handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
-            _handlerMock
-                .Protected()
-                // Setup the PROTECTED method to mock
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                // prepare the expected response of the mocked http call
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{\"lastLoginDate\":\"2020-03-19T11:46:55.423\",\"emrVersion\":\"EMR Ver 3.0 R1 2\",\"emrName\":\"EMR\",\"lastMoH731RunDate\":\"2019-10-01T00:00:00\"}"),
-                })
-                .Verifiable();
-
+            _handlerMock = MockHelpers.HttpHandler(new StringContent(
+                "{\"lastLoginDate\":\"2020-03-19T11:46:55.423\",\"emrVersion\":\"EMR Ver 3.0 R1 2\",\"emrName\":\"EMR\",\"lastMoH731RunDate\":\"2019-10-01T00:00:00\"}"));
             var httpClient = new HttpClient(_handlerMock.Object);
             _metricsService.Client = httpClient;
         }
