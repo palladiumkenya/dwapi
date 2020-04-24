@@ -122,15 +122,20 @@ namespace Dwapi
         public static IHubContext<CbsSendActivity> CbsSendHubContext;
         public static IHubContext<HtsSendActivity> HtsSendHubContext;
         public static IHubContext<HtsActivity> HtsHubContext;
+        public static AppFeature AppFeature;
+        private IHostingEnvironment CurrrentEnv;
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("implementation.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"implementation.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
+            CurrrentEnv = env;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -146,9 +151,6 @@ namespace Dwapi
 
             services.AddResponseCompression(options =>
             {
-
-
-
                 options.Providers.Add<GzipCompressionProvider>();
                 options.EnableForHttps = true;
                 options.MimeTypes =
@@ -194,7 +196,6 @@ namespace Dwapi
                 .AddJsonOptions(o =>
                     o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-
             services.ConfigureWritable<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             var connectionString = Startup.Configuration["ConnectionStrings:DwapiConnection"];
             DatabaseProvider provider = (DatabaseProvider) Convert.ToInt32(Configuration["ConnectionStrings:Provider"]);
@@ -237,6 +238,18 @@ namespace Dwapi
             catch (Exception e)
             {
                 Log.Error(e, "Connections not Initialized");
+            }
+
+            try
+            {
+                var name = Configuration["Features:PKV:Name"];
+                var description = Configuration["Features:PKV:Description"];
+                var key = Configuration["Features:PKV:Key"];
+                AppFeature = AppFeature.Load(name, description, key, CurrrentEnv.IsDevelopment());
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Features not Initialized");
             }
 
             services.AddTransient<ExtractsContext>();
@@ -414,7 +427,6 @@ namespace Dwapi
             services.AddScoped<IEmrMetricReader, EmrMetricReader>();
 
             services.AddScoped<IAppMetricRepository, AppMetricRepository>();
-
             var container = new Container();
             container.Populate(services);
             ServiceProvider = container.GetInstance<IServiceProvider>();
@@ -503,7 +515,14 @@ namespace Dwapi
                     cfg.AddProfile<TempMasterPatientIndexProfile>();
                     cfg.AddProfile<EmrProfiles>();
                     cfg.AddProfile<TempHtsExtractProfile>();
-                    cfg.AddProfile<MasterPatientIndexProfile>();
+                    if (null != AppFeature && AppFeature.PKV.IsValid)
+                    {
+                        cfg.AddProfile<MasterPatientIndexProfileResearch>();
+                    }
+                    else
+                    {
+                        cfg.AddProfile<MasterPatientIndexProfile>();
+                    }
                 }
             );
 
@@ -525,6 +544,14 @@ namespace Dwapi
             stopWatch.Stop();
 
             Log.Debug(@"initializing Database [Complete]");
+            if (null != AppFeature)
+            {
+                Log.Debug(new string('=',50));
+                Log.Debug("Features");
+                Log.Debug($"    {AppFeature.PKV}");
+                Log.Debug(new string('=',50));
+            }
+
             Log.Debug(
                 @"---------------------------------------------------------------------------------------------------");
             Log.Debug
