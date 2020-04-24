@@ -11,33 +11,42 @@ using Dwapi.Custom;
 using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
 using Dwapi.ExtractsManagement.Core.Cleaner.Hts;
+using Dwapi.ExtractsManagement.Core.Cleaner.Mgs;
 using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Extractors.Hts;
+using Dwapi.ExtractsManagement.Core.Extractors.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mgs;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Dwh;
 using Dwapi.ExtractsManagement.Core.Loader.Hts;
+using Dwapi.ExtractsManagement.Core.Loader.Mgs;
 using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
@@ -48,6 +57,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Hts;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Mgs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
@@ -59,12 +69,17 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Validations;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Extracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.TempExtracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Hts;
+using Dwapi.ExtractsManagement.Infrastructure.Validators.Mgs;
 using Dwapi.Hubs.Cbs;
 using Dwapi.Hubs.Dwh;
 using Dwapi.Hubs.Hts;
+using Dwapi.Hubs.Mgs;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
@@ -78,27 +93,33 @@ using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
+using Dwapi.UploadManagement.Core.Interfaces.Packager.Mgs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Hts;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Mgs;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Mgs;
 using Dwapi.UploadManagement.Core.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Packager.Hts;
+using Dwapi.UploadManagement.Core.Packager.Mgs;
 using Dwapi.UploadManagement.Core.Profiles;
 using Dwapi.UploadManagement.Core.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services.Dwh;
 using Dwapi.UploadManagement.Core.Services.Hts;
+using Dwapi.UploadManagement.Core.Services.Mgs;
 using Dwapi.UploadManagement.Core.Services.Psmart;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Dwapi.UploadManagement.Infrastructure.Reader;
 using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Reader.Dwh;
 using Dwapi.UploadManagement.Infrastructure.Reader.Hts;
+using Dwapi.UploadManagement.Infrastructure.Reader.Mgs;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using MediatR;
@@ -129,8 +150,11 @@ namespace Dwapi
         public static IHubContext<CbsSendActivity> CbsSendHubContext;
         public static IHubContext<HtsSendActivity> HtsSendHubContext;
         public static IHubContext<HtsActivity> HtsHubContext;
+        public static IHubContext<MgsSendActivity> MgsSendHubContext;
+        public static IHubContext<MgsActivity> MgsHubContext;
         public static AppFeature AppFeature;
         private IHostingEnvironment CurrrentEnv;
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -212,11 +236,12 @@ namespace Dwapi
                 if (provider == DatabaseProvider.MySql)
                 {
                     services.AddDbContext<SettingsContext>(o =>
-                    {
-                        o.UseMySql(connectionString,
-                           x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name));
-                        o.EnableSensitiveDataLogging(false);
-                    }
+                        {
+                            o.UseMySql(connectionString,
+                                x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName()
+                                    .Name));
+                            o.EnableSensitiveDataLogging(false);
+                        }
                     );
                     services.AddDbContext<ExtractsContext>(o => o.UseMySql(connectionString,
                         x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
@@ -227,15 +252,14 @@ namespace Dwapi
                 if (provider == DatabaseProvider.MsSql)
                 {
                     services.AddDbContext<SettingsContext>(
-                        o => {
+                        o =>
+                        {
                             o.UseSqlServer(connectionString,
-                      x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName().Name));
+                                x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName()
+                                    .Name));
                             o.EnableSensitiveDataLogging(false);
-
-
                         }
-
-                        );
+                    );
                     services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString,
                         x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
                     services.AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString,
@@ -369,7 +393,9 @@ namespace Dwapi
             services.AddScoped<ITempHtsTestKitsExtractRepository, TempHtsTestKitsExtractRepository>();
             services.AddScoped<ITempHtsClientTracingExtractRepository, TempHtsClientTracingExtractRepository>();
             services.AddScoped<ITempHtsPartnerTracingExtractRepository, TempHtsPartnerTracingExtractRepository>();
-            services.AddScoped<ITempHtsPartnerNotificationServicesExtractRepository, TempHtsPartnerNotificationServicesExtractRepository>();
+            services
+                .AddScoped<ITempHtsPartnerNotificationServicesExtractRepository,
+                    TempHtsPartnerNotificationServicesExtractRepository>();
 
             services.AddScoped<IHtsClientsExtractRepository, HtsClientsExtractRepository>();
             services.AddScoped<IHtsClientsLinkageExtractRepository, HtsClientsLinkageExtractRepository>();
@@ -377,19 +403,37 @@ namespace Dwapi
             services.AddScoped<IHtsTestKitsExtractRepository, HtsTestKitsExtractRepository>();
             services.AddScoped<IHtsClientTracingExtractRepository, HtsClientTracingExtractRepository>();
             services.AddScoped<IHtsPartnerTracingExtractRepository, HtsPartnerTracingExtractRepository>();
-            services.AddScoped<IHtsPartnerNotificationServicesExtractRepository, HtsPartnerNotificationServicesExtractRepository>();
+            services
+                .AddScoped<IHtsPartnerNotificationServicesExtractRepository,
+                    HtsPartnerNotificationServicesExtractRepository>();
 
-            services.AddScoped<ITempHTSClientExtractErrorSummaryRepository, TempHTSClientExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHTSClientLinkageExtractErrorSummaryRepository, TempHTSClientLinkageExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHTSClientPartnerExtractErrorSummaryRepository, TempHTSClientPartnerExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHTSClientExtractErrorSummaryRepository, TempHTSClientExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHTSClientLinkageExtractErrorSummaryRepository,
+                    TempHTSClientLinkageExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHTSClientPartnerExtractErrorSummaryRepository,
+                    TempHTSClientPartnerExtractErrorSummaryRepository>();
 
-            services.AddScoped<ITempHtsClientsExtractErrorSummaryRepository, TempHtsClientsExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientLinkageErrorSummaryRepository, TempHtsClientsLinkageExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientTestsErrorSummaryRepository, TempHtsClientTestsExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsClientsExtractErrorSummaryRepository, TempHtsClientsExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsClientLinkageErrorSummaryRepository,
+                    TempHtsClientsLinkageExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsClientTestsErrorSummaryRepository, TempHtsClientTestsExtractErrorSummaryRepository
+                >();
             services.AddScoped<ITempHtsTestKitsErrorSummaryRepository, TempHtsTestKitsExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientTracingErrorSummaryRepository, TempHtsClientTracingExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsPartnerTracingErrorSummaryRepository, TempHtsPartnerTracingExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsPartnerNotificationServicesErrorSummaryRepository, TempHtsPartnerNotificationServicesExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsClientTracingErrorSummaryRepository,
+                    TempHtsClientTracingExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsPartnerTracingErrorSummaryRepository,
+                    TempHtsPartnerTracingExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsPartnerNotificationServicesErrorSummaryRepository,
+                    TempHtsPartnerNotificationServicesExtractErrorSummaryRepository>();
 
             //services.AddScoped<ICleanHtsExtracts, CleanHtsExtracts>();
             services.AddScoped<IClearHtsExtracts, ClearHtsExtracts>();
@@ -406,7 +450,9 @@ namespace Dwapi
             services.AddScoped<IHtsTestKitsSourceExtractor, HtsTestKitsSourceExtractor>();
             services.AddScoped<IHtsClientTracingSourceExtractor, HtsClientTracingSourceExtractor>();
             services.AddScoped<IHtsPartnerTracingSourceExtractor, HtsPartnerTracingSourceExtractor>();
-            services.AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor>();
+            services
+                .AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor
+                >();
 
             /*services.AddScoped<IHTSClientLoader, HTSClientLoader>();
             services.AddScoped<IHTSClientLinkageLoader, HTSClientLinkageLoader>();
@@ -415,16 +461,36 @@ namespace Dwapi
             services.AddScoped<IHtsClientsLoader, HtsClientsLoader>();
             services.AddScoped<IHtsClientTestsLoader, HtsClientTestsLoader>();
             services.AddScoped<IHtsClientsLinkageLoader, HtsClientsLinkageLoader>();
-            services.AddScoped<IHtsTestKitsLoader,   HtsTestKitsLoader>();
+            services.AddScoped<IHtsTestKitsLoader, HtsTestKitsLoader>();
             services.AddScoped<IHtsClientTracingLoader, HtsClientTracingLoader>();
             services.AddScoped<IHtsPartnerTracingLoader, HtsPartnerTracingLoader>();
-            services.AddScoped<IHtsPartnerNotificationServicesLoader, HtsPartnerNotificationServicesLoader >();
+            services.AddScoped<IHtsPartnerNotificationServicesLoader, HtsPartnerNotificationServicesLoader>();
 
             services.AddScoped<IHtsPackager, HtsPackager>();
             services.AddScoped<IHtsSendService, HtsSendService>();
             services.AddScoped<IHtsExtractValidator, HtsExtractValidator>();
             services.AddScoped<IHtsSendService, HtsSendService>();
             services.AddScoped<IHtsExtractReader, HtsExtractReader>();
+
+
+            services.AddScoped<ITempMetricMigrationExtractRepository, TempMetricMigrationExtractRepository>();
+            services.AddScoped<IMetricMigrationExtractRepository, MetricMigrationExtractRepository>();
+            services
+                .AddScoped<ITempMetricMigrationExtractErrorSummaryRepository,
+                    TempMetricMigrationExtractErrorSummaryRepository>();
+            services.AddScoped<ICleanMgsExtracts, CleanMgsExtracts>();
+            services.AddScoped<IClearMgsExtracts, ClearMgsExtracts>();
+
+
+            services.AddScoped<IMgsExtractSourceReader, MgsExtractSourceReader>();
+            services.AddScoped<IMetricMigrationSourceExtractor, MetricMigrationSourceExtractor>();
+            services.AddScoped<IMgsExtractReader, MgsExtractReader>();
+            services.AddScoped<IMetricMigrationLoader, MetricMigrationLoader>();
+            services.AddScoped<IMgsPackager, MgsPackager>();
+            services.AddScoped<IMgsSendService, MgsSendService>();
+            services.AddScoped<IMetricExtractValidator, MetricExtractValidator>();
+
+
             services.AddScoped<IHtsSendService, HtsSendService>();
 
             services.AddScoped<IAppDatabaseManager, AppDatabaseManager>();
@@ -493,7 +559,6 @@ namespace Dwapi
                 ServerName = $"dwapi",
                 WorkerCount = Environment.ProcessorCount * 5,
                 Queues = new string[] {"mpi", "default"}
-
             };
             app.UseHangfireDashboard();
             app.UseHangfireServer(hfServerOptions);
@@ -509,9 +574,11 @@ namespace Dwapi
                     routes.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}");
                     routes.MapHub<CbsActivity>($"/{nameof(CbsActivity).ToLower()}");
                     routes.MapHub<HtsActivity>($"/{nameof(HtsActivity).ToLower()}");
+                    routes.MapHub<MgsActivity>($"/{nameof(MgsActivity).ToLower()}");
                     routes.MapHub<DwhSendActivity>($"/{nameof(DwhSendActivity).ToLower()}");
                     routes.MapHub<CbsSendActivity>($"/{nameof(CbsSendActivity).ToLower()}");
                     routes.MapHub<HtsSendActivity>($"/{nameof(HtsSendActivity).ToLower()}");
+                    routes.MapHub<MgsSendActivity>($"/{nameof(MgsSendActivity).ToLower()}");
                 }
             );
 
@@ -553,10 +620,10 @@ namespace Dwapi
             Log.Debug(@"initializing Database [Complete]");
             if (null != AppFeature)
             {
-                Log.Debug(new string('=',50));
+                Log.Debug(new string('=', 50));
                 Log.Debug("Features");
                 Log.Debug($"    {AppFeature.PKV}");
-                Log.Debug(new string('=',50));
+                Log.Debug(new string('=', 50));
             }
 
             Log.Debug(
@@ -594,8 +661,6 @@ namespace Dwapi
                 Log.Debug($"initializing Database context: {contextName} Error");
                 Log.Debug($"{e}");
             }
-
         }
-
     }
 }
