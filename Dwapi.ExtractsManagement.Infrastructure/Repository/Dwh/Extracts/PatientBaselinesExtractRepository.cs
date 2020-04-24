@@ -12,7 +12,7 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
 {
     public class PatientBaselinesExtractRepository : BaseRepository<PatientBaselinesExtract, Guid>,IPatientBaselinesExtractRepository
     {

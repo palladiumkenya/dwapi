@@ -1,10 +1,8 @@
 using System;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
-using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Destination;
 using Dwapi.SharedKernel.Infrastructure.Repository;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 {

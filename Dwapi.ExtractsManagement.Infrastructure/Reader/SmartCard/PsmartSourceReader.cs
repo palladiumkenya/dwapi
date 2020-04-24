@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Data;
-using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Model.Source;
 using Dwapi.SharedKernel.Enum;
@@ -14,7 +13,7 @@ using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using Serilog;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Reader
+namespace Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard
 {
     public class PsmartSourceReader : IPsmartSourceReader
     {

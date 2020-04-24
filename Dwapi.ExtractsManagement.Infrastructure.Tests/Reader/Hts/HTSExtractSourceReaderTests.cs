@@ -13,11 +13,11 @@ using NUnit.Framework;
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
 {
     [TestFixture]
-    [Category("Dwh")]
+    [Category("Hts")]
     public class HTSExtractSourceReaderTests
     {
 
-        private IExtractSourceReader _reader;
+        private IDwhExtractSourceReader _reader;
         private List<Extract> _extracts;
         private DbProtocol _protocol;
 
@@ -33,7 +33,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Hts
         [SetUp]
         public void SetUp()
         {
-            _reader = TestInitializer.ServiceProvider.GetService<IExtractSourceReader>();
+            _reader = TestInitializer.ServiceProvider.GetService<IDwhExtractSourceReader>();
         }
 
         [TestCase(nameof(HtsClientLinkage))]

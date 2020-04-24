@@ -1,28 +1,26 @@
 ﻿using System;
-using System.Collections;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
-using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Interfaces;
 using Dwapi.SharedKernel.Model;
 using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
+using Serilog;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh
+namespace Dwapi.ExtractsManagement.Infrastructure.Reader
 {
-    public class ExtractSourceReader : IExtractSourceReader
+
+    public abstract class SourceReader : ISourceReader
     {
-        public IDbConnection Connection { get; private set; }
-
-
-        public int Find(DbProtocol protocol, DbExtract extract)
+        public virtual IDbConnection Connection { get; private set; }
+        public virtual int Find(DbProtocol protocol, DbExtract extract)
         {
             throw new NotImplementedException();
         }
 
-
-        public Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract)
+        public virtual Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract)
         {
             var sourceConnection = GetConnection(protocol);
             if (null == sourceConnection)
@@ -46,6 +44,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh
         public IDbConnection GetConnection(DbProtocol databaseProtocol)
         {
             var connectionString = databaseProtocol.GetConnectionString();
+            Log.Debug(new string('+',40));
+            Log.Debug(connectionString);
+            Log.Debug(new string('+',40));
 
             if (databaseProtocol.DatabaseType == DatabaseType.Sqlite)
                 return new SqliteConnection(connectionString);

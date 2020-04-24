@@ -8,11 +8,13 @@ using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.TempExtracts
 {
     public class TempMetricMigrationExtractRepository : BaseRepository<TempMetricMigrationExtract, Guid>, ITempMetricMigrationExtractRepository
     {
@@ -37,6 +39,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs
                 if (Context.Database.ProviderName.ToLower().Contains("MySql".ToLower()))
                 {
                     using (var connection = new MySqlConnection(cn))
+                    {
+                        connection.BulkInsert(extracts);
+                        return true;
+                    }
+                }
+
+                if (Context.Database.IsSqlite())
+                {
+                    using (var connection = new SqliteConnection(cn))
                     {
                         connection.BulkInsert(extracts);
                         return true;

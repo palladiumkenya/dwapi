@@ -20,18 +20,18 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mgs
     {
         private readonly IMetricMigrationSourceExtractor _patientSourceExtractor;
         private readonly IMetricExtractValidator _extractValidator;
-        private readonly IMetricMigrationLoader _patientLoader;
-        private readonly ICleanMgsExtracts _clearDwhExtracts;
-        private readonly ITempMetricMigrationExtractRepository _tempPatientExtractRepository;
+        private readonly IMetricMigrationLoader _migrationLoader;
+        private readonly ICleanMgsExtracts _cleanMgsExtracts;
+        private readonly ITempMetricMigrationExtractRepository _tempMetricMigrationExtractRepository;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractMetricMigrationHandler(IMetricMigrationSourceExtractor patientSourceExtractor, IMetricExtractValidator extractValidator, IMetricMigrationLoader patientLoader, ICleanMgsExtracts clearDwhExtracts, ITempMetricMigrationExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractMetricMigrationHandler(IMetricMigrationSourceExtractor patientSourceExtractor, IMetricExtractValidator extractValidator, IMetricMigrationLoader migrationLoader, ICleanMgsExtracts cleanMgsExtracts, ITempMetricMigrationExtractRepository tempMetricMigrationExtractRepository, IExtractHistoryRepository extractHistoryRepository)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
-            _patientLoader = patientLoader;
-            _clearDwhExtracts = clearDwhExtracts;
-            _tempPatientExtractRepository = tempPatientExtractRepository;
+            _migrationLoader = migrationLoader;
+            _cleanMgsExtracts = cleanMgsExtracts;
+            _tempMetricMigrationExtractRepository = tempMetricMigrationExtractRepository;
             _extractHistoryRepository = extractHistoryRepository;
         }
 
@@ -46,7 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mgs
             await _extractValidator.Validate(request.Extract.Id, found, "Migration", "TempMetricMigrationExtracts");
 
             //Load
-            int loaded = await _patientLoader.Load(request.Extract.Id, found);
+            int loaded = await _migrationLoader.Load(request.Extract.Id, found);
 
             int rejected =
                 _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract);

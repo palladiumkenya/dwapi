@@ -4,7 +4,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Base
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Validations.Base
 {
     public abstract class TempExtractErrorSummaryRepository<T> : ITempExtractErrorSummaryRepository<T> where T: TempExtractErrorSummary
     {

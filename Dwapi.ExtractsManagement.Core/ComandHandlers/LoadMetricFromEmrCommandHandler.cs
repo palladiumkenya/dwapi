@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Commands.Mgs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
 using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers
@@ -22,7 +23,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
             await _mediator.Send(new ClearAllMetricExtracts(extractIds), cancellationToken);
 
-            var migration = request.Extracts.FirstOrDefault(x => x.Extract.Name == "Migration");
+            var migration = request.Extracts.FirstOrDefault(x => x.Extract.Name == nameof(MetricMigrationExtract));
 
             if (migration != null)
             {

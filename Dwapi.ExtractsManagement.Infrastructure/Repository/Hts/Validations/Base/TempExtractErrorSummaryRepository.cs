@@ -4,7 +4,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Validations.Base
 {
     public abstract class TempHTSExtractErrorSummaryRepository<T> : ITempHTSExtractErrorSummaryRepository<T> where T: TempHTSExtractErrorSummary
     {

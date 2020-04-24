@@ -4,7 +4,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Validations
 {
     public abstract class TempMetricExtractErrorSummaryRepository<T> : ITempMetricExtractErrorSummaryRepository<T> where T: TempMetricExtractErrorSummary
     {

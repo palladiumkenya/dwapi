@@ -19,11 +19,11 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 {
     public class PatientLaboratorySourceExtractor : IPatientLaboratorySourceExtractor
     {
-        private readonly IExtractSourceReader _reader;
+        private readonly IDwhExtractSourceReader _reader;
         private readonly IMediator _mediator;
         private readonly ITempPatientLaboratoryExtractRepository _extractRepository;
 
-        public PatientLaboratorySourceExtractor(IExtractSourceReader reader, IMediator mediator, ITempPatientLaboratoryExtractRepository extractRepository)
+        public PatientLaboratorySourceExtractor(IDwhExtractSourceReader reader, IMediator mediator, ITempPatientLaboratoryExtractRepository extractRepository)
         {
             _reader = reader;
             _mediator = mediator;

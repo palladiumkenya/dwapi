@@ -10,7 +10,6 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;

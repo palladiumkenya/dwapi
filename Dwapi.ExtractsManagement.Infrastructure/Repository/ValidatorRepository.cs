@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 

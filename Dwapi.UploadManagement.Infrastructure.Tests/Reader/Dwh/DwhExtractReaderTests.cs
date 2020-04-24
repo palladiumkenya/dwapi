@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Serilog;
 
-namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader
+namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader.Dwh
 {
     [TestFixture]
     public class DwhExtractReaderTests

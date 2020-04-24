@@ -6,6 +6,10 @@ namespace Dwapi.SharedKernel.Model
         public string SiteName { get; set; }
         public int MetricId { get; set; }
 
+        public SiteMetricProfile()
+        {
+        }
+
         public SiteMetricProfile(int siteCode, string siteName, int metricId)
         {
             SiteCode = siteCode;

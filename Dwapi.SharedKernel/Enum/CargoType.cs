@@ -4,6 +4,7 @@
     {
         Patient,
         Metrics,
-        AppMetrics
+        AppMetrics,
+        Migration
     }
 }

@@ -8,51 +8,74 @@ using Dapper;
 using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
 using Dwapi.ExtractsManagement.Core.Cleaner.Hts;
+using Dwapi.ExtractsManagement.Core.Cleaner.Mgs;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Extractors.Hts;
+using Dwapi.ExtractsManagement.Core.Extractors.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Hts;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mgs;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Dwh;
 using Dwapi.ExtractsManagement.Core.Loader.Hts;
+using Dwapi.ExtractsManagement.Core.Loader.Mgs;
 using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Profiles.Hts;
+using Dwapi.ExtractsManagement.Core.Profiles.Mgs;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Hts;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Mgs;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Extracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Validations;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Extracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.TempExtracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Hts;
+using Dwapi.ExtractsManagement.Infrastructure.Validators.Mgs;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
@@ -143,10 +166,11 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             #region Readers
 
             services.AddTransient<IMasterPatientIndexReader, MasterPatientIndexReader>();
-            services.AddTransient<IExtractSourceReader, ExtractSourceReader>();
+            services.AddTransient<IDwhExtractSourceReader, DwhExtractSourceReader>();
             services.AddTransient<IHTSExtractSourceReader, HTSExtractSourceReader>();
             services.AddTransient<IPsmartSourceReader, PsmartSourceReader>();
-
+            // NEW
+            services.AddScoped<IMgsExtractSourceReader,MgsExtractSourceReader>();
             #endregion
 
             services.AddTransient<IEmrMetricRepository, EmrMetricRepository>();
@@ -263,10 +287,28 @@ namespace Dwapi.ExtractsManagement.Core.Tests
 
             #endregion
 
+            #region MGS
+
+            #region Extracts
+            services.AddScoped<IMetricMigrationExtractRepository, MetricMigrationExtractRepository>();
+            #endregion
+
+            #region TempExtracts
+            services.AddScoped<ITempMetricMigrationExtractRepository, TempMetricMigrationExtractRepository>();
+            #endregion
+
+            #region Validations
+            services.AddScoped<ITempMetricMigrationExtractErrorSummaryRepository, TempMetricMigrationExtractErrorSummaryRepository>();
+            #endregion
+
+            #endregion
+
             #region Validators
             services.AddTransient<IMasterPatientIndexValidator, MasterPatientIndexValidator>();
             services.AddTransient<IExtractValidator, ExtractValidator>();
             services.AddTransient<IHtsExtractValidator, HtsExtractValidator>();
+            // NEW
+            services.AddScoped<IMetricExtractValidator,MetricExtractValidator>();
             #endregion
 
             #endregion
@@ -276,6 +318,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddScoped<ICleanCbsExtracts, CleanCbsExtracts>();
             services.AddScoped<IClearDwhExtracts, ClearDwhExtracts>();
             services.AddScoped<IClearHtsExtracts, ClearHtsExtracts>();
+            services.AddScoped<ICleanMgsExtracts, CleanMgsExtracts>();
+            services.AddScoped<IClearMgsExtracts, ClearMgsExtracts>();
 
             #endregion
             #region Extractors
@@ -297,6 +341,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddScoped<IHtsClientTracingSourceExtractor, HtsClientTracingSourceExtractor>();
             services.AddScoped<IHtsPartnerTracingSourceExtractor, HtsPartnerTracingSourceExtractor>();
             services.AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor>();
+
+            services.AddScoped<IMetricMigrationSourceExtractor,MetricMigrationSourceExtractor>();
             #endregion
 
             #region Loaders
@@ -319,6 +365,9 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddScoped<IHtsClientTracingLoader, HtsClientTracingLoader>();
             services.AddScoped<IHtsPartnerTracingLoader, HtsPartnerTracingLoader>();
             services.AddScoped<IHtsPartnerNotificationServicesLoader, HtsPartnerNotificationServicesLoader >();
+
+            services.AddScoped<IMetricMigrationLoader, MetricMigrationLoader>();
+
             #endregion
             #region Services
             services.AddScoped<ICbsSendService, CbsSendService>();
@@ -328,6 +377,8 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddScoped<IHtsSendService, HtsSendService>();
             services.AddScoped<IHtsSendService, HtsSendService>();
             services.AddScoped<IEmrMetricsService, EmrMetricsService>();
+           // services.AddScoped<IMgsSendService, MgsSendService>();
+
             #endregion
 
 
@@ -343,6 +394,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
                                 cfg.AddProfile<EmrProfiles>();
                                 cfg.AddProfile<TempHtsExtractProfile>();
                                 cfg.AddProfile<MasterPatientIndexProfile>();
+                                cfg.AddProfile<TempMetricExtractProfile>();
                             }
                         );
 

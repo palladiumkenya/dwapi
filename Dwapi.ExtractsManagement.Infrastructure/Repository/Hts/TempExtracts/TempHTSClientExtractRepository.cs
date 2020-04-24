@@ -12,7 +12,7 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts
 {
     [Obsolete("Class is obsolete,use TempHtsClientsExtractRepository")]
     public class TempHTSClientExtractRepository : BaseRepository<TempHTSClientExtract, Guid>, ITempHTSClientExtractRepository

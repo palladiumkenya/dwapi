@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
 using Microsoft.Data.Sqlite;
@@ -13,7 +12,7 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Extracts
 {
     public class HtsClientsExtractRepository : BaseRepository<HtsClients, Guid>, IHtsClientsExtractRepository
     {

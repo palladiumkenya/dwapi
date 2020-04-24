@@ -6,8 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
-using Dwapi.ExtractsManagement.Core.Model;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Microsoft.Data.Sqlite;
@@ -16,7 +14,7 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
 {
     public class TempPatientExtractRepository : BaseRepository<TempPatientExtract, Guid>, ITempPatientExtractRepository
     {

@@ -5,6 +5,7 @@ using Dwapi.UploadManagement.Core.Model;
 using Dwapi.UploadManagement.Core.Model.Cbs;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 using Dwapi.UploadManagement.Core.Model.Hts;
+using Dwapi.UploadManagement.Core.Model.Mgs;
 using EFCore.Seeder.Configuration;
 using EFCore.Seeder.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<HtsPartnerNotificationServicesExtractView> PartnerNotificationServicesExtracts { get; set; }
         public virtual DbSet<HtsClientTracingExtractView> ClientTracingExtracts { get; set; }
 
+        public virtual DbSet<MetricMigrationExtractView> MetricMigrationExtracts { get; set; }
 
         public virtual DbSet<EmrMetricView> EmrMetrics { get; set; }
         public virtual DbSet<AppMetricView> AppMetrics { get; set; }

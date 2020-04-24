@@ -61,6 +61,35 @@ namespace Dwapi.SharedKernel.Exchange
             return manifests;
         }
 
+        public static IEnumerable<Manifest> Create(IEnumerable<SiteMetricProfile> profiles, EmrSetup emrSetup,
+            IEnumerable<Site> sites, CargoType type = CargoType.Patient)
+        {
+            var manifests = new List<Manifest>();
+
+            if (emrSetup == EmrSetup.SingleFacility)
+            {
+                var site = sites.OrderByDescending(x => x.PatientCount).First();
+                var manifest = new Manifest(site);
+                manifest.AddCargo(profiles.Select(x => x.MetricId).ToList(), CargoType.Migration);
+                manifests.Add(manifest);
+                return manifests;
+            }
+
+            // multi site setup
+
+            foreach (var site in sites)
+            {
+                var manifest=new Manifest(site);
+                var pks = profiles
+                    .Where(x => x.SiteCode == site.SiteCode)
+                    .Select(x => x.MetricId)
+                    .ToList();
+                manifest.AddCargo(pks,CargoType.Migration);
+                manifests.Add(manifest);
+            }
+            return manifests;
+        }
+
         public void AddCargo(List<int> patienPks, CargoType type = CargoType.Patient)
         {
             var items = string.Join(',', patienPks);

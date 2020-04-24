@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
@@ -12,7 +12,7 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts
 {
     public class TempHtsClientsLinkageExtractRepository : BaseRepository<TempHtsClientLinkage, Guid>, ITempHtsClientsLinkageExtractRepository
     {

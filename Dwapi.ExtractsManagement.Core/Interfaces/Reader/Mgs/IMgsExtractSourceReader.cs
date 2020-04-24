@@ -2,7 +2,7 @@
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs
 {
-    public interface IMetricExtractSourceReader : ISourceReader
+    public interface IMgsExtractSourceReader : ISourceReader
     {
     }
 }

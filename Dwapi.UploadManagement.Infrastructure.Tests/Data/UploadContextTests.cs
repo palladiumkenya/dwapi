@@ -61,6 +61,12 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Data
         }
 
         [Test]
+        public void should_load_Migration_Metrics_From_References()
+        {
+            Assert.True(_context.MetricMigrationExtracts.Any());
+        }
+
+        [Test]
         public void should_load_Metrics_From_References()
         {
             Assert.True(_context.AppMetrics.Any());

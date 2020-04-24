@@ -9,7 +9,7 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts
 {
     [Obsolete]
     public class TempHTSClientLinkageExtractRepository: BaseRepository<TempHTSClientLinkageExtract, Guid>, ITempHTSClientLinkageExtractRepository

@@ -1,11 +1,10 @@
 ﻿using System.Linq;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
-using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Serilog;
 
-namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader
+namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader.Cbs
 {
     [TestFixture]
     public class CbsExtractReaderTests

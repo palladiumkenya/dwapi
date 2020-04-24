@@ -10,7 +10,7 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Extracts
 {
     public class HTSClientPartnerExtractRepository : BaseRepository<HTSClientPartnerExtract, Guid>, IHTSClientPartnerExtractRepository
     {

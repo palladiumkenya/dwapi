@@ -6,9 +6,12 @@ using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
-using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
-using Dwapi.ExtractsManagement.Core.Notifications;
+ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
+ using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
+ using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
+ using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
+ using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
+ using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Serilog;
@@ -17,15 +20,15 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mgs
 {
     public class MetricMigrationLoader : IMetricMigrationLoader
     {
-        private readonly IHTSClientExtractRepository _patientExtractRepository;
-        private readonly ITempHTSClientExtractRepository _tempPatientExtractRepository;
+        private readonly IMetricMigrationExtractRepository _extractRepository;
+        private readonly ITempMetricMigrationExtractRepository _tempExtractRepository;
         private int Found { get; set; }
         private Guid ExtractId { get; set; }
 
-        public MetricMigrationLoader(IHTSClientExtractRepository patientExtractRepository, ITempHTSClientExtractRepository tempPatientExtractRepository)
+        public MetricMigrationLoader(IMetricMigrationExtractRepository extractRepository, ITempMetricMigrationExtractRepository tempExtractRepository)
         {
-            _patientExtractRepository = patientExtractRepository;
-            _tempPatientExtractRepository = tempPatientExtractRepository;
+            _extractRepository = extractRepository;
+            _tempExtractRepository = tempExtractRepository;
         }
 
         public Task<int> Load()
@@ -33,23 +36,23 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mgs
             try
             {
                 //load temp extracts without errors
-                //var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a=>a.CheckError == false).ToList();
-                var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a => a.ErrorType == 0).ToList();
+                //var tempPatientExtracts = _tempExtractRepository.GetAll().Where(a=>a.CheckError == false).ToList();
+                var tempPatientExtracts = _tempExtractRepository.GetAll().Where(a => a.ErrorType == 0).ToList();
 
                 //Auto mapper
-                var extractRecords = Mapper.Map<List<TempHTSClientExtract>, List<HTSClientExtract>>(tempPatientExtracts);
+                var extractRecords = Mapper.Map<List<TempMetricMigrationExtract>, List<MetricMigrationExtract>>(tempPatientExtracts);
 
                 //Batch Insert
-                _patientExtractRepository.BatchInsert(extractRecords);
+                _extractRepository.BatchInsert(extractRecords);
                 Log.Debug("saved batch");
 
-                DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientExtract), "Loading...", Found, 0, 0, 0, 0)));
+                DomainEvents.Dispatch(new MgsNotification(new ExtractProgress(nameof(MetricMigrationExtract), "Loading...", Found, 0, 0, 0, 0)));
                 return Task.FromResult(tempPatientExtracts.Count);
 
             }
             catch (Exception e)
             {
-                Log.Error(e, $"Extract {nameof(HTSClientExtract)} not Loaded");
+                Log.Error(e, $"Extract {nameof(MetricMigrationExtract)} not Loaded");
                 throw;
             }
         }

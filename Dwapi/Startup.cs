@@ -48,10 +48,17 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Hts;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Extracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Hts;
@@ -313,7 +320,7 @@ namespace Dwapi
             services.AddScoped<IPsmartSourceReader, PsmartSourceReader>();
             services.AddScoped<IPsmartSendService, PsmartSendService>();
 
-            services.AddScoped<IExtractSourceReader, ExtractSourceReader>();
+            services.AddScoped<IDwhExtractSourceReader, DwhExtractSourceReader>();
             services.AddScoped<IPatientSourceExtractor, PatientSourceExtractor>();
             services.AddScoped<IPatientArtSourceExtractor, PatientArtSourceExtractor>();
             services.AddScoped<IPatientBaselinesSourceExtractor, PatientBaselinesSourceExtractor>();

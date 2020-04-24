@@ -16,7 +16,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
     [Category("Dwh")]
     public class ExtractSourceReaderTests
     {
-        private IExtractSourceReader _reader;
+        private IDwhExtractSourceReader _reader;
         private List<Extract> _extracts;
         private DbProtocol _protocol;
 
@@ -32,7 +32,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
         [SetUp]
         public void SetUp()
         {
-            _reader = TestInitializer.ServiceProvider.GetService<IExtractSourceReader>();
+            _reader = TestInitializer.ServiceProvider.GetService<IDwhExtractSourceReader>();
         }
 
         [TestCase(nameof(PatientExtract))]

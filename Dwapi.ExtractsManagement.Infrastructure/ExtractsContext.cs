@@ -123,10 +123,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 
         public DbSet<TempMetricMigrationExtract> TempMetricMigrationExtracts { get; set; }
         public DbSet<MetricMigrationExtract> MetricMigrationExtracts { get; set; }
-        /*
         public DbSet<TempMetricMigrationExtractError>  TempMetricMigrationExtractErrors { get; set; }
         public DbSet<TempMetricMigrationExtractErrorSummary> TempMetricMigrationExtractErrorSummaries { get; set; }
-        */
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
@@ -278,6 +276,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempHtsClientLinkage>().Key(x => x.Id).Table($"{nameof(TempHtsClientsLinkageExtracts)}");
             DapperPlusManager.Entity<TempHtsTestKits>().Key(x => x.Id).Table($"{nameof(TempHtsTestKitsExtracts)}");
             DapperPlusManager.Entity<TempHtsPartnerTracing>().Key(x => x.Id).Table($"{nameof(TempHtsPartnerTracingExtracts)}");
+
+            DapperPlusManager.Entity<MetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(MetricMigrationExtracts)}");
+            DapperPlusManager.Entity<TempMetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(TempMetricMigrationExtracts)}");
 
            // DapperPlusManager.MapperFactory = mapper => mapper.BatchTimeout(6000);
         }

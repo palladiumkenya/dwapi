@@ -10,7 +10,7 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
 {
     public class TempPatientArtExtractRepository : BaseRepository<TempPatientArtExtract, Guid>, ITempPatientArtExtractRepository
     {

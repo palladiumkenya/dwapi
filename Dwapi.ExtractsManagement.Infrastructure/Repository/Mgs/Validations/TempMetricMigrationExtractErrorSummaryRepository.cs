@@ -1,8 +1,7 @@
 ﻿using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
-using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Validations
 {
     public class TempMetricMigrationExtractErrorSummaryRepository :TempMetricExtractErrorSummaryRepository<TempMetricMigrationExtractErrorSummary>, ITempMetricMigrationExtractErrorSummaryRepository
     {

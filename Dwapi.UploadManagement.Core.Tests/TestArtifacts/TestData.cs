@@ -281,6 +281,18 @@ namespace Dwapi.UploadManagement.Core.Tests.TestArtifacts
       ^EmrSystemId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^,
       ^DocketId^: ^CBS^,
       ^DatabaseProtocolId^: ^A6221AA4-0E85-11E8-BA89-0ED5F89F718B^
+    },
+    {
+      ^Id^: ^48742EB0-6656-E811-8E16-9CB6D0DA773C^,
+      ^IsPriority^: true,
+      ^Rank^: 1.00,
+      ^Name^: ^MetricMigrationExtract^,
+      ^Display^: ^Migration^,
+      ^ExtractSql^: ^SELECT ID as MetricId,Dataset,Metric,MetricValue,SiteCode,Emr,FacilityName,'KenyaHMIS' as Project,CreateDate FROM DWAPI_Migration_Metrics^,
+      ^Destination^: ^MgsStage^,
+      ^EmrSystemId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^,
+      ^DocketId^: ^MGS^,
+      ^DatabaseProtocolId^: ^A6221AA4-0E85-11E8-BA89-0ED5F89F718B^
     }
   ]
             ";
