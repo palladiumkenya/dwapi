@@ -2229,6 +2229,8 @@ FROM adv
      INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK"|dwhstage|0|PatientAdverseEventExtract|8|a6221988-0e85-11e8-ba89-0ed5f89f718b
 
 
+
+
 3253E133-E110-4D8E-B669-3832B244F6E0|All Patients|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         e.patient_id AS PatientPK,
         pi.identifier AS PatientID,

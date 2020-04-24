@@ -6,10 +6,12 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
+using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
 using Dwapi.SharedKernel.Infrastructure;
 using EFCore.Seeder.Configuration;
 using EFCore.Seeder.Extensions;
@@ -119,7 +121,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsClientLinkageErrorSummary> TempHtsClientsLinkageExtractsErrorSummaries { get; set; }
         public DbSet<TempHtsPartnerNotificationServicesErrorSummary> TempHtsPartnerNotificationServicesExtractsErrorSummaries { get; set; }
 
-
+        public DbSet<TempMetricMigrationExtract> TempMetricMigrationExtracts { get; set; }
+        public DbSet<MetricMigrationExtract> MetricMigrationExtracts { get; set; }
+        /*
+        public DbSet<TempMetricMigrationExtractError>  TempMetricMigrationExtractErrors { get; set; }
+        public DbSet<TempMetricMigrationExtractErrorSummary> TempMetricMigrationExtractErrorSummaries { get; set; }
+        */
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {

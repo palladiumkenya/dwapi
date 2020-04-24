@@ -48,6 +48,9 @@ namespace Dwapi.SettingsManagement.Infrastructure
             if (!Dockets.Any())
                 Dockets.SeedDbSetIfEmpty($"{nameof(Dockets)}");
 
+            if (!Dockets.Any(x => x.Id =="MGS"))
+                Dockets.SeedFromResource($"{nameof(Dockets)}New");
+
             var reg = CentralRegistries.ToList();
             if (reg.Any())
             {
