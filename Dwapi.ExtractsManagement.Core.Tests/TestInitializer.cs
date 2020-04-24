@@ -53,7 +53,6 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Hts;
-using Dwapi.SettingsManagement.Core.Application.Metrics.Queries.Handlers;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;

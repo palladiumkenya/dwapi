@@ -1,18 +1,12 @@
 using System;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
-using Dwapi.ExtractsManagement.Core.Services;
-using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Tests.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using Moq.Protected;
 using NUnit.Framework;
 
 namespace Dwapi.ExtractsManagement.Core.Tests.Services
