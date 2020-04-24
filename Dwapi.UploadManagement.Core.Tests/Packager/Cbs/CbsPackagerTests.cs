@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Linq;
 using AutoMapper;
+using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
+using Dwapi.ExtractsManagement.Core.Profiles;
+using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
+using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
+using Dwapi.ExtractsManagement.Core.Profiles.Hts;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
@@ -101,6 +106,47 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
             Assert.False(manfiests.Any(x=>!string.IsNullOrWhiteSpace(x.FirstName_Normalized)));
             var m = manfiests.First();
             Console.WriteLine($"{m} |{m.FirstName} ");
+        }
+
+        [Test]
+        public void should_Generate_MpiDecodedDtos()
+        {
+            Allow();
+            var manfiests = _packager.GenerateDtoMpi().ToList();
+            Assert.False(manfiests.Any(x => string.IsNullOrWhiteSpace(x.FirstName_Normalized)));
+            var m = manfiests.First();
+            Log.Debug($"{m} |{m.FirstName} ");
+            Reset();
+        }
+
+        private void Allow()
+        {
+            Mapper.Reset();
+            Mapper.Initialize(cfg =>
+                {
+                    cfg.AddDataReaderMapping();
+                    cfg.AddProfile<TempExtractProfile>();
+                    cfg.AddProfile<TempMasterPatientIndexProfile>();
+                    cfg.AddProfile<EmrProfiles>();
+                    cfg.AddProfile<TempHtsExtractProfile>();
+                    cfg.AddProfile<MasterPatientIndexProfileResearch>();
+                }
+            );
+        }
+
+        private void Reset()
+        {
+            Mapper.Reset();
+            Mapper.Initialize(cfg =>
+                {
+                    cfg.AddDataReaderMapping();
+                    cfg.AddProfile<TempExtractProfile>();
+                    cfg.AddProfile<TempMasterPatientIndexProfile>();
+                    cfg.AddProfile<EmrProfiles>();
+                    cfg.AddProfile<TempHtsExtractProfile>();
+                    cfg.AddProfile<MasterPatientIndexProfile>();
+                }
+            );
         }
     }
 }

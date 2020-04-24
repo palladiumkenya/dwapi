@@ -10,4 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Application\Features" />
+  </ItemGroup>
 </Project>

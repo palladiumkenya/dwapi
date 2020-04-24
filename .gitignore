@@ -266,3 +266,4 @@ Dwapi/logs
 Dwapi/appsettings.Development.json
 /Dwapi.ExtractsManagement.Core/Model/Destination/Cbs
 /Dwapi.ExtractsManagement.Infrastructure/Migrations
+Dwapi/implementation.Development.json
