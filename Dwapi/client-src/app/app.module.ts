@@ -153,6 +153,15 @@ import {HtsPartnerNotificationServicesService} from '../dockets/services/hts-par
 import {MetricsComponent} from '../dashboard/metrics/metrics.component';
 import {MetricsService} from '../dashboard/services/metrics.service';
 
+import {MgsDocketComponent} from '../dockets/mgs-docket/mgs-docket.component';
+import {MgsService} from '../dockets/services/mgs.service';
+import {MgsConsoleComponent} from '../dockets/mgs-docket/mgs-console/mgs-console.component';
+import {MgsExtractDetailsComponent} from '../dockets/mgs-docket/mgs-extract-details/mgs-extract-details.component';
+import {MgsInvalidComponent} from '../dockets/mgs-docket/mgs-extract-details/mgs-invalid/mgs-invalid.component';
+import {MgsValidComponent} from '../dockets/mgs-docket/mgs-extract-details/mgs-valid/mgs-valid.component';
+import {MgsSenderService} from '../dockets/services/mgs-sender.service';
+import {MetricMigrationService} from '../dockets/services/metric-migration.service';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -269,8 +278,13 @@ import {MetricsService} from '../dashboard/services/metrics.service';
         HtsExtractDetailsComponent,
         HtsInvalidComponent,
         HtsValidComponent,
-        MetricsComponent
-    ],
+        MetricsComponent,
+        MgsDocketComponent,
+        MgsConsoleComponent,
+        MgsExtractDetailsComponent,
+        MgsInvalidComponent,
+        MgsValidComponent
+],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
         MessageService, ConfirmationService, RegistryConfigService, EmrConfigService, ProtocolConfigService,
@@ -280,7 +294,7 @@ import {MetricsService} from '../dashboard/services/metrics.service';
         SetupService, MpiSearchService, NdwhPatientAdverseEventService, AppDetailsService, HtsService, HtsSenderService,
         HtsClientsService, HtsClientTestsService, HtsClientsLinkageService, HtsTestKitsService, HtsClientTracingService, HtsPartnerTracingService,
         HtsPartnerNotificationServicesService, HtsClientService, HtsClientPartnerService, HtsClientLinkageService,
-        MetricsService
+        MetricsService,MgsService,MgsSenderService,MetricMigrationService
     ],
     bootstrap: [AppComponent]
 })

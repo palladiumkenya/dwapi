@@ -70,8 +70,17 @@ Bached sending and await to 50 at a time
     <ProjectReference Include="..\Dwapi.UploadManagement.Infrastructure\Dwapi.UploadManagement.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="client-src\dockets\mgs-docket\mgs-docket.component.ts" />
+    <TypeScriptCompile Include="client-src\dockets\mgs-docket\mgs-extract-details\mgs-extract-details.component.ts" />
+    <TypeScriptCompile Include="client-src\dockets\mgs-docket\mgs-extract-details\mgs-invalid\mgs-invalid.component.ts" />
+    <TypeScriptCompile Include="client-src\dockets\mgs-docket\mgs-extract-details\mgs-valid\mgs-valid.component.ts" />
+    <TypeScriptCompile Include="client-src\dockets\services\metric-migration.service.ts" />
+    <TypeScriptCompile Include="client-src\dockets\services\mgs-sender.service.ts" />
+    <TypeScriptCompile Include="client-src\dockets\services\mgs.service.ts" />
     <TypeScriptCompile Include="client-src\settings\model\data-metrics.ts" />
     <TypeScriptCompile Include="client-src\settings\model\emr-setup.ts" />
+    <TypeScriptCompile Include="client-src\settings\model\load-mgs-extracts.ts" />
+    <TypeScriptCompile Include="client-src\settings\model\load-mgs-from-emr-command.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="mysql-appsettings.json">

@@ -154,6 +154,7 @@ namespace Dwapi
         public static IHubContext<MgsActivity> MgsHubContext;
         public static AppFeature AppFeature;
         private IHostingEnvironment CurrrentEnv;
+        public static List<string> StartupErrors = new List<string>();
 
         public Startup(IHostingEnvironment env)
         {
@@ -240,13 +241,21 @@ namespace Dwapi
                             o.UseMySql(connectionString,
                                 x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName()
                                     .Name));
-                            o.EnableSensitiveDataLogging(false);
+                            o.EnableSensitiveDataLogging(CurrrentEnv.IsDevelopment());
                         }
                     );
-                    services.AddDbContext<ExtractsContext>(o => o.UseMySql(connectionString,
-                        x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
-                    services.AddDbContext<UploadContext>(o => o.UseMySql(connectionString,
-                        x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name)));
+                    services.AddDbContext<ExtractsContext>(o =>
+                    {
+                        o.UseMySql(connectionString,
+                            x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name));
+                        o.EnableSensitiveDataLogging(CurrrentEnv.IsDevelopment());
+                    });
+                    services.AddDbContext<UploadContext>(o =>
+                    {
+                        o.UseMySql(connectionString,
+                            x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name));
+                        o.EnableSensitiveDataLogging(CurrrentEnv.IsDevelopment());
+                    });
                 }
 
                 if (provider == DatabaseProvider.MsSql)
@@ -257,18 +266,28 @@ namespace Dwapi
                             o.UseSqlServer(connectionString,
                                 x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName()
                                     .Name));
-                            o.EnableSensitiveDataLogging(false);
+                            o.EnableSensitiveDataLogging(CurrrentEnv.IsDevelopment());
                         }
                     );
-                    services.AddDbContext<ExtractsContext>(o => o.UseSqlServer(connectionString,
-                        x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name)));
-                    services.AddDbContext<UploadContext>(o => o.UseSqlServer(connectionString,
-                        x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name)));
+                    services.AddDbContext<ExtractsContext>(o =>
+                    {
+                        o.UseSqlServer(connectionString,
+                            x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name));
+                        o.EnableSensitiveDataLogging(CurrrentEnv.IsDevelopment());
+                    });
+                    services.AddDbContext<UploadContext>(o =>
+                    {
+                        o.UseSqlServer(connectionString,
+                            x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name));
+                        o.EnableSensitiveDataLogging(CurrrentEnv.IsDevelopment());
+                    });
                 }
             }
             catch (Exception e)
             {
-                Log.Error(e, "Connections not Initialized");
+                var error = "Connections not Initialized";
+                Log.Error(e, error);
+                StartupErrors.Add(error);
             }
 
             try
@@ -280,7 +299,9 @@ namespace Dwapi
             }
             catch (Exception e)
             {
-                Log.Error(e, "Features not Initialized");
+                string error = "Features not Initialized";
+                Log.Error(e,error );
+                StartupErrors.Add(error);
             }
 
             services.AddTransient<ExtractsContext>();
@@ -611,7 +632,9 @@ namespace Dwapi
             }
             catch (Exception e)
             {
-                Log.Debug($"{e}");
+                var error = "DapperPlus Initialization Error";
+                Log.Error($"{e}");
+                StartupErrors.Add(error);
                 throw;
             }
 
@@ -642,7 +665,21 @@ namespace Dwapi
 ");
             Log.Debug(
                 @"---------------------------------------------------------------------------------------------------");
-            Log.Debug($"Dwapi started in {stopWatch.ElapsedMilliseconds} ms");
+
+            if (StartupErrors.Any())
+            {
+                Log.Error(new string('*',60));
+                Log.Error($"Dwapi startup FAILED, took {stopWatch.ElapsedMilliseconds} ms");
+                Log.Error($"Startup Failed Due to the follwing {StartupErrors.Count} ERROR(s)");
+                Log.Error(new string('-',60));
+                StartupErrors.ForEach(Log.Error);
+                Log.Error(new string('-',60));
+                Log.Error(new string('*',60));
+            }
+            else
+            {
+                Log.Debug($"Dwapi started in {stopWatch.ElapsedMilliseconds} ms");
+            }
         }
 
         public static void EnsureMigrationOfContext<T>(IServiceProvider app) where T : BaseContext
@@ -658,8 +695,10 @@ namespace Dwapi
             }
             catch (Exception e)
             {
-                Log.Debug($"initializing Database context: {contextName} Error");
-                Log.Debug($"{e}");
+                var error = $"initializing Database context: {contextName} Error";
+                Log.Error(error);
+                Log.Error($"{e}");
+                StartupErrors.Add($"{error} {e}");
             }
         }
     }

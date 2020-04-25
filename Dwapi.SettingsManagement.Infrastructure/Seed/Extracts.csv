@@ -2228,9 +2228,6 @@ SELECT adv.PatientID,
 FROM adv
      INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK"|dwhstage|0|PatientAdverseEventExtract|8|a6221988-0e85-11e8-ba89-0ed5f89f718b
 
-
-
-
 3253E133-E110-4D8E-B669-3832B244F6E0|All Patients|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         e.patient_id AS PatientPK,
         pi.identifier AS PatientID,
@@ -3059,4 +3056,4 @@ E454753B-2C01-4C4D-AEE1-06B9E44FF26D|Hts Partner Tracing|HTS|A6221859-0E85-11E8-
 BAB42EA7-E672-4C1B-A1B3-F2160DE40845|Master Patient Index|CBS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"select null"|MPI|1|MasterPatientIndex|1|A6221989-0E85-11E8-BA89-0ED5F89F718B
 
 b629ab26-3055-11ea-978f-2e728ce98131|Migration|MGS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT ID as MetricId,Dataset,Metric,MetricValue,SiteCode,Emr,FacilityName,'KenyaHMIS' as Project,CreateDate FROM DWAPI_Migration_Metrics"|MgsStage|1|MetricMigrationExtract|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
-b629ab26-3055-11ea-978f-2e728ce98132|Migration|MGS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT ID as MetricId,Dataset,Metric,MetricValue,SiteCode,Emr,FacilityName,'KenyaHMIS' as Project,CreateDate FROM DWAPI_Migration_Metrics"|MgsStage|1|MetricMigrationExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+b629ab27-3055-11ea-978f-2e728ce98132|Migration|MGS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT ID as MetricId,Dataset,Metric,MetricValue,SiteCode,Emr,FacilityName,'KenyaHMIS' as Project,CreateDate FROM DWAPI_Migration_Metrics"|MgsStage|1|MetricMigrationExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b

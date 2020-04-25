@@ -95,7 +95,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
                var sql = $"DELETE FROM {nameof(Extracts)} WHERE {nameof(Extract.EmrSystemId)} = '{x}'";
                Database.ExecuteSqlCommand(sql);
            });
-
+            var extracts=
             Extracts.SeedFromResource($"{nameof(Extracts)}");
             SaveChanges();
         }
