@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using Dwapi.SharedKernel.Utility;
-using Newtonsoft.Json;
 
 namespace Dwapi.SettingsManagement.Core.Model
 {

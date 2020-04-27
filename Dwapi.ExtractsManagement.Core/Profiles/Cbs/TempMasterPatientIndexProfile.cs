@@ -2,7 +2,6 @@
 using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.ExtractsManagement.Core.Profiles.Cbs

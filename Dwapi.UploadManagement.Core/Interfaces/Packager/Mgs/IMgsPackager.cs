@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Exchange;

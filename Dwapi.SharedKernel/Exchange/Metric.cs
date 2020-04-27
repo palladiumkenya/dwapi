@@ -1,5 +1,4 @@
 using System;
-using System.Security.Principal;
 using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.SharedKernel.Exchange

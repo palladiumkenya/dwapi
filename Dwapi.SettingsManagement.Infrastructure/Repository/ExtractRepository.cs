@@ -5,7 +5,6 @@ using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Utility;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Repository
 {

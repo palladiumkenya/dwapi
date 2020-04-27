@@ -1,19 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using CsvHelper;
-using CsvHelper.Configuration;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Infrastructure;
-using EFCore.Seeder.Configuration;
-using EFCore.Seeder.Extensions;
-using EFCore.Seeder.Helpers;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using Serilog;
 using LiveSeeder.Core;
 using Z.Dapper.Plus;
 

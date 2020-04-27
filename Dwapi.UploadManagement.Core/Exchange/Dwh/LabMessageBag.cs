@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Dwapi.UploadManagement.Core.Model.Dwh;
+﻿using Dwapi.UploadManagement.Core.Model.Dwh;
 
 namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {

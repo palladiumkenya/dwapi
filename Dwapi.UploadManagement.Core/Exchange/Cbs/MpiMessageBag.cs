@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.UploadManagement.Core.Model.Cbs.Dtos;
 
 namespace Dwapi.UploadManagement.Core.Exchange.Cbs

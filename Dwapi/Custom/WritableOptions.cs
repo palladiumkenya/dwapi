@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using Dwapi.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;

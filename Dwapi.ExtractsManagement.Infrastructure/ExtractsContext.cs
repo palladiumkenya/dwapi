@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection;
-using CsvHelper.Configuration;
-using Dwapi.ExtractsManagement.Core.Model;
+﻿using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Destination;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -14,11 +11,8 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
 using Dwapi.SharedKernel.Infrastructure;
-using EFCore.Seeder.Configuration;
-using EFCore.Seeder.Extensions;
 using LiveSeeder.Core;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure

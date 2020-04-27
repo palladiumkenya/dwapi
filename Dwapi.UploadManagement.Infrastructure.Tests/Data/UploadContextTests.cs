@@ -1,14 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using Dwapi.ExtractsManagement.Core.Model.Destination;
-using Dwapi.ExtractsManagement.Infrastructure;
-using Dwapi.SettingsManagement.Core.Model;
-using Dwapi.UploadManagement.Core.Model.Dwh;
+﻿using System.Linq;
 using Dwapi.UploadManagement.Infrastructure.Data;
-using Dwapi.UploadManagement.Infrastructure.Tests.TestArtifacts;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 

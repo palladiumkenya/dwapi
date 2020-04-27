@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 

@@ -1,8 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
-using Dwapi.SharedKernel.Enum;
-using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {

@@ -1,8 +1,6 @@
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
 using Dwapi.SharedKernel.Events;
-using Dwapi.UploadManagement.Core.Event.Hts;
 using Dwapi.UploadManagement.Core.Event.Mgs;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Dwapi.SettingsManagement.Core.Model
+﻿namespace Dwapi.SettingsManagement.Core.Model
 {
    public class VerificationResponse
     {

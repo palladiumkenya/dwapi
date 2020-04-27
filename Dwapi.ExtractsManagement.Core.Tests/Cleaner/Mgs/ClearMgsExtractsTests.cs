@@ -1,13 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Mgs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mgs;
-using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mgs;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
 using Dwapi.ExtractsManagement.Core.Tests.TestArtifacts;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Core.Model;
-using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -20,7 +16,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Mgs
         private IClearMgsExtracts _clearMgs;
         private List<Extract> _extracts;
         private ExtractsContext _extractsContext;
-       
+
 
         [OneTimeSetUp]
         public void Init()
@@ -46,7 +42,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Mgs
             Assert.True(_extractsContext.MetricMigrationExtracts.Any());
 
             _clearMgs.Clear(extractIds).Wait();
-            
+
             Assert.False(_extractsContext.TempMetricMigrationExtracts.Any());
             Assert.False(_extractsContext.MetricMigrationExtracts.Any());
             Assert.False(_extractsContext.ExtractHistory.Any(x => extractIds.Contains(x.ExtractId)));

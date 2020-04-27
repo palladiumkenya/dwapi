@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Dwapi.SharedKernel.Model;
+﻿using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.SettingsManagement.Core.Model
 {

@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Mgs
 {

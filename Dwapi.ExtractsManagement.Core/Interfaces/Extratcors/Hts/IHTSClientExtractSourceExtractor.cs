@@ -1,5 +1,4 @@
 using System;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.SharedKernel.Interfaces;
 

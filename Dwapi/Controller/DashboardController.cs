@@ -1,7 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Dwapi.Models;
-using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Queries;
 using Dwapi.SettingsManagement.Core.Model;
 using MediatR;

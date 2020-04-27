@@ -84,36 +84,27 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts
                 nameof(ExtractsContext.HtsPartnerTracingExtracts),
                 nameof(ExtractsContext.HtsClientTracingExtracts),
                 nameof(ExtractsContext.HtsPartnerNotificationServicesExtracts),
-                nameof(ExtractsContext.HtsClientsExtracts),
-
-                /*nameof(ExtractsContext.TempHtsClientLinkageExtracts),
-                nameof(ExtractsContext.TempHtsClientPartnerExtracts),
-                nameof(ExtractsContext.TempHtsClientExtracts),
-                nameof(ExtractsContext.HtsClientLinkageExtracts),
-                nameof(ExtractsContext.HtsClientPartnerExtracts),
-                nameof(ExtractsContext.HtsClientExtracts)*/
             };
 
-            //   var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };
+            var deletes = new List<string> {nameof(ExtractsContext.HtsClientsExtracts)};
 
-            //var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"TRUNCATE TABLE {x};"));
-
-            var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"DELETE FROM {x};"));
+            var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"TRUNCATE TABLE {x};"));
 
             foreach (var truncateCommand in truncateCommands)
             {
                 await truncateCommand;
             }
 
-            /*  var deleteCommands = deletes.Select(d => GetSqlCommand(cn, $"DELETE FROM {d};"));
+            var deleteCommands = deletes.Select(d => GetSqlCommand(cn, $"DELETE FROM {d};"));
 
-              foreach (var deleteCommand in deleteCommands)
-              {
-                  await deleteCommand;
-              }
-              */
+            foreach (var deleteCommand in deleteCommands)
+            {
+                await deleteCommand;
+            }
+
             CloseConnection(cn);
         }
+
         public Task<int> GetCleanCount()
         {
             return DbSet.AsNoTracking()
@@ -123,6 +114,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts
         }
         private Task<int> GetSqlCommand(IDbConnection cn, string sql)
         {
+            if (cn is SqliteConnection)
+                return cn.ExecuteAsync(sql.Replace("TRUNCATE TABLE", "DELETE FROM"));
+
             return cn.ExecuteAsync(sql);
         }
 

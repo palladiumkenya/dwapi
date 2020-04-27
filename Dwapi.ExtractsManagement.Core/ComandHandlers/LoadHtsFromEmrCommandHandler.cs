@@ -2,9 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.ComandHandlers.Hts;
 using Dwapi.ExtractsManagement.Core.Commands;
-using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Commands.Hts;
 using MediatR;
 

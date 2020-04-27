@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Dwapi.SharedKernel.Model
 {
     public class Site

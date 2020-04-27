@@ -1,5 +1,4 @@
 using Dwapi.ExtractsManagement.Core.Commands;
-using Dwapi.ExtractsManagement.Core.Commands.Cbs;
 
 namespace Dwapi.Models
 {

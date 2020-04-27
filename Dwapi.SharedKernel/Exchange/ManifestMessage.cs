@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.SharedKernel.Exchange
 {

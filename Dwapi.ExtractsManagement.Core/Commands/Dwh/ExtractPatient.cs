@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Dwapi.SharedKernel.Model;
+﻿using Dwapi.SharedKernel.Model;
 using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.Commands.Dwh

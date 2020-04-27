@@ -1,15 +1,10 @@
-﻿using System.Reflection;
-using CsvHelper.Configuration;
-using Dwapi.SharedKernel.Infrastructure;
+﻿using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Model;
 using Dwapi.UploadManagement.Core.Model.Cbs;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 using Dwapi.UploadManagement.Core.Model.Hts;
 using Dwapi.UploadManagement.Core.Model.Mgs;
-using EFCore.Seeder.Configuration;
-using EFCore.Seeder.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Z.Dapper.Plus;
 
 namespace Dwapi.UploadManagement.Infrastructure.Data
 {

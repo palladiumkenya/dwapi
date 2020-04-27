@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
-using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.SettingsManagement.Core.Model
 {

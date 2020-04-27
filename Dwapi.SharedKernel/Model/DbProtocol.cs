@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Utility;
 

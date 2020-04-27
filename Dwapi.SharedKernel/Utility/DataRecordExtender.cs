@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using Serilog;
 
 namespace Dwapi.SharedKernel.Utility
 {

@@ -1,6 +1,5 @@
 using System;
 using Dwapi.SharedKernel.Exchange;
-using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination
 {

@@ -1,6 +1,4 @@
-﻿using System; 
-
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
+﻿namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
 {
     public  class TempHtsTestKits : TempHtsExtract
     {

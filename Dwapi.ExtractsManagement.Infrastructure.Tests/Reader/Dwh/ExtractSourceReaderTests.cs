@@ -6,7 +6,6 @@ using Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
-using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 

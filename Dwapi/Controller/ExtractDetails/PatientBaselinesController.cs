@@ -4,7 +4,6 @@ using Serilog;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 
 namespace Dwapi.Controller.ExtractDetails
 {

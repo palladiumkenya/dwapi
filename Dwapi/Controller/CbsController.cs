@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;

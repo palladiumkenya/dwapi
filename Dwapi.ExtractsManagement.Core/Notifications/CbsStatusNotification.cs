@@ -1,7 +1,6 @@
 ﻿using System;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
-using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Notifications
 {

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.DTOs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
-using Dwapi.ExtractsManagement.Core.Model;
-using Dwapi.SharedKernel.Enum;
 
 namespace Dwapi.ExtractsManagement.Core.Services
 {

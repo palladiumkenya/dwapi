@@ -13,7 +13,6 @@ using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using MediatR;
-using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 {

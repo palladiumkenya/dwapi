@@ -3,7 +3,6 @@ using System.Linq;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Exchange;
-using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Mgs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Mgs;

@@ -1,6 +1,5 @@
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Commands.Cbs;
-using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 
 namespace Dwapi.Models
 {

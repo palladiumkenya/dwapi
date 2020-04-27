@@ -1,5 +1,4 @@
 using System;
-using System.Data;
 using MediatR;
 
 namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events

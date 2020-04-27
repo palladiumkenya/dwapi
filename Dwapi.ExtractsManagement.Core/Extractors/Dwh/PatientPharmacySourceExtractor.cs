@@ -2,7 +2,6 @@
 using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
-using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
@@ -14,7 +13,6 @@ using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using MediatR;
-using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Dwapi.UploadManagement.Core.Model.Dwh
+﻿namespace Dwapi.UploadManagement.Core.Model.Dwh
 {
     public class Facility
     {

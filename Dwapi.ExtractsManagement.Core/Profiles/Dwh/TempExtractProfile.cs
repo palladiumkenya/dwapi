@@ -1,8 +1,6 @@
 ﻿using System.Data;
 using AutoMapper;
-using Dwapi.ExtractsManagement.Core.Model.Destination;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
-using Dwapi.ExtractsManagement.Core.Model.Source;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SharedKernel.Utility;
 

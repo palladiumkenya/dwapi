@@ -1,5 +1,4 @@
 using Dwapi.SharedKernel.Events;
-using Dwapi.UploadManagement.Core.Notifications.Hts;
 using Dwapi.UploadManagement.Core.Notifications.Mgs;
 using Microsoft.AspNetCore.SignalR;
 

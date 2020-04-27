@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Dwapi.SharedKernel.Model
+﻿namespace Dwapi.SharedKernel.Model
 {
     public class DwhProgress
     {
