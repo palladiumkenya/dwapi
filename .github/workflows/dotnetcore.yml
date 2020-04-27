@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: dotnet restore Dwapi.sln
       - name: Build
-        run: dotnet build Dwapi.csproj --configuration Release --no-restore
+        run: dotnet build Dwapi/Dwapi.csproj --configuration Release --no-restore
       - name: Test
         run: dotnet test --no-restore --verbosity normal
 
