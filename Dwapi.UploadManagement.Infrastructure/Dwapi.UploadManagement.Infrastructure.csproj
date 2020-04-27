@@ -15,7 +15,7 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
     <PackageReference Include="Serilog" Version="2.7.1" />
-    <PackageReference Include="Z.Dapper.Plus" Version="3.0.1" />
+    <PackageReference Include="Z.Dapper.Plus" Version="3.0.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dwapi.SharedKernel.Infrastructure\Dwapi.SharedKernel.Infrastructure.csproj" />
