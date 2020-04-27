@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using CsvHelper.Configuration;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Destination;
@@ -15,7 +16,9 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
 using Dwapi.SharedKernel.Infrastructure;
 using EFCore.Seeder.Configuration;
 using EFCore.Seeder.Extensions;
+using LiveSeeder.Core;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure
@@ -279,25 +282,22 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 
             DapperPlusManager.Entity<MetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(MetricMigrationExtracts)}");
             DapperPlusManager.Entity<TempMetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(TempMetricMigrationExtracts)}");
-
+            DapperPlusManager.Entity<Validator>().Key(x => x.Id).Table($"{nameof(Validator)}");
            // DapperPlusManager.MapperFactory = mapper => mapper.BatchTimeout(6000);
         }
 
-        public override void EnsureSeeded()
+        public override async void EnsureSeeded()
         {
-            var csvConfig = new CsvConfiguration
+            if (Database.IsSqlite())
             {
-                Delimiter = "|",
-                SkipEmptyRecords = true,
-                TrimFields = true,
-                TrimHeaders = true,
-                WillThrowOnMissingField = false
-            };
-
-            SeederConfiguration.ResetConfiguration(csvConfig, null, typeof(ExtractsContext).GetTypeInfo().Assembly);
-            Validator.RemoveRange(Validator);
-            Validator.SeedFromResource($"{nameof(Validator)}");
-            SaveChanges();
+                this.SeedClear<Validator>().Wait();
+                this.SeedAdd<Validator>(typeof(ExtractsContext).Assembly, "|").Wait();
+            }
+            else
+            {
+                await this.SeedClear<Validator>();
+                await this.SeedAdd<Validator>(typeof(ExtractsContext).Assembly, "|");
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +14,8 @@ using EFCore.Seeder.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Serilog;
+using LiveSeeder.Core;
+using Z.Dapper.Plus;
 
 namespace Dwapi.SettingsManagement.Infrastructure
 {
@@ -33,56 +36,22 @@ namespace Dwapi.SettingsManagement.Infrastructure
         public DbSet<Extract> Extracts { get; set; }
         public DbSet<AppMetric> AppMetrics { get; set; }
 
-        public override void EnsureSeeded()
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var csvConfig = new CsvConfiguration
-            {
-                Delimiter = "|",
-                SkipEmptyRecords = true,
-                TrimFields = true,
-                TrimHeaders = true,
-                WillThrowOnMissingField = false
-            };
-            SeederConfiguration.ResetConfiguration(csvConfig, null, typeof(SettingsContext).GetTypeInfo().Assembly);
+            base.OnModelCreating(modelBuilder);
+            DapperPlusManager.Entity<CentralRegistry>().Key(x => x.Id).Table($"{nameof(CentralRegistries)}");
+            DapperPlusManager.Entity<EmrSystem>().Key(x => x.Id).Table($"{nameof(EmrSystems)}");
+            DapperPlusManager.Entity<DatabaseProtocol>().Key(x => x.Id).Table($"{nameof(DatabaseProtocols)}");
+            DapperPlusManager.Entity<RestProtocol>().Key(x => x.Id).Table($"{nameof(RestProtocols)}");
+            DapperPlusManager.Entity<Resource>().Key(x => x.Id).Table($"{nameof(Resources)}");
+            DapperPlusManager.Entity<Docket>().Key(x => x.Id).Table($"{nameof(Dockets)}");
+            DapperPlusManager.Entity<Extract>().Key(x => x.Id).Table($"{nameof(Extracts)}");
+            DapperPlusManager.Entity<AppMetric>().Key(x => x.Id).Table($"{nameof(AppMetrics)}");
 
-            if (!Dockets.Any())
-                Dockets.SeedDbSetIfEmpty($"{nameof(Dockets)}");
+        }
 
-            if (!Dockets.Any(x => x.Id =="MGS"))
-                Dockets.SeedFromResource($"{nameof(Dockets)}New");
-
-            var reg = CentralRegistries.ToList();
-            if (reg.Any())
-            {
-                CentralRegistries.RemoveRange(reg);
-                SaveChanges();
-            }
-
-            CentralRegistries.SeedDbSetIfEmpty($"{nameof(CentralRegistries)}");
-
-            if (!EmrSystems.Any())
-                EmrSystems.SeedDbSetIfEmpty($"{nameof(EmrSystems)}");
-
-            if (!EmrSystems.Any(x => x.Id == new Guid("926f49b8-305d-11ea-978f-2e728ce88125")))
-                EmrSystems.SeedFromResource($"{nameof(EmrSystems)}New");
-
-            if (!DatabaseProtocols.Any())
-                DatabaseProtocols.SeedDbSetIfEmpty($"{nameof(DatabaseProtocols)}");
-
-            if (!DatabaseProtocols.Any(x => x.EmrSystemId == new Guid("926f49b8-305d-11ea-978f-2e728ce88125")))
-                DatabaseProtocols.SeedFromResource($"{nameof(DatabaseProtocols)}New");
-
-            var restEndpoints = RestProtocols.ToList();
-            if (restEndpoints.All(x => x.Url.Contains("https://palladiumkenya.github.io/dwapi/stuff")))
-            {
-                RestProtocols.RemoveRange(restEndpoints);
-                SaveChanges();
-            }
-
-            RestProtocols.SeedDbSetIfEmpty($"{nameof(RestProtocols)}");
-            Resources.SeedDbSetIfEmpty($"{nameof(Resources)}");
-            SaveChanges();
-
+        public override async void EnsureSeeded()
+        {
             var managedEmrs = new List<Guid>
             {
                 new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"),
@@ -90,14 +59,65 @@ namespace Dwapi.SettingsManagement.Infrastructure
                 new Guid("a6221857-0e85-11e8-ba89-0ed5f89f718b"),
                 new Guid("926f49b8-305d-11ea-978f-2e728ce88125")
             };
-           managedEmrs.ForEach(x =>
-           {
-               var sql = $"DELETE FROM {nameof(Extracts)} WHERE {nameof(Extract.EmrSystemId)} = '{x}'";
-               Database.ExecuteSqlCommand(sql);
-           });
-            var extracts=
-            Extracts.SeedFromResource($"{nameof(Extracts)}");
-            SaveChanges();
+
+            if (Database.IsSqlite())
+            {
+                this.SeedMerge<Docket>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(Dockets)}").Wait();
+                this.SeedMerge<CentralRegistry>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(CentralRegistries)}").Wait();
+                this.SeedNewOnly<EmrSystem>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(EmrSystems)}").Wait();
+                this.SeedNewOnly<DatabaseProtocol>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(DatabaseProtocols)}").Wait();
+
+                var restEndpoints = RestProtocols.AsNoTracking().ToList();
+                if (restEndpoints.All(x => x.Url.Contains("https://palladiumkenya.github.io/dwapi/stuff")))
+                {
+                    this.SeedMerge<RestProtocol>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(RestProtocols)}").Wait();
+                    this.SeedMerge<Resource>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(Resources)}").Wait();
+                }
+                else
+                {
+                    this.SeedNewOnly<RestProtocol>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(RestProtocols)}").Wait();
+                    this.SeedNewOnly<Resource>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(Resources)}").Wait();
+                }
+
+                managedEmrs.ForEach(x =>
+                {
+                    var sql = $"DELETE FROM {nameof(Extracts)} WHERE {nameof(Extract.EmrSystemId)} = '{x}'";
+                    Database.ExecuteSqlCommand(sql);
+                });
+
+                this.SeedNewOnly<Extract>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(Extracts)}").Wait();
+            }
+            else
+            {
+                await this.SeedMerge<Docket>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(Dockets)}");
+                await this.SeedMerge<CentralRegistry>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(CentralRegistries)}");
+                await this.SeedNewOnly<EmrSystem>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(EmrSystems)}");
+                await this.SeedNewOnly<DatabaseProtocol>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(DatabaseProtocols)}");
+
+                var restEndpoints = RestProtocols.AsNoTracking().ToList();
+                if (restEndpoints.All(x => x.Url.Contains("https://palladiumkenya.github.io/dwapi/stuff")))
+                {
+                    await this.SeedMerge<RestProtocol>(typeof(SettingsContext).Assembly, "|", "Seed",
+                        $"{nameof(RestProtocols)}");
+                    await this.SeedMerge<Resource>(typeof(SettingsContext).Assembly, "|", "Seed",
+                        $"{nameof(Resources)}");
+                }
+                else
+                {
+                    await this.SeedNewOnly<RestProtocol>(typeof(SettingsContext).Assembly, "|", "Seed",
+                        $"{nameof(RestProtocols)}");
+                    await this.SeedNewOnly<Resource>(typeof(SettingsContext).Assembly, "|", "Seed",
+                        $"{nameof(Resources)}");
+                }
+
+                managedEmrs.ForEach(x =>
+                {
+                    var sql = $"DELETE FROM {nameof(Extracts)} WHERE {nameof(Extract.EmrSystemId)} = '{x}'";
+                    Database.ExecuteSqlCommand(sql);
+                });
+
+                await this.SeedNewOnly<Extract>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Extracts)}");
+            }
         }
     }
 }

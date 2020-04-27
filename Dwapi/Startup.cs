@@ -51,6 +51,7 @@ using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Profiles.Hts;
+using Dwapi.ExtractsManagement.Core.Profiles.Mgs;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader;
@@ -584,6 +585,23 @@ namespace Dwapi
             app.UseHangfireDashboard();
             app.UseHangfireServer(hfServerOptions);
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute() {Attempts = 3});
+
+            try
+            {
+                DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
+                if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
+                {
+                    throw new Exception(licenseErrorMessage);
+                }
+            }
+            catch (Exception e)
+            {
+                var error = "DapperPlus Initialization Error";
+                Log.Error($"{e}");
+                StartupErrors.Add(error);
+                throw;
+            }
+
             Log.Debug(@"initializing Database...");
 
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);
@@ -618,25 +636,11 @@ namespace Dwapi
                     {
                         cfg.AddProfile<MasterPatientIndexProfile>();
                     }
+                    cfg.AddProfile<TempMetricExtractProfile>();
                 }
             );
 
             DomainEvents.Init();
-            try
-            {
-                DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
-                if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
-                {
-                    throw new Exception(licenseErrorMessage);
-                }
-            }
-            catch (Exception e)
-            {
-                var error = "DapperPlus Initialization Error";
-                Log.Error($"{e}");
-                StartupErrors.Add(error);
-                throw;
-            }
 
             stopWatch.Stop();
 

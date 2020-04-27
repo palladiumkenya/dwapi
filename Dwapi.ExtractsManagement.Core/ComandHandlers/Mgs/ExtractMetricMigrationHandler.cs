@@ -18,16 +18,16 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mgs
 {
     public class ExtractMetricMigrationHandler :IRequestHandler<ExtractMetricMigration,bool>
     {
-        private readonly IMetricMigrationSourceExtractor _patientSourceExtractor;
+        private readonly IMetricMigrationSourceExtractor _metricMigrationSourceExtractor;
         private readonly IMetricExtractValidator _extractValidator;
         private readonly IMetricMigrationLoader _migrationLoader;
         private readonly ICleanMgsExtracts _cleanMgsExtracts;
         private readonly ITempMetricMigrationExtractRepository _tempMetricMigrationExtractRepository;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractMetricMigrationHandler(IMetricMigrationSourceExtractor patientSourceExtractor, IMetricExtractValidator extractValidator, IMetricMigrationLoader migrationLoader, ICleanMgsExtracts cleanMgsExtracts, ITempMetricMigrationExtractRepository tempMetricMigrationExtractRepository, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractMetricMigrationHandler(IMetricMigrationSourceExtractor metricMigrationSourceExtractor, IMetricExtractValidator extractValidator, IMetricMigrationLoader migrationLoader, ICleanMgsExtracts cleanMgsExtracts, ITempMetricMigrationExtractRepository tempMetricMigrationExtractRepository, IExtractHistoryRepository extractHistoryRepository)
         {
-            _patientSourceExtractor = patientSourceExtractor;
+            _metricMigrationSourceExtractor = metricMigrationSourceExtractor;
             _extractValidator = extractValidator;
             _migrationLoader = migrationLoader;
             _cleanMgsExtracts = cleanMgsExtracts;
@@ -39,7 +39,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mgs
         {
 
             //Extract
-            int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            int found = await _metricMigrationSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
 
             //Validate
@@ -49,10 +49,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mgs
             int loaded = await _migrationLoader.Load(request.Extract.Id, found);
 
             int rejected =
-                _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract);
+               // TODO: CHECK MGS Rejection
+               _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract,false);
 
 
-            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected,request.Extract);
+            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected,request.Extract,false);
 
             //notify loaded
             DomainEvents.Dispatch(

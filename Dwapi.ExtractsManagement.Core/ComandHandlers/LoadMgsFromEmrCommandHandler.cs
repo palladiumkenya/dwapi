@@ -8,11 +8,11 @@ using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 {
-    public class LoadMetricFromEmrCommandHandler : IRequestHandler<LoadMgsFromEmrCommand, bool>
+    public class LoadMgsFromEmrCommandHandler : IRequestHandler<LoadMgsFromEmrCommand, bool>
     {
         private IMediator _mediator;
 
-        public LoadMetricFromEmrCommandHandler(IMediator mediator)
+        public LoadMgsFromEmrCommandHandler(IMediator mediator)
         {
             _mediator = mediator;
         }

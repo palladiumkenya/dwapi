@@ -71,6 +71,12 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
             ServiceProvider = services.BuildServiceProvider();
         }
 
+        public static void SetupDb()
+        {
+            var context = ServiceProvider.GetService<SettingsContext>();
+            context.Database.EnsureCreated();
+        }
+
         public static void ClearDb()
         {
             var context = ServiceProvider.GetService<SettingsContext>();

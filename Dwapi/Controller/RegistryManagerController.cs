@@ -23,8 +23,12 @@ namespace Dwapi.Controller
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest();
+
             try
             {
+                id = id.IsSameAs("MGS") ? "CBS" : id;
                 var centralRegistry = _registryManagerService.GetByDocket(id);
 
                 if (null == centralRegistry)
@@ -108,7 +112,7 @@ namespace Dwapi.Controller
                     return Ok(verified);
                 }
 
-                
+
             }
             catch (Exception e)
             {

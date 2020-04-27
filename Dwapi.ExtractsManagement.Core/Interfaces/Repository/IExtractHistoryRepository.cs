@@ -19,8 +19,8 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
         void UpdateStatus(Guid extractId, ExtractStatus status,int? stats=null,string statusInfo="", bool express = false);
         void DwhUpdateStatus(Guid extractId, ExtractStatus status, int? stats = null, string statusInfo = "");
         void Complete(Guid extractId);
-        int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract);
-        int ProcessRejected(Guid extractId,int rejectedCount,DbExtract extract);
+        int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract,bool checkDb=true);
+        int ProcessRejected(Guid extractId,int rejectedCount,DbExtract extract,bool checkDb=true);
         int ProcessExcluded(Guid extractId,int rejectedCount,int excludedCount);
     }
 }

@@ -269,7 +269,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             ServiceProvider = services.BuildServiceProvider();
 
             var context = ServiceProvider.GetService<SettingsContext>();
-            context.EnsureSeeded();
+          //  context.EnsureSeeded();
         }
 
         public static void ClearDb()

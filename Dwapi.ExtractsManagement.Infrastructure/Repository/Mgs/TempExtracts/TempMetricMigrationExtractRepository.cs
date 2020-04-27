@@ -70,15 +70,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.TempExtracts
 
             var truncates = new List<string>
             {
-                nameof(ExtractsContext.TempHtsClientLinkageExtracts),
-                nameof(ExtractsContext.TempHtsClientPartnerExtracts),
-                nameof(ExtractsContext.TempHtsClientExtracts),
-                nameof(ExtractsContext.HtsClientLinkageExtracts),
-                nameof(ExtractsContext.HtsClientPartnerExtracts),
-                nameof(ExtractsContext.HtsClientExtracts)
+                nameof(ExtractsContext.TempMetricMigrationExtracts),
+                nameof(ExtractsContext.MetricMigrationExtracts)
             };
-
-         //   var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };
 
             var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"TRUNCATE TABLE {x};"));
 
@@ -86,14 +80,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.TempExtracts
             {
                 await truncateCommand;
             }
-
-          /*  var deleteCommands = deletes.Select(d => GetSqlCommand(cn, $"DELETE FROM {d};"));
-
-            foreach (var deleteCommand in deleteCommands)
-            {
-                await deleteCommand;
-            }
-            */
             CloseConnection(cn);
         }
 
