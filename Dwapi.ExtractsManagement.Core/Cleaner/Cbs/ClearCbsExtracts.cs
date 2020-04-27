@@ -11,12 +11,12 @@ using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Cleaner.Cbs
 {
-    public class CleanCbsExtracts:ICleanCbsExtracts
+    public class ClearCbsExtracts:IClearCbsExtracts
     {
         private readonly ITempMasterPatientIndexRepository _repository;
         private readonly IExtractHistoryRepository _historyRepository;
 
-        public CleanCbsExtracts(ITempMasterPatientIndexRepository repository, IExtractHistoryRepository historyRepository)
+        public ClearCbsExtracts(ITempMasterPatientIndexRepository repository, IExtractHistoryRepository historyRepository)
         {
             _repository = repository;
             _historyRepository = historyRepository;

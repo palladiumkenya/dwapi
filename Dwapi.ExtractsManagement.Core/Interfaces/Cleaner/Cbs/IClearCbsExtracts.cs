@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs
 {
-    public interface ICleanCbsExtracts
+    public interface IClearCbsExtracts
     {
         Task Clean(Guid extractId);
     }

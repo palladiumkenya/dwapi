@@ -21,16 +21,14 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mgs
         private readonly IMetricMigrationSourceExtractor _metricMigrationSourceExtractor;
         private readonly IMetricExtractValidator _extractValidator;
         private readonly IMetricMigrationLoader _migrationLoader;
-        private readonly ICleanMgsExtracts _cleanMgsExtracts;
         private readonly ITempMetricMigrationExtractRepository _tempMetricMigrationExtractRepository;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractMetricMigrationHandler(IMetricMigrationSourceExtractor metricMigrationSourceExtractor, IMetricExtractValidator extractValidator, IMetricMigrationLoader migrationLoader, ICleanMgsExtracts cleanMgsExtracts, ITempMetricMigrationExtractRepository tempMetricMigrationExtractRepository, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractMetricMigrationHandler(IMetricMigrationSourceExtractor metricMigrationSourceExtractor, IMetricExtractValidator extractValidator, IMetricMigrationLoader migrationLoader, ITempMetricMigrationExtractRepository tempMetricMigrationExtractRepository, IExtractHistoryRepository extractHistoryRepository)
         {
             _metricMigrationSourceExtractor = metricMigrationSourceExtractor;
             _extractValidator = extractValidator;
             _migrationLoader = migrationLoader;
-            _cleanMgsExtracts = cleanMgsExtracts;
             _tempMetricMigrationExtractRepository = tempMetricMigrationExtractRepository;
             _extractHistoryRepository = extractHistoryRepository;
         }

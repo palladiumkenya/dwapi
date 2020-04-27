@@ -14,6 +14,7 @@ using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Extractors.Hts;
 using Dwapi.ExtractsManagement.Core.Extractors.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Mgs;
@@ -45,6 +46,10 @@ using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Dwh;
 using Dwapi.ExtractsManagement.Core.Loader.Hts;
 using Dwapi.ExtractsManagement.Core.Loader.Mgs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
 using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
@@ -83,6 +88,7 @@ using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
+using Dwapi.SharedKernel.Interfaces;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
@@ -315,10 +321,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests
 
             #region Cleaners
 
-            services.AddScoped<ICleanCbsExtracts, CleanCbsExtracts>();
+            services.AddScoped<IClearCbsExtracts, ClearCbsExtracts>();
             services.AddScoped<IClearDwhExtracts, ClearDwhExtracts>();
             services.AddScoped<IClearHtsExtracts, ClearHtsExtracts>();
-            services.AddScoped<ICleanMgsExtracts, CleanMgsExtracts>();
             services.AddScoped<IClearMgsExtracts, ClearMgsExtracts>();
 
             #endregion
@@ -489,6 +494,47 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
                         file.Delete();
                 }
             }
+        }
+
+        private static void LoadMpi()
+        {
+            LoadData(ServiceProvider.GetService<IMasterPatientIndexLoader>(), ServiceProvider.GetService<IMasterPatientIndexSourceExtractor>(), nameof(MasterPatientIndex));
+        }
+        public static void LoadHts()
+        {
+            LoadData(ServiceProvider.GetService<IHtsClientsLoader>(), ServiceProvider.GetService<IHtsClientsSourceExtractor>(), "HtsClient");
+
+            LoadData(ServiceProvider.GetService<IHtsClientsLinkageLoader>(), ServiceProvider.GetService<IHtsClientsLinkageSourceExtractor>(), nameof(HtsClientLinkage));
+            LoadData(ServiceProvider.GetService<IHtsClientTestsLoader>(), ServiceProvider.GetService<IHtsClientTestsSourceExtractor>(), nameof(HtsClientTests));
+            LoadData(ServiceProvider.GetService<IHtsClientTracingLoader>(), ServiceProvider.GetService<IHtsClientTracingSourceExtractor>(), nameof(HtsClientTracing));
+            LoadData(ServiceProvider.GetService<IHtsPartnerNotificationServicesLoader>(), ServiceProvider.GetService<IHtsPartnerNotificationServicesSourceExtractor>(), nameof(HtsPartnerNotificationServices));
+            LoadData(ServiceProvider.GetService<IHtsPartnerTracingLoader>(), ServiceProvider.GetService<IHtsPartnerTracingSourceExtractor>(), nameof(HtsPartnerTracing));
+            LoadData(ServiceProvider.GetService<IHtsTestKitsLoader>(), ServiceProvider.GetService<IHtsTestKitsSourceExtractor>(), nameof(HtsTestKits));
+
+        }
+        public static void LoadCt()
+        {
+            LoadData(ServiceProvider.GetService<IPatientLoader>(), ServiceProvider.GetService<IPatientSourceExtractor>(), nameof(PatientExtract));
+
+            LoadData(ServiceProvider.GetService<IPatientAdverseEventLoader>(), ServiceProvider.GetService<IPatientAdverseEventSourceExtractor>(), nameof(PatientAdverseEventExtract));
+            LoadData(ServiceProvider.GetService<IPatientArtLoader>(), ServiceProvider.GetService<IPatientArtSourceExtractor>(), nameof(PatientArtExtract));
+            LoadData(ServiceProvider.GetService<IPatientBaselinesLoader>(), ServiceProvider.GetService<IPatientBaselinesSourceExtractor>(), "PatientBaselineExtract");
+            LoadData(ServiceProvider.GetService<IPatientLaboratoryLoader>(), ServiceProvider.GetService<IPatientLaboratorySourceExtractor>(), "PatientLabExtract");
+            LoadData(ServiceProvider.GetService<IPatientPharmacyLoader>(), ServiceProvider.GetService<IPatientPharmacySourceExtractor>(), nameof(PatientPharmacyExtract));
+            LoadData(ServiceProvider.GetService<IPatientStatusLoader>(), ServiceProvider.GetService<IPatientStatusSourceExtractor>(), nameof(PatientStatusExtract));
+            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+        }
+
+        public static void LoadMgs()
+        {
+            LoadData(ServiceProvider.GetService<IMetricMigrationLoader>(), ServiceProvider.GetService<IMetricMigrationSourceExtractor>(), nameof(MetricMigrationExtract));
+        }
+
+        private static void LoadData<TM, T>(ILoader<TM> loader, ISourceExtractor<T> extractor, string extractName) where TM : class
+        {
+            var extract = Extracts.First(x => x.Name.IsSameAs(extractName));
+            var countA = extractor.Extract(extract, Protocol).Result;
+            var countB = loader.Load(extract.Id, countA).Result;
         }
     }
 }

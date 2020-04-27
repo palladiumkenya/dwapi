@@ -85,6 +85,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.TempExtracts
 
         private Task<int> GetSqlCommand(IDbConnection cn, string sql)
         {
+            if (cn is SqliteConnection)
+            {
+                return cn.ExecuteAsync(sql.Replace("TRUNCATE TABLE", "DELETE FROM"));
+            }
             return cn.ExecuteAsync(sql);
         }
     }

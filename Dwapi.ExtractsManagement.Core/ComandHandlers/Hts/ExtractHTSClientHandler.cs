@@ -30,16 +30,14 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
         private readonly IHTSClientSourceExtractor _patientSourceExtractor;
         private readonly IHtsExtractValidator _extractValidator;
         private readonly IHTSClientLoader _patientLoader;
-        private readonly ICleanHtsExtracts _clearDwhExtracts;
         private readonly ITempHTSClientExtractRepository _tempPatientExtractRepository;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractHTSClientHandler(IHTSClientSourceExtractor patientSourceExtractor, IHtsExtractValidator extractValidator, IHTSClientLoader patientLoader, ICleanHtsExtracts clearDwhExtracts, ITempHTSClientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractHTSClientHandler(IHTSClientSourceExtractor patientSourceExtractor, IHtsExtractValidator extractValidator, IHTSClientLoader patientLoader, ITempHTSClientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
             _patientLoader = patientLoader;
-            _clearDwhExtracts = clearDwhExtracts;
             _tempPatientExtractRepository = tempPatientExtractRepository;
             _extractHistoryRepository = extractHistoryRepository;
         }

@@ -345,10 +345,9 @@ namespace Dwapi.UploadManagement.Core.Tests
 
             #region Cleaners
 
-            services.AddScoped<ICleanCbsExtracts, CleanCbsExtracts>();
+            services.AddScoped<IClearCbsExtracts, ClearCbsExtracts>();
             services.AddScoped<IClearDwhExtracts, ClearDwhExtracts>();
             services.AddScoped<IClearHtsExtracts, ClearHtsExtracts>();
-            services.AddScoped<ICleanMgsExtracts, CleanMgsExtracts>();
             services.AddScoped<IClearMgsExtracts, ClearMgsExtracts>();
             #endregion
             #region Extractors

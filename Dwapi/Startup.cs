@@ -390,7 +390,7 @@ namespace Dwapi
             services.AddScoped<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>();
             services.AddScoped<IMasterPatientIndexValidator, MasterPatientIndexValidator>();
             services.AddScoped<IMasterPatientIndexLoader, MasterPatientIndexLoader>();
-            services.AddScoped<ICleanCbsExtracts, CleanCbsExtracts>();
+            services.AddScoped<IClearCbsExtracts, ClearCbsExtracts>();
             services.AddScoped<ICbsExtractReader, CbsExtractReader>();
             services.AddScoped<ICbsSendService, CbsSendService>();
             services.AddScoped<ICbsPackager, CbsPackager>();
@@ -500,7 +500,6 @@ namespace Dwapi
             services
                 .AddScoped<ITempMetricMigrationExtractErrorSummaryRepository,
                     TempMetricMigrationExtractErrorSummaryRepository>();
-            services.AddScoped<ICleanMgsExtracts, CleanMgsExtracts>();
             services.AddScoped<IClearMgsExtracts, ClearMgsExtracts>();
 
 

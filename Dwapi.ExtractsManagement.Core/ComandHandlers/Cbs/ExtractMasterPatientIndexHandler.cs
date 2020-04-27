@@ -26,9 +26,9 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs
         private readonly IMasterPatientIndexSourceExtractor _patientSourceExtractor;
         private readonly IMasterPatientIndexValidator _patientValidator;
         private readonly IMasterPatientIndexLoader _patientLoader;
-        private readonly ICleanCbsExtracts _clearExtracts;
+        private readonly IClearCbsExtracts _clearExtracts;
 
-        public ExtractMasterPatientIndexHandler(IMasterPatientIndexSourceExtractor patientSourceExtractor, IMasterPatientIndexValidator patientValidator, IMasterPatientIndexLoader patientLoader, ICleanCbsExtracts clearExtracts)
+        public ExtractMasterPatientIndexHandler(IMasterPatientIndexSourceExtractor patientSourceExtractor, IMasterPatientIndexValidator patientValidator, IMasterPatientIndexLoader patientLoader, IClearCbsExtracts clearExtracts)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _patientValidator = patientValidator;
