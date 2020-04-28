@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Seed\CentralRegistries.csv" />
+    <None Remove="Seed\DatabaseProtocols.csv" />
+    <None Remove="Seed\Docket.csv" />
+    <None Remove="Seed\EmrSystems.csv" />
+    <None Remove="Seed\Extracts.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Seed\DatabaseProtocols.csv" />
+    <EmbeddedResource Include="Seed\CentralRegistries.csv" />
+    <EmbeddedResource Include="Seed\EmrSystems.csv" />
+    <EmbeddedResource Include="Seed\Resources.csv" />
+    <EmbeddedResource Include="Seed\RestProtocols.csv" />
+    <None Remove="Seed\Dockets.csv" />
+    <EmbeddedResource Include="Seed\Dockets.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="13.0.0" />
+    <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="EFCore.Seeder" Version="1.0.0" />
+    <PackageReference Include="LiveSeeder" Version="1.0.0-CI-20200427-182214" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
+    <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Z.Dapper.Plus" Version="3.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dwapi.SettingsManagement.Core\Dwapi.SettingsManagement.Core.csproj" />
+    <ProjectReference Include="..\Dwapi.SharedKernel.Infrastructure\Dwapi.SharedKernel.Infrastructure.csproj" />
+    <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Seed\Extracts.csv" />
+  </ItemGroup>
+</Project>

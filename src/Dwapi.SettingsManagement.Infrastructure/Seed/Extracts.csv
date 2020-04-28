@@ -1,0 +1,3059 @@
+Id|Display|DocketId|EmrSystemId|ExtractSql|Destination|IsPriority|Name|Rank|DatabaseProtocolId
+a6222210-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"select [Id],[shr],[date_created],[status],[status_date],[uuid] FROM [psmart_store] WHERE UPPER(Status) = 'PENDING'"|PSmartStage|1|pSmart|1|a6221982-0e85-11e8-ba89-0ed5f89f718b
+a6226eb4-0e85-11e8-ba89-0ed5f89f718b|Smart Card|PSMART|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select id,shr,date_created,status,status_date,uuid FROM psmart_store where upper(status) = 'PENDING'"|PSmartStage|1|pSmart|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+329bfbf4-d404-4dfd-88eb-6fb398c64249|All Patients|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
+ PatientID, PatientPK, FacilityID, SiteCode, FacilityName, SatelliteName,
+ Gender, DOB, RegistrationDate, RegistrationAtCCC, RegistrationAtPMTCT,
+ RegistrationAtTBClinic, PatientSource, Region, District, Village, ContactRelation, LastVisit,
+ MaritalStatus, EducationLevel, DateConfirmedHIVPositive, PreviousARTExposure,
+ PreviousARTStartDate, StatusAtCCC, StatusAtPMTCT, StatusAtTBClinic, 'IQCare' AS EMR, 'Kenya HMIS II' AS Project,
+ PatientType,
+	PopulationCategory as PopulationType,
+	'' AS KeyPopulationType,
+	Orphan, InSchool,
+	County AS PatientResidentCounty ,
+	SubCounty AS PatientResidentSubCounty,
+	Ward AS PatientResidentLocation ,
+	'' AS PatientResidentSubLocation,
+	Ward AS PatientResidentWard ,
+	Village AS PatientResidentVillage,
+	ARTTransferInDate as TransferInDate,
+	CAST(GETDATE() AS DATE) AS DateExtracted,
+	newid() as ID
+  FROM  	tmp_PatientMaster AS a WHERE a.RegistrationAtCCC IS NOT NULL"|dwhstage|1|PatientExtract|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
+41742eb0-5856-e811-8e16-9cb6d0da773c|ART Patients|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
+
+ a.PatientPK, a.PatientID, c.FacilityID, c.SiteCode,
+ a.FacilityName, a.DOB, a.AgeEnrollment, a.AgeARTStart,
+ a.AgeLastVisit, a.RegistrationDate, a.PatientSource, a.Gender, a.StartARTDate, a.PreviousARTStartDate,
+  REPLACE(REPLACE(REPLACE (a.PreviousARTRegimen,'/', '+'),'LPV+r','LPV/r'), 'ATV+r','ATV/r') AS PreviousARTRegimen,
+  a.StartARTAtThisFacility,
+ REPLACE(REPLACE(REPLACE (a.StartRegimen,'/', '+'),'LPV+r','LPV/r'), 'ATV+r','ATV/r') AS StartRegimen,
+  a.StartRegimenLine, a.LastARTDate,
+  REPLACE(REPLACE(REPLACE (a.LastRegimen,'/', '+'),'LPV+r','LPV/r'), 'ATV+r','ATV/r') AS LastRegimen,
+   a.LastRegimenLine, a.Duration, a.ExpectedReturn, a.Provider, a.LastVisit, a.ExitReason,
+
+ a.ExitDate, CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
+
+FROM
+ tmp_ARTPatients AS a
+ INNER JOIN
+ tmp_PatientMaster AS c ON a.PatientPK = c.PatientPK where c.RegistrationAtCCC is not null"|dwhStage|0|PatientArtExtract|2|a6221983-0e85-11e8-ba89-0ed5f89f718b
+42742eb0-5856-e811-8e16-9cb6d0da773c|Patient Baselines|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
+
+ tmp_PatientMaster.PatientPK, tmp_PatientMaster.PatientID, tmp_PatientMaster.FacilityID, tmp_PatientMaster.SiteCode, IQC_bCD4.bCD4, IQC_bCD4.bCD4Date, IQC_bWAB.bWAB, IQC_bWAB.bWABDate,
+
+ IQC_bWHO.bWHO, IQC_bWHO.bWHODate, IQC_eWAB.eWAB, IQC_eWAB.eWABDate, IQC_eCD4.eCD4, IQC_eCD4.eCD4Date, IQC_eWHO.eWHO, IQC_eWHO.eWHODate, IQC_lastWHO.lastWHO,
+
+ IQC_lastWHO.lastWHODate, IQC_lastWAB.lastWAB, IQC_lastWAB.lastWABDate, IQC_lastCD4.lastCD4, IQC_lastCD4.lastCD4Date, IQC_m12CD4.m12CD4, IQC_m12CD4.m12CD4Date, IQC_m6CD4.m6CD4,
+
+ IQC_m6CD4.m6CD4Date, CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
+
+FROM
+
+ tmp_PatientMaster LEFT OUTER JOIN
+    IQC_bCD4 ON tmp_PatientMaster.PatientPK = IQC_bCD4.PatientPK LEFT OUTER JOIN
+    IQC_bWAB ON tmp_PatientMaster.PatientPK = IQC_bWAB.PatientPK LEFT OUTER JOIN
+    IQC_bWHO ON tmp_PatientMaster.PatientPK = IQC_bWHO.PatientPK LEFT OUTER JOIN
+    IQC_lastCD4 ON tmp_PatientMaster.PatientPK = IQC_lastCD4.PatientPK LEFT OUTER JOIN
+    IQC_eWAB ON tmp_PatientMaster.PatientPK = IQC_eWAB.PatientPK LEFT OUTER JOIN
+    IQC_eWHO ON tmp_PatientMaster.PatientPK = IQC_eWHO.PatientPK LEFT OUTER JOIN
+    IQC_lastWAB ON tmp_PatientMaster.PatientPK = IQC_lastWAB.PatientPK LEFT OUTER JOIN
+    IQC_eCD4 ON tmp_PatientMaster.PatientPK = IQC_eCD4.PatientPK LEFT OUTER JOIN
+    IQC_lastWHO ON tmp_PatientMaster.PatientPK = IQC_lastWHO.PatientPK LEFT OUTER JOIN
+    IQC_m12CD4 ON tmp_PatientMaster.PatientPK = IQC_m12CD4.PatientPK LEFT OUTER JOIN
+    IQC_m6CD4 ON tmp_PatientMaster.PatientPK = IQC_m6CD4.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhStage|0|PatientBaselineExtract|3|a6221983-0e85-11e8-ba89-0ed5f89f718b
+43742eb0-5856-e811-8e16-9cb6d0da773c|Patient Status|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
+ pm.PatientID, ls.PatientPK, pm.SiteCode,
+ pm.FacilityName, pm.FacilityID as FacilityId,
+ '' AS ExitDescription,
+ MAX(ls.ExitDate) AS ExitDate,
+ (SELECT TOP 1 ExitReason from tmp_LastStatus S
+	WHERE S.PatientPK=ls.PatientPK AND ExitDate= MAX(ls.ExitDate)) AS ExitReason,
+ CAST(GETDATE() AS DATE) AS DateExtracted, 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
+FROM
+ tmp_LastStatus ls
+ INNER JOIN
+ tmp_PatientMaster pm ON ls.PatientPK = pm.PatientPK
+ where pm.RegistrationAtCCC is not null
+ GROUP BY  pm.PatientID, ls.PatientPK, pm.SiteCode, pm.FacilityName, pm.FacilityID
+ order by PatientPK"|dwhStage|0|PatientStatusExtract|4|a6221983-0e85-11e8-ba89-0ed5f89f718b
+44742eb0-5856-e811-8e16-9cb6d0da773c|Patient Labs|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
+ tmp_PatientMaster.PatientID, tmp_Labs.PatientPK, tmp_PatientMaster.FacilityID, tmp_PatientMaster.SiteCode, tmp_PatientMaster.FacilityName, tmp_PatientMaster.SatelliteName, tmp_Labs.VisitID,
+ tmp_Labs.OrderedbyDate, tmp_Labs.ReportedbyDate, tmp_Labs.TestName, tmp_Labs.EnrollmentTest, tmp_Labs.TestResult, tmp_Labs.Reasons as Reason,CAST(GETDATE() AS DATE) AS DateExtracted,
+   'IQCare' AS EMR, 'Kenya HMIS II' AS Project
+FROM
+ tmp_Labs INNER JOIN
+ tmp_PatientMaster ON tmp_Labs.PatientPK = tmp_PatientMaster.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientLabExtract|5|a6221983-0e85-11e8-ba89-0ed5f89f718b
+46742eb0-5856-e811-8e16-9cb6d0da773c|Patient Pharmacy|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
+ pm.PatientID, pm.FacilityID, pm.SiteCode,
+ ph.PatientPK, ph.VisitID,
+  CASE WHEN ph.TreatmentType='ART'
+ THEN  REPLACE(REPLACE(REPLACE ( ph.Drug,'/', '+'),'LPV+r','LPV/r'), 'ATV+r','ATV/r')
+ ELSE ph.Drug END as drug, ph.Provider,
+ ph.DispenseDate, ph.Duration, ph.ExpectedReturn, ph.TreatmentType, ph.RegimenLine, ph.PeriodTaken,
+  ph.ProphylaxisType, CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project
+FROM
+ tmp_Pharmacy Ph
+ INNER JOIN
+    tmp_PatientMaster pm ON ph.PatientPK = pm.PatientPK where pm.RegistrationAtCCC is not null"|dwhstage|0|PatientPharmacyExtract|6|a6221983-0e85-11e8-ba89-0ed5f89f718b
+47742eb0-5856-e811-8e16-9cb6d0da773c|Patient Visits|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT
+ REPLACE(tmp_PatientMaster.PatientID, ' ', '') AS PatientID, tmp_PatientMaster.FacilityName, tmp_PatientMaster.FacilityID as FacilityId, tmp_PatientMaster.SiteCode, tmp_ClinicalEncounters.PatientPK, tmp_ClinicalEncounters.VisitID,
+ tmp_ClinicalEncounters.VisitDate, tmp_ClinicalEncounters.Service, tmp_ClinicalEncounters.VisitType, tmp_ClinicalEncounters.WHOStage, tmp_ClinicalEncounters.WABStage, tmp_ClinicalEncounters.Pregnant,
+ tmp_ClinicalEncounters.LMP, tmp_ClinicalEncounters.EDD, tmp_ClinicalEncounters.Height, tmp_ClinicalEncounters.Weight, tmp_ClinicalEncounters.BP, tmp_ClinicalEncounters.OI,
+ tmp_ClinicalEncounters.OIDate, tmp_ClinicalEncounters.Adherence, tmp_ClinicalEncounters.AdherenceCategory, NULL AS SubstitutionFirstlineRegimenDate, NULL AS SubstitutionFirstlineRegimenReason, NULL
+ AS SubstitutionSecondlineRegimenDate, NULL AS SubstitutionSecondlineRegimenReason, NULL AS SecondlineRegimenChangeDate, NULL AS SecondlineRegimenChangeReason,
+ tmp_ClinicalEncounters.FamilyPlanningMethod, tmp_ClinicalEncounters.PwP, tmp_ClinicalEncounters.GestationAge, tmp_ClinicalEncounters.NextAppointmentDate, CAST(GETDATE() AS DATE)
+ AS DateExtracted
+ , 'IQCare' AS EMR, 'Kenya HMIS II' AS Project,
+ PopulationCategory as PopulationType,
+	NULL AS KeyPopulationType,
+	StabilityAssessment AS StabilityAssessment,
+	DifferentiatedCare AS DifferentiatedCare
+FROM
+ tmp_ClinicalEncounters INNER JOIN
+ tmp_PatientMaster ON tmp_PatientMaster.PatientPK = tmp_ClinicalEncounters.PatientPK where tmp_PatientMaster.RegistrationAtCCC is not null"|dwhstage|0|PatientVisitExtract|7|a6221983-0e85-11e8-ba89-0ed5f89f718b
+3A742EB0-5856-E811-8E16-9CB6D0DA773C|All Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select
+CASE WHEN prg.program='TB' THEN prg.status  ELSE null end  AS StatusAtTBClinic,
+CASE WHEN prg.program='PMTCT' THEN prg.status  ELSE null end  AS  StatusAtPMTCT,
+CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
+
+'' AS SatelliteName,
+0 AS FacilityId,d.unique_patient_no as PatientID,
+                                 d.patient_id as PatientPK,
+                                 (select value_reference from location_attribute
+                                  where location_id in (select property_value
+                                                        from global_property
+                                                        where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
+                                 (select name from location
+                                  where location_id in (select property_value
+                                                        from global_property
+                                                        where property='kenyaemr.defaultLocation')) as FacilityName,
+                                 case d.gender when 'M' then 'Male' when 'F' then 'Female' end  as Gender,
+                                 d.dob as DOB,
+                                 CAST(min(hiv.visit_date) as Date) as RegistrationDate,
+                                 CAST(coalesce(date_first_enrolled_in_care,min(hiv.visit_date)) as Date) as RegistrationAtCCC,
+                                 CAST(min(mch.visit_date)as Date) as RegistrationATPMTCT,
+                                 CAST(min(tb.visit_date)as Date) as RegistrationAtTBClinic,
+                                 case  max(hiv.entry_point)
+                                   when 160542 then 'OPD'
+                                   when 160563 then 'Other'
+                                   when 160539 then 'VCT'
+                                   when 160538 then 'PMTCT'
+                                   when 160541 then 'TB'
+                                   when 160536 then 'IPD - Adult'
+                                   /*else cn.name*/
+                                     end as PatientSource,
+
+                                (select state_province from location
+                                                           where location_id in (select property_value
+                                                                                 from global_property
+                                                                                 where property='kenyaemr.defaultLocation')) as Region,
+                                 (select county_district from location
+                                  where location_id in (select property_value
+                                                        from global_property
+                                                        where property='kenyaemr.defaultLocation'))as District,
+                                 (select address6 from location
+                                  where location_id in (select property_value
+                                                        from global_property
+                                                        where property='kenyaemr.defaultLocation')) as Village,
+                                 UPPER(ts.name) as ContactRelation,
+                                 CAST(GREATEST(coalesce(max(hiv.visit_date),date('1000-01-01')),coalesce(max(de.visit_date),date('1000-01-01')), coalesce(max(enr.visit_date),date('1000-01-01'))) as Date) as LastVisit,
+                                 UPPER(d.marital_status) as MaritalStatus,
+                                 UPPER(d.education_level) as EducationLevel,
+
+                                 CAST(min(hiv.date_confirmed_hiv_positive) as Date) as DateConfirmedHIVPositive,
+                                 max(hiv.arv_status) as PreviousARTExposure,
+                                 NULL as PreviousARTStartDate,
+
+
+                                 'KenyaEMR' as Emr,
+                                 'Kenya HMIS II' as Project,
+
+
+                                CASE hiv.patient_type
+									WHEN 160563 THEN 'Transfer in'
+									WHEN 164144	THEN 'New client'
+									WHEN 159833	THEN 'Re-enroll'
+                                ELSE hiv.patient_type
+                                END AS PatientType,
+
+
+
+                                 (select CASE
+									WHEN f.key_population_type  IS NOT NULL AND f.key_population_type  !=1175
+										THEN 'Key population'
+									WHEN f.key_population_type  =1175 THEN 'General Population'
+									ELSE pt.name  END  from  kenyaemr_etl.etl_patient_hiv_followup f
+									left join concept_name pt on f.population_type = pt.concept_id AND pt.concept_name_type='FULLY_SPECIFIED'
+								WHERE f.encounter_id=min(enr.encounter_id)) AS PopulationType,
+
+                                 (select
+									case f.key_population_type
+									WHEN 105 THEN 'PWID'
+									WHEN 160578 THEN 'MSM'
+									WHEN 160579  THEN 'FSW'
+									WHEN 1175 THEN 'N/A'
+									ELSE null END
+
+                                from  kenyaemr_etl.etl_patient_hiv_followup f
+								WHERE f.encounter_id=min(enr.encounter_id)) AS KeyPopulationType,
+                                case orp.value_coded when 1 THEN 'Yes' when 2 THEN 'No' ELSE null END as  'Orphan',
+                                case sch.value_coded when 1 THEN 'Yes' when 2 THEN 'No' ELSE null END as 'InSchool',
+								patAd.county_district AS  PatientResidentCounty,
+                                patAd.state_province AS PatientResidentSubCounty,
+                                patAd.address6 AS PatientResidentLocation,
+                                patAd.address5 AS PatientResidentSubLocation,
+                                patAd.address4 AS PatientResidentWard,
+                                patAd.city_village AS PatientResidentVillage,
+                                cast(min(hiv.transfer_in_date) as Date) as TransferInDate
+
+from kenyaemr_etl.etl_hiv_enrollment hiv
+inner join  kenyaemr_etl.etl_patient_demographics d on hiv.patient_id=d.patient_id
+left outer join kenyaemr_etl.etl_mch_enrollment mch on mch.patient_id=d.patient_id
+left outer join kenyaemr_etl.etl_patient_hiv_followup enr on enr.patient_id=d.patient_id
+left outer join kenyaemr_etl.etl_tb_enrollment tb on tb.patient_id=d.patient_id
+left outer join kenyaemr_etl.etl_drug_event de on de.patient_id = d.patient_id
+left join concept_name ts on ts.concept_id=hiv.relationship_of_treatment_supporter and ts.concept_name_type = 'FULLY_SPECIFIED' and ts.locale='en'
+left join person_address patAd ON patAd.person_id=d.patient_id and patAd.voided = 0
+left join (select distinct person_id, value_coded
+	from obs
+    where concept_id=5629 and voided=0) sch on  sch.person_id = d.patient_id
+left join (select distinct person_id, value_coded
+	from obs
+    where concept_id=11704 and voided=0) orp on  sch.person_id = d.patient_id
+left join
+(
+	select Patient_Id,   program ,
+	if(mid(max(concat(date_enrolled,date_completed)), 20) is null, 'Active', 'Inactive') as status
+	from kenyaemr_etl.etl_patient_program
+	group by Patient_Id,program
+) as prg on prg.patient_id = d.patient_id
+where unique_patient_no is not null
+group by d.patient_id
+order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|" select '' AS SatelliteName, 0 AS FacilityId, d.DOB,
+       d.Gender, '' AS Provider,
+       d.unique_patient_no as PatientID,
+       d.patient_id as PatientPK,
+       timestampdiff(year,d.DOB, hiv.visit_date) as AgeEnrollment,
+       timestampdiff(year,d.DOB, reg.art_start_date) as AgeARTStart,
+       timestampdiff(year,d.DOB, reg.latest_vis_date) as AgeLastVisit,
+       (select value_reference from location_attribute
+        where location_id in (select property_value
+                              from global_property
+                              where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
+       (select name from location
+        where location_id in (select property_value
+                              from global_property
+                              where property='kenyaemr.defaultLocation')) as FacilityName,
+       CAST(coalesce(date_first_enrolled_in_care,min(hiv.visit_date)) as Date) as RegistrationDate,
+       case  max(hiv.entry_point)
+         when 160542 then 'OPD'
+         when 160563 then 'Other'
+         when 160539 then 'VCT'
+         when 160538 then 'PMTCT'
+         when 160541 then 'TB'
+         when 160536 then 'IPD - Adult'
+         else cn.name
+           end as PatientSource,
+       reg.art_start_date as StartARTDate,
+       hiv.date_started_art_at_transferring_facility as PreviousARTStartDate,
+       '' as PreviousARTRegimen,
+       reg.art_start_date as StartARTAtThisFacility,
+       reg.regimen as StartRegimen,
+       reg.regimen_line as StartRegimenLine,
+      -- reg.last_art_date as LastARTDate,
+	   case
+		when reg.latest_vis_date is not null then reg.latest_vis_date else  reg.last_art_date end as LastARTDate,
+
+       reg.last_regimen as LastRegimen,
+       reg.last_regimen_line as LastRegimenLine,
+       reg.latest_tca as ExpectedReturn,
+       reg.latest_vis_date as LastVisit ,
+       timestampdiff(month,reg.art_start_date, reg.latest_vis_date) as duration,
+       disc.visit_date as ExitDate,
+       case
+         when disc.discontinuation_reason is not null then dis_rsn.name
+         else '' end as ExitReason,
+       'KenyaEMR' as Emr,
+       'Kenya HMIS II' as Project,
+       CAST(now() as Date) AS DateExtracted
+from kenyaemr_etl.etl_hiv_enrollment hiv
+       join kenyaemr_etl.etl_patient_demographics d on d.patient_id=hiv.patient_id
+       left outer join  kenyaemr_etl.etl_patient_program_discontinuation disc on disc.patient_id=hiv.patient_id
+       left outer join (select e.patient_id,
+                               if(enr.date_started_art_at_transferring_facility is not null,enr.date_started_art_at_transferring_facility,
+                                  e.date_started)as art_start_date, e.date_started, e.gender,e.dob,d.visit_date as dis_date, if(d.visit_date is not null, 1, 0) as TOut,
+                               e.regimen, e.regimen_line, e.alternative_regimen, max(fup.next_appointment_date) as latest_tca,
+                               last_art_date,last_regimen,last_regimen_line,
+                               if(enr.transfer_in_date is not null, 1, 0) as TIn, max(fup.visit_date) as  latest_vis_date
+                        from (select e.patient_id,p.dob,p.Gender,min(e.date_started) as date_started,
+                                     max(e.date_started) as last_art_date,
+                                     mid(min(concat(e.date_started,e.regimen_name)),11) as regimen,
+                                     mid(min(concat(e.date_started,e.regimen_line)),11) as regimen_line,
+                                     mid(max(concat(e.date_started,e.regimen_name)),11) as last_regimen,
+                                     mid(max(concat(e.date_started,e.regimen_line)),11) as last_regimen_line,
+                                     max(if(discontinued,1,0))as alternative_regimen
+                              from kenyaemr_etl.etl_drug_event e
+                                     join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id
+                                     left join  kenyaemr_etl.etl_pharmacy_extract ph on ph.patient_id = e.patient_id and is_arv=1
+                              group by e.patient_id) e
+                               left outer join kenyaemr_etl.etl_patient_program_discontinuation d on d.patient_id=e.patient_id
+                               left outer join kenyaemr_etl.etl_hiv_enrollment enr on enr.patient_id=e.patient_id
+                               left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=e.patient_id
+                        group by e.patient_id)reg on reg.patient_id=hiv.patient_id
+       left outer join concept_name dis_rsn on dis_rsn.concept_id=disc.discontinuation_reason  and dis_rsn.concept_name_type='FULLY_SPECIFIED'
+                                                 and dis_rsn.locale='en'
+       left outer join concept_name cn on cn.concept_id=hiv.entry_point  and cn.concept_name_type='FULLY_SPECIFIED'
+                                            and cn.locale='en'
+where d.unique_patient_no is not null
+group by d.patient_id
+having min(hiv.visit_date) is not null and reg.art_start_date is not null;"|dwhstage|0|PatientArtExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+3C742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Baselines|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
+d.patient_id as PatientPK,
+(select value_reference from location_attribute
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation') and attribute_type_id=1) as facilityId,
+(select value_reference from location_attribute
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
+ mid(max(if(l.visit_date<=p_dates.enrollment_date,concat(l.visit_date,test_result),null)),11) as eCd4,
+ CAST(left(max(if(l.visit_date<=p_dates.enrollment_date,concat(l.visit_date,test_result),null)),10) AS DATE) as eCd4Date,
+ if(fup.visit_date<=p_dates.enrollment_date,
+ case who_stage
+ when 1220 then 'WHO I'
+ when 1221 then 'WHO II'
+ when 1222 then 'WHO III'
+ when 1223 then 'WHO IV'
+ when 1204 then 'WHO I'
+ when 1205 then 'WHO II'
+ when 1206 then 'WHO III'
+ when 1207 then 'WHO IV'
+ end,null) as ewho,
+ CAST(if(fup.visit_date<=p_dates.enrollment_date and who_stage is not null and fup.visit_date>'1900-01-01',
+fup.visit_date,null) AS DATE) as ewhodate,
+'' as bCD4,
+NULL as bCD4Date,
+'' as bWHO,
+NULL as bWHODate,
+ mid(max(concat(fup.visit_date,case who_stage
+ when 1220 then 'WHO I'
+ when 1221 then 'WHO II'
+ when 1222 then 'WHO III'
+ when 1223 then 'WHO IV'
+ when 1204 then 'WHO I'
+ when 1205 then 'WHO II'
+ when 1206 then 'WHO III'
+ when 1207 then 'WHO IV'
+ end)),11) as lastwho,
+ CAST(left(max(concat(fup.visit_date,case who_stage
+ when 1220 then 'WHO I'
+ when 1221 then 'WHO II'
+ when 1222 then 'WHO III'
+ when 1223 then 'WHO IV'
+ when 1204 then 'WHO I'
+ when 1205 then 'WHO II'
+ when 1206 then 'WHO III'
+ when 1207 then 'WHO IV'
+ end)),10) AS DATE) as lastwhodate,
+  mid(max(concat(l.visit_date,l.test_result)),11) as lastcd4,
+ CAST(left(max(concat(l.visit_date,l.test_result)),10) AS DATE) as lastcd4date,
+ mid(max(if(l.visit_date>p_dates.six_month_date and l.visit_date<p_dates.twelve_month_date ,concat(l.visit_date,test_result),null)),11) as m6Cd4,
+ CAST(left(max(if(l.visit_date>=p_dates.six_month_date and l.visit_date<p_dates.twelve_month_date ,concat(l.visit_date,test_result),null)),10) AS DATE) as m6Cd4Date,
+ mid(max(if(l.visit_date>=p_dates.twelve_month_date,concat(l.visit_date,test_result),null)),11) as m6Cd4,
+ CAST(left(max(if(l.visit_date>p_dates.twelve_month_date,concat(l.visit_date,test_result),null)),10) AS DATE) as m6Cd4Date,
+ '' as eWAB, NULL as eWABDate,'' as bWAB, NULL as bWABDAte,
+ 'KenyaEMR' as Emr,
+ 'Kenya HMIS II' as Project,
+ '' AS LastWaB,NULL AS LastWABDate,
+ '' as m12CD4,
+NULL as m12CD4Date,
+'' AS m6CD4,
+NULL m6CD4Date
+from kenyaemr_etl.etl_patient_hiv_followup fup
+join kenyaemr_etl.etl_patient_demographics d on d.patient_id=fup.patient_id
+join (select e.patient_id,date_add(date_add(min(e.visit_date),interval 3 month), interval 1 day) as enrollment_date,
+date_add(date_add(min(e.visit_date), interval 6 month),interval 1 day) as six_month_date,
+date_add(date_add(min(e.visit_date), interval 12 month),interval 1 day) as twelve_month_date
+from kenyaemr_etl.etl_hiv_enrollment e
+group by e.patient_id) p_dates on p_dates.patient_id=fup.patient_id
+left outer join kenyaemr_etl.etl_laboratory_extract l on l.patient_id=fup.patient_id and l.lab_test in (5497,730) where d.unique_patient_no is not null
+group by fup.patient_id
+order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+38742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Status|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select
+'' AS SatelliteName,
+0 AS FacilityId,
+d.unique_patient_no as PatientID,
+d.patient_id as PatientPK,(select value_reference from location_attribute
+where location_id in (select property_value from global_property where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode, (select name from location where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation')) as FacilityName,
+'' as ExitDescription,
+/*disc.visit_date as ExitDate,
+case
+when disc.discontinuation_reason is not null then cn.name
+else '' end as ExitReason,*/
+ 'KenyaEMR' as Emr,
+ 'Kenya HMIS II' as Project,
+CAST(now() as Date) AS DateExtracted,
+max(disc.visit_date) AS ExitDate,
+mid(max(concat(disc.visit_date,case when disc.discontinuation_reason is not null then cn.name
+else '' end  )),20) as ExitReason
+from kenyaemr_etl.etl_patient_program_discontinuation disc
+join kenyaemr_etl.etl_patient_demographics d on d.patient_id=disc.patient_id
+left outer join concept_name cn on cn.concept_id=disc.discontinuation_reason  and cn.concept_name_type='FULLY_SPECIFIED'
+and cn.locale='en'
+where d.unique_patient_no is not null
+group by PatientID
+order by disc.visit_date ASC;"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as patientID, d.patient_id as patientPK, l.encounter_id as visitID,
+CAST(l.visit_date AS DATE) as orderedByDate,CAST(l.visit_date AS DATE) as reportedByDate, null as reason, (select value_reference from location_attribute
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation') and attribute_type_id=1) as facilityID,
+(select value_reference from location_attribute
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
+(select name from location
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation')) as facilityName,
+cn.name as testName,
+case
+when c.datatype_id=2 then cn2.name
+else
+ l.test_result
+end as TestResult,
+NULL as enrollmentTest,
+ 'KenyaEMR' as Emr,
+ 'Kenya HMIS II' as Project
+from kenyaemr_etl.etl_laboratory_extract l
+join kenyaemr_etl.etl_patient_demographics d on d.patient_id=l.patient_id
+join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
+join concept c on c.concept_id = l.lab_test
+left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
+and cn2.locale='en' where d.unique_patient_no is not null"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct
+'' AS Provider,'' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
+d.patient_id as PatientPK,
+(select name from location
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation')) as FacilityName,
+(select value_reference from location_attribute
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
+ph.visit_id as VisitID,
+-- if(cn2.name is not null, cn2.name,cn.name) as Drug,
+case
+when is_arv=1 then ph.drugreg
+else if(cn2.name is not null, cn2.name,cn.name) END as Drug,
+ph.visit_date as DispenseDate,
+ph.duration AS duration,
+ph.duration AS PeriodTaken,
+fup.next_appointment_date as ExpectedReturn,
+'KenyaEMR' as Emr,
+'Kenya HMIS II' as Project,
+CASE WHEN is_arv=1 THEN 'ARV'
+WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,
+ph.RegimenLine,
+CASE WHEN is_ctx=1 THEN 'CTX'
+WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,
+CAST(now() as Date) AS DateExtracted
+from (SELECT * FROM (
+select patient_id, visit_id,visit_date,encounter_id,drug,is_arv, is_ctx,is_dapsone,drug_name as drugreg,frequency,
+'' as DispenseDate,duration, duration PeriodTaken,
+''ExpectedReturn, CASE WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,'' as RegimenLine,
+CASE WHEN is_ctx=1 THEN 'CTX'
+WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType from kenyaemr_etl.etl_pharmacy_extract ph
+left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
+and cn2.locale='en' where is_ctx=1 OR is_dapsone= 1
+GROUP BY patient_id, visit_id,visit_date,encounter_id
+UNION
+
+SELECT patient_id,''visit_id,visit_date,encounter_id,regimen drug,1 as is_arv, 0 as is_ctx, 0 as is_dapsone, regimen_name as drugreg, '' frequency, date_started as DispenseDate,''duration,''PeriodTaken,
+''ExpectedReturn, 'ARV' AS TreatmentType,regimen_line as RegimenLine,NULL as ProphylaxisType FROM kenyaemr_etl.etl_drug_event
+GROUP BY patient_id, visit_id,visit_date,encounter_id
+)A )ph
+join kenyaemr_etl.etl_patient_demographics d on d.patient_id=ph.patient_id
+left outer join concept_name cn on cn.concept_id=ph.drug and cn.concept_name_type='FULLY_SPECIFIED'
+and cn.locale='en'
+left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
+and cn.locale='en'
+left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph.encounter_id
+and fup.patient_id=ph.patient_id
+where unique_patient_no is not null and (is_arv=1 OR is_ctx=1 OR is_dapsone =1 ) and drugreg is not null
+order by ph.patient_id,ph.visit_date;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct
+'' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
+d.patient_id as PatientPK,
+(select name from location
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation')) as FacilityName,
+(select value_reference from location_attribute
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
+fup.visit_id as VisitID,
+case when fup.visit_date < '1990-01-01' then null else CAST(fup.visit_date AS DATE) end  AS VisitDate,
+'Out Patient' as Service,
+fup.visit_scheduled as VisitType,
+case fup.who_stage
+when 1220 then 'WHO I'
+when 1221 then 'WHO II'
+when 1222 then 'WHO III'
+when 1223 then 'WHO IV'
+when 1204 then 'WHO I'
+when 1205 then 'WHO II'
+when 1206 then 'WHO III'
+when 1207 then 'WHO IV'
+  else ''
+end as WHOStage,
+'' as WABStage,
+case fup.pregnancy_status
+when 1065 then 'Yes'
+when 1066 then 'No'
+end as Pregnant,
+CAST(fup.last_menstrual_period AS DATE) as LMP,
+CAST(fup.expected_delivery_date AS DATE) as EDD,
+fup.height as Height,
+fup.weight as Weight,
+concat(fup.systolic_pressure,'/',fup.diastolic_pressure) as BP,
+'ART|CTX' as AdherenceCategory,
+concat(
+IF(fup.arv_adherence=159405, 'Good', IF(fup.arv_adherence=159406, 'Fair', IF(fup.arv_adherence=159407, 'Poor', ''))), IF(fup.arv_adherence in (159405,159406,159407), '|','') ,
+IF(fup.ctx_adherence=159405, 'Good', IF(fup.ctx_adherence=159406, 'Fair', IF(fup.ctx_adherence=159407, 'Poor', '')))
+) AS Adherence,
+'' as OI,
+NULL as OIDate,
+case fup.family_planning_status
+when 695 then 'Currently using FP'
+when 160652 then 'Not using FP'
+when 1360 then 'Wants FP'
+else ''
+end as FamilyPlanningMethod,
+concat(
+case fup.condom_provided
+when 1065 then 'Condoms,'
+else ''
+end,
+case fup.pwp_disclosure
+when 1065 then 'Disclosure|'
+else ''
+end,
+case fup.pwp_partner_tested
+when 1065 then 'Partner Testing|'
+else ''
+end,
+case fup.screened_for_sti
+when 1065 then 'Screened for STI'
+else ''
+end )as PWP,
+if(fup.last_menstrual_period is not null, timestampdiff(week,fup.last_menstrual_period,fup.visit_date),'') as GestationAge,
+case when fup.next_appointment_date < '1990-01-01' then null else CAST(fup.next_appointment_date AS DATE) end  AS NextAppointmentDate,
+'KenyaEMR' as Emr,
+'Kenya HMIS II' as Project,
+
+CAST(fup.substitution_first_line_regimen_date AS DATE)  AS SubstitutionFirstlineRegimenDate,
+fup.substitution_first_line_regimen_reason AS SubstitutionFirstlineRegimenReason,
+CAST(fup.substitution_second_line_regimen_date AS DATE) AS SubstitutionSecondlineRegimenDate,
+fup.substitution_second_line_regimen_reason AS SubstitutionSecondlineRegimenReason,
+CAST(fup.second_line_regimen_change_date AS DATE) AS SecondlineRegimenChangeDate,
+fup.second_line_regimen_change_reason AS SecondlineRegimenChangeReason,
+
+
+ CASE fup.stability
+ WHEN 1 THEN 'Stable'
+ WHEN 2 THEN 'Not Stable' END as StabilityAssessment,
+
+dc.name as DifferentiatedCare,
+CASE
+               WHEN fup.key_population_type  IS NOT NULL AND fup.key_population_type  !=1175
+               THEN 'Key population'
+    ELSE pt.name  END as PopulationType,
+
+case fup.key_population_type
+WHEN 105 THEN 'PWID'
+WHEN 160578 THEN 'MSM'
+WHEN 160579  THEN 'FSW'
+WHEN 1175 THEN 'N/A'
+ELSE fup.key_population_type  END as KeyPopulationType
+
+from kenyaemr_etl.etl_patient_demographics d
+join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=d.patient_id
+left join concept_name dc on dc.concept_id =  fup.differentiated_care and dc.concept_name_type='FULLY_SPECIFIED'
+left join concept_name pt on fup.population_type = pt.concept_id AND pt.concept_name_type='FULLY_SPECIFIED'
+where d.unique_patient_no is not null and fup.visit_date > '1990-01-01'  "|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT
+ *,
+LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
+LEFT([Gender],1)+
+    CASE
+    WHEN CHARINDEX(';',[dmFirstName])>0 THEN
+       SUBSTRING([dmFirstName],CHARINDEX(';',[dmFirstName])+1,LEN([dmFirstName]))
+    ELSE
+     [dmFirstName]
+    END +
+    CASE
+    WHEN CHARINDEX(';',[dmLastName])>0 THEN
+       SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))
+    ELSE
+     [dmLastName]
+    END +LTRIM(RTRIM(STR(YEAR(DOB)))) AS [dmPKValue],
+CASE WHEN CHARINDEX(';',[dmLastName])>0 THEN
+     LEFT([Gender],1)+ [sxFirstName]+ SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))+LTRIM(RTRIM(STR(YEAR(DOB))))
+    ELSE
+     LEFT([Gender],1)+ [sxFirstName]+[dmLastName]+LTRIM(RTRIM(STR(YEAR(DOB))))
+    END AS [sxdmPKValue],
+LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112)))) AS [sxPKValueDoB],
+LEFT([Gender],1)+
+    CASE
+    WHEN CHARINDEX(';',[dmFirstName])>0 THEN
+       SUBSTRING([dmFirstName],CHARINDEX(';',[dmFirstName])+1,LEN([dmFirstName]))
+    ELSE
+     [dmFirstName]
+    END +
+    CASE
+    WHEN CHARINDEX(';',[dmLastName])>0 THEN
+       SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))
+    ELSE
+     [dmLastName]
+    END +LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112)))) AS [dmPKValueDoB],
+CASE WHEN CHARINDEX(';',[dmLastName])>0 THEN
+     LEFT([Gender],1)+ [sxFirstName]+ SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))+LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112))))
+    ELSE
+     LEFT([Gender],1)+ [sxFirstName]+[dmLastName]+LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112))))
+    END AS [sxdmPKValueDoB]
+
+FROM
+(
+SELECT
+   -------Demographics
+   Ptn_Pk,a.PatientPK,a.SiteCode,a.FacilityName,
+    case when a.HTSID is null then a.PatientID else a.HTSID end as Serial
+
+      ,UPPER([dFirstName]) FirstName
+   ,UPPER([dMiddleName]) MiddleName
+      ,UPPER([dLastName]) LastName
+   ,dbo.[fnReplaceInvalidChars](UPPER(REPLACE([dFirstName],'0','O'))) AS [FirstName_Normalized]
+      ,dbo.[fnReplaceInvalidChars](UPPER(REPLACE([dMiddleName],'0','O'))) AS [MiddleName_Normalized]
+      ,dbo.[fnReplaceInvalidChars](UPPER(REPLACE([dLastName],'0','O'))) AS [LastName_Normalized]
+     ,SOUNDEX(dbo.[fnReplaceInvalidChars](UPPER(REPLACE([dFirstName],'0','O')))) AS  [sxFirstName]
+   ,SOUNDEX(dbo.[fnReplaceInvalidChars](UPPER(REPLACE([dLastName],'0','O')))) AS [sxLastName]
+   ,SOUNDEX(dbo.[fnReplaceInvalidChars](UPPER(REPLACE([dMiddleName],'0','O')))) AS sxMiddleName
+  ,[dmFirstName]= dbo.fn_getPatientNameDoubleMetaphone(dbo.[fnReplaceInvalidChars](UPPER(REPLACE([dFirstName],'0','O'))))
+  ,[dmLastName] = dbo.fn_getPatientNameDoubleMetaphone(dbo.[fnReplaceInvalidChars](UPPER(REPLACE([dLastName],'0','O'))))
+  ,dmMiddleName = dbo.fn_getPatientNameDoubleMetaphone(dbo.[fnReplaceInvalidChars](UPPER(REPLACE([dMiddleName],'0','O'))))
+  ,a.[PhoneNumber]PatientPhoneNumber
+   ,NULL PatientAlternatePhoneNumber
+      ,a.[Gender]
+      ,a.[DOB]
+   ,a.[MaritalStatus]
+   -------Patient Address
+   ,a.[PatientSource]
+      ,[Region]PatientCounty
+      ,[District]PatientSubCounty
+      ,[Village]PatientVillage
+   -------Patient-Identifiers
+   ,mst.[PatientClinicID]PatientID
+   ,[NationalId][National_ID]
+   ,NULL as [NHIF_Number]
+   ,NULL as [Birth_Certificate]
+   ,b.[PatientID][CCC_Number]
+   ,ltrim(rtrim(DistrictRegistrationNr))[TB_Number]
+      -------Next Of Kin
+
+      ,LTRIM(RTRIM(ContactName)) AS ContactName
+      ,[ContactRelation] AS  ContactRelation
+      ,[ContactPhoneNumber] as ContactPhoneNumber
+      ,[ContactAddress] as ContactAddress
+   , NULL AS  NokNationalId
+   -------Additional Variables
+      ,[DateConfirmedHIVPositive]
+   ,b.[StartARTDate]
+   ,[StartRegimen]StartARTRegimenCode
+   ,[StartRegimenLine]StartARTRegimenDesc
+
+  FROM [dbo].[tmp_PatientMaster] a
+  inner join [dbo].[mst_patient_decoded]mst on a.patientpk=mst.ptn_pk
+  left  join (SELECT DISTINCT a.PatientPK, a.PatientID, a.RegistrationAtCCC, b.StartARTDate, b.StartRegimen, b.StartRegimenLine
+  FROM
+  tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
+  WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
+  Where len(a.htsid) > 0 or len(a.PatientID) > 0
+ --ORDER BY PKV_2,Ptn_Pk  ASC
+) X
+INNER JOIN
+(
+SELECT
+  Ptn_Pk,
+    case when a.HTSID is null then a.PatientID else a.HTSID end as Serial
+FROM [dbo].[tmp_PatientMaster] a
+  inner join [dbo].[mst_patient_decoded]mst on a.patientpk=mst.ptn_pk
+  left  join (SELECT DISTINCT a.PatientPK, a.PatientID, a.RegistrationAtCCC, b.StartARTDate, b.StartRegimen, b.StartRegimenLine
+  FROM dbo.tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
+  WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
+  Where len(a.htsid) > 0 or len(a.PatientID) > 0
+
+)Y
+ON
+Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial"|MPI|1|MasterPatientIndex|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
+48742EB0-6656-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"
+SELECT DISTINCT
+-- -----Demographics
+X.Ptn_Pk,
+X.PatientPK,
+siteCode,
+FacilityName,
+-- a.patient_clinic_number AS Serial
+-- X.Ptn_Pk AS Serial
+X.Serial
+,FirstName
+, MiddleName
+,LastName
+, FirstName_Normalized
+, MiddleName_Normalized
+,LastName_Normalized
+,sxFirstName
+,sxLastName
+,sxMiddleName
+,dmFirstName
+, dmLastName
+, dmMiddleName
+, PatientPhoneNumber
+, PatientAlternatePhoneNumber
+,Gender
+,DOB
+,MaritalStatus
+-- -----Patient Address
+, PatientSource
+, PatientCounty
+, PatientSubCounty
+, PatientVillage
+-- -----Patient-Identifiers
+,PatientID
+,National_ID
+,NHIF_Number
+,Birth_Certificate
+,CCC_Number
+,TB_Number
+-- -----Next Of Kin
+,ContactName
+,ContactRelation
+, ContactPhoneNumber
+,ContactAddress
+, NokNationalId
+-- -----Additional Variables
+, DateConfirmedHIVPositive
+,StartARTDate
+,StartARTRegimenCode
+, StartARTRegimenDesc,
+CONCAT(LEFT(Gender ,1), sxFirstName ,sxLastName ,LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y')))) AS sxPKValue,
+CONCAT( CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8),
+CAST(CASE
+WHEN locate(';',dmFirstName )>0 THEN
+SUBSTRING(dmFirstName , locate(';',dmFirstName )+1,LENGTH(dmFirstName ))
+ELSE
+dmFirstName
+END AS CHAR CHARACTER SET utf8),
+CAST(CASE
+WHEN locate(';',dmLastName )>0 THEN
+SUBSTRING(dmLastName , locate(';',dmLastName )+1,LENGTH(dmLastName ))
+ELSE
+dmLastName
+END AS CHAR CHARACTER SET utf8),
+CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y')))AS CHAR CHARACTER SET utf8)
+
+) AS dmPKValue ,
+
+CASE WHEN locate(';',dmLastName )>0
+THEN
+CONCAT(
+CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8)
+, CAST(sxFirstName AS CHAR CHARACTER SET utf8)
+, CAST(SUBSTRING(dmLastName , locate(';',dmLastName )+1,LENGTH(dmLastName )) AS CHAR CHARACTER SET utf8)
+, CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y')))AS CHAR CHARACTER SET utf8)
+)
+ELSE
+CONCAT(
+CAST(LEFT(Gender ,1)AS CHAR CHARACTER SET utf8)
+, CAST(sxFirstName AS CHAR CHARACTER SET utf8)
+, CAST(dmLastName AS CHAR CHARACTER SET utf8)
+, CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+)
+END AS sxdmPKValue ,
+CONCAT(
+CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8)
+,CAST(sxFirstName AS CHAR CHARACTER SET utf8)
+,CAST(sxLastName AS CHAR CHARACTER SET utf8)
+,CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d')))AS CHAR CHARACTER SET utf8)
+) AS sxPKValueDoB ,
+
+CONCAT(
+
+CAST(LEFT(Gender ,1) AS CHAR CHARACTER SET utf8),
+CASE
+WHEN locate(';',dmFirstName )>0 THEN
+CAST(SUBSTRING(dmFirstName , locate(';',dmFirstName )+1,LENGTH(dmFirstName )) AS CHAR CHARACTER SET utf8)
+ELSE
+CAST(dmFirstName AS CHAR CHARACTER SET utf8)
+END ,
+CASE
+WHEN locate(';',dmLastName )>0 THEN
+CAST( SUBSTRING(dmLastName , locate(';',dmLastName )+1,LENGTH(dmLastName )) AS CHAR CHARACTER SET utf8)
+ELSE
+CAST( dmLastName AS CHAR CHARACTER SET utf8)
+END ,
+
+CAST( LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d'))) AS CHAR CHARACTER SET utf8)
+) AS dmPKValueDoB ,
+
+CASE WHEN locate(';',dmLastName )>0 THEN
+CONCAT(
+CAST( LEFT(Gender ,1) AS CHAR CHARACTER SET utf8)
+,CAST( sxFirstName AS CHAR CHARACTER SET utf8)
+, CAST( SUBSTRING(dmLastName ,locate(';',dmLastName )+1,LENGTH(dmLastName )) AS CHAR CHARACTER SET utf8)
+,CAST( LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d'))) AS CHAR CHARACTER SET utf8)
+)
+ELSE
+CONCAT(
+CAST( LEFT(Gender ,1)AS CHAR CHARACTER SET utf8)
+, CAST( sxFirstName AS CHAR CHARACTER SET utf8),
+CAST( dmLastName AS CHAR CHARACTER SET utf8),
+CAST( LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y%m%d'))) AS CHAR CHARACTER SET utf8)
+)
+END AS sxdmPKValueDoB
+FROM
+(
+SELECT
+-- -----Demographics
+a.patient_id as Ptn_Pk,
+a.patient_id as PatientPK,
+(select value_reference from location_attribute
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
+
+(select name from location
+where location_id in (select property_value
+from global_property
+where property='kenyaemr.defaultLocation')) as FacilityName,
+id.identifier AS Serial
+-- a.patient_clinic_number AS Serial
+
+,UPPER(a.given_name ) as FirstName
+,UPPER(a.middle_name ) as MiddleName
+,UPPER(family_name) as LastName
+,UPPER(REPLACE(given_name ,'0','O')) AS FirstName_Normalized
+,UPPER(REPLACE(middle_name ,'0','O')) AS MiddleName_Normalized
+,UPPER(REPLACE(family_name ,'0','O')) AS LastName_Normalized
+,SOUNDEX(UPPER(REPLACE(given_name ,'0','O'))) AS sxFirstName
+,SOUNDEX(UPPER(REPLACE(family_name ,'0','O'))) AS sxLastName
+,SOUNDEX(UPPER(REPLACE(middle_name ,'0','O'))) AS sxMiddleName
+, fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name ,'0','O'))) AS dmFirstName
+, fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name ,'0','O'))) AS dmLastName
+, fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name ,'0','O'))) AS dmMiddleName
+,a.phone_number AS PatientPhoneNumber
+,en.treatment_supporter_telephone AS PatientAlternatePhoneNumber
+,a.Gender
+,a.DOB
+,a.marital_status AS MaritalStatus
+-- -----Patient Address
+, en.entry_point AS PatientSource
+,NULL PatientCounty
+,NULL PatientSubCounty
+,NULL PatientVillage
+-- -----Patient-Identifiers
+,patient_clinic_number AS PatientID
+,national_id_no AS National_ID
+,NULL as NHIF_Number
+,NULL as Birth_Certificate
+,a.patient_clinic_number AS CCC_Number
+,ltrim(rtrim(a.district_reg_no))TB_Number
+-- -----Next Of Kin
+,LTRIM(RTRIM(next_of_kin)) AS ContactName
+,next_of_kin_relationship AS ContactRelation
+,treatment_supporter_telephone as ContactPhoneNumber
+,treatment_supporter_address as ContactAddress
+,NULL AS NokNationalId
+-- -----Additional Variables
+,date_confirmed_hiv_positive AS DateConfirmedHIVPositive
+,X.date_started AS StartARTDate
+,X.regimen_name AS StartARTRegimenCode
+,X.regimen_line StartARTRegimenDesc
+
+FROM kenyaemr_datatools.patient_demographics a
+INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = (SELECT patient_identifier_type_id FROM openmrs.patient_identifier_type
+where name ='OpenMRS ID')
+left join (
+SELECT  c.patient_id,
+c.encounter_id, treatment_supporter_telephone, entry_point , treatment_supporter_address, date_confirmed_hiv_positive
+from kenyaemr_datatools.hiv_enrollment  c
+left JOIN
+    (
+        SELECT patient_id, MAX(encounter_id) max_encounter_id
+        FROM kenyaemr_datatools.hiv_enrollment
+        GROUP BY patient_id
+    ) b ON c.patient_id = b.patient_id AND
+            c.encounter_id = b.max_encounter_id
+
+  order by patient_id,date_created asc
+
+
+ ) en
+on a.Patient_Id=en.patient_id
+LEFT JOIN
+(
+SELECT patient_id, MIN(date_started) AS date_started ,MIN(regimen_name) AS regimen_name, MIN(regimen_line) AS regimen_line
+FROM kenyaemr_datatools.drug_event GROUP BY patient_id
+) X ON X.patient_id = a.Patient_id
+) X
+INNER JOIN
+(
+SELECT
+a.patient_id as Ptn_Pk,
+id.identifier AS Serial
+FROM kenyaemr_datatools.patient_demographics a
+INNER JOIN patient_identifier id ON a.patient_id = id.patient_id AND id.identifier_type = (SELECT patient_identifier_type_id FROM openmrs.patient_identifier_type
+where name ='OpenMRS ID')
+
+)Y
+ON
+Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial
+"|MPI|1|MasterPatientIndex|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+329bfbf4-d404-4dfd-88eb-6fb398c5f449|Patient Adverse Events|NDWH|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT adv.PatientID,
+       adv.PatientPK,
+       adv.SiteCode,
+	   p.FacilityID,
+       'IQCare' AS EMR,
+       'Kenya HMIS II' AS Project,
+       adv.VisitDate,
+       adv.Regimen AS AdverseEventRegimen,
+       adv.AdverseEvent,
+       adv.AdverseEventCause,
+       adv.Severity,
+       adv.ActionTaken AS AdverseEventActionTaken,
+       adv.ClinicalOutcome AS AdverseEventClinicalOutcome,
+	   adv.VisitDate AS AdverseEventStartDate,
+       adv.AdverseEventEndDate,
+       adv.Pregnancy AS AdverseEventIsPregnant
+FROM IQC_AdverseEvents adv
+     INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK where p.RegistrationAtCCC is not null"|dwhstage|0|PatientAdverseEventExtract|8|a6221983-0e85-11e8-ba89-0ed5f89f718b
+a6226eb4-0e85-11e8-ba89-6fb398c5f449|Patient Adverse Events|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT '' AS PatientID,
+       '' AS PatientPK,
+       '' AS SiteCode,
+	   '' AS FacilityID,
+       'Kenya EMR' AS EMR,
+       'Kenya HMIS II' AS Project,
+       NOW() AS VisitDate,
+       '' AS AdverseEventRegimen,
+       '' AS AdverseEvent,
+       '' AS AdverseEventCause,
+       '' AS Severity,
+       '' AS AdverseEventActionTaken,
+       '' AS AdverseEventClinicalOutcome,
+	   NOW() AS AdverseEventStartDate,
+       NOW() AS AdverseEventEndDate,
+       '' AS AdverseEventIsPregnant"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+953cd910-23bb-11e9-ab14-d663bd873d93|Patient Status|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT patientid,
+       patientpk,
+       sitecode,
+       facilityname,
+       exitdescription,
+       exitreason,
+       if(exitdate,exitdate,null) as exitdate,
+       emr,
+       project,
+       ident,
+       null as dateimported,
+       facilityid
+FROM   ndwr_patient_status"|dwhstage|0|PatientStatusExtract|4|a6221aa5-0e85-11e8-ba89-0ed5f89f718b
+953cdb90-23bb-11e9-ab14-d663bd873d93|ART Patients|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT patientid,
+       patientpk,
+       if(dob,dob,null) as dob,
+       arv_first_regimen_start_date,
+       ageenrollment,
+       ageartstart,
+       agelastvisit,
+       sitecode,
+       facilityname,
+       if(registrationdate,registrationdate,null) as registrationdate,
+       patientsource,
+       gender,
+       if(startartdate,startartdate,null) as startartdate,
+       if(previousartstartdate,previousartstartdate,NULL) as previousartstartdate,
+       previousartregimen,
+       if(startartatthisfacility,startartatthisfacility,null) AS startartatthisfacility,
+       startregimen,
+       startregimenline,
+       if(lastartdate,lastartdate,null) AS lastartdate,
+       lastregimen,
+       lastregimenline,
+       duration,
+       IF(expectedreturn,expectedreturn,NULL) AS expectedreturn,
+       provider,
+       IF(lastvisit,lastvisiT,NULL) AS lastvisit,
+       encounter_type,
+       status,
+       exitreason,
+       if(exitdate,exitdate,null) as exitdate,
+       emr,
+       project,
+       ident,
+       previousartregimen_orig,
+       startregimen_orig,
+       lastregimen_orig,
+       null as dateimported,
+       facilityid
+FROM   ndwr_art_patients"|dwhstage|0|PatientArtExtract|2|a6221aa5-0e85-11e8-ba89-0ed5f89f718b
+953cdce4-23bb-11e9-ab14-d663bd873d93|All Patients|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT patientid,
+       patientpk,
+       sitecode,
+       facilityname,
+       gender,
+       IF(dob, dob, NULL) AS DOB,
+       IF(registrationdate, registrationdate, NULL) as registrationdate,
+       if(registrationatccc,registrationatccc,null) as registrationatccc,
+       if(registrationatpmtct,registrationatpmtct,null) AS registrationatpmtct,
+       IF(registrationattbclinic,registrationattbclinic,NULL) AS registrationattbclinic,
+       patientsource,
+       region,
+       district,
+       village,
+       contactrelation,
+       lastvisit,
+       maritalstatus,
+       educationlevel,
+       IF(dateconfirmedhivpositive,dateconfirmedhivpositive,NULL) AS dateconfirmedhivpositive,
+       IF(previousartexposure,previousartexposure,NULL) as previousartexposure,
+       if(previousartstartdate,previousartstartdate,null) as previousartstartdate,
+       emr,
+       project,
+       facilityid,
+       satellitename,
+       StatusAtCCC,StatusAtPMTCT,StatusAtTBClinic
+FROM   ndwr_all_patients"|dwhstage|1|PatientExtract|1|a6221aa5-0e85-11e8-ba89-0ed5f89f718b
+953cde1a-23bb-11e9-ab14-d663bd873d93|Patient Baselines|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT patientpk,
+       patientid,
+       facilityname,
+       sitecode,
+       locationid,
+       facilityid,
+       bcd4,
+       if(bcd4date,bcd4date,null) as bcd4date,
+       bwho,
+       if(bwhodate,bwhodate,null) as bwhodate,
+       ecd4,
+       if(ecd4date,ecd4date,null) as ecd4date,
+       ewho,
+       if(ewhodate,ewhodate,null) as ewhodate,
+       lastwho,
+       if(lastwhodate,lastwhodate,null) as lastwhodate,
+       lastcd4,
+       if(lastcd4date,lastcd4date,null) as lastcd4date,
+       m12cd4,
+       if(m12cd4date,m12cd4date,null) as m12cd4date,
+       m6cd4,
+       if(m6cd4date,m6cd4date,null) as m6cd4date,
+       cd4atenrollment,
+       if(cd4atenrollment_date,cd4atenrollment_date,null) as cd4atenrollment_date,
+       cd4beforeartstart,
+       if(cd4beforeartstart_date,cd4beforeartstart_date,null) as cd4beforeartstart_date,
+       lastcd4afterartstart,
+       if(lastcd4afterartstart_date,lastcd4afterartstart_date,null) as lastcd4afterartstart_date,
+       cd4atenrollmentpercent,
+       if( cd4atenrollmentpercent_date,cd4atenrollmentpercent_date,null) as  cd4atenrollmentpercent_date,
+       cd4beforeartstartpercent,
+       if(cd4beforeartstartpercent_date,cd4beforeartstartpercent_date,null) as cd4beforeartstartpercent_date,
+       lastcd4afterartstartpercent,
+       if(lastcd4afterartstartpercent_date,lastcd4afterartstartpercent_date,null) as lastcd4afterartstartpercent_date,
+       6monthcd4,
+       if(6monthcd4_date,6monthcd4_date,null) as 6monthcd4_date,
+       12monthcd4,
+       if(12monthcd4_date,12monthcd4_date,null) as 12monthcd4_date,
+       6monthcd4percent,
+       if(6monthcd4percent_date,6monthcd4percent_date,null) as 6monthcd4percent_date,
+       firstcd4afterartstart,
+       if(firstcd4afterartstart_date,firstcd4afterartstart_date,null) as firstcd4afterartstart_date,
+       firtscd4afterartstartpercent,
+       if(firtscd4afterartstartpercent_date,firtscd4afterartstartpercent_date,null) as firtscd4afterartstartpercent_date,
+       null as dateimported,
+       6monthvl,
+       if(6monthvldate,6monthvldate,null) as 6monthvldate,
+       12monthvl,
+       if(12monthvldate,12monthvldate,null) as 12monthvldate,
+       'AMRS' as emr,
+       'AMPATHPLUS' as project,
+       null as ident,
+	   null as bWAB,
+	   null as bWABDate,
+	   null as eWAB,
+	   null as eWABDate,
+	   null as lastWAB,
+	   null as lastWABDate
+
+FROM   ndw_base_line"|dwhstage|0|PatientBaselineExtract|3|a6221aa5-0e85-11e8-ba89-0ed5f89f718b
+953cdf46-23bb-11e9-ab14-d663bd873d93|Patient Labs|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT patientid,
+       patientpk,
+       facilityid,
+       sitecode,
+       facilityname,
+       satellitename,
+       if(orderedbydate,orderedbydate,null) as orderedbydate,
+       if(reportedbydate,reportedbydate,null) as reportedbydate,
+       visitid,
+       testname,
+       testresult,
+       baselinetest,
+       enrollmenttest,
+       emr,
+       project,
+       ident,
+       null as dateimported
+FROM   ndwr_patient_labs"|dwhstage|0|PatientLabExtract|5|a6221aa5-0e85-11e8-ba89-0ed5f89f718b
+953ce2b6-23bb-11e9-ab14-d663bd873d93|Patient Pharmacy|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT patientid,
+       patientpk,
+       facilityname,
+       sitecode,
+       visitid,
+       drug,
+       if(dispensedate,dispensedate,null) as dispensedate,
+       treatmenttype,
+       prophylaxistype,
+       if(expectedreturn,expectedreturn,null) as expectedreturn,
+       duration,
+       periodtaken,
+       emr,
+       project,
+       null as dateimported,
+       ident,
+       facilityid,
+	   null as Provider,
+	   null as RegimenLine
+FROM   ndwr_patient_pharmacy"|dwhstage|0|PatientPharmacyExtract|6|a6221aa5-0e85-11e8-ba89-0ed5f89f718b
+953ce400-23bb-11e9-ab14-d663bd873d93|Patient Visit|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT patientid,
+       patientpk,
+       facilityname,
+       sitecode,
+       visitid,
+       if(visitdate,visitdate,null) as visitdate,
+       service,
+       visittype,
+       whostage,
+       wabstage,
+       pregnant,
+       if(lmp,lmp,null) as lmp,
+       if(edd,edd,null) as edd,
+       height,
+       bp,
+       oi,
+       if(oidate,oidate,null) as oidate,
+       adherence,
+       adherencecategory,
+       familyplanningmethod,
+       pwp,
+       gestationage,
+       if(nextappointmentdate,nextappointmentdate,null) as nextappointmentdate,
+       substitutionfirstlinereg,
+	   if(SecondlineRegimenChangeDate,SecondlineRegimenChangeDate,null) as SecondlineRegimenChangeDate,
+	   if(SubstitutionSecondlineRegimenDate,SubstitutionSecondlineRegimenDate,null) as SubstitutionSecondlineRegimenDate,
+	   if(SubstitutionFirstlineRegimenDate,SubstitutionFirstlineRegimenDate,null) as SubstitutionFirstlineRegimenDate,
+       emr,
+       project,
+       null as dateimported,
+       ident,
+       facilityid,
+	   null as weight,
+	   null as SubstitutionFirstlineRegimenReason,
+	   null as SubstitutionFirstLineRegmenReason,
+	   null as SubstitutionSecondLineRegimen,
+	   null as SubstitutionSecondLineRegimenReason,
+	   null as SecondLineRegimenChange,
+	   null as SubstitutionSecondlineRegimenReason,
+	   null as SecondLineRegimenChangeReason  FROM   ndwr_all_patient_visits"|dwhstage|0|PatientVisitExtract|7|a6221aa5-0e85-11e8-ba89-0ed5f89f718b
+
+96226eb4-0e85-11e8-ba89-6fb398c5f449|Patient Adverse Events|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT '' AS PatientID,
+       '' AS PatientPK,
+       '' AS SiteCode,
+	   '' AS FacilityID,
+       'Kenya EMR' AS EMR,
+       'Kenya HMIS II' AS Project,
+       NOW() AS VisitDate,
+       '' AS AdverseEventRegimen,
+       '' AS AdverseEvent,
+       '' AS AdverseEventCause,
+       '' AS Severity,
+       '' AS AdverseEventActionTaken,
+       '' AS AdverseEventClinicalOutcome,
+	   NOW() AS AdverseEventStartDate,
+       NOW() AS AdverseEventEndDate,
+       '' AS AdverseEventIsPregnant"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa5-0e85-11e8-ba89-0ed5f89f718b
+
+8578a9ae-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct h.PatientPk,
+SiteCode,
+FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+HTSID as HtsNumber  ,
+h.DOB as Dob,
+h.Gender,
+h.MaritalStatus,
+case when ltrim(h.KeyPop) in ('SW','PWID','MSM','Other','MSW','FSW') then 'Key Population' else 'General Population' end as PopulationType,
+ltrim(h.KeyPop)  as KeyPopulationType,
+Disability as PatientDisabled,
+County,
+SubCounty,
+Ward from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
+on h.PatientPK=p.PatientPK
+order by KeyPopulationType"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F89F718B
+
+8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT  distinct d.patient_id as PatientPK,
+	SC.value_reference AS SiteCode,
+	SN.name as FacilityName,
+	'KenyaEMR' as Emr,
+	'Kenya HMIS II' AS Project,
+	id.identifier AS HtsNumber,
+	d.DOB,
+	case when d.Gender='M' then 'Male' else 'Female' end as Gender,
+	d.marital_status as MaritalStatus,
+	t.population_type as PopulationType,
+	t.key_population_type as KeyPopulationType,
+	t.disability_type as PatientDisabled,
+	A.county_district as County,
+	A.state_province as SubCounty,
+	A.address4 as Ward
+FROM
+kenyaemr_etl.etl_patient_demographics  d
+INNER JOIN
+kenyaemr_etl.etl_hts_test t ON d.patient_id=t.patient_id
+LEFT JOIN
+ location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+LEFT JOIN
+  location SN ON SN.location_id =t.encounter_location
+LEFT JOIN person_address A ON A.person_id=d.patient_id
+LEFT JOIN patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id
+from patient_identifier_type
+where name='OpenMRS ID')
+group by d.patient_id"|DWHStage|1|HtsClient|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+8578ae7c-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct h.PatientPK,
+SiteCode,
+FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+p.HTSID as HtsNumber,
+HTSEncounterId as EncounterId,
+VisitDate as TestDate,
+TestedBefore as EverTestedForHiv,
+WhenLastTested as MonthsSinceLastTest,
+ClientTestedAs,
+TestEntryPoint as EntryPoint,
+StrategyHTS as TestStrategy,
+FinalTestOneResult as TestResult1,
+FinalResultTestTwo as TestResult2,
+finalResultHTS as FinalTestResult,
+FinalResultsGiven as PatientGivenResult,
+TBScreeningHTS as TbScreening,
+clientSelfTestesd as ClientSelfTested,
+CoupleDiscordant,
+TestType,
+case when Consent='1' or Consent='Yes' then 'Yes' else 'No' end as Consent from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
+on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-0ED5F89F718B
+
+8578afbc-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+	t.patient_id as PatientPK,
+	SC.value_reference AS SiteCode,
+	 SN.name as FacilityName,
+	'KenyaEMR' as Emr,
+	'Kenya HMIS II' AS Project,
+    id.identifier AS HtsNumber,
+	t.encounter_id as EncounterId,
+	t.visit_date as TestDate,
+	t.ever_tested_for_hiv as EverTestedForHiv,
+	t.months_since_last_test as MonthsSinceLastTest,
+	t.client_tested_as as ClientTestedAs,
+	t.hts_entry_point as EntryPoint,
+	t.test_strategy as TestStrategy,
+	t.test_1_result as TestResult1,
+	t.test_2_result as TestResult2,
+	t.final_test_result as FinalTestResult,
+	t.patient_given_result as PatientGivenResult,
+	t.tb_screening as TbScreening,
+	t.patient_had_hiv_self_test as ClientSelfTested,
+	t.couple_discordant as CoupleDiscordant,
+	CASE t.test_type
+		WHEN 1 THEN 'Initial'
+        WHEN 2 THEN 'Repeat'
+	END AS TestType,
+	t.patient_consented as Consent
+FROM
+	kenyaemr_etl.etl_hts_test t
+inner join
+	kenyaemr_etl.etl_patient_demographics demographics on t.patient_id=demographics.patient_id
+LEFT JOIN
+	 location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+LEFT JOIN
+  location SN ON SN.location_id =t.encounter_location
+LEFT JOIN patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id
+from patient_identifier_type
+where name='OpenMRS ID')"|DWHStage|1|HtsClientTests|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+8578b0f2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct r.ptn_pk as PatientPK,SiteCode,
+p.FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+p.HTSID as HtsNumber,
+ref.referraldate as DatePrefferedToBeEnrolled,
+case when ref.tofacility=99999 then 'Other Facility'else (
+select name from FacilityList where MFLCode=ref.tofacility ) end as FacilityReferredTo,
+HandedOverTo,
+HandedOverToCadre,
+r.FacilityEnrolled as EnrolledFacilityName,
+ref.createdate as ReferralDate,
+dateEnrolled as DateEnrolled,
+r.CCCNumber as ReportedCCCNumber,
+r.ArtStartDate as ReportedStartARTDate
+  FROM tmp_Referral_Linkage_Register r
+  inner join tmp_PatientMaster p on r.ptn_pk=p.PatientPK
+  inner join tmp_HTS_LAB_register plab on r.ptn_pk=plab.PatientPK
+  inner join patient pat on pat.ptn_pk=r.ptn_pk
+  left join Referral ref on pat.personid=ref.personid"|DWHStage|1|HtsClientLinkage|3|A6221983-0E85-11E8-BA89-0ED5F89F718B
+
+8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.patient_id as PatientPK,
+SC.value_reference AS SiteCode,
+SN.name as FacilityName,
+'KenyaEMR' as Emr,
+'Kenya HMIS II' AS Project,
+id.identifier AS HtsNumber,
+ref.date_to_enrol as DatePrefferedToBeEnrolled,
+ref.facility_referred_to as FacilityReferredTo,
+a.provider_handed_to as HandedOverTo,
+NULL HandedOverToCadre,
+a.facility_linked_to as EnrolledFacilityName,
+ref.visit_date as ReferralDate,
+a.enrollment_date as DateEnrolled,
+a.ccc_number as ReportedCCCNumber,
+a.art_start_date as ReportedStartARTDate
+from (SELECT Distinct patient_id, encounter_id,ccc_number,enrollment_date,
+art_start_date,provider_handed_to,facility_linked_to,encounter_location FROM
+(SELECT DISTINCT htsrl.patient_id, encounter_id,ccc_number,enrollment_date,
+art_start_date,provider_handed_to,facility_linked_to,encounter_location
+FROM kenyaemr_etl.etl_hts_referral_and_linkage htsrl
+UNION ALL
+SELECT DISTINCT t.patient_id,t.encounter_id,unique_patient_no ccc_number,e.visit_date DateEnrolled,
+ar.art_start_date,provider_handed_to,facility_linked_to,t.encounter_location
+FROM kenyaemr_etl.etl_hts_test t
+INNER JOIN kenyaemr_etl.etl_patient_demographics pt ON pt.patient_id=t.patient_id AND pt.voided=0
+INNER JOIN kenyaemr_etl.etl_hiv_enrollment e ON e.patient_id=t.patient_id AND e.voided=0
+LEFT JOIN kenyaemr_etl.etl_hts_referral_and_linkage l ON l.patient_id=t.patient_id
+LEFT JOIN (SELECT patient_id,min(date_started) as art_start_date FROM kenyaemr_etl.etl_drug_event
+group by patient_id)ar on ar.patient_id=t.patient_id
+WHERE t.test_type = 1 AND t.final_test_result='Positive' AND t.voided=0 AND l.patient_id IS NULL)a
+) a
+left join kenyaemr_etl.etl_hts_referral ref on a.patient_id=ref.patient_id
+LEFT JOIN location_attribute SC ON (SC.location_id = a.encounter_location or SC.location_id=ref.encounter_location ) AND SC.attribute_type_id=1
+LEFT JOIN location SN ON (SN.location_id =a.encounter_location or SN.location_id =ref.encounter_location )
+LEFT JOIN patient_identifier id ON (id.patient_id = a.patient_id or id.patient_id = ref.patient_id ) AND id.identifier_type = (select patient_identifier_type_id
+from patient_identifier_type
+where name='OpenMRS ID')
+LEFT JOIN kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =a.patient_id
+where a.patient_id in (select patient_id from kenyaemr_etl.etl_hts_test);"|DWHStage|1|HtsClientLinkage|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+8578b5a2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct p.PatientPK,
+SiteCode,
+p.FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+p.HTSID as HtsNumber,
+HTSEncounterId as EncounterId,
+TestKitName1,
+TestKitLotNumber1,
+TestKitExpiryDate1 as TestKitExpiry1,
+TestResultsHTS1 as TestResult1,
+TestKitName_2 as TestKitName2,
+TestKitLotNumber_2 as TestKitLotNumber2,
+TestKitExpiryDate_2 as TestKitExpiry2,
+TestResultsHTS_2 as TestResult2
+from tmp_HTS_LAB_register h inner join tmp_PatientMaster p
+on h.PatientPK=p.PatientPK"|DWHStage|1|HtsTestKits|4|A6221983-0E85-11E8-BA89-0ED5F89F718B
+
+8578b700-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+    t.patient_id AS PatientPK,
+	SC.value_reference AS SiteCode,
+	SN.name as FacilityName,
+	'KenyaEMR' as Emr,
+	'Kenya HMIS II' AS Project,
+    id.identifier AS HtsNumber,
+	t.encounter_id AS EncounterId,
+	t.test_1_kit_name AS TestKitName1,
+	t.test_1_kit_lot_no AS TestKitLotNumber1,
+	t.test_1_kit_expiry as TestKitExpiry1,
+	t.test_1_result as TestResult1,
+	t.test_2_kit_name as TestKitName2,
+	t.test_2_kit_lot_no as TestKitLotNumber2,
+	t.test_2_kit_expiry as TestKitExpiry2,
+	t.test_2_result as TestResult2
+
+FROM
+	kenyaemr_etl.etl_hts_test t
+inner join
+	kenyaemr_etl.etl_patient_demographics demographics on t.patient_id=demographics.patient_id
+LEFT JOIN
+	 location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+LEFT JOIN
+  location SN ON SN.location_id =t.encounter_location
+LEFT JOIN patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id
+from patient_identifier_type
+where name='OpenMRS ID')"|DWHStage|1|HtsTestKits|4|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+8578b836-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tracing|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.PatientPK, a.SiteCode, a. TracingType, a.TracingDate,
+a.FacilityName,a.Emr,a.Project, a.HTSNumber AS HtsNumber, a.TracingOutcome from (select h.PatientPK,
+tp.SiteCode,
+TracingType = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.Mode),
+DateTracingDone as TracingDate,
+FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+tp.HTSID as HTSNumber,
+Tpe = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.TracingType),
+TracingOutcome = (Select Top 1 ItemName From LookupItemView WHERE ItemId = tr.Outcome)
+from tmp_HTS_LAB_register h
+inner join tmp_PatientMaster tp on tp.PatientPK =h.Patientpk
+inner join patient pt on pt.ptn_pk=h.Patientpk
+inner join Tracing tr on tr.personid=pt.id) a
+where a.Tpe='Enrolment'"|DWHStage|1|HtsClientTracing|5|A6221983-0E85-11E8-BA89-0ED5F89F718B
+
+8578b962-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+	ht.patient_id as PatientPK,
+	SC.value_reference AS SiteCode,
+	htsrl.tracing_type as TracingType,
+	htsrl.visit_date as TracingDate,
+	SN.name as FacilityName,
+	'KenyaEMR' as Emr,
+	'Kenya HMIS II' AS Project,
+	id.identifier AS HtsNumber,
+	htsrl.tracing_status as TracingOutcome
+FROM
+	kenyaemr_etl.etl_hts_test ht
+INNER JOIN
+	kenyaemr_etl.etl_hts_test t ON ht.patient_id=t.patient_id
+LEFT  JOIN
+	kenyaemr_etl.etl_hts_referral_and_linkage htsrl  ON ht.patient_id=htsrl.patient_id
+LEFT JOIN
+  location SN ON SN.location_id =htsrl.encounter_location
+LEFT JOIN
+	 location_attribute SC ON SC.location_id = htsrl.encounter_location AND SC.attribute_type_id=1
+LEFT JOIN
+ patient_identifier id ON id.patient_id = htsrl.patient_id AND id.identifier_type = (select patient_identifier_type_id
+from patient_identifier_type
+where name='OpenMRS ID')
+ WHERE SC.value_reference IS NOT NULL"|DWHStage|1|HtsClientTracing|5|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+8578ba84-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Tracing|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.IndexPatientPK as PatientPK, a.HtsNumber,
+a.PartnerPersonId, a. TraceType,a.TraceDate, a.FacilityName,a.Emr,a.Project, a.SiteCode,a.TraceOutcome, a.BookingDate from (select pr.IndexPtn_pk as IndexPatientPK, tp.HTSID as HtsNumber,
+pr.PersonId as PartnerPersonId,
+TraceType = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.Mode),
+DateTracingDone as TraceDate,
+FacilityName,'IQCare' as Emr,'Kenya HMIS II' as Project,tp.SiteCode,
+TraceOutcome = (Select Top 1 ItemName From LookupItemView WHERE ItemId = tr.Outcome),
+Tpe = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.TracingType), tr.datebookedTesting as BookingDate
+from (select pr.PersonId, pat.ptn_pk, ptIndex.ptn_pk as IndexPtn_pk
+from PersonRelationship pr
+left join patient ptIndex on ptIndex.id=pr.PatientId
+left join patient pat on pat.PersonId=pr.PersonId
+where pr.PatientId in (select PatientId
+from PatientIdentifier pid
+inner join Identifiers i on pid.IdentifierTypeId=i.id
+where i.Name like '%hts%')) pr
+inner join Tracing tr on tr.personid=pr.PersonId
+inner join tmp_PatientMaster tp on tp.PatientPK =pr.IndexPtn_pk ) a
+where a.Tpe='Partner'"|DWHStage|1|HtsPartnerTracing|6|A6221983-0E85-11E8-BA89-0ED5F89F718B
+
+8578bbba-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select distinct
+t.patient_id as PatientPK,
+id.identifier as HtsNumber,
+client_id as PartnerPersonId,
+contact_type as TraceType,
+encounter_date as TraceDate,
+SN.name as FacilityName,
+'KenyaEMR' as Emr,
+'Kenya HMIS II' AS Project,
+SC.value_reference AS SiteCode,
+status as TraceOutcome,
+tc.appointment_date as BookingDate
+from
+	kenyaemr_hiv_testing_patient_contact pc
+inner join
+	kenyaemr_etl.etl_hts_test t on pc.patient_related_to=t.patient_id
+inner join
+	kenyaemr_hiv_testing_client_trace tc on pc.id=tc.client_id
+LEFT JOIN
+	patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id
+	from patient_identifier_type where name='OpenMRS ID')
+LEFT JOIN
+	 location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+LEFT JOIN
+	location SN ON SN.location_id =t.encounter_location;" |DWHStage|1|HtsPartnerTracing|6|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+8578bce6-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct pns.ptn_pk as PatientPK,a.SiteCode,a.FacilityName,
+'IQCare' as Emr, 'Kenya HMIS II' as Project,HTS_Number as HtsNumber, pd.PatientPK as PartnerPatientPk,pns.personid as PartnerPersonID,
+pns.AgeYears as Age, pns.PNSSex as Sex, RelationsipToIndexClient, ScreenedForIPV as ScreenedForIpv,
+IPVScreeningOutcome as IpvScreeningOutcome, CurrentlyLivingWithIndexClient, KnowledgeOfHIVStatus as KnowledgeOfHivStatus,
+PNSApproach as PnsApproach , PNSConsent as PnsConsent, Linked as LinkedToCare, b.dateEnrolled as LinkDateLinkedToCare,
+b.CCCNumber as CccNumber, b.FacilityEnrolled as FacilityLinkedTo, pd.dateofbirth as Dob,
+pns.Date as DateElicited,
+pns.MaritalStatus
+  FROM  tmp_PNS_Register pns
+    INNER JOIN dbo.tmp_HTS_LAB_register AS c ON pns.Ptn_pk = c.PatientPK
+	INNER JOIN tmp_PatientMaster AS a ON pns.Ptn_pk = a.PatientPK
+	LEFT JOIN dbo.tmp_HTS_LAB_register AS pc ON pns.PersonID = pc.PersonID
+    LEFT JOIN tmp_Referral_Linkage_Register b ON pc.PatientPK = b.ptn_pk
+
+    LEFT JOIN tmp_PersonDetails pd ON pd.PersonID = pns.personid
+  WHERE c.finalResultHTS = 'Positive' AND pns.personid IS NOT NULL"|DWHStage|1|HtsPartnerNotificationServices|7|A6221983-0E85-11E8-BA89-0ED5F89F718B
+
+
+8578c042-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+DISTINCT
+               t.patient_id AS PatientPK,
+               SC.value_reference AS SiteCode,
+               SN.name as FacilityName,
+               'KenyaEMR' as Emr,
+               'Kenya HMIS II' AS Project,
+               id.identifier AS HtsNumber,
+               ohpc.patient_id AS PartnerPatientPk,
+               ohpc.id AS PartnerPersonId,
+    YEAR(ohpc.date_created)-YEAR(ohpc.birth_date)  AS Age,
+               ohpc.sex,
+               CASE ohpc.relationship_type
+                                              WHEN 970          THEN  'parent (Mother)'
+                                              WHEN 971           THEN  'parent(Father)'
+                                              WHEN 972          THEN  'sibling'
+                                              WHEN 1528        THEN  'Child'
+                                              WHEN 5617          THEN  'spouse'
+            WHEN 163565  THEN  'partner'
+                                              WHEN 162221  THEN  'cowife'
+               END     AS RelationsipToIndexClient,
+
+    /*Screened for IPV? CASE?*/
+               CASE WHEN ohpc.ipv_outcome IS NOT NUll THEN 'Yes' ELSE 'No' END AS  ScreenedForIpv,
+
+               ohpc.ipv_outcome AS IpvScreeningOutcome,
+               CASE ohpc.living_with_patient
+                               WHEN 1065 THEN 'Yes'
+                               WHEN 1066 THEN 'No'
+               END AS CurrentlyLivingWithIndexClient,
+    /*knowledgeof HIV Status*/
+    ohpc.baseline_hiv_status as KnowledgeOfHivStatus,
+
+pnsApprocah.name AS  PnsApproach,
+ohpc.consented_contact_listing as  PnsConsent,
+case when ctrace.status is null then 'N' else 'Y' end as LinkedToCare,
+ctrace.encounter_date as  LinkDateLinkedToCare,
+ctrace.unique_patient_no as CccNumber,
+ctrace.facility_linked_to as FacilityLinkedTo,
+ohpc.birth_date as DoB,
+ohpc.date_created as DateElicited ,
+marital.name as  MaritalStatus
+
+
+  FROM
+               kenyaemr_etl.etl_hts_test t
+INNER JOIN
+        kenyaemr_hiv_testing_patient_contact ohpc ON ohpc.patient_related_to=t.patient_id
+LEFT JOIN
+                location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+LEFT JOIN
+  location SN ON SN.location_id =t.encounter_location
+  LEFT JOIN
+               patient_identifier id ON id.patient_id = t.patient_id AND id.identifier_type = (select patient_identifier_type_id
+from patient_identifier_type
+where name='OpenMRS ID')
+left JOIN patient openmrs ON  openmrs.patient_id = id.patient_id
+left JOIN kenyaemr_hiv_testing_client_trace ctrace ON  ctrace.client_id = ohpc.id and ctrace.status='Contacted and Linked'
+left join concept_name marital ON marital.concept_id = ohpc.marital_status and marital.locale='en' and marital.concept_name_type = 'FULLY_SPECIFIED'
+left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach and pnsApprocah.locale='en' and pnsApprocah.concept_name_type = 'FULLY_SPECIFIED'
+ "|DWHStage|1|HtsPartnerNotificationServices|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+
+
+290bd21c-3089-11ea-978f-2e728ce88125|Master Patient Index|CBS|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
+*
+, LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue]
+, LEFT([Gender],1) + CASE
+	WHEN CHARINDEX(';',[dmFirstName])>0 THEN
+	SUBSTRING([dmFirstName],CHARINDEX(';',[dmFirstName])+1,LEN([dmFirstName]))
+	ELSE [dmFirstName] END +
+	CASE
+	WHEN CHARINDEX(';',[dmLastName])>0 THEN
+	SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))
+	ELSE [dmLastName] END + LTRIM(RTRIM(STR(YEAR(DOB)))) AS [dmPKValue]
+, CASE WHEN CHARINDEX(';',[dmLastName])>0 THEN
+LEFT([Gender],1)+ [sxFirstName]+ SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))+LTRIM(RTRIM(STR(YEAR(DOB))))
+ELSE
+LEFT([Gender],1)+ [sxFirstName]+[dmLastName]+LTRIM(RTRIM(STR(YEAR(DOB))))
+END AS [sxdmPKValue],
+LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112)))) AS [sxPKValueDoB],
+LEFT([Gender],1)+
+CASE
+WHEN CHARINDEX(';',[dmFirstName])>0 THEN
+SUBSTRING([dmFirstName],CHARINDEX(';',[dmFirstName])+1,LEN([dmFirstName]))
+ELSE
+[dmFirstName]
+END +
+CASE
+WHEN CHARINDEX(';',[dmLastName])>0 THEN
+SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))
+ELSE
+[dmLastName]
+END +LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112)))) AS [dmPKValueDoB],
+CASE WHEN CHARINDEX(';',[dmLastName])>0 THEN
+LEFT([Gender],1)+ [sxFirstName]+ SUBSTRING([dmLastName],CHARINDEX(';',[dmLastName])+1,LEN([dmLastName]))+LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112))))
+ELSE
+LEFT([Gender],1)+ [sxFirstName]+[dmLastName]+LTRIM(RTRIM(STR(CONVERT(VARCHAR(20),DOB,112))))
+END AS [sxdmPKValueDoB]
+
+FROM
+(
+SELECT
+-------Demographics
+a.Ptn_Pk
+,a.PatientPK
+,a.SiteCode
+,a.FacilityName
+,a.[PatientID]Serial
+,UPPER(c.FirstName) FirstName
+,UPPER(C.MidName) MiddleName
+,UPPER(c.LastName) LastName
+,dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.FirstName,'0','O'))) AS [FirstName_Normalized]
+,dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.MidName,'0','O'))) AS [MiddleName_Normalized]
+,dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.LastName,'0','O'))) AS [LastName_Normalized]
+,SOUNDEX(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.FirstName,'0','O')))) AS  [sxFirstName]
+,SOUNDEX(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.LastName,'0','O')))) AS [sxLastName]
+,SOUNDEX(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.MidName,'0','O')))) AS sxMiddleName
+,[dmFirstName]= dbo.fn_getPatientNameDoubleMetaphone(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.FirstName,'0','O'))))
+,[dmLastName] = dbo.fn_getPatientNameDoubleMetaphone(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.MidName,'0','O'))))
+,dmMiddleName = dbo.fn_getPatientNameDoubleMetaphone(dbo.[fnReplaceInvalidChars](UPPER(REPLACE(c.LastName,'0','O'))))
+,a.[PhoneNumber]PatientPhoneNumber
+,NULL PatientAlternatePhoneNumber
+,a.[Gender]
+,a.[DOB]
+,a.[MaritalStatus]
+-------Patient Address
+,a.[PatientSource]
+,(Select top 1 Region FROM IQC_SiteDetails) PatientCounty
+,(Select top 1 District FROM IQC_SiteDetails)PatientSubCounty
+,[Village]PatientVillage
+-------Patient-Identifiers
+, a.PatientID
+,c.NationalId [NationalId]
+,NULL as [NHIF_Number]
+,NULL as [Birth_Certificate]
+,a.[PatientID] [CCC_Number]
+,NULL[TB_Number]
+-------Next Of Kin
+
+,LTRIM(RTRIM(ContactName)) AS ContactName
+,[ContactRelation] AS  ContactRelation
+,[ContactPhoneNumber] as ContactPhoneNumber
+,[ContactAddress] as ContactAddress
+, NULL AS  NokNationalId
+-------Additional Variables
+, HIVDiagnosisDate DateConfirmedHIVPositive
+,b.[StartARTDate]
+,[StartRegimen]StartARTRegimenCode
+,[StartRegimenLine]StartARTRegimenDesc
+
+FROM [dbo].[tmp_PatientMaster] a
+inner join Patient bb on a.PatientPK = bb.Id
+inner join Person_Decoded c ON bb.PersonId = c.PersonID
+left  join
+
+(SELECT DISTINCT a.PatientPK
+, a.PatientID
+, a.RegistrationAtCCC
+, b.StartARTDate
+, b.StartRegimen
+, 'First Line' StartRegimenLine
+FROM
+tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
+WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
+) X
+INNER JOIN
+(
+SELECT
+a.PatientPK
+,a.[PatientID] Serial
+FROM [dbo].[tmp_PatientMaster] a
+left  join (SELECT DISTINCT a.PatientPK, a.PatientID, a.RegistrationAtCCC, b.StartARTDate, b.StartRegimen, 'First Line' StartRegimenLine
+FROM dbo.tmp_PatientMaster AS a LEFT OUTER JOIN dbo.tmp_ARTPatients AS b ON a.PatientPK = b.PatientPK
+WHERE  (a.RegistrationAtCCC IS NOT NULL)) b on a.patientpk=b.patientpk
+
+)Y
+ON
+Y.PatientPK = X.PatientPK AND Y.Serial= X.Serial
+"|MPI|0|MasterPatientIndex|1|a6221988-0e85-11e8-ba89-0ed5f89f718b
+
+290bd4b0-3089-11ea-978f-2e728ce88125|Hts Clients|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"select distinct h.PatientPk,
+SiteCode,
+FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+HTSID as HtsNumber  ,
+h.DOB as Dob,
+h.Gender,
+h.MaritalStatus,
+case when LTRIM(h.KeyPop) in ('SW','PWID','MSM','Other','MSW','FSW') then 'Key Population' else 'General Population' end as PopulationType,
+LTRIM(h.KeyPop)  as KeyPopulationType,
+Disability as PatientDisabled,
+County,
+SubCounty,
+Ward from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
+on h.PatientPK=p.PatientPK
+order by KeyPopulationType"|dwhstage|0|HtsClient|1|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bd780-3089-11ea-978f-2e728ce88125|Hts Client Tests|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"select distinct h.PatientPK,
+SiteCode,
+FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+p.HTSID as HtsNumber,
+HTSEncounterId as EncounterId,
+VisitDate as TestDate,
+TestedBefore as EverTestedForHiv,
+WhenLastTested as MonthsSinceLastTest,
+ClientTestedAs,
+TestEntryPoint as EntryPoint,
+StrategyHTS as TestStrategy,
+FinalTestOneResult as TestResult1,
+FinalResultTestTwo as TestResult2,
+finalResultHTS as FinalTestResult,
+FinalResultsGiven as PatientGivenResult,
+TBScreeningHTS as TbScreening,
+clientSelfTestesd as ClientSelfTested,
+CoupleDiscordant,
+TestType,
+case when Consent='1' or Consent='Yes' then 'Yes' else 'No' end as Consent from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
+on h.PatientPK=p.PatientPK"|dwhstage|0|HtsClientTests|2|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bd8e8-3089-11ea-978f-2e728ce88125|Hts Client Linkage|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT distinct r.ptn_pk as PatientPK,SiteCode,
+p.FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+p.HTSID as HtsNumber,
+ref.referraldate as DatePrefferedToBeEnrolled,
+case when ref.tofacility=99999 then 'Other Facility'else (
+select name from FacilityList where MFLCode=ref.tofacility ) end as FacilityReferredTo,
+HandedOverTo,
+HandedOverToCadre,
+r.FacilityEnrolled as EnrolledFacilityName,
+ref.createdate as ReferralDate,
+dateEnrolled as DateEnrolled,
+r.CCCNumber as ReportedCCCNumber,
+r.ArtStartDate as ReportedStartARTDate
+  FROM tmp_Referral_Linkage_Register r
+  inner join tmp_PatientMaster p on r.ptn_pk=p.PatientPK
+  inner join tmp_HTS_LAB_register plab on r.ptn_pk=plab.PatientPK
+  inner join patient pat on pat.ptn_pk=r.ptn_pk
+  left join Referral ref on pat.personid=ref.personid"|dwhstage|0|HtsClientLinkage|3|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bda28-3089-11ea-978f-2e728ce88125|Hts Test Kits|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"select distinct p.PatientPK,
+SiteCode,
+p.FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+p.HTSID as HtsNumber,
+HTSEncounterId as EncounterId,
+TestKitName1,
+TestKitLotNumber1,
+TestKitExpiryDate1 as TestKitExpiry1,
+TestResultsHTS1 as TestResult1,
+TestKitName_2 as TestKitName2,
+TestKitLotNumber_2 as TestKitLotNumber2,
+TestKitExpiryDate_2 as TestKitExpiry2,
+TestResultsHTS_2 as TestResult2
+from tmp_HTS_LAB_register h inner join tmp_PatientMaster p
+on h.PatientPK=p.PatientPK"|dwhstage|0|HtsTestKits|4|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bdb54-3089-11ea-978f-2e728ce88125|Hts Client Tracing|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"select distinct a.PatientPK, a.SiteCode, a. TracingType, a.TracingDate,
+a.FacilityName,a.Emr,a.Project, a.HTSNumber AS HtsNumber, a.TracingOutcome from (select h.PatientPK,
+tp.SiteCode,
+TracingType = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.Mode),
+DateTracingDone as TracingDate,
+FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+tp.HTSID as HTSNumber,
+Tpe = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.TracingType),
+TracingOutcome = (Select Top 1 ItemName From LookupItemView WHERE ItemId = tr.Outcome)
+from tmp_HTS_LAB_register h
+inner join tmp_PatientMaster tp on tp.PatientPK =h.Patientpk
+inner join patient pt on pt.ptn_pk=h.Patientpk
+inner join Tracing tr on tr.personid=pt.id) a
+where a.Tpe='Enrolment'"|dwhstage|0|HtsClientTracing|5|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bdc8a-3089-11ea-978f-2e728ce88125|Hts Partner Tracing|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"select a.IndexPatientPK as PatientPK, a.HtsNumber
+,   a.PartnerPersonId, a. TraceType,a.TraceDate,   a.FacilityName,a.Emr,a.Project, a.SiteCode,a.TraceOutcome, a.BookingDate
+from (select pr.IndexPtn_pk as IndexPatientPK
+, tp.HTSID as HtsNumber
+,   pr.PersonId as PartnerPersonId
+,  TraceType = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.Mode)
+,  DateTracingDone as TraceDate
+,  FacilityName
+,'IQCare' as Emr
+,'Kenya HMIS II' as Project
+,tp.SiteCode
+,  TraceOutcome = (Select Top 1 ItemName From LookupItemView WHERE ItemId = tr.Outcome)
+,  Tpe = (Select TOP 1 ItemName From LookupItemView WHERE ItemId = tr.TracingType), tr.datebookedTesting as BookingDate
+from   (select pr.PersonId
+	, pat.ptn_pk
+	, ptIndex.ptn_pk as IndexPtn_pk
+	from PersonRelationship pr
+left join patient ptIndex on ptIndex.id=pr.PatientId
+left join patient pat on pat.PersonId=pr.PersonId) pr
+
+inner join Tracing tr on tr.personid=pr.PersonId
+inner join tmp_PatientMaster tp on tp.Ptn_Pk =pr.IndexPtn_pk ) a  where a.Tpe='Partner'"|dwhstage|0|HtsPartnerTracing|6|a6221988-0e85-11e8-ba89-0ed5f89f718b
+290bddb6-3089-11ea-978f-2e728ce88125|Hts Partner Notification Services|HTS|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT distinct pns.ptn_pk as PatientPK
+,a.SiteCode,a.FacilityName
+,  'IQCare' as Emr, 'Kenya HMIS II' as Project
+,HTS_Number as HtsNumber
+, pd.Ptn_Pk as PartnerPatientPk
+, pns.personid as PartnerPersonID
+, pns.Age, pns.Gender as Sex
+, RelationsipToIndexClient
+, ScreenedForIPV as ScreenedForIpv
+, IPVScreeningOutcome as IpvScreeningOutcome
+, CurrentlyLivingWithIndexClient
+, KnowledgeOfHIVStatus as KnowledgeOfHivStatus
+, PNSApproach as PnsApproach
+, PNSConsent as PnsConsent
+, Linked as LinkedToCare
+, b.dateEnrolled as LinkDateLinkedToCare
+, b.CCCNumber as CccNumber
+, b.FacilityEnrolled as FacilityLinkedTo
+, DATEADD(yy,-pns.Age,pns.Date) as Dob
+, pns.Date as DateElicited, pns.MaritalStatus
+FROM  tmp_PNS_Register pns
+	INNER JOIN dbo.tmp_HTS_LAB_register AS c ON pns.Ptn_pk = c.PatientPK
+	INNER JOIN tmp_PatientMaster AS a ON pns.Ptn_pk = a.Ptn_Pk
+	LEFT JOIN dbo.tmp_HTS_LAB_register AS pc ON pns.PersonID = pc.PersonID
+	LEFT JOIN tmp_Referral_Linkage_Register b ON pc.PatientPK = b.ptn_pk
+	LEFT JOIN Person pd ON pd.Id = pns.personid
+WHERE c.finalResultHTS = 'Positive' AND pns.personid IS NOT NULL"|dwhstage|0|HtsPartnerNotificationServices|7|a6221988-0e85-11e8-ba89-0ed5f89f718b
+
+b6299cbc-3055-11ea-978f-2e728ce88125|All Patients|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"WITH locator
+     AS (SELECT Pat.id                  PatientPK,
+                look.NAME               PatientType,
+                pop.populationcategory  PopulationType,
+                ''                      AS KeyPopulationType,
+                CASE
+                  WHEN ovc.orphan = 1 THEN 'Yes'
+                  ELSE 'No'
+                END                     AS Orphan,
+                CASE
+                  WHEN ovc.inschool = 1 THEN 'Yes'
+                  ELSE 'No'
+                END                     AS InSchool,
+                county.countyname       AS PatientResidentCounty,
+                subcounty.subcountyname AS PatientResidentSubCounty,
+                loc.location            AS PatientResidentLocation,
+                loc.sublocation         PatientResidentSubLocation,
+                ward.wardname           AS PatientResidentWard,
+                loc.village             AS PatientResidentVillage
+         FROM   patient pat
+                LEFT JOIN person per
+                       ON per.id = pat.personid
+                LEFT JOIN lookupitem look
+                       ON look.id = pat.patienttype
+                LEFT JOIN patientpopulationview pop
+                       ON pop.patientpk = Pat.ptn_pk
+                LEFT JOIN [patientovcstatus] ovc
+                       ON ovc.personid = pat.personid
+                LEFT JOIN personlocation loc
+                       ON loc.personid = Pat.personid
+                          AND loc.deleteflag = 0
+                LEFT JOIN county
+                       ON county.countyid = loc.county
+                LEFT JOIN county subcounty
+                       ON subcounty.subcountyid = loc.subcounty
+                LEFT JOIN county ward
+                       ON ward.wardid = loc.ward
+         GROUP  BY Pat.id,
+                   look.NAME,
+                   patienttype,
+                   loc.location,
+                   loc.sublocation,
+                   pop.populationcategory,
+                   orphan,
+                   inschool,
+                   county.countyname,
+                   subcounty.subcountyname,
+                   loc.sublocation,
+                   ward.wardname,
+                   loc.village),
+     transferin
+     AS (SELECT a.id PatientPK,
+                b.transferindate
+         FROM   patient a
+                LEFT JOIN patienttransferin b
+                       ON a.id = b.patientid
+                LEFT JOIN lookupitem c
+                       ON b.currenttreatment = c.id
+         WHERE  patienttype = 260)
+SELECT patientid,
+       a.patientpk,
+       (SELECT TOP 1 facilityid
+        FROM   iqc_sitedetails) FacilityID,
+       sitecode,
+       facilityname,
+       satellitename,
+       gender,
+       dob,
+       registrationdate,
+       registrationatccc,
+       registrationatpmtct,
+       NULL                     RegistrationAtTBClinic,
+       patientsource,
+       (SELECT TOP 1 region
+        FROM   iqc_sitedetails) Region,
+       (SELECT TOP 1 district
+        FROM   iqc_sitedetails) District,
+       village,
+       contactrelation,
+       lastvisit,
+       maritalstatus,
+       NULL                     EducationLevel,
+       hivdiagnosisdate         DateConfirmedHIVPositive,
+       NULL                     PreviousARTExposure,
+       NULL                     PreviousARTStartDate,
+       CASE
+         WHEN dbo.Fn_activeccc(Getdate(), a.patientpk) = 1 THEN 'Active'
+         ELSE NULL
+       END                      AS StatusAtCCC,
+       NULL                     StatusAtPMTCT,
+       NULL                     StatusAtTBClinic,
+       'IQCare'                 AS EMR,
+       'CHAP Uzima'             AS Project,
+       b.patienttype,
+       b.populationtype,
+       ''                       KeyPopulationType,
+       b.orphan,
+       b.inschool,
+       b.patientresidentcounty,
+       b.patientresidentsubcounty,
+       b.patientresidentlocation,
+       b.patientresidentsublocation,
+       b.patientresidentward,
+       b.patientresidentvillage,
+       c.transferindate,
+       Cast(Getdate() AS DATE)  AS DateExtracted,
+       Newid()                  AS ID
+FROM   tmp_patientmaster AS a
+       LEFT JOIN locator b
+              ON a.patientpk = b.patientpk
+       LEFT JOIN transferin c
+              ON a.patientpk = c.patientpk
+WHERE  a.registrationatccc IS NOT NULL
+"|dwhstage|1|PatientExtract|1|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a1a8-3055-11ea-978f-2e728ce88125|ART Patients|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"with arvPharmacy as (select PatientPK
+, MIN(DateDispensed) DateDispensed
+from tmp_ARVPharmacy
+GROUP BY PatientPK)
+
+, lastDispense as (select a.PatientPK, max(Duration) Duration
+from tmp_ARVPharmacy a inner join (
+select PatientPK
+, MAX(DateDispensed) DateDispensed
+from tmp_ARVPharmacy
+GROUP BY PatientPK) b on a.PatientPK = b.PatientPK and a.DateDispensed = b.DateDispensed
+group by a.PatientPK)
+
+SELECT
+
+ a.PatientPK
+ , a.PatientID
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityID
+ , b.SiteCode
+ , a.FacilityName
+ , a.DOB
+ , a.AgeEnrollment
+ , a.AgeARTStart
+ , a.AgeLastVisit
+ , a.RegistrationDate
+ , a.PatientSource
+ , a.Gender
+ , a.StartARTDate
+ , case when c.DateDispensed < a.StartARTDate then c.DateDispensed else a.StartARTDate end PreviousARTStartDate
+ , NULL PreviousARTRegimen
+ , c.DateDispensed StartARTAtThisFacility
+ , a.StartRegimen
+ , 'First Line' StartRegimenLine
+ , a.LastARTDate
+ , a.LastRegimen
+ , case a.LastRegimenLine when 1 then 'First Line' when 2 then 'Second Line' else null end as LastRegimenLine
+ , d.Duration
+ , a.ExpectedReturn
+ , 'USG' [Provider]
+ , a.LastVisit
+ , a.ExitReason
+ , a.ExitDate
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+
+FROM
+tmp_ARTPatients AS a INNER JOIN tmp_PatientMaster AS b ON a.PatientPK = b.PatientPK
+LEFT JOIN arvPharmacy c ON a.PatientPK = c.PatientPK
+LEFT JOIN lastDispense d on a.PatientPK = d.PatientPK"|dwhstage|0|PatientArtExtract|2|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a32e-3055-11ea-978f-2e728ce88125|Patient Baselines|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
+a.PatientPK
+, a.PatientID
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityID
+ , a.SiteCode
+ , IQC_bCD4.bCD4
+ , IQC_bCD4.bCD4Date
+ , NULL bWAB
+ , NULL bWABDate
+ , IQC_bWHO.bWHO
+ , IQC_bWHO.bWHODate
+ , NULL eWAB
+ , NULL eWABDate
+ , IQC_eCD4.eCD4
+ , IQC_eCD4.eCD4Date
+ , IQC_eWHO.eWHO
+ , IQC_eWHO.eWHODate
+ , IQC_lastWHO.lastWHO
+ , IQC_lastWHO.lastWHODate
+ , NULL lastWAB
+ , NULL lastWABDate
+ , IQC_lastCD4.lastCD4
+ , IQC_lastCD4.lastCD4Date
+ , IQC_m12CD4.m12CD4
+ , IQC_m12CD4.m12CD4Date
+ , IQC_m6CD4.m6CD4
+ , IQC_m6CD4.m6CD4Date
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+
+FROM
+
+ tmp_PatientMaster a LEFT OUTER JOIN
+    IQC_bCD4 ON a.PatientPK = IQC_bCD4.PatientPK LEFT OUTER JOIN
+    IQC_bWHO ON a.PatientPK = IQC_bWHO.PatientPK LEFT OUTER JOIN
+    IQC_lastCD4 ON a.PatientPK = IQC_lastCD4.PatientPK LEFT OUTER JOIN
+    IQC_eWHO ON a.PatientPK = IQC_eWHO.PatientPK LEFT OUTER JOIN
+    IQC_eCD4 ON a.PatientPK = IQC_eCD4.PatientPK LEFT OUTER JOIN
+    IQC_lastWHO ON a.PatientPK = IQC_lastWHO.PatientPK LEFT OUTER JOIN
+    IQC_m12CD4 ON a.PatientPK = IQC_m12CD4.PatientPK LEFT OUTER JOIN
+    IQC_m6CD4 ON a.PatientPK = IQC_m6CD4.PatientPK"|dwhstage|0|PatientBaselineExtract|3|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a46e-3055-11ea-978f-2e728ce88125|Patient Status|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
+ b.PatientID
+ , a.PatientPK
+ , b.SiteCode
+ , b.FacilityName
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityId
+ , a.ExitDescription
+ , a.ExitDate
+ , a.ExitReason
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+FROM
+ tmp_LastStatus a INNER JOIN tmp_PatientMaster b ON a.PatientPK = b.PatientPK"|dwhstage|0|PatientStatusExtract|4|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a5a4-3055-11ea-978f-2e728ce88125|Patient Labs|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
+ b.PatientID
+ , a.PatientPK
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityID
+ , b.SiteCode
+ , b.FacilityName
+ , b.SatelliteName
+ , a.VisitID
+ , a.OrderedbyDate
+ , a.ReportedbyDate
+ , a.TestName
+ , a.EnrollmentTest
+ , a.TestResult
+ ,a.Reasons AS Reason
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+FROM
+ tmp_Labs a INNER JOIN
+ tmp_PatientMaster b ON a.PatientPK = b.PatientPK"|dwhstage|0|PatientLabExtract|5|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a6da-3055-11ea-978f-2e728ce88125|Patient Pharmacy|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
+ b.PatientID
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityID
+ , b.SiteCode
+ , a.PatientPK
+ , d.Id VisitID
+ , a.Drug
+ , 'USG' Provider
+ , a.DateDispensed DispenseDate
+ , a.Duration
+ , DATEADD(dd,a.Duration,a.DateDispensed) ExpectedReturn
+ , a.TreatmentType
+ , case c.RegimenLine when 1 then 'First Line' when 2 then 'Second Line' else null end as RegimenLine
+ , NULL PeriodTaken
+ , a.ProphylaxisType
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+
+FROM
+
+ tmp_Pharmacy a INNER JOIN
+ tmp_PatientMaster b ON a.PatientPK = b.PatientPK
+ LEFT JOIN tmp_ARVPharmacy c on a.PatientPK = c.PatientPK and a.DateDispensed = c.DateDispensed
+ LEFT JOIN PatientMasterVisit d on a.PatientPK = d.PatientId and a.DateDispensed = cast(d.VisitDate as date)"|dwhstage|0|PatientPharmacyExtract|6|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629a810-3055-11ea-978f-2e728ce88125|Patient Visits|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"with OIs as (select a.PatientId PatientPK
+, b.[Name] OI
+, a.PatientMasterVisitId
+  from PatientOI a inner join LookupItem b on a.OIId = b.Id
+where b.Name != 'Asymptomatic'
+)
+
+, Adherence as (select a.PatientId, a.PatientMasterVisitId
+, case AdherenceType when 34 then 'ARV Adherence' when 35 then 'CTX Adherence'
+end as AdherenceCategory
+, c.[Name] Adherence
+from AdherenceOutcome a
+left join LookupItem c on a.Score = c.Id)
+
+SELECT
+ REPLACE(b.PatientID, ' ', '') AS PatientID
+ , b.FacilityName
+ , (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityId
+ , b.SiteCode
+ , a.PatientPK
+ , c.Id VisitID
+ , a.VisitDate
+ , a.Service
+ , a.VisitType
+ , a.WHOStage
+ , NULL WABStage
+ , a.Pregnant
+ , a.LMP
+ , a.EDD
+ , a.Height
+ , a.[Weight]
+ , cast(a.BPS as varchar(3)) + '/' + cast(a.BPD as varchar(3)) BP
+ , d.OI
+ , case when d.OI is not null then a.VisitDate else null end OIDate
+ , e.Adherence
+ , e.AdherenceCategory
+ , NULL AS SubstitutionFirstlineRegimenDate
+ , NULL AS SubstitutionFirstlineRegimenReason
+ , NULL AS SubstitutionSecondlineRegimenDate
+ , NULL AS SubstitutionSecondlineRegimenReason
+ , NULL AS SecondlineRegimenChangeDate
+ , NULL AS SecondlineRegimenChangeReason
+
+ , NULL FamilyPlanningMethod
+ , NULL PwP
+ , NULL GestationAge
+ , a.NextAppointmentDate
+ , CAST(GETDATE() AS DATE) AS DateExtracted
+ , 'IQCare' AS EMR
+ , 'CHAP Uzima' AS Project
+ ,b.PopulationType AS PopulationType
+ ,NULL AS KeyPopulationType
+ ,a.StabilityAssessment AS StabilityAssessment
+ ,NULL AS DifferentiatedCare
+FROM
+ tmp_ClinicalEncounters a INNER JOIN tmp_PatientMaster b ON a.PatientPK = b.PatientPK
+ LEFT JOIN PatientMasterVisit c on a.PatientPK = c.PatientId and a.VisitDate = cast(c.VisitDate as date)
+ LEFT JOIN OIs d on c.Id = d.PatientMasterVisitId
+ LEFT JOIN Adherence e on c.Id = e.PatientMasterVisitId"|dwhstage|0|PatientVisitExtract|7|a6221988-0e85-11e8-ba89-0ed5f89f718b
+b629ab26-3055-11ea-978f-2e728ce88125|Patient Adverse Events|NDWH|926f49b8-305d-11ea-978f-2e728ce88125|"with adv
+as
+(SELECT distinct p.PatientID,
+       p.PatientPK,
+       a.FacilityId AS SiteCode,
+       c.VisitDate,
+       r.Regimen,
+       b.EventName AS AdverseEvent,
+       b.EventCause AS AdverseEventCause,
+       lk.ItemName AS Severity,
+       b.Action AS ActionTaken,
+       lk1.ItemName AS ClinicalOutcome,
+       d.OutcomeDate AS AdverseEventEndDate,
+       preg.PregnancyStatus AS Pregnancy
+FROM dbo.Patient AS a
+INNER JOIN dbo.tmp_PatientMaster AS p ON a.Id = p.PatientPK
+INNER JOIN dbo.AdverseEvent AS b ON a.Id = b.PatientId
+INNER JOIN dbo.PatientMasterVisit AS c ON b.PatientMasterVisitId = c.Id
+LEFT OUTER JOIN dbo.PatientAdverseEventOutcome AS d ON a.Id = d.Id
+LEFT OUTER JOIN dbo.LookupItemView AS lk ON b.Severity = lk.ItemId
+LEFT OUTER JOIN dbo.LookupItemView AS lk1 ON d.OutComeId = lk1.ItemId
+LEFT OUTER JOIN
+  (SELECT DISTINCT a.PatientId,
+                   a.PatientMasterVisitId,
+                   c.VisitDate,
+                   lk.DisplayName AS Regimen
+   FROM dbo.ARVTreatmentTracker AS a
+   INNER JOIN dbo.PatientMasterVisit AS c ON a.PatientMasterVisitId = c.Id
+   LEFT OUTER JOIN dbo.LookupItemView AS lk ON a.RegimenId = lk.ItemId) AS r ON r.PatientId = a.Id
+AND c.Id = r.PatientMasterVisitId
+LEFT OUTER JOIN
+  (SELECT dbo.PregnancyIndicator.PatientId,
+          dbo.PregnancyIndicator.PatientMasterVisitId,
+          lk.DisplayName AS PregnancyStatus,
+          dbo.PregnancyIndicator.VisitDate
+   FROM dbo.PregnancyIndicator
+   INNER JOIN dbo.LookupItemView AS lk ON lk.ItemId = dbo.PregnancyIndicator.PregnancyStatusId) AS preg ON preg.PatientId = a.Id
+AND c.Id = preg.PatientMasterVisitId)
+
+SELECT adv.PatientID,
+       adv.PatientPK,
+       adv.SiteCode,
+	   (SELECT TOP 1 FacilityID FROM IQC_SiteDetails) FacilityID,
+       'IQCare' AS EMR,
+       'CHAP Uzima' AS Project,
+       adv.VisitDate,
+       adv.Regimen AS AdverseEventRegimen,
+       adv.AdverseEvent,
+       adv.AdverseEventCause,
+       adv.Severity,
+       adv.ActionTaken AS AdverseEventActionTaken,
+       adv.ClinicalOutcome AS AdverseEventClinicalOutcome,
+	   adv.VisitDate AS AdverseEventStartDate,
+       adv.AdverseEventEndDate,
+       adv.Pregnancy AS AdverseEventIsPregnant
+FROM adv
+     INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK"|dwhstage|0|PatientAdverseEventExtract|8|a6221988-0e85-11e8-ba89-0ed5f89f718b
+
+3253E133-E110-4D8E-B669-3832B244F6E0|All Patients|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        e.patient_id AS PatientPK,
+        pi.identifier AS PatientID,
+        la.`value_reference` AS FacilityID,
+        la.`value_reference` AS SiteCode,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        l.name AS FacilityName,
+        p.gender AS Gender,
+        DATE(p.birthdate) AS DOB,
+        MIN(IF(e.encounter_type IN (1,3,21,26),DATE(e.encounter_datetime),NULL)) AS RegistrationDate,
+        MIN(IF(e.encounter_type IN (1,3,21,26),DATE(e.encounter_datetime),NULL)) AS RegistrationAtCCC,
+        NULL AS RegistrationATPMTCT,
+        NULL AS RegistrationAtTBClinic,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 1353,cn.name,NULL))),20) AS PatientSource,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 6687,o.value_text,NULL))),20) AS Region,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 6367,o.value_text,NULL))),20) AS District,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 6688,o.value_text,NULL))),20) AS Village,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1615,cn.name,NULL))),20) AS ContactRelation,
+        MAX(DATE(e.encounter_datetime)) AS LastVisit,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1054,cn.name,NULL))),20) AS MaritalStatus,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1368,cn.name,NULL))),20) AS EducationLevel,
+        COALESCE(MAX(IF(o.concept_id=6740,DATE(o.value_datetime),NULL)), DATE(MIN(e.encounter_datetime))) AS DateConfirmedHIVPositive,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 1461,cn.name,NULL))),20) AS  PreviousARTExposure,
+        COALESCE(COALESCE(MAX(IF(o.concept_id IN (6746,6739),DATE(o.value_datetime),NULL)),
+            MAX(IF(o.concept_id IN (1255) AND o.value_coded=1256,DATE(o.obs_datetime),NULL))),
+            COALESCE(MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id IN(1592,6506) AND o.value_coded IN(1407,6197) ,DATE(o.obs_datetime),NULL))),20),
+            MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id=1571 ,DATE(o.obs_datetime),NULL))),20))
+            ) AS PreviousARTStartDate,
+        IF(lt.LastTCADate > CURDATE(),'Active','Inactive') AS StatusAtCCC,
+        NULL AS StatusAtPMTCT,
+        NULL AS StatusAtTBClinic,
+        NULL AS SatelliteName,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 5629,cn.name,NULL))),20) AS Inschool,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 7771,cn.name,NULL))),20) AS KeyPopulationType,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1174,cn.name,NULL))),20) AS Orphan,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 7967,cn.name,NULL))),20) AS PatientResidentCounty,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6500,cn.name,NULL))),20) AS PatientResidentLocation,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 8001,cn.name,NULL))),20) AS PatientResidentSubCounty,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6501,cn.name,NULL))),20) AS PatientResidentSubLocation,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 6688,o.value_text,NULL))),20) AS PatientResidentVillage,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 7968,o.value_text,NULL))),20) AS PatientResidentWard,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 1353 AND o.value_coded = 1605,'Transfer-In',IF(o.concept_id = 1353 AND o.value_coded != 1605,'New',NULL)))),20) AS PatientType,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 7766,IF(cn.name = 'Gen Pop','General Population',IF(cn.name = 'Key Pop','Key Population',NULL)),NULL))),20) AS PopulationType,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 6517,DATE(o.value_datetime),NULL))),20) AS  TransferInDate
+    FROM encounter e
+    JOIN patient_identifier `pi` ON pi.patient_id = e.patient_id AND pi.identifier_type = 9 AND e.voided = 0 AND pi.voided=0
+    JOIN person p ON p.person_id = e.patient_id AND p.voided=0
+    INNER JOIN location l ON e.location_id = l.location_id
+    LEFT OUTER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+    LEFT OUTER JOIN
+    (
+    SELECT
+            o.person_id,
+            MAX(DATE(o.value_datetime)) AS LastTCADate
+        FROM obs o
+        INNER JOIN encounter e ON o.person_id = e.patient_id
+        WHERE o.concept_id IN (1938,5096,7469,7628)
+            AND o.voided=0
+            AND o.value_datetime IS NOT NULL
+        GROUP BY 1
+    ) AS lt ON lt.person_id = e.patient_id
+    LEFT OUTER JOIN obs o ON o.person_id = e.patient_id AND o.voided=0
+        AND o.concept_id IN (1353,6687,6367,6688,1615,1054,1368,6740,1461,6746,6739,1255,1592,6506,1571,5629,7771,1174,7967,6500,8001,6501,6688,7968,7766,6517)
+    INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+    GROUP BY e.patient_id;"|DWHStage|1|PatientExtract|1|BB254606-38F8-409F-8E36-AB6601139DEA
+C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        p.person_id AS PatientPK,
+        MAX(pi.identifier) AS PatientID,
+        la.`value_reference` AS FacilityID,
+        la.`value_reference` AS SiteCode,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        l.name AS FacilityName,
+        DATE(p.birthdate) AS DOB,
+        DATEDIFF(id.DAteEnrolledInCare,p.birthdate) DIV 365.25 AS AgeEnrollment,
+        DATEDIFF(id.Date_Started_ART,p.birthdate) DIV 365.25 AS AgeARTStart,
+        DATEDIFF(lv.LastEncounter,p.birthdate) DIV 365.25 AS AgeLastVisit,
+        id.FirstEncounter AS RegistrationDate,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 1353,cn.name,NULL))),20) AS PatientSource,
+        p.gender AS Gender,
+        id.Date_Started_ART AS StartARTDate,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 6739,DATE(o.value_datetime),NULL))),20) AS  PreviousARTStartDate,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 1461,cn.name,NULL))),20) AS  PreviousARTRegimen,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 1571,DATE(o.obs_datetime),NULL))),20) AS  StartARTAtThisFacility,
+        IF(1st_Line_ART_Regimen IS NOT NULL, 1st_Line_ART_Regimen,
+            IF(1st_Line_ART_Substitution IS NOT NULL,1st_Line_ART_Substitution,
+                IF(2nd_Line_ART_Regimen IS NOT NULL,2nd_Line_ART_Regimen,
+                    IF(2nd_Line_ART_Substitution IS NOT NULL,2nd_Line_ART_Substitution,NULL)
+                )
+            )
+        ) AS StartRegimen,
+        IF(1st_Line_ART_Regimen IS NOT NULL, 'First Line',
+            IF(1st_Line_ART_Substitution IS NOT NULL,'First Line Substitution',
+                IF(2nd_Line_ART_Regimen IS NOT NULL,'Second Line',
+                    IF(2nd_Line_ART_Substitution IS NOT NULL,'Second Line Substitution',NULL)
+                )
+            )
+        ) AS StartRegimenLine,
+        id.LastARTDate,
+        cr.Current_Regimen AS LastRegimen,
+        IF(STRCMP(cr.Current_Regimen,1st_Line_ART_Regimen)=0, 'First Line',
+            IF(STRCMP(cr.Current_Regimen,1st_Line_ART_Substitution)=0,'First Line Substitution',
+                IF(STRCMP(cr.Current_Regimen,2nd_Line_ART_Regimen)=0,'Second Line',
+                    IF(STRCMP(cr.Current_Regimen,2nd_Line_ART_Substitution)=0,'Second Line Substitution',NULL)
+                )
+            )
+        ) AS LastRegimenLine,
+        DATEDIFF(id.LastTCADate,id.LastARTDate) DIV 365.25 AS Duration,
+        id.LastTCADate AS ExpectedReturn,
+        'Government' AS Provider,
+        lv.LastEncounter AS LastVisit,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(e.encounter_type=6 AND o.concept_id=1655,cn.name,NULL))),20) AS ExitReason,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(e.encounter_type=6,DATE(e.encounter_datetime),NULL))),20) AS ExitDate
+    FROM person p
+    INNER JOIN patient_identifier `pi` ON p.person_id = pi.patient_id AND pi.identifier_type=9 AND pi.voided = 0 AND p.voided = 0
+    INNER JOIN encounter e ON p.person_id = e.patient_id
+        AND e.encounter_type IN (1,2,3,4,6,21,22,26,27,28,40,41,42)
+    INNER JOIN
+    (
+        SELECT
+            ide.patient_id,
+            MIN(DATE(ide.encounter_datetime)) AS FirstEncounter,
+            MIN(IF(ido.concept_id=6742,DATE(ido.value_datetime),NULL)) AS DateEnrolledInCare,
+            COALESCE(COALESCE(MAX(IF(ido.concept_id IN (6746,6739),DATE(ido.value_datetime),NULL)),
+                MAX(IF(ido.concept_id = 1255 AND ido.value_coded = 1256,DATE(ido.obs_datetime),NULL))),
+                COALESCE(MID(MIN(CONCAT(ide.encounter_datetime,IF(ido.concept_id IN(1592,6506) AND ido.value_coded IN(1407,6197) ,DATE(ido.obs_datetime),NULL))),20),
+                MID(MIN(CONCAT(ide.encounter_datetime,IF(ido.concept_id=1571 ,DATE(ido.obs_datetime),NULL))),20))
+                ) AS  Date_Started_ART,
+            MAX(IF(ido.concept_id = 1571, DATE(ido.obs_datetime),NULL)) AS LastARTDate,
+            MAX(IF(ido.concept_id IN (1938,5096,7469,7628),DATE(ido.value_datetime),NULL)) AS LastTCADate
+        FROM encounter ide
+        INNER JOIN obs ido ON ide.patient_id = ido.person_id
+            AND ido.voided = 0 AND ide.voided = 0
+            AND ido.concept_id IN (6742,6746,6739,1255,1592,6506,1571,1938,5096,7469,7628)
+            AND ide.encounter_datetime > '2015-12-31'
+        GROUP BY 1
+    ) id ON p.person_id = id.patient_id
+    LEFT OUTER JOIN
+    (
+        SELECT
+            lve.patient_id,
+            MID(MAX(CONCAT(lve.encounter_datetime,IF(lve.encounter_type = 6,'Yes','No'))),20) AS  IsDiscontinued,
+            MAX(DATE(lve.encounter_datetime)) AS LastEncounter
+        FROM encounter lve
+        WHERE lve.voided = 0
+        GROUP BY 1
+        HAVING IsDiscontinued = 'No'
+    ) lv ON p.person_id = lv.patient_id
+    INNER JOIN location l ON e.location_id = l.location_id
+    LEFT OUTER JOIN location_attribute la ON e.location_id = la.location_id AND la.attribute_type_id = 1
+    INNER JOIN
+    (
+        SELECT
+            cre.patient_id,
+            cre.encounter_id,
+            MID(MAX(CONCAT(cre.encounter_datetime,IF(cro.concept_id = 6747, crn.name, NULL))),20) AS 1st_Line_ART_Regimen,
+            MID(MAX(CONCAT(cre.encounter_datetime,IF(cro.concept_id = 6749, crn.name, NULL))),20) AS 1st_Line_ART_Substitution,
+            MID(MAX(CONCAT(cre.encounter_datetime,IF(cro.concept_id = 6782, crn.name, NULL))),20) AS 2nd_Line_ART_Regimen,
+            MID(MAX(CONCAT(cre.encounter_datetime,IF(cro.concept_id = 6750, crn.name, NULL))),20) AS 2nd_Line_ART_Substitution,
+            MID(MAX(CONCAT(cre.encounter_datetime,IF(cro.concept_id = 1571, crn.name, NULL))),20) AS Current_Regimen
+        FROM encounter cre
+        INNER JOIN obs cro
+            ON cre.encounter_id = cro.encounter_id
+                AND cro.concept_id IN (6747,6749,6782,6750,1571) AND cro.voided = 0 AND cre.voided = 0
+        INNER JOIN concept_name crn
+            ON cro.value_coded = crn.concept_id AND crn.voided = 0
+        GROUP BY 1
+    ) cr ON p.person_id = cr.patient_id
+    LEFT OUTER JOIN obs o ON e.patient_id = o.person_id
+        AND o.voided=0 AND o.concept_id IN (1353,1571,1655,1461,6739)
+    INNER JOIN concept_name cn ON cn.concept_id=o.value_coded
+    GROUP BY p.person_id;"|DWHStage|0|PatientArtExtract|2|BB254606-38F8-409F-8E36-AB6601139DEA
+64C5D42A-C3ED-457A-951A-FDB22F14B6B7|Patient Pharmacy|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        e.patient_id AS PatientPK,
+        MIN(pi.identifier) AS PatientID,
+        la.`value_reference` AS FacilityID,
+        la.`value_reference` AS SiteCode,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+    -- 	l.name AS FacilityName,
+        v.visit_id AS VisitID,
+        cr.Current_Regimen AS Drug,
+        'Government' AS Provider,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id IN (1571,6138),DATE(o.obs_datetime),NULL))),20) AS DispenseDate,
+        DATEDIFF(lt.LastTCADate,MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id IN (1571,6138),DATE(o.obs_datetime),NULL))),20)) AS Duration,
+        lt.LastTCADate AS ExpectedReturn,
+        MID(MAX(CONCAT(encounter_datetime,IF(rsn.concept_id IN (1565, 1566,1251,1404,1497,1498,1564,1592,1409,6304,6305,1496),cnr.name,
+            IF(rsn.concept_id = 7147, rsn.value_text,NULL)))),20) AS TreatmentType,
+        IF(STRCMP(cr.Current_Regimen,1st_Line_ART_Regimen)=0, 'First Line',
+            IF(STRCMP(cr.Current_Regimen,1st_Line_ART_Substitution)=0,'First Line Substitution',
+                IF(STRCMP(cr.Current_Regimen,2nd_Line_ART_Regimen)=0,'Second Line',
+                    IF(STRCMP(cr.Current_Regimen,2nd_Line_ART_Substitution)=0,'Second Line Substitution',NULL)
+                )
+            )
+        ) AS RegimenLine,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1836, IF(o.value_coded = 1065,'Pregnancy',IF(o.value_coded IN(6765,50),'Labor',IF(o.value_coded IN(6847,6848),'Postnatal',NULL ) )), NULL))),20) AS PeriodTaken,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1565,IF(o.value_coded = 92,'Dapsone',IF(o.value_coded = 1427,'CTX',NULL)),IF(o.concept_id = 1650 AND o.value_coded = 7789,'INH',NULL)))),20) AS ProphylaxisType
+    FROM patient_identifier `pi`
+    INNER JOIN visit v ON pi.patient_id = v.patient_id AND pi.identifier_type = 9 AND pi.voided=0
+    INNER JOIN encounter e ON v.visit_id  = e.visit_id AND e.voided = 0
+    INNER JOIN location l ON e.location_id = l.location_id
+    LEFT OUTER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+    INNER JOIN obs o ON e.encounter_id = o.encounter_id AND o.voided=0 AND o.concept_id IN (1571,6138,1565,1650,1836)
+    INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+    LEFT OUTER JOIN obs rsn ON rsn.encounter_id = e.encounter_id
+        AND rsn.voided=0 AND rsn.concept_id IN (1565,1650,1566,7147,1251,1404,1497,1498,1564,1592,1409,6304,6305,1496)
+    INNER JOIN concept_name cnr ON cnr.concept_id = rsn.value_coded
+    LEFT OUTER JOIN
+    (
+        SELECT
+            e.patient_id,
+            e.encounter_id,
+            MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6747, cn.name, NULL))),20) AS 1st_Line_ART_Regimen,
+            MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6749, cn.name, NULL))),20) AS 1st_Line_ART_Substitution,
+            MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6782, cn.name, NULL))),20) AS 2nd_Line_ART_Regimen,
+            MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6750, cn.name, NULL))),20) AS 2nd_Line_ART_Substitution,
+            MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1571, cn.name, NULL))),20) AS Current_Regimen
+        FROM encounter e
+        INNER JOIN obs o
+            ON e.encounter_id = o.encounter_id
+                AND o.concept_id IN (6747,6749,6782,6750,1571) AND o.voided = 0 AND e.voided = 0
+        INNER JOIN concept_name cn
+            ON o.value_coded = cn.concept_id AND cn.voided = 0
+        GROUP BY 1
+    ) cr ON pi.patient_id = cr.patient_id
+    LEFT OUTER JOIN
+    (
+        SELECT
+            o.person_id,
+            MAX(DATE(o.value_datetime)) AS LastTCADate
+        FROM obs o
+        INNER JOIN encounter e ON o.person_id = e.patient_id AND e.encounter_type IN (21,22,42,6)
+        WHERE o.concept_id IN (1938,5096,7469,7628)
+            AND o.voided=0
+            AND o.value_datetime IS NOT NULL
+            AND DATE(o.value_datetime) >= '2011-01-01'
+        GROUP BY 1
+    ) AS lt ON lt.person_id = e.patient_id
+    WHERE DATE(v.date_started) >= '2011-01-01'
+    GROUP BY e.patient_id;"|DWHStage|0|PatientPharmacyExtract|3|BB254606-38F8-409F-8E36-AB6601139DEA
+1CD45F9F-BC5D-4F85-B2CD-1581CBF1A01E|Patient Labs|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        e.patient_id AS PatientPk,
+        MIN(pi.identifier) AS PatientID,
+        la.`value_reference` AS FacilityID,
+        la.`value_reference` AS SiteCode,
+        'OpenMRS' AS Emr,
+        'UCSF Clinical Kisumu' AS Project,
+        l.name AS FacilityName,
+        NULL AS SatelliteName,
+        v.visit_id AS VisitID,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id=1271,DATE(e.encounter_datetime),IF(o.concept_id=7467,DATE(o.value_datetime),NULL)))),20) AS OrderedByDate,
+        DATE(ot.obs_datetime) AS ReportedByDate,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id=1271,cn.name,IF(o.concept_id=7471,'HIV VIRAL LOAD',NULL)))),20) AS TestName,
+        NULL AS EnrollmentTest,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id=7471,ot.value_text,CONVERT(ot.value_numeric,CHAR)))),20) AS TestResult,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id=8037,cn.name,NULL))),20)  AS Reason
+    FROM patient_identifier `pi`
+    INNER JOIN visit v ON pi.patient_id = v.patient_id AND pi.identifier_type = 9 AND pi.voided=0 AND v.voided = 0
+    INNER JOIN encounter e ON v.visit_id  = e.visit_id AND e.voided = 0
+    INNER JOIN location l ON e.location_id = l.location_id
+    LEFT OUTER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+    INNER JOIN obs o ON e.encounter_id = o.encounter_id AND o.voided=0 AND o.concept_id IN (1271, 8037, 7467,7471)
+    LEFT OUTER JOIN concept_name cn ON cn.concept_id = o.value_coded
+    LEFT OUTER JOIN
+    (
+        SELECT
+            ot.person_id,
+            ot.encounter_id,
+            ot.obs_datetime,
+            ot.concept_id,
+            ot.value_numeric,
+            ot.value_text
+        FROM obs ot
+        WHERE ot.voided = 0 AND ot.concept_id IN (730,21,5497,856,654,790,7467,7471,8037)
+    ) ot ON e.encounter_id = ot.encounter_id
+    WHERE DATE(v.date_started) >= '2011-01-01'
+    GROUP BY  e.patient_id, e.encounter_id
+    HAVING TestName IS NOT NULL AND TestResult IS NOT NULL;"|DWHStage|0|PatientLabExtract|4|BB254606-38F8-409F-8E36-AB6601139DEA
+362DC8AD-9FF8-4622-994B-53761AF6AAE9|Patient Status|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        e.patient_id AS PatientPK,
+        MIN(IF(pi.identifier_type=9,pi.identifier,NULL)) AS PatientID,
+        la.`value_reference` AS FacilityID,
+        la.`value_reference` AS SiteCode,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        l.name AS FacilityName,
+        NULL AS ExitDescription,
+        IF(s.ExitDate IS NOT NULL AND (MAX(DATE(e.encounter_datetime)) <= s.ExitDate), s.ExitDate, NULL) AS ExitDate,
+        IF(s.ExitDate IS NOT NULL AND (MAX(DATE(e.encounter_datetime)) <= s.ExitDate), s.ExitReason, NULL) AS ExitReason
+    FROM encounter e
+    INNER JOIN location l ON e.location_id = l.location_id
+    LEFT OUTER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+    INNER JOIN patient_identifier `pi` ON e.patient_id = pi.patient_id AND pi.identifier_type IN (3,9)
+    LEFT OUTER JOIN
+    (
+        SELECT
+            e.patient_id,
+            MAX(IF(e.encounter_type = 6,DATE(e.encounter_datetime),NULL)) AS ExitDate,
+            MAX(IF(o.concept_id = 1655,cn.name,NULL)) AS ExitReason
+        FROM encounter e
+        LEFT OUTER JOIN obs o ON e.patient_id = o.person_id AND o.concept_id = 1655 AND o.voided = 0 AND e.voided = 0
+        INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+        WHERE e.encounter_type IN (1,2,3,4,21,22,42,6)
+        GROUP BY 1
+    ) s ON e.patient_id = s.patient_id
+    GROUP BY e.patient_id;"|DWHStage|0|PatientStatusExtract|5|BB254606-38F8-409F-8E36-AB6601139DEA
+127CA0C5-86D8-46BA-98E1-57F224D99C23|Patient Baselines|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        e.patient_id AS PatientPk,
+        MIN(pi.identifier) AS PatientID,
+        la.`value_reference` AS FacilityID,
+        la.`value_reference` AS SiteCode,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        MIN(IF(o.concept_id=5497 AND (o.obs_datetime BETWEEN DATE_ADD(Date_Started_ART,INTERVAL -90 DAY)
+            AND DATE_ADD(Date_Started_ART,INTERVAL 14 DAY)),o.value_numeric,NULL)) AS bCD4,
+        MIN(IF(o.concept_id=5497 AND (o.obs_datetime BETWEEN DATE_ADD(Date_Started_ART,INTERVAL -90 DAY)
+            AND DATE_ADD(Date_Started_ART,INTERVAL 14 DAY)),DATE(o.obs_datetime),NULL)) AS bCD4Date,
+        NULL AS bWAB,
+        NULL AS bWABDate,
+        MIN(IF(o.concept_id = 6745,cn.name,NULL)) AS bWHO,
+        MIN(IF(o.concept_id = 6745,DATE(o.obs_datetime),NULL)) AS bWHODate,
+        NULL AS eWAB,
+        NULL AS eWABDate,
+        MIN(IF(o.concept_id=6314 AND (o.obs_datetime BETWEEN DATE_ADD(DateEnrolledInCare,INTERVAL -120 DAY)
+            AND DATE_ADD(DateEnrolledInCare,INTERVAL 120 DAY)),o.value_numeric,NULL)) AS eCD4,
+        MIN(IF(o.concept_id=6314 AND (o.obs_datetime BETWEEN DATE_ADD(DateEnrolledInCare,INTERVAL -120 DAY)
+            AND DATE_ADD(DateEnrolledInCare,INTERVAL 120 DAY)),DATE(o.obs_datetime),NULL)) AS eCD4Date,
+        MIN(IF(o.concept_id = 6769,cn.name,NULL)) AS eWHO,
+        MIN(IF(o.concept_id=6769,DATE(o.obs_datetime),NULL))AS eWHODate,
+        MAX(IF(o.concept_id = 6794,cn.name,NULL))AS lastWHO,
+        MAX(IF(o.concept_id = 6794, DATE(o.obs_datetime), NULL)) AS lastWHODate,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id=5497,o.value_numeric,NULL))),20) AS lastCD4,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id=5497,DATE(o.obs_datetime),NULL))),20) AS lastCD4Date,
+        NULL AS lastWAB,
+        NULL AS lastWABDate,
+        MAX(IF(o.concept_id=5497 AND (o.obs_datetime BETWEEN DATE_ADD(DATE_ADD(Date_Started_ART,INTERVAL 12 MONTH),INTERVAL -1 MONTH) AND DATE_ADD(DATE_ADD(Date_Started_ART,INTERVAL 12 MONTH),INTERVAL 1 MONTH)),o.value_numeric,NULL)) AS m12CD4,
+        MAX(IF(o.concept_id=5497 AND (o.obs_datetime BETWEEN DATE_ADD(DATE_ADD(Date_Started_ART,INTERVAL 12 MONTH),INTERVAL -1 MONTH) AND DATE_ADD(DATE_ADD(Date_Started_ART,INTERVAL 12 MONTH),INTERVAL 1 MONTH)),DATE(o.obs_datetime),NULL)) AS m12CD4Date,
+        MAX(IF(o.concept_id=5497 AND (o.obs_datetime BETWEEN DATE_ADD(DATE_ADD(Date_Started_ART,INTERVAL 6 MONTH),INTERVAL -1 MONTH) AND DATE_ADD(DATE_ADD(Date_Started_ART,INTERVAL 6 MONTH),INTERVAL 1 MONTH)),o.value_numeric,NULL)) AS m6CD4,
+        MAX(IF(o.concept_id=5497 AND (o.obs_datetime BETWEEN DATE_ADD(DATE_ADD(Date_Started_ART,INTERVAL 6 MONTH),INTERVAL -1 MONTH) AND DATE_ADD(DATE_ADD(Date_Started_ART,INTERVAL 6 MONTH),INTERVAL 1 MONTH)),DATE(o.obs_datetime),NULL)) AS m6CD4Date
+    FROM encounter e
+    INNER JOIN patient_identifier `pi` ON pi.patient_id = e.patient_id AND pi.identifier_type = 9
+    INNER JOIN
+    (
+        SELECT
+            e.patient_id,
+            MIN(DATE(e.encounter_datetime)) AS FirstEncounter,
+            MIN(IF(o.concept_id=6742,DATE(o.value_datetime),NULL)) AS DateEnrolledInCare,
+            COALESCE(COALESCE(MAX(IF(o.concept_id IN (6746,6739),DATE(o.value_datetime),NULL)),
+                MAX(IF(o.concept_id = 1255 AND o.value_coded = 1256,DATE(o.obs_datetime),NULL))),
+                COALESCE(MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id IN(1592,6506) AND o.value_coded IN(1407,6197) ,DATE(o.obs_datetime),NULL))),20),
+                MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id=1571 ,DATE(o.obs_datetime),NULL))),20))
+                ) AS  Date_Started_ART,
+            MAX(IF(o.concept_id = 1571, DATE(o.obs_datetime),NULL)) AS LastARTDate,
+            MAX(IF(o.concept_id IN (1938,5096,7469,7628),DATE(o.value_datetime),NULL)) AS LastTCADate
+        FROM encounter e
+        INNER JOIN obs o ON e.patient_id = o.person_id
+            AND o.voided = 0 AND e.voided = 0
+            AND o.concept_id IN (6742,6746,6739,1255,1592,6506,1571,1938,5096,7469,7628)
+        GROUP BY 1
+    ) id ON e.patient_id = id.patient_id
+    LEFT OUTER JOIN obs o ON o.encounter_id = e.encounter_id AND o.voided=0 AND o.concept_id IN (6314,6769,5497,6745,6794)
+    LEFT OUTER JOIN concept_name cn ON cn.concept_id=o.value_coded
+    INNER JOIN location l ON l.location_id = e.location_id
+    LEFT OUTER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+    GROUP BY e.patient_id;"|DWHStage|0|PatientBaselineExtract|6|BB254606-38F8-409F-8E36-AB6601139DEA
+90A68C9F-72AD-48C4-B0EB-35AB9DC6F07D|Patient Visits|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        p.patient_id AS PatientPk,
+        MIN(pi.identifier) AS PatientID,
+        la.`value_reference` AS FacilityID,
+        la.`value_reference` AS SiteCode,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        l.name AS FacilityName,
+        v.visit_id AS VisitID,
+        DATE(v.date_started) AS VisitDate,
+        et.name AS Service,
+        'Out-Patient' AS VisitType,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6794,cn.name,NULL))),20) AS WHOStage,
+        NULL AS WABStage,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1836,cn.name,NULL))),20) AS Pregnant,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1450, DATE(o.value_datetime), NULL))),20) AS LMP,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1451,DATE(o.value_datetime),NULL))),20) AS EDD,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 5090,o.value_numeric,NULL))),20) AS Height,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 5089,o.value_numeric,NULL))),20) AS Weight,
+        CONCAT_WS(""/"",MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 5085,o.value_numeric,NULL),IF(o.concept_id = 5086,o.value_numeric,NULL))),20)) AS BP,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id=6802,cn.name,NULL))),20) AS OI,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id=6802,DATE(obs_datetime),NULL))),20) AS OIDate,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6760,cn.name,NULL))),20) AS Adherence,
+        'ART' AS AdherenceCategory,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 6748, DATE(o.value_datetime), NULL))),20) AS SubstitutionFirstlineRegimenDate,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6771, cn.name, NULL))),20) AS SubstitutionFirstlineRegimenReason,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 6751, DATE(o.value_datetime), NULL))),20) AS SubstitutionSecondlineRegimenDate,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6192, cn.name, NULL))),20) AS SubstitutionSecondlineRegimenReason,
+        MID(MIN(CONCAT(e.encounter_datetime,IF(o.concept_id = 6770, DATE(o.value_datetime), NULL))),20) AS SecondlineRegimenChangeDate,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 6772, cn.name, NULL))),20) AS SecondlineRegimenChangeReason,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id IN(374,1591),cn.name,NULL))),20) AS FamilyPlanningMethod,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 1048,'Disclosure',IF(o.concept_id = 6781,'Condoms',IF(o.concept_id = 1363,'Partner Testing',IF(o.concept_id = 6780,'STI Screen',NULL)))))),20) AS PWP,
+        DATEDIFF((MAX(IF(e.encounter_type IN (1,2,21,22),DATE(e.encounter_datetime), NULL))),MAX(IF(o.concept_id = 1450, DATE(o.value_datetime), NULL))) DIV 365.25 AS GestationAge,
+        lt.LastTCADate AS NextAppointmentDate,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 7979,cn.name,NULL))),20) AS DifferentiatedCare,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 7771,cn.name,NULL))),20) AS KeyPopulationType,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 7766,IF(cn.name = 'Gen Pop','General Population',IF(cn.name = 'Key Pop','Key Population',NULL)),NULL))),20) AS PopulationType,
+        MID(MAX(CONCAT(e.encounter_datetime,IF(o.concept_id = 7978,cn.name,NULL))),20) AS StabilityAssessment
+    FROM patient p
+    INNER JOIN patient_identifier `pi` ON p.patient_id = pi.patient_id AND pi.identifier_type IS NOT NULL AND pi.identifier_type = 9 AND p.voided = 0	-- and identifier_type is not null
+    LEFT OUTER JOIN visit v ON p.patient_id = v.patient_id AND v.voided = 0 AND DATE(v.date_started) > '2016-12-31'
+    INNER JOIN encounter e ON p.patient_id = e.patient_id AND e.voided = 0 AND DATE(e.encounter_datetime) > '2016-12-31'
+    INNER JOIN location l ON e.location_id = l.location_id
+    LEFT OUTER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+    JOIN encounter_type et ON  e.encounter_type = et.encounter_type_id
+    LEFT OUTER JOIN obs o ON e.patient_id = o.person_id AND o.voided=0
+        AND o.concept_id IN (7978,7766,7771,7979,1916,6794,1836,1450,1451,5090,5089,5085,6802,6760,374,1591,1048,6781,1363,6780,6748,6771,6751,6192,6770,6772)
+    LEFT OUTER JOIN concept_name cn ON cn.concept_id = o.value_coded AND cn.concept_name_type = 'FULLY_SPECIFIED'
+    LEFT OUTER JOIN
+    (
+        SELECT
+            ol.person_id,
+            MAX(DATE(ol.value_datetime)) AS LastTCADate
+        FROM obs ol
+        WHERE ol.concept_id IN (1938,5096,7469,7628)
+            AND ol.voided=0
+            AND ol.value_datetime IS NOT NULL
+        GROUP BY 1
+    ) AS lt ON p.patient_id = lt.person_id
+    GROUP BY p.patient_id, v.visit_id, e.encounter_id;"|DWHStage|0|PatientVisitExtract|7|BB254606-38F8-409F-8E36-AB6601139DEA
+5A7F8B7F-59E4-4364-8AA0-F7A94A4E6483|Patient Adverse Events|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        p.patient_id AS PatientPk,
+        MIN(pi.identifier) AS PatientID,
+        la.`value_reference` AS FacilityID,
+        la.`value_reference` AS SiteCode,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        NULL AS AdverseEvent,
+        NULL AS AdverseEventStartDate,
+        NULL AS AdverseEventEndDate,
+        NULL AS Severity,
+        NULL AS VisitDate,
+        NULL AS AdverseEventActionTaken,
+        NULL AS AdverseEventClinicalOutcome,
+        NULL AS AdverseEventIsPregnant,
+        NULL AS AdverseEventCause,
+        NULL AS AdverseEventRegimen
+    FROM patient p
+    INNER JOIN patient_identifier `pi` ON p.patient_id = pi.patient_id AND pi.identifier_type IS NOT NULL AND pi.identifier_type = 9
+    INNER JOIN visit v ON p.patient_id = v.patient_id AND v.voided = 0
+    INNER JOIN location l ON v.location_id = l.location_id
+    LEFT OUTER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+    GROUP BY p.patient_id, v.visit_id
+    HAVING AdverseEvent IS NOT NULL
+    ORDER BY p.patient_id, v.visit_id;"|DWHStage|0|PatientAdverseEventExtract|8|BB254606-38F8-409F-8E36-AB6601139DEA
+72D51B17-EB57-49F8-88FE-F79FD2299B7B|Hts Clients|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        pt.patient_id AS PatientPK,
+        la.`value_reference` AS SiteCode,
+        l.name AS FacilityName,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        MAX(pi.identifier) AS HtsNumber,
+        DATE(p.birthdate) AS DOB,
+        IF(p.gender = 'M', 'Male',IF(p.gender = 'F','Female',NULL)) AS Gender,
+        MAX(IF(o.concept_id = 1054,cn.name,NULL)) AS MaritalStatus,
+        MAX(IF(o.concept_id = 7766,IF(cn.name = 'Gen Pop','General Population',IF(cn.name = 'Key Pop','Key Population',NULL)),NULL)) AS PopulationType,
+        MAX(IF(o.concept_id = 7771,cn.name,NULL)) AS KeyPopulationType,
+        MAX(IF(o.concept_id = 7923,cn.name,NULL)) AS PatientDisabled,
+        pa.county_district AS County,
+        pa.address6 AS SubCounty,
+        pa.address5 AS Ward
+    FROM patient pt
+    LEFT OUTER JOIN person_address pa ON pt.patient_id = pa.person_id AND pt.voided = 0 AND pa.voided = 0
+    LEFT OUTER JOIN encounter e ON pt.patient_id = e.patient_id AND e.voided = 0
+    INNER JOIN patient_identifier `pi` ON pi.patient_id = pt.patient_id AND pi.identifier_type IN (18,1) AND pi.voided=0
+    INNER JOIN person p ON p.person_id = pt.patient_id
+    INNER JOIN location l ON pi.location_id = l.location_id AND l.location_id IN (2,40,265,238,217,215,237,216,42,261,41,258,233,267,44,228,43)
+    INNER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+    LEFT OUTER JOIN obs o ON o.person_id = pt.patient_id AND o.voided=0 AND o.concept_id IN (1054,7766,7771,7923)
+    LEFT OUTER JOIN concept_name cn ON cn.concept_id = o.value_coded
+    GROUP BY pt.patient_id
+    HAVING DOB IS NOT NULL AND Gender IS NOT NULL;"|DWHStage|1|HtsClient|1|A6221989-0E85-11E8-BA89-0ED5F89F718B
+64748A19-0A4C-4065-BF0E-3E963F0F4133|Hts Test Kits|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        ct.FacilityName,
+        ct.SiteCode,
+        ct.PatientPK,
+        ct.HtsNumber,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        e.encounter_id AS EncounterId,
+        t.kit_name1 AS TestKitName1,
+        t.lot_no1 AS TestKitLotNumber1,
+        t.expiry_date1 AS TestKitExpiry1,
+        MAX(IF(t.test_1_result IS NOT NULL, t.test_1_result, NULL)) AS TestResult1,
+        t.kit_name2 AS TestKitName2,
+        t.lot_no2 AS TestKitLotNumber2,
+        t.expiry_date2 AS TestKitExpiry2,
+        MAX(IF(t.test_2_result IS NOT NULL, t.test_2_result, NULL)) AS TestResult2
+    FROM patient pt
+    INNER JOIN (
+        SELECT
+            hc.FacilityName,
+            hc.SiteCode,
+            hc.PatientPK,
+            hc.HtsNumber,
+            'OpenMRS' AS EMR,
+            'UCSF Clinical Kisumu' AS Project,
+            e.encounter_id AS EncounterId,
+            DATE(e.encounter_datetime) AS TestDate,
+            MAX(IF(o.concept_id=7136,(CASE o.value_coded WHEN 1065 THEN ""Yes"" WHEN 1066 THEN ""No"" ELSE NULL END),NULL)) AS EverTestedForHiv,
+            MAX(IF(o.concept_id=7658,(CASE o.value_coded WHEN 7659 THEN 3 WHEN 7660 THEN 12 WHEN 7661 THEN 13 WHEN 1729 THEN NULL END),NULL)) AS MonthsSinceLastTest,
+            MAX(IF(o.concept_id=8138,(CASE o.value_coded WHEN 8137 THEN ""Individual"" WHEN 1756 THEN ""Couple"" ELSE NULL END),NULL)) AS ClientTestedAs,
+            MAX(IF(o.concept_id=8174,(
+               CASE o.value_coded
+                   WHEN 1357 THEN ""OPD""
+                   WHEN 8170 THEN ""IPD""
+                   WHEN 1354 THEN ""VCT""
+                   WHEN 8172 THEN ""MCH""
+                   WHEN 8175 THEN ""TB Clinic""
+                   WHEN 8173 THEN ""PNS""
+                   WHEN 7656 THEN ""Family Testing""
+                   WHEN 8171 THEN ""VMMC""
+                   ELSE NULL
+                   END ), NULL))AS EntryPoint,
+            MAX(IF(o.concept_id=8145,(
+              CASE o.value_coded
+                  WHEN 8139 THEN ""HP/PITC""
+                  WHEN 8140 THEN ""Non Provider Initiated Testing""
+                  WHEN 8141 THEN ""Integrated VCT Center""
+                  WHEN 8142 THEN ""Stand Alone VCT Center""
+                  WHEN 8143 THEN ""Home Based Testing""
+                  WHEN 8144 THEN ""Mobile Outreach HTS""
+                  WHEN 7629 THEN ""HTS for Non-Patient[NP]""
+              ELSE NULL
+              END ),NULL)) AS TestStrategy,
+            MAX(IF(t.test_1_result IS NOT NULL, t.test_1_result, NULL)) AS TestResult1,
+            MAX(IF(t.test_2_result IS NOT NULL, t.test_2_result, NULL)) AS TestResult2,
+            MAX(IF(o.concept_id=8155,(CASE o.value_coded WHEN 703 THEN ""Positive"" WHEN 664 THEN ""Negative"" WHEN 7864 THEN ""Inconclusive"" ELSE NULL END),NULL)) AS FinalTestResult,
+            MAX(IF(o.concept_id=7936,(CASE o.value_coded WHEN 1065 THEN ""Yes"" WHEN 1066 THEN ""No"" ELSE NULL END),NULL)) AS PatientGivenResult,
+            MAX(IF(o.concept_id=7791,cn.name,NULL)) AS TBScreening,
+            MAX(IF(o.concept_id=7937,(CASE o.value_coded WHEN 1065 THEN ""Yes"" WHEN 1066 THEN ""No"" ELSE NULL END),NULL)) AS ClientSelfTested,
+            MAX(IF(o.concept_id=6096,(CASE o.value_coded WHEN 1065 THEN ""Yes"" WHEN 1066 THEN ""No"" ELSE NULL END),NULL)) AS CoupleDiscordant,
+            IF(e.encounter_type = 46,""Initial"",IF(e.encounter_type = 47,""Repeat"",NULL)) AS TestType,
+            MAX(IF(o.concept_id=8168,(CASE o.value_coded WHEN 1065 THEN ""Yes"" WHEN 1066 THEN ""No"" ELSE """" END),NULL)) AS Consent
+        FROM patient pt
+        INNER JOIN (
+            SELECT
+                pt.patient_id AS PatientPK,
+                la.`value_reference` AS SiteCode,
+                l.name AS FacilityName,
+                MAX(pi.identifier) AS HtsNumber,
+                DATE(p.birthdate) AS DOB,
+                IF(p.gender = 'M', 'Male',IF(p.gender = 'F','Female',NULL)) AS Gender
+            FROM patient pt
+            LEFT OUTER JOIN encounter e ON pt.patient_id = e.patient_id AND e.voided = 0
+            INNER JOIN patient_identifier `pi` ON pi.patient_id = pt.patient_id AND pi.identifier_type IN (18,1) AND pi.voided=0
+            INNER JOIN person p ON p.person_id = pt.patient_id
+            INNER JOIN location l ON pi.location_id = l.location_id AND l.location_id IN (2,40,265,238,217,215,237,216,42,261,41,258,233,267,44,228,43)
+            INNER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+            GROUP BY pt.patient_id
+            HAVING DOB IS NOT NULL AND Gender IS NOT NULL
+        ) hc ON pt.patient_id = hc.PatientPK AND SiteCode = hc.SiteCode
+        INNER JOIN visit v ON pt.patient_id = v.patient_id AND v.voided = 0
+        LEFT JOIN encounter e ON pt.patient_id = e.patient_id AND e.encounter_type IN (46,47)
+        JOIN person p ON p.person_id = pt.patient_id
+        INNER JOIN (
+             SELECT
+                       o.person_id,
+                       o.encounter_id,
+                       o.obs_group_id,
+                       MAX(IF(o.concept_id=1040, (CASE o.value_coded WHEN 703 THEN ""Positive"" WHEN 664 THEN ""Negative"" WHEN 1304 THEN ""Invalid""  ELSE NULL END),NULL)) AS test_1_result ,
+                       MAX(IF(o.concept_id=1326, (CASE o.value_coded WHEN 703 THEN ""Positive"" WHEN 664 THEN ""Negative"" WHEN 1175 THEN ""N/A""  ELSE NULL END),NULL)) AS test_2_result
+             FROM obs o
+             INNER JOIN encounter e ON e.encounter_id = o.encounter_id
+             WHERE o.concept_id IN (1040, 1326)
+             GROUP BY e.encounter_id, o.obs_group_id
+        ) t ON e.encounter_id = t.encounter_id
+        LEFT OUTER JOIN obs o ON o.person_id = pt.patient_id AND o.voided=0 AND o.concept_id IN (7136,7658,8138,8174,8145,8155,7936,7937,6096,8168,7791)
+        INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+        GROUP BY pt.patient_id, TestType
+    ) ct ON pt.patient_id = ct.PatientPK
+    INNER JOIN visit v ON pt.patient_id = v.patient_id AND v.voided = 0
+    LEFT JOIN encounter e ON pt.patient_id = e.patient_id AND e.encounter_type IN (44,45,46,47,48,49,53)
+    INNER JOIN (
+         SELECT
+                   o.person_id,
+                   o.encounter_id,
+                   MAX(IF(o.concept_id=1040, (CASE o.value_coded WHEN 703 THEN ""Positive"" WHEN 664 THEN ""Negative"" WHEN 1304 THEN ""Invalid""  ELSE NULL END),NULL)) AS test_1_result ,
+                   MAX(IF(o.concept_id=1326, (CASE o.value_coded WHEN 703 THEN ""Positive"" WHEN 664 THEN ""Negative"" WHEN 1175 THEN ""N/A""  ELSE NULL END),NULL)) AS test_2_result,
+                   MAX(IF(o.concept_id=8148,(CASE o.value_coded WHEN 8146 THEN ""Determine"" WHEN 8147 THEN ""First Response"" ELSE NULL END),NULL)) AS kit_name1 ,
+                   MAX(IF(o.concept_id=8192,(CASE o.value_coded WHEN 8190 THEN ""Determine"" WHEN 8191 THEN ""First Response"" ELSE NULL END),NULL)) AS kit_name2 ,
+                   MAX(IF(o.concept_id=8153,o.value_text,NULL)) AS lot_no1,
+                   MAX(IF(o.concept_id=8193,o.value_text,NULL)) AS lot_no2,
+                   MAX(IF(o.concept_id=8150,DATE(o.value_datetime),NULL)) AS expiry_date1,
+                   MAX(IF(o.concept_id=8154,DATE(o.value_datetime),NULL)) AS expiry_date2
+         FROM obs o
+         INNER JOIN encounter e ON e.encounter_id = o.encounter_id
+         WHERE o.concept_id IN (1040,1326,8148,8192,8153,8193,8150,8154)
+         GROUP BY e.encounter_id	-- , o.obs_group_id
+    ) t ON ct.EncounterId = t.encounter_id
+    GROUP BY pt.patient_id
+    HAVING TestKitName1 IS NOT NULL OR TestKitName2 IS NOT NULL;"|DWHStage|0|HtsTestKits|2|A6221989-0E85-11E8-BA89-0ED5F89F718B
+4CF5649A-E085-4661-A982-A53B6F320F0B|Hts Client Linkage|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        hc.PatientPK,
+        hc.SiteCode,
+        hc.FacilityName,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        hc.HtsNumber,
+        MAX(IF(o.concept_id=8156,DATE(o.date_created),NULL)) AS DatePrefferedToBeEnrolled,
+        MAX(IF(o.concept_id=8156,o.value_text,NULL)) AS FacilityReferredTo,
+        MAX(IF(o.concept_id=8157,o.value_text,NULL)) AS HandedOverTo,
+        NULL AS HandedOverToCadre,
+        MAX(IF(o.concept_id=8156,o.value_text,NULL)) AS EnrolledFacilityName,
+        MAX(IF(o.concept_id=8156,DATE(o.date_created),NULL)) AS ReferralDate,
+        MAX(IF(o.concept_id=6742,DATE(o.value_datetime),NULL)) AS DateEnrolled,
+        MAX(IF(o.concept_id=6455,o.value_text,NULL)) AS ReportedCCCNumber,
+        NULL AS ReportedStartARTDate
+    FROM patient pt
+    INNER JOIN (
+        SELECT
+            pt.patient_id AS PatientPK,
+            la.`value_reference` AS SiteCode,
+            l.name AS FacilityName,
+            MAX(pi.identifier) AS HtsNumber,
+            DATE(p.birthdate) AS DOB,
+            IF(p.gender = 'M', 'Male',IF(p.gender = 'F','Female',NULL)) AS Gender
+        FROM patient pt
+        LEFT OUTER JOIN encounter e ON pt.patient_id = e.patient_id AND e.voided = 0
+        INNER JOIN patient_identifier `pi` ON pi.patient_id = pt.patient_id AND pi.identifier_type IN (18,1) AND pi.voided=0
+        INNER JOIN person p ON p.person_id = pt.patient_id
+        INNER JOIN location l ON pi.location_id = l.location_id AND l.location_id IN (2,40,265,238,217,215,237,216,42,261,41,258,233,267,44,228,43)
+        INNER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+        GROUP BY pt.patient_id
+        HAVING DOB IS NOT NULL AND Gender IS NOT NULL
+    ) hc ON pt.patient_id = hc.PatientPK
+    LEFT JOIN encounter e ON pt.patient_id = e.patient_id AND e.encounter_type IN (44,45,46,47,48,49,53)
+    LEFT OUTER JOIN obs o ON o.person_id = pt.patient_id AND o.voided=0 AND o.concept_id IN (8157,8156,6742,6455)
+    GROUP BY pt.patient_id
+    HAVING DatePrefferedToBeEnrolled IS NOT NULL;"|DWHStage|0|HtsClientLinkage|3|A6221989-0E85-11E8-BA89-0ED5F89F718B
+D3AB4970-0E03-443F-A3B5-F453692DBECE|Hts Client Tracing|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        hc.FacilityName,
+        hc.SiteCode,
+        hc.PatientPK,
+        hc.HtsNumber,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        MAX(IF(o.concept_id=7563,(CASE o.value_coded WHEN 6230 THEN 'Phone' WHEN 6227 THEN 'Physical' ELSE NULL END),NULL)) AS TracingType,
+        MAX(IF(o.concept_id=7563,(CASE o.value_coded WHEN 6230 THEN DATE(obs_datetime) WHEN 6227 THEN DATE(obs_datetime) ELSE NULL END),NULL)) AS TracingDate,
+        MAX(IF(o.concept_id=7824,(CASE o.value_coded WHEN 1065 THEN ""Contacted and linked"" WHEN 1066 THEN ""Contacted but not linked"" ELSE NULL END),NULL)) AS TracingOutcome
+    FROM patient pt
+    INNER JOIN (
+        SELECT
+            pt.patient_id AS PatientPK,
+            la.`value_reference` AS SiteCode,
+            l.name AS FacilityName,
+            MAX(pi.identifier) AS HtsNumber,
+            DATE(p.birthdate) AS DOB,
+            IF(p.gender = 'M', 'Male',IF(p.gender = 'F','Female',NULL)) AS Gender
+        FROM patient pt
+        LEFT OUTER JOIN encounter e ON pt.patient_id = e.patient_id AND e.voided = 0
+        INNER JOIN patient_identifier `pi` ON pi.patient_id = pt.patient_id AND pi.identifier_type IN (18,1) AND pi.voided=0
+        INNER JOIN person p ON p.person_id = pt.patient_id
+        INNER JOIN location l ON pi.location_id = l.location_id AND l.location_id IN (2,40,265,238,217,215,237,216,42,261,41,258,233,267,44,228,43)
+        INNER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+        GROUP BY pt.patient_id
+        HAVING DOB IS NOT NULL AND Gender IS NOT NULL
+    ) hc ON pt.patient_id = hc.PatientPK
+    LEFT JOIN encounter e ON pt.patient_id = e.patient_id AND e.encounter_type IN (44,45,46,47,48,49,53)
+    LEFT OUTER JOIN obs o ON o.person_id = e.patient_id AND o.concept_id IN (7563,7824)
+    GROUP BY pt.patient_id
+    HAVING TracingType IS NOT NULL;"|DWHStage|0|HtsClientTracing|4|A6221989-0E85-11E8-BA89-0ED5F89F718B
+6620D2F7-B365-4C5B-83D6-C95DAFC5DD47|Hts Partner Notification Services|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        hc.FacilityName,
+        hc.SiteCode,
+        hc.PatientPK,
+        hc.HtsNumber,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        NULL AS PartnerPatientPk,
+        NULL AS PartnerPersonID,
+        NULL AS Age,
+        NULL AS Sex,
+        NULL AS RelationsipToIndexClient,
+        NULL AS ScreenedForIpv,
+        NULL AS IpvScreeningOutcome,
+        NULL AS CurrentlyLivingWithIndexClient,
+        NULL AS KnowledgeOfHivStatus,
+        NULL AS PnsApproach,
+        NULL AS PnsConsent,
+        NULL AS LinkedToCare,
+        NULL AS LinkDateLinkedToCare,
+        NULL AS CccNumber,
+        NULL AS FacilityLinkedTo,
+        NULL AS Dob,
+        NULL AS DateElicited,
+        NULL AS MaritalStatus
+    FROM patient pt
+    INNER JOIN (
+        SELECT
+            pt.patient_id AS PatientPK,
+            la.`value_reference` AS SiteCode,
+            l.name AS FacilityName,
+            MAX(pi.identifier) AS HtsNumber,
+            DATE(p.birthdate) AS DOB,
+            IF(p.gender = 'M', 'Male',IF(p.gender = 'F','Female',NULL)) AS Gender
+        FROM patient pt
+        LEFT OUTER JOIN encounter e ON pt.patient_id = e.patient_id AND e.voided = 0
+        INNER JOIN patient_identifier `pi` ON pi.patient_id = pt.patient_id AND pi.identifier_type IN (18,1) AND pi.voided=0
+        INNER JOIN person p ON p.person_id = pt.patient_id
+        INNER JOIN location l ON pi.location_id = l.location_id AND l.location_id IN (2,40,265,238,217,215,237,216,42,261,41,258,233,267,44,228,43)
+        INNER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+        GROUP BY pt.patient_id
+        HAVING DOB IS NOT NULL AND Gender IS NOT NULL
+    ) hc ON pt.patient_id = hc.PatientPK
+    GROUP BY pt.patient_id
+    HAVING PartnerPatientPk IS NOT NULL;"|DWHStage|0|HtsPartnerNotificationServices|5|A6221989-0E85-11E8-BA89-0ED5F89F718B
+E454753B-2C01-4C4D-AEE1-06B9E44FF26D|Hts Partner Tracing|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        hc.FacilityName,
+        hc.SiteCode,
+        hc.PatientPK,
+        hc.HtsNumber,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        NULL AS TraceType,
+        NULL AS PartnerPersonID,
+        NULL AS TraceDate,
+        NULL AS TraceOutcome,
+        NULL AS BookingDate
+    FROM patient pt
+    INNER JOIN (
+        SELECT
+            pt.patient_id AS PatientPK,
+            la.`value_reference` AS SiteCode,
+            l.name AS FacilityName,
+            MAX(pi.identifier) AS HtsNumber,
+            DATE(p.birthdate) AS DOB,
+            IF(p.gender = 'M', 'Male',IF(p.gender = 'F','Female',NULL)) AS Gender
+        FROM patient pt
+        LEFT OUTER JOIN encounter e ON pt.patient_id = e.patient_id AND e.voided = 0
+        INNER JOIN patient_identifier `pi` ON pi.patient_id = pt.patient_id AND pi.identifier_type IN (18,1) AND pi.voided=0
+        INNER JOIN person p ON p.person_id = pt.patient_id
+        INNER JOIN location l ON pi.location_id = l.location_id AND l.location_id IN (2,40,265,238,217,215,237,216,42,261,41,258,233,267,44,228,43)
+        INNER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+        GROUP BY pt.patient_id
+        HAVING DOB IS NOT NULL AND Gender IS NOT NULL
+    ) hc ON pt.patient_id = hc.PatientPK
+    GROUP BY pt.patient_id
+    HAVING PartnerPersonID IS NOT NULL;"|DWHStage|0|HtsPartnerTracing|6|A6221989-0E85-11E8-BA89-0ED5F89F718B
+2C71EB3C-B4E3-4CE8-BDAE-6265A312C3C1|Hts Client Tests|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+        hc.FacilityName,
+        hc.SiteCode,
+        hc.PatientPK,
+        hc.HtsNumber,
+        'OpenMRS' AS EMR,
+        'UCSF Clinical Kisumu' AS Project,
+        e.encounter_id AS EncounterId,
+        DATE(e.encounter_datetime) AS TestDate,
+        MAX(IF(o.concept_id=7136,(CASE o.value_coded WHEN 1065 THEN ""Yes"" WHEN 1066 THEN ""No"" ELSE NULL END),NULL)) AS EverTestedForHiv,
+        MAX(IF(o.concept_id=7658,(CASE o.value_coded WHEN 7659 THEN 3 WHEN 7660 THEN 12 WHEN 7661 THEN 13 WHEN 1729 THEN NULL END),NULL)) AS MonthsSinceLastTest,
+        MAX(IF(o.concept_id=8138,(CASE o.value_coded WHEN 8137 THEN ""Individual"" WHEN 1756 THEN ""Couple"" ELSE NULL END),NULL)) AS ClientTestedAs,
+        MAX(IF(o.concept_id=8174,(
+           CASE o.value_coded
+               WHEN 1357 THEN ""OPD""
+               WHEN 8170 THEN ""IPD""
+               WHEN 1354 THEN ""VCT""
+               WHEN 8172 THEN ""MCH""
+               WHEN 8175 THEN ""TB Clinic""
+               WHEN 8173 THEN ""PNS""
+               WHEN 7656 THEN ""Family Testing""
+               WHEN 8171 THEN ""VMMC""
+               ELSE NULL
+               END ), NULL))AS EntryPoint,
+        MAX(IF(o.concept_id=8145,(
+          CASE o.value_coded
+              WHEN 8139 THEN ""HP/PITC""
+              WHEN 8140 THEN ""Non Provider Initiated Testing""
+              WHEN 8141 THEN ""Integrated VCT Center""
+              WHEN 8142 THEN ""Stand Alone VCT Center""
+              WHEN 8143 THEN ""Home Based Testing""
+              WHEN 8144 THEN ""Mobile Outreach HTS""
+              WHEN 7629 THEN ""HTS for Non-Patient[NP]""
+          ELSE NULL
+          END ),NULL)) AS TestStrategy,
+        MAX(IF(t.test_1_result IS NOT NULL, t.test_1_result, NULL)) AS TestResult1,
+        MAX(IF(t.test_2_result IS NOT NULL, t.test_2_result, NULL)) AS TestResult2,
+        MAX(IF(o.concept_id=8155,(CASE o.value_coded WHEN 703 THEN ""Positive"" WHEN 664 THEN ""Negative"" WHEN 7864 THEN ""Inconclusive"" ELSE NULL END),NULL)) AS FinalTestResult,
+        MAX(IF(o.concept_id=7936,(CASE o.value_coded WHEN 1065 THEN ""Yes"" WHEN 1066 THEN ""No"" ELSE NULL END),NULL)) AS PatientGivenResult,
+        MAX(IF(o.concept_id=7791,cn.name,NULL)) AS TBScreening,
+        MAX(IF(o.concept_id=7937,(CASE o.value_coded WHEN 1065 THEN ""Yes"" WHEN 1066 THEN ""No"" ELSE NULL END),NULL)) AS ClientSelfTested,
+        MAX(IF(o.concept_id=6096,(CASE o.value_coded WHEN 1065 THEN ""Yes"" WHEN 1066 THEN ""No"" ELSE NULL END),NULL)) AS CoupleDiscordant,
+        IF(e.encounter_type = 46,""Initial"",IF(e.encounter_type = 47,""Repeat"",NULL)) AS TestType,
+        MAX(IF(o.concept_id=8168,(CASE o.value_coded WHEN 1065 THEN ""Yes"" WHEN 1066 THEN ""No"" ELSE """" END),NULL)) AS Consent
+    FROM patient pt
+    INNER JOIN (
+        SELECT
+            pt.patient_id AS PatientPK,
+            la.`value_reference` AS SiteCode,
+            l.name AS FacilityName,
+            MAX(pi.identifier) AS HtsNumber,
+            DATE(p.birthdate) AS DOB,
+            IF(p.gender = 'M', 'Male',IF(p.gender = 'F','Female',NULL)) AS Gender
+        FROM patient pt
+        LEFT OUTER JOIN encounter e ON pt.patient_id = e.patient_id AND e.voided = 0
+        INNER JOIN patient_identifier `pi` ON pi.patient_id = pt.patient_id AND pi.identifier_type IN (18,1) AND pi.voided=0
+        INNER JOIN person p ON p.person_id = pt.patient_id
+        INNER JOIN location l ON pi.location_id = l.location_id AND l.location_id IN (2,40,265,238,217,215,237,216,42,261,41,258,233,267,44,228,43)
+        INNER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
+        GROUP BY pt.patient_id
+        HAVING DOB IS NOT NULL AND Gender IS NOT NULL
+    ) hc ON pt.patient_id = hc.PatientPK AND SiteCode = hc.SiteCode
+    INNER JOIN visit v ON pt.patient_id = v.patient_id AND v.voided = 0
+    LEFT JOIN encounter e ON pt.patient_id = e.patient_id AND e.encounter_type IN (46,47)
+    JOIN person p ON p.person_id = pt.patient_id
+    INNER JOIN (
+         SELECT
+                   o.person_id,
+                   o.encounter_id,
+                   o.obs_group_id,
+                   MAX(IF(o.concept_id=1040, (CASE o.value_coded WHEN 703 THEN ""Positive"" WHEN 664 THEN ""Negative"" WHEN 1304 THEN ""Invalid""  ELSE NULL END),NULL)) AS test_1_result ,
+                   MAX(IF(o.concept_id=1326, (CASE o.value_coded WHEN 703 THEN ""Positive"" WHEN 664 THEN ""Negative"" WHEN 1175 THEN ""N/A""  ELSE NULL END),NULL)) AS test_2_result
+         FROM obs o
+         INNER JOIN encounter e ON e.encounter_id = o.encounter_id
+         WHERE o.concept_id IN (1040, 1326)
+         GROUP BY e.encounter_id, o.obs_group_id
+    ) t ON e.encounter_id = t.encounter_id
+    LEFT OUTER JOIN obs o ON o.person_id = pt.patient_id AND o.voided=0 AND o.concept_id IN (7136,7658,8138,8174,8145,8155,7936,7937,6096,8168,7791)
+    INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
+    GROUP BY pt.patient_id, TestType;"|DWHStage|0|HtsClientTests|7|A6221989-0E85-11E8-BA89-0ED5F89F718B
+BAB42EA7-E672-4C1B-A1B3-F2160DE40845|Master Patient Index|CBS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"select null"|MPI|1|MasterPatientIndex|1|A6221989-0E85-11E8-BA89-0ED5F89F718B
+
+b629ab26-3055-11ea-978f-2e728ce98131|Migration|MGS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT ID as MetricId,Dataset,Metric,MetricValue,SiteCode,Emr,FacilityName,'KenyaHMIS' as Project,CreateDate FROM DWAPI_Migration_Metrics"|MgsStage|1|MetricMigrationExtract|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
+b629ab27-3055-11ea-978f-2e728ce98132|Migration|MGS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT ID as MetricId,Dataset,Metric,MetricValue,SiteCode,Emr,FacilityName,'KenyaHMIS' as Project,CreateDate FROM DWAPI_Migration_Metrics"|MgsStage|1|MetricMigrationExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b

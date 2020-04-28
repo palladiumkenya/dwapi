@@ -1,0 +1,55 @@
+<div>
+    <p-dataTable [value]="urls" dataKey="id">
+        <p-column field="url" header="Base URL"></p-column>
+        <p-column header="Action">
+            <ng-template let-activeUrl="rowData" pTemplate="body">
+                <button pButton icon="ui-icon-edit" class="teal-btn" (click)="editUrl(activeUrl)"></button>
+            </ng-template>
+        </p-column>
+    </p-dataTable>
+</div>
+<br>
+
+
+<button type="button" [disabled]="true" label="Add" icon="ui-icon-add" pButton (click)="newUrl()"></button>
+<p-dialog header="Rest API Base Url" [(visible)]="displayDialog" width="400px" [responsive]="true" showEffect="fade" [modal]="true" [responsive]="true">
+    <form #dbForm="ngForm" novalidate>
+        <div class="ui-grid ui-grid-responsive ui-fluid">
+            <p-messages [(value)]="messages"></p-messages>
+            <input type="hidden" name="id" [(ngModel)]="dbDialog.id"/>
+            <div class="ui-g ui-g-12 ui-g-nopad">
+                <div class="ui-g-12 ui-md-3 ui-label">
+                    <label for="url">Url</label>
+                </div>
+                <div class="ui-g-12 ui-md-9">
+                    <input pInputText id="url" name="url" required
+                           [(ngModel)]="dbDialog.url" />
+                </div>
+                <div class="ui-g-12 ui-md-3 ui-label">
+                    <label for="url">User</label>
+                </div>
+                <div class="ui-g-12 ui-md-9">
+                    <input pInputText id="userName" name="userName"
+                           [(ngModel)]="dbDialog.userName" />
+                </div>
+                <div class="ui-g-12 ui-md-3 ui-label">
+                    <label for="url">Password</label>
+                </div>
+                <div class="ui-g-12 ui-md-9">
+                    <input pInputText id="password" name="password" type="password"
+                           [(ngModel)]="dbDialog.password" />
+                </div>
+            </div>
+            <div class="ui-g-12 ui-lg-12">
+                <div class="ui-g-12 ui-md-3">
+                    <button pButton type="submit" (click)="saveProtocol()" label="Save" pButton
+                            icon="ui-icon-save" [disabled]="!dbForm.form.valid"></button>
+                </div>
+                <div class="ui-g-12 ui-md-3">
+                    <button pButton type="submit" (click)="verfiyProtocol()" label="Verify" pButton
+                            icon="ui-icon-check" [disabled]="true"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</p-dialog>

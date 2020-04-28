@@ -1,0 +1,20 @@
+<div class="ui-g">
+    <div class="ui-g-12">
+        <p-tabView orientation="top" (onChange)="onChange($event)" [activeIndex]="selectedIndex">
+            <p-tabPanel [header]="item.display" *ngFor="let item of extracts; let i = index" [selected]="i == 0">
+                <p-tabView>
+                    <p-tabPanel [header]="item.display + ' Records'">
+                        <liveapp-mgs-valid [extract]="extractName"></liveapp-mgs-valid>
+                    </p-tabPanel>
+                    <p-tabPanel [header]="item.display + ' Validation Summary'">
+                        <liveapp-mgs-invalid [extract]="extractName"></liveapp-mgs-invalid>
+                    </p-tabPanel>
+                    <p-tabPanel [header]="item.display + ' Send Summary'">
+
+                    </p-tabPanel>
+                </p-tabView>
+            </p-tabPanel>
+        </p-tabView>
+        <p-messages [(value)]="errorMessage"></p-messages>
+    </div>
+</div>

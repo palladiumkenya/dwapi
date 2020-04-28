@@ -1,0 +1,28 @@
+<p-table #dt [value]="validExtracts" autoLayout="true" resizableColumns="true" columnResizeMode="expand"
+         [totalRecords]="recordCount"
+         [rowsPerPageOptions]="[20,50,100,500]"
+         [lazy]="true"
+         [paginator]="true"
+         [rows]="initialRows"
+         [loading]="loadingData"
+         (onLazyLoad)="pageView($event)">
+    <ng-template pTemplate="caption">
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-valid>
+        <tr>
+            <td *ngFor="let col of cols">
+                {{valid[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+<p-messages [(value)]="errorMessage"></p-messages>
+<p-growl [(value)]="otherMessage"></p-growl>

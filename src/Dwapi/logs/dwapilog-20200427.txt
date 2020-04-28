@@ -1,0 +1,173 @@
+2020-04-27 21:10:02.320 +03:00 [Error] Error Reading metrics
+System.Net.Http.HttpRequestException: Connection refused ---> System.Net.Sockets.SocketException: Connection refused
+   at System.Net.Http.ConnectHelper.ConnectAsync(String host, Int32 port, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.ConnectHelper.ConnectAsync(String host, Int32 port, CancellationToken cancellationToken)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.CreateConnectionAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.WaitForCreatedConnectionAsync(ValueTask`1 creationTask)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.SendWithRetryAsync(HttpRequestMessage request, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.FinishSendAsyncBuffered(Task`1 sendTask, HttpRequestMessage request, CancellationTokenSource cts, Boolean disposeCts)
+   at Dwapi.ExtractsManagement.Core.Services.EmrMetricsService.Read(AuthProtocol authProtocol, String url) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi.ExtractsManagement.Core/Services/EmrMetricsService.cs:line 51
+2020-04-27 21:10:02.457 +03:00 [Error] Error loading EmrMetric
+2020-04-27 21:10:02.468 +03:00 [Error] System.Exception: could not load EMR metrics
+   at Dwapi.Controller.EmrManagerController.LoadMetric(EmrSystem entity) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi/Controller/EmrManagerController.cs:line 326
+2020-04-27 21:10:05.067 +03:00 [Error] Error Reading metrics
+System.Net.Http.HttpRequestException: Connection refused ---> System.Net.Sockets.SocketException: Connection refused
+   at System.Net.Http.ConnectHelper.ConnectAsync(String host, Int32 port, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.ConnectHelper.ConnectAsync(String host, Int32 port, CancellationToken cancellationToken)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.CreateConnectionAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.WaitForCreatedConnectionAsync(ValueTask`1 creationTask)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.SendWithRetryAsync(HttpRequestMessage request, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.FinishSendAsyncBuffered(Task`1 sendTask, HttpRequestMessage request, CancellationTokenSource cts, Boolean disposeCts)
+   at Dwapi.ExtractsManagement.Core.Services.EmrMetricsService.Read(AuthProtocol authProtocol, String url) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi.ExtractsManagement.Core/Services/EmrMetricsService.cs:line 51
+2020-04-27 21:10:05.069 +03:00 [Error] Error loading EmrMetric
+2020-04-27 21:10:05.069 +03:00 [Error] System.Exception: could not load EMR metrics
+   at Dwapi.Controller.EmrManagerController.LoadMetric(EmrSystem entity) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi/Controller/EmrManagerController.cs:line 326
+2020-04-27 21:10:05.216 +03:00 [Error] Failed executing DbCommand ("18"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT [v].[Id], [v].[CreateDate], [v].[Dataset], [v].[DateGenerated], [v].[Extract], [v].[FacilityName], [v].[Field], [v].[Metric], [v].[MetricId], [v].[MetricValue], [v].[RecordId], [v].[SiteCode], [v].[Summary], [v].[Type]
+FROM [vTempMetricMigrationExtractErrorSummary] AS [v]"
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'CreateDate'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.ExecuteReader()
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.Execute(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues)
+ClientConnectionId:d0bb9a54-04c8-46c3-9c19-3bf81d7d3b1f
+Error Number:207,State:1,Class:16
+2020-04-27 21:10:05.242 +03:00 [Error] Error loading Migrations error summary
+2020-04-27 21:10:05.245 +03:00 [Error] System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'CreateDate'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.ExecuteReader()
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.Execute(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues)
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteReader(IRelationalConnection connection, IReadOnlyDictionary`2 parameterValues)
+   at Microsoft.EntityFrameworkCore.Query.QueryMethodProvider._FastQuery[TEntity](RelationalQueryContext relationalQueryContext, ShaperCommandContext shaperCommandContext, Func`3 materializer, Type contextType, IDiagnosticsLogger`1 logger)+MoveNext()
+   at System.Collections.Generic.List`1.AddEnumerable(IEnumerable`1 enumerable)
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Dwapi.Controller.MgsSummaryController.LoadClientValidations() in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi/Controller/MgsSummaryController.cs:line 69
+ClientConnectionId:d0bb9a54-04c8-46c3-9c19-3bf81d7d3b1f
+Error Number:207,State:1,Class:16
+2020-04-27 21:10:54.033 +03:00 [Error] Error Reading metrics
+System.Net.Http.HttpRequestException: Connection refused ---> System.Net.Sockets.SocketException: Connection refused
+   at System.Net.Http.ConnectHelper.ConnectAsync(String host, Int32 port, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.ConnectHelper.ConnectAsync(String host, Int32 port, CancellationToken cancellationToken)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.CreateConnectionAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.WaitForCreatedConnectionAsync(ValueTask`1 creationTask)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.SendWithRetryAsync(HttpRequestMessage request, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.FinishSendAsyncBuffered(Task`1 sendTask, HttpRequestMessage request, CancellationTokenSource cts, Boolean disposeCts)
+   at Dwapi.ExtractsManagement.Core.Services.EmrMetricsService.Read(AuthProtocol authProtocol, String url) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi.ExtractsManagement.Core/Services/EmrMetricsService.cs:line 51
+2020-04-27 21:10:54.040 +03:00 [Error] Error loading EmrMetric
+2020-04-27 21:10:54.040 +03:00 [Error] System.Exception: could not load EMR metrics
+   at Dwapi.Controller.EmrManagerController.LoadMetric(EmrSystem entity) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi/Controller/EmrManagerController.cs:line 326
+2020-04-27 21:10:56.988 +03:00 [Error] Error Reading metrics
+System.Net.Http.HttpRequestException: Connection refused ---> System.Net.Sockets.SocketException: Connection refused
+   at System.Net.Http.ConnectHelper.ConnectAsync(String host, Int32 port, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.ConnectHelper.ConnectAsync(String host, Int32 port, CancellationToken cancellationToken)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.CreateConnectionAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.WaitForCreatedConnectionAsync(ValueTask`1 creationTask)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.SendWithRetryAsync(HttpRequestMessage request, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.FinishSendAsyncBuffered(Task`1 sendTask, HttpRequestMessage request, CancellationTokenSource cts, Boolean disposeCts)
+   at Dwapi.ExtractsManagement.Core.Services.EmrMetricsService.Read(AuthProtocol authProtocol, String url) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi.ExtractsManagement.Core/Services/EmrMetricsService.cs:line 51
+2020-04-27 21:10:56.990 +03:00 [Error] Error loading EmrMetric
+2020-04-27 21:10:56.991 +03:00 [Error] System.Exception: could not load EMR metrics
+   at Dwapi.Controller.EmrManagerController.LoadMetric(EmrSystem entity) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi/Controller/EmrManagerController.cs:line 326
+2020-04-27 21:10:57.106 +03:00 [Error] Failed executing DbCommand ("5"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT [v].[Id], [v].[CreateDate], [v].[Dataset], [v].[DateGenerated], [v].[Extract], [v].[FacilityName], [v].[Field], [v].[Metric], [v].[MetricId], [v].[MetricValue], [v].[RecordId], [v].[SiteCode], [v].[Summary], [v].[Type]
+FROM [vTempMetricMigrationExtractErrorSummary] AS [v]"
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'CreateDate'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.ExecuteReader()
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.Execute(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues)
+ClientConnectionId:98fa9c6d-10bc-45a9-becc-cb1a91123345
+Error Number:207,State:1,Class:16
+2020-04-27 21:10:57.108 +03:00 [Error] Error loading Migrations error summary
+2020-04-27 21:10:57.109 +03:00 [Error] System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'CreateDate'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.ExecuteReader()
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.Execute(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues)
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteReader(IRelationalConnection connection, IReadOnlyDictionary`2 parameterValues)
+   at Microsoft.EntityFrameworkCore.Query.QueryMethodProvider._FastQuery[TEntity](RelationalQueryContext relationalQueryContext, ShaperCommandContext shaperCommandContext, Func`3 materializer, Type contextType, IDiagnosticsLogger`1 logger)+MoveNext()
+   at System.Collections.Generic.List`1.AddEnumerable(IEnumerable`1 enumerable)
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Dwapi.Controller.MgsSummaryController.LoadClientValidations() in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi/Controller/MgsSummaryController.cs:line 69
+ClientConnectionId:98fa9c6d-10bc-45a9-becc-cb1a91123345
+Error Number:207,State:1,Class:16
+2020-04-27 21:23:03.266 +03:00 [Error] System.Exception: ERROR_004: The support & upgrades period is expired. The license is perpetual (work forever), but you can only use versions released before '2020-03-07'. You can contact our support team to get a renewal discount at info@zzzprojects.com or purchase a new license on our website https://dapper-plus.net. License Name: '1755;700-ThePalladiumGroup';License Key: '2073303b-0cfc-fbb9-d45f-1723bb282a3c';ExpirationDate: '2020-03-07'
+   at Dwapi.Startup.Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi/Startup.cs:line 596
+2020-04-27 21:23:03.301 +03:00 [Fatal] Application startup exception
+System.Exception: ERROR_004: The support & upgrades period is expired. The license is perpetual (work forever), but you can only use versions released before '2020-03-07'. You can contact our support team to get a renewal discount at info@zzzprojects.com or purchase a new license on our website https://dapper-plus.net. License Name: '1755;700-ThePalladiumGroup';License Key: '2073303b-0cfc-fbb9-d45f-1723bb282a3c';ExpirationDate: '2020-03-07'
+   at Dwapi.Startup.Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi/Startup.cs:line 596
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.Internal.AutoRequestServicesStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+2020-04-27 21:23:03.311 +03:00 [Fatal] Host terminated unexpectedly
+System.Exception: ERROR_004: The support & upgrades period is expired. The license is perpetual (work forever), but you can only use versions released before '2020-03-07'. You can contact our support team to get a renewal discount at info@zzzprojects.com or purchase a new license on our website https://dapper-plus.net. License Name: '1755;700-ThePalladiumGroup';License Key: '2073303b-0cfc-fbb9-d45f-1723bb282a3c';ExpirationDate: '2020-03-07'
+   at Dwapi.Startup.Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi/Startup.cs:line 596
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.Internal.AutoRequestServicesStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+   at Microsoft.AspNetCore.Hosting.Internal.WebHost.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.WebHostExtensions.RunAsync(IWebHost host, CancellationToken token, String shutdownMessage)
+   at Microsoft.AspNetCore.Hosting.WebHostExtensions.RunAsync(IWebHost host, CancellationToken token)
+   at Microsoft.AspNetCore.Hosting.WebHostExtensions.Run(IWebHost host)
+   at Dwapi.Program.Main(String[] args) in /Users/koskedk/Projects/hmis/dwh/dwapi/client/Dwapi/Program.cs:line 26

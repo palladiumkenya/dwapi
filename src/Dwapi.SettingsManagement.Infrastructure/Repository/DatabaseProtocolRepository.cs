@@ -1,0 +1,14 @@
+﻿using System;
+using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
+using Dwapi.SettingsManagement.Core.Model;
+using Dwapi.SharedKernel.Infrastructure.Repository;
+
+namespace Dwapi.SettingsManagement.Infrastructure.Repository
+{
+    public class DatabaseProtocolRepository : BaseRepository<DatabaseProtocol, Guid>, IDatabaseProtocolRepository
+    {
+        public DatabaseProtocolRepository(SettingsContext context) : base(context)
+        {
+        }
+    }
+}

@@ -1,0 +1,92 @@
+<div class="ui-g">
+    <div class="ui-g-4">
+        <div class="card">
+            <h1>EMR Settings</h1>
+            <p-messages [(value)]="messages"></p-messages>
+            <div class="content-section implementation">
+                <p-dataTable [value]="emrs" selectionMode="single" [(selection)]="selectedEmr" dataKey="id"
+                             (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
+                    <p-header>EMR Systems</p-header>
+                    <p-footer>showing {{recordCount}} EMR(s)</p-footer>
+                    <p-column field="name" header="Name">
+                        <ng-template let-col let-emr="rowData" pTemplate="body">
+                            <span [style.color]="emr['isDefault']?'red':'black'" [style.font-weight]="emr['isDefault']?'bold':'normal'">{{emr[col.field]}}</span>
+                        </ng-template>
+
+                    </p-column>
+                    <p-column styleClass="col-button" header="Actions ">
+                        <ng-template let-emr="rowData" pTemplate="body">
+                            <p-splitButton (onDropdownClick)="selectEmr(emr)" label="Actions" icon="ui-icon-settings"  [model]="items"></p-splitButton>
+                        </ng-template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+            <br>
+            <button type="button" label="Add" icon="ui-icon-add" pButton (click)="newEmr()"></button>
+        </div>
+    </div>
+    <div class="ui-g-8">
+        <div class="card">
+            <h1>{{protocolTitle}}</h1>
+            <p-tabView>
+                <p-tabPanel header="Database" leftIcon="ui-icon-blur-linear">
+                    <div *ngIf="selectedEmr">
+                        <liveapp-db-protocol [selectedEmr]="selectedEmr"></liveapp-db-protocol>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="REST Endpoints" leftIcon="ui-icon-rss-feed">
+                    <div *ngIf="selectedEmr">
+                        <liveapp-rest-protocol [selectedEmr]="selectedEmr"></liveapp-rest-protocol>
+                    </div>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+        <div class="card">
+            <h1>{{docketTitle}}</h1>
+            <liveapp-emr-docket [selectedEmr]="selectedEmr"></liveapp-emr-docket>
+        </div>
+        <div class="card">
+            <h1>{{resourceTitle}}</h1>
+            <liveapp-rest-resource [selectedEmr]="selectedEmr"></liveapp-rest-resource>
+        </div>
+    </div>
+</div>
+<p-dialog header="EMR" [(visible)]="displayDialog" width="400px"
+          [responsive]="true" showEffect="fade" [modal]="true" [responsive]="true">
+    <form #emrForm="ngForm" novalidate>
+        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="emrDialog">
+            <p-messages [(value)]="messages"></p-messages>
+            <div class="ui-g ui-g-12 ui-g-nopad">
+                <div class="ui-g-12 ui-md-3 ui-label">
+                    <label for="name">Name</label>
+                </div>
+                <div class="ui-g-12 ui-md-9">
+                    <input pInputText id="name" name="name" required
+                           [(ngModel)]="emrDialog.name"/>
+                </div>
+            </div>
+            <div class="ui-g ui-g-12 ui-g-nopad">
+                <div class="ui-g-12 ui-md-3 ui-label">
+                    <label for="description">Version</label>
+                </div>
+                <div class="ui-g-12 ui-md-9">
+              <textarea pInputTextarea id="description" name="description" required
+                        [(ngModel)]="emrDialog.version"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="submit" pButton icon="ui-icon-save" (click)="saveRecord()"
+                    label="Save" [disabled]="!emrForm.form.valid"></button>
+        </div>
+    </p-footer>
+</p-dialog>
+<p-confirmDialog #cd>
+    <p-footer>
+        <button type="button" pButton icon="fa-check" label="Yes" (click)="cd.accept()"
+                class="ui-button-danger"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+    </p-footer>
+</p-confirmDialog>
