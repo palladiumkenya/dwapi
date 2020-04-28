@@ -13,19 +13,13 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader.Dwh
     public class DwhExtractReaderTests
     {
         private IDwhExtractReader _reader;
-        private Guid _pid;
-
-        [OneTimeSetUp]
-        public void Init()
-        {
-            var context= TestInitializer.ServiceProvider.GetService<UploadContext>();
-            _pid = context.ClientPatientExtracts.AsNoTracking().First().Id;
-        }
+        private UploadContext _context;
 
         [SetUp]
         public void SetUp()
         {
             _reader =TestInitializer.ServiceProvider.GetService<IDwhExtractReader>();
+            _context= TestInitializer.ServiceProvider.GetService<UploadContext>();
         }
 
         [Test]
@@ -45,9 +39,9 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader.Dwh
         [Test]
         public void should_Read_By_Ids()
         {
-            var extractViews = _reader.Read(_pid);
+            var pid = _context.ClientPatientExtracts.AsNoTracking().First().Id;
+            var extractViews = _reader.Read(pid);
             Assert.NotNull(extractViews);
-            Assert.True(extractViews.PatientArtExtracts.Any());
         }
 
         [Test]
