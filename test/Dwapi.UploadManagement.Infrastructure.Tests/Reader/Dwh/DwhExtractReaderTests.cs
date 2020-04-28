@@ -42,7 +42,6 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader.Dwh
             var pid = _context.ClientPatientExtracts.AsNoTracking().First().Id;
             var extractViews = _reader.Read(pid);
             Assert.NotNull(extractViews);
-            Assert.True(extractViews.PatientVisitExtracts.Any());
         }
 
         [Test]
