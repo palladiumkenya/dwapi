@@ -1,7 +1,9 @@
-#DWAPI
+DWAPI
 -------
 ![.NET Core](https://github.com/koskedk/dwapi/workflows/.NET%20Core/badge.svg?branch=master)
 
+
+# Running DWAPI with docker
 
 1) Download docker
 --------------
