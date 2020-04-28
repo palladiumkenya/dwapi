@@ -5,55 +5,61 @@ VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedKernel", "SharedKernel", "{8C9435BC-8B9C-4558-9AD5-B778C92F734C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SharedKernel", "Dwapi.SharedKernel\Dwapi.SharedKernel.csproj", "{3BE84E40-8AD3-4B83-B36C-490E533ADE99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SharedKernel", "src\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj", "{3BE84E40-8AD3-4B83-B36C-490E533ADE99}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SettingsManagement", "SettingsManagement", "{E6AA4090-73F4-4790-8D7C-4184B81F11B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.Core", "Dwapi.SettingsManagement.Core\Dwapi.SettingsManagement.Core.csproj", "{657E0C9F-2FD5-4B68-BC00-35AA22FCDD8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.Core", "src\Dwapi.SettingsManagement.Core\Dwapi.SettingsManagement.Core.csproj", "{657E0C9F-2FD5-4B68-BC00-35AA22FCDD8D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SharedKernel.Tests", "Dwapi.SharedKernel.Tests\Dwapi.SharedKernel.Tests.csproj", "{6DE67B9A-C8D3-4D85-BBC5-3913EBE93FAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SharedKernel.Tests", "test\Dwapi.SharedKernel.Tests\Dwapi.SharedKernel.Tests.csproj", "{6DE67B9A-C8D3-4D85-BBC5-3913EBE93FAB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.Core.Tests", "Dwapi.SettingsManagement.Core.Tests\Dwapi.SettingsManagement.Core.Tests.csproj", "{73594812-402D-498C-925E-6CE496FDF173}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.Core.Tests", "test\Dwapi.SettingsManagement.Core.Tests\Dwapi.SettingsManagement.Core.Tests.csproj", "{73594812-402D-498C-925E-6CE496FDF173}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SharedKernel.Infrastructure", "Dwapi.SharedKernel.Infrastructure\Dwapi.SharedKernel.Infrastructure.csproj", "{1314ACBA-24AE-4817-8220-F27879B93EAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SharedKernel.Infrastructure", "src\Dwapi.SharedKernel.Infrastructure\Dwapi.SharedKernel.Infrastructure.csproj", "{1314ACBA-24AE-4817-8220-F27879B93EAF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SharedKernel.Infrastructure.Tests", "Dwapi.SharedKernel.Infrastructure.Tests\Dwapi.SharedKernel.Infrastructure.Tests.csproj", "{706D6419-6E37-4B18-B3F3-9317DB7C4988}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SharedKernel.Infrastructure.Tests", "test\Dwapi.SharedKernel.Infrastructure.Tests\Dwapi.SharedKernel.Infrastructure.Tests.csproj", "{706D6419-6E37-4B18-B3F3-9317DB7C4988}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi", "Dwapi\Dwapi.csproj", "{B05B6084-EAD2-4A80-9BA7-EFE1EFB3CCF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi", "src\Dwapi\Dwapi.csproj", "{B05B6084-EAD2-4A80-9BA7-EFE1EFB3CCF0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{CE1B29DE-9CA2-46CA-A7ED-86A31577E3E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.Infrastructure", "src\Dwapi.SettingsManagement.Infrastructure\Dwapi.SettingsManagement.Infrastructure.csproj", "{4C9B459E-EB24-42B3-BDAD-ECE0E31482EA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.Infrastructure", "Dwapi.SettingsManagement.Infrastructure\Dwapi.SettingsManagement.Infrastructure.csproj", "{4C9B459E-EB24-42B3-BDAD-ECE0E31482EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.Infrastructure.Tests", "test\Dwapi.SettingsManagement.Infrastructure.Tests\Dwapi.SettingsManagement.Infrastructure.Tests.csproj", "{EE0FA3F7-F571-44CF-B662-E1133CA1B947}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.SettingsManagement.Infrastructure.Tests", "Dwapi.SettingsManagement.Infrastructure.Tests\Dwapi.SettingsManagement.Infrastructure.Tests.csproj", "{EE0FA3F7-F571-44CF-B662-E1133CA1B947}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.Tests", "Dwapi.Tests\Dwapi.Tests.csproj", "{984EF8AC-7A8F-4021-B071-0D9573ED0A74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.Tests", "test\Dwapi.Tests\Dwapi.Tests.csproj", "{984EF8AC-7A8F-4021-B071-0D9573ED0A74}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExtractsManagement", "ExtractsManagement", "{F3891226-78C8-4D3D-B618-3F357AC464AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Core", "Dwapi.ExtractsManagement.Core\Dwapi.ExtractsManagement.Core.csproj", "{F7891A41-C863-4072-B048-CE6EA693CA32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Core", "src\Dwapi.ExtractsManagement.Core\Dwapi.ExtractsManagement.Core.csproj", "{F7891A41-C863-4072-B048-CE6EA693CA32}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Core.Tests", "Dwapi.ExtractsManagement.Core.Tests\Dwapi.ExtractsManagement.Core.Tests.csproj", "{05A115C7-AB3A-47AF-8391-81F4D2751370}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Core.Tests", "test\Dwapi.ExtractsManagement.Core.Tests\Dwapi.ExtractsManagement.Core.Tests.csproj", "{05A115C7-AB3A-47AF-8391-81F4D2751370}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{608002F3-8E7B-417B-BFC5-B8B472A5961E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Infrastructure", "src\Dwapi.ExtractsManagement.Infrastructure\Dwapi.ExtractsManagement.Infrastructure.csproj", "{D0A5473D-1098-447A-B80F-FFD54D6613A3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Infrastructure", "Dwapi.ExtractsManagement.Infrastructure\Dwapi.ExtractsManagement.Infrastructure.csproj", "{D0A5473D-1098-447A-B80F-FFD54D6613A3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Infrastructure.Tests", "Dwapi.ExtractsManagement.Infrastructure.Tests\Dwapi.ExtractsManagement.Infrastructure.Tests.csproj", "{08BBF52F-6D22-43C0-8EDD-24B553E4F79C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.ExtractsManagement.Infrastructure.Tests", "test\Dwapi.ExtractsManagement.Infrastructure.Tests\Dwapi.ExtractsManagement.Infrastructure.Tests.csproj", "{08BBF52F-6D22-43C0-8EDD-24B553E4F79C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UploadManagement", "UploadManagement", "{A5FF5E21-9524-4ADD-91E5-66C61FCA2767}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.UploadManagement.Core", "Dwapi.UploadManagement.Core\Dwapi.UploadManagement.Core.csproj", "{C8481F4C-40C6-4C02-8A44-AC448D92653C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.UploadManagement.Core", "src\Dwapi.UploadManagement.Core\Dwapi.UploadManagement.Core.csproj", "{C8481F4C-40C6-4C02-8A44-AC448D92653C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.UploadManagement.Core.Tests", "Dwapi.UploadManagement.Core.Tests\Dwapi.UploadManagement.Core.Tests.csproj", "{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.UploadManagement.Core.Tests", "test\Dwapi.UploadManagement.Core.Tests\Dwapi.UploadManagement.Core.Tests.csproj", "{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{22D13270-C933-4FA4-82FB-67DA5A21E983}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.UploadManagement.Infrastructure", "src\Dwapi.UploadManagement.Infrastructure\Dwapi.UploadManagement.Infrastructure.csproj", "{49364D41-74F2-4F12-A6D6-C1B0D5E79A4A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.UploadManagement.Infrastructure", "Dwapi.UploadManagement.Infrastructure\Dwapi.UploadManagement.Infrastructure.csproj", "{49364D41-74F2-4F12-A6D6-C1B0D5E79A4A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.UploadManagement.Infrastructure.Tests", "Dwapi.UploadManagement.Infrastructure.Tests\Dwapi.UploadManagement.Infrastructure.Tests.csproj", "{4D5D39C0-F510-4CC7-88E4-F3C0FCD77BAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.UploadManagement.Infrastructure.Tests", "test\Dwapi.UploadManagement.Infrastructure.Tests\Dwapi.UploadManagement.Infrastructure.Tests.csproj", "{4D5D39C0-F510-4CC7-88E4-F3C0FCD77BAE}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{16047A4A-1299-420C-AE12-688A23F026B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EA314005-C21E-4724-9AC2-E66B8556C433}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6AD79AFC-A97F-495A-9A48-4FAB0145330A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExtractsManagement", "ExtractsManagement", "{A41252FC-B70B-4E97-BA2A-746DE737A8F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SettingsManagement", "SettingsManagement", "{1310E588-AA76-4660-8B2A-A077585FE98C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UploadManagement", "UploadManagement", "{BDDF3DCF-556D-4851-BC1B-975E3FDE3C10}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedKernel", "SharedKernel", "{E62E15E1-3C59-4F9A-98C1-20E48945A61C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -144,23 +150,30 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3BE84E40-8AD3-4B83-B36C-490E533ADE99} = {8C9435BC-8B9C-4558-9AD5-B778C92F734C}
 		{657E0C9F-2FD5-4B68-BC00-35AA22FCDD8D} = {E6AA4090-73F4-4790-8D7C-4184B81F11B3}
-		{6DE67B9A-C8D3-4D85-BBC5-3913EBE93FAB} = {8C9435BC-8B9C-4558-9AD5-B778C92F734C}
-		{73594812-402D-498C-925E-6CE496FDF173} = {E6AA4090-73F4-4790-8D7C-4184B81F11B3}
 		{1314ACBA-24AE-4817-8220-F27879B93EAF} = {8C9435BC-8B9C-4558-9AD5-B778C92F734C}
-		{706D6419-6E37-4B18-B3F3-9317DB7C4988} = {8C9435BC-8B9C-4558-9AD5-B778C92F734C}
-		{CE1B29DE-9CA2-46CA-A7ED-86A31577E3E9} = {E6AA4090-73F4-4790-8D7C-4184B81F11B3}
-		{4C9B459E-EB24-42B3-BDAD-ECE0E31482EA} = {CE1B29DE-9CA2-46CA-A7ED-86A31577E3E9}
-		{EE0FA3F7-F571-44CF-B662-E1133CA1B947} = {CE1B29DE-9CA2-46CA-A7ED-86A31577E3E9}
 		{F7891A41-C863-4072-B048-CE6EA693CA32} = {F3891226-78C8-4D3D-B618-3F357AC464AE}
-		{05A115C7-AB3A-47AF-8391-81F4D2751370} = {F3891226-78C8-4D3D-B618-3F357AC464AE}
-		{608002F3-8E7B-417B-BFC5-B8B472A5961E} = {F3891226-78C8-4D3D-B618-3F357AC464AE}
-		{D0A5473D-1098-447A-B80F-FFD54D6613A3} = {608002F3-8E7B-417B-BFC5-B8B472A5961E}
-		{08BBF52F-6D22-43C0-8EDD-24B553E4F79C} = {608002F3-8E7B-417B-BFC5-B8B472A5961E}
 		{C8481F4C-40C6-4C02-8A44-AC448D92653C} = {A5FF5E21-9524-4ADD-91E5-66C61FCA2767}
-		{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21} = {A5FF5E21-9524-4ADD-91E5-66C61FCA2767}
-		{22D13270-C933-4FA4-82FB-67DA5A21E983} = {A5FF5E21-9524-4ADD-91E5-66C61FCA2767}
-		{49364D41-74F2-4F12-A6D6-C1B0D5E79A4A} = {22D13270-C933-4FA4-82FB-67DA5A21E983}
-		{4D5D39C0-F510-4CC7-88E4-F3C0FCD77BAE} = {22D13270-C933-4FA4-82FB-67DA5A21E983}
+		{49364D41-74F2-4F12-A6D6-C1B0D5E79A4A} = {A5FF5E21-9524-4ADD-91E5-66C61FCA2767}
+		{8C9435BC-8B9C-4558-9AD5-B778C92F734C} = {EA314005-C21E-4724-9AC2-E66B8556C433}
+		{4C9B459E-EB24-42B3-BDAD-ECE0E31482EA} = {E6AA4090-73F4-4790-8D7C-4184B81F11B3}
+		{D0A5473D-1098-447A-B80F-FFD54D6613A3} = {F3891226-78C8-4D3D-B618-3F357AC464AE}
+		{A5FF5E21-9524-4ADD-91E5-66C61FCA2767} = {EA314005-C21E-4724-9AC2-E66B8556C433}
+		{E6AA4090-73F4-4790-8D7C-4184B81F11B3} = {EA314005-C21E-4724-9AC2-E66B8556C433}
+		{F3891226-78C8-4D3D-B618-3F357AC464AE} = {EA314005-C21E-4724-9AC2-E66B8556C433}
+		{A41252FC-B70B-4E97-BA2A-746DE737A8F3} = {6AD79AFC-A97F-495A-9A48-4FAB0145330A}
+		{05A115C7-AB3A-47AF-8391-81F4D2751370} = {A41252FC-B70B-4E97-BA2A-746DE737A8F3}
+		{08BBF52F-6D22-43C0-8EDD-24B553E4F79C} = {A41252FC-B70B-4E97-BA2A-746DE737A8F3}
+		{1310E588-AA76-4660-8B2A-A077585FE98C} = {6AD79AFC-A97F-495A-9A48-4FAB0145330A}
+		{BDDF3DCF-556D-4851-BC1B-975E3FDE3C10} = {6AD79AFC-A97F-495A-9A48-4FAB0145330A}
+		{E62E15E1-3C59-4F9A-98C1-20E48945A61C} = {6AD79AFC-A97F-495A-9A48-4FAB0145330A}
+		{6DE67B9A-C8D3-4D85-BBC5-3913EBE93FAB} = {E62E15E1-3C59-4F9A-98C1-20E48945A61C}
+		{706D6419-6E37-4B18-B3F3-9317DB7C4988} = {E62E15E1-3C59-4F9A-98C1-20E48945A61C}
+		{73594812-402D-498C-925E-6CE496FDF173} = {1310E588-AA76-4660-8B2A-A077585FE98C}
+		{EE0FA3F7-F571-44CF-B662-E1133CA1B947} = {1310E588-AA76-4660-8B2A-A077585FE98C}
+		{B4EDDE3A-7759-4BB5-9EE9-9C773015CA21} = {BDDF3DCF-556D-4851-BC1B-975E3FDE3C10}
+		{4D5D39C0-F510-4CC7-88E4-F3C0FCD77BAE} = {BDDF3DCF-556D-4851-BC1B-975E3FDE3C10}
+		{984EF8AC-7A8F-4021-B071-0D9573ED0A74} = {6AD79AFC-A97F-495A-9A48-4FAB0145330A}
+		{B05B6084-EAD2-4A80-9BA7-EFE1EFB3CCF0} = {EA314005-C21E-4724-9AC2-E66B8556C433}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E11F9C16-45D7-4C0D-B672-1F72F0A3A625}
