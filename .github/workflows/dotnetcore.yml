@@ -22,5 +22,5 @@ jobs:
       - name: Build
         run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release --no-restore
       - name: Test
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test Dwapi.sln --no-restore --verbosity normal
 
