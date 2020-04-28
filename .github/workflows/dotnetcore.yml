@@ -22,5 +22,5 @@ jobs:
       - name: Build
         run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release --no-restore
       - name: Test
-        run: dotnet test **/*Tests.csproj  --configuration release --no-restore
+        run: ls test/*/*Tests.csproj | xargs -L 1 dotnet test
 
