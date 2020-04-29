@@ -93,7 +93,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mgs
                 try
                 {
                     var msg = JsonConvert.SerializeObject(message);
-                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Metrics"), message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}migrations"), message);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();

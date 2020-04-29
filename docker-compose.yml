@@ -5,7 +5,8 @@ services:
     image: kenyahmis/dwapi:latest
     build:
       context: .
-      dockerfile: Dwapi/Dockerfile
+      dockerfile: src/Dwapi/Dockerfile
     ports:
     - "5757:5757"
+    - "5753:5753"
     restart: unless-stopped
