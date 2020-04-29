@@ -261,9 +261,9 @@ __pycache__/
 *.pyc
 
 # DWAPI Logs
-Dwapi/logs
+/src/Dwapi/logs
 
-Dwapi/appsettings.Development.json
-/Dwapi.ExtractsManagement.Core/Model/Destination/Cbs
-/Dwapi.ExtractsManagement.Infrastructure/Migrations
-Dwapi/implementation.Development.json
+src/Dwapi/appsettings.Development.json
+/src/Dwapi.ExtractsManagement.Core/Model/Destination/Cbs
+/src//Dwapi.ExtractsManagement.Infrastructure/Migrations
+src/Dwapi/implementation.Development.json
