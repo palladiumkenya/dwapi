@@ -122,6 +122,7 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -533,11 +534,22 @@ namespace Dwapi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(
+                    builder => builder
+                        .WithOrigins("http://localhost:4200", "http://localhost:5757", "http://localhost:5753")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials());
             }
             else
             {
                 app.UseHsts();
                 app.UseHttpsRedirection();
+                app.UseCors(
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials());
             }
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -545,13 +557,8 @@ namespace Dwapi
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
-            app.UseCors(
-                    builder => builder.AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials())
-                .UseStaticFiles()
-                .UseWebSockets();
+            app.UseStaticFiles();
+            app.UseWebSockets();
 
             app.Use(async (context, next) =>
             {

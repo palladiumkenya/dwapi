@@ -34,7 +34,6 @@ Bached sending and await to 50 at a time
 
   <ItemGroup>
     <Folder Include="logs" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Hangfire.MemoryStorage.Core" Version="1.4.0" />
