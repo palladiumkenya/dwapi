@@ -28,7 +28,7 @@ jobs:
       - run: npm install --prefix src/Dwapi
       - run: npm run build --prefix src/Dwapi
       - name: Publish
-        run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o dwapi
+        run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o /dwapi
       - name: Zip Folder
         run: zip -r dwapi.zip dwapi
 
@@ -50,6 +50,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dwapi.zip
+          asset_path: ./dwapi
           asset_name: dwapi.zip
           asset_content_type: application/zip
