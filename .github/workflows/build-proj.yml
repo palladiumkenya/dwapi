@@ -1,9 +1,7 @@
-name: .NET Core
+name: Build DWAPI
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
     branches: [ master ]
 
 jobs:
@@ -26,4 +24,4 @@ jobs:
       - name: Publish
         run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o dwapi
       - name: Zip Folder
-          run: zip -r hello.zip hello
+          run: zip -r dwapi.zip dwapi

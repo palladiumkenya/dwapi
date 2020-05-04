@@ -1,8 +1,6 @@
-name: .NET Core
+name: Check PR
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -23,7 +21,3 @@ jobs:
         run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release --no-restore
       - name: Test
         run: ls test/*/*Tests.csproj | xargs -L 1 dotnet test
-      - name: Publish
-        run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o dwapi
-      - name: Zip Folder
-          run: zip -r hello.zip hello
