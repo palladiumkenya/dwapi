@@ -19,14 +19,14 @@ jobs:
         run: dotnet restore Dwapi.sln
       - name: Build
         run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release --no-restore
-#      - name: Test
-#        run: ls test/*/*Tests.csproj | xargs -L 1 dotnet test
-#      - name: Setup Angular
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: '14.x'
-#      - run: npm install --prefix src/Dwapi
-#      - run: npm run build --prefix src/Dwapi
+      - name: Test
+        run: ls test/*/*Tests.csproj | xargs -L 1 dotnet test
+      - name: Setup Angular
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - run: npm install --prefix src/Dwapi
+      - run: npm run build --prefix src/Dwapi
 
       - name: Pub .NET Core
         uses: actions/setup-dotnet@v1
