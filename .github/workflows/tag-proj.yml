@@ -33,7 +33,7 @@ jobs:
         with:
           dotnet-version: 3.1.201
       - name: Publish
-        run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o .dwapi
+        run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o dwapi
       - name: Zip Folder
         run: zip -r dwapi.zip dwapi
 
