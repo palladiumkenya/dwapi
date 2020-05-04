@@ -28,7 +28,7 @@ jobs:
       - run: npm install --prefix src/Dwapi
       - run: npm run build --prefix src/Dwapi
         with:
-          dotnet-version: 2.1.805
+          dotnet-version: 3.1.201
       - name: Publish
         run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o dwapi
       - name: Zip Folder
