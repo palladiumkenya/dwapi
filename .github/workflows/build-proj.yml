@@ -24,4 +24,4 @@ jobs:
       - name: Publish
         run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o dwapi
       - name: Zip Folder
-          run: zip -r dwapi.zip dwapi
+        run: zip -r dwapi.zip dwapi
