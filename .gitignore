@@ -261,12 +261,8 @@ __pycache__/
 *.pyc
 
 # DWAPI Logs
-/src/Dwapi/logs
+logs
 
-src/Dwapi/appsettings.Development.json
-/src/Dwapi.ExtractsManagement.Core/Model/Destination/Cbs
-/src//Dwapi.ExtractsManagement.Infrastructure/Migrations
-src/Dwapi/implementation.Development.json
-src/Dwapi/logs
+# DWAPI dev files
 *.Development.json
 !*kenyahmis.pfx
