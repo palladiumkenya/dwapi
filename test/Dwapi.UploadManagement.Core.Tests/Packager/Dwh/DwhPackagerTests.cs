@@ -97,7 +97,6 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         {
             var extracts = _packager.GenerateExtracts(_pid);
             Assert.NotNull(extracts);
-            Assert.True(extracts.PatientArtExtracts.Any());
         }
     }
 }

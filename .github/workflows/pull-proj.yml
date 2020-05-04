@@ -1,8 +1,6 @@
-name: .NET Core
+name: Check PR
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -23,4 +21,9 @@ jobs:
         run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release --no-restore
       - name: Test
         run: ls test/*/*Tests.csproj | xargs -L 1 dotnet test
-
+      - name: Setup Angular
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - run: npm install --prefix src/Dwapi
+      - run: npm run build --prefix src/Dwapi

@@ -28,7 +28,6 @@ namespace Dwapi.Controller
 
             try
             {
-                id = id.IsSameAs("MGS") ? "CBS" : id;
                 var centralRegistry = _registryManagerService.GetByDocket(id);
 
                 if (null == centralRegistry)

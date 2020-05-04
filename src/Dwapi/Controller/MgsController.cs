@@ -81,7 +81,7 @@ namespace Dwapi.Controller
 
             var ver = GetType().Assembly.GetName().Version;
             string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
-            await _mediator.Publish(new ExtractSent("HivTestingService", version));
+            await _mediator.Publish(new ExtractSent("MigrationService", version));
 
             try
             {
@@ -97,7 +97,7 @@ namespace Dwapi.Controller
         }
 
 
-      
+
         [HttpPost("migrations")]
         public IActionResult SendMigrationExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
