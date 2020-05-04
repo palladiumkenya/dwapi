@@ -27,6 +27,9 @@ jobs:
           node-version: '14.x'
       - run: npm install --prefix src/Dwapi
       - run: npm run build --prefix src/Dwapi
+
+      - name: Pub .NET Core
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 2.1.805
       - name: Publish
