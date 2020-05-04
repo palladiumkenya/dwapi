@@ -4,11 +4,11 @@ on:
   pull_request:
     branches: [ master ]
 
+
 jobs:
   build:
-
+    name: Check PR
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core

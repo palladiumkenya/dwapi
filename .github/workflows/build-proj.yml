@@ -4,11 +4,11 @@ on:
   push:
     branches: [ master ]
 
+
 jobs:
   build:
-
+    name: Build
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
@@ -27,6 +27,9 @@ jobs:
           node-version: '14.x'
       - run: npm install --prefix src/Dwapi
       - run: npm run build --prefix src/Dwapi
+
+      - name: Pub .NET Core
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.201
       - name: Publish
