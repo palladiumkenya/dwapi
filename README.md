@@ -1,3 +1,10 @@
+DWAPI
+-------
+![.NET Core](https://github.com/koskedk/dwapi/workflows/.NET%20Core/badge.svg?branch=master)
+
+
+# Running DWAPI with docker
+
 1) Download docker
 --------------
 [Ubuntu 12 64 bit](https://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_17.04.0~ce-0~ubuntu-precise_amd64.deb)
