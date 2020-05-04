@@ -31,9 +31,9 @@ jobs:
       - name: Pub .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.101
+          dotnet-version: 3.1.201
       - name: Publish
-        run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o ./dwapi
+        run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o .dwapi
       - name: Zip Folder
         run: zip -r dwapi.zip dwapi
 
