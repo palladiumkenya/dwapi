@@ -2,7 +2,7 @@
     "https_port": 5753,
     "ConnectionStrings": {
         "Provider": 1,
-        "DwapiConnection": "Server=127.0.0.1;User Id=dwapi;Password=dwapi;Database=dwapiDev;Pooling=True;Persist Security Info=True;Convert Zero Datetime=True;Port=3307"
+        "DwapiConnection": "Server=127.0.0.1;User Id=dwapi;Password=dwapi;Database=dwapi;Pooling=True;Persist Security Info=True;Convert Zero Datetime=True;Port=3307"
     },
     "AllowedHosts": "*",
     "Kestrel": {
