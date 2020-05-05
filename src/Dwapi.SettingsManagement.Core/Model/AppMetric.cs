@@ -40,6 +40,9 @@ namespace Dwapi.SettingsManagement.Core.Model
             if (Name == "MasterPatientIndex")
                 return "Master Patient Index";
 
+            if (Name == "MigrationService")
+                return "Migration Services";
+
             return "Other";
         }
 
@@ -74,6 +77,12 @@ namespace Dwapi.SettingsManagement.Core.Model
             if (LogValue.Contains("NoSent") && Name == "MasterPatientIndex")
                 return 6;
 
+            if (LogValue.Contains("NoLoaded") && Name == "MigrationService")
+                return 7;
+
+            if (LogValue.Contains("NoSent") && Name == "MigrationService")
+                return 8;
+
             return 99;
         }
 
@@ -94,6 +103,13 @@ namespace Dwapi.SettingsManagement.Core.Model
         public void CreatMpi(string logValue)
         {
             Name = "MasterPatientIndex";
+            LogValue =logValue;
+            LogDate=new DateTime(1983,4,7);
+        }
+
+        public void CreatMgs(string logValue)
+        {
+            Name = "MigrationService";
             LogValue =logValue;
             LogDate=new DateTime(1983,4,7);
         }

@@ -9,8 +9,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
             if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
             {
                 migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 0;");
-                migrationBuilder.Sql(@"alter table MetricMigrationExtract convert to character set utf8 collate utf8_unicode_ci;");
-                migrationBuilder.Sql(@"alter table TempMetricMigrationExtract convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql(@"alter table MetricMigrationExtracts convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql(@"alter table TempMetricMigrationExtracts convert to character set utf8 collate utf8_unicode_ci;");
                 migrationBuilder.Sql(@"alter table EmrSystems convert to character set utf8 collate utf8_unicode_ci;");
                 migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 1;");
             }
