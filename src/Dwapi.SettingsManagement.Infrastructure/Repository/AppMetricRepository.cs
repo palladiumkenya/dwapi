@@ -105,7 +105,31 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
                 list.Add(ap);
             }
 
+            //Migration
 
+            var mgsLoaded = DbSet.AsNoTracking()
+                .Where(x => x.Name == "MigrationService" && x.LogValue.Contains("NoLoaded"))
+                .OrderByDescending(x => x.LogDate).FirstOrDefault();
+            if (null != mgsLoaded)
+                list.Add(mgsLoaded);
+            else
+            {
+                var ap = new AppMetric();
+                ap.CreatMgs("NoLoaded");
+                list.Add(ap);
+            }
+
+            var mgsSent = DbSet.AsNoTracking()
+                .Where(x => x.Name == "MigrationService" && x.LogValue.Contains("NoSent"))
+                .OrderByDescending(x => x.LogDate).FirstOrDefault();
+            if (null != mgsSent)
+                list.Add(mgsSent);
+            else
+            {
+                var ap = new AppMetric();
+                ap.CreatMgs("NoSent");
+                list.Add(ap);
+            }
 
             return list;
         }

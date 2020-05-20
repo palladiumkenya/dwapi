@@ -18,7 +18,7 @@ namespace Dwapi.Controller
         public IActionResult Version()
         {
             var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}{ver.Revision}";
             return Ok(version);
         }
     }

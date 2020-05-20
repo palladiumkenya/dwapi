@@ -96,7 +96,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
 
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
-            .withUrl(`${window.location.protocol}//${document.location.hostname}:${environment.port}/cbsactivity`)
+            .withUrl(`${window.location.protocol}//${document.location.hostname}:${environment.port}/CbsActivity`)
             .configureLogging(LogLevel.Trace)
             .build();
         this._hubConnection.serverTimeoutInMilliseconds = 120000;

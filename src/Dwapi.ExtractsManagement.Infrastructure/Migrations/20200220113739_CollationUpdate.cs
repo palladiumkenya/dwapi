@@ -2,7 +2,8 @@
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
-    public partial class CollationUpdate : Migration
+    public partial class
+        CollationUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

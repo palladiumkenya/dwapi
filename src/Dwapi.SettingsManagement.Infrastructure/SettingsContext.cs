@@ -40,7 +40,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
         }
 
-        public override async void EnsureSeeded()
+        public override void EnsureSeeded()
         {
             var managedEmrs = new List<Guid>
             {
@@ -50,64 +50,35 @@ namespace Dwapi.SettingsManagement.Infrastructure
                 new Guid("926f49b8-305d-11ea-978f-2e728ce88125")
             };
 
-            if (Database.IsSqlite())
+            this.SeedMerge<Docket>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Dockets)}").Wait();
+            this.SeedMerge<CentralRegistry>(typeof(SettingsContext).Assembly, "|", "Seed",
+                $"{nameof(CentralRegistries)}").Wait();
+            this.SeedNewOnly<EmrSystem>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(EmrSystems)}").Wait();
+            this.SeedNewOnly<DatabaseProtocol>(typeof(SettingsContext).Assembly, "|", "Seed",
+                $"{nameof(DatabaseProtocols)}").Wait();
+
+            var restEndpoints = RestProtocols.AsNoTracking().ToList();
+            if (restEndpoints.All(x => x.Url.Contains("https://palladiumkenya.github.io/dwapi/stuff")))
             {
-                this.SeedMerge<Docket>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(Dockets)}").Wait();
-                this.SeedMerge<CentralRegistry>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(CentralRegistries)}").Wait();
-                this.SeedNewOnly<EmrSystem>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(EmrSystems)}").Wait();
-                this.SeedNewOnly<DatabaseProtocol>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(DatabaseProtocols)}").Wait();
-
-                var restEndpoints = RestProtocols.AsNoTracking().ToList();
-                if (restEndpoints.All(x => x.Url.Contains("https://palladiumkenya.github.io/dwapi/stuff")))
-                {
-                    this.SeedMerge<RestProtocol>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(RestProtocols)}").Wait();
-                    this.SeedMerge<Resource>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(Resources)}").Wait();
-                }
-                else
-                {
-                    this.SeedNewOnly<RestProtocol>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(RestProtocols)}").Wait();
-                    this.SeedNewOnly<Resource>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(Resources)}").Wait();
-                }
-
-                managedEmrs.ForEach(x =>
-                {
-                    var sql = $"DELETE FROM {nameof(Extracts)} WHERE {nameof(Extract.EmrSystemId)} = '{x}'";
-                    Database.ExecuteSqlCommand(sql);
-                });
-
-                this.SeedNewOnly<Extract>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(Extracts)}").Wait();
+                this.SeedMerge<RestProtocol>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(RestProtocols)}")
+                    .Wait();
+                this.SeedMerge<Resource>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Resources)}").Wait();
             }
             else
             {
-                await this.SeedMerge<Docket>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(Dockets)}");
-                await this.SeedMerge<CentralRegistry>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(CentralRegistries)}");
-                await this.SeedNewOnly<EmrSystem>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(EmrSystems)}");
-                await this.SeedNewOnly<DatabaseProtocol>(typeof(SettingsContext).Assembly, "|","Seed",$"{nameof(DatabaseProtocols)}");
-
-                var restEndpoints = RestProtocols.AsNoTracking().ToList();
-                if (restEndpoints.All(x => x.Url.Contains("https://palladiumkenya.github.io/dwapi/stuff")))
-                {
-                    await this.SeedMerge<RestProtocol>(typeof(SettingsContext).Assembly, "|", "Seed",
-                        $"{nameof(RestProtocols)}");
-                    await this.SeedMerge<Resource>(typeof(SettingsContext).Assembly, "|", "Seed",
-                        $"{nameof(Resources)}");
-                }
-                else
-                {
-                    await this.SeedNewOnly<RestProtocol>(typeof(SettingsContext).Assembly, "|", "Seed",
-                        $"{nameof(RestProtocols)}");
-                    await this.SeedNewOnly<Resource>(typeof(SettingsContext).Assembly, "|", "Seed",
-                        $"{nameof(Resources)}");
-                }
-
-                managedEmrs.ForEach(x =>
-                {
-                    var sql = $"DELETE FROM {nameof(Extracts)} WHERE {nameof(Extract.EmrSystemId)} = '{x}'";
-                    Database.ExecuteSqlCommand(sql);
-                });
-
-                await this.SeedNewOnly<Extract>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Extracts)}");
+                this.SeedNewOnly<RestProtocol>(typeof(SettingsContext).Assembly, "|", "Seed",
+                    $"{nameof(RestProtocols)}").Wait();
+                this.SeedNewOnly<Resource>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Resources)}")
+                    .Wait();
             }
+
+            managedEmrs.ForEach(x =>
+            {
+                var sql = $"DELETE FROM {nameof(Extracts)} WHERE {nameof(Extract.EmrSystemId)} = '{x}'";
+                Database.ExecuteSqlCommand(sql);
+            });
+
+            this.SeedNewOnly<Extract>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Extracts)}").Wait();
         }
     }
 }

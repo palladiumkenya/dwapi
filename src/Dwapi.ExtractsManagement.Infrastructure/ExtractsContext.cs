@@ -280,18 +280,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure
            // DapperPlusManager.MapperFactory = mapper => mapper.BatchTimeout(6000);
         }
 
-        public override async void EnsureSeeded()
+        public override void EnsureSeeded()
         {
-            if (Database.IsSqlite())
-            {
-                this.SeedClear<Validator>().Wait();
-                this.SeedAdd<Validator>(typeof(ExtractsContext).Assembly, "|").Wait();
-            }
-            else
-            {
-                await this.SeedClear<Validator>();
-                await this.SeedAdd<Validator>(typeof(ExtractsContext).Assembly, "|");
-            }
+            this.SeedClear<Validator>().Wait();
+            this.SeedAdd<Validator>(typeof(ExtractsContext).Assembly, "|").Wait();
         }
     }
 }
