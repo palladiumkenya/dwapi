@@ -42,7 +42,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
 
                 StringBuilder query = new StringBuilder();
-                query.Append($" SELECT * FROM {nameof(TempPatientBaselinesExtract)}s s");
+                query.Append($" SELECT s.* FROM {nameof(TempPatientBaselinesExtract)}s s");
                 query.Append($" INNER JOIN PatientExtracts p ON ");
                 query.Append($" s.PatientPK = p.PatientPK AND ");
                 query.Append($" s.SiteCode = p.SiteCode ");
