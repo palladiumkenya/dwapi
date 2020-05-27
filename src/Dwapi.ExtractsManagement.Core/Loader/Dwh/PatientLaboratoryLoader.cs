@@ -46,7 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 query.Append($" s.PatientPK = p.PatientPK AND ");
                 query.Append($" s.SiteCode = p.SiteCode ");
 
-                const int take = 5000;
+                const int take = 500;
                 var eCount = await  _tempPatientLaboratoryExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempPatientLaboratoryExtractRepository.PageCount(take, eCount);
 

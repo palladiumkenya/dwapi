@@ -39,7 +39,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                         nameof(ExtractStatus.Loading),
                         found, 0, 0, 0, 0)));
 
-                const int take = 1000;
+                const int take = 500;
                 var eCount = await  _tempPatientExtractRepository.GetCleanCount();
                 var pageCount = _tempPatientExtractRepository.PageCount(take, eCount);
 

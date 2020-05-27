@@ -536,7 +536,7 @@ namespace Dwapi
                 app.UseDeveloperExceptionPage();
                 app.UseCors(
                     builder => builder
-                        .WithOrigins("http://localhost:4200", "http://localhost:5757", "http://localhost:5753")
+                        .WithOrigins("http://localhost:4200")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials());
