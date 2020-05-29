@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
@@ -12,6 +13,11 @@ namespace Dwapi.SharedKernel.Exchange
         public int SiteCode { get; set; }
         public List<int> PatientPks { get; set; } = new List<int>();
         public string Metrics { get; set; }
+
+        public string Name { get; set; }
+        public Guid EmrId { get; set; }
+        public string EmrName { get; set; }
+        public EmrSetup EmrSetup { get; set; }
         public List<FacMetric> FacMetrics { get; set; } = new List<FacMetric>();
 
         public DwhManifest()
@@ -23,10 +29,14 @@ namespace Dwapi.SharedKernel.Exchange
             SiteCode = siteCode;
         }
 
-        public DwhManifest(int siteCode, List<int> patientPks)
+        public DwhManifest(int siteCode, List<int> patientPks,string siteName,EmrDto emrDto)
         {
             SiteCode = siteCode;
             PatientPks = patientPks;
+            Name = siteName;
+            EmrId = emrDto.EmrId;
+            EmrName = emrDto.Name;
+            EmrSetup = emrDto.EmrSetup;
         }
 
         public override string ToString()
@@ -34,15 +44,15 @@ namespace Dwapi.SharedKernel.Exchange
             return $"{SiteCode}-{PatientPks.Count}";
         }
 
-        public static IEnumerable<DwhManifest> Create(IEnumerable<SitePatientProfile> profiles, EmrSetup emrSetup,
+        public static IEnumerable<DwhManifest> Create(IEnumerable<SitePatientProfile> profiles, EmrDto emrDto,
             IEnumerable<Site> sites)
         {
             var list = new List<DwhManifest>();
 
-            if (emrSetup == EmrSetup.SingleFacility)
+            if (emrDto.EmrSetup == EmrSetup.SingleFacility)
             {
                 var site = sites.OrderByDescending(x => x.PatientCount).First();
-                var manifest = new DwhManifest(site.SiteCode, profiles.Select(x => x.PatientPk).ToList());
+                var manifest = new DwhManifest(site.SiteCode, profiles.Select(x => x.PatientPk).ToList(),site.SiteName,emrDto);
                 list.Add(manifest);
                 return list;
             }
@@ -55,7 +65,7 @@ namespace Dwapi.SharedKernel.Exchange
                     .Where(x => x.SiteCode == site.SiteCode)
                     .Select(x => x.PatientPk)
                     .ToList();
-                var manifest = new DwhManifest(site.SiteCode, pks);
+                var manifest = new DwhManifest(site.SiteCode, pks,site.SiteName,emrDto);
                 list.Add(manifest);
             }
 

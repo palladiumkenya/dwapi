@@ -84,6 +84,7 @@ using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
+using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
 using Dwapi.SharedKernel.Interfaces;
@@ -139,6 +140,10 @@ namespace Dwapi.UploadManagement.Core.Tests
         public static string ConnectionString;
         public static DatabaseProtocol Protocol;
         public static List<Extract> Extracts;
+        public static EmrDto IqEmrDto;
+        public static EmrDto IqEmrMultiDto;
+        public static EmrDto KeEmrDto;
+        public static EmrDto KeEmrMultiDto;
 
         [OneTimeSetUp]
         public void Setup()
@@ -158,7 +163,11 @@ namespace Dwapi.UploadManagement.Core.Tests
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
-
+            IqEmrDto = new EmrDto(new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"), "IQCare", EmrSetup.SingleFacility);
+            IqEmrMultiDto = new EmrDto(new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"), "IQCare",
+                EmrSetup.MultiFacility);
+            KeEmrDto=new EmrDto(new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"),"KenyaEMR",EmrSetup.SingleFacility);
+            KeEmrMultiDto=new EmrDto(new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"),"KenyaEMR",EmrSetup.MultiFacility);
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
             ConnectionString = GenerateCopyConnection(config, "dwapiConnection");
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
