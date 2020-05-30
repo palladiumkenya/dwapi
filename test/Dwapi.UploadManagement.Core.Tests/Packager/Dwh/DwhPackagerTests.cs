@@ -33,7 +33,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         [Test]
         public void should_Generate_Manifest()
         {
-            var manifests = _packager.Generate(EmrSetup.SingleFacility).ToList();
+            var manifests = _packager.Generate(TestInitializer.IqEmrDto).ToList();
             Assert.True(manifests.Any());
             Assert.True(manifests.Count==1);
             var m = manifests.First();
@@ -44,7 +44,8 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         [Test]
         public void should_Generate_Multi_Manifest()
         {
-            var manifests = _packager.Generate(EmrSetup.MultiFacility).ToList();
+            var emrDto = TestInitializer.IqEmrMultiDto;
+            var manifests = _packager.Generate(emrDto).ToList();
             Assert.True(manifests.Any());
             Assert.True(manifests.Count>1);
             foreach (var m in manifests)
@@ -57,7 +58,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         [Test]
         public void should_Generate_Manifest_With_Metrics()
         {
-            var manifests = _packager.GenerateWithMetrics(EmrSetup.SingleFacility).ToList();
+            var manifests = _packager.GenerateWithMetrics(TestInitializer.IqEmrDto).ToList();
             Assert.True(manifests.Any());
             Assert.True(manifests.Count==1);
             var m = manifests.First();
@@ -75,7 +76,8 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         [Test]
         public void should_Generate_Multi_Manifest_With_Metrics()
         {
-            var manifests = _packager.GenerateWithMetrics(EmrSetup.MultiFacility).ToList();
+            var emrDto = TestInitializer.IqEmrMultiDto;
+            var manifests = _packager.GenerateWithMetrics(emrDto).ToList();
             Assert.True(manifests.Any());
             Assert.True(manifests.Count > 1);
             foreach (var m in manifests)

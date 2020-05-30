@@ -36,7 +36,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
 
         public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
         {
-            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.EmrSetup).ToList()));
+            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
         }
 
         public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage)

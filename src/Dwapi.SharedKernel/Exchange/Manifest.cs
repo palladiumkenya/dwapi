@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -12,6 +13,9 @@ namespace Dwapi.SharedKernel.Exchange
     {
         public int SiteCode { get; set; }
         public string Name { get; set; }
+        public Guid EmrId { get; set; }
+        public string EmrName { get; set; }
+        public EmrSetup EmrSetup { get; set; }
         public Guid Id { get; set; } = LiveGuid.NewGuid();
         public DateTime DateLogged { get; set; } = DateTime.Now;
         public List<Cargo> Cargoes { get; set; } = new List<Cargo>();
@@ -26,21 +30,24 @@ namespace Dwapi.SharedKernel.Exchange
             SiteCode = siteCode;
         }
 
-        private Manifest(Site site)
+        private Manifest(Site site,EmrDto emrDto)
         {
             SiteCode = site.SiteCode;
             Name = site.SiteName;
+            EmrId = emrDto.EmrId;
+            EmrName = emrDto.Name;
+            EmrSetup = emrDto.EmrSetup;
         }
 
-        public static IEnumerable<Manifest> Create(IEnumerable<SitePatientProfile> profiles, EmrSetup emrSetup,
+        public static IEnumerable<Manifest> Create(IEnumerable<SitePatientProfile> profiles, EmrDto emrDto,
             IEnumerable<Site> sites, CargoType type = CargoType.Patient)
         {
             var manifests = new List<Manifest>();
 
-            if (emrSetup == EmrSetup.SingleFacility)
+            if (emrDto.EmrSetup == EmrSetup.SingleFacility)
             {
                 var site = sites.OrderByDescending(x => x.PatientCount).First();
-                var manifest = new Manifest(site);
+                var manifest = new Manifest(site,emrDto);
                 manifest.AddCargo(profiles.Select(x => x.PatientPk).ToList());
                 manifests.Add(manifest);
                 return manifests;
@@ -50,7 +57,7 @@ namespace Dwapi.SharedKernel.Exchange
 
             foreach (var site in sites)
             {
-                var manifest=new Manifest(site);
+                var manifest=new Manifest(site,emrDto);
                 var pks = profiles
                     .Where(x => x.SiteCode == site.SiteCode)
                     .Select(x => x.PatientPk)
@@ -61,15 +68,15 @@ namespace Dwapi.SharedKernel.Exchange
             return manifests;
         }
 
-        public static IEnumerable<Manifest> Create(IEnumerable<SiteMetricProfile> profiles, EmrSetup emrSetup,
+        public static IEnumerable<Manifest> Create(IEnumerable<SiteMetricProfile> profiles, EmrDto emrDto,
             IEnumerable<Site> sites, CargoType type = CargoType.Patient)
         {
             var manifests = new List<Manifest>();
 
-            if (emrSetup == EmrSetup.SingleFacility)
+            if (emrDto.EmrSetup == EmrSetup.SingleFacility)
             {
                 var site = sites.OrderByDescending(x => x.PatientCount).First();
-                var manifest = new Manifest(site);
+                var manifest = new Manifest(site,emrDto);
                 manifest.AddCargo(profiles.Select(x => x.MetricId).ToList(), CargoType.Migration);
                 manifests.Add(manifest);
                 return manifests;
@@ -79,7 +86,7 @@ namespace Dwapi.SharedKernel.Exchange
 
             foreach (var site in sites)
             {
-                var manifest=new Manifest(site);
+                var manifest=new Manifest(site,emrDto);
                 var pks = profiles
                     .Where(x => x.SiteCode == site.SiteCode)
                     .Select(x => x.MetricId)

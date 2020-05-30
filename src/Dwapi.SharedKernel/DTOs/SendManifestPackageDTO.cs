@@ -12,6 +12,9 @@ namespace Dwapi.SharedKernel.DTOs
         public string ExtractName { get; set; }
         public string Endpoint { get; private set; }
         public EmrSetup EmrSetup { get; set; }
+        public string EmrName { get; set; }
+        public Guid EmrId { get; set; }
+
 
         public SendManifestPackageDTO()
         {
@@ -32,6 +35,11 @@ namespace Dwapi.SharedKernel.DTOs
             Endpoint = string.IsNullOrWhiteSpace(endPoint) ? string.Empty : endPoint.HasToStartWith("/");
             var url = $"{Destination.Url}{Endpoint}";
             return url;
+        }
+
+        public EmrDto GetEmrDto()
+        {
+            return new EmrDto(EmrId, EmrName, EmrSetup);
         }
     }
 }

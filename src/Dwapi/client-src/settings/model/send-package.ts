@@ -8,4 +8,6 @@ export interface SendPackage {
     extractName?: string;
     endpoint?: string;
     emrSetup?: EmrSetup;
+    emrId?: string;
+    emrName?: string;
 }

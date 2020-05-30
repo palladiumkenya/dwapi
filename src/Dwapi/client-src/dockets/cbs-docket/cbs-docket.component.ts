@@ -344,7 +344,10 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
     private getSendManifestPackage(): SendPackage {
         return {
             extractId: this.extract.id,
-            destination: this.centralRegistry
+            destination: this.centralRegistry,
+            emrSetup: this.emrSystem.emrSetup,
+            emrId:this.emrSystem.id,
+            emrName:this.emrSystem.name
         };
     }
 

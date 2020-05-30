@@ -6,6 +6,7 @@ using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Profiles.Hts;
+using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Profiles;
@@ -30,7 +31,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
         [Test]
         public void should_Generate_Manifest()
         {
-            var manifests = _packager.Generate(EmrSetup.SingleFacility).ToList();
+            var manifests = _packager.Generate(TestInitializer.IqEmrDto).ToList();
             Assert.True(manifests.Any());
             Assert.True(manifests.Count==1);
             var m = manifests.First();
@@ -41,7 +42,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
         [Test]
         public void should_Generate_Multi_Manifest()
         {
-            var manifests = _packager.Generate(EmrSetup.MultiFacility).ToList();
+            var manifests = _packager.Generate(TestInitializer.IqEmrMultiDto).ToList();
             Assert.True(manifests.Any());
             Assert.True(manifests.Count>1);
             foreach (var m in manifests)
@@ -54,7 +55,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
         [Test]
         public void should_Generate_Manifest_With_Metrics()
         {
-            var manifests = _packager.GenerateWithMetrics(EmrSetup.SingleFacility).ToList();
+            var manifests = _packager.GenerateWithMetrics(TestInitializer.IqEmrDto).ToList();
             Assert.True(manifests.Any());
             Assert.True(manifests.Count == 1);
             var m = manifests.First();
@@ -72,7 +73,8 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
         [Test]
         public void should_Generate_Multi_Manifest_With_Metrics()
         {
-            var manfiests = _packager.GenerateWithMetrics(EmrSetup.MultiFacility).ToList();
+            var emrDto = TestInitializer.IqEmrMultiDto;
+            var manfiests = _packager.GenerateWithMetrics(emrDto).ToList();
             Assert.True(manfiests.Any());
             Assert.True(manfiests.Count>1);
             foreach (var m in manfiests)

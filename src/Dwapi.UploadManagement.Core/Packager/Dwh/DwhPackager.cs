@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
@@ -22,14 +23,14 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         }
 
 
-        public IEnumerable<DwhManifest> Generate(EmrSetup emrSetup)
+        public IEnumerable<DwhManifest> Generate(EmrDto emrSetup)
         {
             var sites = _reader.GetSites();
             var patientProfiles = _reader.GetSitePatientProfiles();
             return DwhManifest.Create(patientProfiles, emrSetup, sites);
         }
 
-        public IEnumerable<DwhManifest> GenerateWithMetrics(EmrSetup emrSetup)
+        public IEnumerable<DwhManifest> GenerateWithMetrics(EmrDto emrSetup)
         {
             var metrics = _metricReader.ReadAll().FirstOrDefault();
             var appMetrics = _metricReader.ReadAppAll().ToList();

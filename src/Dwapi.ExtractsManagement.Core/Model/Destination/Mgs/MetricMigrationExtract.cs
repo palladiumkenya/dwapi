@@ -7,6 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mgs
         public string Dataset { get; set; }
         public string Metric { get; set; }
         public string MetricValue { get; set; }
+        public string Stage { get; set; }
         public DateTime? CreateDate { get; set; }
 
         public override string ToString()
