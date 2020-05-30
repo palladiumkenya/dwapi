@@ -2,9 +2,9 @@
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
-    public partial class MetricStageViews : Migration
+    public partial class MetricStageViewsRev : Migration
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
+          protected override void Up(MigrationBuilder migrationBuilder)
         {
             if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
             {
@@ -32,7 +32,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                         vTempMetricMigrationExtractError.Dataset,
                         vTempMetricMigrationExtractError.Metric,
                         vTempMetricMigrationExtractError.MetricValue,
-                        vTempMetricMigrationExtractError.Stage
+                        vTempMetricMigrationExtractError.Stage,
+                        vTempMetricMigrationExtractError.CreateDate
                         FROM vTempMetricMigrationExtractError 
                         INNER JOIN ValidationError ON vTempMetricMigrationExtractError.Id = ValidationError.RecordId 
                         INNER JOIN Validator ON ValidationError.ValidatorId = Validator.Id");
