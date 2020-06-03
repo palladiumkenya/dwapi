@@ -8,9 +8,12 @@ using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Utility;
+using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
+using Dwapi.UploadManagement.Core.Notifications.Dwh;
 using Hangfire;
 using Hangfire.States;
 using MediatR;
@@ -30,13 +33,15 @@ namespace Dwapi.Controller
         private readonly IHubContext<DwhSendActivity> _hubSendContext;
         private readonly IDwhSendService _dwhSendService;
         private readonly ICbsSendService _cbsSendService;
+        private readonly ICTSendService _ctSendService;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService, IHubContext<DwhSendActivity> hubSendContext, ICbsSendService cbsSendService)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService, IHubContext<DwhSendActivity> hubSendContext, ICbsSendService cbsSendService, ICTSendService ctSendService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _dwhSendService = dwhSendService;
             _cbsSendService = cbsSendService;
+            _ctSendService = ctSendService;
             Startup.DwhSendHubContext= _hubSendContext = hubSendContext;
             Startup.HubContext= _hubContext = hubContext;
         }
@@ -154,10 +159,35 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
         [AutomaticRetry(Attempts = 0)]
         private void QueueDwh(SendManifestPackageDTO package)
         {
-            BackgroundJob.Enqueue(() => _dwhSendService.SendExtractsAsync(package));
+
+           _ctSendService.NotifyPreSending();
+
+            var job1=
+            BatchJob.StartNew(x =>
+            {
+                _ctSendService.SendBatchExtractsAsync(package, 200, new ArtMessageBag());
+                _ctSendService.SendBatchExtractsAsync(package, 200, new BaselineMessageBag());
+                _ctSendService.SendBatchExtractsAsync(package, 200, new StatusMessageBag());
+                _ctSendService.SendBatchExtractsAsync(package, 200, new AdverseEventsMessageBag());
+            });
+
+            var job2=
+                BatchJob.ContinueBatchWith(job1,x =>
+                {
+                    _ctSendService.SendBatchExtractsAsync(package, 300, new PharmacyMessageBag());
+                    _ctSendService.SendBatchExtractsAsync(package, 300, new LabMessageBag());
+                    _ctSendService.SendBatchExtractsAsync(package, 300, new VisitsMessageBag());
+                });
+
+            var jobEnd=
+                BatchJob.ContinueBatchWith(job2,x =>
+                {
+                    _ctSendService.NotifyPreSending();
+                });
         }
         [AutomaticRetry(Attempts = 0)]
         private void QueueMpi(SendManifestPackageDTO package)

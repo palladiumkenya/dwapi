@@ -14,5 +14,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh
         IEnumerable<Site> GetSites();
         IEnumerable<SitePatientProfile> GetSitePatientProfiles();
 
+        IEnumerable<T> Read<T, TId>(int page, int pageSize) where T : Entity<TId>;
+        long GetTotalRecords<T, TId>() where T : Entity<TId>;
     }
 }

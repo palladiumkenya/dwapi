@@ -113,7 +113,7 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e, $"Send Manifest Error");
+                    Log.Error(e, $"Send Extracts Error");
                     throw;
                 }
 

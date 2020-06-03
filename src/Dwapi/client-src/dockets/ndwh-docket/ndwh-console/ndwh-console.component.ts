@@ -101,6 +101,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadMpi: boolean = false;
     public sendMpi: boolean = false;
     public loading = false;
+    extractSent = [];
 
     public constructor(
         confirmationService: ConfirmationService,
@@ -146,11 +147,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.emrVersion = `(Ver. ${this.emr.version})`;
             if (this.emrName == 'KenyaEMR') {
                 this.minEMRVersion = '(The minimum version EMR is 17.1.0)';
-            }
-            else if (this.emrName === 'IQCare') {
+            } else if (this.emrName === 'IQCare') {
                 this.minEMRVersion = '(The minimum version EMR is 2.2.1)';
-            }
-            else {
+            } else {
                 this.minEMRVersion = '';
             }
         }
@@ -326,8 +325,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 destination: this.centralRegistry,
                 extractId: dwhMan.id,
                 emrSetup: this.emr.emrSetup,
-                emrId:this.emr.id,
-                emrName:this.emr.name
+                emrId: this.emr.id,
+                emrName: this.emr.name,
+                extracts: this.extracts
             };
         }
         return this.dwhManifestPackage;
@@ -374,6 +374,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             )
             .configureLogging(LogLevel.Error)
             .build();
+        this._hubConnection.serverTimeoutInMilliseconds = 120000;
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
@@ -414,6 +415,20 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             }
             this.canLoadFromEmr = this.canSend = !this.sending;
         });
+
+        this._hubConnection.on('ShowHtsSendProgressDone', (extractName: string) => {
+            this.extractSent.push(extractName);
+            if (this.extractSent.length === 7) {
+                this.errorMessage = [];
+                this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
+                // this.updateEvent();
+                this.sending = false;
+            } else {
+                this.sending = true;
+                //this.updateEvent();
+            }
+        });
+
 
         this._hubConnection.on('ShowDwhSendMessage', (message: any) => {
             if (message.error) {

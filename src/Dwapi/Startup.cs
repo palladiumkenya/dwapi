@@ -397,6 +397,7 @@ namespace Dwapi
             services.AddScoped<IDwhExtractReader, DwhExtractReader>();
             services.AddScoped<IDwhPackager, DwhPackager>();
             services.AddScoped<IDwhSendService, DwhSendService>();
+            services.AddScoped<ICTSendService, CTSendService>();
             services.AddScoped<IDwhExtractSentServcie, DwhExtractSentServcie>();
 
             services.AddScoped<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>();
@@ -588,6 +589,7 @@ namespace Dwapi
             app.UseHangfireDashboard();
             app.UseHangfireServer(hfServerOptions);
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute() {Attempts = 3});
+            GlobalConfiguration.Configuration.UseBatches();
 
             try
             {

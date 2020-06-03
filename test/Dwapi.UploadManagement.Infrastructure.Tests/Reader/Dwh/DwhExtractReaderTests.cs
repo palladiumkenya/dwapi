@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.UploadManagement.Core.Model.Dwh;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +59,22 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader.Dwh
             var sitePatientProfiles = _reader.GetSitePatientProfiles().ToList();
             Assert.True(sitePatientProfiles.Any());
             sitePatientProfiles.ForEach(site => Log.Debug($"{site}"));
+        }
+
+        [Test]
+        public void should_ART_ReadPaged()
+        {
+            var extractViews = _reader.Read<PatientArtExtractView,Guid>(1, 2).ToList();
+            Assert.True(extractViews.Any());
+            Assert.True(extractViews.Count==2);
+            Assert.NotNull(extractViews.First().PatientExtractView);
+        }
+
+        [Test]
+        public void should_ART_Count()
+        {
+            var totalRecords = _reader.GetTotalRecords<PatientArtExtractView,Guid>();
+            Assert.True(totalRecords>0);
         }
     }
 }

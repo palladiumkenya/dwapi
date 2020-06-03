@@ -4,7 +4,6 @@
     {
         public string Extract { get; set; }
         public int Progress { get; set; }
-
         public bool Done { get; set; }
 
         public SendProgress(string extract, int progress,bool done=false)
