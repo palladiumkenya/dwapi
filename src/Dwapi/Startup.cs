@@ -583,10 +583,14 @@ namespace Dwapi
             var hfServerOptions = new BackgroundJobServerOptions()
             {
                 ServerName = $"dwapi",
-                WorkerCount = Environment.ProcessorCount * 5,
-                Queues = new string[] {"mpi", "default"}
+                // WorkerCount =
+                // WorkerCount = Environment.ProcessorCount * 5,
+                //Queues = new string[] {"mpi", "default"}
             };
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/api/hangfire", new DashboardOptions()
+            {
+                Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
+            });
             app.UseHangfireServer(hfServerOptions);
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute() {Attempts = 3});
             GlobalConfiguration.Configuration.UseBatches();

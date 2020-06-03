@@ -80,7 +80,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 .Include(nameof(PatientExtractView))
                 .Skip((page - 1) * pageSize).Take(pageSize)
                 .OrderBy(x => x.Id)
-                .AsNoTracking();
+                .AsNoTracking().ToList();
         }
 
         public long GetTotalRecords<T, TId>() where T : Entity<TId>

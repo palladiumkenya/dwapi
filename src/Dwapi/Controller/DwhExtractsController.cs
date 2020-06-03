@@ -164,31 +164,32 @@ namespace Dwapi.Controller
         private void QueueDwh(SendManifestPackageDTO package)
         {
 
-           _ctSendService.NotifyPreSending();
+            _ctSendService.NotifyPreSending();
 
-            var job1=
-            BatchJob.StartNew(x =>
-            {
-                _ctSendService.SendBatchExtractsAsync(package, 200, new ArtMessageBag());
-                _ctSendService.SendBatchExtractsAsync(package, 200, new BaselineMessageBag());
-                _ctSendService.SendBatchExtractsAsync(package, 200, new StatusMessageBag());
-                _ctSendService.SendBatchExtractsAsync(package, 200, new AdverseEventsMessageBag());
-            });
+            var job1 =
+                BatchJob.StartNew(x => { SendJobBaselines(package); });
 
-            var job2=
-                BatchJob.ContinueBatchWith(job1,x =>
-                {
-                    _ctSendService.SendBatchExtractsAsync(package, 300, new PharmacyMessageBag());
-                    _ctSendService.SendBatchExtractsAsync(package, 300, new LabMessageBag());
-                    _ctSendService.SendBatchExtractsAsync(package, 300, new VisitsMessageBag());
-                });
+            var job2 =
+                BatchJob.ContinueBatchWith(job1, x => { SendJobProfiles(package); });
 
-            var jobEnd=
-                BatchJob.ContinueBatchWith(job2,x =>
-                {
-                    _ctSendService.NotifyPreSending();
-                });
+            var jobEnd =
+                BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(); });
         }
+
+        public void SendJobBaselines(SendManifestPackageDTO package)
+        {
+            var idsA =_ctSendService.SendBatchExtractsAsync(package, 200, new ArtMessageBag()).Result;
+            var idsB=_ctSendService.SendBatchExtractsAsync(package, 200, new BaselineMessageBag()).Result;
+            var idsC= _ctSendService.SendBatchExtractsAsync(package, 200, new StatusMessageBag()).Result;
+            var idsD=_ctSendService.SendBatchExtractsAsync(package, 200, new AdverseEventsMessageBag()).Result;
+        }
+        public void SendJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsA =_ctSendService.SendBatchExtractsAsync(package, 300, new PharmacyMessageBag()).Result;
+            var idsB=_ctSendService.SendBatchExtractsAsync(package, 300, new LabMessageBag()).Result;
+            var idsC= _ctSendService.SendBatchExtractsAsync(package, 300, new VisitsMessageBag()).Result;
+        }
+
         [AutomaticRetry(Attempts = 0)]
         private void QueueMpi(SendManifestPackageDTO package)
         {
