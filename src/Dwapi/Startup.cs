@@ -144,7 +144,6 @@ namespace Dwapi
         public IServiceCollection Service;
         public static IServiceProvider ServiceProvider;
         public static IHubContext<ExtractActivity> HubContext;
-        public static IHubContext<DwhSendActivity> DwhSendHubContext;
         public static IHubContext<CbsActivity> CbsHubContext;
         public static IHubContext<CbsSendActivity> CbsSendHubContext;
         public static IHubContext<HtsSendActivity> HtsSendHubContext;

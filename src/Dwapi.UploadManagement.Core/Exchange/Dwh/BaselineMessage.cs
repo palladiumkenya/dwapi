@@ -27,6 +27,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
         public List<PatientBaselinesExtractView> Extracts { get; } = new List<PatientBaselinesExtractView>();
 
         public List<Guid> SendIds => GetIds();
+        public List<Guid> PatientIds { get; }
 
         [JsonProperty(PropertyName = "PBaselinesExtracts")]
         public List<PatientBaselinesExtractView> BaselinesExtracts { get; set; } =

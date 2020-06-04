@@ -145,7 +145,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.updateEvent();
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
-            if (this.emrName == 'KenyaEMR') {
+            if (this.emrName === 'KenyaEMR') {
                 this.minEMRVersion = '(The minimum version EMR is 17.1.0)';
             } else if (this.emrName === 'IQCare') {
                 this.minEMRVersion = '(The minimum version EMR is 2.2.1)';
@@ -160,6 +160,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public loadFromEmr(): void {
+        localStorage.clear();
         this.errorMessage = [];
         this.load$ = this._ndwhExtractService
             .extractAll(this.generateExtractLoadCommand(this.emr))
@@ -249,6 +250,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
 
     public send(): void {
+        localStorage.clear();
         this.sendingManifest = true;
         this.errorMessage = [];
         this.notifications = [];
@@ -367,6 +369,26 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
 
+    private getCurrrentProgress(extract: string, progress: string) {
+        let overallProgress = 0;
+        const keys = this.extracts.map(x => `CT-${x.name}`);
+        const key = `CT-${extract}`;
+        localStorage.setItem(key, progress);
+        keys.forEach(k => {
+            const data = localStorage.getItem(k);
+            if (data) {
+
+                console.log(`${k}=>${data}`);
+                overallProgress = overallProgress + (+data);
+            }
+        });
+
+        console.log(`${overallProgress} %`);
+
+        return overallProgress;
+
+    }
+
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
@@ -404,33 +426,23 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         });
 
         this._hubConnection.on('ShowDwhSendProgress', (dwhProgress: any) => {
-            // console.log(dwhProgress);
+            const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);
             this.sendEvent = {
-                sentProgress: dwhProgress.progress
+                sentProgress: progress
             };
-            if (dwhProgress.progress !== 100) {
+            if (progress !== 100) {
                 this.sending = true;
             } else {
                 this.sending = false;
+                this.updateEvent();
             }
             this.canLoadFromEmr = this.canSend = !this.sending;
         });
 
-        this._hubConnection.on('ShowHtsSendProgressDone', (extractName: string) => {
-            this.extractSent.push(extractName);
-            if (this.extractSent.length === 7) {
-                this.errorMessage = [];
-                this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
-                // this.updateEvent();
-                this.sending = false;
-            } else {
-                this.sending = true;
-                //this.updateEvent();
-            }
-        });
-
-
         this._hubConnection.on('ShowDwhSendMessage', (message: any) => {
+            if (message === 'Sending started...') {
+                localStorage.clear();
+            }
             if (message.error) {
                 this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: message.message});
             } else {
@@ -438,6 +450,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             }
         });
     }
+
 
     private liveOnInitMpi() {
         this._hubConnectionMpi = new HubConnectionBuilder()

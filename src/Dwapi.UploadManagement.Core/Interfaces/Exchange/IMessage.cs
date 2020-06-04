@@ -11,6 +11,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Exchange
         PatientExtractView Demographic { get; }
         List<T> Extracts { get; }
         List<Guid> SendIds { get; }
+        List<Guid> PatientIds { get; }
         IMessage<T> Generate(T extract);
         List<IMessage<T>> GenerateMessages(List<T> extracts);
         bool HasContents { get; }

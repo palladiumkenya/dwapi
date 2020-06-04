@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.SharedKernel.Enum;
+using Humanizer;
 
 namespace Dwapi.UploadManagement.Core.Interfaces.Exchange
 {
@@ -14,5 +15,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Exchange
         IMessageBag<T> Generate(List<T> extracts);
         string ExtractName { get; }
         ExtractType ExtractType { get; }
+        int GetProgress(int count, int total);
     }
 }

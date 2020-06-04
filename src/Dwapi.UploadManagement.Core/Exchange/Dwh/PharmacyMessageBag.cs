@@ -10,6 +10,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class PharmacyMessageBag:IPharmacyMessageBag
     {
+        private int stake = 20;
         public string EndPoint => "PatientPharmacy";
         public IMessage<PatientPharmacyExtractView> Message { get; set; }
         public List<IMessage<PatientPharmacyExtractView>> Messages { get; set; }
@@ -17,6 +18,16 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
         public string ExtractName => "PatientPharmacyExtract";
 
         public ExtractType ExtractType => ExtractType.PatientPharmacy;
+
+        public int GetProgress(int count, int total)
+        {
+            if (total == 0)
+                return stake;
+
+            var percentageStake=  ((float)count / (float)total) * stake;
+            return (int) percentageStake;
+        }
+
         public PharmacyMessageBag()
         {
         }

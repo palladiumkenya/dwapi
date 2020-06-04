@@ -24,6 +24,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
         [JsonProperty(PropertyName = "AdverseEventExtracts")]
         public List<PatientAdverseEventView> Extracts { get; }=new List<PatientAdverseEventView>();
         public List<Guid> SendIds => GetIds();
+        public List<Guid> PatientIds { get; }
+
         [JsonProperty(PropertyName = "PAdverseEventExtracts")]
         public List<PatientAdverseEventView> AdverseEventExtracts { get; set; } = new List<PatientAdverseEventView>();
         public bool HasContents => null != AdverseEventExtracts && AdverseEventExtracts.Any();

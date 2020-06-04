@@ -45,9 +45,9 @@ namespace Dwapi.SharedKernel.DTOs
             return new EmrDto(EmrId, EmrName, EmrSetup);
         }
 
-        public Guid GetExtractId()
+        public Guid GetExtractId(string name)
         {
-            var extract = Extracts.FirstOrDefault(x => x.Name.IsSameAs(ExtractName));
+            var extract = Extracts.FirstOrDefault(x => x.Name.IsSameAs(name));
 
             if (null != extract)
                 return extract.Id;

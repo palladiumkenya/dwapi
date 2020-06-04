@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Dwh;
 using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
+using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Events;
@@ -30,19 +32,19 @@ namespace Dwapi.Controller
         private readonly IMediator _mediator;
         private readonly IExtractStatusService _extractStatusService;
         private readonly IHubContext<ExtractActivity> _hubContext;
-        private readonly IHubContext<DwhSendActivity> _hubSendContext;
         private readonly IDwhSendService _dwhSendService;
         private readonly ICbsSendService _cbsSendService;
         private readonly ICTSendService _ctSendService;
+        private readonly IExtractRepository _extractRepository;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService, IHubContext<DwhSendActivity> hubSendContext, ICbsSendService cbsSendService, ICTSendService ctSendService)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _dwhSendService = dwhSendService;
             _cbsSendService = cbsSendService;
             _ctSendService = ctSendService;
-            Startup.DwhSendHubContext= _hubSendContext = hubSendContext;
+            _extractRepository = extractRepository;
             Startup.HubContext= _hubContext = hubContext;
         }
 
@@ -163,6 +165,10 @@ namespace Dwapi.Controller
         [AutomaticRetry(Attempts = 0)]
         private void QueueDwh(SendManifestPackageDTO package)
         {
+            var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
+
+            if (extracts.Any())
+                package.Extracts = extracts.Select(x => new ExtractDto() {Id = x.Id, Name = x.Name}).ToList();
 
             _ctSendService.NotifyPreSending();
 

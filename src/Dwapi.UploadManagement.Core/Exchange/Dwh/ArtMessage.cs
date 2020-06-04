@@ -27,6 +27,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
         public List<PatientArtExtractView> Extracts { get; } = new List<PatientArtExtractView>();
 
         public List<Guid> SendIds => GetIds();
+        public List<Guid> PatientIds { get; }
+
         [JsonProperty(PropertyName = "PArtExtracts")]
         public List<PatientArtExtractView> ArtExtracts { get; set; } = new List<PatientArtExtractView>();
         public bool HasContents => null != ArtExtracts && ArtExtracts.Any();

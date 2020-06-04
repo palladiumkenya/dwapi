@@ -38,24 +38,27 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
         {
-            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
+            return SendManifestAsync(sendTo,
+                DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
         }
 
-        public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, DwhManifestMessageBag messageBag)
+        public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,
+            DwhManifestMessageBag messageBag)
         {
             var responses = new List<SendDhwManifestResponse>();
             HttpClientHandler handler = new HttpClientHandler()
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             };
-            var client =Client ?? new HttpClient(handler);
+            var client = Client ?? new HttpClient(handler);
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
             foreach (var message in messageBag.Messages)
             {
                 try
                 {
-                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}spot"), message.Manifest);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}spot"),
+                        message.Manifest);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
@@ -73,12 +76,14 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     throw;
                 }
             }
+
             return responses;
         }
 
         public void NotifyPreSending()
         {
             DomainEvents.Dispatch(new DwhMessageNotification(false, $"Sending started..."));
+
         }
 
         public async Task<List<SendCTResponse>> SendBatchExtractsAsync<T>(
@@ -98,9 +103,9 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             int sendCound = 0;
             int count = 0;
             int total = packageInfo.PageCount;
+            int overall = 0;
 
-
-            DomainEvents.Dispatch(new CTStatusNotification(sendTo.GetExtractId(), ExtractStatus.Sending));
+            DomainEvents.Dispatch(new CTStatusNotification(sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sending));
             long recordCount = 0;
 
             try
@@ -147,22 +152,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         throw;
                     }
 
-                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
-                        Common.GetProgress(count, total))));
+                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total))));
 
                 }
             }
             catch (Exception e)
             {
-                Log.Error(e,$"Send Extracts {messageBag.ExtractName} Error");
+                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error");
                 throw;
             }
 
-
             DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
-                Common.GetProgress(count, total), true)));
+                messageBag.GetProgress(count, total), true)));
 
-            DomainEvents.Dispatch(new CTStatusNotification(sendTo.GetExtractId(), ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new CTStatusNotification(sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound));
 
             return responses;
         }

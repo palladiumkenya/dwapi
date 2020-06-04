@@ -25,6 +25,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
         public List<PatientPharmacyExtractView> Extracts { get; } = new List<PatientPharmacyExtractView>();
 
         public List<Guid> SendIds => GetIds();
+        public List<Guid> PatientIds { get; }
+
         [JsonProperty(PropertyName = "PPharmacyExtracts")]
         public List<PatientPharmacyExtractView> PharmacyExtracts { get; set; } = new List<PatientPharmacyExtractView>();
         public bool HasContents => null != PharmacyExtracts && PharmacyExtracts.Any();

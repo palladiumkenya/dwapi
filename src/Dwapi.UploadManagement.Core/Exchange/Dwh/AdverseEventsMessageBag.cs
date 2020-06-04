@@ -10,12 +10,22 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class AdverseEventsMessageBag:IAdverseEventsMessageBag
     {
+        private int stake = 5;
         public string EndPoint => "PatientAdverseEvents";
         public IMessage<PatientAdverseEventView> Message { get; set; }
         public List<IMessage<PatientAdverseEventView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();
         public string ExtractName => "PatientAdverseEventExtract";
         public ExtractType ExtractType => ExtractType.PatientAdverseEvent;
+        public int GetProgress(int count, int total)
+        {
+            if (total == 0)
+                return stake;
+
+            var percentageStake=  ((float)count / (float)total) * stake;
+            return (int) percentageStake;
+        }
+
         public AdverseEventsMessageBag()
         {
         }

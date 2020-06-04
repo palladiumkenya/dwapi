@@ -5,6 +5,8 @@ using System.Linq;
 using Dapper.Contrib.Extensions;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
 using Microsoft.Data.Sqlite;
@@ -86,7 +88,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
 
         public void UpdateSendStatus(List<SentItem> sentItems)
         {
-            var mpi = GetAll(x => sentItems.Select(i => i.Id).Contains(x.Id))
+            var extracts = GetAll(x => sentItems.Select(i => i.Id).Contains(x.Id)).ToList();
+
+            var mpi = extracts
                 .Select(x =>
                 {
                     var sentItem = sentItems.First(s => s.Id == x.Id);
@@ -98,6 +102,20 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
             var cn = GetConnection();
             cn.BulkUpdate(mpi);
             CloseConnection(cn);
+
+            var successOnly = sentItems.Where(x => x.Status == SendStatus.Sent).Select(x => x.Id).ToList();
+
+            var pks = extracts
+                .Where(x => successOnly.Contains(x.Id))
+                .Select(x => new PatientSiteCodeDto()
+                    {PatientPK = x.PatientPK, SiteCode = x.SiteCode});
+
+            UpdatePatientSendStatus(pks);
+        }
+
+        private void UpdatePatientSendStatus(IEnumerable<PatientSiteCodeDto> @select)
+        {
+            // throw new NotImplementedException();
         }
     }
 }

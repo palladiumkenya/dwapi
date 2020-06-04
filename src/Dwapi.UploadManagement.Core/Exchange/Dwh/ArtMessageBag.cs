@@ -11,12 +11,22 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class ArtMessageBag : IArtMessageBag
     {
+        private int stake = 10;
         public string EndPoint => "PatientArt";
         public IMessage<PatientArtExtractView> Message { get; set; }
         public List<IMessage<PatientArtExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();
         public string ExtractName => "PatientArtExtract";
         public ExtractType ExtractType => ExtractType.PatientArt;
+        public int GetProgress(int count, int total)
+        {
+            if (total == 0)
+                return stake;
+
+            var percentageStake=  ((float)count / (float)total) * stake;
+            return (int) percentageStake;
+        }
+
         public ArtMessageBag()
         {
         }

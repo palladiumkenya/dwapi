@@ -10,12 +10,23 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class LabMessageBag:ILaboratoryMessageBag
     {
+        private int stake = 20;
         public string EndPoint => "PatientLabs";
         public IMessage<PatientLaboratoryExtractView> Message { get; set; }
         public List<IMessage<PatientLaboratoryExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();
         public string ExtractName => "PatientLabExtract";
         public ExtractType ExtractType => ExtractType.PatientLab;
+
+        public int GetProgress(int count, int total)
+        {
+            if (total == 0)
+                return stake;
+
+            var percentageStake=  ((float)count / (float)total) * stake;
+            return (int) percentageStake;
+        }
+
         public LabMessageBag()
         {
         }
