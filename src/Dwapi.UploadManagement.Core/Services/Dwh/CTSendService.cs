@@ -152,7 +152,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         throw;
                     }
 
-                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total))));
+                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total),recordCount)));
 
                 }
             }
@@ -163,7 +163,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             }
 
             DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
-                messageBag.GetProgress(count, total), true)));
+                messageBag.GetProgress(count, total), recordCount,true)));
 
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
                 {UpdatePatient = (messageBag is ArtMessageBag || messageBag is BaselineMessageBag || messageBag is StatusMessageBag)}

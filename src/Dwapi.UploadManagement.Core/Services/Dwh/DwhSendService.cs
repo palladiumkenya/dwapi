@@ -414,7 +414,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         public void UpdateUiNumbers(ExtractStatus status)
         {
             //update progress bar
-            DomainEvents.Dispatch(new DwhSendNotification(new SendProgress(nameof(PatientExtract), Common.GetProgress(_count, _total))));
+            DomainEvents.Dispatch(new DwhSendNotification(new SendProgress(nameof(PatientExtract), Common.GetProgress(_count, _total),0)));
             //update Patients
             if (_patientExtractStatus.Found != null)
                 if (_patientExtractStatus.Loaded != null)

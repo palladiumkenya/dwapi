@@ -160,7 +160,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public loadFromEmr(): void {
-        this.canSend=this.canLoadFromEmr=false;
+        this.canSend = this.canLoadFromEmr = false;
         localStorage.clear();
         this.errorMessage = [];
         this.load$ = this._ndwhExtractService
@@ -169,8 +169,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 p => {
                 },
                 e => {
-                    this.canSend=this.canLoadFromEmr=true;
-                    console.error('LOADING>>>',e);
+                    this.canSend = this.canLoadFromEmr = true;
+                    console.error('LOADING>>>', e);
                     this.errorMessage = [];
                     this.errorMessage.push({
                         severity: 'error',
@@ -179,7 +179,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     });
                 },
                 () => {
-                    this.canSend=this.canLoadFromEmr=true;
+                    this.canSend = this.canLoadFromEmr = true;
                     this.errorMessage.push({
                         severity: 'success',
                         summary: 'load was successful '
@@ -267,9 +267,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 p => {
                     this.canSendPatients = true;
                 },
-                e =>
-                {
-                    console.error('SEND ERROR',e);
+                e => {
+                    console.error('SEND ERROR', e);
 
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
@@ -294,10 +293,10 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     // this.sendResponse = p;
                 },
                 e => {
-                    console.error('SEND ERROR',e);
-                    if(e && e.ProgressEvent){
+                    console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
 
-                    }else {
+                    } else {
                         this.errorMessage = [];
                         this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                     }
@@ -391,17 +390,23 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         keys.forEach(k => {
             const data = localStorage.getItem(k);
             if (data) {
-
-                console.log(`${k}=>${data}`);
                 overallProgress = overallProgress + (+data);
             }
         });
-
-        console.log(`${overallProgress} %`);
-
         return overallProgress;
-
     }
+
+    private updateExractStats(dwhProgress: any) {
+        if(dwhProgress) {
+           this.extracts.map(e => {
+                    if (e.name === dwhProgress.extract && e.extractEvent) {
+                        e.extractEvent.sent = dwhProgress.sent;
+                    }
+                }
+            );
+        }
+    }
+
 
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
@@ -444,6 +449,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.sendEvent = {
                 sentProgress: progress
             };
+            this.updateExractStats(dwhProgress);
             if (progress !== 100) {
                 this.sending = true;
             } else {
@@ -469,7 +475,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private liveOnInitMpi() {
         this._hubConnectionMpi = new HubConnectionBuilder()
             .withUrl(`${window.location.protocol}//${document.location.hostname}:${environment.port}/cbsactivity`)
-            .configureLogging(LogLevel.Trace)
+            .configureLogging(LogLevel.Error)
             .build();
         this._hubConnectionMpi.serverTimeoutInMilliseconds = 120000;
 
@@ -640,4 +646,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.send$.unsubscribe();
         }
     }
+
+
 }

@@ -93,7 +93,16 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
         this.liveOnInit();
         this.loadDetails();
     }
-
+    private updateExractStats(dwhProgress: any) {
+        if(dwhProgress) {
+            this.extracts.map(e => {
+                    if (e.name === dwhProgress.extract && e.extractEvent) {
+                        e.extractEvent.sent = dwhProgress.sent;
+                    }
+                }
+            );
+        }
+    }
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(`${window.location.protocol}//${document.location.hostname}:${environment.port}/CbsActivity`)
@@ -122,6 +131,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                 this.sendEvent = {
                     sentProgress: dwhProgress.progress
                 };
+                this.updateExractStats(dwhProgress);
                 this.sending = true;
                 this.canLoad = this.canSend = !this.sending;
             }
@@ -180,7 +190,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                 },
                 e => {
                     this.metricMessages = [];
-                    //this.metricMessages.push({severity: 'warn', summary: 'Could not load EMR metrics', detail: <any>e});
+                    // this.metricMessages.push({severity: 'warn', summary: 'Could not load EMR metrics', detail: <any>e});
                 },
                 () => {
                     if (this.emrMetric) {
@@ -206,7 +216,6 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                 });
             },
             () => {
-                //console.log(this.centralRegistry.name);
                 if (this.centralRegistry) {
                     this.canSend = true;
                 }
@@ -255,7 +264,6 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     this.messages.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
                 },
                 () => {
-                    // console.log(extract);
                 }
             );
 
@@ -269,7 +277,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     this.messages.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
                 },
                 () => {
-                    // console.log(extract);
+
                 }
             );
         this.getStatus$ = this.cbsService.getStatus(this.extract.id)
@@ -287,7 +295,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                     this.messages.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
                 },
                 () => {
-                    // console.log(extract);
+
                 }
             );
 
@@ -382,11 +390,6 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
 
                     this.sdk = Array.from(new Set(this.extractDetails.map(extract => extract.sxdmPKValueDoB)));
                     this.colorMappings = this.sdk.map((sd, idx) => ({sxdmPKValueDoB: sd, color: this.isEven(idx) ? 'white' : 'pink'}));
-                    // this.colorMappings.forEach(value => {
-                    //     this.rowStyleMap[value.sxdmPKValueDoB] = value.color;
-                    //     console.log(this.rowStyleMap);
-                    // });
-
                 }
             );
 
@@ -404,11 +407,6 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
 
                     this.sdk = Array.from(new Set(this.extractDetails.map(extract => extract.sxdmPKValueDoB)));
                     this.colorMappings = this.sdk.map((sd, idx) => ({sxdmPKValueDoB: sd, color: this.isEven(idx) ? 'white' : 'pink'}));
-                    // this.colorMappings.forEach(value => {
-                    //     this.rowStyleMap[value.sxdmPKValueDoB] = value.color;
-                    //     console.log(this.rowStyleMap);
-                    // });
-
                 }
             );
     }

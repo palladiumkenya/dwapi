@@ -117,7 +117,7 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
                     throw;
                 }
 
-                DomainEvents.Dispatch(new CbsSendNotification(new SendProgress(nameof(MasterPatientIndex), Common.GetProgress(count,total))));
+                DomainEvents.Dispatch(new CbsSendNotification(new SendProgress(nameof(MasterPatientIndex), Common.GetProgress(count,total),sendCound)));
             }
 
             DomainEvents.Dispatch(new CbsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));

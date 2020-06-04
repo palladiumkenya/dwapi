@@ -51,7 +51,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
         this._patientAdverseEventService = patientAdverseEventService;
     }
 
-    get preventLoad(): string {
+    get preventLoad(): boolean {
         return this._preventLoad;
     }
 
@@ -77,7 +77,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
 
     ngOnInit() {
         this.getPatientColumns();
-        this.getInvalidPatientExtracts();
+        // this.getInvalidPatientExtracts();
     }
 
     public getInvalidExtracts(): void {

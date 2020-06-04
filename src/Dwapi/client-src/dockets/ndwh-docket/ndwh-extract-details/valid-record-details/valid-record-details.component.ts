@@ -38,7 +38,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     public initialRows: number = 10;
     public loadingData = false;
     public recordCount = 0;
-    private _preventLoad=true;
+    private _preventLoad = true;
 
     constructor(patientExtractsService: NdwhPatientsExtractService, patientArtService: NdwhPatientArtService,
                 patientBaselineService: NdwhPatientBaselineService, patientLabService: NdwhPatientLaboratoryService,
@@ -52,9 +52,15 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         this._patientStatusService = patientStatusService;
         this._patientVisitService = patientVisitService;
         this._patientAdverseEventService = patientAdverseEventService;
+
+        this.pageModel = {
+            page: 1,
+            pageSize: this.initialRows
+        };
+
     }
 
-    get preventLoad(): string {
+    get preventLoad(): boolean {
         return this._preventLoad;
     }
 
@@ -70,8 +76,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     @Input()
     set extract(extract: string) {
         if (extract) {
+            this._preventLoad = false;
             this.exName = extract;
-            //console.log(extract);
             this.cols = [];
             this.validExtracts = [];
 
@@ -82,22 +88,17 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
 
             this.getColumns();
             this.getValidExtracts();
+        } else {
+            this._preventLoad = true;
         }
     }
 
     ngOnInit() {
-        this.exName = 'All Patients'
-        this.pageModel = {
-            page: 1,
-            pageSize: this.initialRows
-        };
-
+        this.exName = 'Patient Adverse Events';
         this.getPatientColumns();
-        this.getPatients();
     }
 
     public getValidExtracts(): void {
-        //console.log('loading>', this.extract);
         if (this.extract === 'All Patients') {
             this.getPatients();
         }
@@ -541,10 +542,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'registrationDate', header: 'Registration Date'},
             {field: 'patientSource', header: 'Patient Source'},
             {field: 'gender', header: 'Gender'},
-            { field: 'ageEnrollment', header: 'Enrollment Age' },
-            { field: 'ageARTStart', header: 'Age ART Start' },
-            { field: 'ageLastVisit', header: 'Age Last Visit' },
-            { field: 'startARTDate', header: 'Start ART Date' },
+            {field: 'ageEnrollment', header: 'Enrollment Age'},
+            {field: 'ageARTStart', header: 'Age ART Start'},
+            {field: 'ageLastVisit', header: 'Age Last Visit'},
+            {field: 'startARTDate', header: 'Start ART Date'},
             {field: 'previousARTStartDate', header: 'Previous ART Start Date'},
             {field: 'previousARTRegimen', header: 'Previous ART Regimen'},
             {field: 'startARTAtThisFacility', header: 'Start ART At This Facility'},
@@ -614,8 +615,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'visitId', header: 'VisitId'},
             {field: 'orderedByDate', header: 'Ordered By Date'},
             {field: 'reportedByDate', header: 'Reported By Date'},
-            { field: 'testName', header: 'Test Name' },
-            { field: 'reason', header: 'Lab Reason' },
+            {field: 'testName', header: 'Test Name'},
+            {field: 'reason', header: 'Lab Reason'},
             {field: 'enrollmentTest', header: 'Enrollment Test'},
             {field: 'testResult', header: 'Test Result'},
             {field: 'dateExtracted', header: 'Date Extracted'}
@@ -735,7 +736,9 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             sortOrder: event.sortOrder
         };
         this.getColumns();
-        this.getValidExtracts();
+        if (!this.preventLoad) {
+            this.getValidExtracts();
+        }
     }
 
     ngOnDestroy(): void {

@@ -28,13 +28,13 @@ export class NdwhExtractDetailsComponent implements OnInit {
     public extractName: string;
     public errorMessage: Message[];
     public otherMessage: Message[];
-    selectedIndex = 0;
+    selectedIndex = 7;
     @ViewChild(TabView) tabView: TabView;
-    setIsInitialLoad=false;
+    isLoading = true;
 
     @Input()
     set isInitialLoad(intial: boolean) {
-        setIsInitialLoad = intial
+        this.isLoading = intial;
     }
 
     @Input()
