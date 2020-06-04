@@ -24,6 +24,7 @@ export class NdwhDocketComponent implements OnInit, OnDestroy {
     public emrMetric: EmrMetrics;
     public emrVersion: string;
     public metricMessages: Message[];
+    isInitialLoading = false;
 
     public constructor(public breadcrumbService: BreadcrumbService,
                        confirmationService: ConfirmationService, emrConfigService: EmrConfigService) {
@@ -35,6 +36,7 @@ export class NdwhDocketComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
+        this.isInitialLoading = true;
         this.loadData();
     }
 

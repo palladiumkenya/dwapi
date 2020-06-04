@@ -139,7 +139,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             return responses;
         }
 
-        public async Task<List<string>> SendExtractsAsync(SendManifestPackageDTO sendTo)
+      public async Task<List<string>> SendExtractsAsync(SendManifestPackageDTO sendTo)
         {
             //hack to prevent hang fire from requeueing the job every 30 minutes
             if (_patientExtractStatus.LastStatus != nameof(ExtractStatus.Sending))
@@ -150,7 +150,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 {
                     AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
                 };
-                using (var client = Client ?? new HttpClient(handler))
+                using (var client = new HttpClient(handler))
                 {
                     client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
                     client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
@@ -200,15 +200,15 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             {
                                 var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{artMessageBag.EndPoint}"), artMessage);
                                 httpResponseMessages.Add(response);
-                                _artCount += artMessage.ArtExtracts.Count;
-                                sentPatientArts.AddRange(artMessage.ArtExtracts.Select(x => x.Id).ToList());
+                                _artCount += artMessage.Extracts.Count;
+                                sentPatientArts.AddRange(artMessage.Extracts.Select(x => x.Id).ToList());
 
                             }
                             catch (Exception e)
                             {
                                 //Show error message in UI
                                 DomainEvents.Dispatch(new DwhMessageNotification(true, $"Error sending {ExtractType.PatientArt.ToString()}s for patient id {id}"));
-                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientArt, artMessage.ArtExtracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
+                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientArt, artMessage.Extracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
                                 Log.Error(e, $"Send Error");
                                 PrintMessage(artMessage);
                                 throw;
@@ -221,15 +221,15 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             {
                                 var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{baselineMessageBag.EndPoint}"), baselineMessage);
                                 httpResponseMessages.Add(response);
-                                _baselineCount += baselineMessage.BaselinesExtracts.Count;
-                                sentPatientBaselines.AddRange(baselineMessage.BaselinesExtracts.Select(x => x.Id).ToList());
+                                _baselineCount += baselineMessage.Extracts.Count;
+                                sentPatientBaselines.AddRange(baselineMessage.Extracts.Select(x => x.Id).ToList());
 
                             }
                             catch (Exception e)
                             {
                                 //Show error message in UI
                                 DomainEvents.Dispatch(new DwhMessageNotification(true, $"Error sending {ExtractType.PatientBaseline.ToString()}s for patient id {id}"));
-                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientBaseline, baselineMessage.BaselinesExtracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
+                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientBaseline, baselineMessage.Extracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
                                 Log.Error(e, $"Send Error");
                                 PrintMessage(baselineMessage);
                                 throw;
@@ -242,14 +242,14 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             {
                                 var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{labMessageBag.EndPoint}"), labMessage);
                                 httpResponseMessages.Add(response);
-                                _labCount += labMessage.LaboratoryExtracts.Count;
-                                sentPatientLabs.AddRange(labMessage.LaboratoryExtracts.Select(x => x.Id).ToList());
+                                _labCount += labMessage.Extracts.Count;
+                                sentPatientLabs.AddRange(labMessage.Extracts.Select(x => x.Id).ToList());
                             }
                             catch (Exception e)
                             {
                                 //Show error message in UI
                                 DomainEvents.Dispatch(new DwhMessageNotification(true, $"Error sending {ExtractType.PatientLab.ToString()}s for patient id {id}"));
-                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientLab, labMessage.LaboratoryExtracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
+                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientLab, labMessage.Extracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
                                 Log.Error(e, $"Send Error");
                                 PrintMessage(labMessage);
                                 throw;
@@ -262,14 +262,14 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             {
                                 var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{pharmacyMessageBag.EndPoint}"), pharmacyMessage);
                                 httpResponseMessages.Add(response);
-                                _pharmacyCount += pharmacyMessage.PharmacyExtracts.Count;
-                                sentPatientPharmacies.AddRange(pharmacyMessage.PharmacyExtracts.Select(x => x.Id).ToList());
+                                _pharmacyCount += pharmacyMessage.Extracts.Count;
+                                sentPatientPharmacies.AddRange(pharmacyMessage.Extracts.Select(x => x.Id).ToList());
                             }
                             catch (Exception e)
                             {
                                 //Show error message in UI
                                 DomainEvents.Dispatch(new DwhMessageNotification(true, $"Error sending {ExtractType.PatientPharmacy.ToString()}s for patient id {id}"));
-                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientPharmacy, pharmacyMessage.PharmacyExtracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
+                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientPharmacy, pharmacyMessage.Extracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
                                 Log.Error(e, $"Send Error");
                                 PrintMessage(pharmacyMessage);
                                 throw;
@@ -282,8 +282,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             {
                                 var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{statusMessageBag.EndPoint}"), statusMessage);
                                 httpResponseMessages.Add(response);
-                                _statusCount += statusMessage.StatusExtracts.Count;
-                                sentPatientStatuses.AddRange(statusMessage.StatusExtracts.Select(x => x.Id).ToList());
+                                _statusCount += statusMessage.Extracts.Count;
+                                sentPatientStatuses.AddRange(statusMessage.Extracts.Select(x => x.Id).ToList());
 
                             }
                             catch (Exception e)
@@ -291,7 +291,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 //Show error message in UI
                                 DomainEvents.Dispatch(new DwhMessageNotification(true, $"Error sending {ExtractType.PatientStatus.ToString()}es for patient id {id}"));
                                 Log.Error(e, $"Send Error");
-                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientStatus, statusMessage.StatusExtracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
+                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientStatus, statusMessage.Extracts.Select(x => x.Id).ToList(), SendStatus.Failed, e.Message));
                                 PrintMessage(statusMessage);
                                 throw;
                             }
@@ -303,8 +303,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             {
                                 var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{visitsMessageBag.EndPoint}"), visitsMessage);
                                 httpResponseMessages.Add(response);
-                                _visitCount += visitsMessage.VisitExtracts.Count;
-                                sentPatientVisits.AddRange(visitsMessage.VisitExtracts.Select(x => x.Id).ToList());
+                                _visitCount += visitsMessage.Extracts.Count;
+                                sentPatientVisits.AddRange(visitsMessage.Extracts.Select(x => x.Id).ToList());
 
                             }
                             catch (Exception e)
@@ -312,7 +312,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 //Show error message in UI
                                 DomainEvents.Dispatch(new DwhMessageNotification(true, $"Error sending {ExtractType.PatientVisit.ToString()}s for patient id {id}"));
                                 Log.Error(e, $"Send Error");
-                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientVisit, visitsMessage.VisitExtracts.Select(x => x.Id).ToList(), SendStatus.Sent, e.Message));
+                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientVisit, visitsMessage.Extracts.Select(x => x.Id).ToList(), SendStatus.Sent, e.Message));
                                 PrintMessage(visitsMessage);
                                 throw;
                             }
@@ -324,15 +324,15 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             {
                                 var response = client.PostAsCompressedAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}{adverseEventsMessageBag.EndPoint}"), adverseEventsMessage);
                                 httpResponseMessages.Add(response);
-                                _adverseEventCount += adverseEventsMessage.AdverseEventExtracts.Count;
-                                sentPatientAdverseEvents.AddRange(adverseEventsMessage.AdverseEventExtracts.Select(x => x.Id).ToList());
+                                _adverseEventCount += adverseEventsMessage.Extracts.Count;
+                                sentPatientAdverseEvents.AddRange(adverseEventsMessage.Extracts.Select(x => x.Id).ToList());
                             }
                             catch (Exception e)
                             {
                                 //Show error message in UI
                                 DomainEvents.Dispatch(new DwhMessageNotification(true, $"Error sending {ExtractType.PatientAdverseEvent.ToString()}s for patient id {id}"));
                                 Log.Error(e, $"Send Error");
-                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientAdverseEvent, adverseEventsMessage.AdverseEventExtracts.Select(x => x.Id).ToList(), SendStatus.Sent, e.Message));
+                                DomainEvents.Dispatch(new DwhExtractSentEvent(ExtractType.PatientAdverseEvent, adverseEventsMessage.Extracts.Select(x => x.Id).ToList(), SendStatus.Sent, e.Message));
                                 PrintMessage(adverseEventsMessage);
                                 throw;
                             }
@@ -414,7 +414,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         public void UpdateUiNumbers(ExtractStatus status)
         {
             //update progress bar
-            DomainEvents.Dispatch(new DwhSendNotification(new SendProgress(nameof(PatientExtract), Common.GetProgress(_count, _total))));
+            DomainEvents.Dispatch(new DwhSendNotification(new SendProgress(nameof(PatientExtract), Common.GetProgress(_count, _total),0)));
             //update Patients
             if (_patientExtractStatus.Found != null)
                 if (_patientExtractStatus.Loaded != null)

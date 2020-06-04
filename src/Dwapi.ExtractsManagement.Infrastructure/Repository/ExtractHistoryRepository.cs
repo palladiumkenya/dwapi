@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
+using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
 using Serilog;
+using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 {
@@ -54,7 +58,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 
         public IEnumerable<ExtractHistory> GetAllExtractStatus(Guid extractId)
         {
-            return GetAll().Where(x => x.ExtractId == extractId);
+            List<ExtractHistory> histories;
+            var sql = $"SELECT * FROM {nameof(ExtractsContext.ExtractHistory)} Where ExtractId = @extractId";
+
+            using (var cn = GetNewConnection())
+            {
+                histories = cn.Query<ExtractHistory>(sql, new {ExtractId = extractId}).ToList();
+            }
+
+            return histories;
         }
 
         public void UpdateStatus(Guid extractId, ExtractStatus status,int? stats, string statusInfo = "", bool express = false)

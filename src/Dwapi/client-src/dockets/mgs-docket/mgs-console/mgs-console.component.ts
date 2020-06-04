@@ -287,7 +287,7 @@ export class MgsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             .withUrl(
                 `${window.location.protocol}//${document.location.hostname}:${environment.port}/MgsActivity`
             )
-            .configureLogging(LogLevel.Trace)
+            .configureLogging(LogLevel.Error)
             .build();
 
         this._hubConnection.start().catch(err => console.error(err.toString()));

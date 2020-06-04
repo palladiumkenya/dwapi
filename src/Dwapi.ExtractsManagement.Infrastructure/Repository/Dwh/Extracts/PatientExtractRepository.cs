@@ -77,5 +77,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
             cn.BulkUpdate(mpi);
             CloseConnection(cn);
         }
+
+        public int GetSent(Guid domainEventPatientExtractId)
+        {
+            var count = DbSet.AsNoTracking().Where(x => x.Status == "Sent").Select(x => x.Id).Count();
+            return count;
+        }
     }
 }
