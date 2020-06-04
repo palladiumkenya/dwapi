@@ -30,6 +30,12 @@ export class NdwhExtractDetailsComponent implements OnInit {
     public otherMessage: Message[];
     selectedIndex = 0;
     @ViewChild(TabView) tabView: TabView;
+    setIsInitialLoad=false;
+
+    @Input()
+    set isInitialLoad(intial: boolean) {
+        setIsInitialLoad = intial
+    }
 
     @Input()
     set emr(emr: EmrSystem) {

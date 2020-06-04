@@ -35,6 +35,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
     public otherMessage: Message[];
 
     public loadingData = false;
+    private _preventLoad = true;
 
     constructor(patientExtractsService: NdwhPatientsExtractService, patientArtService: NdwhPatientArtService,
                 patientBaselineService: NdwhPatientBaselineService, patientLabService: NdwhPatientLaboratoryService,
@@ -48,6 +49,15 @@ export class InvalidRecordDetailsComponent implements OnInit {
         this._patientStatusService = patientStatusService;
         this._patientVisitService = patientVisitService;
         this._patientAdverseEventService = patientAdverseEventService;
+    }
+
+    get preventLoad(): string {
+        return this._preventLoad;
+    }
+
+    @Input()
+    set preventLoad(allow: boolean) {
+        this._preventLoad = allow;
     }
 
     get extract(): string {
@@ -395,7 +405,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
             {field: 'facilityName', header: 'Facility Name'},
-            {field: 'reason', header: 'Lab Reason' },
+            {field: 'reason', header: 'Lab Reason'},
             {field: 'enrollmentTest', header: 'Enrollment Test'},
             {field: 'testResult', header: 'Test Result'},
             {field: 'visitId', header: 'Visit Id'}

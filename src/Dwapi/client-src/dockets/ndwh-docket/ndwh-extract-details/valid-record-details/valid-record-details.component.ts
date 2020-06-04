@@ -38,6 +38,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     public initialRows: number = 10;
     public loadingData = false;
     public recordCount = 0;
+    private _preventLoad=true;
 
     constructor(patientExtractsService: NdwhPatientsExtractService, patientArtService: NdwhPatientArtService,
                 patientBaselineService: NdwhPatientBaselineService, patientLabService: NdwhPatientLaboratoryService,
@@ -51,6 +52,15 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         this._patientStatusService = patientStatusService;
         this._patientVisitService = patientVisitService;
         this._patientAdverseEventService = patientAdverseEventService;
+    }
+
+    get preventLoad(): string {
+        return this._preventLoad;
+    }
+
+    @Input()
+    set preventLoad(allow: boolean) {
+        this._preventLoad = allow;
     }
 
     get extract(): string {
