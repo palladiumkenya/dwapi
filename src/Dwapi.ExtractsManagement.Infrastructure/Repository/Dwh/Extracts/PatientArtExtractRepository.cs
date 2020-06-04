@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using Dapper;
 using Dapper.Contrib.Extensions;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -113,9 +114,27 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
             UpdatePatientSendStatus(pks);
         }
 
-        private void UpdatePatientSendStatus(IEnumerable<PatientSiteCodeDto> @select)
+        private void UpdatePatientSendStatus(IEnumerable<PatientSiteCodeDto> patientSiteCodeDtos)
         {
-            // throw new NotImplementedException();
+            var sitePks = patientSiteCodeDtos
+                .GroupBy(x => x.SiteCode)
+                .ToList();
+
+            foreach (var sitePk in sitePks)
+            {
+                string sql = @"
+                    update PatientExtracts
+                    set Status=@Status,StatusDate=@StatusDate
+                    where SiteCode=@SiteCode
+                    and PatientPK in @PatientPK and Status is null
+                ";
+
+                Context.Database.GetDbConnection().Execute(sql,
+                    new
+                    {
+                        Status = "Sent", StatusDate = DateTime.Now, SiteCode = sitePk.Key, PatientPK = sitePk.ToArray()
+                    });
+            }
         }
     }
 }
