@@ -100,9 +100,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
                     return x;
                 });
 
-            var cn = GetConnection();
-            cn.BulkUpdate(mpi);
-            CloseConnection(cn);
+            using (var cn = GetNewConnection())
+            {
+                cn.BulkUpdate(mpi);
+            }
 
             var successOnly = sentItems.Where(x => x.Status == SendStatus.Sent).Select(x => x.Id).ToList();
 

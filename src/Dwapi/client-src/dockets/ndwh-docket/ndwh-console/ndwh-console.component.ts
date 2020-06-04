@@ -168,6 +168,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 p => {
                 },
                 e => {
+                    console.error('LOADING>>>',e);
                     this.errorMessage = [];
                     this.errorMessage.push({
                         severity: 'error',
@@ -261,7 +262,10 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 p => {
                     this.canSendPatients = true;
                 },
-                e => {
+                e =>
+                {
+                    console.error('SEND ERROR',e);
+
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                 },
@@ -285,6 +289,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     // this.sendResponse = p;
                 },
                 e => {
+                    console.error('SEND ERROR',e);
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                 },

@@ -194,7 +194,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
                 return new SqliteConnection(cn);
             }
 
-            return Context.Database.GetDbConnection();
+            return null;
         }
 
         public string GetConnectionString()

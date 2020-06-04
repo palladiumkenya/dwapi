@@ -71,9 +71,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
                     return x;
                 });
 
-            var cn = GetConnection();
-            cn.BulkUpdate(mpi);
-            CloseConnection(cn);
+            using (var cn = GetNewConnection())
+            {
+                cn.BulkUpdate(mpi);
+            }
         }
     }
 }
