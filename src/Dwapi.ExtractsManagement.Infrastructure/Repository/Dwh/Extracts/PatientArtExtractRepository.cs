@@ -128,12 +128,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
                     where SiteCode=@SiteCode
                     and PatientPK in @PatientPK and Status is null
                 ";
+                using (var connection= GetNewConnection())
+                {
+                    connection.Execute(sql,
+                        new
+                        {
+                            Status = "Sent", StatusDate = DateTime.Now, SiteCode = sitePk.Key, PatientPK = sitePk.Select(x=>x.PatientPK).ToArray()
+                        });
+                }
 
-                Context.Database.GetDbConnection().Execute(sql,
-                    new
-                    {
-                        Status = "Sent", StatusDate = DateTime.Now, SiteCode = sitePk.Key, PatientPK = sitePk.ToArray()
-                    });
             }
         }
     }

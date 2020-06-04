@@ -175,6 +175,28 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             return _connection;
         }
 
+        public IDbConnection GetNewConnection()
+        {
+            var cn = GetConnectionString();
+
+            if (Context.Database.IsSqlServer())
+            {
+                return new SqlConnection(cn);
+            }
+
+            if (Context.Database.IsMySql())
+            {
+                return new MySqlConnection(cn);
+            }
+
+            if (Context.Database.IsSqlite())
+            {
+                return new SqliteConnection(cn);
+            }
+
+            return Context.Database.GetDbConnection();
+        }
+
         public string GetConnectionString()
         {
             return Context.Database.GetDbConnection().ConnectionString;

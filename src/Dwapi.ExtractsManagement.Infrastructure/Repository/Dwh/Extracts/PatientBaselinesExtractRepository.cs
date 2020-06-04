@@ -104,11 +104,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
                     and PatientPK in @PatientPK and Status is null
                 ";
 
-                Context.Database.GetDbConnection().Execute(sql,
-                    new
-                    {
-                        Status = "Sent", StatusDate = DateTime.Now, SiteCode = sitePk.Key, PatientPK = sitePk.ToArray()
-                    });
+                using (var connection= GetNewConnection())
+                {
+                    connection.Execute(sql,
+                        new
+                        {
+                            Status = "Sent", StatusDate = DateTime.Now, SiteCode = sitePk.Key, PatientPK = sitePk.Select(x=>x.PatientPK).ToArray()
+                        });
+                }
             }
         }
     }
