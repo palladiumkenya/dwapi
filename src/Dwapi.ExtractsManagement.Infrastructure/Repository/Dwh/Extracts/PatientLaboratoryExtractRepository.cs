@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.SharedKernel.Infrastructure.Repository;
@@ -14,7 +15,8 @@ using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
 {
-    public class PatientLaboratoryExtractRepository : BaseRepository<PatientLaboratoryExtract, Guid>, IPatientLaboratoryExtractRepository
+    public class PatientLaboratoryExtractRepository : BaseRepository<PatientLaboratoryExtract, Guid>,
+        IPatientLaboratoryExtractRepository
     {
         public PatientLaboratoryExtractRepository(ExtractsContext context) : base(context)
         {
@@ -42,6 +44,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
                         return true;
                     }
                 }
+
                 if (Context.Database.IsSqlite())
                 {
                     using (var connection = new SqliteConnection(cn))
@@ -50,6 +53,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
                         return true;
                     }
                 }
+
                 return false;
             }
             catch (Exception e)
@@ -62,19 +66,25 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
 
         public void UpdateSendStatus(List<SentItem> sentItems)
         {
-            var mpi = GetAll(x => sentItems.Select(i => i.Id).Contains(x.Id))
-                .Select(x =>
-                {
-                    var sentItem = sentItems.First(s => s.Id == x.Id);
-                    x.Status = $"{sentItem.Status}";
-                    x.StatusDate = sentItem.StatusDate;
-                    return x;
-                });
+            var sql = $"SELECT * FROM {nameof(ExtractsContext.PatientLaboratoryExtracts)} Where Id IN @Ids";
+            var ids = sentItems.Select(x => x.Id).ToArray();
 
             using (var cn = GetNewConnection())
             {
+
+                var mpi = cn.Query<PatientLaboratoryExtract>(sql, new {Ids = ids}).ToList()
+                    .Select(x =>
+                    {
+                        var sentItem = sentItems.First(s => s.Id == x.Id);
+                        x.Status = $"{sentItem.Status}";
+                        x.StatusDate = sentItem.StatusDate;
+                        return x;
+                    }).ToList();
+
+
                 cn.BulkUpdate(mpi);
             }
         }
     }
 }
+

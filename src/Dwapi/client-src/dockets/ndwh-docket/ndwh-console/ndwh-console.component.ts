@@ -160,6 +160,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public loadFromEmr(): void {
+        this.canSend=this.canLoadFromEmr=false;
         localStorage.clear();
         this.errorMessage = [];
         this.load$ = this._ndwhExtractService
@@ -168,6 +169,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 p => {
                 },
                 e => {
+                    this.canSend=this.canLoadFromEmr=true;
                     console.error('LOADING>>>',e);
                     this.errorMessage = [];
                     this.errorMessage.push({
@@ -177,6 +179,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     });
                 },
                 () => {
+                    this.canSend=this.canLoadFromEmr=true;
                     this.errorMessage.push({
                         severity: 'success',
                         summary: 'load was successful '
@@ -184,6 +187,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.updateEvent();
                 }
             );
+
+
     }
 
     public loadRegisrty(): void {
@@ -290,8 +295,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     console.error('SEND ERROR',e);
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    if(e && e.ProgressEvent){
+
+                    }else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    }
                 },
                 () => {
                     this.errorMessage.push({severity: 'success', summary: 'Sending Extracts '});

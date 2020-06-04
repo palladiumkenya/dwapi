@@ -35,7 +35,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     public getValidCount$: Subscription;
     private exName: string;
     public pageModel: PageModel;
-    public initialRows: number = 20;
+    public initialRows: number = 10;
     public loadingData = false;
     public recordCount = 0;
 
@@ -527,7 +527,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'facilityName', header: 'Facility Name'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
-            {field: 'dob', header: 'DOB'}, 
+            {field: 'dob', header: 'DOB'},
             {field: 'registrationDate', header: 'Registration Date'},
             {field: 'patientSource', header: 'Patient Source'},
             {field: 'gender', header: 'Gender'},
