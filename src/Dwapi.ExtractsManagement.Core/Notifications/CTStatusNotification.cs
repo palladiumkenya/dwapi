@@ -10,9 +10,12 @@ namespace Dwapi.ExtractsManagement.Core.Notifications
         public ExtractStatus Status { get; }
         public int? Stats { get;  }
         public string StatusInfo { get; }
+        public Guid PatientExtractId  { get; }
+        public bool UpdatePatient { get; set; }
 
-        public CTStatusNotification(Guid extractId, ExtractStatus status, int? stats=null, string statusInfo="")
+        public CTStatusNotification(Guid patientExtractId, Guid extractId, ExtractStatus status, int? stats=null, string statusInfo="")
         {
+            PatientExtractId = patientExtractId;
             ExtractId = extractId;
             Status = status;
             Stats = stats;
