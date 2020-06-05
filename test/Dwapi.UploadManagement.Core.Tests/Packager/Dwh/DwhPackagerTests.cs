@@ -2,6 +2,7 @@
 using System.Linq;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
+using Dwapi.UploadManagement.Core.Model.Dwh;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -94,11 +95,20 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
             }
         }
 
+
         [Test]
-        public void should_Generate_Extracts()
+        public void should_Generate_Art_Extracts()
         {
-            var extracts = _packager.GenerateExtracts(_pid);
-            Assert.NotNull(extracts);
+            var extracts = _packager.GenerateBatchExtracts<PatientArtExtractView,Guid>(1,1);
+            Assert.True(extracts.Any());
+        }
+
+        [Test]
+        public void should_Get_Art_PackageInfo()
+        {
+            var extracts = _packager.GetPackageInfo<PatientArtExtractView,Guid>(1);
+            Assert.True(extracts.PageCount>0);
+            Assert.True(extracts.TotalRecords>0);
         }
     }
 }

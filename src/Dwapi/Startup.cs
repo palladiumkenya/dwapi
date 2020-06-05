@@ -144,7 +144,6 @@ namespace Dwapi
         public IServiceCollection Service;
         public static IServiceProvider ServiceProvider;
         public static IHubContext<ExtractActivity> HubContext;
-        public static IHubContext<DwhSendActivity> DwhSendHubContext;
         public static IHubContext<CbsActivity> CbsHubContext;
         public static IHubContext<CbsSendActivity> CbsSendHubContext;
         public static IHubContext<HtsSendActivity> HtsSendHubContext;
@@ -397,6 +396,7 @@ namespace Dwapi
             services.AddScoped<IDwhExtractReader, DwhExtractReader>();
             services.AddScoped<IDwhPackager, DwhPackager>();
             services.AddScoped<IDwhSendService, DwhSendService>();
+            services.AddScoped<ICTSendService, CTSendService>();
             services.AddScoped<IDwhExtractSentServcie, DwhExtractSentServcie>();
 
             services.AddScoped<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>();
@@ -582,12 +582,19 @@ namespace Dwapi
             var hfServerOptions = new BackgroundJobServerOptions()
             {
                 ServerName = $"dwapi",
+                // WorkerCount =
                 WorkerCount = Environment.ProcessorCount * 5,
-                Queues = new string[] {"mpi", "default"}
+                //Queues = new string[] {"mpi", "default"}
             };
-            app.UseHangfireDashboard();
+            /*
+            app.UseHangfireDashboard("/api/hangfire", new DashboardOptions()
+            {
+                Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
+            });
+            */
             app.UseHangfireServer(hfServerOptions);
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute() {Attempts = 3});
+            GlobalConfiguration.Configuration.UseBatches();
 
             try
             {

@@ -30,37 +30,49 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         public string StatusAtCCC { get; set; }
         public string StatusAtPMTCT { get; set; }
         public string StatusAtTBClinic { get; set; }
-        [NotMapped]
-        public int PatientPID => PatientPK;
+        [NotMapped] public int PatientPID => PatientPK;
         [NotMapped] public string PatientCccNumber => PatientID;
-        [NotMapped] public int FacilityId =>SiteCode;
+        [NotMapped] public int FacilityId => SiteCode;
 
         [NotMapped]
         public ICollection<PatientArtExtractView> PatientArtExtracts { get; set; } = new List<PatientArtExtractView>();
-        [NotMapped]
-        public ICollection<PatientBaselinesExtractView> PatientBaselinesExtracts { get; set; }=new List<PatientBaselinesExtractView>();
-        [NotMapped]
-        public ICollection<PatientLaboratoryExtractView> PatientLaboratoryExtracts { get; set; }=new List<PatientLaboratoryExtractView>();
-        [NotMapped]
-        public ICollection<PatientPharmacyExtractView> PatientPharmacyExtracts { get; set; }=new List<PatientPharmacyExtractView>();
-        [NotMapped]
-        public ICollection<PatientStatusExtractView> PatientStatusExtracts { get; set; }=new List<PatientStatusExtractView>();
-        [NotMapped]
-        public ICollection<PatientVisitExtractView> PatientVisitExtracts { get; set; }=new List<PatientVisitExtractView>();
-        [NotMapped]
-        public ICollection<PatientAdverseEventView> PatientAdverseEventExtracts { get; set; } = new List<PatientAdverseEventView>();
 
-        [NotMapped] public bool HasArt => null!= PatientArtExtracts&& PatientArtExtracts.Any();
-        [NotMapped] public bool HasBaseline => null != PatientBaselinesExtracts&& PatientBaselinesExtracts.Any();
-        [NotMapped] public bool HasLab => null != PatientLaboratoryExtracts&&PatientLaboratoryExtracts.Any();
+        [NotMapped]
+        public ICollection<PatientBaselinesExtractView> PatientBaselinesExtracts { get; set; } =
+            new List<PatientBaselinesExtractView>();
+
+        [NotMapped]
+        public ICollection<PatientLaboratoryExtractView> PatientLaboratoryExtracts { get; set; } =
+            new List<PatientLaboratoryExtractView>();
+
+        [NotMapped]
+        public ICollection<PatientPharmacyExtractView> PatientPharmacyExtracts { get; set; } =
+            new List<PatientPharmacyExtractView>();
+
+        [NotMapped]
+        public ICollection<PatientStatusExtractView> PatientStatusExtracts { get; set; } =
+            new List<PatientStatusExtractView>();
+
+        [NotMapped]
+        public ICollection<PatientVisitExtractView> PatientVisitExtracts { get; set; } =
+            new List<PatientVisitExtractView>();
+
+        [NotMapped]
+        public ICollection<PatientAdverseEventView> PatientAdverseEventExtracts { get; set; } =
+            new List<PatientAdverseEventView>();
+
+        [NotMapped] public bool HasArt => null != PatientArtExtracts && PatientArtExtracts.Any();
+        [NotMapped] public bool HasBaseline => null != PatientBaselinesExtracts && PatientBaselinesExtracts.Any();
+        [NotMapped] public bool HasLab => null != PatientLaboratoryExtracts && PatientLaboratoryExtracts.Any();
         [NotMapped] public bool HasPharmacy => null != PatientPharmacyExtracts && PatientPharmacyExtracts.Any();
         [NotMapped] public bool HasStatus => null != PatientStatusExtracts && PatientStatusExtracts.Any();
-        [NotMapped] public bool HasVisit => null != PatientVisitExtracts&&PatientVisitExtracts.Any();
+        [NotMapped] public bool HasVisit => null != PatientVisitExtracts && PatientVisitExtracts.Any();
 
+        [NotMapped] public bool HasAdverse => null != PatientAdverseEventExtracts && PatientAdverseEventExtracts.Any();
 
         public Facility GetFacility()
         {
-            return new Facility(SiteCode,FacilityName,Emr,Project);
+            return new Facility(SiteCode, FacilityName, Emr, Project);
         }
     }
 }

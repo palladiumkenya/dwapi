@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
@@ -12,6 +13,7 @@ using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using MediatR;
+using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
 {

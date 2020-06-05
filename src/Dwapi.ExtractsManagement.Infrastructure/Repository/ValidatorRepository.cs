@@ -35,9 +35,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 
         public IEnumerable<Validator> GetByExtract(string extract)
         {
-            return null;
-            // return Context.Validator
-            //     .Where(x => x.Extract.ToLower() == extract.ToLower());
+            return Context.Validator
+                 .Where(x => x.Extract.ToLower() == extract.ToLower());
         }
     }
 }

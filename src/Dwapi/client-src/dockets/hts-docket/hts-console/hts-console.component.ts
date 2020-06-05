@@ -566,13 +566,22 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             extractName: 'HtsClientTests'
         };
     }
-
+    private updateExractStats(dwhProgress: any) {
+        if (dwhProgress) {
+            this.extracts.map(e => {
+                    if (e.name === dwhProgress.extract && e.extractEvent) {
+                        e.extractEvent.sent = dwhProgress.sent;
+                    }
+                }
+            );
+        }
+    }
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
                 `${window.location.protocol}//${document.location.hostname}:${environment.port}/HtsActivity`
             )
-            .configureLogging(LogLevel.Trace)
+            .configureLogging(LogLevel.Error)
             .build();
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
@@ -607,6 +616,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             this.sendEvent = {
                 sentProgress: dwhProgress.progress
             };
+            this.updateExractStats(dwhProgress);
             this.canLoadFromEmr = this.canSend = !this.sending;
         });
 
