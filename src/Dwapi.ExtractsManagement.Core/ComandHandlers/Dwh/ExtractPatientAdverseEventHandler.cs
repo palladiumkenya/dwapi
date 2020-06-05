@@ -36,17 +36,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
 
         public async Task<bool> Handle(ExtractPatientAdverseEvent request, CancellationToken cancellationToken)
         {
-            int found = 0;
             //Extract
-            try
-            {
-                 found = await _patientAdverseEventSourceExtractor.Extract(request.Extract,
-                    request.DatabaseProtocol);
-            }
-            catch (Exception e)
-            {
-                Log.Error(e,"Adverse Events");
-            }
+            int found = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientAdverseEventExtract),

@@ -44,7 +44,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 .Include(x => x.PatientVisitExtracts)
                 .Include(x => x.PatientAdverseEventExtracts)
                 .AsNoTracking()
-                .SingleOrDefault(x => x.Id == id);
+                .FirstOrDefault(x => x.Id == id);
             return patientExtractView;
         }
 
