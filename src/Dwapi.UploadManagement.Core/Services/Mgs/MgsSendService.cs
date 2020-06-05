@@ -116,10 +116,10 @@ namespace Dwapi.UploadManagement.Core.Services.Mgs
                     throw;
                 }
 
-                DomainEvents.Dispatch(new MgsSendNotification(new SendProgress("Migration", Common.GetProgress(count,total))));
+                DomainEvents.Dispatch(new MgsSendNotification(new SendProgress("Migration", Common.GetProgress(count,total),sendCound)));
             }
 
-            DomainEvents.Dispatch(new MgsSendNotification(new SendProgress("Migration", Common.GetProgress(count,total),true)));
+            DomainEvents.Dispatch(new MgsSendNotification(new SendProgress("Migration", Common.GetProgress(count,total),sendCound,true)));
 
             DomainEvents.Dispatch(new MgsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 

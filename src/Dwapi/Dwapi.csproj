@@ -36,6 +36,7 @@ Bached sending and await to 50 at a time
     <Folder Include="logs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Hangfire.Core" Version="1.7.11" />
     <PackageReference Include="Hangfire.MemoryStorage.Core" Version="1.4.0" />
     <PackageReference Include="Humanizer.Core" Version="2.7.9" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2"><PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
@@ -58,7 +59,7 @@ Bached sending and await to 50 at a time
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
     <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="1.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
-    <PackageReference Include="Hangfire" Version="1.6.21" />
+    <PackageReference Include="Hangfire" Version="1.7.11" />
     <PackageReference Include="X.PagedList" Version="7.6.0" />
   </ItemGroup>
   <ItemGroup>
@@ -109,5 +110,10 @@ Bached sending and await to 50 at a time
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Hangfire.Pro, Version=2.2.2.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\libs\Hangfire.Pro.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

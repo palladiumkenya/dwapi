@@ -10,6 +10,7 @@ namespace Dwapi.SharedKernel.Model
         public string StatusInfo { get; set; }
         public DateTime StatusDate { get; set; }=DateTime.Now;
         public string Extract { get; set; }
+        public ExtractType ExtractType   { get; set; }
 
         public SentItem(Guid id, SendStatus status)
         {
@@ -19,6 +20,11 @@ namespace Dwapi.SharedKernel.Model
         public SentItem(Guid id, SendStatus status, string statusInfo,string extract=""):this(id,status)
         {
             Extract = extract;
+            StatusInfo = statusInfo;
+        }
+        public SentItem(Guid id, SendStatus status, string statusInfo,ExtractType extractType):this(id,status)
+        {
+            ExtractType = extractType;
             StatusInfo = statusInfo;
         }
     }

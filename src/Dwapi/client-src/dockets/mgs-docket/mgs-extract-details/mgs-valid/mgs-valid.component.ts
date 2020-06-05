@@ -18,7 +18,7 @@ export class MgsValidComponent implements OnInit, OnDestroy {
     public getValid$: Subscription;
     public getValidCount$: Subscription;
     public pageModel: PageModel;
-    public initialRows: number = 20;
+    public initialRows: number = 10;
     private exName: string;
     public loadingData = false;
 

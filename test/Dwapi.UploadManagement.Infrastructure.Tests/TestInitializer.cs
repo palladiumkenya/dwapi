@@ -396,8 +396,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddScoped<ICbsSendService, CbsSendService>();
             services.AddScoped<IMpiSearchService, MpiSearchService>();
             services.AddScoped<IDwhSendService, DwhSendService>();
-            services.AddScoped<IHtsSendService, HtsSendService>();
-            services.AddScoped<IHtsSendService, HtsSendService>();
+            services.AddScoped<ICTSendService, CTSendService>();
             services.AddScoped<IHtsSendService, HtsSendService>();
             services.AddScoped<IEmrMetricsService, EmrMetricsService>();
             // NEW

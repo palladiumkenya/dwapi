@@ -37,7 +37,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
     public getValid$: Subscription;
     public getValidCount$: Subscription;
     public pageModel: PageModel;
-    public initialRows: number = 20;
+    public initialRows: number = 10;
     private exName: string;
     public loadingData = false;
 
@@ -407,11 +407,11 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         );
     }
 
-    
+
     private getClientsColumns(): void {
         this.cols = [
             //{ field: 'summary', header: 'Summary' },
-            { field: 'patientPk', header: 'PatientPK' }, 
+            { field: 'patientPk', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
             { field: 'doB', header: 'Dob' },
             { field: 'gender', header: 'Gender' },
@@ -421,9 +421,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'county', header: 'County' },
             { field: 'subCounty', header: 'SubCounty' },
             { field: 'ward', header: 'Ward' },
-            
 
-           
+
+
         ];
     }
 
@@ -441,7 +441,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'testResult1', header: 'Test Result 1' },
             { field: 'testResult2', header: 'Test Result 2' },
             { field: 'finalTestResult', header: 'Final Test Result' },
-             
+
         ];
     }
 
@@ -458,7 +458,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'reportedStartARTDate', header: 'Reported ART Start Date' },
             { field: 'enrolledFacilityName', header: 'Enrolled Facility Name' },
             { field: 'referralDate', header: 'Referral Date' },
-            { field: 'dateEnrolled', header: 'Date Enrolled' }, 
+            { field: 'dateEnrolled', header: 'Date Enrolled' },
         ];
     }
 
@@ -474,7 +474,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'testKitName2', header: 'Test Kit Name 2' },
             { field: 'testKitLotNumber2', header: 'Test Kit Lot Number 2' },
             { field: 'testKitExpiry2', header: 'Test Kit Expiry 2' },
-            { field: 'testResult2', header: 'Test Result 2' },  
+            { field: 'testResult2', header: 'Test Result 2' },
         ];
     }
 
@@ -485,7 +485,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'htsNumber', header: 'Hts Number' },
             { field: 'tracingType', header: 'Tracing Type' },
             { field: 'tracingDate', header: 'Tracing Date' },
-            { field: 'tracingOutcome', header: 'Tracing Outcome' },  
+            { field: 'tracingOutcome', header: 'Tracing Outcome' },
         ];
     }
 
@@ -514,12 +514,12 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'screenedForIpv', header: 'Screened For IPV' },
             { field: 'ipvScreeningOutcome', header: 'IPV Screening Outcome' },
             { field: 'currentlyLivingWithIndexClient', header: 'currently Living With Index Client' },
-            { field: 'pnsConsent', header: 'PNS Consent' }, 
+            { field: 'pnsConsent', header: 'PNS Consent' },
 
         ];
     }
 
-   
+
 
 
     pageView(event: any) {

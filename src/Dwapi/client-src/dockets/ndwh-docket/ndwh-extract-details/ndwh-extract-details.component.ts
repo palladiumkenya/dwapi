@@ -28,8 +28,14 @@ export class NdwhExtractDetailsComponent implements OnInit {
     public extractName: string;
     public errorMessage: Message[];
     public otherMessage: Message[];
-    selectedIndex = 0;
+    selectedIndex = 7;
     @ViewChild(TabView) tabView: TabView;
+    isLoading = true;
+
+    @Input()
+    set isInitialLoad(intial: boolean) {
+        this.isLoading = intial;
+    }
 
     @Input()
     set emr(emr: EmrSystem) {

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
@@ -12,6 +13,7 @@ using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using MediatR;
+using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
 {
@@ -34,8 +36,17 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
 
         public async Task<bool> Handle(ExtractPatientAdverseEvent request, CancellationToken cancellationToken)
         {
+            int found = 0;
             //Extract
-            int found = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            try
+            {
+                 found = await _patientAdverseEventSourceExtractor.Extract(request.Extract,
+                    request.DatabaseProtocol);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e,"Adverse Events");
+            }
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientAdverseEventExtract),

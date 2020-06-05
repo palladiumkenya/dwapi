@@ -43,63 +43,10 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<PatientExtractView>()
-                .HasKey(f => new { f.SiteCode, f.PatientPK });
-
-            modelBuilder.Entity<PatientExtractView>()
-                .HasMany(c => c.PatientArtExtracts)
-                .WithOne()
-                .IsRequired()
-                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
-
-            modelBuilder.Entity<PatientExtractView>()
-                .HasMany(c => c.PatientBaselinesExtracts)
-                .WithOne()
-                .IsRequired()
-                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
-
-            modelBuilder.Entity<PatientExtractView>()
-                .HasMany(c => c.PatientLaboratoryExtracts)
-                .WithOne()
-                .IsRequired()
-                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
-
-            modelBuilder.Entity<PatientExtractView>()
-                .HasMany(c => c.PatientPharmacyExtracts)
-                .WithOne()
-                .IsRequired()
-                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
-
-            modelBuilder.Entity<PatientExtractView>()
-                .HasMany(c => c.PatientStatusExtracts)
-                .WithOne()
-                .IsRequired()
-                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
-
-            modelBuilder.Entity<PatientExtractView>()
-                .HasMany(c => c.PatientVisitExtracts)
-                .WithOne()
-                .IsRequired()
-                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
-            modelBuilder.Entity<PatientExtractView>()
-                .HasMany(c => c.PatientAdverseEventExtracts)
-                .WithOne()
-                .IsRequired()
-                .HasForeignKey(f => new { f.SiteCode, f.PatientPK });
+                .HasKey(f => new {f.SiteCode, f.PatientPK});
 
             modelBuilder.Entity<HtsClientsExtractView>()
-                .HasKey(f => f.Id );
-            /*modelBuilder.Entity<HtsClientTestsExtractView>()
-                .HasKey(f => f.Id );
-            modelBuilder.Entity<HtsTestKitsExtractView>()
-                .HasKey(f => f.Id );
-            modelBuilder.Entity<HtsPartnerNotificationServicesExtractView>()
                 .HasKey(f => f.Id);
-            modelBuilder.Entity<HtsClientTracingExtractView>()
-                .HasKey(f => f.Id);
-            modelBuilder.Entity<HtsPartnerTracingExtractView>()
-                .HasKey(f => f.Id);
-            modelBuilder.Entity<HtsClientsLinkageExtractView>()
-                .HasKey(f => f.Id);*/
         }
     }
 }
