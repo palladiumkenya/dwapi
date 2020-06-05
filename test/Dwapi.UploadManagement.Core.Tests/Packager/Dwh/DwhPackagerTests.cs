@@ -95,12 +95,6 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
             }
         }
 
-        [Test]
-        public void should_Generate_Extracts()
-        {
-            var extracts = _packager.GenerateExtracts(_pid);
-            Assert.NotNull(extracts);
-        }
 
         [Test]
         public void should_Generate_Art_Extracts()
