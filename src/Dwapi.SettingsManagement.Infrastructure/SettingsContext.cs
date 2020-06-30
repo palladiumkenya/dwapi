@@ -47,7 +47,8 @@ namespace Dwapi.SettingsManagement.Infrastructure
                 new Guid("a62216ee-0e85-11e8-ba89-0ed5f89f718b"),
                 new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"),
                 new Guid("a6221857-0e85-11e8-ba89-0ed5f89f718b"),
-                new Guid("926f49b8-305d-11ea-978f-2e728ce88125")
+                new Guid("926f49b8-305d-11ea-978f-2e728ce88125"),
+                new Guid("a6221860-0e85-11e8-ba89-0ed5f89f718b")
             };
 
             this.SeedMerge<Docket>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Dockets)}").Wait();
