@@ -3114,7 +3114,7 @@ CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
 
 
                                  'KenyaEMR' as Emr,
-                                 'Kenya HMIS II' as Project,
+                                 'IRDO' as Project,
 
 
                                 CASE hiv.patient_type
@@ -3224,7 +3224,7 @@ ec3d7e12-bb10-11ea-b3de-0242ac130004|ART Patients|NDWH|a6221860-0e85-11e8-ba89-0
          when disc.discontinuation_reason is not null then dis_rsn.name
          else '' end as ExitReason,
        'KenyaEMR' as Emr,
-       'Kenya HMIS II' as Project,
+       'IRDO' as Project,
        CAST(now() as Date) AS DateExtracted
 from kenyaemr_etl.etl_hiv_enrollment hiv
        join kenyaemr_etl.etl_patient_demographics d on d.patient_id=hiv.patient_id
@@ -3315,7 +3315,7 @@ NULL as bWHODate,
  CAST(left(max(if(l.visit_date>p_dates.twelve_month_date,concat(l.visit_date,test_result),null)),10) AS DATE) as m6Cd4Date,
  '' as eWAB, NULL as eWABDate,'' as bWAB, NULL as bWABDAte,
  'KenyaEMR' as Emr,
- 'Kenya HMIS II' as Project,
+ 'IRDO' as Project,
  '' AS LastWaB,NULL AS LastWABDate,
  '' as m12CD4,
 NULL as m12CD4Date,
@@ -3345,7 +3345,7 @@ case
 when disc.discontinuation_reason is not null then cn.name
 else '' end as ExitReason,*/
  'KenyaEMR' as Emr,
- 'Kenya HMIS II' as Project,
+ 'IRDO' as Project,
 CAST(now() as Date) AS DateExtracted,
 max(disc.visit_date) AS ExitDate,
 mid(max(concat(disc.visit_date,case when disc.discontinuation_reason is not null then cn.name
@@ -3379,7 +3379,7 @@ else
 end as TestResult,
 NULL as enrollmentTest,
  'KenyaEMR' as Emr,
- 'Kenya HMIS II' as Project
+ 'IRDO' as Project
 from kenyaemr_etl.etl_laboratory_extract l
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=l.patient_id
 join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
@@ -3408,7 +3408,7 @@ ph.duration AS duration,
 ph.duration AS PeriodTaken,
 fup.next_appointment_date as ExpectedReturn,
 'KenyaEMR' as Emr,
-'Kenya HMIS II' as Project,
+'IRDO' as Project,
 CASE WHEN is_arv=1 THEN 'ARV'
 WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,
 ph.RegimenLine,
@@ -3509,7 +3509,7 @@ end )as PWP,
 if(fup.last_menstrual_period is not null, timestampdiff(week,fup.last_menstrual_period,fup.visit_date),'') as GestationAge,
 case when fup.next_appointment_date < '1990-01-01' then null else CAST(fup.next_appointment_date AS DATE) end  AS NextAppointmentDate,
 'KenyaEMR' as Emr,
-'Kenya HMIS II' as Project,
+'IRDO' as Project,
 
 CAST(fup.substitution_first_line_regimen_date AS DATE)  AS SubstitutionFirstlineRegimenDate,
 fup.substitution_first_line_regimen_reason AS SubstitutionFirstlineRegimenReason,
@@ -3545,8 +3545,8 @@ ec3d7e18-bb10-11ea-b3de-0242ac130004|Patient Adverse Events|NDWH|a6221860-0e85-1
        '' AS PatientPK,
        '' AS SiteCode,
 	   '' AS FacilityID,
-       'Kenya EMR' AS EMR,
-       'Kenya HMIS II' AS Project,
+       'KenyaEMR' AS EMR,
+       'IRDO' AS Project,
        NOW() AS VisitDate,
        '' AS AdverseEventRegimen,
        '' AS AdverseEvent,
@@ -3784,7 +3784,7 @@ ec3d7e30-bb10-11ea-b3de-0242ac130004|Hts Clients|HTS|a6221860-0e85-11e8-ba89-0ed
 	SC.value_reference AS SiteCode,
 	SN.name as FacilityName,
 	'KenyaEMR' as Emr,
-	'Kenya HMIS II' AS Project,
+	'IRDO' AS Project,
 	id.identifier AS HtsNumber,
 	d.DOB,
 	case when d.Gender='M' then 'Male' else 'Female' end as Gender,
@@ -3813,7 +3813,7 @@ ec3d7e31-bb10-11ea-b3de-0242ac130004|Hts Client Tests|HTS|a6221860-0e85-11e8-ba8
 	SC.value_reference AS SiteCode,
 	 SN.name as FacilityName,
 	'KenyaEMR' as Emr,
-	'Kenya HMIS II' AS Project,
+	'IRDO' AS Project,
     id.identifier AS HtsNumber,
 	t.encounter_id as EncounterId,
 	t.visit_date as TestDate,
@@ -3849,7 +3849,7 @@ ec3d7e32-bb10-11ea-b3de-0242ac130004|Hts Client Linkage|HTS|a6221860-0e85-11e8-b
 SC.value_reference AS SiteCode,
 SN.name as FacilityName,
 'KenyaEMR' as Emr,
-'Kenya HMIS II' AS Project,
+'IRDO' AS Project,
 id.identifier AS HtsNumber,
 ref.date_to_enrol as DatePrefferedToBeEnrolled,
 ref.facility_referred_to as FacilityReferredTo,
@@ -3889,7 +3889,7 @@ ec3d7e33-bb10-11ea-b3de-0242ac130004|Hts Test Kits|HTS|a6221860-0e85-11e8-ba89-0
 	SC.value_reference AS SiteCode,
 	SN.name as FacilityName,
 	'KenyaEMR' as Emr,
-	'Kenya HMIS II' AS Project,
+	'IRDO' AS Project,
     id.identifier AS HtsNumber,
 	t.encounter_id AS EncounterId,
 	t.test_1_kit_name AS TestKitName1,
@@ -3919,7 +3919,7 @@ ec3d7e34-bb10-11ea-b3de-0242ac130004|Hts Client Tracing|HTS|a6221860-0e85-11e8-b
 	htsrl.visit_date as TracingDate,
 	SN.name as FacilityName,
 	'KenyaEMR' as Emr,
-	'Kenya HMIS II' AS Project,
+	'IRDO' AS Project,
 	id.identifier AS HtsNumber,
 	htsrl.tracing_status as TracingOutcome
 FROM
@@ -3945,7 +3945,7 @@ contact_type as TraceType,
 encounter_date as TraceDate,
 SN.name as FacilityName,
 'KenyaEMR' as Emr,
-'Kenya HMIS II' AS Project,
+'IRDO' AS Project,
 SC.value_reference AS SiteCode,
 status as TraceOutcome,
 tc.appointment_date as BookingDate
@@ -3968,7 +3968,7 @@ DISTINCT
                SC.value_reference AS SiteCode,
                SN.name as FacilityName,
                'KenyaEMR' as Emr,
-               'Kenya HMIS II' AS Project,
+               'IRDO' AS Project,
                id.identifier AS HtsNumber,
                ohpc.patient_id AS PartnerPatientPk,
                ohpc.id AS PartnerPersonId,
