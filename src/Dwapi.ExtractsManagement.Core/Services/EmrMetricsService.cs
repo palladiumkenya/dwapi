@@ -34,6 +34,7 @@ namespace Dwapi.ExtractsManagement.Core.Services
         public async Task<EmrMetricSource> Read(AuthProtocol authProtocol, string url)
         {
             EmrMetricSource metricSoruce = null;
+            string metricsUrl=string.Empty;
 
             if (authProtocol.HasAuth)
             {
@@ -48,7 +49,8 @@ namespace Dwapi.ExtractsManagement.Core.Services
 
             try
             {
-                var response = await _httpClient.GetAsync(GetUrl(authProtocol.Url, url));
+                 metricsUrl = GetUrl(authProtocol.Url, url);
+                var response = await _httpClient.GetAsync(metricsUrl);
                 if (response.IsSuccessStatusCode)
                 {
                     metricSoruce = await response.Content.ReadAsJsonAsync<EmrMetricSource>();
@@ -60,7 +62,10 @@ namespace Dwapi.ExtractsManagement.Core.Services
             }
             catch (Exception e)
             {
-                Log.Error(e, "Error Reading metrics");
+                Log.Error(new string('-',40));
+                Log.Error($"Error Reading metrics on [{metricsUrl}]");
+                Log.Error(e.Message,"Metrics Error");
+                Log.Error(new string('-',40));
             }
 
             if (null != metricSoruce)

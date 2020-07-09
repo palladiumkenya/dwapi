@@ -8,6 +8,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -34,15 +35,6 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
 
             try
             {
-                /*
-                   DomainEvents.Dispatch(
-                    new ExtractActivityNotification(extractId, new DwhProgress(
-                        nameof(PatientExtract),
-                        nameof(ExtractStatus.Loading),
-                        found, 0, 0, 0, 0)));
-
-                 */
-
                 const int take = 1000;
                 var eCount = await  _tempHtsClientsLinkageExtractRepository.GetCleanCount();
                 var pageCount = _tempHtsClientsLinkageExtractRepository.PageCount(take, eCount);
@@ -51,7 +43,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                 while (page <= pageCount)
                 {
                     var tempHtsClientLinkages =await
-                        _tempHtsClientsLinkageExtractRepository.GetAll(a => a.ErrorType == 0, page, take);
+                        _tempHtsClientsLinkageExtractRepository.GetAll(QueryUtil.Linkage, page, take);
 
                     var batch = tempHtsClientLinkages.ToList();
                     count += batch.Count;
@@ -70,13 +62,6 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     }
                     Log.Debug("saved batch");
                     page++;
-                    /*
-                    DomainEvents.Dispatch(
-                        new ExtractActivityNotification(extractId, new DwhProgress(
-                            nameof(PatientExtract),
-                            nameof(ExtractStatus.Loading),
-                            found, count, 0, 0, 0)));
-                    */
                 }
                 DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientLinkage), "Loading...", Found, 0, 0, 0, 0)));
                 return count;

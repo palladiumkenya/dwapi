@@ -53,6 +53,19 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
         }
 
         [Test]
+        public void should_Generate_Comm_Manifest()
+        {
+            var manifests = _packager.Generate(TestInitializer.KeEmrCommDto).ToList();
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count>1);
+            foreach (var m in manifests)
+            {
+                Assert.True(m.Cargoes.Any());
+                Log.Debug($"{m}");
+            }
+        }
+
+        [Test]
         public void should_Generate_Manifest_With_Metrics()
         {
             var manifests = _packager.GenerateWithMetrics(TestInitializer.IqEmrDto).ToList();
@@ -90,6 +103,27 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
                 });
             }
         }
+        [Test]
+        public void should_Generate_Comm_Manifest_With_Metrics()
+        {
+            var emrDto = TestInitializer.KeEmrCommDto;
+            var manfiests = _packager.GenerateWithMetrics(emrDto).ToList();
+            Assert.True(manfiests.Any());
+            Assert.True(manfiests.Count>1);
+            foreach (var m in manfiests)
+            {
+                Assert.True(m.Cargoes.Any(x => x.Type == CargoType.Patient));
+                Assert.True(m.Cargoes.Any(x => x.Type == CargoType.Metrics));
+                Assert.True(m.Cargoes.Any(x => x.Type == CargoType.AppMetrics));
+                Log.Debug($"{m}");
+                m.Cargoes.ForEach(c =>
+                {
+                    Log.Debug($"{c.Type}");
+                    Log.Debug($"     {c.Items} ");
+                });
+            }
+        }
+
 
         [Test]
         public void should_Generate_MpiDtos()
