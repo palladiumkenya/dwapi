@@ -53,7 +53,9 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
                     // AutoMapper profiles
                     var extractRecord = Mapper.Map<IDataRecord, TempMasterPatientIndex>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
-                    list.Add(extractRecord);
+
+                    if(!string.IsNullOrWhiteSpace(extractRecord.sxdmPKValueDoB))
+                        list.Add(extractRecord);
 
                     if (count == batch)
                     {

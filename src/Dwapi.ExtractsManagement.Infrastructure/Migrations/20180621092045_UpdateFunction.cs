@@ -34,7 +34,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
 					END;");
 
-                migrationBuilder.Sql(@"GRANT EXECUTE ON FUNCTION fn_calculateTranspositions TO '*'@'%';
+                migrationBuilder.Sql(@"GRANT EXECUTE ON FUNCTION fn_calculateTranspositions TO 'dwapi'@'%';
             FLUSH PRIVILEGES;");
             }
 

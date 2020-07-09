@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -34,24 +37,15 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
 
             try
             {
-         /*
-                   DomainEvents.Dispatch(
-                    new ExtractActivityNotification(extractId, new DwhProgress(
-                        nameof(PatientExtract),
-                        nameof(ExtractStatus.Loading),
-                        found, 0, 0, 0, 0)));
-
-                 */
-
                 const int take = 1000;
-                var eCount = await  _tempHtsClientTestsExtractRepository.GetCleanCount();
+                var eCount = await _tempHtsClientTestsExtractRepository.GetCleanCount();
                 var pageCount = _tempHtsClientTestsExtractRepository.PageCount(take, eCount);
 
                 int page = 1;
                 while (page <= pageCount)
                 {
-                    var tempHtsClientTests =await
-                        _tempHtsClientTestsExtractRepository.GetAll(a => a.ErrorType == 0, page, take);
+                    var tempHtsClientTests = await
+                        _tempHtsClientTestsExtractRepository.GetAll(QueryUtil.Tests, page, take);
 
                     var batch = tempHtsClientTests.ToList();
                     count += batch.Count;
@@ -61,6 +55,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     {
                         record.Id = LiveGuid.NewGuid();
                     }
+
                     //Batch Insert
                     var inserted = _htsClientTestsExtractRepository.BatchInsert(extractRecords);
                     if (!inserted)
@@ -68,6 +63,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                         Log.Error($"Extract {nameof(HtsClientTests)} not Loaded");
                         return 0;
                     }
+
                     Log.Debug("saved batch");
                     page++;
                     /*
@@ -78,7 +74,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                             found, count, 0, 0, 0)));
                     */
                 }
-                DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTests), "Loading...", Found, 0, 0, 0, 0)));
+
+                DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTests), "Loading...",
+                    Found, 0, 0, 0, 0)));
                 return count;
             }
             catch (Exception e)
