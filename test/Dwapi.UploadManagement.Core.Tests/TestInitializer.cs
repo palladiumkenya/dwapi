@@ -142,6 +142,7 @@ namespace Dwapi.UploadManagement.Core.Tests
         public static List<Extract> Extracts;
         public static EmrDto IqEmrDto;
         public static EmrDto IqEmrMultiDto;
+        public static EmrDto KeEmrCommDto;
         public static EmrDto KeEmrDto;
         public static EmrDto KeEmrMultiDto;
 
@@ -168,6 +169,7 @@ namespace Dwapi.UploadManagement.Core.Tests
                 EmrSetup.MultiFacility);
             KeEmrDto=new EmrDto(new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"),"KenyaEMR",EmrSetup.SingleFacility);
             KeEmrMultiDto=new EmrDto(new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b"),"KenyaEMR",EmrSetup.MultiFacility);
+            KeEmrCommDto=new EmrDto(new Guid( "a6221860-0e85-11e8-ba89-0ed5f89f718b"),"KenyaEMR",EmrSetup.Community);
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
             ConnectionString = GenerateCopyConnection(config, "dwapiConnection");
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");

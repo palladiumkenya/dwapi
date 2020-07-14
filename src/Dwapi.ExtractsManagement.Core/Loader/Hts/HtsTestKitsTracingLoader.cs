@@ -8,6 +8,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -33,15 +34,6 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
             int count = 0;
             try
             {
-               /*
-                   DomainEvents.Dispatch(
-                    new ExtractActivityNotification(extractId, new DwhProgress(
-                        nameof(PatientExtract),
-                        nameof(ExtractStatus.Loading),
-                        found, 0, 0, 0, 0)));
-
-                 */
-
                 const int take = 1000;
                 var eCount = await  _tempHtsTestKitsExtractRepository.GetCleanCount();
                 var pageCount = _tempHtsTestKitsExtractRepository.PageCount(take, eCount);
@@ -50,7 +42,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                 while (page <= pageCount)
                 {
                     var tempHtsTestKits =await
-                        _tempHtsTestKitsExtractRepository.GetAll(a => a.ErrorType == 0, page, take);
+                        _tempHtsTestKitsExtractRepository.GetAll(QueryUtil.Kits, page, take);
 
                     var batch = tempHtsTestKits.ToList();
                     count += batch.Count;

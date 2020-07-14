@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Extracts;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -67,10 +69,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts
 
         public Task<int> GetCleanCount()
         {
-            return DbSet.AsNoTracking()
-                .Where(a => a.ErrorType == 0)
-                .Select(x => x.Id)
-                .CountAsync();
+            int count = 0;
+            using (var cn=GetNewConnection())
+            {
+                var query = QueryUtil.KitsCount;
+                count = cn.ExecuteScalar<int>(query);
+            }
+            return Task.FromResult(count);
         }
     }
 }

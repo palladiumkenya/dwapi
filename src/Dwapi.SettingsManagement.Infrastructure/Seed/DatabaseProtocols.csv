@@ -1,10 +1,11 @@
 Id|DatabaseName|DatabaseType|EmrSystemId|Host|Password|Port|Username|AdvancedProperties
 A6221982-0E85-11E8-BA89-0ED5F89F718B|IQCare|1|a62216ee-0e85-11e8-ba89-0ed5f89f718b|.|M@un1983||sa|
 a6221983-0e85-11e8-ba89-0ed5f89f718b|IQTools_KeHMIS|1|a62216ee-0e85-11e8-ba89-0ed5f89f718b|.|M@un1983||sa|
-a6221aa4-0e85-11e8-ba89-0ed5f89f718b|openmrs|2|a6221856-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|openmrs|3306|root|Allow User Variables=True
+a6221aa4-0e85-11e8-ba89-0ed5f89f718b|openmrs|2|a6221856-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|dwapi|3306|dwapi|Allow User Variables=True
 a6221aa5-0e85-11e8-ba89-0ed5f89f718b|amrsndwr|2|a6221857-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|openmrs|3306|root|Allow User Variables=True
 a6221982-0e86-11e8-ba89-0ed5f89f718b|ECare|1|a6221858-0e85-11e8-ba89-0ed5f89f718b|.|P@ssw0rd||sa|
-a6221989-0e85-11e8-ba89-0ed5f89f718b|openmrs|2|a6221859-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|openmrs|3306|root|Allow User Variables=True
-bb254606-38f8-409f-8e36-ab6601139dea|other|2|a6221859-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|openmrs|3306|root|Allow User Variables=True
+a6221989-0e85-11e8-ba89-0ed5f89f718b|openmrs|2|a6221859-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|dwapi|3306|dwapi|Allow User Variables=True
+bb254606-38f8-409f-8e36-ab6601139dea|other|2|a6221859-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|dwapi|3306|dwapi|Allow User Variables=True
 A6221987-0E85-11E8-BA89-0ED5F89F718B|IQCare_CHAK|1|926f49b8-305d-11ea-978f-2e728ce88125|.|c0nstella||sa|
 a6221988-0e85-11e8-ba89-0ed5f89f718b|IQTools_CHAK|1|926f49b8-305d-11ea-978f-2e728ce88125|.|c0nstella||sa|
+a6221aa6-0e85-11e8-ba89-0ed5f89f718b|openmrs|2|a6221860-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|dwapi|3306|dwapi|Allow User Variables=True
