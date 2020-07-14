@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -12,6 +14,10 @@ namespace Dwapi.SharedKernel.DTOs
         public string ExtractName { get; set; }
         public string Endpoint { get; private set; }
         public EmrSetup EmrSetup { get; set; }
+        public string EmrName { get; set; }
+        public Guid EmrId { get; set; }
+        public List<ExtractDto> Extracts { get; set; } = new List<ExtractDto>();
+
 
         public SendManifestPackageDTO()
         {
@@ -32,6 +38,21 @@ namespace Dwapi.SharedKernel.DTOs
             Endpoint = string.IsNullOrWhiteSpace(endPoint) ? string.Empty : endPoint.HasToStartWith("/");
             var url = $"{Destination.Url}{Endpoint}";
             return url;
+        }
+
+        public EmrDto GetEmrDto()
+        {
+            return new EmrDto(EmrId, EmrName, EmrSetup);
+        }
+
+        public Guid GetExtractId(string name)
+        {
+            var extract = Extracts.FirstOrDefault(x => x.Name.IsSameAs(name));
+
+            if (null != extract)
+                return extract.Id;
+
+            return ExtractId;
         }
     }
 }

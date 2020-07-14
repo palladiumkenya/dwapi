@@ -42,12 +42,12 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
 
                 StringBuilder query = new StringBuilder();
-                query.Append($" SELECT * FROM {nameof(TempPatientArtExtract)}s s");
+                query.Append($" SELECT s.* FROM {nameof(TempPatientArtExtract)}s s");
                 query.Append($" INNER JOIN PatientExtracts p ON ");
                 query.Append($" s.PatientPK = p.PatientPK AND ");
                 query.Append($" s.SiteCode = p.SiteCode ");
 
-                const int take = 1000;
+                const int take = 500;
                 var eCount = await  _tempPatientArtExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempPatientArtExtractRepository.PageCount(take, eCount);
 

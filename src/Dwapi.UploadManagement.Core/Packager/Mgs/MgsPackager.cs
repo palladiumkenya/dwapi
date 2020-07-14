@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
+using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Mgs;
@@ -21,8 +22,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Mgs
             _metricReader = metricReader;
         }
 
-
-        public IEnumerable<Manifest>  Generate(EmrSetup emrSetup)
+        public IEnumerable<Manifest>  Generate(EmrDto emrSetup)
         {
             var sites = _htsExtractReader.GetSites();
             var profiles = _htsExtractReader.GetSitePatientProfiles();
@@ -30,7 +30,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Mgs
             return Manifest.Create(profiles, emrSetup,sites);
         }
 
-        public IEnumerable<Manifest> GenerateWithMetrics(EmrSetup emrSetup)
+        public IEnumerable<Manifest> GenerateWithMetrics(EmrDto emrSetup)
         {
             var metrics = _metricReader.ReadAll().FirstOrDefault();
             var appMetrics = _metricReader.ReadAppAll().ToList();

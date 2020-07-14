@@ -36,7 +36,7 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
 
         public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
         {
-            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.EmrSetup).ToList()));
+            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
         }
 
         public Task<List<SendMpiResponse>> SendMpiAsync(SendManifestPackageDTO sendTo)
@@ -113,11 +113,11 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e, $"Send Manifest Error");
+                    Log.Error(e, $"Send Extracts Error");
                     throw;
                 }
 
-                DomainEvents.Dispatch(new CbsSendNotification(new SendProgress(nameof(MasterPatientIndex), Common.GetProgress(count,total))));
+                DomainEvents.Dispatch(new CbsSendNotification(new SendProgress(nameof(MasterPatientIndex), Common.GetProgress(count,total),sendCound)));
             }
 
             DomainEvents.Dispatch(new CbsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));

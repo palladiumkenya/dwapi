@@ -44,7 +44,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 .Include(x => x.PatientVisitExtracts)
                 .Include(x => x.PatientAdverseEventExtracts)
                 .AsNoTracking()
-                .SingleOrDefault(x => x.Id == id);
+                .FirstOrDefault(x => x.Id == id);
             return patientExtractView;
         }
 
@@ -72,6 +72,22 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
             ";
             return _context.Database.GetDbConnection()
                 .Query<SitePatientProfile>(sql).ToList();
+        }
+
+        public IEnumerable<T> Read<T, TId>(int page, int pageSize) where T : Entity<TId>
+        {
+            return _context.Set<T>()
+                .Include(nameof(PatientExtractView))
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .OrderBy(x => x.Id)
+                .AsNoTracking().ToList();
+        }
+
+        public long GetTotalRecords<T, TId>() where T : Entity<TId>
+        {
+            return _context.Set<T>()
+                .Select(x => x.Id)
+                .LongCount();
         }
     }
 }

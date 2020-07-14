@@ -26,7 +26,7 @@ namespace Dwapi.SettingsManagement.Core.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public string Key { get; set; }
-        public DateTime Expiry { get; set; } = new DateTime(2020, 6, 1);
+        public DateTime Expiry { get; set; } = new DateTime(2020, 8, 1);
 
         public bool IsValid => DateTime.Now.Date < Expiry.Date && ValidateKey();
 

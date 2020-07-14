@@ -36,7 +36,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mgs
 
         public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
         {
-            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.EmrSetup).ToList()));
+            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
         }
 
         public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage)
@@ -116,10 +116,10 @@ namespace Dwapi.UploadManagement.Core.Services.Mgs
                     throw;
                 }
 
-                DomainEvents.Dispatch(new MgsSendNotification(new SendProgress("Migration", Common.GetProgress(count,total))));
+                DomainEvents.Dispatch(new MgsSendNotification(new SendProgress("Migration", Common.GetProgress(count,total),sendCound)));
             }
 
-            DomainEvents.Dispatch(new MgsSendNotification(new SendProgress("Migration", Common.GetProgress(count,total),true)));
+            DomainEvents.Dispatch(new MgsSendNotification(new SendProgress("Migration", Common.GetProgress(count,total),sendCound,true)));
 
             DomainEvents.Dispatch(new MgsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 

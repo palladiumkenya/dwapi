@@ -25,6 +25,7 @@ namespace Dwapi.SharedKernel.Interfaces
         DatabaseProvider GetConnectionProvider();
         void Delete(TId id);
         IDbConnection GetConnection(bool opened=true);
+        IDbConnection GetNewConnection();
         string GetConnectionString();
         void CloseConnection();
         void CloseConnection(IDbConnection connection);

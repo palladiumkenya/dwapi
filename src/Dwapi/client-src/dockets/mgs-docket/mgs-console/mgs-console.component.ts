@@ -268,7 +268,9 @@ export class MgsConsoleComponent implements OnInit, OnDestroy, OnChanges {
          return {
              destination: this.centralRegistry,
              extractId: this.extracts.find(x => x.name === 'MetricMigrationExtract').id,
-             emrSetup: this.emr.emrSetup
+             emrSetup: this.emr.emrSetup,
+             emrId:this.emr.id,
+             emrName:this.emr.name
          };
     }
 
@@ -285,7 +287,7 @@ export class MgsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             .withUrl(
                 `${window.location.protocol}//${document.location.hostname}:${environment.port}/MgsActivity`
             )
-            .configureLogging(LogLevel.Trace)
+            .configureLogging(LogLevel.Error)
             .build();
 
         this._hubConnection.start().catch(err => console.error(err.toString()));

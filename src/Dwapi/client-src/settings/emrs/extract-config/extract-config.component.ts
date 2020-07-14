@@ -103,7 +103,6 @@ export class ExtractConfigComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public editExtract(extract: Extract): void {
-        //console.log(extract);
         this.displayDialog = true;
         this.extractDialog = { ...extract };
     }

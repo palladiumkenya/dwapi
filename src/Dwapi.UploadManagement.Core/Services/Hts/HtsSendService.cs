@@ -36,7 +36,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
 
         public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
         {
-            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.EmrSetup).ToList()));
+            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
         }
 
         public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage)
@@ -116,10 +116,10 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     throw;
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClients), Common.GetProgress(count,total))));
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClients), Common.GetProgress(count,total),sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClients), Common.GetProgress(count,total),true)));
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClients), Common.GetProgress(count,total),sendCound,true)));
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
@@ -170,10 +170,10 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     throw;
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientLinkage), Common.GetProgress(count,total))));
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientLinkage), Common.GetProgress(count,total),sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientLinkage), Common.GetProgress(count,total),true)));
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientLinkage), Common.GetProgress(count,total),sendCound,true)));
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
@@ -224,10 +224,10 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     throw;
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTests), Common.GetProgress(count,total))));
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTests), Common.GetProgress(count,total),sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTests), Common.GetProgress(count,total),true)));
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTests), Common.GetProgress(count,total),sendCound,true)));
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
@@ -278,10 +278,10 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     throw;
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsTestKits), Common.GetProgress(count, total))));
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsTestKits), Common.GetProgress(count, total),sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsTestKits), Common.GetProgress(count, total), true)));
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsTestKits), Common.GetProgress(count, total), sendCound,true)));
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
@@ -332,10 +332,10 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     throw;
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTracing), Common.GetProgress(count, total))));
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTracing), Common.GetProgress(count, total),sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTracing), Common.GetProgress(count, total), true)));
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTracing), Common.GetProgress(count, total), sendCound,true)));
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
@@ -386,10 +386,10 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     throw;
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerTracing), Common.GetProgress(count, total))));
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerTracing), Common.GetProgress(count, total),sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerTracing), Common.GetProgress(count, total), true)));
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerTracing), Common.GetProgress(count, total), sendCound,true)));
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
@@ -440,10 +440,10 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     throw;
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerNotificationServices), Common.GetProgress(count, total))));
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerNotificationServices), Common.GetProgress(count, total),sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerNotificationServices), Common.GetProgress(count, total), true)));
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerNotificationServices), Common.GetProgress(count, total),sendCound, true)));
 
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 

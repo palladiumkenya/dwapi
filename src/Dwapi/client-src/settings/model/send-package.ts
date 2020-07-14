@@ -1,5 +1,6 @@
 import {CentralRegistry} from './central-registry';
 import {EmrSetup} from './emr-setup';
+import {Extract} from './extract';
 
 export interface SendPackage {
     destination?: CentralRegistry;
@@ -8,4 +9,7 @@ export interface SendPackage {
     extractName?: string;
     endpoint?: string;
     emrSetup?: EmrSetup;
+    emrId?: string;
+    emrName?: string;
+    extracts?: Extract[];
 }
