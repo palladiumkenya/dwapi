@@ -27,7 +27,7 @@ export class AppMenuComponent implements OnInit {
                             //{label: 'PSmart', icon: 'credit_card', routerLink: ['/registry', 'PSMART']},
                             {label: 'PKV Services', icon: 'search', routerLink: ['/registry', 'CBS']},
                             {label: 'HIV Testing Services', icon: 'local_hospital', routerLink: ['/registry', 'HTS']},
-                            {label: 'Migration Services', icon: 'flight_takeoff', routerLink: ['/registry', 'MGS']}
+                            // {label: 'Migration Services', icon: 'flight_takeoff', routerLink: ['/registry', 'MGS']}
                         ]
                     },
                     {label: 'EMR Settings', icon: 'dvr', routerLink: ['/emrconfig']}
@@ -40,7 +40,7 @@ export class AppMenuComponent implements OnInit {
                     //{label: 'PSmart', icon: 'credit_card', routerLink: ['/psmart']},
                     {label: 'PKV Services', icon: 'search', routerLink: ['/cbs']},
                     {label: 'HIV Testing Services', icon: 'local_hospital', routerLink: ['/hts']},
-                    {label: 'Migration Services', icon: 'flight_takeoff', routerLink: ['/mgs']}
+                    // {label: 'Migration Services', icon: 'flight_takeoff', routerLink: ['/mgs']}
                 ]
             }
         ];
