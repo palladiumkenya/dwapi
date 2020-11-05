@@ -1,31 +1,43 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.Application.Events
 {
-    public class DocketExtractLoaded : INotification
+    public class DocketExtractSent : INotification
     {
         public string Docket { get;  }
         public string Extract { get;  }
-        public DateTime? LastCreated { get;  }
-        public DateTime? LastModified { get; }
 
-        public DocketExtractLoaded(string docket, string extract, DateTime? lastCreated, DateTime? lastModified)
+        public DocketExtractSent(string docket, string extract)
         {
             Docket = docket;
             Extract = extract;
-            LastCreated = lastCreated;
-            LastModified = lastModified;
         }
     }
 
-    public class DocketExtractLoadedEventHanlder:INotificationHandler<DocketExtractLoaded>
+    public class DocketExtractSentEventHandler:INotificationHandler<DocketExtractSent>
     {
-        public Task Handle(DocketExtractLoaded notification, CancellationToken cancellationToken)
+        private readonly IDiffLogRepository _repository;
+
+        public DocketExtractSentEventHandler(IDiffLogRepository repository)
         {
-            throw new System.NotImplementedException();
+            _repository = repository;
+        }
+
+        public Task Handle(DocketExtractSent notification, CancellationToken cancellationToken)
+        {
+            var diffLog = _repository.GetLog(notification.Docket, notification.Extract);
+
+            if (null != diffLog)
+            {
+                diffLog.LogSent();
+                _repository.SaveLog(diffLog);
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

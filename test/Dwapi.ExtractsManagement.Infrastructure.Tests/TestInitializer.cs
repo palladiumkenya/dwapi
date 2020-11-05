@@ -10,6 +10,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
@@ -24,6 +25,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader.Mgs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Diff;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Validations;
@@ -63,6 +65,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
         public static string MsSqlConnectionString;
         public static string MySqlConnectionString;
         public static string EmrConnectionString;
+        public static string EmrDiffConnectionString;
         public static string ConnectionString;
         public static DatabaseProtocol Protocol;
         public static List<Extract> Extracts;
@@ -87,6 +90,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                 .Build();
 
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
+            EmrDiffConnectionString = GenerateConnection(config, "emrDiffConnection", false);
             ConnectionString = GenerateConnection(config, "dwapiConnection", false);
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
@@ -129,6 +133,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddTransient<IValidatorRepository, ValidatorRepository>();
             services.AddTransient<IPsmartStageRepository, PsmartStageRepository>();
+            services.AddTransient<IDiffLogRepository, DiffLogRepository>();
 
             #region CBS
 
@@ -319,10 +324,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
             return connectionString;
         }
+
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =
-                {"dwapi.db", "emr.db"};
+                {"dwapi.db", "emr.db", "emrdiff.db"};
             string[] keyDirs = {@"TestArtifacts/Database".ToOsStyle()};
 
             foreach (var keyDir in keyDirs)

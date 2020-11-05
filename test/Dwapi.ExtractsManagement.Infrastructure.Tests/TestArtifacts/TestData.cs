@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Diff;
 using Dwapi.SettingsManagement.Core.Model;
 using FizzWare.NBuilder;
 using Newtonsoft.Json;
@@ -43,6 +44,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
             .With(x=>x.ValidatorId=new Guid("6c5c70be-2a95-11e7-93ae-92361f002671"))
             .Build()
             .ToList();
+        }
+
+        public static List<DiffLog> GenerateDiffs(int count = 2)
+        {
+          return new List<DiffLog>()
+          {
+            DiffLog.Create("NDWH", "PatientExtract"),
+            DiffLog.Create("NDWH", "PatientArtExtract")
+          };
         }
 
         private static string EmrJson()

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.DTOs;
@@ -19,6 +20,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Exchange;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Notifications.Dwh;
+using MediatR;
 using Serilog;
 
 namespace Dwapi.UploadManagement.Core.Services.Dwh
@@ -27,12 +29,14 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
     {
         private readonly string _endPoint;
         private readonly IDwhPackager _packager;
+        private readonly IMediator _mediator;
 
         public HttpClient Client { get; set; }
 
-        public CTSendService(IDwhPackager packager)
+        public CTSendService(IDwhPackager packager, IMediator mediator)
         {
             _packager = packager;
+            _mediator = mediator;
             _endPoint = "api/";
         }
 
@@ -155,6 +159,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total),recordCount)));
 
                 }
+
+                await _mediator.Publish(new DocketExtractSent("NDWH", nameof(T)));
             }
             catch (Exception e)
             {

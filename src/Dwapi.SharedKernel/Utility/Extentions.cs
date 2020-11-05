@@ -46,6 +46,19 @@ namespace Dwapi.SharedKernel.Utility
             return guid == Guid.Empty;
         }
 
+        /// <summary>
+        /// Determines if a nullable Date (Date?) is null or Empty
+        /// </summary>
+        public static bool IsNullOrEmpty(this DateTime? dateTime)
+        {
+            DateTime? defDate = null;
+
+            if (null != dateTime || dateTime.HasValue)
+                return dateTime == defDate.GetValueOrDefault();
+
+            return null == dateTime || !dateTime.HasValue;
+        }
+
         public static Task<HttpResponseMessage> PostAsJsonAsync<T>(
             this HttpClient httpClient, string url, T data)
         {
@@ -120,5 +133,18 @@ namespace Dwapi.SharedKernel.Utility
             return HasToEndsWith(value, end);
         }
 
+        public static DateTime? CastDateTime(dynamic source)
+        {
+            DateTime dateValue;
+
+            if (string.IsNullOrWhiteSpace(source.ToString()))
+                return null;
+
+            if (DateTime.TryParse(source, out dateValue))
+                return dateValue as DateTime?;
+
+
+            return null;
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
 {
     [TestFixture]
     [Category("Dwh")]
-    public class ExtractSourceReaderTests
+    public class DiffExtractSourceReaderTests
     {
         private IDwhExtractSourceReader _reader;
         private List<Extract> _extracts;
@@ -23,7 +23,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
         public void Init()
         {
             TestInitializer.ClearDb();
-            TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
+            TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrDiffConnectionString));
             _protocol = TestInitializer.Protocol;
             _extracts=TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("NDWH")).ToList();
         }

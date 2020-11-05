@@ -1,45 +1,101 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Model;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Diff;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts;
+using Dwapi.SharedKernel.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository
+namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Diff
 {
     [TestFixture]
-    [Category("Cbs")]
-    public class ValidatorRepositoryTests
+    public class DiffLogRepositoryTests
     {
-        private IValidatorRepository _repository;
-        private List<ValidationError> _indices;
+        private IDiffLogRepository _repository;
+        private List<DiffLog> _diffLogs;
         private ExtractsContext _context;
 
         [OneTimeSetUp]
         public void Init()
         {
             TestInitializer.ClearDb();
-            _indices = TestData.GenerateErrors();
-            TestInitializer.SeedData<ExtractsContext>(_indices);
+            TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrDiffConnectionString));
+            _diffLogs = TestData.GenerateDiffs();
+            TestInitializer.SeedData<ExtractsContext>(_diffLogs);
+            TestInitializer.SeedData<ExtractsContext>(
+                TestData.GenerateData<PatientExtract>(),TestData.GenerateData<PatientAdverseEventExtract>());
             _context=TestInitializer.ServiceProvider.GetService<ExtractsContext>();
         }
 
         [SetUp]
         public void SetUp()
         {
-            _repository = TestInitializer.ServiceProvider.GetService<IValidatorRepository>();
+            _repository = TestInitializer.ServiceProvider.GetService<IDiffLogRepository>();
         }
 
         [Test]
-        public void should_Clear_By_Docket()
+        public void should_Get_Log()
         {
-            Assert.True(_context.ValidationError.Any());
-            var validatorRepository = TestInitializer.ServiceProvider.GetService<IValidatorRepository>();
-            validatorRepository.ClearByDocket("NDWH");
+            var diffLog = _repository.GetLog("ndwh", "PatientExtract");
+            Assert.NotNull(diffLog);
+        }
 
-            var  context = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
-            Assert.False(context.ValidationError.Any());
+        [Test]
+        public void should_Init_Log_New()
+        {
+            var diffLog = _repository.InitLog("NDWH", "PatientStatusExtract");
+            Assert.NotNull(diffLog);
+        }
+
+        [Test]
+        public void should_Init_Log_Exisiting()
+        {
+            var diffLog = _repository.InitLog("ndwh", "PatientExtract");
+            Assert.NotNull(diffLog);
+        }
+
+        [Test]
+        public void should_Save_Log_New()
+        {
+            var diffLog = DiffLog.Create("NDWH", "PatientVisitExtract");
+            _repository.SaveLog(diffLog);
+
+
+            var context = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
+            var savedDiffLog = context.DiffLogs.Find(diffLog.Id);
+
+            Assert.NotNull(savedDiffLog);
+        }
+
+        [Test]
+        public void should_Save_Log_Update()
+        {
+
+            var diffLog = _diffLogs.First(x => x.Extract == "PatientExtract");
+            diffLog.LogSent();
+
+            _repository.SaveLog(diffLog);
+
+
+            var context = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
+            var savedDiffLog = context.DiffLogs.Find(diffLog.Id);
+
+            Assert.NotNull(savedDiffLog);
+        }
+
+        [TestCase("PatientAdverseEventExtracts")]
+        [TestCase("PatientExtracts")]
+        public void should_Generate_Diff(string extract)
+        {
+            var diffLog = _repository.GenerateDiff("NDWH", extract);
+            Assert.NotNull(diffLog);
+            Assert.False(diffLog.MaxCreated.IsNullOrEmpty());
+            Assert.False(diffLog.MaxModified.IsNullOrEmpty());
         }
     }
 }

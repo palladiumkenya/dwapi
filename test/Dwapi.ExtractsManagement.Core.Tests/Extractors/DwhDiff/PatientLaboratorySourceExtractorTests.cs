@@ -10,10 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Serilog;
 
-namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
+namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.DwhDiff
 {
     [TestFixture]
-    public class PatientLaboratorySourceExtractorTests
+    public class DiffPatientLaboratorySourceExtractorTests
     {
         private IPatientLaboratorySourceExtractor _extractor;
         private List<Extract> _extracts;
@@ -24,7 +24,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
         public void Init()
         {
             TestInitializer.ClearDb();
-            TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
+            TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrDiffConnectionString));
             _protocol = TestInitializer.Protocol;
             _extracts = TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("NDWH")).ToList();
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();

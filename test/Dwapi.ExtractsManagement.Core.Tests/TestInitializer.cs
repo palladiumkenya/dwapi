@@ -111,6 +111,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
         public static string MsSqlConnectionString;
         public static string MySqlConnectionString;
         public static string EmrConnectionString;
+        public static string EmrDiffConnectionString;
         public static string ConnectionString;
         public static DatabaseProtocol Protocol;
         public static List<Extract> Extracts;
@@ -135,6 +136,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .Build();
 
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
+            EmrDiffConnectionString = GenerateConnection(config, "emrDiffConnection", false);
             ConnectionString = GenerateCopyConnection(config, "dwapiConnection");
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
@@ -477,7 +479,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =
-                {"dwapi.db", "emr.db"};
+                {"dwapi.db", "emr.db", "emr-diff.db"};
             string[] keyDirs = {@"TestArtifacts/Database".ToOsStyle()};
 
             foreach (var keyDir in keyDirs)
