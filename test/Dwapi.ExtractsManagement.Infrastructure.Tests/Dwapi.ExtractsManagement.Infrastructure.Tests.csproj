@@ -4,9 +4,17 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="appsettings.json" />
     <None Remove="appsettings.mysql.json" />
     <None Update="TestArtifacts\Database\dwapi.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestArtifacts\Database\dwapidiff.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestArtifacts\Database\emr.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -39,17 +47,9 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Content Include="appsettings.json">
+    <None Include="TestArtifacts\Database\emrdiff.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <None Remove="TestArtifacts\Database\emr.db" />
-    <Content Include="TestArtifacts\Database\emrdiff.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestArtifacts\Database\emr.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   
   <ItemGroup>

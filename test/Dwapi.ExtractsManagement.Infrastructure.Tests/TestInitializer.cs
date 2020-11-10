@@ -54,7 +54,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Serilog;
 using Z.Dapper.Plus;
-using SettingsContext = System.Configuration.SettingsContext;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 {
@@ -67,8 +66,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
         public static string EmrConnectionString;
         public static string EmrDiffConnectionString;
         public static string ConnectionString;
+        public static string DiffConnectionString;
         public static DatabaseProtocol Protocol;
         public static List<Extract> Extracts;
+        public static ServiceCollection AllServices;
 
         [OneTimeSetUp]
         public void Setup()
@@ -92,6 +93,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
             EmrDiffConnectionString = GenerateConnection(config, "emrDiffConnection", false);
             ConnectionString = GenerateConnection(config, "dwapiConnection", false);
+            DiffConnectionString = GenerateConnection(config, "dwapiDiffConnection", false);
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
@@ -102,7 +104,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
             #region Setttings.Infrastructure
 
-            services.AddDbContext<Dwapi.SettingsManagement.Infrastructure.SettingsContext>(x => x.UseSqlite(connection));
+            services.AddDbContext<SettingsContext>(x => x.UseSqlite(connection));
 
             services.AddTransient<IAppDatabaseManager, AppDatabaseManager>();
             services.AddTransient<IDatabaseManager, DatabaseManager>();
@@ -126,14 +128,19 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services.AddTransient<IHTSExtractSourceReader, HTSExtractSourceReader>();
             services.AddTransient<IPsmartSourceReader, PsmartSourceReader>();
             // NEW
-            services.AddScoped<IMgsExtractSourceReader,MgsExtractSourceReader>();
+            services.AddScoped<IMgsExtractSourceReader, MgsExtractSourceReader>();
+
             #endregion
+
+            #region Sys
 
             services.AddTransient<IEmrMetricRepository, EmrMetricRepository>();
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddTransient<IValidatorRepository, ValidatorRepository>();
             services.AddTransient<IPsmartStageRepository, PsmartStageRepository>();
             services.AddTransient<IDiffLogRepository, DiffLogRepository>();
+
+            #endregion
 
             #region CBS
 
@@ -210,13 +217,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services.AddScoped<IHtsClientsLinkageExtractRepository, HtsClientsLinkageExtractRepository>();
             services.AddScoped<IHtsClientTestsExtractRepository, HtsClientTestsExtractRepository>();
             services.AddScoped<IHtsClientTracingExtractRepository, HtsClientTracingExtractRepository>();
-            services.AddScoped<IHtsPartnerNotificationServicesExtractRepository, HtsPartnerNotificationServicesExtractRepository>();
+            services
+                .AddScoped<IHtsPartnerNotificationServicesExtractRepository,
+                    HtsPartnerNotificationServicesExtractRepository>();
             services.AddScoped<IHtsPartnerTracingExtractRepository, HtsPartnerTracingExtractRepository>();
             services.AddScoped<IHtsTestKitsExtractRepository, HtsTestKitsExtractRepository>();
 
             #endregion
 
             #region TempExtracts
+
             services.AddScoped<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>();
             services.AddScoped<ITempHTSClientLinkageExtractRepository, TempHTSClientLinkageExtractRepository>();
             services.AddScoped<ITempHTSClientPartnerExtractRepository, TempHTSClientPartnerExtractRepository>();
@@ -224,54 +234,83 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services.AddScoped<ITempHtsClientsLinkageExtractRepository, TempHtsClientsLinkageExtractRepository>();
             services.AddScoped<ITempHtsClientTestsExtractRepository, TempHtsClientTestsExtractRepository>();
             services.AddScoped<ITempHtsClientTracingExtractRepository, TempHtsClientTracingExtractRepository>();
-            services.AddScoped<ITempHtsPartnerNotificationServicesExtractRepository, TempHtsPartnerNotificationServicesExtractRepository>();
+            services
+                .AddScoped<ITempHtsPartnerNotificationServicesExtractRepository,
+                    TempHtsPartnerNotificationServicesExtractRepository>();
             services.AddScoped<ITempHtsPartnerTracingExtractRepository, TempHtsPartnerTracingExtractRepository>();
             services.AddScoped<ITempHtsTestKitsExtractRepository, TempHtsTestKitsExtractRepository>();
+
             #endregion
 
             #region Validations
-            services.AddScoped<ITempHTSClientExtractErrorSummaryRepository, TempHTSClientExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHTSClientLinkageExtractErrorSummaryRepository, TempHTSClientLinkageExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHTSClientPartnerExtractErrorSummaryRepository, TempHTSClientPartnerExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientsExtractErrorSummaryRepository, TempHtsClientsExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientLinkageErrorSummaryRepository, TempHtsClientsLinkageExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientTestsErrorSummaryRepository, TempHtsClientTestsExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientTracingErrorSummaryRepository, TempHtsClientTracingExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsPartnerNotificationServicesErrorSummaryRepository, TempHtsPartnerNotificationServicesExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsPartnerTracingErrorSummaryRepository, TempHtsPartnerTracingExtractErrorSummaryRepository>();
+
+            services
+                .AddScoped<ITempHTSClientExtractErrorSummaryRepository, TempHTSClientExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHTSClientLinkageExtractErrorSummaryRepository,
+                    TempHTSClientLinkageExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHTSClientPartnerExtractErrorSummaryRepository,
+                    TempHTSClientPartnerExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsClientsExtractErrorSummaryRepository, TempHtsClientsExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsClientLinkageErrorSummaryRepository,
+                    TempHtsClientsLinkageExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsClientTestsErrorSummaryRepository, TempHtsClientTestsExtractErrorSummaryRepository
+                >();
+            services
+                .AddScoped<ITempHtsClientTracingErrorSummaryRepository,
+                    TempHtsClientTracingExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsPartnerNotificationServicesErrorSummaryRepository,
+                    TempHtsPartnerNotificationServicesExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsPartnerTracingErrorSummaryRepository,
+                    TempHtsPartnerTracingExtractErrorSummaryRepository>();
             services.AddScoped<ITempHtsTestKitsErrorSummaryRepository, TempHtsTestKitsExtractErrorSummaryRepository>();
+
             #endregion
 
             #endregion
 
             #region MGS
 
-             #region Extracts
-             services.AddScoped<IMetricMigrationExtractRepository, MetricMigrationExtractRepository>();
-             #endregion
+            #region Extracts
+
+            services.AddScoped<IMetricMigrationExtractRepository, MetricMigrationExtractRepository>();
+
+            #endregion
 
             #region TempExtracts
+
             services.AddScoped<ITempMetricMigrationExtractRepository, TempMetricMigrationExtractRepository>();
+
             #endregion
 
             #region Validations
-            services.AddScoped<ITempMetricMigrationExtractErrorSummaryRepository, TempMetricMigrationExtractErrorSummaryRepository>();
+
+            services
+                .AddScoped<ITempMetricMigrationExtractErrorSummaryRepository,
+                    TempMetricMigrationExtractErrorSummaryRepository>();
+
             #endregion
 
             #endregion
 
             #region Validators
+
             services.AddTransient<IMasterPatientIndexValidator, MasterPatientIndexValidator>();
             services.AddTransient<IExtractValidator, ExtractValidator>();
             services.AddTransient<IHtsExtractValidator, HtsExtractValidator>();
             // NEW
-            services.AddScoped<IMetricExtractValidator,MetricExtractValidator>();
+            services.AddScoped<IMetricExtractValidator, MetricExtractValidator>();
+
             #endregion
 
+            AllServices = services;
             ServiceProvider = services.BuildServiceProvider();
-
-            var context = ServiceProvider.GetService<SettingsContext>();
-          //  context.EnsureSeeded();
         }
 
         public static void ClearDb()
@@ -280,9 +319,34 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             econtext.EnsureSeeded();
         }
 
+        public static void ClearDiffDb()
+        {
+            AllServices.RemoveService(typeof(SettingsContext));
+            AllServices.RemoveService(typeof(ExtractsContext));
+            AllServices.RemoveService(typeof(DbContextOptions<SettingsContext>));
+            AllServices.RemoveService(typeof(DbContextOptions<ExtractsContext>));
+
+            var diffConnection = new SqliteConnection(DiffConnectionString);
+            diffConnection.Open();
+
+            AllServices.AddDbContext<SettingsContext>(x => x.UseSqlite(diffConnection));
+            AllServices.AddDbContext<ExtractsContext>(x => x.UseSqlite(diffConnection));
+
+            ServiceProvider = AllServices.BuildServiceProvider();
+
+            var econtext = ServiceProvider.GetService<ExtractsContext>();
+            econtext.EnsureSeeded();
+        }
+
         public static void SeedData(params IEnumerable<object>[] entities)
         {
             var context = ServiceProvider.GetService<Dwapi.SettingsManagement.Infrastructure.SettingsContext>();
+            if (entities.Any(x => x.First().GetType() == typeof(EmrSystem)))
+            {
+                context.EmrSystems.RemoveRange(context.EmrSystems);
+                context.SaveChanges();
+            }
+
             foreach (IEnumerable<object> t in entities)
             {
                 context.AddRange(t);
@@ -293,15 +357,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             Protocol = context.DatabaseProtocols.AsNoTracking().First(x => x.DatabaseType == DatabaseType.Sqlite);
             Extracts = context.Extracts.AsNoTracking().Where(x => x.DatabaseProtocolId == Protocol.Id).ToList();
         }
-        public static void SeedData<T>(params IEnumerable<object>[] entities) where T:DbContext
+
+        public static void SeedData<T>(params IEnumerable<object>[] entities) where T : DbContext
         {
             var context = ServiceProvider.GetService<T>();
             foreach (IEnumerable<object> t in entities)
             {
                 context.AddRange(t);
             }
+
             context.SaveChanges();
         }
+
         private void RegisterLicence()
         {
             DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
@@ -328,7 +395,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =
-                {"dwapi.db", "emr.db", "emrdiff.db"};
+                {"dwapi.db", "dwapidiff.db", "emr.db", "emrdiff.db"};
             string[] keyDirs = {@"TestArtifacts/Database".ToOsStyle()};
 
             foreach (var keyDir in keyDirs)

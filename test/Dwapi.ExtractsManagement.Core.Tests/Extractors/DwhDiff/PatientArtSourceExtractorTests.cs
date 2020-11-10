@@ -24,7 +24,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.DwhDiff
         [OneTimeSetUp]
         public void Init()
         {
-            TestInitializer.ClearDb();
+            TestInitializer.ClearDiffDb();
             TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrDiffConnectionString));
             _protocol = TestInitializer.Protocol;
             _extracts = TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("NDWH")).ToList();
@@ -46,6 +46,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.DwhDiff
             Assert.True(count > 0);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
             Assert.AreEqual(count,_extractsContext.TempPatientArtExtracts.Count());
+            Assert.False(_extractsContext.TempPatientArtExtracts.First().Date_Created.IsNullOrEmpty());
+            Assert.False(_extractsContext.TempPatientArtExtracts.First().Date_Last_Modified.IsNullOrEmpty());
             Log.Debug($"extracted {_extractsContext.TempPatientArtExtracts.Count()}");
         }
     }

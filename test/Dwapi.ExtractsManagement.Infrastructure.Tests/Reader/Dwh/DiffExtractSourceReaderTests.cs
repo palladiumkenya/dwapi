@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -12,7 +13,7 @@ using NUnit.Framework;
 namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
 {
     [TestFixture]
-    [Category("Dwh")]
+    [Category("DwhDiff")]
     public class DiffExtractSourceReaderTests
     {
         private IDwhExtractSourceReader _reader;
@@ -22,7 +23,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
         [OneTimeSetUp]
         public void Init()
         {
-            TestInitializer.ClearDb();
+            TestInitializer.ClearDiffDb();
             TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrDiffConnectionString));
             _protocol = TestInitializer.Protocol;
             _extracts=TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("NDWH")).ToList();
@@ -49,6 +50,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
             Assert.NotNull(reader);
             reader.Read();
             Assert.NotNull(reader[0]);
+            Assert.False((reader.GetDateTime(reader.GetOrdinal(nameof(PatientExtract.Date_Created))) as DateTime?).IsNullOrEmpty());
+            Assert.False((reader.GetDateTime(reader.GetOrdinal(nameof(PatientExtract.Date_Last_Modified))) as DateTime?).IsNullOrEmpty());
             reader.Close();
         }
     }

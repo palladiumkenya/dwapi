@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace Dwapi.SharedKernel.Utility
@@ -145,6 +146,22 @@ namespace Dwapi.SharedKernel.Utility
 
 
             return null;
+        }
+
+        public static void RemoveService(this ServiceCollection services, Type serviceType)
+        {
+            var descriptors = services
+                .Where(x => x.ServiceType == serviceType)
+                .ToList();
+
+            if (descriptors.Any())
+            {
+                foreach (var descriptor in descriptors)
+                {
+                    services.Remove(descriptor);
+                }
+            }
+
         }
     }
 }

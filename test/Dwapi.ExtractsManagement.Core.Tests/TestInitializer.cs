@@ -113,8 +113,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests
         public static string EmrConnectionString;
         public static string EmrDiffConnectionString;
         public static string ConnectionString;
+        public static string DiffConnectionString;
         public static DatabaseProtocol Protocol;
         public static List<Extract> Extracts;
+        public static ServiceCollection AllServices;
 
         [OneTimeSetUp]
         public void Setup()
@@ -138,6 +140,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
             EmrDiffConnectionString = GenerateConnection(config, "emrDiffConnection", false);
             ConnectionString = GenerateCopyConnection(config, "dwapiConnection");
+            DiffConnectionString = GenerateCopyConnection(config, "dwapiDiffConnection");
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
@@ -386,6 +389,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
 
             services.AddMediatR(typeof(LoadFromEmrCommand));
 
+            AllServices = services;
             ServiceProvider = services.BuildServiceProvider();
 
               Mapper.Initialize(cfg =>
@@ -415,9 +419,42 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
         }
 
+        public static void ClearDiffDb()
+        {
+            AllServices.RemoveService(typeof(SettingsContext));
+            AllServices.RemoveService(typeof(ExtractsContext));
+            AllServices.RemoveService(typeof(DbContextOptions<SettingsContext>));
+            AllServices.RemoveService(typeof(DbContextOptions<ExtractsContext>));
+
+            var diffConnection = new SqliteConnection(DiffConnectionString);
+            diffConnection.Open();
+
+            AllServices.AddDbContext<SettingsContext>(x => x.UseSqlite(diffConnection));
+            AllServices.AddDbContext<ExtractsContext>(x => x.UseSqlite(diffConnection));
+
+            ServiceProvider = AllServices.BuildServiceProvider();
+
+            var context = ServiceProvider.GetService<SettingsContext>();
+            context.EnsureSeeded();
+
+            var econtext = ServiceProvider.GetService<ExtractsContext>();
+            econtext.EnsureSeeded();
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempPatientExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.PatientExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempHtsClientsExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
+        }
+
         public static void SeedData(params IEnumerable<object>[] entities)
         {
             var context = ServiceProvider.GetService<SettingsContext>();
+
+            if (entities.Any(x => x.First().GetType() == typeof(EmrSystem)))
+            {
+                context.EmrSystems.RemoveRange(context.EmrSystems);
+                context.SaveChanges();
+            }
+
             foreach (IEnumerable<object> t in entities)
             {
                 context.AddRange(t);
@@ -479,7 +516,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =
-                {"dwapi.db", "emr.db", "emr-diff.db"};
+                {"dwapi.db", "dwapi-diff.db", "emr.db", "emr-diff.db"};
             string[] keyDirs = {@"TestArtifacts/Database".ToOsStyle()};
 
             foreach (var keyDir in keyDirs)

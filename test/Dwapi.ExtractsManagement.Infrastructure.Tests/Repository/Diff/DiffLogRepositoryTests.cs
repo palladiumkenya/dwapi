@@ -23,7 +23,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Diff
         [OneTimeSetUp]
         public void Init()
         {
-            TestInitializer.ClearDb();
+            TestInitializer.ClearDiffDb();
             TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrDiffConnectionString));
             _diffLogs = TestData.GenerateDiffs();
             TestInitializer.SeedData<ExtractsContext>(_diffLogs);
