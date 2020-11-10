@@ -37,13 +37,10 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader.Dwh
             Assert.True(extractViews.Count==2);
             Assert.NotNull(extractViews.First().PatientExtractView);
         }
-        [Test]
-        public void should_Read_Diff_ART_Next()
+
+        private void BuildDiff()
         {
-            var extractViews = _reader.Read<PatientArtExtractView,Guid>(1, 2).ToList();
-            Assert.True(extractViews.Any());
-            Assert.True(extractViews.Count==2);
-            Assert.NotNull(extractViews.First().PatientExtractView);
+
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using AutoMapper;
@@ -204,7 +205,8 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests
             services.AddTransient<IHTSExtractSourceReader, HTSExtractSourceReader>();
             services.AddTransient<IPsmartSourceReader, PsmartSourceReader>();
             // NEW
-            services.AddScoped<IMgsExtractSourceReader,MgsExtractSourceReader>();
+            services.AddScoped<IMgsExtractSourceReader, MgsExtractSourceReader>();
+
             #endregion
 
             services.AddTransient<IEmrMetricRepository, EmrMetricRepository>();
@@ -288,13 +290,16 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests
             services.AddScoped<IHtsClientsLinkageExtractRepository, HtsClientsLinkageExtractRepository>();
             services.AddScoped<IHtsClientTestsExtractRepository, HtsClientTestsExtractRepository>();
             services.AddScoped<IHtsClientTracingExtractRepository, HtsClientTracingExtractRepository>();
-            services.AddScoped<IHtsPartnerNotificationServicesExtractRepository, HtsPartnerNotificationServicesExtractRepository>();
+            services
+                .AddScoped<IHtsPartnerNotificationServicesExtractRepository,
+                    HtsPartnerNotificationServicesExtractRepository>();
             services.AddScoped<IHtsPartnerTracingExtractRepository, HtsPartnerTracingExtractRepository>();
             services.AddScoped<IHtsTestKitsExtractRepository, HtsTestKitsExtractRepository>();
 
             #endregion
 
             #region TempExtracts
+
             services.AddScoped<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>();
             services.AddScoped<ITempHTSClientLinkageExtractRepository, TempHTSClientLinkageExtractRepository>();
             services.AddScoped<ITempHTSClientPartnerExtractRepository, TempHTSClientPartnerExtractRepository>();
@@ -302,22 +307,43 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests
             services.AddScoped<ITempHtsClientsLinkageExtractRepository, TempHtsClientsLinkageExtractRepository>();
             services.AddScoped<ITempHtsClientTestsExtractRepository, TempHtsClientTestsExtractRepository>();
             services.AddScoped<ITempHtsClientTracingExtractRepository, TempHtsClientTracingExtractRepository>();
-            services.AddScoped<ITempHtsPartnerNotificationServicesExtractRepository, TempHtsPartnerNotificationServicesExtractRepository>();
+            services
+                .AddScoped<ITempHtsPartnerNotificationServicesExtractRepository,
+                    TempHtsPartnerNotificationServicesExtractRepository>();
             services.AddScoped<ITempHtsPartnerTracingExtractRepository, TempHtsPartnerTracingExtractRepository>();
             services.AddScoped<ITempHtsTestKitsExtractRepository, TempHtsTestKitsExtractRepository>();
+
             #endregion
 
             #region Validations
-            services.AddScoped<ITempHTSClientExtractErrorSummaryRepository, TempHTSClientExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHTSClientLinkageExtractErrorSummaryRepository, TempHTSClientLinkageExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHTSClientPartnerExtractErrorSummaryRepository, TempHTSClientPartnerExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientsExtractErrorSummaryRepository, TempHtsClientsExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientLinkageErrorSummaryRepository, TempHtsClientsLinkageExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientTestsErrorSummaryRepository, TempHtsClientTestsExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsClientTracingErrorSummaryRepository, TempHtsClientTracingExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsPartnerNotificationServicesErrorSummaryRepository, TempHtsPartnerNotificationServicesExtractErrorSummaryRepository>();
-            services.AddScoped<ITempHtsPartnerTracingErrorSummaryRepository, TempHtsPartnerTracingExtractErrorSummaryRepository>();
+
+            services
+                .AddScoped<ITempHTSClientExtractErrorSummaryRepository, TempHTSClientExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHTSClientLinkageExtractErrorSummaryRepository,
+                    TempHTSClientLinkageExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHTSClientPartnerExtractErrorSummaryRepository,
+                    TempHTSClientPartnerExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsClientsExtractErrorSummaryRepository, TempHtsClientsExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsClientLinkageErrorSummaryRepository,
+                    TempHtsClientsLinkageExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsClientTestsErrorSummaryRepository, TempHtsClientTestsExtractErrorSummaryRepository
+                >();
+            services
+                .AddScoped<ITempHtsClientTracingErrorSummaryRepository,
+                    TempHtsClientTracingExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsPartnerNotificationServicesErrorSummaryRepository,
+                    TempHtsPartnerNotificationServicesExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsPartnerTracingErrorSummaryRepository,
+                    TempHtsPartnerTracingExtractErrorSummaryRepository>();
             services.AddScoped<ITempHtsTestKitsErrorSummaryRepository, TempHtsTestKitsExtractErrorSummaryRepository>();
+
             #endregion
 
             #endregion
@@ -325,25 +351,35 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests
             #region MGS
 
             #region Extracts
+
             services.AddScoped<IMetricMigrationExtractRepository, MetricMigrationExtractRepository>();
+
             #endregion
 
             #region TempExtracts
+
             services.AddScoped<ITempMetricMigrationExtractRepository, TempMetricMigrationExtractRepository>();
+
             #endregion
 
             #region Validations
-            services.AddScoped<ITempMetricMigrationExtractErrorSummaryRepository, TempMetricMigrationExtractErrorSummaryRepository>();
+
+            services
+                .AddScoped<ITempMetricMigrationExtractErrorSummaryRepository,
+                    TempMetricMigrationExtractErrorSummaryRepository>();
+
             #endregion
 
             #endregion
 
             #region Validators
+
             services.AddTransient<IMasterPatientIndexValidator, MasterPatientIndexValidator>();
             services.AddTransient<IExtractValidator, ExtractValidator>();
             services.AddTransient<IHtsExtractValidator, HtsExtractValidator>();
             // NEW
-            services.AddScoped<IMetricExtractValidator,MetricExtractValidator>();
+            services.AddScoped<IMetricExtractValidator, MetricExtractValidator>();
+
             #endregion
 
             #endregion
@@ -354,8 +390,11 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests
             services.AddScoped<IClearDwhExtracts, ClearDwhExtracts>();
             services.AddScoped<IClearHtsExtracts, ClearHtsExtracts>();
             services.AddScoped<IClearMgsExtracts, ClearMgsExtracts>();
+
             #endregion
+
             #region Extractors
+
             services.AddScoped<IMasterPatientIndexSourceExtractor, MasterPatientIndexSourceExtractor>();
 
             services.AddScoped<IPatientAdverseEventSourceExtractor, PatientAdverseEventSourceExtractor>();
@@ -373,12 +412,16 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests
             services.AddScoped<IHtsTestKitsSourceExtractor, HtsTestKitsSourceExtractor>();
             services.AddScoped<IHtsClientTracingSourceExtractor, HtsClientTracingSourceExtractor>();
             services.AddScoped<IHtsPartnerTracingSourceExtractor, HtsPartnerTracingSourceExtractor>();
-            services.AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor>();
+            services
+                .AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor
+                >();
 
-            services.AddScoped<IMetricMigrationSourceExtractor,MetricMigrationSourceExtractor>();
+            services.AddScoped<IMetricMigrationSourceExtractor, MetricMigrationSourceExtractor>();
+
             #endregion
 
             #region Loaders
+
             services.AddScoped<IPatientLoader, PatientLoader>();
             services.AddScoped<IPatientArtLoader, PatientArtLoader>();
             services.AddScoped<IPatientBaselinesLoader, PatientBaselinesLoader>();
@@ -394,13 +437,16 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddScoped<IHtsClientsLoader, HtsClientsLoader>();
             services.AddScoped<IHtsClientTestsLoader, HtsClientTestsLoader>();
             services.AddScoped<IHtsClientsLinkageLoader, HtsClientsLinkageLoader>();
-            services.AddScoped<IHtsTestKitsLoader,   HtsTestKitsLoader>();
+            services.AddScoped<IHtsTestKitsLoader, HtsTestKitsLoader>();
             services.AddScoped<IHtsClientTracingLoader, HtsClientTracingLoader>();
             services.AddScoped<IHtsPartnerTracingLoader, HtsPartnerTracingLoader>();
-            services.AddScoped<IHtsPartnerNotificationServicesLoader, HtsPartnerNotificationServicesLoader >();
+            services.AddScoped<IHtsPartnerNotificationServicesLoader, HtsPartnerNotificationServicesLoader>();
             services.AddScoped<IMetricMigrationLoader, MetricMigrationLoader>();
+
             #endregion
+
             #region Services
+
             services.AddScoped<ICbsSendService, CbsSendService>();
             services.AddScoped<IMpiSearchService, MpiSearchService>();
             services.AddScoped<IDwhSendService, DwhSendService>();
@@ -408,8 +454,9 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddScoped<IHtsSendService, HtsSendService>();
             services.AddScoped<IEmrMetricsService, EmrMetricsService>();
             // NEW
-            services.AddScoped<IMgsExtractReader,MgsExtractReader>();
+            services.AddScoped<IMgsExtractReader, MgsExtractReader>();
             services.AddScoped<IMgsSendService, MgsSendService>();
+
             #endregion
 
 
@@ -417,10 +464,10 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
 
 
             services.AddTransient<IDwhExtractReader, DwhExtractReader>();
-           // services.AddTransient<ICTExtractReader, CTExtractReader>();
+            // services.AddTransient<ICTExtractReader, CTExtractReader>();
             services.AddTransient<IDwhPackager, DwhPackager>();
-          //  services.AddTransient<ICTPackager, CTPackager>();
-          //  services.AddTransient<ICTSendService, CTSendService>();
+            //  services.AddTransient<ICTPackager, CTPackager>();
+            //  services.AddTransient<ICTSendService, CTSendService>();
             services.AddTransient<ICbsSendService, CbsSendService>();
             services.AddTransient<ICbsPackager, CbsPackager>();
             services.AddTransient<ICbsExtractReader, CbsExtractReader>();
@@ -430,23 +477,23 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddTransient<IHtsExtractReader, HtsExtractReader>();
             services.AddTransient<IExtractStatusService, ExtractStatusService>();
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
-             services   .AddTransient<IEmrSystemRepository,EmrSystemRepository>();
-             AllServices = services;
+            services.AddTransient<IEmrSystemRepository, EmrSystemRepository>();
+            AllServices = services;
             ServiceProvider = services.BuildServiceProvider();
 
-              Mapper.Initialize(cfg =>
-                            {
-                                cfg.AddDataReaderMapping();
-                                cfg.AddProfile<TempExtractProfile>();
-                                cfg.AddProfile<TempMasterPatientIndexProfile>();
-                                cfg.AddProfile<EmrProfiles>();
-                                cfg.AddProfile<TempHtsExtractProfile>();
-                                cfg.AddProfile<MasterPatientIndexProfile>();
-                                cfg.AddProfile<TempMetricExtractProfile>();
-                            }
-                        );
+            Mapper.Initialize(cfg =>
+                {
+                    cfg.AddDataReaderMapping();
+                    cfg.AddProfile<TempExtractProfile>();
+                    cfg.AddProfile<TempMasterPatientIndexProfile>();
+                    cfg.AddProfile<EmrProfiles>();
+                    cfg.AddProfile<TempHtsExtractProfile>();
+                    cfg.AddProfile<MasterPatientIndexProfile>();
+                    cfg.AddProfile<TempMetricExtractProfile>();
+                }
+            );
 
-              ClearDb();
+            ClearDb();
         }
 
         public static void ClearDb()
@@ -498,11 +545,15 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempHtsClientsExtracts)}");
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
             */
+
             SeedData(TestData.GenerateEmrSystems(EmrDiffConnectionString));
             SeedData(TestData.GenerateData<AppMetric>());
             SeedData<ExtractsContext>(TestData.GenerateData<EmrMetric>());
             Protocol = context.DatabaseProtocols.AsNoTracking().First(x => x.DatabaseType == DatabaseType.Sqlite);
             Extracts = context.Extracts.AsNoTracking().Where(x => x.DatabaseProtocolId == Protocol.Id).ToList();
+
+            SetUpDiff( DateTime.Now.Date.AddMonths(-1), DateTime.Now.Date.AddMonths(-1));
+
             LoadMpi();
             LoadHts();
             LoadCt();
@@ -521,13 +572,14 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
 
         }
 
-        public static void SeedData<T>(params IEnumerable<object>[] entities) where T:DbContext
+        public static void SeedData<T>(params IEnumerable<object>[] entities) where T : DbContext
         {
             var context = ServiceProvider.GetService<T>();
             foreach (IEnumerable<object> t in entities)
             {
                 context.AddRange(t);
             }
+
             context.SaveChanges();
         }
 
@@ -589,43 +641,88 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
 
         private static void LoadMpi()
         {
-            LoadData(ServiceProvider.GetService<IMasterPatientIndexLoader>(), ServiceProvider.GetService<IMasterPatientIndexSourceExtractor>(), nameof(MasterPatientIndex));
+            LoadData(ServiceProvider.GetService<IMasterPatientIndexLoader>(),
+                ServiceProvider.GetService<IMasterPatientIndexSourceExtractor>(), nameof(MasterPatientIndex));
         }
+
         private static void LoadHts()
         {
-            LoadData(ServiceProvider.GetService<IHtsClientsLoader>(), ServiceProvider.GetService<IHtsClientsSourceExtractor>(), "HtsClient");
+            LoadData(ServiceProvider.GetService<IHtsClientsLoader>(),
+                ServiceProvider.GetService<IHtsClientsSourceExtractor>(), "HtsClient");
 
-            LoadData(ServiceProvider.GetService<IHtsClientsLinkageLoader>(), ServiceProvider.GetService<IHtsClientsLinkageSourceExtractor>(), nameof(HtsClientLinkage));
-            LoadData(ServiceProvider.GetService<IHtsClientTestsLoader>(), ServiceProvider.GetService<IHtsClientTestsSourceExtractor>(), nameof(HtsClientTests));
-            LoadData(ServiceProvider.GetService<IHtsClientTracingLoader>(), ServiceProvider.GetService<IHtsClientTracingSourceExtractor>(), nameof(HtsClientTracing));
-            LoadData(ServiceProvider.GetService<IHtsPartnerNotificationServicesLoader>(), ServiceProvider.GetService<IHtsPartnerNotificationServicesSourceExtractor>(), nameof(HtsPartnerNotificationServices));
-            LoadData(ServiceProvider.GetService<IHtsPartnerTracingLoader>(), ServiceProvider.GetService<IHtsPartnerTracingSourceExtractor>(), nameof(HtsPartnerTracing));
-            LoadData(ServiceProvider.GetService<IHtsTestKitsLoader>(), ServiceProvider.GetService<IHtsTestKitsSourceExtractor>(), nameof(HtsTestKits));
+            LoadData(ServiceProvider.GetService<IHtsClientsLinkageLoader>(),
+                ServiceProvider.GetService<IHtsClientsLinkageSourceExtractor>(), nameof(HtsClientLinkage));
+            LoadData(ServiceProvider.GetService<IHtsClientTestsLoader>(),
+                ServiceProvider.GetService<IHtsClientTestsSourceExtractor>(), nameof(HtsClientTests));
+            LoadData(ServiceProvider.GetService<IHtsClientTracingLoader>(),
+                ServiceProvider.GetService<IHtsClientTracingSourceExtractor>(), nameof(HtsClientTracing));
+            LoadData(ServiceProvider.GetService<IHtsPartnerNotificationServicesLoader>(),
+                ServiceProvider.GetService<IHtsPartnerNotificationServicesSourceExtractor>(),
+                nameof(HtsPartnerNotificationServices));
+            LoadData(ServiceProvider.GetService<IHtsPartnerTracingLoader>(),
+                ServiceProvider.GetService<IHtsPartnerTracingSourceExtractor>(), nameof(HtsPartnerTracing));
+            LoadData(ServiceProvider.GetService<IHtsTestKitsLoader>(),
+                ServiceProvider.GetService<IHtsTestKitsSourceExtractor>(), nameof(HtsTestKits));
 
         }
+
         private static void LoadCt()
         {
-            LoadData(ServiceProvider.GetService<IPatientLoader>(), ServiceProvider.GetService<IPatientSourceExtractor>(), nameof(PatientExtract));
+            LoadData(ServiceProvider.GetService<IPatientLoader>(),
+                ServiceProvider.GetService<IPatientSourceExtractor>(), nameof(PatientExtract));
 
-            LoadData(ServiceProvider.GetService<IPatientAdverseEventLoader>(), ServiceProvider.GetService<IPatientAdverseEventSourceExtractor>(), nameof(PatientAdverseEventExtract));
-            LoadData(ServiceProvider.GetService<IPatientArtLoader>(), ServiceProvider.GetService<IPatientArtSourceExtractor>(), nameof(PatientArtExtract));
-            LoadData(ServiceProvider.GetService<IPatientBaselinesLoader>(), ServiceProvider.GetService<IPatientBaselinesSourceExtractor>(), "PatientBaselineExtract");
-            LoadData(ServiceProvider.GetService<IPatientLaboratoryLoader>(), ServiceProvider.GetService<IPatientLaboratorySourceExtractor>(), "PatientLabExtract");
-            LoadData(ServiceProvider.GetService<IPatientPharmacyLoader>(), ServiceProvider.GetService<IPatientPharmacySourceExtractor>(), nameof(PatientPharmacyExtract));
-            LoadData(ServiceProvider.GetService<IPatientStatusLoader>(), ServiceProvider.GetService<IPatientStatusSourceExtractor>(), nameof(PatientStatusExtract));
-            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+            LoadData(ServiceProvider.GetService<IPatientAdverseEventLoader>(),
+                ServiceProvider.GetService<IPatientAdverseEventSourceExtractor>(), nameof(PatientAdverseEventExtract));
+            LoadData(ServiceProvider.GetService<IPatientArtLoader>(),
+                ServiceProvider.GetService<IPatientArtSourceExtractor>(), nameof(PatientArtExtract));
+            LoadData(ServiceProvider.GetService<IPatientBaselinesLoader>(),
+                ServiceProvider.GetService<IPatientBaselinesSourceExtractor>(), "PatientBaselineExtract");
+            LoadData(ServiceProvider.GetService<IPatientLaboratoryLoader>(),
+                ServiceProvider.GetService<IPatientLaboratorySourceExtractor>(), "PatientLabExtract");
+            LoadData(ServiceProvider.GetService<IPatientPharmacyLoader>(),
+                ServiceProvider.GetService<IPatientPharmacySourceExtractor>(), nameof(PatientPharmacyExtract));
+            LoadData(ServiceProvider.GetService<IPatientStatusLoader>(),
+                ServiceProvider.GetService<IPatientStatusSourceExtractor>(), nameof(PatientStatusExtract));
+            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(),
+                ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
         }
 
         private static void LoadMgs()
         {
-            LoadData(ServiceProvider.GetService<IMetricMigrationLoader>(), ServiceProvider.GetService<IMetricMigrationSourceExtractor>(), nameof(MetricMigrationExtract));
+            LoadData(ServiceProvider.GetService<IMetricMigrationLoader>(),
+                ServiceProvider.GetService<IMetricMigrationSourceExtractor>(), nameof(MetricMigrationExtract));
         }
 
-        private static void LoadData<TM,T>(ILoader<TM> loader, ISourceExtractor<T> extractor,string extractName) where TM : class
+        private static void LoadData<TM, T>(ILoader<TM> loader, ISourceExtractor<T> extractor, string extractName)
+            where TM : class
         {
             var extract = Extracts.First(x => x.Name.IsSameAs(extractName));
             var countA = extractor.Extract(extract, Protocol).Result;
-            var countB = loader.Load(extract.Id,countA).Result;
+            var countB = loader.Load(extract.Id, countA).Result;
+        }
+
+        public static void SetUpDiff(DateTime dateCreated, DateTime dateModified)
+        {
+            var context = ServiceProvider.GetService<SettingsContext>();
+            var db = context.EmrSystems.First(x => x.Name == "KenyaCare");
+            var connection = db.DatabaseProtocols.First().GetConnectionString();
+
+            var sql = $@"
+                update TempPatientAdverseEventExtracts set {nameof(PatientExtract.Date_Created)}=@dateCreated, {nameof(PatientExtract.Date_Last_Modified)}=@dateModified;
+                update TempPatientArtExtracts set {nameof(PatientExtract.Date_Created)}=@dateCreated, {nameof(PatientExtract.Date_Last_Modified)}=@dateModified;
+                update TempPatientBaselinesExtracts set {nameof(PatientExtract.Date_Created)}=@dateCreated, {nameof(PatientExtract.Date_Last_Modified)}=@dateModified;
+                update TempPatientExtracts set {nameof(PatientExtract.Date_Created)}=@dateCreated, {nameof(PatientExtract.Date_Last_Modified)}=@dateModified;
+                update TempPatientLaboratoryExtracts set {nameof(PatientExtract.Date_Created)}=@dateCreated, {nameof(PatientExtract.Date_Last_Modified)}=@dateModified;
+                update TempPatientPharmacyExtracts set {nameof(PatientExtract.Date_Created)}=@dateCreated, {nameof(PatientExtract.Date_Last_Modified)}=@dateModified;
+                update TempPatientStatusExtracts set {nameof(PatientExtract.Date_Created)}=@dateCreated, {nameof(PatientExtract.Date_Last_Modified)}=@dateModified;
+                update TempPatientVisitExtracts set {nameof(PatientExtract.Date_Created)}=@dateCreated, {nameof(PatientExtract.Date_Last_Modified)}=@dateModified;
+             ";
+
+            using (var dbConnection = new SqliteConnection(connection))
+            {
+                dbConnection.Open();
+                dbConnection.Execute(sql, new {dateCreated, dateModified});
+            }
         }
     }
 }
