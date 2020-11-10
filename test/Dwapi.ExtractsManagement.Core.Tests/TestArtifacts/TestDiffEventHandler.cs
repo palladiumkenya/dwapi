@@ -6,7 +6,7 @@ using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Tests.TestArtifacts
 {
-    public class TestDocketExtractLoadedEventHandler : INotificationHandler<DocketExtractLoaded>
+    public class TestDiffEventHandler : INotificationHandler<DocketExtractLoaded>,INotificationHandler<DocketExtractSent>
     {
         public Task Handle(DocketExtractLoaded notification, CancellationToken cancellationToken)
         {
@@ -14,6 +14,15 @@ namespace Dwapi.ExtractsManagement.Core.Tests.TestArtifacts
             Log.Debug($"{notification.Docket}-{notification.Extract} LOADED");
             Log.Debug(new string('*',40));
             Log.Debug(new string('+',40));
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(DocketExtractSent notification, CancellationToken cancellationToken)
+        {
+            Log.Debug(new string('>',40));
+            Log.Debug($"{notification.Docket}-{notification.Extract} SENT");
+            Log.Debug(new string('>',40));
+            Log.Debug(new string('-',40));
             return Task.CompletedTask;
         }
     }

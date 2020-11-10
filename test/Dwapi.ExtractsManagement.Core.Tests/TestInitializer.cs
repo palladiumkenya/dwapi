@@ -391,7 +391,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             #endregion
 
 
-            services.AddMediatR(typeof(LoadFromEmrCommand),typeof(TestDocketExtractLoadedEventHandler));
+            services.AddMediatR(typeof(LoadFromEmrCommand),typeof(TestDiffEventHandler));
 
             AllServices = services;
             ServiceProvider = services.BuildServiceProvider();

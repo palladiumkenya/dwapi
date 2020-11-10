@@ -15,7 +15,11 @@ namespace Dwapi.ExtractsManagement.Core.Model.Diff
         public DateTime? MaxModified { get; set; }
         public DateTime? LastSent { get; set; }
 
-        private DiffLog(string docket, string extract)
+        public DiffLog()
+        {
+
+        }
+        public DiffLog(string docket, string extract)
         {
             Docket = docket;
             Extract = extract;
@@ -26,12 +30,12 @@ namespace Dwapi.ExtractsManagement.Core.Model.Diff
             return new DiffLog(docket, extract);
         }
 
-        public void LogLoad(DateTime? lastCreated, DateTime? lastModified)
+        public void LogLoad(DateTime? maxCreated, DateTime? maxModified)
         {
-            if (!lastCreated.IsNullOrEmpty())
-                LastCreated = lastCreated;
-            if (!lastModified.IsNullOrEmpty())
-                LastModified = lastModified;
+            if (!maxCreated.IsNullOrEmpty())
+                MaxCreated = maxCreated;
+            if (!maxModified.IsNullOrEmpty())
+                MaxModified = maxModified;
         }
 
         public void LogSent()
