@@ -34,6 +34,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
@@ -66,6 +67,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader.Mgs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Diff;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Validations;
@@ -134,9 +136,12 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests
         public static string MsSqlConnectionString;
         public static string MySqlConnectionString;
         public static string EmrConnectionString;
+        public static string EmrDiffConnectionString;
         public static string ConnectionString;
+        public static string DiffConnectionString;
         public static DatabaseProtocol Protocol;
         public static List<Extract> Extracts;
+        public static ServiceCollection AllServices;
 
         [OneTimeSetUp]
         public void Setup()
@@ -158,7 +163,9 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests
                 .Build();
 
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
+            EmrDiffConnectionString = GenerateConnection(config, "emrDiffConnection", false);
             ConnectionString = GenerateCopyConnection(config, "dwapiConnection");
+            DiffConnectionString = GenerateCopyConnection(config, "dwapiDiffConnection");
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
@@ -204,6 +211,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddTransient<IValidatorRepository, ValidatorRepository>();
             services.AddTransient<IPsmartStageRepository, PsmartStageRepository>();
+            services.AddTransient<IDiffLogRepository, DiffLogRepository>();
 
             #region CBS
 
@@ -423,7 +431,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddTransient<IExtractStatusService, ExtractStatusService>();
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
              services   .AddTransient<IEmrSystemRepository,EmrSystemRepository>();
-
+             AllServices = services;
             ServiceProvider = services.BuildServiceProvider();
 
               Mapper.Initialize(cfg =>
@@ -455,6 +463,42 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
             */
             SeedData(TestData.GenerateEmrSystems(EmrConnectionString));
+            SeedData(TestData.GenerateData<AppMetric>());
+            SeedData<ExtractsContext>(TestData.GenerateData<EmrMetric>());
+            Protocol = context.DatabaseProtocols.AsNoTracking().First(x => x.DatabaseType == DatabaseType.Sqlite);
+            Extracts = context.Extracts.AsNoTracking().Where(x => x.DatabaseProtocolId == Protocol.Id).ToList();
+            LoadMpi();
+            LoadHts();
+            LoadCt();
+            LoadMgs();
+        }
+
+        public static void ClearDiffDb()
+        {
+            AllServices.RemoveService(typeof(SettingsContext));
+            AllServices.RemoveService(typeof(ExtractsContext));
+            AllServices.RemoveService(typeof(DbContextOptions<SettingsContext>));
+            AllServices.RemoveService(typeof(DbContextOptions<ExtractsContext>));
+            var diffConnection = new SqliteConnection(DiffConnectionString);
+            diffConnection.Open();
+
+            AllServices.AddDbContext<SettingsContext>(x => x.UseSqlite(diffConnection));
+            AllServices.AddDbContext<ExtractsContext>(x => x.UseSqlite(diffConnection));
+
+            ServiceProvider = AllServices.BuildServiceProvider();
+
+            var context = ServiceProvider.GetService<SettingsContext>();
+            context.EnsureSeeded();
+
+            var econtext = ServiceProvider.GetService<ExtractsContext>();
+            econtext.EnsureSeeded();
+            /*
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempPatientExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.PatientExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempHtsClientsExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
+            */
+            SeedData(TestData.GenerateEmrSystems(EmrDiffConnectionString));
             SeedData(TestData.GenerateData<AppMetric>());
             SeedData<ExtractsContext>(TestData.GenerateData<EmrMetric>());
             Protocol = context.DatabaseProtocols.AsNoTracking().First(x => x.DatabaseType == DatabaseType.Sqlite);
@@ -529,7 +573,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =
-                {"dwapi.db", "emr.db"};
+                {"dwapi.db", "dwapi_diff.db", "emr.db", "emr_diff.db"};
             string[] keyDirs = {@"TestArtifacts/Database".ToOsStyle()};
 
             foreach (var keyDir in keyDirs)

@@ -83,6 +83,16 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 .AsNoTracking().ToList();
         }
 
+        public IEnumerable<T> ReadDiff<T, TId>(int page, int pageSize) where T : Entity<TId>
+        {
+
+            return _context.Set<T>()
+                .Include(nameof(PatientExtractView))
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .OrderBy(x => x.Id)
+                .AsNoTracking().ToList();
+        }
+
         public long GetTotalRecords<T, TId>() where T : Entity<TId>
         {
             return _context.Set<T>()

@@ -34,6 +34,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
@@ -66,6 +67,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader.Mgs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Diff;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Validations;
@@ -217,6 +219,7 @@ namespace Dwapi.UploadManagement.Core.Tests
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddTransient<IValidatorRepository, ValidatorRepository>();
             services.AddTransient<IPsmartStageRepository, PsmartStageRepository>();
+            services.AddTransient<IDiffLogRepository, DiffLogRepository>();
 
             #region CBS
 

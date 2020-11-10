@@ -16,6 +16,12 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader.Dwh
         private IDwhExtractReader _reader;
         private UploadContext _context;
 
+        [OneTimeSetUp]
+        public void Init()
+        {
+            TestInitializer.ClearDiffDb();
+        }
+
         [SetUp]
         public void SetUp()
         {
@@ -24,57 +30,20 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader.Dwh
         }
 
         [Test]
-        public void should_ReadProfiles()
-        {
-            var profiles = _reader.ReadProfiles().ToList();
-            Assert.True(profiles.Any());
-        }
-
-        [Test]
-        public void should_ReadAllIds()
-        {
-            var extractViews = _reader.ReadAllIds().ToList();
-            Assert.True(extractViews.Any());
-        }
-
-        // [Test]
-        public void should_Read_By_Ids()
-        {
-            var pid = _context.ClientPatientExtracts.AsNoTracking().First().Id;
-            var extractViews = _reader.Read(pid);
-            Assert.NotNull(extractViews);
-        }
-
-        [Test]
-        public void should_GetSites()
-        {
-            var sites = _reader.GetSites().ToList();
-            Assert.True(sites.Any());
-            sites.ForEach(site => Log.Debug($"{site}"));
-        }
-
-        [Test]
-        public void should_GetSitePatientProfiles()
-        {
-            var sitePatientProfiles = _reader.GetSitePatientProfiles().ToList();
-            Assert.True(sitePatientProfiles.Any());
-            sitePatientProfiles.ForEach(site => Log.Debug($"{site}"));
-        }
-
-        [Test]
-        public void should_ART_ReadPaged()
+        public void should_Read_Diff_ART_Initial()
         {
             var extractViews = _reader.Read<PatientArtExtractView,Guid>(1, 2).ToList();
             Assert.True(extractViews.Any());
             Assert.True(extractViews.Count==2);
             Assert.NotNull(extractViews.First().PatientExtractView);
         }
-
         [Test]
-        public void should_ART_Count()
+        public void should_Read_Diff_ART_Next()
         {
-            var totalRecords = _reader.GetTotalRecords<PatientArtExtractView,Guid>();
-            Assert.True(totalRecords>0);
+            var extractViews = _reader.Read<PatientArtExtractView,Guid>(1, 2).ToList();
+            Assert.True(extractViews.Any());
+            Assert.True(extractViews.Count==2);
+            Assert.NotNull(extractViews.First().PatientExtractView);
         }
     }
 }

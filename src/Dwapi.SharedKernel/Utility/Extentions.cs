@@ -138,12 +138,14 @@ namespace Dwapi.SharedKernel.Utility
         {
             DateTime dateValue;
 
+            if (null == source)
+                return null;
+
             if (string.IsNullOrWhiteSpace(source.ToString()))
                 return null;
 
             if (DateTime.TryParse(source, out dateValue))
                 return dateValue as DateTime?;
-
 
             return null;
         }
