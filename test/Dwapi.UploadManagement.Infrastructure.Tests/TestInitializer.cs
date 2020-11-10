@@ -474,6 +474,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddTransient<IHtsSendService, HtsSendService>();
             services.AddTransient<IHtsPackager, HtsPackager>();
             services.AddTransient<IEmrMetricReader, EmrMetricReader>();
+            services.AddTransient<IDiffLogReader, DiffLogReader>();
             services.AddTransient<IHtsExtractReader, HtsExtractReader>();
             services.AddTransient<IExtractStatusService, ExtractStatusService>();
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
@@ -493,7 +494,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
                 }
             );
 
-            ClearDb();
+           // ClearDb();
         }
 
         public static void ClearDb()
@@ -522,15 +523,21 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
 
         public static void ClearDiffDb()
         {
+            AllServices.RemoveService(typeof(UploadContext));
             AllServices.RemoveService(typeof(SettingsContext));
             AllServices.RemoveService(typeof(ExtractsContext));
+
+            AllServices.RemoveService(typeof(DbContextOptions<UploadContext>));
             AllServices.RemoveService(typeof(DbContextOptions<SettingsContext>));
             AllServices.RemoveService(typeof(DbContextOptions<ExtractsContext>));
+
             var diffConnection = new SqliteConnection(DiffConnectionString);
             diffConnection.Open();
 
+            AllServices.AddDbContext<UploadContext>(x => x.UseSqlite(diffConnection));
             AllServices.AddDbContext<SettingsContext>(x => x.UseSqlite(diffConnection));
             AllServices.AddDbContext<ExtractsContext>(x => x.UseSqlite(diffConnection));
+
 
             ServiceProvider = AllServices.BuildServiceProvider();
 
@@ -552,12 +559,9 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             Protocol = context.DatabaseProtocols.AsNoTracking().First(x => x.DatabaseType == DatabaseType.Sqlite);
             Extracts = context.Extracts.AsNoTracking().Where(x => x.DatabaseProtocolId == Protocol.Id).ToList();
 
-            SetUpDiff( DateTime.Now.Date.AddMonths(-1), DateTime.Now.Date.AddMonths(-1));
+            LoadDiffs(DateTime.Now.Date.AddMonths(-1), DateTime.Now.Date.AddMonths(-1));
 
-            LoadMpi();
-            LoadHts();
             LoadCt();
-            LoadMgs();
         }
 
         public static void SeedData(params IEnumerable<object>[] entities)
@@ -701,7 +705,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             var countB = loader.Load(extract.Id, countA).Result;
         }
 
-        public static void SetUpDiff(DateTime dateCreated, DateTime dateModified)
+        public static void LoadDiffs(DateTime dateCreated, DateTime dateModified)
         {
             var context = ServiceProvider.GetService<SettingsContext>();
             var db = context.EmrSystems.First(x => x.Name == "KenyaCare");

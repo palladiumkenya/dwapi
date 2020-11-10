@@ -18,6 +18,9 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh
         IEnumerable<T>  GenerateBatchExtracts<T, TId>(int page,int batchSize) where T : Entity<TId>;
         IEnumerable<T>  GenerateBatchExtracts<T>(int page,int batchSize) where T :ClientExtract;
 
+        IEnumerable<T> GenerateDiffBatchExtracts<T>(int page, int batchSize, string docket, string extract)
+            where T : ClientExtract;
+
         PackageInfo GetPackageInfo<T, TId>(int batchSize) where T : Entity<TId>;
         PackageInfo GetPackageInfo<T>(int batchSize) where T : ClientExtract;
     }

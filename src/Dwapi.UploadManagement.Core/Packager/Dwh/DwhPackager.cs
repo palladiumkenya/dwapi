@@ -6,6 +6,7 @@ using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
@@ -17,11 +18,13 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
     {
         private readonly IDwhExtractReader _reader;
         private readonly IEmrMetricReader _metricReader;
+        private readonly IDiffLogReader _diffLogReader;
 
-        public DwhPackager(IDwhExtractReader reader, IEmrMetricReader metricReader)
+        public DwhPackager(IDwhExtractReader reader, IEmrMetricReader metricReader, IDiffLogReader diffLogReader)
         {
             _reader = reader;
             _metricReader = metricReader;
+            _diffLogReader = diffLogReader;
         }
 
 
@@ -73,6 +76,26 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         public IEnumerable<T> GenerateBatchExtracts<T>(int page, int batchSize) where T : ClientExtract
         {
             return GenerateBatchExtracts<T,Guid>(page,batchSize);
+        }
+
+        public IEnumerable<T> GenerateDiffBatchExtracts<T>(int page, int batchSize,string docket,string extract) where T : ClientExtract
+        {
+            var allDifflogs = _diffLogReader.ReadAll().ToList();
+
+            var diffLog = allDifflogs.FirstOrDefault(x =>
+                x.Docket.ToLower() == docket.ToLower() && x.Extract.ToLower() == extract.ToLower());
+
+            if (null == diffLog)
+                return GenerateBatchExtracts<T, Guid>(page, batchSize);
+
+            if(diffLog.LastCreated.IsNullOrEmpty())
+                return GenerateBatchExtracts<T, Guid>(page, batchSize);
+
+            if(diffLog.LastModified.IsNullOrEmpty())
+                return _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated);
+
+            return _reader.Read<T, Guid>(page, batchSize,
+                x => x.Date_Created > diffLog.LastCreated || x.Date_Last_Modified > diffLog.LastModified);
         }
 
         public PackageInfo GetPackageInfo<T, TId>(int batchSize) where T : Entity<TId>
