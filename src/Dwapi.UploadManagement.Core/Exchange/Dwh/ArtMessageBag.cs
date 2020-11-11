@@ -18,6 +18,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
         public List<Guid> SendIds => GetIds();
         public string ExtractName => "PatientArtExtract";
         public ExtractType ExtractType => ExtractType.PatientArt;
+        public string Docket  => "NDWH";
         public int GetProgress(int count, int total)
         {
             if (total == 0)

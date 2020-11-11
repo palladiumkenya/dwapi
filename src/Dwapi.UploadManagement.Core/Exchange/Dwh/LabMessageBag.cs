@@ -18,6 +18,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
         public string ExtractName => "PatientLabExtract";
         public ExtractType ExtractType => ExtractType.PatientLab;
 
+        public string Docket  => "NDWH";
+
         public int GetProgress(int count, int total)
         {
             if (total == 0)

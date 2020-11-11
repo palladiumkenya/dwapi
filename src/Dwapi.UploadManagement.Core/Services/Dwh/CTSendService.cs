@@ -178,9 +178,89 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             return responses;
         }
 
-        public Task<List<SendCTResponse>> SendDiffBatchExtractsAsync<T>(SendManifestPackageDTO sendTo, int batchSize, IMessageBag<T> messageBag) where T : ClientExtract
+        public async Task<List<SendCTResponse>> SendDiffBatchExtractsAsync<T>(SendManifestPackageDTO sendTo, int batchSize, IMessageBag<T> messageBag) where T : ClientExtract
         {
-            throw new NotImplementedException();
+          HttpClientHandler handler = new HttpClientHandler()
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
+            var client = Client ?? new HttpClient(handler);
+
+            var responses = new List<SendCTResponse>();
+            var packageInfo = _packager.GetPackageInfo<T>(batchSize);
+            int sendCound = 0;
+            int count = 0;
+            int total = packageInfo.PageCount;
+            int overall = 0;
+
+            DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sending));
+            long recordCount = 0;
+
+            try
+            {
+                for (int page = 1; page <= packageInfo.PageCount; page++)
+                {
+                    count++;
+                    var extracts = _packager.GenerateDiffBatchExtracts<T>(page, packageInfo.PageSize, messageBag.Docket,
+                        messageBag.ExtractName).ToList();
+                    recordCount = recordCount + extracts.Count;
+                    Log.Debug(
+                        $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords} Page:{page} of {packageInfo.PageCount}");
+                    messageBag = messageBag.Generate(extracts);
+                    var message = messageBag.Messages;
+                    try
+                    {
+                        /*
+                        var msg = JsonConvert.SerializeObject(message,new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Serializ});
+                        */
+                        var response = await client.PostAsJsonAsync(
+                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsJsonAsync<SendCTResponse>();
+                            responses.Add(content);
+
+                            var sentIds = messageBag.SendIds;
+                            sendCound += sentIds.Count;
+                            DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
+                                messageBag.ExtractType));
+                        }
+                        else
+                        {
+                            var sentIds = messageBag.SendIds;
+                            var error = await response.Content.ReadAsStringAsync();
+                            DomainEvents.Dispatch(new CTExtractSentEvent(
+                                sentIds, SendStatus.Failed, messageBag.ExtractType,
+                                error));
+                            throw new Exception(error);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error");
+                        throw;
+                    }
+
+                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total),recordCount)));
+
+                }
+
+                await _mediator.Publish(new DocketExtractSent("NDWH", nameof(T)));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error");
+                throw;
+            }
+
+            DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                messageBag.GetProgress(count, total), recordCount,true)));
+
+            DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
+                {UpdatePatient = (messageBag is ArtMessageBag || messageBag is BaselineMessageBag || messageBag is StatusMessageBag)}
+            );
+
+            return responses;
         }
 
         public void NotifyPostSending()

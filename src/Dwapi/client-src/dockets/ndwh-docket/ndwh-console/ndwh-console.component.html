@@ -9,10 +9,17 @@
         </div>
 
         <div class="ui-toolbar-group-right">
-            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse"
+            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send All"
                     icon="ui-icon-cloud-upload"
                     class="blue-btn"></button>
         </div>
+
+        <div class="ui-toolbar-group-right">
+            <button pButton type="button" [disabled]="!canSend" (click)="sendDiff()" label="Send Changes Only"
+                    icon="ui-icon-cloud-upload"
+                    class="orange-btn"></button>
+        </div>
+
     </p-toolbar>
 
     <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true" [loading]="loadingData" loadingIcon="fa-spinner fa-pulse"

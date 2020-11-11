@@ -282,7 +282,60 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             );
     }
 
+    public sendDiff(): void {
+        localStorage.clear();
+        this.sendingManifest = true;
+        this.errorMessage = [];
+        this.notifications = [];
+        this.canSendPatients = false;
+        this.manifestPackage = this.getSendManifestPackage();
+        this.sendManifest$ = this._ndwhSenderService.sendManifest(this.manifestPackage)
+            .subscribe(
+                p => {
+                    this.canSendPatients = true;
+                },
+                e => {
+                    console.error('SEND ERROR', e);
+
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                },
+                () => {
+                    this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+                    this.sendDiffExtracts();
+                    this.sendingManifest = false;
+                    this.updateEvent();
+                }
+            );
+    }
+
     public sendExtracts(): void {
+        this.sendEvent = {sentProgress: 0};
+        this.sending = true;
+        this.errorMessage = [];
+        this.extractPackage = this.getExtractsPackage();
+        this.send$ = this._ndwhSenderService.sendPatientExtracts(this.extractPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                },
+                e => {
+                    console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
+
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    }
+                },
+                () => {
+                    this.errorMessage.push({severity: 'success', summary: 'Sending Extracts '});
+                    this.updateEvent();
+                }
+            );
+    }
+
+    public sendDiffExtracts(): void {
         this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];

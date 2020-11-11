@@ -13,6 +13,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh
     {
         IEnumerable<DwhManifest> Generate(EmrDto emrDto);
         IEnumerable<DwhManifest> GenerateWithMetrics(EmrDto emrDto);
+        IEnumerable<DwhManifest> GenerateDiffWithMetrics(EmrDto emrDto);
         PatientExtractView GenerateExtracts(Guid id);
 
         IEnumerable<T>  GenerateBatchExtracts<T, TId>(int page,int batchSize) where T : Entity<TId>;

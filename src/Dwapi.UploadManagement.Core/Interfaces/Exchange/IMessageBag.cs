@@ -15,6 +15,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Exchange
         IMessageBag<T> Generate(List<T> extracts);
         string ExtractName { get; }
         ExtractType ExtractType { get; }
+        string Docket { get; }
         int GetProgress(int count, int total);
     }
 }

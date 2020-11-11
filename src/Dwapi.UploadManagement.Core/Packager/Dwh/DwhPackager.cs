@@ -63,6 +63,18 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
             return manifests;
         }
 
+        public IEnumerable<DwhManifest> GenerateDiffWithMetrics(EmrDto emrSetup)
+        {
+            var manifests = GenerateWithMetrics(emrSetup).ToList();
+
+            foreach (var dwhManifest in manifests)
+            {
+                dwhManifest.UploadMode = UploadMode.Differential;
+            }
+
+            return manifests;
+        }
+
         public PatientExtractView GenerateExtracts(Guid id)
         {
             return _reader.Read(id);
