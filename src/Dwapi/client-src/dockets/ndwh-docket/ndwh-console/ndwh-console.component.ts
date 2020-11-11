@@ -289,7 +289,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.notifications = [];
         this.canSendPatients = false;
         this.manifestPackage = this.getSendManifestPackage();
-        this.sendManifest$ = this._ndwhSenderService.sendManifest(this.manifestPackage)
+        this.sendManifest$ = this._ndwhSenderService.sendDiffManifest(this.manifestPackage)
             .subscribe(
                 p => {
                     this.canSendPatients = true;
@@ -314,7 +314,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.sending = true;
         this.errorMessage = [];
         this.extractPackage = this.getExtractsPackage();
-        this.send$ = this._ndwhSenderService.sendPatientExtracts(this.extractPackage)
+        this.send$ = this._ndwhSenderService.sendDiffPatientExtracts(this.extractPackage)
             .subscribe(
                 p => {
                     // this.sendResponse = p;
