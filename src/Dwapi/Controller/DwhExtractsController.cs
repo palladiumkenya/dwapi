@@ -246,10 +246,10 @@ namespace Dwapi.Controller
             _ctSendService.NotifyPreSending();
 
             var job1 =
-                BatchJob.StartNew(x => { SendJobBaselines(package); });
+                BatchJob.StartNew(x => { SendDiffJobBaselines(package); });
 
             var job2 =
-                BatchJob.ContinueBatchWith(job1, x => { SendJobProfiles(package); });
+                BatchJob.ContinueBatchWith(job1, x => { SendDiffJobProfiles(package); });
 
             var jobEnd =
                 BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(); });

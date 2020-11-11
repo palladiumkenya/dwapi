@@ -16,6 +16,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Exchange
         string ExtractName { get; }
         ExtractType ExtractType { get; }
         string Docket { get; }
+        string DocketExtract { get; }
         int GetProgress(int count, int total);
     }
 }

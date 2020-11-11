@@ -202,7 +202,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 {
                     count++;
                     var extracts = _packager.GenerateDiffBatchExtracts<T>(page, packageInfo.PageSize, messageBag.Docket,
-                        messageBag.ExtractName).ToList();
+                        messageBag.DocketExtract).ToList();
                     recordCount = recordCount + extracts.Count;
                     Log.Debug(
                         $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords} Page:{page} of {packageInfo.PageCount}");

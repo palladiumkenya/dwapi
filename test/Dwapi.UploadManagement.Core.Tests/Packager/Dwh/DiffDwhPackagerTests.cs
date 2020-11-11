@@ -35,11 +35,34 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         }
 
         [Test]
+        public void should_Generate_Diff_Manifest_With_Metrics()
+        {
+            var manifests = _packager.GenerateDiffWithMetrics(TestInitializer.IqEmrDto).ToList();
+            Assert.False(manifests.Any(x=>x.UploadMode!=UploadMode.Differential));
+            Assert.True(manifests.Any());
+            Assert.True(manifests.Count==1);
+            var m = manifests.First();
+            Assert.True(m.PatientPks.Any());
+            Assert.True(m.FacMetrics.Any(x => x.CargoType == CargoType.Metrics));
+            Assert.True(m.FacMetrics.Any(x => x.CargoType == CargoType.AppMetrics));
+            Log.Debug($"{m} [{m.UploadMode}]");
+            m.FacMetrics.ForEach(c =>
+            {
+                Log.Debug($"{c.CargoType}");
+                Log.Debug($"     {c.Metric} ");
+            });
+        }
+
+        [Test]
         public void should_Generate_Diff_Art_Extracts_Initial()
         {
             var extracts =
-                _packager.GenerateDiffBatchExtracts<PatientArtExtractView>(1, 1, "NDWH", nameof(PatientArtExtract));
+                _packager.GenerateDiffBatchExtracts<PatientArtExtractView>(1, 50, "NDWH", nameof(PatientArtExtract));
             Assert.True(extracts.Any());
+            foreach (var patientArtExtractView in extracts)
+            {
+                Log.Debug($"{patientArtExtractView.SiteCode}|{patientArtExtractView.PatientID}|{patientArtExtractView.Date_Created:yyyy MMMM dd}|{patientArtExtractView.Date_Last_Modified:yyyy MMMM dd}");
+            }
         }
 
         [Test]

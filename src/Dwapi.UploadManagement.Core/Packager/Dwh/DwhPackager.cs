@@ -110,6 +110,26 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
                 x => x.Date_Created > diffLog.LastCreated || x.Date_Last_Modified > diffLog.LastModified);
         }
 
+        public IEnumerable<T> GenerateDiffBatchMainExtracts<T>(int page, int batchSize, string docket, string extract) where T : ClientExtract
+        {
+            var allDifflogs = _diffLogReader.ReadAll().ToList();
+
+            var diffLog = allDifflogs.FirstOrDefault(x =>
+                x.Docket.ToLower() == docket.ToLower() && x.Extract.ToLower() == extract.ToLower());
+
+            if (null == diffLog)
+                return new List<T>();
+
+            if(diffLog.LastCreated.IsNullOrEmpty())
+                return new List<T>();
+
+            if(diffLog.LastModified.IsNullOrEmpty())
+                return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated);
+
+            return _reader.ReadMainExtract<T, Guid>(page, batchSize,
+                x => x.Date_Created > diffLog.LastCreated || x.Date_Last_Modified > diffLog.LastModified);
+        }
+
         public PackageInfo GetPackageInfo<T, TId>(int batchSize) where T : Entity<TId>
         {
 

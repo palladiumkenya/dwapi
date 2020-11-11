@@ -511,7 +511,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
                 }
             );
 
-            // ClearDb();
+            ClearDb();
         }
 
         public static void ClearDb()
