@@ -66,9 +66,21 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         }
 
         [Test]
+        public void should_Generate_Diff_Visit_Extracts_Initial()
+        {
+            var extracts =
+                _packager.GenerateDiffBatchExtracts<PatientVisitExtractView>(1, 500, "NDWH", nameof(PatientVisitExtract));
+            Assert.True(extracts.Any());
+            foreach (var visitExtract in extracts)
+            {
+                Log.Debug($"{visitExtract.SiteCode}|{visitExtract.PatientID}|{visitExtract.Date_Created:yyyy MMMM dd}|{visitExtract.Date_Last_Modified:yyyy MMMM dd}");
+            }
+        }
+
+        [Test]
         public void should_Generate_Diff_Art_Extracts_Next()
         {
-            InitNext();
+            InitArtNext();
 
             var extracts =
                 _packager.GenerateDiffBatchExtracts<PatientArtExtractView>(1, 50, "NDWH", nameof(PatientArtExtract));
@@ -79,7 +91,22 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
             }
         }
 
-        private void InitNext()
+        [Test]
+        public void should_Generate_Diff_Visit_Extracts_Next()
+        {
+            InitVisitNext();
+
+            var extracts =
+                _packager.GenerateDiffBatchExtracts<PatientVisitExtractView>(1, 50, "NDWH", nameof(PatientVisitExtract));
+            Assert.True(extracts.Any());
+            foreach (var visitExtractView in extracts)
+            {
+                Log.Debug($"{visitExtractView.SiteCode}|{visitExtractView.PatientID}|{visitExtractView.Date_Created:yyyy MMMM dd}|{visitExtractView.Date_Last_Modified:yyyy MMMM dd}");
+            }
+        }
+
+
+        private void InitArtNext()
         {
             var context = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
             var diffLog = context.DiffLogs.First(x => x.Docket == "NDWH" && x.Extract == nameof(PatientArtExtract));
@@ -93,6 +120,23 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
             arts[1].Date_Last_Modified = DateTime.Now;
 
             context.AttachRange(arts);
+            context.SaveChanges();
+        }
+
+        private void InitVisitNext()
+        {
+            var context = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
+            var diffLog = context.DiffLogs.First(x => x.Docket == "NDWH" && x.Extract == nameof(PatientVisitExtract));
+            diffLog.LogLoad(DateTime.Now.AddDays(-2), DateTime.Now.AddDays(-2));
+            diffLog.LogSent();
+            diffLog.LastSent = DateTime.Now.AddDays(-1);
+
+            var visits = context.PatientVisitExtracts.Take(2).ToList();
+
+            visits[0].Date_Created = DateTime.Now;
+            visits[1].Date_Last_Modified = DateTime.Now;
+
+            context.AttachRange(visits);
             context.SaveChanges();
         }
     }

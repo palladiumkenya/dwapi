@@ -93,6 +93,9 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         public IEnumerable<T> GenerateDiffBatchExtracts<T>(int page, int batchSize, string docket, string extract)
             where T : ClientExtract
         {
+            var changes = new List<T>();
+            var finalChanges = new List<T>();
+
             var allDifflogs = _diffLogReader.ReadAll().ToList();
 
             var diffLog = allDifflogs.FirstOrDefault(x =>
@@ -105,13 +108,26 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
                 return GenerateBatchExtracts<T, Guid>(page, batchSize);
 
             if (diffLog.LastModified.IsNullOrEmpty() && !diffLog.LastCreated.IsNullOrEmpty())
-                return _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated);
+                changes = _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated).ToList();
 
             if (!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
-                return _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastModified);
+                changes =  _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastModified).ToList();
 
-            return _reader.Read<T, Guid>(page, batchSize,
-                x => x.Date_Created > diffLog.LastCreated || x.Date_Last_Modified > diffLog.LastModified);
+            if (!diffLog.LastModified.IsNullOrEmpty() && !diffLog.LastCreated.IsNullOrEmpty())
+                changes= _reader.Read<T, Guid>(page, batchSize,
+                x => x.Date_Created > diffLog.LastCreated || x.Date_Last_Modified > diffLog.LastModified).ToList();
+
+            if (changes.Any())
+            {
+                var ids = changes.Select(x => new {x.PatientPK, x.SiteCode}).Distinct().ToList();
+                foreach (var id in ids)
+                {
+                    var changedRecords= _reader.Read<T, Guid>(page, batchSize, x => x.PatientPK==id.PatientPK && x.SiteCode==id.SiteCode).ToList();
+                    finalChanges.AddRange(changedRecords);
+                }
+                //return  _reader.Read<T, Guid>(page, batchSize, x =>  > diffLog.LastCreated).ToList();
+            }
+            return finalChanges;
         }
 
         public IEnumerable<T> GenerateDiffBatchMainExtracts<T>(int page, int batchSize, string docket, string extract)
