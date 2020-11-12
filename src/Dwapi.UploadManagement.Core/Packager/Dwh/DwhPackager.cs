@@ -87,10 +87,11 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
 
         public IEnumerable<T> GenerateBatchExtracts<T>(int page, int batchSize) where T : ClientExtract
         {
-            return GenerateBatchExtracts<T,Guid>(page,batchSize);
+            return GenerateBatchExtracts<T, Guid>(page, batchSize);
         }
 
-        public IEnumerable<T> GenerateDiffBatchExtracts<T>(int page, int batchSize,string docket,string extract) where T : ClientExtract
+        public IEnumerable<T> GenerateDiffBatchExtracts<T>(int page, int batchSize, string docket, string extract)
+            where T : ClientExtract
         {
             var allDifflogs = _diffLogReader.ReadAll().ToList();
 
@@ -100,20 +101,21 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
             if (null == diffLog)
                 return GenerateBatchExtracts<T, Guid>(page, batchSize);
 
-            if(diffLog.LastCreated.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
+            if (diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
                 return GenerateBatchExtracts<T, Guid>(page, batchSize);
 
-            if(diffLog.LastModified.IsNullOrEmpty() && !diffLog.LastCreated.IsNullOrEmpty())
+            if (diffLog.LastModified.IsNullOrEmpty() && !diffLog.LastCreated.IsNullOrEmpty())
                 return _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated);
 
-            if(!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
+            if (!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
                 return _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastModified);
 
             return _reader.Read<T, Guid>(page, batchSize,
                 x => x.Date_Created > diffLog.LastCreated || x.Date_Last_Modified > diffLog.LastModified);
         }
 
-        public IEnumerable<T> GenerateDiffBatchMainExtracts<T>(int page, int batchSize, string docket, string extract) where T : ClientExtract
+        public IEnumerable<T> GenerateDiffBatchMainExtracts<T>(int page, int batchSize, string docket, string extract)
+            where T : ClientExtract
         {
             var allDifflogs = _diffLogReader.ReadAll().ToList();
 
@@ -123,13 +125,13 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
             if (null == diffLog)
                 return new List<T>();
 
-            if(diffLog.LastCreated.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
+            if (diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
                 return new List<T>();
 
-            if(diffLog.LastModified.IsNullOrEmpty() && !diffLog.LastCreated.IsNullOrEmpty())
+            if (diffLog.LastModified.IsNullOrEmpty() && !diffLog.LastCreated.IsNullOrEmpty())
                 return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated);
 
-            if(!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
+            if (!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
                 return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastModified);
 
             return _reader.ReadMainExtract<T, Guid>(page, batchSize,
@@ -139,11 +141,11 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         public PackageInfo GetPackageInfo<T, TId>(int batchSize) where T : Entity<TId>
         {
 
-            var count=_reader.GetTotalRecords<T,TId>();
-            var pageCount=new PackagePager().PageCount(batchSize,count);
+            var count = _reader.GetTotalRecords<T, TId>();
+            var pageCount = new PackagePager().PageCount(batchSize, count);
 
 
-            return new PackageInfo(pageCount,count,batchSize);
+            return new PackageInfo(pageCount, count, batchSize);
         }
 
         public PackageInfo GetPackageInfo<T>(int batchSize) where T : ClientExtract

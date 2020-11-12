@@ -11,5 +11,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh
         bool BatchInsert(IEnumerable<PatientArtExtract> extracts);
         IEnumerable<PatientArtExtract> BatchGet();
         void UpdateSendStatus(List<SentItem> sentItems);
+        long UpdateDiffSendStatus();
     }
 }

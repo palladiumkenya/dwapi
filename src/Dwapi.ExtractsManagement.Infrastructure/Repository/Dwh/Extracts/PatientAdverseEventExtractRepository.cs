@@ -5,6 +5,7 @@ using System.Linq;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
 using Microsoft.Data.Sqlite;
@@ -15,7 +16,8 @@ using Z.Dapper.Plus;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
 {
-    public class PatientAdverseEventExtractRepository : BaseRepository<PatientAdverseEventExtract, Guid>, IPatientAdverseEventExtractRepository
+    public class PatientAdverseEventExtractRepository : BaseRepository<PatientAdverseEventExtract, Guid>,
+        IPatientAdverseEventExtractRepository
     {
         public PatientAdverseEventExtractRepository(ExtractsContext context) : base(context)
         {
@@ -62,6 +64,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
                 return false;
             }
         }
+
         public void UpdateSendStatus(List<SentItem> sentItems)
         {
             var sql = $"SELECT * FROM {nameof(ExtractsContext.PatientAdverseEventExtracts)} Where Id IN @Ids";
@@ -70,7 +73,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
             using (var cn = GetNewConnection())
             {
 
-                var mpi = cn.Query<PatientAdverseEventExtract>(sql, new { Ids = ids }).ToList()
+                var mpi = cn.Query<PatientAdverseEventExtract>(sql, new {Ids = ids}).ToList()
                     .Select(x =>
                     {
                         var sentItem = sentItems.First(s => s.Id == x.Id);
@@ -82,6 +85,29 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
 
                 cn.BulkUpdate(mpi);
             }
+        }
+
+        public long UpdateDiffSendStatus()
+        {
+            int totalUpdated;
+
+            using (var cn = GetNewConnection())
+            {
+
+                var sql = $@"
+                UPDATE
+                    {nameof(ExtractsContext.PatientAdverseEventExtracts)}
+                SET
+                    {nameof(PatientAdverseEventExtract.Status)}=@Status,{nameof(PatientAdverseEventExtract.StatusDate)}=@StatusDate
+                where
+                    {nameof(PatientAdverseEventExtract.PatientPK)} in (select PatientPK from {nameof(ExtractsContext.PatientExtracts)}) AND
+                    {nameof(PatientAdverseEventExtract.SiteCode)} in (select SiteCode from {nameof(ExtractsContext.PatientExtracts)})
+                ";
+
+                totalUpdated = cn.Execute(sql, new {Status = nameof(SendStatus.Sent), StatusDate = DateTime.Now});
+            }
+
+            return totalUpdated;
         }
     }
 }

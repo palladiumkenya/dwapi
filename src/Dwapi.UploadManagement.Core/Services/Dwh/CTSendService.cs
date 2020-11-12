@@ -160,7 +160,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                 }
 
-                await _mediator.Publish(new DocketExtractSent("NDWH", nameof(T)));
+                // await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
             }
             catch (Exception e)
             {
@@ -204,6 +204,15 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     var extracts = _packager.GenerateDiffBatchExtracts<T>(page, packageInfo.PageSize, messageBag.Docket,
                         messageBag.DocketExtract).ToList();
                     recordCount = recordCount + extracts.Count;
+
+                    if (!extracts.Any())
+                    {
+                        count = total;
+                        recordCount = packageInfo.TotalRecords;
+                        DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total),recordCount)));
+                        break;
+                    }
+
                     Log.Debug(
                         $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords} Page:{page} of {packageInfo.PageCount}");
                     messageBag = messageBag.Generate(extracts);
@@ -245,7 +254,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                 }
 
-                await _mediator.Publish(new DocketExtractSent("NDWH", nameof(T)));
+                await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
             }
             catch (Exception e)
             {
