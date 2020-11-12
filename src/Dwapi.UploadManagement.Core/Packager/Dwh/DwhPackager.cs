@@ -100,11 +100,14 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
             if (null == diffLog)
                 return GenerateBatchExtracts<T, Guid>(page, batchSize);
 
-            if(diffLog.LastCreated.IsNullOrEmpty())
+            if(diffLog.LastCreated.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
                 return GenerateBatchExtracts<T, Guid>(page, batchSize);
 
-            if(diffLog.LastModified.IsNullOrEmpty())
+            if(diffLog.LastModified.IsNullOrEmpty() && !diffLog.LastCreated.IsNullOrEmpty())
                 return _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated);
+
+            if(!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
+                return _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastModified);
 
             return _reader.Read<T, Guid>(page, batchSize,
                 x => x.Date_Created > diffLog.LastCreated || x.Date_Last_Modified > diffLog.LastModified);
@@ -120,11 +123,14 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
             if (null == diffLog)
                 return new List<T>();
 
-            if(diffLog.LastCreated.IsNullOrEmpty())
+            if(diffLog.LastCreated.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
                 return new List<T>();
 
-            if(diffLog.LastModified.IsNullOrEmpty())
+            if(diffLog.LastModified.IsNullOrEmpty() && !diffLog.LastCreated.IsNullOrEmpty())
                 return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated);
+
+            if(!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
+                return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastModified);
 
             return _reader.ReadMainExtract<T, Guid>(page, batchSize,
                 x => x.Date_Created > diffLog.LastCreated || x.Date_Last_Modified > diffLog.LastModified);

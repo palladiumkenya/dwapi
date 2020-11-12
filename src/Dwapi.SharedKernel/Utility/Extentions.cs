@@ -136,7 +136,8 @@ namespace Dwapi.SharedKernel.Utility
 
         public static DateTime? CastDateTime(dynamic source)
         {
-            DateTime dateValue;
+            if (source is DateTime)
+                return source;
 
             if (null == source)
                 return null;
@@ -144,7 +145,7 @@ namespace Dwapi.SharedKernel.Utility
             if (string.IsNullOrWhiteSpace(source.ToString()))
                 return null;
 
-            if (DateTime.TryParse(source, out dateValue))
+            if (DateTime.TryParse(source, out DateTime dateValue))
                 return dateValue as DateTime?;
 
             return null;

@@ -65,6 +65,10 @@ namespace Dwapi.SharedKernel.Tests.Utility
             dynamic dateItem3 = string.Empty;
             DateTime? date3 = Extentions.CastDateTime(dateItem3);
             Assert.True(date3.IsNullOrEmpty());
+
+            dynamic realDateItem = DateTime.Now;
+            DateTime? readDate = Extentions.CastDateTime(realDateItem);
+            Assert.False(readDate.IsNullOrEmpty());
         }
 
     }
