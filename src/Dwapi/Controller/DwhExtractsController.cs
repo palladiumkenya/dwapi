@@ -10,12 +10,10 @@ using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
-using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
-using Dwapi.UploadManagement.Core.Notifications.Dwh;
 using Hangfire;
 using Hangfire.States;
 using MediatR;
@@ -48,7 +46,6 @@ namespace Dwapi.Controller
             Startup.HubContext= _hubContext = hubContext;
         }
 
-
         [HttpPost("extract")]
         public async Task<IActionResult> Load([FromBody]ExtractPatient request)
         {
@@ -79,7 +76,6 @@ namespace Dwapi.Controller
             var result1 = await Task.WhenAll(extractTasks);
             return Ok(dwhExtractsTask);
         }
-
 
         // GET: api/DwhExtracts/status/id
         [HttpGet("status/{id}")]
@@ -135,6 +131,37 @@ namespace Dwapi.Controller
             }
         }
 
+        // POST: api/DwhExtracts/diffmanifest
+        [HttpPost("diffmanifest")]
+        public async Task<IActionResult> SendDiffManifest([FromBody] CombinedSendManifestDto packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+
+            var ver = GetType().Assembly.GetName().Version;
+            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            await _mediator.Publish(new ExtractSent("CareTreatment", version));
+
+            try
+            {
+                if (!packageDto.SendMpi)
+                {
+                    var result = await _dwhSendService.SendDiffManifestAsync(packageDto.DwhPackage);
+                    return Ok(result);
+                }
+
+                var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage);
+                var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending  Manifest {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
 
         // POST: api/DwhExtracts/patients
         [HttpPost("patients")]
@@ -147,6 +174,32 @@ namespace Dwapi.Controller
                 if (!packageDto.SendMpi)
                 {
                     QueueDwh(packageDto.DwhPackage);
+                    return Ok();
+                }
+                QueueDwh(packageDto.DwhPackage);
+                QueueMpi(packageDto.MpiPackage);
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("diffpatients")]
+        public IActionResult SendDiffPatientExtracts([FromBody] CombinedSendManifestDto packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                if (!packageDto.SendMpi)
+                {
+                    QueueDwhDiff(packageDto.DwhPackage);
                     return Ok();
                 }
                 QueueDwh(packageDto.DwhPackage);
@@ -182,6 +235,26 @@ namespace Dwapi.Controller
                 BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(); });
         }
 
+        [AutomaticRetry(Attempts = 0)]
+        private void QueueDwhDiff(SendManifestPackageDTO package)
+        {
+            var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
+
+            if (extracts.Any())
+                package.Extracts = extracts.Select(x => new ExtractDto() {Id = x.Id, Name = x.Name}).ToList();
+
+            _ctSendService.NotifyPreSending();
+
+            var job1 =
+                BatchJob.StartNew(x => { SendDiffJobBaselines(package); });
+
+            var job2 =
+                BatchJob.ContinueBatchWith(job1, x => { SendDiffJobProfiles(package); });
+
+            var jobEnd =
+                BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(); });
+        }
+
         public void SendJobBaselines(SendManifestPackageDTO package)
         {
             var idsA =_ctSendService.SendBatchExtractsAsync(package, 200, new ArtMessageBag()).Result;
@@ -189,11 +262,24 @@ namespace Dwapi.Controller
             var idsC= _ctSendService.SendBatchExtractsAsync(package, 200, new StatusMessageBag()).Result;
             var idsD=_ctSendService.SendBatchExtractsAsync(package, 200, new AdverseEventsMessageBag()).Result;
         }
+        public void SendDiffJobBaselines(SendManifestPackageDTO package)
+        {
+            var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new ArtMessageBag()).Result;
+            var idsB=_ctSendService.SendDiffBatchExtractsAsync(package, 200, new BaselineMessageBag()).Result;
+            var idsC= _ctSendService.SendDiffBatchExtractsAsync(package, 200, new StatusMessageBag()).Result;
+            var idsD=_ctSendService.SendDiffBatchExtractsAsync(package, 200, new AdverseEventsMessageBag()).Result;
+        }
         public void SendJobProfiles(SendManifestPackageDTO package)
         {
             var idsA =_ctSendService.SendBatchExtractsAsync(package, 300, new PharmacyMessageBag()).Result;
             var idsB=_ctSendService.SendBatchExtractsAsync(package, 300, new LabMessageBag()).Result;
             var idsC= _ctSendService.SendBatchExtractsAsync(package, 300, new VisitsMessageBag()).Result;
+        }
+        public void SendDiffJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 300, new PharmacyMessageBag()).Result;
+            var idsB=_ctSendService.SendDiffBatchExtractsAsync(package, 300, new LabMessageBag()).Result;
+            var idsC= _ctSendService.SendDiffBatchExtractsAsync(package, 300, new VisitsMessageBag()).Result;
         }
 
         [AutomaticRetry(Attempts = 0)]

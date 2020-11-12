@@ -209,8 +209,13 @@ CASE WHEN prg.program='HIV' THEN prg.status  ELSE null end  AS   StatusATCCC,
                                 patAd.address5 AS PatientResidentSubLocation,
                                 patAd.address4 AS PatientResidentWard,
                                 patAd.city_village AS PatientResidentVillage,
-                                cast(min(hiv.transfer_in_date) as Date) as TransferInDate
-
+                                cast(min(hiv.transfer_in_date) as Date) as TransferInDate,
+hiv.date_created,
+GREATEST(
+  COALESCE(d.date_last_modified, hiv.date_last_modified, prg.date_last_modified),
+  COALESCE(hiv.date_last_modified, prg.date_last_modified, d.date_last_modified),
+  COALESCE(prg.date_last_modified, d.date_last_modified, hiv.date_last_modified)
+) as date_last_modified
 from kenyaemr_etl.etl_hiv_enrollment hiv
 inner join  kenyaemr_etl.etl_patient_demographics d on hiv.patient_id=d.patient_id
 left outer join kenyaemr_etl.etl_mch_enrollment mch on mch.patient_id=d.patient_id
@@ -228,7 +233,8 @@ left join (select distinct person_id, value_coded
 left join
 (
 	select Patient_Id,   program ,
-	if(mid(max(concat(date_enrolled,date_completed)), 20) is null, 'Active', 'Inactive') as status
+	if(mid(max(concat(date_enrolled,date_completed)), 20) is null, 'Active', 'Inactive') as status,
+	date_created,date_last_modified
 	from kenyaemr_etl.etl_patient_program
 	group by Patient_Id,program
 ) as prg on prg.patient_id = d.patient_id
@@ -281,7 +287,13 @@ order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5
          else '' end as ExitReason,
        'KenyaEMR' as Emr,
        'Kenya HMIS II' as Project,
-       CAST(now() as Date) AS DateExtracted
+       CAST(now() as Date) AS DateExtracted,
+        hiv.date_created,
+        GREATEST(
+          COALESCE(hiv.date_last_modified, disc.date_last_modified, reg.date_last_modified),
+          COALESCE(disc.date_last_modified, reg.date_last_modified, hiv.date_last_modified),
+          COALESCE(reg.date_last_modified, hiv.date_last_modified, disc.date_last_modified)
+        ) as date_last_modified
 from kenyaemr_etl.etl_hiv_enrollment hiv
        join kenyaemr_etl.etl_patient_demographics d on d.patient_id=hiv.patient_id
        left outer join  kenyaemr_etl.etl_patient_program_discontinuation disc on disc.patient_id=hiv.patient_id
@@ -290,14 +302,17 @@ from kenyaemr_etl.etl_hiv_enrollment hiv
                                   e.date_started)as art_start_date, e.date_started, e.gender,e.dob,d.visit_date as dis_date, if(d.visit_date is not null, 1, 0) as TOut,
                                e.regimen, e.regimen_line, e.alternative_regimen, max(fup.next_appointment_date) as latest_tca,
                                last_art_date,last_regimen,last_regimen_line,
-                               if(enr.transfer_in_date is not null, 1, 0) as TIn, max(fup.visit_date) as  latest_vis_date
+                               if(enr.transfer_in_date is not null, 1, 0) as TIn, max(fup.visit_date) as  latest_vis_date,
+                                e.date_created,e.date_last_modified
                         from (select e.patient_id,p.dob,p.Gender,min(e.date_started) as date_started,
                                      max(e.date_started) as last_art_date,
                                      mid(min(concat(e.date_started,e.regimen_name)),11) as regimen,
                                      mid(min(concat(e.date_started,e.regimen_line)),11) as regimen_line,
                                      mid(max(concat(e.date_started,e.regimen_name)),11) as last_regimen,
                                      mid(max(concat(e.date_started,e.regimen_line)),11) as last_regimen_line,
-                                     max(if(discontinued,1,0))as alternative_regimen
+                                     max(if(discontinued,1,0))as alternative_regimen,
+                                     GREATEST(COALESCE(p.date_created, ph.date_created), COALESCE(ph.date_created, p.date_created)) as date_created,
+                                    GREATEST(COALESCE(p.date_last_modified, ph.date_last_modified), COALESCE(ph.date_last_modified, p.date_last_modified)) as date_last_modified
                               from kenyaemr_etl.etl_drug_event e
                                      join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id
                                      left join  kenyaemr_etl.etl_pharmacy_extract ph on ph.patient_id = e.patient_id and is_arv=1
@@ -375,12 +390,19 @@ NULL as bWHODate,
  '' as m12CD4,
 NULL as m12CD4Date,
 '' AS m6CD4,
-NULL m6CD4Date
+NULL m6CD4Date,
+fup.date_created,
+GREATEST(
+  COALESCE(fup.date_last_modified, d.date_last_modified, p_dates.date_last_modified),
+  COALESCE(d.date_last_modified, p_dates.date_last_modified, fup.date_last_modified),
+  COALESCE(p_dates.date_last_modified, fup.date_last_modified, d.date_last_modified)
+) as date_last_modified
 from kenyaemr_etl.etl_patient_hiv_followup fup
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=fup.patient_id
 join (select e.patient_id,date_add(date_add(min(e.visit_date),interval 3 month), interval 1 day) as enrollment_date,
 date_add(date_add(min(e.visit_date), interval 6 month),interval 1 day) as six_month_date,
-date_add(date_add(min(e.visit_date), interval 12 month),interval 1 day) as twelve_month_date
+date_add(date_add(min(e.visit_date), interval 12 month),interval 1 day) as twelve_month_date,
+e.date_created,e.date_last_modified
 from kenyaemr_etl.etl_hiv_enrollment e
 group by e.patient_id) p_dates on p_dates.patient_id=fup.patient_id
 left outer join kenyaemr_etl.etl_laboratory_extract l on l.patient_id=fup.patient_id and l.lab_test in (5497,730) where d.unique_patient_no is not null
@@ -404,7 +426,9 @@ else '' end as ExitReason,*/
 CAST(now() as Date) AS DateExtracted,
 max(disc.visit_date) AS ExitDate,
 mid(max(concat(disc.visit_date,case when disc.discontinuation_reason is not null then cn.name
-else '' end  )),20) as ExitReason
+else '' end  )),20) as ExitReason,
+	disc.date_created,
+	GREATEST(COALESCE(disc.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, disc.date_last_modified)) as date_last_modified
 from kenyaemr_etl.etl_patient_program_discontinuation disc
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=disc.patient_id
 left outer join concept_name cn on cn.concept_id=disc.discontinuation_reason  and cn.concept_name_type='FULLY_SPECIFIED'
@@ -433,7 +457,9 @@ else
 end as TestResult,
 NULL as enrollmentTest,
  'KenyaEMR' as Emr,
- 'Kenya HMIS II' as Project
+ 'Kenya HMIS II' as Project,
+l.date_created,
+GREATEST(COALESCE(l.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, l.date_last_modified)) as date_last_modified
 from kenyaemr_etl.etl_laboratory_extract l
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=l.patient_id
 join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
@@ -467,20 +493,24 @@ WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,
 ph.RegimenLine,
 CASE WHEN is_ctx=1 THEN 'CTX'
 WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,
-CAST(now() as Date) AS DateExtracted
+CAST(now() as Date) AS DateExtracted,
+ph.date_created,
+GREATEST(COALESCE(ph.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, ph.date_last_modified)) as date_last_modified
 from (SELECT * FROM (
 select patient_id, visit_id,visit_date,encounter_id,drug,is_arv, is_ctx,is_dapsone,drug_name as drugreg,frequency,
 '' as DispenseDate,duration, duration PeriodTaken,
 ''ExpectedReturn, CASE WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,'' as RegimenLine,
 CASE WHEN is_ctx=1 THEN 'CTX'
-WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType from kenyaemr_etl.etl_pharmacy_extract ph
+WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,
+ph.date_created, ph.date_last_modified from kenyaemr_etl.etl_pharmacy_extract ph
 left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
 and cn2.locale='en' where is_ctx=1 OR is_dapsone= 1
 GROUP BY patient_id, visit_id,visit_date,encounter_id
 UNION
 
 SELECT patient_id,''visit_id,visit_date,encounter_id,regimen drug,1 as is_arv, 0 as is_ctx, 0 as is_dapsone, regimen_name as drugreg, '' frequency, date_started as DispenseDate,''duration,''PeriodTaken,
-''ExpectedReturn, 'ARV' AS TreatmentType,regimen_line as RegimenLine,NULL as ProphylaxisType FROM kenyaemr_etl.etl_drug_event
+''ExpectedReturn, 'ARV' AS TreatmentType,regimen_line as RegimenLine,NULL as ProphylaxisType,
+null as date_created,null as date_last_modified FROM kenyaemr_etl.etl_drug_event
 GROUP BY patient_id, visit_id,visit_date,encounter_id
 )A )ph
 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=ph.patient_id
@@ -586,8 +616,9 @@ WHEN 105 THEN 'PWID'
 WHEN 160578 THEN 'MSM'
 WHEN 160579  THEN 'FSW'
 WHEN 1175 THEN 'N/A'
-ELSE fup.key_population_type  END as KeyPopulationType
-
+ELSE fup.key_population_type  END as KeyPopulationType,
+fup.date_created,
+GREATEST(COALESCE(d.date_last_modified, fup.date_last_modified), COALESCE(fup.date_last_modified, d.date_last_modified)) as date_last_modified
 from kenyaemr_etl.etl_patient_demographics d
 join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=d.patient_id
 left join concept_name dc on dc.concept_id =  fup.differentiated_care and dc.concept_name_type='FULLY_SPECIFIED'
@@ -963,7 +994,7 @@ a6226eb4-0e85-11e8-ba89-6fb398c5f449|Patient Adverse Events|NDWH|a6221856-0e85-1
        '' AS AdverseEventClinicalOutcome,
 	   NOW() AS AdverseEventStartDate,
        NOW() AS AdverseEventEndDate,
-       '' AS AdverseEventIsPregnant"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+       '' AS AdverseEventIsPregnant,null as date_created,null as date_last_modified"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 953cd910-23bb-11e9-ab14-d663bd873d93|Patient Status|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT patientid,
        patientpk,
        sitecode,

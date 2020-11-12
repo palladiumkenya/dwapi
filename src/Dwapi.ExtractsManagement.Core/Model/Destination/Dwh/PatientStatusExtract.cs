@@ -2,7 +2,7 @@ using System;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
-    
+
     public class PatientStatusExtract : ClientExtract
     {
         public string FacilityName { get; set; }

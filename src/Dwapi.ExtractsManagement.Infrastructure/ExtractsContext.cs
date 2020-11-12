@@ -5,6 +5,7 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
+using Dwapi.ExtractsManagement.Core.Model.Diff;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
@@ -123,6 +124,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempMetricMigrationExtractError>  TempMetricMigrationExtractErrors { get; set; }
         public DbSet<TempMetricMigrationExtractErrorSummary> TempMetricMigrationExtractErrorSummaries { get; set; }
 
+        public DbSet<DiffLog> DiffLogs { get; set; }
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
 
@@ -277,6 +279,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<MetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(MetricMigrationExtracts)}");
             DapperPlusManager.Entity<TempMetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(TempMetricMigrationExtracts)}");
             DapperPlusManager.Entity<Validator>().Key(x => x.Id).Table($"{nameof(Validator)}");
+            DapperPlusManager.Entity<DiffLog>().Key(x => x.Id).Table($"{nameof(DiffLogs)}");
            // DapperPlusManager.MapperFactory = mapper => mapper.BatchTimeout(6000);
         }
 

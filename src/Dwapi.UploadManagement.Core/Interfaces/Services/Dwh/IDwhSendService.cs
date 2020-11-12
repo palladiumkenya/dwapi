@@ -11,6 +11,9 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
         HttpClient Client { get; set; }
         Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo);
 
+        Task<List<SendDhwManifestResponse>> SendDiffManifestAsync(SendManifestPackageDTO sendTo);
+
+
         Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,
             DwhManifestMessageBag messageBag);
 

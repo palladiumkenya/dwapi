@@ -37,7 +37,5 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string DifferentiatedCare { get; set; }
         public string PopulationType  { get; set; }
         public string KeyPopulationType { get; set; }
-
-
     }
 }

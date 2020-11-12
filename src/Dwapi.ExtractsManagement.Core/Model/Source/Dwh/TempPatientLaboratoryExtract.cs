@@ -2,7 +2,7 @@ using System;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
-    
+
     public class TempPatientLaboratoryExtract : TempExtract
     {
         public string FacilityName { get; set; }
@@ -14,5 +14,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string TestName { get; set; }
         public int? EnrollmentTest { get; set; }
         public string TestResult { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

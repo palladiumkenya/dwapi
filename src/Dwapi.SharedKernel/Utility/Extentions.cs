@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace Dwapi.SharedKernel.Utility
@@ -44,6 +45,19 @@ namespace Dwapi.SharedKernel.Utility
         public static bool IsNullOrEmpty(this Guid guid)
         {
             return guid == Guid.Empty;
+        }
+
+        /// <summary>
+        /// Determines if a nullable Date (Date?) is null or Empty
+        /// </summary>
+        public static bool IsNullOrEmpty(this DateTime? dateTime)
+        {
+            DateTime? defDate = null;
+
+            if (null != dateTime || dateTime.HasValue)
+                return dateTime == defDate.GetValueOrDefault();
+
+            return null == dateTime || !dateTime.HasValue;
         }
 
         public static Task<HttpResponseMessage> PostAsJsonAsync<T>(
@@ -120,5 +134,37 @@ namespace Dwapi.SharedKernel.Utility
             return HasToEndsWith(value, end);
         }
 
+        public static DateTime? CastDateTime(dynamic source)
+        {
+            if (source is DateTime)
+                return source;
+
+            if (null == source)
+                return null;
+
+            if (string.IsNullOrWhiteSpace(source.ToString()))
+                return null;
+
+            if (DateTime.TryParse(source, out DateTime dateValue))
+                return dateValue as DateTime?;
+
+            return null;
+        }
+
+        public static void RemoveService(this ServiceCollection services, Type serviceType)
+        {
+            var descriptors = services
+                .Where(x => x.ServiceType == serviceType)
+                .ToList();
+
+            if (descriptors.Any())
+            {
+                foreach (var descriptor in descriptors)
+                {
+                    services.Remove(descriptor);
+                }
+            }
+
+        }
     }
 }
