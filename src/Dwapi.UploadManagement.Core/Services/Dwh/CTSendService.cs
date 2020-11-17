@@ -160,7 +160,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                 }
 
-                // await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
+                await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
             }
             catch (Exception e)
             {
