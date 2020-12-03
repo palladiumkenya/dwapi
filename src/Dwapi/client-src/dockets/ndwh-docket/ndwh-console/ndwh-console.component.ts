@@ -146,7 +146,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
             if (this.emrName === 'KenyaEMR') {
-                this.minEMRVersion = '(The minimum version EMR is 17.1.0)';
+                this.minEMRVersion = '(The minimum version EMR is 17.3.0)';
             } else if (this.emrName === 'IQCare') {
                 this.minEMRVersion = '(The minimum version EMR is 2.2.1)';
             } else {

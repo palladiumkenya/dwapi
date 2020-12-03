@@ -157,7 +157,7 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                         this.emrVersion = this.emrSystem.version;
 
                         if (this.emrSystem.name == 'KenyaEMR') {
-                            this.minEMRVersion = '(The minimum version EMR is 17.1.0)';
+                            this.minEMRVersion = '(The minimum version EMR is 17.3.0)';
                         }
                         else if (this.emrSystem.name === 'IQCare') {
                             this.minEMRVersion = '(The minimum version EMR is 2.2.1)';
