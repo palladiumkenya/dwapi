@@ -8,7 +8,7 @@
                     icon="ui-icon-file-download" class="green-btn"></button>
         </div>
 
-        <div class="ui-toolbar-group-right">
+        <div class="ui-toolbar-group-right" *ngIf="(emrName && emrName === 'KenyaEMR')">
             <button pButton type="button" [disabled]="!canSend" (click)="sendDiff()" label="Send Changes Only"
                     icon="ui-icon-cloud-upload"
                     class="orange-btn"></button>

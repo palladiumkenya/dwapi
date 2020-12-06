@@ -228,11 +228,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempPatientLaboratoryExtract>().Key(x => x.Id)
                 .Table($"{nameof(TempPatientLaboratoryExtracts)}");
             DapperPlusManager.Entity<TempPatientPharmacyExtract>().Key(x => x.Id)
-                .Table($"{nameof(TempPatientPharmacyExtracts)}").BatchTimeout(360);;
+                .Table($"{nameof(TempPatientPharmacyExtracts)}").BatchTimeout(3600);;
             DapperPlusManager.Entity<TempPatientStatusExtract>().Key(x => x.Id)
                 .Table($"{nameof(TempPatientStatusExtracts)}");
             DapperPlusManager.Entity<TempPatientVisitExtract>().Key(x => x.Id)
-                .Table($"{nameof(TempPatientVisitExtracts)}").BatchTimeout(360);;
+                .Table($"{nameof(TempPatientVisitExtracts)}").BatchTimeout(3600);;
             DapperPlusManager.Entity<TempPatientAdverseEventExtract>().Key(x => x.Id)
                 .Table($"{nameof(TempPatientAdverseEventExtracts)}");
             DapperPlusManager.Entity<PatientArtExtract>().Key(x => x.Id).Table($"{nameof(PatientArtExtracts)}");
@@ -241,13 +241,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<PatientLaboratoryExtract>().Key(x => x.Id)
                 .Table($"{nameof(PatientLaboratoryExtracts)}");
             DapperPlusManager.Entity<PatientPharmacyExtract>().Key(x => x.Id)
-                .Table($"{nameof(PatientPharmacyExtracts)}").BatchTimeout(360);
+                .Table($"{nameof(PatientPharmacyExtracts)}").BatchTimeout(3600);
             DapperPlusManager.Entity<PatientStatusExtract>().Key(x => x.Id).Table($"{nameof(PatientStatusExtracts)}");
-            DapperPlusManager.Entity<PatientVisitExtract>().Key(x => x.Id).Table($"{nameof(PatientVisitExtracts)}").BatchTimeout(360);
+            DapperPlusManager.Entity<PatientVisitExtract>().Key(x => x.Id).Table($"{nameof(PatientVisitExtracts)}").BatchTimeout(3600);
             DapperPlusManager.Entity<PatientAdverseEventExtract>().Key(x => x.Id)
                 .Table($"{nameof(PatientAdverseEventExtracts)}");
             DapperPlusManager.Entity<PatientExtract>().Key(x => x.Id).Table($"{nameof(PatientExtracts)}");
-            DapperPlusManager.Entity<MasterPatientIndex>().Key(x => x.Id).Table($"{nameof(MasterPatientIndices)}").BatchTimeout(360);
+            DapperPlusManager.Entity<MasterPatientIndex>().Key(x => x.Id).Table($"{nameof(MasterPatientIndices)}").BatchTimeout(3600);
             DapperPlusManager.Entity<TempMasterPatientIndex>().Key(x => x.Id)
                 .Table($"{nameof(TempMasterPatientIndices)}");
             DapperPlusManager.Entity<EmrMetric>().Key(x => x.Id).Table($"{nameof(EmrMetric)}");
