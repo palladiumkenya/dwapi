@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Serilog;
 
-namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Cbs
+namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Mgs
 {
     [TestFixture]
     public class MetricMigrationLoaderTests

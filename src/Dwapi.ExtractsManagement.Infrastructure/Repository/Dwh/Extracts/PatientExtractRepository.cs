@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
 using Microsoft.Data.Sqlite;
@@ -82,6 +84,26 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
         {
             var count = DbSet.AsNoTracking().Where(x => x.Status == "Sent").Select(x => x.Id).Count();
             return count;
+        }
+
+        public long UpdateDiffSendStatus()
+        {
+            int totalUpdated;
+
+            using (var cn = GetNewConnection())
+            {
+
+                var sql = $@"
+                UPDATE
+                    {nameof(ExtractsContext.PatientExtracts)}
+                SET
+                    {nameof(PatientExtract.Status)}=@Status,{nameof(PatientExtract.StatusDate)}=@StatusDate
+                ";
+
+                totalUpdated = cn.Execute(sql, new {Status = nameof(SendStatus.Sent), StatusDate = DateTime.Now});
+            }
+
+            return totalUpdated;
         }
     }
 }

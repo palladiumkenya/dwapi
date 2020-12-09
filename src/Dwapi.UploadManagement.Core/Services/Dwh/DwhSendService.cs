@@ -104,6 +104,11 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
         }
 
+        public Task<List<SendDhwManifestResponse>> SendDiffManifestAsync(SendManifestPackageDTO sendTo)
+        {
+            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateDiffWithMetrics(sendTo.GetEmrDto()).ToList()));
+        }
+
         public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, DwhManifestMessageBag messageBag)
         {
             var responses = new List<SendDhwManifestResponse>();

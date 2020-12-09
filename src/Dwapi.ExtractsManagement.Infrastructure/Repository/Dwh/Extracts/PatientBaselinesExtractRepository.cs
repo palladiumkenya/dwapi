@@ -121,5 +121,28 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
                 }
             }
         }
+
+        public long UpdateDiffSendStatus()
+        {
+            int totalUpdated;
+
+            using (var cn = GetNewConnection())
+            {
+
+                var sql = $@"
+                UPDATE
+                    {nameof(ExtractsContext.PatientBaselinesExtracts)}
+                SET
+                    {nameof(PatientBaselinesExtract.Status)}=@Status,{nameof(PatientBaselinesExtract.StatusDate)}=@StatusDate
+                where
+                    {nameof(PatientBaselinesExtract.PatientPK)} in (select PatientPK from {nameof(ExtractsContext.PatientExtracts)}) AND
+                    {nameof(PatientBaselinesExtract.SiteCode)} in (select SiteCode from {nameof(ExtractsContext.PatientExtracts)})
+                ";
+
+                totalUpdated = cn.Execute(sql, new {Status = nameof(SendStatus.Sent), StatusDate = DateTime.Now});
+            }
+
+            return totalUpdated;
+        }
     }
 }

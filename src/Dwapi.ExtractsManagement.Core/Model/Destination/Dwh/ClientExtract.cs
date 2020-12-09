@@ -20,6 +20,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public virtual DateTime? DateExtracted { get; set; }
         public string Emr { get; set; }
         public string Project { get; set; }
+        public virtual DateTime? Date_Created { get; set; }
+        public virtual DateTime? Date_Last_Modified { get; set; }
 
         [NotMapped]
         public bool IsSent => !string.IsNullOrWhiteSpace(Status) && Status.IsSameAs(nameof(SendStatus.Sent));

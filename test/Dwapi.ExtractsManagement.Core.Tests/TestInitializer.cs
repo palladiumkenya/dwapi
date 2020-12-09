@@ -33,6 +33,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
@@ -56,6 +57,7 @@ using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Profiles.Hts;
 using Dwapi.ExtractsManagement.Core.Profiles.Mgs;
 using Dwapi.ExtractsManagement.Core.Services;
+using Dwapi.ExtractsManagement.Core.Tests.TestArtifacts;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
@@ -64,6 +66,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader.Mgs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Diff;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Validations;
@@ -111,9 +114,12 @@ namespace Dwapi.ExtractsManagement.Core.Tests
         public static string MsSqlConnectionString;
         public static string MySqlConnectionString;
         public static string EmrConnectionString;
+        public static string EmrDiffConnectionString;
         public static string ConnectionString;
+        public static string DiffConnectionString;
         public static DatabaseProtocol Protocol;
         public static List<Extract> Extracts;
+        public static ServiceCollection AllServices;
 
         [OneTimeSetUp]
         public void Setup()
@@ -135,7 +141,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .Build();
 
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
+            EmrDiffConnectionString = GenerateConnection(config, "emrDiffConnection", false);
             ConnectionString = GenerateCopyConnection(config, "dwapiConnection");
+            DiffConnectionString = GenerateCopyConnection(config, "dwapiDiffConnection");
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
@@ -179,6 +187,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddTransient<IValidatorRepository, ValidatorRepository>();
             services.AddTransient<IPsmartStageRepository, PsmartStageRepository>();
+            services.AddTransient<IDiffLogRepository, DiffLogRepository>();
 
             #region CBS
 
@@ -382,8 +391,9 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             #endregion
 
 
-            services.AddMediatR(typeof(LoadFromEmrCommand));
+            services.AddMediatR(typeof(LoadFromEmrCommand),typeof(TestDiffEventHandler));
 
+            AllServices = services;
             ServiceProvider = services.BuildServiceProvider();
 
               Mapper.Initialize(cfg =>
@@ -413,9 +423,42 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
         }
 
+        public static void ClearDiffDb()
+        {
+            AllServices.RemoveService(typeof(SettingsContext));
+            AllServices.RemoveService(typeof(ExtractsContext));
+            AllServices.RemoveService(typeof(DbContextOptions<SettingsContext>));
+            AllServices.RemoveService(typeof(DbContextOptions<ExtractsContext>));
+
+            var diffConnection = new SqliteConnection(DiffConnectionString);
+            diffConnection.Open();
+
+            AllServices.AddDbContext<SettingsContext>(x => x.UseSqlite(diffConnection));
+            AllServices.AddDbContext<ExtractsContext>(x => x.UseSqlite(diffConnection));
+
+            ServiceProvider = AllServices.BuildServiceProvider();
+
+            var context = ServiceProvider.GetService<SettingsContext>();
+            context.EnsureSeeded();
+
+            var econtext = ServiceProvider.GetService<ExtractsContext>();
+            econtext.EnsureSeeded();
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempPatientExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.PatientExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempHtsClientsExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
+        }
+
         public static void SeedData(params IEnumerable<object>[] entities)
         {
             var context = ServiceProvider.GetService<SettingsContext>();
+
+            if (entities.Any(x => x.First().GetType() == typeof(EmrSystem)))
+            {
+                context.EmrSystems.RemoveRange(context.EmrSystems);
+                context.SaveChanges();
+            }
+
             foreach (IEnumerable<object> t in entities)
             {
                 context.AddRange(t);
@@ -477,7 +520,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =
-                {"dwapi.db", "emr.db"};
+                {"dwapi.db", "dwapi-diff.db", "emr.db", "emr-diff.db"};
             string[] keyDirs = {@"TestArtifacts/Database".ToOsStyle()};
 
             foreach (var keyDir in keyDirs)

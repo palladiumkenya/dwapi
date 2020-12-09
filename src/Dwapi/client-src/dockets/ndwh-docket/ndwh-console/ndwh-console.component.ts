@@ -146,7 +146,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
             if (this.emrName === 'KenyaEMR') {
-                this.minEMRVersion = '(The minimum version EMR is 17.1.0)';
+                this.minEMRVersion = '(The minimum version EMR is 17.3.0)';
             } else if (this.emrName === 'IQCare') {
                 this.minEMRVersion = '(The minimum version EMR is 2.2.1)';
             } else {
@@ -282,12 +282,65 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             );
     }
 
+    public sendDiff(): void {
+        localStorage.clear();
+        this.sendingManifest = true;
+        this.errorMessage = [];
+        this.notifications = [];
+        this.canSendPatients = false;
+        this.manifestPackage = this.getSendManifestPackage();
+        this.sendManifest$ = this._ndwhSenderService.sendDiffManifest(this.manifestPackage)
+            .subscribe(
+                p => {
+                    this.canSendPatients = true;
+                },
+                e => {
+                    console.error('SEND ERROR', e);
+
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                },
+                () => {
+                    this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+                    this.sendDiffExtracts();
+                    this.sendingManifest = false;
+                    this.updateEvent();
+                }
+            );
+    }
+
     public sendExtracts(): void {
         this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         this.extractPackage = this.getExtractsPackage();
         this.send$ = this._ndwhSenderService.sendPatientExtracts(this.extractPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                },
+                e => {
+                    console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
+
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    }
+                },
+                () => {
+                    this.errorMessage.push({severity: 'success', summary: 'Sending Extracts '});
+                    this.updateEvent();
+                }
+            );
+    }
+
+    public sendDiffExtracts(): void {
+        this.sendEvent = {sentProgress: 0};
+        this.sending = true;
+        this.errorMessage = [];
+        this.extractPackage = this.getExtractsPackage();
+        this.send$ = this._ndwhSenderService.sendDiffPatientExtracts(this.extractPackage)
             .subscribe(
                 p => {
                     // this.sendResponse = p;

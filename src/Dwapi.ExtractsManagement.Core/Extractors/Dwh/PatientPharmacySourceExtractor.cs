@@ -31,6 +31,9 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
+            //AppConstants.DiffSupport = _reader.CheckDiffSupport(dbProtocol);
+            extract.SetupDiffSql();
+
             int batch = 5000;
 
             var list = new List<TempPatientPharmacyExtract>();

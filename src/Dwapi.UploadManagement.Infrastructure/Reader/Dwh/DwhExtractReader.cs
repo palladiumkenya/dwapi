@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Dapper;
+using Dwapi.ExtractsManagement.Core.Model.Diff;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Model.Dwh;
@@ -78,6 +80,26 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
         {
             return _context.Set<T>()
                 .Include(nameof(PatientExtractView))
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .OrderBy(x => x.Id)
+                .AsNoTracking().ToList();
+        }
+
+
+        public IEnumerable<T> Read<T, TId>(int page, int pageSize, Expression<Func<T, bool>> predicate) where T : Entity<TId>
+        {
+            return _context.Set<T>()
+                .Include(nameof(PatientExtractView))
+                .Where(predicate)
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .OrderBy(x => x.Id)
+                .AsNoTracking().ToList();
+        }
+
+        public IEnumerable<T> ReadMainExtract<T, TId>(int page, int pageSize, Expression<Func<T, bool>> predicate) where T : Entity<TId>
+        {
+            return _context.Set<T>()
+                .Where(predicate)
                 .Skip((page - 1) * pageSize).Take(pageSize)
                 .OrderBy(x => x.Id)
                 .AsNoTracking().ToList();

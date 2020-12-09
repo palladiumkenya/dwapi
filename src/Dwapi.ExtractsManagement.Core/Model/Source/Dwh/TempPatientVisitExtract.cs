@@ -2,7 +2,7 @@ using System;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
-    
+
     public class TempPatientVisitExtract : TempExtract
     {
         public string FacilityName { get; set; }
@@ -37,5 +37,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string DifferentiatedCare { get; set; }
         public string PopulationType { get; set; }
         public string KeyPopulationType { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

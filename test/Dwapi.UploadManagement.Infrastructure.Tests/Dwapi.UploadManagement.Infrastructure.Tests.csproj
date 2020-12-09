@@ -8,6 +8,9 @@
     <None Update="TestArtifacts\Database\dwapi.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestArtifacts\Database\dwapi_diff.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.json">
@@ -17,6 +20,9 @@
     <Content Include="TestArtifacts\Database\emr.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="TestArtifacts\Database\emr_diff.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />

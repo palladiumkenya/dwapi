@@ -37,8 +37,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PatientResidentSubLocation { get; set; }
         public string PatientResidentWard { get; set; }
         public string PatientResidentVillage { get; set; }
-
         public DateTime? TransferInDate { get; set; }
-
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

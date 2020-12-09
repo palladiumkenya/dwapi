@@ -19,9 +19,17 @@ export class NdwhSenderService {
         return this._http.post<boolean>(`${this._url}/manifest`, sendPackage)
             .catch(this.handleError);
     }
+    public sendDiffManifest(sendPackage: CombinedPackage): Observable<boolean> {
+        return this._http.post<boolean>(`${this._url}/diffmanifest`, sendPackage)
+            .catch(this.handleError);
+    }
 
     public sendPatientExtracts(sendPackage: CombinedPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/patients`, sendPackage)
+            .catch(this.handleError);
+    }
+    public sendDiffPatientExtracts(sendPackage: CombinedPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/diffpatients`, sendPackage)
             .catch(this.handleError);
     }
 

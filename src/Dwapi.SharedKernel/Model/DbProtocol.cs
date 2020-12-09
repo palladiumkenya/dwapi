@@ -28,6 +28,8 @@ namespace Dwapi.SharedKernel.Model
 
         [NotMapped] public string DatabaseTypeName => $"{DatabaseType}";
 
+        [NotMapped] public string DiffSqlCheck => GetSql();
+        [NotMapped] public bool DiffSupport => !string.IsNullOrWhiteSpace(GetSql());
 
         public DbProtocol()
         {
@@ -82,6 +84,16 @@ namespace Dwapi.SharedKernel.Model
             return connectionString;
         }
 
+        private string GetSql()
+        {
+            if (Id != new Guid("a6221aa4-0e85-11e8-ba89-0ed5f89f718b"))
+                return string.Empty;
+
+            return @"
+                     select date_last_modified from kenyaemr_etl.etl_patient_demographics 
+                     limit 1
+                     ";
+        }
 
         public override string ToString()
         {
