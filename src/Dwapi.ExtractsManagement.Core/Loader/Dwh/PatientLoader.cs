@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -12,6 +13,7 @@ using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using MediatR;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
@@ -20,11 +22,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
     {
         private readonly IPatientExtractRepository _patientExtractRepository;
         private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
+        private readonly IMediator _mediator;
 
-        public PatientLoader(IPatientExtractRepository patientExtractRepository, ITempPatientExtractRepository tempPatientExtractRepository)
+        public PatientLoader(IPatientExtractRepository patientExtractRepository, ITempPatientExtractRepository tempPatientExtractRepository, IMediator mediator)
         {
             _patientExtractRepository = patientExtractRepository;
             _tempPatientExtractRepository = tempPatientExtractRepository;
+            _mediator = mediator;
         }
 
         public async Task<int> Load(Guid extractId, int found)
@@ -72,6 +76,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                             nameof(ExtractStatus.Loading),
                             found, count, 0, 0, 0)));
                 }
+
+                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(PatientExtract)));
+
                 return count;
             }
             catch (Exception e)

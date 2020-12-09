@@ -15,7 +15,6 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Data
         public void Init()
         {
             _context = TestInitializer.ServiceProvider.GetService<UploadContext>();
-
         }
 
 
@@ -62,6 +61,12 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Data
         {
             Assert.True(_context.AppMetrics.Any());
             Assert.True(_context.EmrMetrics.Any());
+        }
+
+        [Test]
+        public void should_load_DiffLogs_From_References()
+        {
+            Assert.True(_context.DiffLogs.Any());
         }
     }
 }

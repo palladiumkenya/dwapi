@@ -41,6 +41,42 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
             return sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection);
         }
 
+        public bool CheckDiffSupport(DbProtocol protocol)
+        {
+            if (!protocol.DiffSupport)
+                return false;
+
+            var sourceConnection = GetConnection(protocol);
+            if (null == sourceConnection)
+                throw new Exception("Data connection not initialized");
+
+
+            using (sourceConnection)
+            {
+                sourceConnection.Open();
+                var commandDefinition = new CommandDefinition(protocol.DiffSqlCheck, null, null, 0);
+
+                try
+                {
+                    if (sourceConnection is SqliteConnection)
+                    {
+                        sourceConnection.ExecuteReader(commandDefinition);
+                    }
+                    else
+                    {
+                        sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection);
+                    }
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Log.Warning("Missing differential upload feature in EMR");
+                }
+            }
+            return false;
+        }
+
         public IDbConnection GetConnection(DbProtocol databaseProtocol)
         {
             var connectionString = databaseProtocol.GetConnectionString();

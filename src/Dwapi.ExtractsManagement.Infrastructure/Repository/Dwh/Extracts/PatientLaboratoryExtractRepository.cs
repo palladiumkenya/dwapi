@@ -5,6 +5,7 @@ using System.Linq;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
 using Microsoft.Data.Sqlite;
@@ -84,6 +85,29 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
 
                 cn.BulkUpdate(mpi);
             }
+        }
+
+        public long UpdateDiffSendStatus()
+        {
+            int totalUpdated;
+
+            using (var cn = GetNewConnection())
+            {
+
+                var sql = $@"
+                UPDATE
+                    {nameof(ExtractsContext.PatientLaboratoryExtracts)}
+                SET
+                    {nameof(PatientLaboratoryExtract.Status)}=@Status,{nameof(PatientLaboratoryExtract.StatusDate)}=@StatusDate
+                where
+                    {nameof(PatientLaboratoryExtract.PatientPK)} in (select PatientPK from {nameof(ExtractsContext.PatientExtracts)}) AND
+                    {nameof(PatientLaboratoryExtract.SiteCode)} in (select SiteCode from {nameof(ExtractsContext.PatientExtracts)})
+                ";
+
+                totalUpdated = cn.Execute(sql, new {Status = nameof(SendStatus.Sent), StatusDate = DateTime.Now});
+            }
+
+            return totalUpdated;
         }
     }
 }

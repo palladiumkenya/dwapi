@@ -19,7 +19,7 @@ namespace Dwapi.SharedKernel.Exchange
         public string EmrName { get; set; }
         public EmrSetup EmrSetup { get; set; }
         public List<FacMetric> FacMetrics { get; set; } = new List<FacMetric>();
-
+        public UploadMode UploadMode { get; set; }
         public DwhManifest()
         {
         }

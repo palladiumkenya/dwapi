@@ -28,5 +28,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public DateTime? LastVisit { get; set; }
         public string ExitReason { get; set; }
         public DateTime? ExitDate { get; set; }
+
     }
 }
