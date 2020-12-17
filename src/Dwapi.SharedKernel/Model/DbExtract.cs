@@ -78,7 +78,7 @@ namespace Dwapi.SharedKernel.Model
 
         public void SetupDiffSql()
         {
-            if (!AppConstants.DiffSupport)
+            if (AppConstants.DiffSupport)
                 return;
 
 

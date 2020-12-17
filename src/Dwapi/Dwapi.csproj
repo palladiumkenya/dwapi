@@ -35,9 +35,10 @@ Bached sending and await to 50 at a time
     <PackageReference Include="Hangfire.Core" Version="1.7.11" />
     <PackageReference Include="Hangfire.MemoryStorage.Core" Version="1.4.0" />
     <PackageReference Include="Humanizer.Core" Version="2.7.9" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2"><PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
-<Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
-</PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2">
+        <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
+        <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
+    </PackageReference>
     <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.1.1" />
@@ -66,19 +67,6 @@ Bached sending and await to 50 at a time
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
     <ProjectReference Include="..\Dwapi.UploadManagement.Core\Dwapi.UploadManagement.Core.csproj" />
     <ProjectReference Include="..\Dwapi.UploadManagement.Infrastructure\Dwapi.UploadManagement.Infrastructure.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="client-src\dockets\mgs-docket\mgs-docket.component.ts" />
-    <TypeScriptCompile Include="client-src\dockets\mgs-docket\mgs-extract-details\mgs-extract-details.component.ts" />
-    <TypeScriptCompile Include="client-src\dockets\mgs-docket\mgs-extract-details\mgs-invalid\mgs-invalid.component.ts" />
-    <TypeScriptCompile Include="client-src\dockets\mgs-docket\mgs-extract-details\mgs-valid\mgs-valid.component.ts" />
-    <TypeScriptCompile Include="client-src\dockets\services\metric-migration.service.ts" />
-    <TypeScriptCompile Include="client-src\dockets\services\mgs-sender.service.ts" />
-    <TypeScriptCompile Include="client-src\dockets\services\mgs.service.ts" />
-    <TypeScriptCompile Include="client-src\settings\model\data-metrics.ts" />
-    <TypeScriptCompile Include="client-src\settings\model\emr-setup.ts" />
-    <TypeScriptCompile Include="client-src\settings\model\load-mgs-extracts.ts" />
-    <TypeScriptCompile Include="client-src\settings\model\load-mgs-from-emr-command.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="mysql-appsettings.json">

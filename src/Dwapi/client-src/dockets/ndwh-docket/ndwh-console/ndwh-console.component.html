@@ -19,9 +19,6 @@
                     icon="ui-icon-cloud-upload"
                     class="blue-btn"></button>
         </div>
-
-
-
     </p-toolbar>
 
     <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true" [loading]="loadingData" loadingIcon="fa-spinner fa-pulse"
@@ -44,7 +41,6 @@
             <p-progressBar mode="indeterminate"></p-progressBar>
         </div>
     </div>
-
     <div class="ui-g" *ngIf="sending">
         <div class="ui-g-12">
             Stage 2 of 2: Sending Extracts, please wait ...

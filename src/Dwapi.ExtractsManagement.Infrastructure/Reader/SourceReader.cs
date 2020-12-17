@@ -60,11 +60,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
                 {
                     if (sourceConnection is SqliteConnection)
                     {
-                        sourceConnection.ExecuteReader(commandDefinition);
+                        var diffReader =sourceConnection.ExecuteReader(commandDefinition);
+                        diffReader.Read();
                     }
                     else
                     {
-                        sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection);
+
+                        var diffReader = sourceConnection.ExecuteReader(commandDefinition, CommandBehavior.CloseConnection);
+                        diffReader.Read();
                     }
 
                     return true;

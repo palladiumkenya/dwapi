@@ -32,6 +32,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
             AppConstants.DiffSupport = _reader.CheckDiffSupport(dbProtocol);
+            AppConstants.DiffSupportChecked = true;
             extract.SetupDiffSql();
 
             // TODO: PLEASE FIND OUT WHY LOADED COUNT

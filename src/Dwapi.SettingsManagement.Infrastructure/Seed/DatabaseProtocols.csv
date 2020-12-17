@@ -1,7 +1,7 @@
 Id|DatabaseName|DatabaseType|EmrSystemId|Host|Password|Port|Username|AdvancedProperties
 A6221982-0E85-11E8-BA89-0ED5F89F718B|IQCare|1|a62216ee-0e85-11e8-ba89-0ed5f89f718b|.|M@un1983||sa|
 a6221983-0e85-11e8-ba89-0ed5f89f718b|IQTools_KeHMIS|1|a62216ee-0e85-11e8-ba89-0ed5f89f718b|.|M@un1983||sa|
-a6221aa4-0e85-11e8-ba89-0ed5f89f718b|openmrs|2|a6221856-0e85-11e8-ba89-0ed5f89f718b|kenyaemrstaging_kenyaemr-staging-mysql_1|mY@Dwapi7236|3306|thedwapi|Allow User Variables=True
+a6221aa4-0e85-11e8-ba89-0ed5f89f718b|openmrs|2|a6221856-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|dwapi|3306|dwapi|Allow User Variables=True
 a6221aa5-0e85-11e8-ba89-0ed5f89f718b|amrsndwr|2|a6221857-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|openmrs|3306|root|Allow User Variables=True
 a6221982-0e86-11e8-ba89-0ed5f89f718b|ECare|1|a6221858-0e85-11e8-ba89-0ed5f89f718b|.|P@ssw0rd||sa|
 a6221989-0e85-11e8-ba89-0ed5f89f718b|openmrs|2|a6221859-0e85-11e8-ba89-0ed5f89f718b|127.0.0.1|dwapi|3306|dwapi|Allow User Variables=True

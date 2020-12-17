@@ -28,7 +28,7 @@ export class MetricsComponent implements OnInit, OnDestroy {
                 },
                 e => {
                     this.sysMessages = [];
-                    this.sysMessages.push({severity: 'error', summary: 'Error Loading metrics', detail: <any>e});
+                    // this.sysMessages.push({severity: 'error', summary: 'Error Loading metrics', detail: <any>e});
                     this.loadingData = false;
                     this.appMetrics = null;
                 },
