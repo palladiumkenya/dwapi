@@ -280,7 +280,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempMetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(TempMetricMigrationExtracts)}");
             DapperPlusManager.Entity<Validator>().Key(x => x.Id).Table($"{nameof(Validator)}");
             DapperPlusManager.Entity<DiffLog>().Key(x => x.Id).Table($"{nameof(DiffLogs)}");
-           // DapperPlusManager.MapperFactory = mapper => mapper.BatchTimeout(6000);
+            DapperPlusManager.Entity<ExtractHistory>().Key(x => x.Id).Table($"{nameof(ExtractHistory)}");
+            // DapperPlusManager.MapperFactory = mapper => mapper.BatchTimeout(6000);
         }
 
         public override void EnsureSeeded()

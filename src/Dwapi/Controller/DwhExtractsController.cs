@@ -257,29 +257,29 @@ namespace Dwapi.Controller
 
         public void SendJobBaselines(SendManifestPackageDTO package)
         {
-            var idsA =_ctSendService.SendBatchExtractsAsync(package, 200, new ArtMessageBag()).Result;
-            var idsB=_ctSendService.SendBatchExtractsAsync(package, 200, new BaselineMessageBag()).Result;
-            var idsC= _ctSendService.SendBatchExtractsAsync(package, 200, new StatusMessageBag()).Result;
-            var idsD=_ctSendService.SendBatchExtractsAsync(package, 200, new AdverseEventsMessageBag()).Result;
+            var idsA =_ctSendService.SendBatchExtractsAsync(package, 500, new ArtMessageBag()).Result;
+            var idsB=_ctSendService.SendBatchExtractsAsync(package, 500, new BaselineMessageBag()).Result;
+            var idsC= _ctSendService.SendBatchExtractsAsync(package, 500, new StatusMessageBag()).Result;
+            var idsD=_ctSendService.SendBatchExtractsAsync(package, 500, new AdverseEventsMessageBag()).Result;
         }
         public void SendDiffJobBaselines(SendManifestPackageDTO package)
         {
-            var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new ArtMessageBag()).Result;
-            var idsB=_ctSendService.SendDiffBatchExtractsAsync(package, 200, new BaselineMessageBag()).Result;
-            var idsC= _ctSendService.SendDiffBatchExtractsAsync(package, 200, new StatusMessageBag()).Result;
-            var idsD=_ctSendService.SendDiffBatchExtractsAsync(package, 200, new AdverseEventsMessageBag()).Result;
+            var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 500, new ArtMessageBag()).Result;
+            var idsB=_ctSendService.SendDiffBatchExtractsAsync(package, 500, new BaselineMessageBag()).Result;
+            var idsC= _ctSendService.SendDiffBatchExtractsAsync(package, 500, new StatusMessageBag()).Result;
+            var idsD=_ctSendService.SendDiffBatchExtractsAsync(package, 500, new AdverseEventsMessageBag()).Result;
         }
         public void SendJobProfiles(SendManifestPackageDTO package)
         {
-            var idsA =_ctSendService.SendBatchExtractsAsync(package, 300, new PharmacyMessageBag()).Result;
-            var idsB=_ctSendService.SendBatchExtractsAsync(package, 300, new LabMessageBag()).Result;
-            var idsC= _ctSendService.SendBatchExtractsAsync(package, 300, new VisitsMessageBag()).Result;
+            var idsA =_ctSendService.SendBatchExtractsAsync(package, 500, new PharmacyMessageBag()).Result;
+            var idsB=_ctSendService.SendBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
+            var idsC= _ctSendService.SendBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
         }
         public void SendDiffJobProfiles(SendManifestPackageDTO package)
         {
-            var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 300, new PharmacyMessageBag()).Result;
-            var idsB=_ctSendService.SendDiffBatchExtractsAsync(package, 300, new LabMessageBag()).Result;
-            var idsC= _ctSendService.SendDiffBatchExtractsAsync(package, 300, new VisitsMessageBag()).Result;
+            var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 500, new PharmacyMessageBag()).Result;
+            var idsB=_ctSendService.SendDiffBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
+            var idsC= _ctSendService.SendDiffBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
         }
 
         [AutomaticRetry(Attempts = 0)]

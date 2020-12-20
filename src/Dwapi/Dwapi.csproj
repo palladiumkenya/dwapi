@@ -4,7 +4,7 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <Version>2.5.0.0</Version>
+    <Version>2.5.0.2</Version>
     <Company>Palladium Group</Company>
     <Authors>Davidson Gikandi, Danson Koske, Mwenda Gitonga, Brian Mwasi, Teddy Brian</Authors>
     <RepositoryUrl>https://github.com/palladiumkenya/DWAPI</RepositoryUrl>
@@ -99,5 +99,8 @@ Bached sending and await to 50 at a time
     <Reference Include="Hangfire.Pro, Version=2.2.2.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\libs\Hangfire.Pro.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="logs" />
   </ItemGroup>
 </Project>

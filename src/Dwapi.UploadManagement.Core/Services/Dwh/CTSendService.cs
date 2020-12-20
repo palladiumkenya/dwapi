@@ -125,30 +125,37 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     var message = messageBag.Messages;
                     try
                     {
-                        /*
-                        var msg = JsonConvert.SerializeObject(message,new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Serializ});
-                        */
-                        var response = await client.PostAsJsonAsync(
-                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
-                        if (response.IsSuccessStatusCode)
+                        int retryCount = 0;
+                        bool allowSend = true;
+                        while (allowSend)
                         {
-                            var content = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                            responses.Add(content);
+                            var response = await client.PostAsJsonAsync(
+                                sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
+                            if (response.IsSuccessStatusCode)
+                            {
+                                allowSend = false;
+                                responses.Add(new SendCTResponse());
 
-                            var sentIds = messageBag.SendIds;
-                            sendCound += sentIds.Count;
-                            DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
-                                messageBag.ExtractType));
+                                var sentIds = messageBag.SendIds;
+                                sendCound += sentIds.Count;
+                                DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
+                                    messageBag.ExtractType));
+                            }
+                            else
+                            {
+                                retryCount++;
+                                if (retryCount == 4)
+                                {
+                                    var sentIds = messageBag.SendIds;
+                                    var error = await response.Content.ReadAsStringAsync();
+                                    DomainEvents.Dispatch(new CTExtractSentEvent(
+                                        sentIds, SendStatus.Failed, messageBag.ExtractType,
+                                        error));
+                                    throw new Exception(error);
+                                }
+                            }
                         }
-                        else
-                        {
-                            var sentIds = messageBag.SendIds;
-                            var error = await response.Content.ReadAsStringAsync();
-                            DomainEvents.Dispatch(new CTExtractSentEvent(
-                                sentIds, SendStatus.Failed, messageBag.ExtractType,
-                                error));
-                            throw new Exception(error);
-                        }
+
                     }
                     catch (Exception e)
                     {
@@ -219,29 +226,36 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     var message = messageBag.Messages;
                     try
                     {
-                        /*
-                        var msg = JsonConvert.SerializeObject(message,new JsonSerializerSettings {ReferenceLoopHandling = ReferenceLoopHandling.Serializ});
-                        */
-                        var response = await client.PostAsJsonAsync(
-                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
-                        if (response.IsSuccessStatusCode)
+                        int retryCount = 0;
+                        bool allowSend = true;
+                        while (allowSend)
                         {
-                            var content = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                            responses.Add(content);
+                            var response = await client.PostAsJsonAsync(
+                                sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
+                            if (response.IsSuccessStatusCode)
+                            {
+                                allowSend = false;
+                                // var content = await response.Content.ReadAsJsonAsync<SendCTResponse>();
+                                responses.Add(new SendCTResponse());
 
-                            var sentIds = messageBag.SendIds;
-                            sendCound += sentIds.Count;
-                            DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
-                                messageBag.ExtractType));
-                        }
-                        else
-                        {
-                            var sentIds = messageBag.SendIds;
-                            var error = await response.Content.ReadAsStringAsync();
-                            DomainEvents.Dispatch(new CTExtractSentEvent(
-                                sentIds, SendStatus.Failed, messageBag.ExtractType,
-                                error));
-                            throw new Exception(error);
+                                var sentIds = messageBag.SendIds;
+                                sendCound += sentIds.Count;
+                                DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
+                                    messageBag.ExtractType));
+                            }
+                            else
+                            {
+                                retryCount++;
+                                if (retryCount == 4)
+                                {
+                                    var sentIds = messageBag.SendIds;
+                                    var error = await response.Content.ReadAsStringAsync();
+                                    DomainEvents.Dispatch(new CTExtractSentEvent(
+                                        sentIds, SendStatus.Failed, messageBag.ExtractType,
+                                        error));
+                                    throw new Exception(error);
+                                }
+                            }
                         }
                     }
                     catch (Exception e)

@@ -58,7 +58,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 while (page <= pageCount)
                 {
                     var tempPatientAdverseEventExtracts =await
-                        _tempPatientAdverseEventExtractRepository.GetAll(query.ToString(), page, take);
+                        _tempPatientAdverseEventExtractRepository.ReadAll(query.ToString(), page, take);
 
                     var batch = tempPatientAdverseEventExtracts.ToList();
                     count += batch.Count;

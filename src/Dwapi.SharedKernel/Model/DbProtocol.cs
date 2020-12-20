@@ -84,6 +84,13 @@ namespace Dwapi.SharedKernel.Model
             return connectionString;
         }
 
+        public void AddConnectionTimeout()
+        {
+            if (AdvancedProperties.Contains("Connection Timeout=0"))
+                return;
+            AdvancedProperties = ";Connection Timeout=0";
+        }
+
         private string GetSql()
         {
             if (Id != new Guid("a6221aa4-0e85-11e8-ba89-0ed5f89f718b"))

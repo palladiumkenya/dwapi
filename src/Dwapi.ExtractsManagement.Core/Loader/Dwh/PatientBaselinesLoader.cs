@@ -59,7 +59,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 while (page <= pageCount)
                 {
                     var patientBaselinesExtracts =await
-                        _tempPatientBaselinesExtractRepository.GetAll(query.ToString(), page, take);
+                        _tempPatientBaselinesExtractRepository.ReadAll(query.ToString(), page, take);
 
                     var batch = patientBaselinesExtracts.ToList();
                     count += batch.Count;
