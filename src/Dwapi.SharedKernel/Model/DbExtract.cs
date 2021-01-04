@@ -76,11 +76,13 @@ namespace Dwapi.SharedKernel.Model
             return $@"select count(*) from ({ExtractSql.ToLower()})xt".ToLower();
         }
 
-        public void SetupDiffSql()
+        public void SetupDiffSql(DbProtocol dbProtocol)
         {
             if (AppConstants.DiffSupport)
                 return;
 
+            if (dbProtocol.Id != new Guid("a6221aa4-0e85-11e8-ba89-0ed5f89f718b"))
+                return;
 
             if (Name == "PatientStatusExtract")
             {
@@ -117,7 +119,7 @@ namespace Dwapi.SharedKernel.Model
 
             if (Name == "PatientArtExtract")
             {
-                 ExtractSql = @"
+                ExtractSql = @"
  select '' AS SatelliteName, 0 AS FacilityId, d.DOB,
        d.Gender, '' AS Provider,
        d.unique_patient_no as PatientID,
@@ -202,7 +204,7 @@ having min(hiv.visit_date) is not null and reg.art_start_date is not null;
 
             if (Name == "PatientExtract")
             {
-                 ExtractSql = @"
+                ExtractSql = @"
 select
 CASE WHEN prg.program='TB' THEN prg.status  ELSE null end  AS StatusAtTBClinic,
 CASE WHEN prg.program='PMTCT' THEN prg.status  ELSE null end  AS  StatusAtPMTCT,
@@ -327,7 +329,7 @@ order by d.patient_id;
 
             if (Name == "PatientBaselineExtract")
             {
-                 ExtractSql = @"
+                ExtractSql = @"
 select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select value_reference from location_attribute
@@ -407,7 +409,7 @@ order by m6cd4date desc
 
             if (Name == "PatientLabExtract")
             {
-                 ExtractSql = @"
+                ExtractSql = @"
 select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as patientID, d.patient_id as patientPK, l.encounter_id as visitID,
 CAST(l.visit_date AS DATE) as orderedByDate,CAST(l.visit_date AS DATE) as reportedByDate, null as reason, (select value_reference from location_attribute
 where location_id in (select property_value
@@ -443,7 +445,7 @@ and cn2.locale='en' where d.unique_patient_no is not null
 
             if (Name == "PatientPharmacyExtract")
             {
-                 ExtractSql = @"
+                ExtractSql = @"
 select distinct
 '' AS Provider,'' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
@@ -502,7 +504,7 @@ order by ph.patient_id,ph.visit_date;
 
             if (Name == "PatientVisitExtract")
             {
-                 ExtractSql = @"
+                ExtractSql = @"
 select distinct
 '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
@@ -610,7 +612,7 @@ where d.unique_patient_no is not null and fup.visit_date > '1990-01-01'
             if (Name == "PatientAdverseEventExtract")
             {
 
-                    ExtractSql = @"
+                ExtractSql = @"
 SELECT '' AS PatientID,
        '' AS PatientPK,
        '' AS SiteCode,
@@ -629,8 +631,6 @@ SELECT '' AS PatientID,
        '' AS AdverseEventIsPregnant,null as date_created,null as date_last_modified
 ";
             }
-
-
         }
 
         public override string ToString()

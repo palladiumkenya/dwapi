@@ -36,7 +36,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                 AppConstants.DiffSupport = _reader.CheckDiffSupport(dbProtocol);
                 AppConstants.DiffSupportChecked = true;
             }
-            extract.SetupDiffSql();
+            extract.SetupDiffSql(dbProtocol);
 
             int batch = 500;
 

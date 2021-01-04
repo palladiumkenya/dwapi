@@ -33,7 +33,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
         {
             AppConstants.DiffSupport = _reader.CheckDiffSupport(dbProtocol);
             AppConstants.DiffSupportChecked = true;
-            extract.SetupDiffSql();
+            extract.SetupDiffSql(dbProtocol);
 
             // TODO: PLEASE FIND OUT WHY LOADED COUNT
             int batch = 500;
