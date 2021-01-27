@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
@@ -286,9 +287,10 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             return responses;
         }
 
-        public void NotifyPostSending()
+        public async Task NotifyPostSending(string version)
         {
             DomainEvents.Dispatch(new DwhMessageNotification(false, $"Sending completed"));
+            await _mediator.Publish(new HandshakeEnd("CTSendEnd", version));
         }
     }
 }

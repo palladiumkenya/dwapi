@@ -2,6 +2,7 @@
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
 using Dwapi.ExtractsManagement.Core.Tests.TestArtifacts;
 using Dwapi.ExtractsManagement.Infrastructure;
@@ -12,13 +13,13 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Serilog;
 
-namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Mgs
+namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Mts
 {
     [TestFixture]
-    public class MetricMigrationLoaderTests
+    public class MtsMigrationLoaderTests
     {
-        private IMetricMigrationLoader _loader;
-        private IMetricMigrationSourceExtractor _extractor;
+        private IMtsMigrationLoader _loader;
+        private  IMetricMigrationSourceExtractor _extractor;
         private List<Extract> _extracts;
         private DbProtocol _protocol;
         private ExtractsContext _extractsContext;
@@ -38,7 +39,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Mgs
         [SetUp]
         public void SetUp()
         {
-            _loader = TestInitializer.ServiceProvider.GetService<IMetricMigrationLoader>();
+            _loader = TestInitializer.ServiceProvider.GetService<IMtsMigrationLoader>();
             _extractor = TestInitializer.ServiceProvider.GetService<IMetricMigrationSourceExtractor>();
             _extract = _extracts.First(x => x.Name.IsSameAs(nameof(MetricMigrationExtract)));
             _count = _extractor.Extract(_extract, _protocol).Result;

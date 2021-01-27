@@ -1367,6 +1367,30 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("MetricMigrationExtracts");
                 });
 
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Mts.IndicatorExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<string>("Indicator");
+
+                    b.Property<DateTime?>("IndicatorDate");
+
+                    b.Property<string>("IndicatorValue");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IndicatorExtracts");
+                });
+
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Diff.DiffLog", b =>
                 {
                     b.Property<Guid>("Id")
@@ -4754,6 +4778,24 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("vTempMetricMigrationExtractErrorSummary");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Mts.TempIndicatorExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<string>("Indicator");
+
+                    b.Property<DateTime?>("IndicatorDate");
+
+                    b.Property<string>("IndicatorValue");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempIndicatorExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.ValidationError", b =>

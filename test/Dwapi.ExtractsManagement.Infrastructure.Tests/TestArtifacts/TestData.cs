@@ -303,6 +303,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
       ^EmrSystemId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^,
       ^DocketId^: ^MGS^,
       ^DatabaseProtocolId^: ^A6221AA4-0E85-11E8-BA89-0ED5F89F718B^
+    },
+   {
+      ^Id^: ^48743EB0-6656-E811-8E16-9CB6D0DA773C^,
+      ^IsPriority^: true,
+      ^Rank^: 1.00,
+      ^Name^: ^IndicatorExtract^,
+      ^Display^: ^IndicatorExtract^,
+      ^ExtractSql^: ^SELECT indicator,indicator_value,indicator_date FROM temp_metrics^,
+      ^Destination^: ^IndicatorExtract^,
+      ^EmrSystemId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^,
+      ^DocketId^: ^MTS^,
+      ^DatabaseProtocolId^: ^A6221AA4-0E85-11E8-BA89-0ED5F89F718B^
     }
   ]
             ";

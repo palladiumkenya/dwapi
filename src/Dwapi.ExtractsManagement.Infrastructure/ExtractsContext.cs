@@ -5,12 +5,14 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Diff;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
+using Dwapi.ExtractsManagement.Core.Model.Source.Mts;
 using Dwapi.SharedKernel.Infrastructure;
 using LiveSeeder.Core;
 using Microsoft.EntityFrameworkCore;
@@ -125,9 +127,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempMetricMigrationExtractErrorSummary> TempMetricMigrationExtractErrorSummaries { get; set; }
 
         public DbSet<DiffLog> DiffLogs { get; set; }
+        public DbSet<TempIndicatorExtract> TempIndicatorExtracts { get; set; }
+        public DbSet<IndicatorExtract> IndicatorExtracts { get; set; }
+
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -281,6 +285,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<Validator>().Key(x => x.Id).Table($"{nameof(Validator)}");
             DapperPlusManager.Entity<DiffLog>().Key(x => x.Id).Table($"{nameof(DiffLogs)}");
             DapperPlusManager.Entity<ExtractHistory>().Key(x => x.Id).Table($"{nameof(ExtractHistory)}");
+            DapperPlusManager.Entity<IndicatorExtract>().Key(x => x.Id).Table($"{nameof(IndicatorExtracts)}");
+            DapperPlusManager.Entity<TempIndicatorExtract>().Key(x => x.Id).Table($"{nameof(TempIndicatorExtracts)}");
             // DapperPlusManager.MapperFactory = mapper => mapper.BatchTimeout(6000);
         }
 

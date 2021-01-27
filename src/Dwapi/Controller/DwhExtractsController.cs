@@ -34,6 +34,7 @@ namespace Dwapi.Controller
         private readonly ICbsSendService _cbsSendService;
         private readonly ICTSendService _ctSendService;
         private readonly IExtractRepository _extractRepository;
+        private readonly string _version;
 
         public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository)
         {
@@ -44,6 +45,8 @@ namespace Dwapi.Controller
             _ctSendService = ctSendService;
             _extractRepository = extractRepository;
             Startup.HubContext= _hubContext = hubContext;
+            var ver = GetType().Assembly.GetName().Version;
+            _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
         }
 
         [HttpPost("extract")]
@@ -115,12 +118,12 @@ namespace Dwapi.Controller
             {
                 if (!packageDto.SendMpi)
                 {
-                    var result = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage);
+                    var result = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage,_version);
                     return Ok(result);
                 }
 
                 var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage);
-                var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage);
+                var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage,_version);
                 return Ok();
             }
             catch (Exception e)
@@ -146,12 +149,12 @@ namespace Dwapi.Controller
             {
                 if (!packageDto.SendMpi)
                 {
-                    var result = await _dwhSendService.SendDiffManifestAsync(packageDto.DwhPackage);
+                    var result = await _dwhSendService.SendDiffManifestAsync(packageDto.DwhPackage,_version);
                     return Ok(result);
                 }
 
                 var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage);
-                var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage);
+                var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage,_version);
                 return Ok();
             }
             catch (Exception e)
@@ -218,6 +221,8 @@ namespace Dwapi.Controller
         [AutomaticRetry(Attempts = 0)]
         private void QueueDwh(SendManifestPackageDTO package)
         {
+
+
             var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
 
             if (extracts.Any())
@@ -232,7 +237,11 @@ namespace Dwapi.Controller
                 BatchJob.ContinueBatchWith(job1, x => { SendJobProfiles(package); });
 
             var jobEnd =
-                BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(); });
+                BatchJob.ContinueBatchWith(job2, x =>
+                {
+                    _ctSendService.NotifyPostSending(_version);
+
+                });
         }
 
         [AutomaticRetry(Attempts = 0)]
@@ -252,7 +261,7 @@ namespace Dwapi.Controller
                 BatchJob.ContinueBatchWith(job1, x => { SendDiffJobProfiles(package); });
 
             var jobEnd =
-                BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(); });
+                BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(_version); });
         }
 
         public void SendJobBaselines(SendManifestPackageDTO package)

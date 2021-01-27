@@ -50,6 +50,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     private _ndwhSenderService: NdwhSenderService;
 
     public load$: Subscription;
+    public loadMet$: Subscription;
     public loadRegistry$: Subscription;
     public send$: Subscription;
     public getStatus$: Subscription;
@@ -185,6 +186,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         summary: 'load was successful '
                     });
                     this.updateEvent();
+                    this.loadMet();
                 }
             );
 
@@ -254,6 +256,27 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
+    public loadMet(): void {
+
+        this.loadMet$ = this._ndwhExtractService
+            .loadMet()
+            .subscribe(
+                p => {
+
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error loading stats ',
+                        detail: <any>e
+                    });
+                },
+                () => {
+                }
+            );
+
+    }
 
     public send(): void {
         localStorage.clear();
@@ -697,6 +720,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.send$) {
             this.send$.unsubscribe();
+        }
+        if (this.loadMet$) {
+            this.loadMet$.unsubscribe();
         }
     }
 

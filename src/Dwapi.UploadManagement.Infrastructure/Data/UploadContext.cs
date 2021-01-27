@@ -4,6 +4,7 @@ using Dwapi.UploadManagement.Core.Model.Cbs;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 using Dwapi.UploadManagement.Core.Model.Hts;
 using Dwapi.UploadManagement.Core.Model.Mgs;
+using Dwapi.UploadManagement.Core.Model.Mts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dwapi.UploadManagement.Infrastructure.Data
@@ -34,6 +35,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<AppMetricView> AppMetrics { get; set; }
 
         public virtual DbSet<DiffLogView> DiffLogs { get; set; }
+        public virtual DbSet<IndicatorExtractView> IndicatorExtracts { get; set; }
 
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
