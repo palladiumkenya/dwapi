@@ -122,7 +122,7 @@ namespace Dwapi.Controller
                     return Ok(result);
                 }
 
-                var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage);
+                var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage,_version);
                 var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage,_version);
                 return Ok();
             }
@@ -153,7 +153,7 @@ namespace Dwapi.Controller
                     return Ok(result);
                 }
 
-                var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage);
+                var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage,_version);
                 var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage,_version);
                 return Ok();
             }

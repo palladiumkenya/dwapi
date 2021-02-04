@@ -26,65 +26,28 @@ namespace Dwapi.SettingsManagement.Core.Model
             var status = LogicStatus.None;
 
             if (LogicType == LogicType.AppVer)
-            {
-                status = subject.ToString() == Logic ? LogicStatus.Pass : LogicStatus.Fail;
-            }
+                status = subject == Logic ? LogicStatus.Pass : LogicStatus.Fail;
 
             if (LogicType == LogicType.DateDiff)
             {
-                DateTime intSubj = Convert.ToDateTime(subject);
-                var daysSinceLastRefresh = DateTime.Today.Subtract(intSubj).Days;
-                int intlogic = Convert.ToInt32(Logic);
-                status = daysSinceLastRefresh > intlogic ? LogicStatus.Pass : LogicStatus.Fail;
+                DateTime dateSubj = Convert.ToDateTime(subject);
+                var daysSinceLastRefresh = DateTime.Today.Subtract(dateSubj).Days;
+                int days = Convert.ToInt32(Logic);
+                status = daysSinceLastRefresh > days ? LogicStatus.Pass : LogicStatus.Fail;
             }
 
-            if (LogicType == LogicType.NumericGT)
+            if (LogicType == LogicType.Numeric)
             {
-                int intlogic = Convert.ToInt32(Logic);
                 int intSubj = Convert.ToInt32(subject);
-
-                status = intSubj >intlogic?  LogicStatus.Pass : LogicStatus.Fail;
-            }
-
-            if (LogicType == LogicType.NumericLT)
-            {
                 int intlogic = Convert.ToInt32(Logic);
-                int intSubj = Convert.ToInt32(subject);
-
-                status = intSubj < intlogic?  LogicStatus.Pass : LogicStatus.Fail;
+                status = intSubj > intlogic ? LogicStatus.Pass : LogicStatus.Fail;
             }
-
-            if (LogicType == LogicType.NumericEQ)
-            {
-                int intlogic = Convert.ToInt32(Logic);
-                int intSubj = Convert.ToInt32(subject);
-
-                status = intSubj == intlogic?  LogicStatus.Pass : LogicStatus.Fail;
-            }
-
             return new IntegrityCheckRun(status, Id);
         }
 
         public void UpdateLogic(string logic)
         {
             Logic = logic;
-        }
-    }
-
-    public class IntegrityCheckRun:Entity<Guid>
-    {
-        public Guid IntegrityCheckId { get; set; }
-        public DateTime RunDate { get; set; }
-        public LogicStatus RunStatus { get; set; }
-
-        public IntegrityCheckRun()
-        {
-        }
-        public IntegrityCheckRun(LogicStatus runStatus,Guid integrityCheckId)
-        {
-            IntegrityCheckId = integrityCheckId;
-            RunStatus = runStatus;
-            RunDate=DateTime.Now;
         }
     }
 }

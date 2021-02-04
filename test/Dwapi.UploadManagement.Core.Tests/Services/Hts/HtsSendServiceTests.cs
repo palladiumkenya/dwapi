@@ -45,7 +45,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Hts
             _sendService.Client = new HttpClient(_manifestHandlerMock.Object);
             var sendTo = new SendManifestPackageDTO(_registry);
 
-            var responses = _sendService.SendManifestAsync(sendTo).Result;
+            var responses = _sendService.SendManifestAsync(sendTo,"v1").Result;
 
             Assert.NotNull(responses);
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));

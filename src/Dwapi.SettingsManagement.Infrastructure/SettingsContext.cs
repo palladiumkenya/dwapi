@@ -14,10 +14,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
         public SettingsContext(DbContextOptions<SettingsContext> options) : base(options)
         {
         }
-
-
         public DbSet<CentralRegistry> CentralRegistries { get; set; }
-
         public DbSet<EmrSystem> EmrSystems { get; set; }
         public DbSet<DatabaseProtocol> DatabaseProtocols { get; set; }
         public DbSet<RestProtocol> RestProtocols { get; set; }
@@ -25,6 +22,8 @@ namespace Dwapi.SettingsManagement.Infrastructure
         public DbSet<Docket> Dockets { get; set; }
         public DbSet<Extract> Extracts { get; set; }
         public DbSet<AppMetric> AppMetrics { get; set; }
+        public DbSet<IntegrityCheck> IntegrityChecks { get; set; }
+        public DbSet<IntegrityCheckRun> IntegrityCheckRuns { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,7 +36,8 @@ namespace Dwapi.SettingsManagement.Infrastructure
             DapperPlusManager.Entity<Docket>().Key(x => x.Id).Table($"{nameof(Dockets)}");
             DapperPlusManager.Entity<Extract>().Key(x => x.Id).Table($"{nameof(Extracts)}");
             DapperPlusManager.Entity<AppMetric>().Key(x => x.Id).Table($"{nameof(AppMetrics)}");
-
+            DapperPlusManager.Entity<IntegrityCheck>().Key(x => x.Id).Table($"{nameof(IntegrityChecks)}");
+            DapperPlusManager.Entity<IntegrityCheckRun>().Key(x => x.Id).Table($"{nameof(IntegrityCheckRuns)}");
         }
 
         public override void EnsureSeeded()
@@ -80,6 +80,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
             });
 
             this.SeedNewOnly<Extract>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Extracts)}").Wait();
+            this.SeedMerge<IntegrityCheck>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(IntegrityChecks)}").Wait();
         }
     }
 }

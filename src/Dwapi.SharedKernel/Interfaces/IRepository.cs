@@ -19,6 +19,7 @@ namespace Dwapi.SharedKernel.Interfaces
         Task<IPagedList<T>> GetAll(string sql, int? page, int pageSize);
         Task<IPagedList<T>> GetAll(Expression<Func<T, bool>> predicate,int? page, int pageSize);
         void Create(T entity);
+        void Create<TC>(List<TC> entity);
         void CreateBatch(List<T> entity);
         void Update(T entity);
         void CreateOrUpdate(T entity);

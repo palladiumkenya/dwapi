@@ -83,6 +83,14 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             }
         }
 
+        public void Create<TC>(List<TC> entity)
+        {
+            if (null != entity)
+            {
+                Context.Database.GetDbConnection().BulkInsert(entity);
+            }
+        }
+
         public void CreateBatch(List<T> entity)
         {
             if (entity.Any())

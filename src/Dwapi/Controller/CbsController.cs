@@ -29,7 +29,7 @@ namespace Dwapi.Controller
         private readonly IMasterPatientIndexRepository _masterPatientIndexRepository;
         private readonly ICbsSendService _cbsSendService;
         private readonly IMpiSearchService _mpiSearchService;
-
+        private readonly string _version;
 
         public CbsController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<CbsActivity> hubContext, IMasterPatientIndexRepository masterPatientIndexRepository,
@@ -42,6 +42,8 @@ namespace Dwapi.Controller
             _mpiSearchService = mpiSearchService;
             Startup.CbsSendHubContext= _hubSendContext = hubSendContext;
             Startup.CbsHubContext = _hubContext = hubContext;
+            var ver = GetType().Assembly.GetName().Version;
+            _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
         }
 
 
@@ -168,7 +170,7 @@ namespace Dwapi.Controller
 
             try
             {
-                await _cbsSendService.SendManifestAsync(packageDTO);
+                await _cbsSendService.SendManifestAsync(packageDTO,_version);
                 return Ok();
             }
             catch (Exception e)

@@ -24,7 +24,7 @@ namespace Dwapi.Controller
         private readonly IHubContext<HtsActivity> _hubContext;
         private readonly IHubContext<HtsSendActivity> _hubSendContext;
         private readonly IHtsSendService _htsSendService;
-
+        private readonly string _version;
         public HtsController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<HtsActivity> hubContext, IHtsSendService htsSendService,
             IHubContext<HtsSendActivity> hubSendContext)
@@ -34,6 +34,8 @@ namespace Dwapi.Controller
             _htsSendService = htsSendService;
             Startup.HtsSendHubContext = _hubSendContext = hubSendContext;
             Startup.HtsHubContext = _hubContext = hubContext;
+            var ver = GetType().Assembly.GetName().Version;
+            _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
         }
 
         [HttpPost("extractAll")]
@@ -86,7 +88,7 @@ namespace Dwapi.Controller
 
             try
             {
-                var result = await _htsSendService.SendManifestAsync(packageDto);
+                var result = await _htsSendService.SendManifestAsync(packageDto,_version);
                 return Ok(result);
             }
             catch (Exception e)

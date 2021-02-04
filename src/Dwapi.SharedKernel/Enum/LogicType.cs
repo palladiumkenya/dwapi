@@ -4,9 +4,7 @@ namespace Dwapi.SharedKernel.Enum
     {
         None,
         AppVer,
-        NumericGT,
-        NumericLT,
-        NumericEQ,
+        Numeric,
         DateDiff
     }
 }
