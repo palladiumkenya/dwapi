@@ -65,7 +65,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private readonly ExtractEventDTO _patientStatusExtractStatus;
         private readonly ExtractEventDTO _patientVisitExtractStatus;
         private readonly ExtractEventDTO _patientAdverseEventExtractStatus;
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
 
         public HttpClient Client { get; set; }
 

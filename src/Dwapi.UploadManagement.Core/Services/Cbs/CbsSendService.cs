@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
@@ -16,6 +17,8 @@ using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Notifications.Cbs;
+using Dwapi.UploadManagement.Core.Notifications.Dwh;
+using MediatR;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -25,18 +28,20 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
     {
         private readonly string _endPoint;
         private readonly ICbsPackager _packager;
+        private readonly IMediator _mediator;
 
         public HttpClient Client { get; set; }
 
-        public CbsSendService(ICbsPackager packager)
+        public CbsSendService(ICbsPackager packager, IMediator mediator)
         {
             _packager = packager;
+            _mediator = mediator;
             _endPoint = "api/cbs/";
         }
 
-        public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
+        public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,string version)
         {
-            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
+            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()),version);
         }
 
         public Task<List<SendMpiResponse>> SendMpiAsync(SendManifestPackageDTO sendTo)
@@ -44,10 +49,10 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
             return SendMpiAsync(sendTo, MpiMessageBag.Create(_packager.GenerateDtoMpi().ToList()));
         }
 
-        public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage)
+        public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage,string version)
         {
             var responses=new List<SendManifestResponse>();
-
+            await _mediator.Publish(new HandshakeStart("MPISendStart", version));
             var client = Client ?? new HttpClient();
 
             foreach (var message in manifestMessage.Messages)
@@ -123,6 +128,11 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
             DomainEvents.Dispatch(new CbsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
             return responses;
+        }
+
+        public async Task NotifyPostSending(string version)
+        {
+            await _mediator.Publish(new HandshakeEnd("MPISendEnd", version));
         }
     }
 }

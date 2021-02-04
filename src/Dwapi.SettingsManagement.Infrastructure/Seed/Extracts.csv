@@ -4056,4 +4056,227 @@ left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach
  "|DWHStage|1|HtsPartnerNotificationServices|7|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
 ec3d7e40-bb10-11ea-b3de-0242ac130004|Migration|MGS|a6221860-0e85-11e8-ba89-0ed5f89f718b|"SELECT ID as MetricId,Dataset,Metric,MetricValue,Stage,SiteCode,Emr,FacilityName,'KenyaHMIS' as Project,CreateDate FROM DWAPI_Migration_Metrics"|MgsStage|1|MetricMigrationExtract|1|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
 
-ec3d7e41-bb10-11ea-b3de-0242ac130004|Indicators|MTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT indicator,indicator_value as indicatorvalue,indicator_date as indicatordate FROM kenyaemr_etl.temp_metrics"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+ec3d7e41-bb10-11ea-b3de-0242ac130004|Indicators|MTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"(select 'TX_CURR' as INDICATOR,count(t.patient_id) as 'INDICATOR_VALUE',
+           date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE'
+    from(
+            select fup.visit_date,fup.patient_id, max(e.visit_date) as enroll_date,
+                   greatest(max(e.visit_date), ifnull(max(date(e.transfer_in_date)),'0000-00-00')) as latest_enrolment_date,
+                   greatest(max(fup.visit_date), ifnull(max(d.visit_date),'0000-00-00')) as latest_vis_date,
+                   greatest(mid(max(concat(fup.visit_date,fup.next_appointment_date)),11), ifnull(max(d.visit_date),'0000-00-00')) as latest_tca,
+                   d.patient_id as disc_patient,
+                   d.effective_disc_date as effective_disc_date,
+                   max(d.visit_date) as date_discontinued,
+                   de.patient_id as started_on_drugs
+            from kenyaemr_etl.etl_patient_hiv_followup fup
+                     join kenyaemr_etl.etl_patient_demographics p on p.patient_id=fup.patient_id
+                     join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id
+                     left outer join kenyaemr_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program='HIV' and date(date_started) <= date(last_day(date_sub(current_date(),interval  1 MONTH)))
+                     left outer JOIN
+                 (select patient_id, coalesce(date(effective_discontinuation_date),visit_date) visit_date,max(date(effective_discontinuation_date)) as effective_disc_date from kenyaemr_etl.etl_patient_program_discontinuation
+                  where date(visit_date) <= date(last_day(date_sub(current_date(),interval  1 MONTH))) and program_name='HIV'
+                  group by patient_id
+                 ) d on d.patient_id = fup.patient_id
+            where fup.visit_date <= last_day(date_sub(current_date(),interval  1 MONTH))
+            group by patient_id
+            having (started_on_drugs is not null and started_on_drugs <> '') and (
+                (
+                        ((timestampdiff(DAY,date(latest_tca),last_day(date_sub(current_date(),interval  1 MONTH))) <= 30 or timestampdiff(DAY,date(latest_tca),date(curdate())) <= 30)
+                            and (date(d.effective_disc_date) > date(last_day(date_sub(current_date(),interval  1 MONTH))) or d.effective_disc_date is null))
+                        and (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or disc_patient is null)
+                    )
+                )
+        ) t
+)
+UNION
+(
+#TX_NEW
+    select 'TX_NEW' as INDICATOR,count(net.patient_id) as INDICATOR_VALUE,date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE'
+    from (
+             select e.patient_id,e.date_started,
+                    d.visit_date as dis_date,
+                    if(d.visit_date is not null, 1, 0) as TOut,
+                    e.regimen, e.regimen_line, e.alternative_regimen,
+                    mid(max(concat(fup.visit_date,fup.next_appointment_date)),11) as latest_tca,
+                    max(if(enr.date_started_art_at_transferring_facility is not null and enr.facility_transferred_from is not null, 1, 0)) as TI_on_art,
+                    max(if(enr.transfer_in_date is not null, 1, 0)) as TIn,
+                    max(fup.visit_date) as latest_vis_date
+             from (select e.patient_id, min(e.date_started) as date_started,
+                          mid(min(concat(e.date_started,e.regimen_name)),11) as regimen,
+                          mid(min(concat(e.date_started,e.regimen_line)),11) as regimen_line,
+                          max(if(discontinued,1,0))as alternative_regimen
+                   from kenyaemr_etl.etl_drug_event e
+                            join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id
+                   where e.program = 'HIV'
+                   group by e.patient_id) e
+                      left outer join kenyaemr_etl.etl_patient_program_discontinuation d on d.patient_id=e.patient_id
+                      left outer join kenyaemr_etl.etl_hiv_enrollment enr on enr.patient_id=e.patient_id
+                      left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=e.patient_id
+             where date(e.date_started) between DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -1 MONTH) and date(last_day(date_sub(current_date(),interval 1 MONTH)))
+             group by e.patient_id
+             having TI_on_art=0
+         )net
+)
+UNION
+(
+#ETL refresh
+    SELECT replace(script_name,'scheduled_updates','EMR_ETL_Refresh'), stop_time as 'INDICATOR_VALUE',DATE_FORMAT(stop_time,'%Y%b%d') as 'INDICATOR_MONTH'
+    FROM kenyaemr_etl.etl_script_status s where s.error is null and script_name='scheduled_updates'
+    order by INDICATOR_VALUE desc
+    limit 1
+)
+UNION
+(
+#HTS_TESTED_POS
+    select 'HTS_TST_POS' AS 'INDICATOR', count(t.patient_id) as 'INDICATOR_VALUE',date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE' from  kenyaemr_etl.etl_hts_test t
+                                                                                                                                                                                          inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id=t.patient_id
+    where t.voided=0 and date(t.visit_date) between DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -1 MONTH) and date(last_day(date_sub(current_date(),interval 1 MONTH))) and t.test_type=2 and t.final_test_result='Positive'
+    group by t.patient_id
+)
+UNION
+(
+#HTS-Linked
+    select 'HTS_LINKED' AS 'INDICATOR', count(r.patient_id) as 'INDICATOR_VALUE',date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE'
+    from kenyaemr_etl.etl_hts_referral_and_linkage r
+             inner join kenyaemr_etl.etl_hts_test t on r.patient_id = t.patient_id and t.final_test_result = 'Positive'
+    where (r.ccc_number !=''  and r.ccc_number IS NOT NULL) and (r.facility_linked_to !='' and r.facility_linked_to IS NOT NULL)
+      and t.visit_date between date_sub(date(last_day(date_sub(current_date(),interval 1 MONTH))) , interval 3 MONTH) and  date(last_day(date_sub(current_date(),interval 1 MONTH)))
+)
+UNION
+(
+#MMD
+    select 'MMD' AS 'INDICATOR', count(t.patient_id) as 'INDICATOR_VALUE',date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE'
+    from(
+            select fup.visit_date,fup.patient_id, max(e.visit_date) as enroll_date,
+                   greatest(max(e.visit_date), ifnull(max(date(e.transfer_in_date)),'0000-00-00')) as latest_enrolment_date,
+                   greatest(max(fup.visit_date), ifnull(max(d.visit_date),'0000-00-00')) as latest_vis_date,
+                   greatest(mid(max(concat(fup.visit_date,fup.next_appointment_date)),11), ifnull(max(d.visit_date),'0000-00-00')) as latest_tca,
+                   d.patient_id as disc_patient,
+                   d.effective_disc_date as effective_disc_date,
+                   max(d.visit_date) as date_discontinued,
+                   de.patient_id as started_on_drugs
+            from kenyaemr_etl.etl_patient_hiv_followup fup
+                     join kenyaemr_etl.etl_patient_demographics p on p.patient_id=fup.patient_id
+                     join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id
+                     left outer join kenyaemr_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program='HIV' and date(date_started) <= date(last_day(date_sub(current_date(),interval 1 MONTH)))
+                     left outer JOIN
+                 (select patient_id, coalesce(date(effective_discontinuation_date),visit_date) visit_date,max(date(effective_discontinuation_date)) as effective_disc_date from kenyaemr_etl.etl_patient_program_discontinuation
+                  where date(visit_date) <= date(last_day(date_sub(current_date(),interval 1 MONTH))) and program_name='HIV'
+                  group by patient_id
+                 ) d on d.patient_id = fup.patient_id
+            where fup.visit_date <= date(last_day(date_sub(current_date(),interval 1 MONTH)))
+            group by patient_id
+            having (started_on_drugs is not null and started_on_drugs <> '') and (
+                    ((timestampdiff(DAY,date(latest_tca),date(last_day(date_sub(current_date(),interval 1 MONTH)))) <= 30 or timestampdiff(DAY,date(latest_tca),date(curdate())) <= 30) and (date(d.effective_disc_date) > date(last_day(date_sub(current_date(),interval 1 MONTH))) or d.effective_disc_date is null))
+                    and (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or disc_patient is null)
+                )
+               and timestampdiff(month,greatest(max(fup.visit_date), ifnull(max(d.visit_date),'0000-00-00')),greatest(mid(max(concat(fup.visit_date,fup.next_appointment_date)),11), ifnull(max(d.visit_date),'0000-00-00'))) >1
+        ) t
+)
+UNION
+(
+#HTS_Index
+    select 'HTS_INDEX' AS 'INDICATOR', count(c.patient_related_to) as 'INDICATOR_VALUE',date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE'
+    from openmrs.kenyaemr_hiv_testing_patient_contact c inner join kenyaemr_etl.etl_hts_test t
+                                                                   on c.patient_related_to = t.patient_id where c.relationship_type in(971, 972, 1528, 162221, 163565, 970, 5617)
+                                                                                                            and t.final_test_result = "Positive" and t.voided=0 and c.voided = 0 and t.test_type = 2 and date(c.date_created)
+            between date_sub(date(last_day(date_sub(current_date(),interval 1 MONTH))), INTERVAL  3 MONTH )and date(last_day(date_sub(current_date(),interval 1 MONTH))) group by t.patient_id
+)
+UNION
+(
+#TX_PVLS
+    select 'TX_PVLS' AS 'INDICATOR', count(distinct patient_id) as 'INDICATOR_VALUE',date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE'
+    from kenyaemr_etl.etl_laboratory_extract
+    where (visit_date BETWEEN date_sub(date(last_day(date_sub(current_date(),interval 1 MONTH))) , interval 12 MONTH) and date(last_day(date_sub(current_date(),interval 1 MONTH))))
+      and (lab_test in (856, 1305))
+)
+UNION
+(
+#HTS_Index_Pos
+    select 'HTS_INDEX_POS' AS 'INDICATOR', count(c.patient_id) as 'INDICATOR_VALUE',date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE'
+    from openmrs.kenyaemr_hiv_testing_patient_contact c inner join kenyaemr_etl.etl_hts_test t on c.patient_id = t.patient_id
+    where (c.relationship_type in(971, 972, 1528, 162221, 163565, 970, 5617)) and c.voided = 0 and t.voided =0
+    group by c.patient_id
+    having mid(max(concat(t.visit_date,t.final_test_result)),11) = 'Positive'
+       and max(t.visit_date) between date_sub( date(last_day(date_sub(current_date(),interval 1 MONTH))), INTERVAL  3 MONTH )and date(last_day(date_sub(current_date(),interval 1 MONTH)))
+)
+UNION
+(
+#TX_RTT
+    select 'TX_RTT' AS 'INDICATOR', count(k.patient_id) as 'INDICATOR_VALUE',date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE' from (select e.patient_id,e.latest_tca,e.latest_vis_date,e.date_discontinued,f.visit_date as rtt_date,mid(max(concat(r.visit_date,r.next_appointment_date)),11) as ltca_after_return
+                                                                                                                                                                                 from (
+                                                                                                                                                                                          select fup.visit_date,fup.patient_id, min(e.visit_date) as enroll_date,
+                                                                                                                                                                                                 max(fup.visit_date) as latest_vis_date,
+                                                                                                                                                                                                 mid(max(concat(fup.visit_date,fup.next_appointment_date)),11) as latest_tca,
+                                                                                                                                                                                                 date_sub(DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -3 month), INTERVAL 30 DAY),
+                                                                                                                                                                                                 datediff(date_sub(DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -3 month), INTERVAL 30 DAY), date(mid(max(concat(fup.visit_date,fup.next_appointment_date)),11))) as 'start_date-30 - ltca' ,
+                                                                                                                                                                                                 max(d.visit_date) as date_discontinued,
+                                                                                                                                                                                                 d.patient_id as disc_patient
+                                                                                                                                                                                          from kenyaemr_etl.etl_patient_hiv_followup fup
+                                                                                                                                                                                                   join kenyaemr_etl.etl_patient_demographics p on p.patient_id=fup.patient_id
+                                                                                                                                                                                                   join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id
+                                                                                                                                                                                                   left outer JOIN
+                                                                                                                                                                                               (select patient_id, visit_date from kenyaemr_etl.etl_patient_program_discontinuation
+                                                                                                                                                                                                where date(visit_date) <= date_sub(DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -3 month), INTERVAL 30 DAY)  and program_name='HIV'
+                                                                                                                                                                                                group by patient_id -- check if this line is necessary
+                                                                                                                                                                                               ) d on d.patient_id = fup.patient_id
+                                                                                                                                                                                          where fup.visit_date <= date_sub(DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -3 month), INTERVAL 30 DAY)
+                                                                                                                                                                                          group by patient_id
+                                                                                                                                                                                          having (
+                                                                                                                                                                                                         (((date(latest_tca) < date_sub(DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -3 month), INTERVAL 30 DAY)) and (date(latest_vis_date) < date(latest_tca))) ) and ((date(latest_tca) > date(date_discontinued) and date(latest_vis_date) > date(date_discontinued)) or disc_patient is null))
+                                                                                                                                                                                      ) e inner join kenyaemr_etl.etl_patient_hiv_followup f on f.patient_id=e.patient_id and date(f.visit_date) between date(latest_tca) and date(last_day(date_sub(current_date(),interval 1 MONTH)))
+                                                                                                                                                                                          inner join kenyaemr_etl.etl_patient_hiv_followup r on r.patient_id=e.patient_id and date(r.visit_date) between date(DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -3 month)) and date(last_day(date_sub(current_date(),interval 1 MONTH)))
+                                                                                                                                                                                 group by e.patient_id)k
+)
+UNION
+(
+#TX_ML
+    select 'TX_ML' AS 'INDICATOR', count(tx_ml.patient_id) as 'INDICATOR_VALUE',date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE'
+    from (select t.patient_id,t.date_started,t.latest_vis_date,t.latest_tca from(
+                                                                                    select fup.visit_date,fup.patient_id, min(e.visit_date) as enroll_date,
+                                                                                           max(fup.visit_date) as latest_vis_date,
+                                                                                           mid(max(concat(fup.visit_date,fup.next_appointment_date)),11) as latest_tca,
+                                                                                           max(d.visit_date) as date_discontinued,
+                                                                                           d.patient_id as disc_patient,
+                                                                                           de.patient_id as started_on_drugs,
+                                                                                           de.date_started
+                                                                                    from kenyaemr_etl.etl_patient_hiv_followup fup
+                                                                                             join kenyaemr_etl.etl_patient_demographics p on p.patient_id=fup.patient_id
+                                                                                             join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id
+                                                                                             left outer join kenyaemr_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program='HIV' and date(date_started) <= date(last_day(date_sub(current_date(),interval 1 MONTH)))
+                                                                                             left outer JOIN
+                                                                                         (select patient_id, visit_date from kenyaemr_etl.etl_patient_program_discontinuation
+                                                                                          where visit_date <= date_sub(date(last_day(date_sub(current_date(),interval 1 MONTH))),INTERVAL 3 MONTH) and program_name='HIV'
+                                                                                          group by patient_id
+                                                                                         ) d on d.patient_id = fup.patient_id
+                                                                                    where fup.visit_date <= date(last_day(date_sub(current_date(),interval 1 MONTH)))
+                                                                                    group by patient_id
+                                                                                    having (started_on_drugs is not null and started_on_drugs <> '') and (
+                                                                                        ( (disc_patient is null and date_add(date(latest_tca), interval 30 DAY)  >= date_sub(date(last_day(date_sub(current_date(),interval 1 MONTH))),INTERVAL 3 MONTH)) or (date(latest_tca) > date(date_discontinued) and date(latest_vis_date)> date(date_discontinued) and date_add(date(latest_tca), interval 30 DAY)  >= date_sub(date(last_day(date_sub(current_date(),interval 1 MONTH))), INTERVAL 3 MONTH)))
+                                                                                        )
+                                                                                ) t
+                                                                                    inner join
+                                                                                (
+                                                                                    select fup.visit_date,fup.patient_id, min(e.visit_date) as enroll_date,
+                                                                                           max(fup.visit_date) as latest_vis_date,
+                                                                                           mid(max(concat(fup.visit_date,fup.next_appointment_date)),11) as latest_tca,
+                                                                                           max(d.visit_date) as date_discontinued,
+                                                                                           d.patient_id as disc_patient
+                                                                                    from kenyaemr_etl.etl_patient_hiv_followup fup
+                                                                                             join kenyaemr_etl.etl_patient_demographics p on p.patient_id=fup.patient_id
+                                                                                             join kenyaemr_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id
+                                                                                             left outer JOIN
+                                                                                         (select patient_id, visit_date from kenyaemr_etl.etl_patient_program_discontinuation
+                                                                                          where visit_date <= date(last_day(date_sub(current_date(),interval 1 MONTH)))  and program_name='HIV'
+                                                                                          group by patient_id
+                                                                                         ) d on d.patient_id = fup.patient_id
+                                                                                    where fup.visit_date <= date(last_day(date_sub(current_date(),interval 1 MONTH)))
+                                                                                    group by patient_id
+                                                                                    having (
+                                                                                                   (((date(latest_tca) < date(last_day(date_sub(current_date(),interval 1 MONTH)))) and (date(latest_vis_date) < date(latest_tca))) ) and ((date(latest_tca) > date(date_discontinued) and date(latest_vis_date) > date(date_discontinued)) or disc_patient is null ) and datediff(date(last_day(date_sub(current_date(),interval 1 MONTH))), date(latest_tca)) between 1 and 90)
+                                                                                ) e on t.patient_id = e.patient_id) tx_ml
+             left outer join
+         (select dt.patient_id from kenyaemr_etl.etl_ccc_defaulter_tracing dt where dt.is_final_trace =1267 and dt.true_status =5240 and date(dt.visit_date) between DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -1 month) and date(last_day(date_sub(current_date(),interval 1 MONTH))) group by dt.patient_id )dt on tx_ml.patient_id = dt.patient_id
+             left outer join
+         (select d.patient_id from kenyaemr_etl.etl_patient_program_discontinuation d group by d.patient_id having mid(max(concat(date(d.visit_date),d.discontinuation_reason)),11)=5240 and max(date(d.visit_date)) between DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -1 month) and date(last_day(date_sub(current_date(),interval 1 MONTH))))dis on tx_ml.patient_id = dis.patient_id
+    where (dis.patient_id is not null or dt.patient_id is not null or datediff(date(last_day(date_sub(current_date(),interval 1 MONTH))), date(tx_ml.latest_tca))>30) and datediff(tx_ml.latest_vis_date,tx_ml.date_started) >0
+)"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
