@@ -50,12 +50,12 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mts
             //Load
             int loaded = await _migrationLoader.Load(request.Extract.Id, found);
 
-            int rejected =
+            //int rejected =
                // TODO: CHECK MGS Rejection
-               _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract,false);
+              // _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract,false);
 
 
-            _extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected,request.Extract,false);
+            //_extractHistoryRepository.ProcessExcluded(request.Extract.Id, rejected,request.Extract,false);
 
             //notify loaded
            /* DomainEvents.Dispatch(

@@ -5,10 +5,12 @@ using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Mgs;
 using Dwapi.Models;
+using Dwapi.SettingsManagement.Core.Application.Checks.Commands;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Mgs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Mts;
@@ -53,6 +55,9 @@ namespace Dwapi.Controller
             await _mediator.Publish(new ExtractLoaded("MetricService", version));
 
             var result = await _mediator.Send(request.LoadMtsFromEmrCommand, HttpContext.RequestAborted);
+
+            await _mediator.Send(new PerformCheck(emr.Id, CheckStage.PreSend));
+
             return Ok(result);
         }
     }

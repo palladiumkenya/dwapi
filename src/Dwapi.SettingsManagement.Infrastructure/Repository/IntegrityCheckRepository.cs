@@ -16,7 +16,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 
         public void Clear()
         {
-            var sql = @$"delete from from {nameof(SettingsContext.IntegrityCheckRuns)}";
+            var sql = $@"delete from from {nameof(SettingsContext.IntegrityCheckRuns)}";
             ExecCommand(sql);
         }
 
