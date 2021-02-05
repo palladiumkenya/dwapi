@@ -22,18 +22,18 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mts
 {
     public class ExtractMtsHandler :IRequestHandler<ExtractMts,bool>
     {
-        private readonly IIndicatorSourceExtractor _metricMigrationSourceExtractor;
+        private readonly IIndicatorSourceExtractor _indicatorSourceExtractor;
         private readonly IMetricExtractValidator _extractValidator;
         private readonly IMtsMigrationLoader _migrationLoader;
-        private readonly ITempIndicatorExtractRepository _tempMetricMigrationExtractRepository;
+        private readonly ITempIndicatorExtractRepository _tempIndicatorExtractRepository;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractMtsHandler(IIndicatorSourceExtractor metricMigrationSourceExtractor, IMetricExtractValidator extractValidator, IMtsMigrationLoader migrationLoader, ITempIndicatorExtractRepository tempMetricMigrationExtractRepository, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractMtsHandler(IIndicatorSourceExtractor indicatorSourceExtractor, IMetricExtractValidator extractValidator, IMtsMigrationLoader migrationLoader, ITempIndicatorExtractRepository tempIndicatorExtractRepository, IExtractHistoryRepository extractHistoryRepository)
         {
-            _metricMigrationSourceExtractor = metricMigrationSourceExtractor;
+            _indicatorSourceExtractor = indicatorSourceExtractor;
             _extractValidator = extractValidator;
             _migrationLoader = migrationLoader;
-            _tempMetricMigrationExtractRepository = tempMetricMigrationExtractRepository;
+            _tempIndicatorExtractRepository = tempIndicatorExtractRepository;
             _extractHistoryRepository = extractHistoryRepository;
         }
 
@@ -41,7 +41,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mts
         {
 
             //Extract
-            int found = await _metricMigrationSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            int found = await _indicatorSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
 
             //Validate

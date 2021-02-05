@@ -1,0 +1,8 @@
+Id,Name,Description,Message,LogicType,Logic,Stage,Docket,EmrSystemId
+d05864e8-678a-11eb-ae93-0242ac130002,AppVersion,AppVersion,DWAPI version {0} check,1,,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
+d0586c5e-678a-11eb-ae93-0242ac130002,EMR_ETL_Refresh,EMR_ETL_Refresh,{0} Days since Last EMR ETL refresh,3,5,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
+d0586d6c-678a-11eb-ae93-0242ac130002,TX_CURR,TX_CURR,Tx Curr check,2,0,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
+d0586e3e-678a-11eb-ae93-0242ac130002,Last_Encounter_Date,Last_Encounter_Date,{0} Days since Last EMR Encounter,3,5,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
+d0586f06-678a-11eb-ae93-0242ac130002,LastLoginDate,Last_Login_Date,{0} Days since Last EMR Login,3,5,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
+d0586f07-678a-11eb-ae93-0242ac130002,MFL_Change,MFL_Change,{0} changes to MFL Code,2,0,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
+

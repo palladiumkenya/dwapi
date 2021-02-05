@@ -554,6 +554,8 @@ namespace Dwapi
             services.AddScoped<IMtsPackager, MtsPackager>();
             services.AddScoped<IMtsSendService, MtsSendService>();
 
+            services.AddScoped<IIntegrityCheckRepository, IntegrityCheckRepository>();
+
 
             var container = new Container();
             container.Populate(services);

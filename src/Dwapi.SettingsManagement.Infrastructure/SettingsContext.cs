@@ -80,7 +80,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
             });
 
             this.SeedNewOnly<Extract>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Extracts)}").Wait();
-            this.SeedMerge<IntegrityCheck>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(IntegrityChecks)}").Wait();
+            this.SeedMerge<IntegrityCheck>(typeof(SettingsContext).Assembly, ",", "Seed", $"{nameof(IntegrityChecks)}").Wait();
         }
     }
 }

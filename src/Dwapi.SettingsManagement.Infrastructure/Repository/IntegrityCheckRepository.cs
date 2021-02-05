@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
@@ -16,21 +17,21 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 
         public void Clear()
         {
-            var sql = $@"delete from from {nameof(SettingsContext.IntegrityCheckRuns)}";
+            var sql = $@"delete from {nameof(SettingsContext.IntegrityCheckRuns)}";
             ExecCommand(sql);
         }
 
         public IEnumerable<IndicatorDto> LoadIndicators()
         {
             var sql = @"select Indicator,IndicatorValue from IndicatorExtracts";
-            var indicators = ExecQuery<IEnumerable<IndicatorDto>>(sql).ToList();
+            var indicators = GetConnection().Query<IndicatorDto>(sql);
             return indicators;
         }
 
         public IEnumerable<MetricDto> LoadMetices()
         {
             var sql = @"select * from EmrMetrics";
-            var metrics = ExecQuery<IEnumerable<MetricDto>>(sql).ToList();
+            var metrics = GetConnection().Query<MetricDto>(sql).ToList();
             return metrics;
         }
     }
