@@ -23,32 +23,36 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests.TestArtifacts
          public static List<IntegrityCheckRun> GenerateChecks()
          {
              var raw = @"
-                [
-                  {
-                    ^Id^: ^55ebfb50-4add-4804-bb66-acc600d4343f^,
-                    ^IntegrityCheckId^: ^d05864e8-678a-11eb-ae93-0242ac130002^,
-                    ^RunDate^: ^2021-02-05 15:52:36.687493^,
-                    ^RunStatus^: 2
-                  },
-                  {
-                    ^Id^: ^950e5f5a-a6c0-4972-a563-acc600d43440^,
-                    ^IntegrityCheckId^: ^d0586c5e-678a-11eb-ae93-0242ac130002^,
-                    ^RunDate^: ^2021-02-05 15:52:36.689281^,
-                    ^RunStatus^: 2
-                  },
-                  {
-                    ^Id^: ^b2e27cfb-5751-472a-9e3a-acc600d43440^,
-                    ^IntegrityCheckId^: ^d0586e3e-678a-11eb-ae93-0242ac130002^,
-                    ^RunDate^: ^2021-02-05 15:52:36.689442^,
-                    ^RunStatus^: 1
-                  },
-                  {
-                    ^Id^: ^eef9b456-eaa3-4379-8587-acc600d43440^,
-                    ^IntegrityCheckId^: ^d0586d6c-678a-11eb-ae93-0242ac130002^,
-                    ^RunDate^: ^2021-02-05 15:52:36.689766^,
-                    ^RunStatus^: 1
-                  }
-                ]
+[
+  {
+    ^Id^: ^4a63929e-5c15-4ff0-884a-acc600e4d04a^,
+    ^IntegrityCheckId^: ^d0586d6c-678a-11eb-ae93-0242ac130002^,
+    ^RunDate^: ^2021-02-05 16:53:05.095650^,
+    ^RunStatus^: 1,
+    ^Finding^: ^839^
+  },
+  {
+    ^Id^: ^5a7d646a-880e-4c76-a6b3-acc600e4d04a^,
+    ^IntegrityCheckId^: ^d0586e3e-678a-11eb-ae93-0242ac130002^,
+    ^RunDate^: ^2021-02-05 16:53:05.095385^,
+    ^RunStatus^: 1,
+    ^Finding^: ^2021-01-27 10:57:51^
+  },
+  {
+    ^Id^: ^7c8b8b7a-c776-48bb-b470-acc600e4d049^,
+    ^IntegrityCheckId^: ^d05864e8-678a-11eb-ae93-0242ac130002^,
+    ^RunDate^: ^2021-02-05 16:53:05.093959^,
+    ^RunStatus^: 2,
+    ^Finding^: ^2.5.0^
+  },
+  {
+    ^Id^: ^d6e06e7e-ddcb-45b8-8a1d-acc600e4d04a^,
+    ^IntegrityCheckId^: ^d0586c5e-678a-11eb-ae93-0242ac130002^,
+    ^RunDate^: ^2021-02-05 16:53:05.095189^,
+    ^RunStatus^: 2,
+    ^Finding^: ^2021-02-01 18:00:04^
+  }
+]
                 ";
             var data = JsonConvert.DeserializeObject<List<IntegrityCheckRun>>(raw.Replace("^","'"));
             return data;

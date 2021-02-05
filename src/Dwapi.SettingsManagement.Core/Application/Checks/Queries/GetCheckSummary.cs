@@ -25,7 +25,7 @@ namespace Dwapi.SettingsManagement.Core.Application.Checks.Queries
 
         public Task<Result<List<IntegrityCheckSummaryDto>>> Handle(GetCheckSummary request, CancellationToken cancellationToken)
         {
-            var checks = _integrityCheckRepository.GetAll().ToList();
+            var checks = _integrityCheckRepository.LoadAll().ToList();
 
             var summaries = IntegrityCheckSummaryDto.Generate(checks);
 

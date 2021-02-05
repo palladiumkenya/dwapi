@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
+using Humanizer;
 
 namespace Dwapi.SettingsManagement.Core.DTOs
 {
@@ -13,20 +14,20 @@ namespace Dwapi.SettingsManagement.Core.DTOs
         public string Message { get; set; }
         public string Docket { get; set; }
         public string Status { get; set; }
+        public DateTime RunDate { get; set; }
+        public string TimeAgo => GetTimeAgo();
 
-        public ICollection<IntegrityCheckRun> IntegrityCheckRuns { get; set; } = new List<IntegrityCheckRun>();
-
-        public IntegrityCheckSummaryDto(string name, string description, string message,string docket,List<IntegrityCheckRun> runs)
+        public IntegrityCheckSummaryDto(string name, string description,string logic, string message,string docket,List<IntegrityCheckRun> runs)
         {
             Name = name;
             Description = description;
             Docket = docket;
 
-            Message = message;
-
             var run = runs.OrderByDescending(x => x.RunDate).FirstOrDefault();
             if (null!=run)
             {
+                RunDate = run.RunDate;
+                Message = message.Replace("{0}", run.Finding).Replace("{1}", logic);
                 Status = $"{run.RunStatus}";
             }
         }
@@ -35,16 +36,22 @@ namespace Dwapi.SettingsManagement.Core.DTOs
         {
             var list = new List<IntegrityCheckSummaryDto>();
 
-
             foreach (var check in checks)
             {
-                var summary = new IntegrityCheckSummaryDto(check.Name, check.Description, check.Message, check.Docket,
+                var summary = new IntegrityCheckSummaryDto(check.Name, check.Description,check.Logic, check.Message, check.Docket,
                     check.IntegrityCheckRuns.ToList());
 
                 list.Add(summary);
             }
 
             return list;
+        }
+
+        private string GetTimeAgo()
+        {
+            if (RunDate.Year < 1983)
+                return string.Empty;
+            return RunDate.Humanize(false);
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Dwapi.Controller
         }
 
         [HttpGet("load")]
-        public async Task<IActionResult> Load( )
+        public async Task<IActionResult> Load()
         {
             var emr = _emrManagerService.GetDefault();
 
@@ -49,7 +49,7 @@ namespace Dwapi.Controller
             {
                 LoadMtsFromEmrCommand = new LoadMtsFromEmrCommand()
                 {
-                    Extracts = emr.Extracts.Where(x=>x.DocketId=="MTS").ToList(),
+                    Extracts = emr.Extracts.Where(x => x.DocketId == "MTS").ToList(),
                     DatabaseProtocol = emr.DatabaseProtocols.FirstOrDefault()
                 }
             };
@@ -62,19 +62,19 @@ namespace Dwapi.Controller
 
             await _mediator.Send(new InitAppVerCheck());
 
-            await _mediator.Send(new PerformCheck(emr.Id, CheckStage.PreSend,version));
+            await _mediator.Send(new PerformCheck(emr.Id, CheckStage.PreSend, version));
 
             return Ok(result);
         }
 
         [HttpGet("summary")]
-        public async Task<IActionResult> Summary( )
+        public async Task<IActionResult> Summary()
         {
             var emr = _emrManagerService.GetDefault();
 
             var result = await _mediator.Send(new GetCheckSummary(), HttpContext.RequestAborted);
 
-            return Ok(result);
+            return Ok(result.Value);
         }
     }
 }

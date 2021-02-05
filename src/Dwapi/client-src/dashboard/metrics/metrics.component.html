@@ -1,6 +1,24 @@
 <div class="ui-g">
     <div class="ui-g-12">
         <p-messages [(value)]="sysMessages"></p-messages>
+
+        <div class="ui-g-12">
+            <div class="card card-w-title">
+                <h1>Quality Indicators</h1>
+                <p-dataTable [value]="appChecks">
+                    <p-column field="description" header="Indicator"></p-column>
+                    <p-column field="message" header="Message"></p-column>
+                    <p-column field="status" header="Status"></p-column>
+                    <p-column field="runDate" header="Date">
+                        <ng-template let-col let-detail="rowData" pTemplate="body">
+                            {{detail.timeAgo ? (detail.runDate | date: 'medium') :''}}
+                        </ng-template>
+                    </p-column>
+                    <p-column field="timeAgo" header=""></p-column>
+                </p-dataTable>
+            </div>
+        </div>
+
         <div class="ui-g-12">
             <div class="card card-w-title">
                 <h1>DWAPI Metrics</h1>
@@ -9,12 +27,13 @@
                     <p-column field="action" header="Activity"></p-column>
                     <p-column field="lastAction" header="Date">
                         <ng-template let-col let-detail="rowData" pTemplate="body">
-                            {{detail.timeAgo ? (detail.lastAction|date: 'medium') :''}}
+                            {{detail.timeAgo ? (detail.lastAction | date: 'medium') :''}}
                         </ng-template>
                     </p-column>
                     <p-column field="timeAgo" header=""></p-column>
                 </p-dataTable>
             </div>
         </div>
+
     </div>
 </div>
