@@ -10,6 +10,7 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Repositories
     {
         void Clear();
         IEnumerable<IndicatorDto> LoadIndicators();
-        IEnumerable<MetricDto> LoadMetices();
+        IEnumerable<MetricDto> LoadEmrMetrics();
+        IEnumerable<IntegrityCheck> LoadAll();
     }
 }

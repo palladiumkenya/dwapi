@@ -42,7 +42,13 @@ namespace Dwapi.SettingsManagement.Core.Model
                 int intlogic = Convert.ToInt32(Logic);
                 status = intSubj > intlogic ? LogicStatus.Pass : LogicStatus.Fail;
             }
-            return new IntegrityCheckRun(status, Id);
+
+            return new IntegrityCheckRun(status, Id, subject);
+        }
+
+        public IntegrityCheckRun Run(DateTime subject)
+        {
+            return Run(subject.ToString("yyyyMMMdd"));
         }
 
         public void UpdateLogic(string logic)

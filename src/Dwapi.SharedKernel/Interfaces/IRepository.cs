@@ -22,6 +22,7 @@ namespace Dwapi.SharedKernel.Interfaces
         void Create<TC>(List<TC> entity);
         void CreateBatch(List<T> entity);
         void Update(T entity);
+        void Update<TC>(List<TC> entity);
         void CreateOrUpdate(T entity);
         IEnumerable<T> GetFromSql(string query);
         DatabaseProvider GetConnectionProvider();

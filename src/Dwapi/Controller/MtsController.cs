@@ -6,6 +6,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Mgs;
 using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Application.Checks.Commands;
+using Dwapi.SettingsManagement.Core.Application.Checks.Queries;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
@@ -28,12 +29,15 @@ namespace Dwapi.Controller
         private readonly IMediator _mediator;
         private readonly IMtsSendService _mtsSendService;
         private readonly IEmrManagerService _emrManagerService;
+        private string _version;
 
         public MtsController(IMediator mediator, IMtsSendService mtsSendService, IEmrManagerService emrManagerService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mtsSendService = mtsSendService;
             _emrManagerService = emrManagerService;
+            var ver = GetType().Assembly.GetName().Version;
+            _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
         }
 
         [HttpGet("load")]
@@ -56,7 +60,19 @@ namespace Dwapi.Controller
 
             var result = await _mediator.Send(request.LoadMtsFromEmrCommand, HttpContext.RequestAborted);
 
-            await _mediator.Send(new PerformCheck(emr.Id, CheckStage.PreSend));
+            await _mediator.Send(new InitAppVerCheck());
+
+            await _mediator.Send(new PerformCheck(emr.Id, CheckStage.PreSend,version));
+
+            return Ok(result);
+        }
+
+        [HttpGet("summary")]
+        public async Task<IActionResult> Summary( )
+        {
+            var emr = _emrManagerService.GetDefault();
+
+            var result = await _mediator.Send(new GetCheckSummary(), HttpContext.RequestAborted);
 
             return Ok(result);
         }

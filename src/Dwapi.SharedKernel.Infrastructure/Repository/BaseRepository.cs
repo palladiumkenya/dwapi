@@ -85,7 +85,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public void Create<TC>(List<TC> entity)
         {
-            if (null != entity)
+            if (entity.Any())
             {
                 Context.Database.GetDbConnection().BulkInsert(entity);
             }
@@ -104,6 +104,14 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             if (null != entity)
             {
                 Context.Update(entity);
+            }
+        }
+
+        public void Update<TC>(List<TC> entity)
+        {
+            if (entity.Any())
+            {
+                Context.Database.GetDbConnection().BulkUpdate(entity);
             }
         }
 

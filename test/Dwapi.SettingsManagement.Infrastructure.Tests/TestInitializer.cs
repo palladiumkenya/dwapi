@@ -68,6 +68,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
             services.AddTransient<IEmrSystemRepository,EmrSystemRepository>();
             services.AddTransient<IExtractRepository,ExtractRepository>();
             services.AddTransient<IRestProtocolRepository,RestProtocolRepository>();
+            services.AddTransient<IIntegrityCheckRepository,IntegrityCheckRepository>();
 
             ServiceProvider = services.BuildServiceProvider();
         }

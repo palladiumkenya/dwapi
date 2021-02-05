@@ -79,6 +79,8 @@ namespace Dwapi.SettingsManagement.Core.Tests
             services.AddTransient<IExtractManagerService,ExtractManagerService>();
             services.AddTransient<IRegistryManagerService,RegistryManagerService>();
 
+            services.AddTransient<IIntegrityCheckRepository,IntegrityCheckRepository>();
+
             services.AddMediatR(typeof(GetAppMetricHandler));
 
             ServiceProvider = services.BuildServiceProvider();

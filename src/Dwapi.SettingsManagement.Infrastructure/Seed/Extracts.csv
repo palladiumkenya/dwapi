@@ -4367,6 +4367,11 @@ UNION
 )
 UNION
 (
+			select 'LAST_ENCOUNTER_CREATE_DATE' AS 'INDICATOR', max(e.date_created) as 'INDICATORVALUE',date_format(current_date(),'%Y%b%d') as 'INDICATORDATE'
+			from openmrs.encounter e
+)
+UNION
+(
     SELECT replace(script_name,'scheduled_updates','EMR_ETL_Refresh')as 'INDICATOR', stop_time as 'INDICATORVALUE',DATE_FORMAT(stop_time,'%Y%b%d') as 'INDICATORDATE'
     FROM kenyaemr_etl.etl_script_status s where s.error is null and script_name='scheduled_updates'
     order by INDICATORVALUE desc

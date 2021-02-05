@@ -10,14 +10,17 @@ namespace Dwapi.SettingsManagement.Core.Model
         public DateTime RunDate { get; set; }
         public LogicStatus RunStatus { get; set; }
 
+        public string Finding { get; set; }
+
         public IntegrityCheckRun()
         {
         }
-        public IntegrityCheckRun(LogicStatus runStatus,Guid integrityCheckId)
+        public IntegrityCheckRun(LogicStatus runStatus,Guid integrityCheckId,string finding)
         {
             IntegrityCheckId = integrityCheckId;
             RunStatus = runStatus;
             RunDate=DateTime.Now;
+            Finding = finding;
         }
     }
 }

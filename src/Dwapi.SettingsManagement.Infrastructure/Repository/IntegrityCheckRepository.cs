@@ -6,6 +6,7 @@ using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Repository
 {
@@ -28,11 +29,17 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
             return indicators;
         }
 
-        public IEnumerable<MetricDto> LoadMetices()
+        public IEnumerable<MetricDto> LoadEmrMetrics()
         {
             var sql = @"select * from EmrMetrics";
             var metrics = GetConnection().Query<MetricDto>(sql).ToList();
             return metrics;
+        }
+
+        public IEnumerable<IntegrityCheck> LoadAll()
+        {
+            var ctx = (SettingsContext) Context;
+            return ctx.IntegrityChecks.AsNoTracking().Include(x => x.IntegrityCheckRuns).AsNoTracking().ToList();
         }
     }
 }

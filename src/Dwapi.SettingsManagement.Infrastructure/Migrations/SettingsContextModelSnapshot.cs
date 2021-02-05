@@ -169,50 +169,6 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.ToTable("Extracts");
                 });
 
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.IntegrityCheck", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Docket");
-
-                    b.Property<Guid>("EmrSystemId");
-
-                    b.Property<string>("Logic");
-
-                    b.Property<int>("LogicType");
-
-                    b.Property<string>("Message");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("Stage");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IntegrityChecks");
-                });
-
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.IntegrityCheckRun", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("IntegrityCheckId");
-
-                    b.Property<DateTime>("RunDate");
-
-                    b.Property<int>("RunStatus");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IntegrityCheckId");
-
-                    b.ToTable("IntegrityCheckRuns");
-                });
-
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Resource", b =>
                 {
                     b.Property<Guid>("Id")
@@ -285,14 +241,6 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.HasOne("Dwapi.SettingsManagement.Core.Model.EmrSystem")
                         .WithMany("Extracts")
                         .HasForeignKey("EmrSystemId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.IntegrityCheckRun", b =>
-                {
-                    b.HasOne("Dwapi.SettingsManagement.Core.Model.IntegrityCheck")
-                        .WithMany("IntegrityCheckRuns")
-                        .HasForeignKey("IntegrityCheckId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
