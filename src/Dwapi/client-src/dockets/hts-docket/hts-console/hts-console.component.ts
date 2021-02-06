@@ -405,6 +405,24 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
 
+    public sendHandshake(): void {
+        this.manifestPackage = this.getSendManifestPackage();
+        this.send$ = this._htsSenderService.sendHandshake(this.manifestPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    // this.errorMessage.push({ severity: 'error', summary: 'Error sending handshake', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
     /*public sendClientExtract(): void {
         this.sendEvent = {sentProgress: 0};
         this.sending = true;
@@ -626,6 +644,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
                 this.updateEvent();
+                this.sendHandshake();
                 this.sending = false;
             } else {
                 this.updateEvent();

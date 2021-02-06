@@ -34,6 +34,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Hts
         //Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo);
         //Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
 
-        Task NotifyPostSending(string version);
+        Task NotifyPostSending(SendManifestPackageDTO sendTo,string version);
     }
 }

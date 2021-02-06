@@ -191,6 +191,7 @@ namespace Dwapi.Controller
             try
             {
                 await _cbsSendService.SendMpiAsync(packageDTO);
+                await _cbsSendService.NotifyPostSending(packageDTO, _version);
                 return Ok();
             }
             catch (Exception e)

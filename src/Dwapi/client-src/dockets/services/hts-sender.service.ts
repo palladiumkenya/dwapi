@@ -69,6 +69,11 @@ export class HtsSenderService {
             .catch(this.handleError);
     }
 
+    public sendHandshake(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/endsession`, sendPackage)
+            .catch(this.handleError);
+    }
+
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {
             return Observable.throw('no record(s) found');

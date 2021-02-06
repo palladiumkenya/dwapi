@@ -15,6 +15,7 @@ using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Event.Cbs;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
+using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Notifications.Cbs;
 using Dwapi.UploadManagement.Core.Notifications.Dwh;
@@ -29,13 +30,15 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
         private readonly string _endPoint;
         private readonly ICbsPackager _packager;
         private readonly IMediator _mediator;
+        private IEmrMetricReader _reader;
 
         public HttpClient Client { get; set; }
 
-        public CbsSendService(ICbsPackager packager, IMediator mediator)
+        public CbsSendService(ICbsPackager packager, IMediator mediator, IEmrMetricReader reader)
         {
             _packager = packager;
             _mediator = mediator;
+            _reader = reader;
             _endPoint = "api/cbs/";
         }
 
@@ -130,9 +133,20 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
             return responses;
         }
 
-        public async Task NotifyPostSending(string version)
+        public async Task NotifyPostSending(SendManifestPackageDTO sendTo,string version)
         {
-            await _mediator.Publish(new HandshakeEnd("MPISendEnd", version));
+            var notificationend = new HandshakeEnd("MPISendEnd", version);
+            await _mediator.Publish(notificationend);
+            var client = Client ?? new HttpClient();
+            try
+            {
+                var session = _reader.GetSession(notificationend.EndName);
+                var response = await client.PostAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Handshake?session={session}"),null);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, $"Send Handshake Error");
+            }
         }
     }
 }

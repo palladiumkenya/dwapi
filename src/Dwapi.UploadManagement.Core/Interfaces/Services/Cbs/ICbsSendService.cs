@@ -16,6 +16,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Cbs
         Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag messageBag,string version);
 
         Task<List<SendMpiResponse>> SendMpiAsync(SendManifestPackageDTO sendTo, MpiMessageBag messageBag);
-        Task NotifyPostSending(string version);
+        Task NotifyPostSending(SendManifestPackageDTO sendTo,string version);
     }
 }

@@ -16,6 +16,11 @@ namespace Dwapi.SharedKernel.Exchange
         public ManifestMessageBag(List<ManifestMessage> messages)
         {
             Session = LiveGuid.NewGuid();
+            var sessionStart = DateTime.Now;
+            foreach (var message in messages)
+            {
+                message.Manifest.InitSession(Session,sessionStart,string.Empty);
+            }
             Messages = messages;
         }
 
