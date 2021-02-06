@@ -9,9 +9,10 @@ namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events
         public DateTime Start { get; }=DateTime.Now;
         public string Version { get; }
         public DateTime ActionDate { get; }=DateTime.Now;
-
-        public HandshakeStart(string name,  string version)
+        public Guid Session { get; }
+        public HandshakeStart(string name,  string version,Guid session)
         {
+            Session = session;
             Name = name;
             Version = version;
         }

@@ -117,7 +117,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         {
             var responses = new List<SendDhwManifestResponse>();
 
-            await _mediator.Publish(new HandshakeStart("CTSendStart", version));
+            await _mediator.Publish(new HandshakeStart("CTSendStart", version, messageBag.Session));
 
             HttpClientHandler handler = new HttpClientHandler()
             {

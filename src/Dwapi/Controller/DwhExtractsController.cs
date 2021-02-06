@@ -239,7 +239,7 @@ namespace Dwapi.Controller
             var jobEnd =
                 BatchJob.ContinueBatchWith(job2, x =>
                 {
-                    _ctSendService.NotifyPostSending(_version);
+                    _ctSendService.NotifyPostSending(package,_version);
 
                 });
         }
@@ -261,7 +261,7 @@ namespace Dwapi.Controller
                 BatchJob.ContinueBatchWith(job1, x => { SendDiffJobProfiles(package); });
 
             var jobEnd =
-                BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(_version); });
+                BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(package, _version); });
         }
 
         public void SendJobBaselines(SendManifestPackageDTO package)

@@ -47,7 +47,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
         public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage,string version)
         {
             var responses=new List<SendManifestResponse>();
-            await _mediator.Publish(new HandshakeStart("HTSSendStart", version));
+            await _mediator.Publish(new HandshakeStart("HTSSendStart", version, manifestMessage.Session));
             var client = Client ?? new HttpClient();
 
             foreach (var message in manifestMessage.Messages)

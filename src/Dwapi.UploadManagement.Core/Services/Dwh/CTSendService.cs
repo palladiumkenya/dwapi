@@ -19,6 +19,7 @@ using Dwapi.UploadManagement.Core.Event.Dwh;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Exchange;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Notifications.Dwh;
 using MediatR;
@@ -31,13 +32,15 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private readonly string _endPoint;
         private readonly IDwhPackager _packager;
         private readonly IMediator _mediator;
+        private IEmrMetricReader _reader;
 
         public HttpClient Client { get; set; }
 
-        public CTSendService(IDwhPackager packager, IMediator mediator)
+        public CTSendService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader)
         {
             _packager = packager;
             _mediator = mediator;
+            _reader = reader;
             _endPoint = "api/";
         }
 
@@ -287,10 +290,22 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             return responses;
         }
 
-        public async Task NotifyPostSending(string version)
+        public async Task NotifyPostSending(SendManifestPackageDTO sendTo,string version)
         {
+            var notificationend = new HandshakeEnd("CTSendEnd", version);
             DomainEvents.Dispatch(new DwhMessageNotification(false, $"Sending completed"));
             await _mediator.Publish(new HandshakeEnd("CTSendEnd", version));
+
+            var client = Client ?? new HttpClient();
+            try
+            {
+                var session = _reader.GetSession(notificationend.EndName);
+                var response = await client.PostAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Handshake?session={session}"),null);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, $"Send Handshake Error");
+            }
         }
     }
 }

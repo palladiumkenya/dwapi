@@ -18,9 +18,13 @@ namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events.Handlers
 
         public Task Handle(HandshakeEnd notification, CancellationToken cancellationToken)
         {
+
+            var session = _repository.GetSession(notification.EndName);
+            notification.UpdateSession(session);
+
             var metric = new AppMetric(notification.Version, notification.Name,
                 JsonConvert.SerializeObject(notification));
-            _repository.Clear(notification.Name,"EndTime");
+            _repository.Clear(notification.Name);
             _repository.Create(metric);
             _repository.SaveChanges();
             return Task.CompletedTask;

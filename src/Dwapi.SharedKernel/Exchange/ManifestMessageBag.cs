@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.SharedKernel.Exchange
 {
     public class ManifestMessageBag
     {
+        public Guid Session { get;  }
         public List<ManifestMessage> Messages { get; set; }=new List<ManifestMessage>();
 
         public ManifestMessageBag()
@@ -12,6 +15,7 @@ namespace Dwapi.SharedKernel.Exchange
 
         public ManifestMessageBag(List<ManifestMessage> messages)
         {
+            Session = LiveGuid.NewGuid();
             Messages = messages;
         }
 

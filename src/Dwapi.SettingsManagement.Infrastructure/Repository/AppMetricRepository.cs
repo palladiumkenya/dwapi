@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Repository
 {
@@ -12,6 +14,16 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
     {
         public AppMetricRepository(SettingsContext context) : base(context)
         {
+        }
+
+        public void Clear(string area)
+        {
+            var ctLoaded = DbSet.Where(x => x.Name == area);
+            if (ctLoaded.Any())
+            {
+                DbSet.RemoveRange(ctLoaded);
+                SaveChanges();
+            }
         }
 
         public void Clear(string area, string action)
@@ -132,6 +144,17 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
             }
 
             return list;
+        }
+
+        public Guid GetSession(string notificationName)
+        {
+            var metric = DbSet.AsNoTracking().FirstOrDefault(x => x.Name == notificationName);
+            if (null != metric)
+            {
+                var handshake = JsonConvert.DeserializeObject<HandshakeStart>(metric.LogValue);
+                return handshake.Session;
+            }
+            return Guid.Empty;
         }
     }
 }

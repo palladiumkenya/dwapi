@@ -20,6 +20,11 @@ namespace Dwapi.SharedKernel.Exchange
         public EmrSetup EmrSetup { get; set; }
         public List<FacMetric> FacMetrics { get; set; } = new List<FacMetric>();
         public UploadMode UploadMode { get; set; }
+
+        public Guid Session { get; set; }
+        public DateTime Start { get; set; }
+        public string Tag { get; set; }
+
         public DwhManifest()
         {
         }
@@ -88,6 +93,13 @@ namespace Dwapi.SharedKernel.Exchange
             var items = JsonConvert.SerializeObject(metric);
 
             FacMetrics.Add(new FacMetric(cargoType,items));
+        }
+
+        public void InitSession(Guid session,DateTime start, string tag)
+        {
+            Session = session;
+            Start = start;
+            Tag = tag;
         }
     }
 }

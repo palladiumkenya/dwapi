@@ -52,7 +52,7 @@ namespace Dwapi.UploadManagement.Core.Services.Cbs
         public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage,string version)
         {
             var responses=new List<SendManifestResponse>();
-            await _mediator.Publish(new HandshakeStart("MPISendStart", version));
+            await _mediator.Publish(new HandshakeStart("MPISendStart", version, manifestMessage.Session));
             var client = Client ?? new HttpClient();
 
             foreach (var message in manifestMessage.Messages)

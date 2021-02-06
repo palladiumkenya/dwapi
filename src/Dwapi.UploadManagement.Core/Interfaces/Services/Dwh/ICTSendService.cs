@@ -33,6 +33,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
             where T : ClientExtract;
 
 
-        Task NotifyPostSending(string version);
+        Task NotifyPostSending(SendManifestPackageDTO sendTo,string version);
     }
 }
