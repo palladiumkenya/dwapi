@@ -4,12 +4,14 @@ using System.Linq;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
 using Newtonsoft.Json;
 
 namespace Dwapi.SharedKernel.Exchange
 {
     public class DwhManifest
     {
+        public Guid Id { get; private set; }
         public int SiteCode { get; set; }
         public List<int> PatientPks { get; set; } = new List<int>();
         public string Metrics { get; set; }
@@ -31,11 +33,13 @@ namespace Dwapi.SharedKernel.Exchange
 
         public DwhManifest(int siteCode)
         {
+            Id = LiveGuid.NewGuid();
             SiteCode = siteCode;
         }
 
         public DwhManifest(int siteCode, List<int> patientPks,string siteName,EmrDto emrDto)
         {
+            Id = LiveGuid.NewGuid();
             SiteCode = siteCode;
             PatientPks = patientPks;
             Name = siteName;
