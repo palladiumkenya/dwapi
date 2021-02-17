@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
+using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Infrastructure.Repository;
@@ -155,6 +157,16 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
                 return handshake.Session;
             }
             return Guid.Empty;
+        }
+
+        public IEnumerable<ExtractCargoDto> LoadCargo()
+        {
+            var sql = @"
+                select e.DocketId,e.Name,h.Stats
+                from extracthistory h inner join extracts e on h.ExtractId=e.Id
+                where Status=6";
+
+            return Context.Database.GetDbConnection().Query<ExtractCargoDto>(sql).ToList();
         }
     }
 }

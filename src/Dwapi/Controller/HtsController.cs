@@ -45,9 +45,8 @@ namespace Dwapi.Controller
 
             var ver = GetType().Assembly.GetName().Version;
             string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
-            await _mediator.Publish(new ExtractLoaded("HivTestingService", version));
-
             var result = await _mediator.Send(request.LoadHtsFromEmrCommand, HttpContext.RequestAborted);
+            await _mediator.Publish(new ExtractLoaded("HivTestingService", version));
             return Ok(result);
         }
 

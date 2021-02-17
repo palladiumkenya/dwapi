@@ -45,8 +45,7 @@ namespace Dwapi.Controller
             _ctSendService = ctSendService;
             _extractRepository = extractRepository;
             Startup.HubContext= _hubContext = hubContext;
-            var ver = GetType().Assembly.GetName().Version;
-            _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            _version = GetType().Assembly.GetName().Version.ToString();
         }
 
         [HttpPost("extract")]
@@ -62,13 +61,12 @@ namespace Dwapi.Controller
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
-            await _mediator.Publish(new ExtractLoaded("CareTreatment", version));
+            string version =GetType().Assembly.GetName().Version.ToString();
 
             if (!request.LoadMpi)
             {
                 var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
+                await _mediator.Publish(new ExtractLoaded("CareTreatment", version));
                 return Ok(result);
             }
 
@@ -110,8 +108,8 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid())
                 return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+
+            string version =GetType().Assembly.GetName().Version.ToString();
             await _mediator.Publish(new ExtractSent("CareTreatment", version));
 
             try
@@ -141,8 +139,8 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid())
                 return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+
+            string version = GetType().Assembly.GetName().Version.ToString();
             await _mediator.Publish(new ExtractSent("CareTreatment", version));
 
             try

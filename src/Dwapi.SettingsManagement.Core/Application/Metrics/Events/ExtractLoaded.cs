@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Dwapi.SettingsManagement.Core.DTOs;
 using MediatR;
 
 namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events
@@ -9,6 +12,7 @@ namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events
         public int NoLoaded { get; }
         public string Version { get; }
         public DateTime ActionDate { get; } = DateTime.Now;
+        public IEnumerable<ExtractCargoDto> ExtractCargos { get; private set; } = new List<ExtractCargoDto>();
 
         public ExtractLoaded(string name,  string version)
         {
@@ -21,6 +25,19 @@ namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events
             Name = name;
             NoLoaded = noLoaded;
             Version = version;
+        }
+
+        public void AddCargo(List<ExtractCargoDto> cargoDtos)
+        {
+            var cargos = new List<ExtractCargoDto>();
+            if (Name == "CareTreatment")
+                cargos = cargoDtos.Where(x => x.DocketId == "NDWH").ToList();
+            if (Name == "HivTestingService")
+                cargos = cargoDtos.Where(x => x.DocketId == "HTS").ToList();
+            if (Name == "MasterPatientIndex")
+                cargos = cargoDtos.Where(x => x.DocketId == "CBS").ToList();
+
+            ExtractCargos = cargos;
         }
     }
 }
