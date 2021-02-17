@@ -33,7 +33,7 @@ namespace Dwapi.SettingsManagement.Core.Model
                 DateTime dateSubj = Convert.ToDateTime(subject);
                 var daysSinceLastRefresh = DateTime.Today.Subtract(dateSubj).Days;
                 int days = Convert.ToInt32(Logic);
-                status = daysSinceLastRefresh > days ? LogicStatus.Pass : LogicStatus.Fail;
+                status = daysSinceLastRefresh > days ? LogicStatus.Fail : LogicStatus.Pass;
             }
 
             if (LogicType == LogicType.Numeric)

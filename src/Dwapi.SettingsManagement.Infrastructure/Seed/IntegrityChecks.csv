@@ -4,5 +4,5 @@ d0586c5e-678a-11eb-ae93-0242ac130002,EMR_ETL_Refresh,Last EMR ETL Refresh date,E
 d0586d6c-678a-11eb-ae93-0242ac130002,TX_CURR,TX CURR,Tx Curr {0}. Required > {1},2,0,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
 d0586e3e-678a-11eb-ae93-0242ac130002,LAST_ENCOUNTER_CREATE_DATE,Last EMR Encounter create date,Last EMR Encounter Create date {0}. Required {1} Days since Last EMR Encounter Create date,3,5,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
 d0586f06-678a-11eb-ae93-0242ac130002,LastLoginDate,Last EMR Login date,Last EMR Login {0}. Required {1} days since last login,3,5,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
-d0586f07-678a-11eb-ae93-0242ac130002,MFL_Change,No od Changes to MFL Codes,No of MFL Code changes {0}. Required {1} changes,2,0,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
+d0586f07-678a-11eb-ae93-0242ac130002,MFL_Change,No of MFL Codes,No of MFL Codes {0}. Required {1} changes,2,1,0,NDWH,a6221856-0e85-11e8-ba89-0ed5f89f718b
 

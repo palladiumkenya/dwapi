@@ -35,17 +35,17 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mts
         {
             try
             {
-                var tempPatientExtracts = _tempExtractRepository.GetAll().ToList();
+                var tempIndicatorExtracts = _tempExtractRepository.GetAll().ToList();
 
                 //Auto mapper
-                var extractRecords = Mapper.Map<List<TempIndicatorExtract>, List<IndicatorExtract>>(tempPatientExtracts);
+                var extractRecords = Mapper.Map<List<TempIndicatorExtract>, List<IndicatorExtract>>(tempIndicatorExtracts);
 
                 //Batch Insert
                 _extractRepository.CreateBatch(extractRecords);
                 Log.Debug("saved batch");
 
                 // DomainEvents.Dispatch(new MgsNotification(new ExtractProgress(nameof(IndicatorExtract), "Loading...", Found, 0, 0, 0, 0)));
-                return Task.FromResult(tempPatientExtracts.Count);
+                return Task.FromResult(tempIndicatorExtracts.Count);
 
             }
             catch (Exception e)

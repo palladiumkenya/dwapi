@@ -54,8 +54,7 @@ namespace Dwapi.Controller
                 }
             };
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            string version = GetType().Assembly.GetName().Version.ToString();
             await _mediator.Publish(new ExtractLoaded("MetricService", version));
 
             var result = await _mediator.Send(request.LoadMtsFromEmrCommand, HttpContext.RequestAborted);
