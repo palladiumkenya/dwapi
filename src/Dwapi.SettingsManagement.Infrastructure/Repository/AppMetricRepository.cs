@@ -162,7 +162,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
         public IEnumerable<ExtractCargoDto> LoadCargo()
         {
             var sql = @"
-                select e.DocketId,e.Name,h.Stats
+                select distinct e.DocketId,e.Name,h.Stats
                 from extracthistory h inner join extracts e on h.ExtractId=e.Id
                 where Status=6";
 
