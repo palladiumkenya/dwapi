@@ -2,6 +2,7 @@
 using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mts;
 using Dwapi.SharedKernel.Utility;
@@ -22,6 +23,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mts
                 .ForMember(x => x.IndicatorDate,
                     o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempIndicatorExtract.IndicatorDate))));
             CreateMap<TempIndicatorExtract, IndicatorExtract>();
+
+            CreateMap<IndicatorExtract,IndicatorExtractDto>();
         }
     }
 }

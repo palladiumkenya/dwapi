@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Dwapi.ExtractsManagement.Core.Commands;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto;
 using Dwapi.Hubs.Mgs;
 using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Application.Checks.Commands;
@@ -30,12 +34,14 @@ namespace Dwapi.Controller
         private readonly IMtsSendService _mtsSendService;
         private readonly IEmrManagerService _emrManagerService;
         private string _version;
+        private readonly IIndicatorExtractRepository _extractRepository;
 
-        public MtsController(IMediator mediator, IMtsSendService mtsSendService, IEmrManagerService emrManagerService)
+        public MtsController(IMediator mediator, IMtsSendService mtsSendService, IEmrManagerService emrManagerService, IIndicatorExtractRepository extractRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mtsSendService = mtsSendService;
             _emrManagerService = emrManagerService;
+            _extractRepository = extractRepository;
             var ver = GetType().Assembly.GetName().Version;
             _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
         }
@@ -74,6 +80,16 @@ namespace Dwapi.Controller
             var result = await _mediator.Send(new GetCheckSummary(), HttpContext.RequestAborted);
 
             return Ok(result.Value);
+        }
+
+        [HttpGet("indicator")]
+        public IActionResult Indicator()
+        {
+            var emr = _extractRepository.GetAll().ToList();
+
+            var result = Mapper.Map<List<IndicatorExtractDto>>(emr);
+
+            return Ok(result.OrderBy(x=>x.Rank));
         }
     }
 }

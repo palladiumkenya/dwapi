@@ -3,7 +3,8 @@ import {Message} from 'primeng/api';
 import {MetricsService} from '../services/metrics.service';
 import {Subscription} from 'rxjs/Subscription';
 import {AppMetric} from '../models/app-metric';
-import {AppCheck} from "../models/app-check";
+import {AppCheck} from '../models/app-check';
+import {Indicator} from '../models/indicator';
 
 @Component({
     selector: 'liveapp-metrics',
@@ -14,8 +15,10 @@ export class MetricsComponent implements OnInit, OnDestroy {
     sysMessages: Message[] = [];
     public get$: Subscription;
     public getChecks$: Subscription;
+    public getIndicators$: Subscription;
     appMetrics: AppMetric[] = [];
     appChecks: AppCheck[] = [];
+    indicators: Indicator[] = [];
     loadingData: boolean;
 
     constructor(private service: MetricsService) {
@@ -42,13 +45,28 @@ export class MetricsComponent implements OnInit, OnDestroy {
         this.getChecks$ = this.service.getChecks()
             .subscribe(
                 p => {
-                    this.appChecks= p;
+                    this.appChecks = p;
                 },
                 e => {
                     this.sysMessages = [];
                     // this.sysMessages.push({severity: 'error', summary: 'Error Loading metrics', detail: <any>e});
                     this.loadingData = false;
                     this.appChecks = [];
+                },
+                () => {
+                }
+            );
+
+        this.getIndicators$ = this.service.getIndicators()
+            .subscribe(
+                p => {
+                    this.indicators = p;
+                },
+                e => {
+                    this.sysMessages = [];
+                    // this.sysMessages.push({severity: 'error', summary: 'Error Loading metrics', detail: <any>e});
+                    this.loadingData = false;
+                    this.indicators = [];
                 },
                 () => {
                     this.loadingData = false;
@@ -63,6 +81,8 @@ export class MetricsComponent implements OnInit, OnDestroy {
         if (this.getChecks$) {
             this.getChecks$.unsubscribe();
         }
+        if (this.getIndicators$) {
+            this.getIndicators$.unsubscribe();
+        }
     }
-
 }

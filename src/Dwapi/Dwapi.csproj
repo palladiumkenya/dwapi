@@ -18,6 +18,7 @@ Bached sending and await to 50 at a time
     <Description>Data Warehouse API Client. Transmit data from EMRs (IQCare, KenyaEMR, AMRS, ECARE) to NASCOP</Description>
     <Copyright>Palladium Group</Copyright>
     <StartupObject></StartupObject>
+    <UserSecretsId>47ead4ab-2f08-494a-bdda-b469ec020a8c</UserSecretsId>
     <!--<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>-->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
