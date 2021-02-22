@@ -79,17 +79,15 @@ namespace Dwapi.SettingsManagement.Core.DTOs
         {
             if (
                 run.IntegrityCheckId == new Guid("d0586c5e-678a-11eb-ae93-0242ac130002") ||
-                run.IntegrityCheckId == new Guid("d0586e3e-678a-11eb-ae93-0242ac130002") )
+                run.IntegrityCheckId == new Guid("d0586e3e-678a-11eb-ae93-0242ac130002") ||
+                run.IntegrityCheckId == new Guid("d0586f06-678a-11eb-ae93-0242ac130002"))
             {
-                if (run.RunStatus == LogicStatus.Fail)
+                //
+                var date = DateTime.TryParse(run.Finding, out DateTime local);
+                if (date)
                 {
-                    //
-                    var date = DateTime.TryParse(run.Finding, out DateTime local);
-                    if (date)
-                    {
-                        var daysElapsed = DateTime.Today.Subtract(local).Days;
-                        logic = $"{daysElapsed}";
-                    }
+                    var daysElapsed = DateTime.Today.Subtract(local).Days;
+                    logic = $"{daysElapsed}";
                 }
             }
 

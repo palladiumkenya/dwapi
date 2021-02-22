@@ -1,0 +1,17 @@
+Id,Description,Rank
+HTS_TESTED,Individuals who received a HIV test,10
+HTS_TESTED_POS,Individuals who tested positive during a HIV test,11
+HTS_LINKED,Individuals who tested positive and have been enrolled to care,12
+HTS_INDEX,Individuals who were identified and tested using Index testing services and received their results,13
+HTS_INDEX_POS,Individuals who tested positive using Index testing services and received their results,14
+TX_NEW,Individuals newly enrolled on antiretroviral therapy (ART),20
+TX_CURR,Individuals currently receiving antiretroviral therapy (ART),21
+TX_RTT,Patients who experienced interruption in treatment previously and restarted ARVs in this month,22
+TX_ML,Individuals who were on ART in a given period then had no clinical contact since their last expected contact,23
+TX_PVLS,Individuals of ART patients with a suppressed viral load within the past 12 months,24
+MMD,Individuals dispensed drugs for  Multi month dispense (>= 90 days),25
+RETENTION_ON_ART_12_MONTHS,Individuals who are still alive and on ART 12 months after initiating treatment,30
+RETENTION_ON_ART_VL_1000_12_MONTHS,Individuals who are suppressed 12 months after initiating treatment,31
+LAST_ENCOUNTER_CREATE_DATE,Last EMR Encounter Create date,40
+EMR_ETL_Refresh,Last EMR ETL Refresh date,41
+MFL_CODE,Site MFL Code,42

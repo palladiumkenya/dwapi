@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 
@@ -43,6 +45,13 @@ namespace Dwapi.SettingsManagement.Core.Model
                 status = intSubj > intlogic ? LogicStatus.Pass : LogicStatus.Fail;
             }
 
+            if (LogicType == LogicType.Count)
+            {
+                int intSubj = Convert.ToInt32(subject);
+                int intlogic = Convert.ToInt32(Logic);
+                status = intSubj > intlogic ? LogicStatus.Pass : LogicStatus.Fail;
+            }
+
             return new IntegrityCheckRun(status, Id, subject);
         }
 
@@ -50,6 +59,22 @@ namespace Dwapi.SettingsManagement.Core.Model
         {
             return Run(subject.ToString("yyyyMMMdd"));
         }
+
+        public IntegrityCheckRun Run(List<IndicatorDto> subjects)
+        {
+            var status = LogicStatus.None;
+            var subject = string.Join(",", subjects.Select(x => x.IndicatorValue).ToList());
+
+            if (LogicType == LogicType.Count)
+            {
+                int intSubj = subjects.Count;
+                int intlogic = Convert.ToInt32(Logic);
+                status = intSubj > intlogic ? LogicStatus.Fail : LogicStatus.Pass;
+            }
+
+            return new IntegrityCheckRun(status, Id, subject);
+        }
+
 
         public void UpdateLogic(string logic)
         {

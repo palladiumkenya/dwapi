@@ -108,6 +108,18 @@ namespace Dwapi.SettingsManagement.Core.Application.Checks.Commands
 
                 // MFL Codes
 
+                var siteCodes = indicators.Where(x => x.Indicator == "MFL_CODE").ToList();
+
+                if (siteCodes.Any())
+                {
+                    var check = checks.FirstOrDefault(x => x.Name == "MFL_CODE");
+                    if (null != check)
+                    {
+                        var run = check.Run(siteCodes);
+                        runs.Add(run);
+                    }
+                }
+
                 _integrityCheckRepository.Create(runs);
             }
 

@@ -13,6 +13,7 @@
     <EmbeddedResource Include="Seed\DatabaseProtocols.csv" />
     <EmbeddedResource Include="Seed\CentralRegistries.csv" />
     <EmbeddedResource Include="Seed\EmrSystems.csv" />
+    <EmbeddedResource Include="Seed\IndicatorKeys.csv" />
     <EmbeddedResource Include="Seed\IntegrityChecks.csv" />
     <EmbeddedResource Include="Seed\Resources.csv" />
     <EmbeddedResource Include="Seed\RestProtocols.csv" />

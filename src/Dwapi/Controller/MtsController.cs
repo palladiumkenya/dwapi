@@ -85,11 +85,9 @@ namespace Dwapi.Controller
         [HttpGet("indicator")]
         public IActionResult Indicator()
         {
-            var emr = _extractRepository.GetAll().ToList();
+            var list = _extractRepository.Load().ToList();
 
-            var result = Mapper.Map<List<IndicatorExtractDto>>(emr);
-
-            return Ok(result.OrderBy(x=>x.Rank));
+            return Ok(list.OrderBy(x=>x.Rank));
         }
     }
 }

@@ -23,6 +23,7 @@
                 <p-dataTable [value]="indicators">
                     <p-column field="indicator" header="Indicator"></p-column>
                     <p-column field="indicatorValue" header="Value"></p-column>
+                    <p-column field="description" header="Description"></p-column>
                     <p-column field="indicatorDate" header="Period">
                         <ng-template let-col let-detail="rowData" pTemplate="body">
                             {{detail.indicatorDate| date: 'mediumDate'}}

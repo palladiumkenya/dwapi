@@ -5,6 +5,7 @@ namespace Dwapi.SharedKernel.Enum
         None,
         AppVer,
         Numeric,
-        DateDiff
+        DateDiff,
+        Count
     }
 }

@@ -3,14 +3,16 @@ using System;
 using Dwapi.SettingsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(SettingsContext))]
-    partial class SettingsContextModelSnapshot : ModelSnapshot
+    [Migration("20210222133213_IndicatorsKey")]
+    partial class IndicatorsKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

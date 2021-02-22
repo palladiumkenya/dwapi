@@ -343,6 +343,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     // this.sendResponse = p;
                 },
                 e => {
+                    this.notifications=[];
                     console.error('SEND ERROR', e);
                     if (e && e.ProgressEvent) {
 
@@ -352,7 +353,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     }
                 },
                 () => {
-                    this.errorMessage.push({severity: 'success', summary: 'Sending Extracts '});
+                    this.notifications=[];
+                    this.errorMessage.push({severity: 'success', summary: 'Sending Extracts Completed '});
                     this.updateEvent();
                 }
             );

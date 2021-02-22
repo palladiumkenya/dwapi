@@ -4372,6 +4372,13 @@ UNION
 )
 UNION
 (
+				select 'MFL_CODE' as 'INDICATOR',li.value_reference as 'INDICATORVALUE',date_format(min(pi.date_created),'%Y%b%d') as 'INDICATORDATE'
+				from openmrs.patient_identifier pi inner join openmrs.location_attribute li on pi.location_id = li.location_id
+				where pi.voided=0
+				group by li.value_reference
+)
+UNION
+(
     SELECT replace(script_name,'scheduled_updates','EMR_ETL_Refresh')as 'INDICATOR', stop_time as 'INDICATORVALUE',DATE_FORMAT(stop_time,'%Y%b%d') as 'INDICATORDATE'
     FROM kenyaemr_etl.etl_script_status s where s.error is null and script_name='scheduled_updates'
     order by INDICATORVALUE desc

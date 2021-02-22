@@ -24,6 +24,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
         public DbSet<AppMetric> AppMetrics { get; set; }
         public DbSet<IntegrityCheck> IntegrityChecks { get; set; }
         public DbSet<IntegrityCheckRun> IntegrityCheckRuns { get; set; }
+        public DbSet<IndicatorKey> IndicatorKeys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +39,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
             DapperPlusManager.Entity<AppMetric>().Key(x => x.Id).Table($"{nameof(AppMetrics)}");
             DapperPlusManager.Entity<IntegrityCheck>().Key(x => x.Id).Table($"{nameof(IntegrityChecks)}");
             DapperPlusManager.Entity<IntegrityCheckRun>().Key(x => x.Id).Table($"{nameof(IntegrityCheckRuns)}");
+            DapperPlusManager.Entity<IndicatorKey>().Key(x => x.Id).Table($"{nameof(IndicatorKeys)}");
         }
 
         public override void EnsureSeeded()
@@ -81,6 +83,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
 
             this.SeedNewOnly<Extract>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Extracts)}").Wait();
             this.SeedMerge<IntegrityCheck>(typeof(SettingsContext).Assembly, ",", "Seed", $"{nameof(IntegrityChecks)}").Wait();
+            this.SeedMerge<IndicatorKey>(typeof(SettingsContext).Assembly, ",", "Seed", $"{nameof(IndicatorKeys)}").Wait();
         }
     }
 }
