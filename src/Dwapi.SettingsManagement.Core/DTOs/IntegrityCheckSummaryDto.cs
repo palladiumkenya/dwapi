@@ -17,20 +17,23 @@ namespace Dwapi.SettingsManagement.Core.DTOs
         public DateTime RunDate { get; set; }
         public string TimeAgo => GetTimeAgo();
 
-        public IntegrityCheckSummaryDto(string name, string description,string logic, string message,string docket,List<IntegrityCheckRun> runs)
+        public IntegrityCheckSummaryDto(string name, string description, string logic, string message, string docket,
+            List<IntegrityCheckRun> runs)
         {
             Name = name;
             Description = description;
             Docket = docket;
 
             var run = runs.OrderByDescending(x => x.RunDate).FirstOrDefault();
-            if (null!=run)
+            if (null != run)
             {
                 RunDate = run.RunDate;
-                Message = message.Replace("{0}", run.Finding).Replace("{1}", logic);
+                Message = ParseMessage(message, run, logic);
                 Status = $"{run.RunStatus}";
             }
         }
+
+
 
         public static List<IntegrityCheckSummaryDto> Generate(List<IntegrityCheck> checks)
         {
@@ -38,7 +41,8 @@ namespace Dwapi.SettingsManagement.Core.DTOs
 
             foreach (var check in checks)
             {
-                var summary = new IntegrityCheckSummaryDto(check.Name, check.Description,check.Logic, check.Message, check.Docket,
+                var summary = new IntegrityCheckSummaryDto(check.Name, check.Description, check.Logic, check.Message,
+                    check.Docket,
                     check.IntegrityCheckRuns.ToList());
 
                 list.Add(summary);
@@ -52,6 +56,44 @@ namespace Dwapi.SettingsManagement.Core.DTOs
             if (RunDate.Year < 1983)
                 return string.Empty;
             return RunDate.Humanize(false);
+        }
+
+        private string ParseMessage(string message, IntegrityCheckRun run, string logic)
+        {
+            var finalLogic = ParseLogic(run, logic);
+            var finalMessage = message.Replace("{0}", run.Finding).Replace("{1}", finalLogic);
+
+            if (run.RunStatus == LogicStatus.Pass)
+            {
+                finalMessage = finalMessage.Split('|')[0];
+            }
+            else
+            {
+                finalMessage = finalMessage.Split('|')[1];
+            }
+
+            return finalMessage;
+        }
+
+        private string ParseLogic(IntegrityCheckRun run, string logic)
+        {
+            if (
+                run.IntegrityCheckId == new Guid("d0586c5e-678a-11eb-ae93-0242ac130002") ||
+                run.IntegrityCheckId == new Guid("d0586e3e-678a-11eb-ae93-0242ac130002") )
+            {
+                if (run.RunStatus == LogicStatus.Fail)
+                {
+                    //
+                    var date = DateTime.TryParse(run.Finding, out DateTime local);
+                    if (date)
+                    {
+                        var daysElapsed = DateTime.Today.Subtract(local).Days;
+                        logic = $"{daysElapsed}";
+                    }
+                }
+            }
+
+            return logic;
         }
     }
 }
