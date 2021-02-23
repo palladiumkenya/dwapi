@@ -63,7 +63,7 @@ namespace Dwapi.SettingsManagement.Core.Model
         public IntegrityCheckRun Run(List<IndicatorDto> subjects)
         {
             var status = LogicStatus.None;
-            var subject = string.Join(",", subjects.Select(x => x.IndicatorValue).ToList());
+            var subject = string.Join(",", subjects.Select(x => x.IndicatorValue.Split('|')[0].Trim()).ToList());
 
             if (LogicType == LogicType.Count)
             {

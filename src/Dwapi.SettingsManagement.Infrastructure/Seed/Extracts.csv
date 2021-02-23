@@ -4372,10 +4372,10 @@ UNION
 )
 UNION
 (
-				select 'MFL_CODE' as 'INDICATOR',li.value_reference as 'INDICATORVALUE',date_format(min(pi.date_created),'%Y%b%d') as 'INDICATORDATE'
-				from openmrs.patient_identifier pi inner join openmrs.location_attribute li on pi.location_id = li.location_id
-				where pi.voided=0
-				group by li.value_reference
+			select 'MFL_CODE' as 'INDICATOR',CONCAT(li.value_reference,' | ',l.name)   as 'INDICATORVALUE', date_format(min(pi.date_created),'%Y%b%d') as 'INDICATORDATE'
+			from openmrs.patient_identifier pi inner join openmrs.location_attribute li on pi.location_id = li.location_id left join location l on pi.location_id=l.location_id
+			where pi.voided=0
+			group by li.value_reference
 )
 UNION
 (
