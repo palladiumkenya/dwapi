@@ -13,5 +13,6 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Repositories
         IEnumerable<AppMetric> LoadCurrent();
         Guid GetSession(string notificationName);
         IEnumerable<ExtractCargoDto> LoadCargo();
+        IEnumerable<ExtractCargoDto> LoadDetainedCargo();
     }
 }

@@ -20,7 +20,15 @@ namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events.Handlers
         public Task Handle(ExtractLoaded notification, CancellationToken cancellationToken)
         {
             var cargoes = _repository.LoadCargo().ToList();
+
+            if (notification.Name == "CareTreatment")
+            {
+                var detainedCargoes = _repository.LoadDetainedCargo().ToList();
+                cargoes.AddRange(detainedCargoes);
+            }
+
             notification.AddCargo(cargoes);
+
             var metric = new AppMetric(notification.Version, notification.Name,
                 JsonConvert.SerializeObject(notification));
             _repository.Clear(notification.Name,"NoLoaded");

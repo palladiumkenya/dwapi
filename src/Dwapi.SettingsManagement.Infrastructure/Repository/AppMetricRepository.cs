@@ -168,5 +168,29 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 
             return Context.Database.GetDbConnection().Query<ExtractCargoDto>(sql).ToList();
         }
+
+        public IEnumerable<ExtractCargoDto> LoadDetainedCargo()
+        {
+            var sql = @"
+                select 'NDWH' DocketId,'Detained' Name, p.SiteCode ,count(p.Id) Stats 
+                from patientextracts p left outer join
+                (
+                    select distinct PatientPK,SiteCode from patientadverseeventextracts
+                    union
+                    select distinct PatientPK,SiteCode from patientartextracts
+                    union
+                    select distinct PatientPK,SiteCode from patientlaboratoryextracts
+                    union
+                    select distinct PatientPK,SiteCode from patientpharmacyextracts
+                    union
+                    select distinct PatientPK,SiteCode from patientstatusextracts
+                    union
+                    select distinct PatientPK,SiteCode from patientvisitextracts
+                )x on p.SiteCode=x.SiteCode and p.PatientPK=x.PatientPK
+                where x.PatientPK is null
+                GROUP BY p.SiteCode";
+
+            return Context.Database.GetDbConnection().Query<ExtractCargoDto>(sql).ToList();
+        }
     }
 }

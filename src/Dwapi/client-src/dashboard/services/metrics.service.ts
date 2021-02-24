@@ -32,6 +32,11 @@ export class MetricsService {
             .catch(this.handleError);
     }
 
+    public checkUpdates(): Observable<string> {
+        return this._http.get<string>(`${this._url}/LiveUpdate` )
+            .catch(this.handleError);
+    }
+
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {
             return Observable.throw('not found');

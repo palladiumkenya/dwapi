@@ -47,7 +47,7 @@ namespace Dwapi.Controller
         {
             if (null == entity)
                 return BadRequest();
-            
+
             if (!entity.IsValid())
                 return BadRequest();
 
@@ -74,7 +74,7 @@ namespace Dwapi.Controller
                 _psmartExtractService.Complete(entity.Extract.Id);
 
                 var history = _psmartExtractService.GetStatus(entity.Extract.Id);
-            
+
                 if (null != history)
                     return Ok(new
                     {
@@ -82,8 +82,7 @@ namespace Dwapi.Controller
                         IsStarted = false,
                         eEvent = history
                     });
-
-               throw new ArgumentException("Server could not precess your");
+                throw new ArgumentException("Server could not precess your");
             }
             catch (Exception e)
             {

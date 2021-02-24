@@ -13,7 +13,7 @@ namespace Dwapi.SettingsManagement.Core.DTOs
 
         public AppMetricDto(string name, string action, DateTime lastAction, int rank)
         {
-            Name = name;
+            Name = name.Contains("Master Patient Index") ? "PKV Services" : name;
             Action = action;
             LastAction = lastAction;
             Rank = rank;

@@ -24,7 +24,6 @@ namespace Dwapi.Controller
         private readonly IHubContext<HtsActivity> _hubContext;
         private readonly IHubContext<HtsSendActivity> _hubSendContext;
         private readonly IHtsSendService _htsSendService;
-        private readonly string _version;
         public HtsController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<HtsActivity> hubContext, IHtsSendService htsSendService,
             IHubContext<HtsSendActivity> hubSendContext)
@@ -34,8 +33,6 @@ namespace Dwapi.Controller
             _htsSendService = htsSendService;
             Startup.HtsSendHubContext = _hubSendContext = hubSendContext;
             Startup.HtsHubContext = _hubContext = hubContext;
-            var ver = GetType().Assembly.GetName().Version;
-            _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
         }
 
         [HttpPost("extractAll")]
@@ -43,8 +40,7 @@ namespace Dwapi.Controller
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            string version = GetType().Assembly.GetName().Version.ToString();
             var result = await _mediator.Send(request.LoadHtsFromEmrCommand, HttpContext.RequestAborted);
             await _mediator.Publish(new ExtractLoaded("HivTestingService", version));
             return Ok(result);
@@ -81,13 +77,12 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid())
                 return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            string version = GetType().Assembly.GetName().Version.ToString();
             await _mediator.Publish(new ExtractSent("HivTestingService", version));
 
             try
             {
-                var result = await _htsSendService.SendManifestAsync(packageDto,_version);
+                var result = await _htsSendService.SendManifestAsync(packageDto,version);
                 return Ok(result);
             }
             catch (Exception e)
@@ -240,7 +235,8 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-                _htsSendService.NotifyPostSending(packageDto,_version);
+                string version = GetType().Assembly.GetName().Version.ToString();
+                _htsSendService.NotifyPostSending(packageDto,version);
                 return Ok();
             }
             catch (Exception e)

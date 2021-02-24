@@ -61,12 +61,14 @@ namespace Dwapi.Controller
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            string version =GetType().Assembly.GetName().Version.ToString();
+            string version = GetType().Assembly.GetName().Version.ToString();
 
             if (!request.LoadMpi)
             {
                 var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
+
                 await _mediator.Publish(new ExtractLoaded("CareTreatment", version));
+
                 return Ok(result);
             }
 
@@ -108,8 +110,8 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid())
                 return BadRequest();
 
+            string version = GetType().Assembly.GetName().Version.ToString();
 
-            string version =GetType().Assembly.GetName().Version.ToString();
             await _mediator.Publish(new ExtractSent("CareTreatment", version));
 
             try
@@ -141,6 +143,7 @@ namespace Dwapi.Controller
 
 
             string version = GetType().Assembly.GetName().Version.ToString();
+
             await _mediator.Publish(new ExtractSent("CareTreatment", version));
 
             try

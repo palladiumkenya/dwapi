@@ -52,12 +52,10 @@ namespace Dwapi.Controller
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            string version = GetType().Assembly.GetName().Version.ToString();
 
             var result = await _mediator.Send(request, HttpContext.RequestAborted);
             await _mediator.Publish(new ExtractLoaded("MasterPatientIndex", version));
-
 
             return Ok(result);
         }
@@ -163,8 +161,8 @@ namespace Dwapi.Controller
             if (!packageDTO.IsValid())
                 return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            string version = GetType().Assembly.GetName().Version.ToString();
+
             await _mediator.Publish(new ExtractSent("MasterPatientIndex", version));
 
 

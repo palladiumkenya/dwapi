@@ -13,6 +13,7 @@ import {Indicator} from '../models/indicator';
 })
 export class MetricsComponent implements OnInit, OnDestroy {
     sysMessages: Message[] = [];
+    public liveups$: Subscription;
     public get$: Subscription;
     public getChecks$: Subscription;
     public getIndicators$: Subscription;
@@ -26,6 +27,25 @@ export class MetricsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.loadingData = true;
+
+        if(!this.isUpdatesChecked()) {
+
+            this.get$ = this.service.checkUpdates()
+                .subscribe(
+                    p => {
+                        this.udpdateCheckStatus();
+                    },
+                    e => {
+                        this.sysMessages = [];
+                        // this.sysMessages.push({severity: 'error', summary: 'Error Loading metrics', detail: <any>e});
+                        this.loadingData = false;
+                        this.appMetrics = null;
+                    },
+                    () => {
+                    }
+                );
+        }
+
 
         this.get$ = this.service.getMetrics()
             .subscribe(
@@ -74,7 +94,23 @@ export class MetricsComponent implements OnInit, OnDestroy {
             );
     }
 
+    private udpdateCheckStatus() {
+        const key = `dwapi.liveupdate`;
+        const when = `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`;
+        localStorage.setItem(key, when);
+    }
+
+    private isUpdatesChecked() {
+        const key = `dwapi.liveupdate`;
+        const when = `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`;
+        const found = localStorage.getItem(key);
+        return found && found === when;
+    }
+
     ngOnDestroy(): void {
+        if (this.liveups$) {
+            this.liveups$.unsubscribe();
+        }
         if (this.get$) {
             this.get$.unsubscribe();
         }

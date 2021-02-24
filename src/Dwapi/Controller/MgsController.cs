@@ -41,8 +41,7 @@ namespace Dwapi.Controller
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            string version = GetType().Assembly.GetName().Version.ToString();
             await _mediator.Publish(new ExtractLoaded("MigrationService", version));
 
             var result = await _mediator.Send(request.LoadMgsFromEmrCommand, HttpContext.RequestAborted);
@@ -79,8 +78,7 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid())
                 return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            string version = GetType().Assembly.GetName().Version.ToString();
             await _mediator.Publish(new ExtractSent("MigrationService", version));
 
             try

@@ -22,6 +22,13 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
             ExecCommand(sql);
         }
 
+        public void ClearById(Guid intId)
+        {
+            string sql = $@"delete from {nameof(SettingsContext.IntegrityCheckRuns)}";
+            sql = $@"{sql} where IntegrityCheckId='{intId}'";
+            ExecCommand(sql);
+        }
+
         public IEnumerable<IndicatorDto> LoadIndicators()
         {
             var sql = @"select Indicator,IndicatorValue from IndicatorExtracts";

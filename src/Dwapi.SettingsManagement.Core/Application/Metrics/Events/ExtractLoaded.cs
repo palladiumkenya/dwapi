@@ -12,7 +12,7 @@ namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events
         public int NoLoaded { get; }
         public string Version { get; }
         public DateTime ActionDate { get; } = DateTime.Now;
-        public IEnumerable<ExtractCargoDto> ExtractCargos { get; private set; } = new List<ExtractCargoDto>();
+        public List<ExtractCargoDto> ExtractCargos { get; private set; } = new List<ExtractCargoDto>();
 
         public ExtractLoaded(string name,  string version)
         {

@@ -9,6 +9,7 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Repositories
     public interface IIntegrityCheckRepository : IRepository<IntegrityCheck, Guid>
     {
         void Clear();
+        void ClearById(Guid intId);
         IEnumerable<IndicatorDto> LoadIndicators();
         IEnumerable<MetricDto> LoadEmrMetrics();
         IEnumerable<IntegrityCheck> LoadAll();
