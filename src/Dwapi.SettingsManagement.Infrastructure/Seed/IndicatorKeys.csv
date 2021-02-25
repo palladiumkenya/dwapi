@@ -14,4 +14,4 @@ RETENTION_ON_ART_12_MONTHS,Individuals who are still alive and on ART 12 months 
 RETENTION_ON_ART_VL_1000_12_MONTHS,Individuals who are suppressed 12 months after initiating treatment. Computation: Count individuals who initiated ART are virally suppressed 12 months after initiating ART ,31
 LAST_ENCOUNTER_CREATE_DATE,Last EMR Encounter Create date,40
 EMR_ETL_Refresh,Last EMR ETL Refresh date,41
-MFL_CODE,Site MFL Code,42
+MFL_CODE,Sites Found in the Database,42
