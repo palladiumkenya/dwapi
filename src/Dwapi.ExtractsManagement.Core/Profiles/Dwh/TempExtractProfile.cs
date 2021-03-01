@@ -270,7 +270,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAllergiesChronicIllnessExtract.Emr))))
                 .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAllergiesChronicIllnessExtract.Project))))
                 .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAllergiesChronicIllnessExtract.FacilityName))))
-                .ForMember(x => x.VisitID, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempAllergiesChronicIllnessExtract.VisitID))))
+                .ForMember(x => x.VisitID, o => o.MapFrom(s => s.GetOptionalNullIntOrDefault(nameof(TempAllergiesChronicIllnessExtract.VisitID))))
                 .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempAllergiesChronicIllnessExtract.VisitDate))))
                 .ForMember(x => x.ChronicIllness, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAllergiesChronicIllnessExtract.ChronicIllness))))
                 .ForMember(x => x.ChronicOnsetDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempAllergiesChronicIllnessExtract.ChronicOnsetDate))))

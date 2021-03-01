@@ -299,7 +299,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.TestArtifacts
     ^Display^: ^Allergies ChronicIllness^,
     ^DocketId^: ^NDWH^,
     ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
-    ^ExtractSql^: ^select * from tempAllergiesChronicIllness^,
+    ^ExtractSql^: ^select *,visitdate VisitDate from tempAllergiesChronicIllness^,
     ^Destination^: ^dwhstage^,
     ^IsPriority^: 0,
     ^Name^: ^AllergiesChronicIllnessExtract^,

@@ -79,5 +79,27 @@ namespace Dwapi.SharedKernel.Utility
             return null;
         }
 
+        public static int? GetOptionalNullIntOrDefault(this IDataRecord reader, string columnName)
+        {
+            try
+            {
+                object columnValue = reader[reader.GetOrdinal(columnName)];
+                if (!(columnValue is DBNull))
+                {
+                    int o;
+                    if (int.TryParse(columnValue.ToString(), out o))
+                        return o;
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Warning(e.Message);
+            }
+
+
+            return null;
+        }
+
     }
 }
