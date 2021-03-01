@@ -43,6 +43,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
         [TestCase("PatientLabExtract")]
         [TestCase("PatientBaselineExtract")]
         [TestCase(nameof(PatientAdverseEventExtract))]
+
+        [TestCase(nameof(AllergiesChronicIllnessExtract))]
+        [TestCase(nameof(ContactListingExtract))]
+        [TestCase(nameof(DepressionScreeningExtract))]
+        [TestCase(nameof(DrugAlcoholScreeningExtract))]
+        [TestCase(nameof(EnhancedAdherenceCounsellingExtract))]
+        [TestCase(nameof(GbvScreeningExtract))]
+        [TestCase(nameof(IptExtract))]
+        [TestCase(nameof(OtzExtract))]
+        [TestCase(nameof(OvcExtract))]
         public void should_Execute_Reader(string name)
         {
             var extract = _extracts.First(x => x.Name.IsSameAs(name));
