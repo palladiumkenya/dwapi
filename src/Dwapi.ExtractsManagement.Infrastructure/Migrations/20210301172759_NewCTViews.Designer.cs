@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20210301164011_NewCT")]
-    partial class NewCT
+    [Migration("20210301172759_NewCTViews")]
+    partial class NewCTViews
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -200,6 +200,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SiteCode", "PatientPK");
+
                     b.ToTable("AllergiesChronicIllnessExtracts");
                 });
 
@@ -259,6 +261,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<DateTime?>("StatusDate");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SiteCode", "PatientPK");
 
                     b.ToTable("ContactListingExtracts");
                 });
@@ -324,6 +328,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SiteCode", "PatientPK");
+
                     b.ToTable("DepressionScreeningExtracts");
                 });
 
@@ -371,6 +377,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("VisitID");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SiteCode", "PatientPK");
 
                     b.ToTable("DrugAlcoholScreeningExtracts");
                 });
@@ -498,6 +506,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SiteCode", "PatientPK");
+
                     b.ToTable("EnhancedAdherenceCounsellingExtracts");
                 });
 
@@ -549,6 +559,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("VisitID");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SiteCode", "PatientPK");
 
                     b.ToTable("GbvScreeningExtracts");
                 });
@@ -630,6 +642,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SiteCode", "PatientPK");
+
                     b.ToTable("IptExtracts");
                 });
 
@@ -688,6 +702,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SiteCode", "PatientPK");
+
                     b.ToTable("OtzExtracts");
                 });
 
@@ -743,6 +759,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("VisitID");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SiteCode", "PatientPK");
 
                     b.ToTable("OvcExtracts");
                 });
@@ -5990,6 +6008,78 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Validator");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.AllergiesChronicIllnessExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("AllergiesChronicIllnessExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.ContactListingExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("ContactListingExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.DepressionScreeningExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("DepressionScreeningExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.DrugAlcoholScreeningExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("DrugAlcoholScreeningExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.EnhancedAdherenceCounsellingExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("EnhancedAdherenceCounsellingExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.GbvScreeningExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("GbvScreeningExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.IptExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("IptExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.OtzExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("OtzExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.OvcExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("OvcExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientAdverseEventExtract", b =>

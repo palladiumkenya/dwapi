@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
+    [Table("vTempContactListingExtractError")]
     public class TempContactListingExtractError : TempExtract,IContactListing
     {
         public string FacilityName { get; set; }

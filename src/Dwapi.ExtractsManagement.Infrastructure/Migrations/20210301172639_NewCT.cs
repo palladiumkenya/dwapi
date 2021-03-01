@@ -47,6 +47,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AllergiesChronicIllnessExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AllergiesChronicIllnessExtracts_PatientExtracts_SiteCode_Pat~",
+                        columns: x => new { x.SiteCode, x.PatientPK },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "SiteCode", "PatientPK" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,6 +89,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ContactListingExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContactListingExtracts_PatientExtracts_SiteCode_PatientPK",
+                        columns: x => new { x.SiteCode, x.PatientPK },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "SiteCode", "PatientPK" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -121,6 +133,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DepressionScreeningExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DepressionScreeningExtracts_PatientExtracts_SiteCode_Patient~",
+                        columns: x => new { x.SiteCode, x.PatientPK },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "SiteCode", "PatientPK" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -151,6 +169,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DrugAlcoholScreeningExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DrugAlcoholScreeningExtracts_PatientExtracts_SiteCode_Patien~",
+                        columns: x => new { x.SiteCode, x.PatientPK },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "SiteCode", "PatientPK" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,6 +244,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EnhancedAdherenceCounsellingExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EnhancedAdherenceCounsellingExtracts_PatientExtracts_SiteCod~",
+                        columns: x => new { x.SiteCode, x.PatientPK },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "SiteCode", "PatientPK" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -252,6 +282,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GbvScreeningExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GbvScreeningExtracts_PatientExtracts_SiteCode_PatientPK",
+                        columns: x => new { x.SiteCode, x.PatientPK },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "SiteCode", "PatientPK" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -298,6 +334,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_IptExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_IptExtracts_PatientExtracts_SiteCode_PatientPK",
+                        columns: x => new { x.SiteCode, x.PatientPK },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "SiteCode", "PatientPK" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -333,6 +375,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OtzExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OtzExtracts_PatientExtracts_SiteCode_PatientPK",
+                        columns: x => new { x.SiteCode, x.PatientPK },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "SiteCode", "PatientPK" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -367,6 +415,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OvcExtracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OvcExtracts_PatientExtracts_SiteCode_PatientPK",
+                        columns: x => new { x.SiteCode, x.PatientPK },
+                        principalTable: "PatientExtracts",
+                        principalColumns: new[] { "SiteCode", "PatientPK" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -712,6 +766,51 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_TempOvcExtracts", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AllergiesChronicIllnessExtracts_SiteCode_PatientPK",
+                table: "AllergiesChronicIllnessExtracts",
+                columns: new[] { "SiteCode", "PatientPK" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContactListingExtracts_SiteCode_PatientPK",
+                table: "ContactListingExtracts",
+                columns: new[] { "SiteCode", "PatientPK" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DepressionScreeningExtracts_SiteCode_PatientPK",
+                table: "DepressionScreeningExtracts",
+                columns: new[] { "SiteCode", "PatientPK" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DrugAlcoholScreeningExtracts_SiteCode_PatientPK",
+                table: "DrugAlcoholScreeningExtracts",
+                columns: new[] { "SiteCode", "PatientPK" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EnhancedAdherenceCounsellingExtracts_SiteCode_PatientPK",
+                table: "EnhancedAdherenceCounsellingExtracts",
+                columns: new[] { "SiteCode", "PatientPK" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GbvScreeningExtracts_SiteCode_PatientPK",
+                table: "GbvScreeningExtracts",
+                columns: new[] { "SiteCode", "PatientPK" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IptExtracts_SiteCode_PatientPK",
+                table: "IptExtracts",
+                columns: new[] { "SiteCode", "PatientPK" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OtzExtracts_SiteCode_PatientPK",
+                table: "OtzExtracts",
+                columns: new[] { "SiteCode", "PatientPK" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OvcExtracts_SiteCode_PatientPK",
+                table: "OvcExtracts",
+                columns: new[] { "SiteCode", "PatientPK" });
 
 
             if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))

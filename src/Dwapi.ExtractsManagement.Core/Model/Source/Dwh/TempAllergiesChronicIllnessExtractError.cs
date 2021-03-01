@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
+    [Table("vTempAllergiesChronicIllnessExtractError")]
     public class TempAllergiesChronicIllnessExtractError : TempExtract,IAllergiesChronicIllness
     {
         public string FacilityName { get; set; }

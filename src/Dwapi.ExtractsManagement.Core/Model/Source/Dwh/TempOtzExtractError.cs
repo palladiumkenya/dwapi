@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
+    [Table("vTempOtzExtractError")]
     public class TempOtzExtractError : TempExtract,IOtz
     {
         public string FacilityName { get; set; }

@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
+    [Table("vTempContactListingExtractErrorSummary")]
     public class TempContactListingExtractErrorSummary : TempExtractErrorSummary,IContactListing
     {
         public int? PartnerPersonID { get; set; }

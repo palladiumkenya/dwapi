@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
+    [Table("vTempDrugAlcoholScreeningExtractError")]
     public class TempDrugAlcoholScreeningExtractError : TempExtract,IDrugAlcoholScreening
     {
         public string FacilityName { get; set; }

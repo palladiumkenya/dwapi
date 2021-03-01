@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
+    [Table("vTempGbvScreeningExtractErrorSummary")]
     public class TempGbvScreeningExtractErrorSummary : TempExtractErrorSummary,IGbvScreening
     {
         public int? VisitID { get; set; }
