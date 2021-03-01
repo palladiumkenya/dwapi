@@ -9,6 +9,15 @@
         PatientPharmacy,
         PatientLab,
         PatientBaseline,
-        PatientAdverseEvent
+        PatientAdverseEvent,
+        AllergiesChronicIllness,
+        Ipt,
+        DepressionScreening,
+        ContactListing,
+        GbvScreening,
+        EnhancedAdherenceCounselling,
+        DrugAlcoholScreening,
+        Ovc,
+        Otz
     }
 }

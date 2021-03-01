@@ -125,6 +125,28 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempMetricMigrationExtractErrorSummary> TempMetricMigrationExtractErrorSummaries { get; set; }
 
         public DbSet<DiffLog> DiffLogs { get; set; }
+
+
+        public DbSet<TempAllergiesChronicIllnessExtract> TempAllergiesChronicIllnessExtracts { get; set; }
+        public DbSet<TempIptExtract> TempIptExtracts { get; set; }
+        public DbSet<TempDepressionScreeningExtract> TempDepressionScreeningExtracts { get; set; }
+        public DbSet<TempContactListingExtract> TempContactListingExtracts { get; set; }
+        public DbSet<TempGbvScreeningExtract> TempGbvScreeningExtracts { get; set; }
+        public DbSet<TempEnhancedAdherenceCounsellingExtract> TempEnhancedAdherenceCounsellingExtracts { get; set; }
+        public DbSet<TempDrugAlcoholScreeningExtract> TempDrugAlcoholScreeningExtracts { get; set; }
+        public DbSet<TempOvcExtract> TempOvcExtracts { get; set; }
+        public DbSet<TempOtzExtract> TempOtzExtracts { get; set; }
+
+        public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
+        public DbSet<IptExtract> IptExtracts { get; set; }
+        public DbSet<DepressionScreeningExtract> DepressionScreeningExtracts { get; set; }
+        public DbSet<ContactListingExtract> ContactListingExtracts { get; set; }
+        public DbSet<GbvScreeningExtract> GbvScreeningExtracts { get; set; }
+        public DbSet<EnhancedAdherenceCounsellingExtract> EnhancedAdherenceCounsellingExtracts { get; set; }
+        public DbSet<DrugAlcoholScreeningExtract> DrugAlcoholScreeningExtracts { get; set; }
+        public DbSet<OvcExtract> OvcExtracts { get; set; }
+        public DbSet<OtzExtract> OtzExtracts { get; set; }
+
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
 

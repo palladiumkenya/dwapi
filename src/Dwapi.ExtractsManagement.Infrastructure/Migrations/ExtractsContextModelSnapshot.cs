@@ -14,7 +14,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Cbs.MasterPatientIndex", b =>
@@ -127,6 +127,622 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MasterPatientIndices");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.AllergiesChronicIllnessExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Abdomen");
+
+                    b.Property<string>("AllergicReaction");
+
+                    b.Property<string>("AllergyCausativeAgent");
+
+                    b.Property<DateTime?>("AllergyOnsetDate");
+
+                    b.Property<string>("AllergySeverity");
+
+                    b.Property<string>("CNS");
+
+                    b.Property<string>("CVS");
+
+                    b.Property<string>("Chest");
+
+                    b.Property<string>("ChronicIllness");
+
+                    b.Property<DateTime?>("ChronicOnsetDate");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("ENT");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("Eyes");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Genitourinary");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Skin");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.Property<string>("knownAllergies");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AllergiesChronicIllnessExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.ContactListingExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ContactAge");
+
+                    b.Property<string>("ContactMaritalStatus");
+
+                    b.Property<string>("ContactSex");
+
+                    b.Property<string>("CurrentlyLivingWithIndexClient");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("IpvScreening");
+
+                    b.Property<string>("IpvScreeningOutcome");
+
+                    b.Property<string>("KnowledgeOfHivStatus");
+
+                    b.Property<int?>("PartnerPersonID");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<string>("PnsApproach");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<string>("RelationshipWithPatient");
+
+                    b.Property<string>("ScreenedForIpv");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactListingExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.DepressionScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<int?>("DepressionAssesmentScore");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("PHQ9_1");
+
+                    b.Property<string>("PHQ9_2");
+
+                    b.Property<string>("PHQ9_3");
+
+                    b.Property<string>("PHQ9_4");
+
+                    b.Property<string>("PHQ9_5");
+
+                    b.Property<string>("PHQ9_6");
+
+                    b.Property<string>("PHQ9_7");
+
+                    b.Property<string>("PHQ9_8");
+
+                    b.Property<string>("PHQ9_9");
+
+                    b.Property<string>("PHQ_9_Rating");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DepressionScreeningExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.DrugAlcoholScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("DrinkAlcohol");
+
+                    b.Property<string>("DrugUse");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Smoking");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DrugAlcoholScreeningExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.EnhancedAdherenceCounsellingExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<DateTime?>("DateoffirstSession");
+
+                    b.Property<string>("EACAdherencePlan");
+
+                    b.Property<string>("EACBehaviouralBarrier_1");
+
+                    b.Property<string>("EACBehaviouralBarrier_2");
+
+                    b.Property<string>("EACBehaviouralBarrier_3");
+
+                    b.Property<string>("EACBehaviouralBarrier_4");
+
+                    b.Property<string>("EACBehaviouralBarrier_5");
+
+                    b.Property<string>("EACCognitiveBarrier");
+
+                    b.Property<string>("EACEconBarrier_1");
+
+                    b.Property<string>("EACEconBarrier_2");
+
+                    b.Property<string>("EACEconBarrier_3");
+
+                    b.Property<string>("EACEconBarrier_4");
+
+                    b.Property<string>("EACEconBarrier_5");
+
+                    b.Property<string>("EACEconBarrier_6");
+
+                    b.Property<string>("EACEconBarrier_7");
+
+                    b.Property<string>("EACEconBarrier_8");
+
+                    b.Property<string>("EACEmotionalBarriers_1");
+
+                    b.Property<string>("EACEmotionalBarriers_2");
+
+                    b.Property<DateTime?>("EACFollowupDate");
+
+                    b.Property<string>("EACHomevisit");
+
+                    b.Property<string>("EACRecievedVL");
+
+                    b.Property<string>("EACReferral");
+
+                    b.Property<string>("EACReferralApp");
+
+                    b.Property<string>("EACReferralExperience");
+
+                    b.Property<string>("EACReviewImprovement");
+
+                    b.Property<string>("EACReviewMissedDoses");
+
+                    b.Property<string>("EACReviewStrategy");
+
+                    b.Property<string>("EACVL");
+
+                    b.Property<string>("EACVLConcerns");
+
+                    b.Property<string>("EACVLThoughts");
+
+                    b.Property<string>("EACWayForward");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("MMAS4_1");
+
+                    b.Property<string>("MMAS4_2");
+
+                    b.Property<string>("MMAS4_3");
+
+                    b.Property<string>("MMAS4_4");
+
+                    b.Property<string>("MMSA4_2");
+
+                    b.Property<string>("MMSA4_3");
+
+                    b.Property<string>("MMSA4_4");
+
+                    b.Property<string>("MMSA8_1");
+
+                    b.Property<string>("MMSAScore");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<int?>("PillCountAdherence");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int?>("SessionNumber");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EnhancedAdherenceCounsellingExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.GbvScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("EmotionalIPV");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("IPV");
+
+                    b.Property<string>("IPVRelationship");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<string>("PhysicalIPV");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<string>("SexualIPV");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GbvScreeningExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.IptExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ContactsInvited");
+
+                    b.Property<string>("Cough");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("EvaluatedForIPT");
+
+                    b.Property<string>("EverOnIPT");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Fever");
+
+                    b.Property<string>("ICFActionTaken");
+
+                    b.Property<string>("IPTClientWorkUp");
+
+                    b.Property<string>("IndicationForIPT");
+
+                    b.Property<string>("Lethergy");
+
+                    b.Property<string>("NightSweats");
+
+                    b.Property<string>("NoticeableWeightLoss");
+
+                    b.Property<string>("OnIPT");
+
+                    b.Property<string>("OnTBDrugs");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("StartAntiTBs");
+
+                    b.Property<string>("StartIPT");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("TBClinicalDiagnosis");
+
+                    b.Property<DateTime?>("TBRxStartDate");
+
+                    b.Property<string>("TBScreening");
+
+                    b.Property<string>("TestResult");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IptExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.OtzExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("ModulesCompletedToday");
+
+                    b.Property<string>("ModulesPreviouslyCovered");
+
+                    b.Property<DateTime?>("OTZEnrollmentDate");
+
+                    b.Property<DateTime?>("OutcomeDate");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<string>("Remarks");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("SupportGroupInvolvement");
+
+                    b.Property<string>("TransferInStatus");
+
+                    b.Property<string>("TransitionAttritionReason");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OtzExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.OvcExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CPIMSUniqueIdentifier");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("EnrolledinCPIMS");
+
+                    b.Property<DateTime?>("ExitDate");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<DateTime?>("OVCEnrollmentDate");
+
+                    b.Property<string>("OVCExitReason");
+
+                    b.Property<string>("PartnerOfferingOVCServices");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<string>("RelationshipToClient");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OvcExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientAdverseEventExtract", b =>
@@ -1548,6 +2164,586 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TempMasterPatientIndices");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempAllergiesChronicIllnessExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Abdomen");
+
+                    b.Property<string>("AllergicReaction");
+
+                    b.Property<string>("AllergyCausativeAgent");
+
+                    b.Property<DateTime?>("AllergyOnsetDate");
+
+                    b.Property<string>("AllergySeverity");
+
+                    b.Property<string>("CNS");
+
+                    b.Property<string>("CVS");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("Chest");
+
+                    b.Property<string>("ChronicIllness");
+
+                    b.Property<DateTime?>("ChronicOnsetDate");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("ENT");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("Eyes");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Genitourinary");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("Skin");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.Property<string>("knownAllergies");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempAllergiesChronicIllnessExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempContactListingExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("ContactAge");
+
+                    b.Property<string>("ContactMaritalStatus");
+
+                    b.Property<string>("ContactSex");
+
+                    b.Property<string>("CurrentlyLivingWithIndexClient");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("IpvScreening");
+
+                    b.Property<string>("IpvScreeningOutcome");
+
+                    b.Property<string>("KnowledgeOfHivStatus");
+
+                    b.Property<int?>("PartnerPersonID");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("PnsApproach");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("RelationshipWithPatient");
+
+                    b.Property<string>("ScreenedForIpv");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempContactListingExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempDepressionScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<int?>("DepressionAssesmentScore");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("PHQ9_1");
+
+                    b.Property<string>("PHQ9_2");
+
+                    b.Property<string>("PHQ9_3");
+
+                    b.Property<string>("PHQ9_4");
+
+                    b.Property<string>("PHQ9_5");
+
+                    b.Property<string>("PHQ9_6");
+
+                    b.Property<string>("PHQ9_7");
+
+                    b.Property<string>("PHQ9_8");
+
+                    b.Property<string>("PHQ9_9");
+
+                    b.Property<string>("PHQ_9_Rating");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempDepressionScreeningExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempDrugAlcoholScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("DrinkAlcohol");
+
+                    b.Property<string>("DrugUse");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("Smoking");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempDrugAlcoholScreeningExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempEnhancedAdherenceCounsellingExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<DateTime?>("DateoffirstSession");
+
+                    b.Property<string>("EACAdherencePlan");
+
+                    b.Property<string>("EACBehaviouralBarrier_1");
+
+                    b.Property<string>("EACBehaviouralBarrier_2");
+
+                    b.Property<string>("EACBehaviouralBarrier_3");
+
+                    b.Property<string>("EACBehaviouralBarrier_4");
+
+                    b.Property<string>("EACBehaviouralBarrier_5");
+
+                    b.Property<string>("EACCognitiveBarrier");
+
+                    b.Property<string>("EACEconBarrier_1");
+
+                    b.Property<string>("EACEconBarrier_2");
+
+                    b.Property<string>("EACEconBarrier_3");
+
+                    b.Property<string>("EACEconBarrier_4");
+
+                    b.Property<string>("EACEconBarrier_5");
+
+                    b.Property<string>("EACEconBarrier_6");
+
+                    b.Property<string>("EACEconBarrier_7");
+
+                    b.Property<string>("EACEconBarrier_8");
+
+                    b.Property<string>("EACEmotionalBarriers_1");
+
+                    b.Property<string>("EACEmotionalBarriers_2");
+
+                    b.Property<DateTime?>("EACFollowupDate");
+
+                    b.Property<string>("EACHomevisit");
+
+                    b.Property<string>("EACRecievedVL");
+
+                    b.Property<string>("EACReferral");
+
+                    b.Property<string>("EACReferralApp");
+
+                    b.Property<string>("EACReferralExperience");
+
+                    b.Property<string>("EACReviewImprovement");
+
+                    b.Property<string>("EACReviewMissedDoses");
+
+                    b.Property<string>("EACReviewStrategy");
+
+                    b.Property<string>("EACVL");
+
+                    b.Property<string>("EACVLConcerns");
+
+                    b.Property<string>("EACVLThoughts");
+
+                    b.Property<string>("EACWayForward");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("MMAS4_1");
+
+                    b.Property<string>("MMAS4_2");
+
+                    b.Property<string>("MMAS4_3");
+
+                    b.Property<string>("MMAS4_4");
+
+                    b.Property<string>("MMSA4_2");
+
+                    b.Property<string>("MMSA4_3");
+
+                    b.Property<string>("MMSA4_4");
+
+                    b.Property<string>("MMSA8_1");
+
+                    b.Property<string>("MMSAScore");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<int?>("PillCountAdherence");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SessionNumber");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempEnhancedAdherenceCounsellingExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempGbvScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("EmotionalIPV");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("IPV");
+
+                    b.Property<string>("IPVRelationship");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("PhysicalIPV");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("SexualIPV");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempGbvScreeningExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempIptExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("ContactsInvited");
+
+                    b.Property<string>("Cough");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("EvaluatedForIPT");
+
+                    b.Property<string>("EverOnIPT");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Fever");
+
+                    b.Property<string>("ICFActionTaken");
+
+                    b.Property<string>("IPTClientWorkUp");
+
+                    b.Property<string>("IndicationForIPT");
+
+                    b.Property<string>("Lethergy");
+
+                    b.Property<string>("NightSweats");
+
+                    b.Property<string>("NoticeableWeightLoss");
+
+                    b.Property<string>("OnIPT");
+
+                    b.Property<string>("OnTBDrugs");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("StartAntiTBs");
+
+                    b.Property<string>("StartIPT");
+
+                    b.Property<string>("TBClinicalDiagnosis");
+
+                    b.Property<DateTime?>("TBRxStartDate");
+
+                    b.Property<string>("TBScreening");
+
+                    b.Property<string>("TestResult");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempIptExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempOtzExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("ModulesCompletedToday");
+
+                    b.Property<string>("ModulesPreviouslyCovered");
+
+                    b.Property<DateTime?>("OTZEnrollmentDate");
+
+                    b.Property<DateTime?>("OutcomeDate");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("Remarks");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("SupportGroupInvolvement");
+
+                    b.Property<string>("TransferInStatus");
+
+                    b.Property<string>("TransitionAttritionReason");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempOtzExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempOvcExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CPIMSUniqueIdentifier");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("EnrolledinCPIMS");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<DateTime?>("ExitDate");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<DateTime?>("OVCEnrollmentDate");
+
+                    b.Property<string>("OVCExitReason");
+
+                    b.Property<string>("PartnerOfferingOVCServices");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("RelationshipToClient");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempOvcExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempPatientAdverseEventExtract", b =>

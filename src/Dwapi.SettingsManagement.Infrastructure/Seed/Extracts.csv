@@ -4055,3 +4055,226 @@ left join concept_name marital ON marital.concept_id = ohpc.marital_status and m
 left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach and pnsApprocah.locale='en' and pnsApprocah.concept_name_type = 'FULLY_SPECIFIED'
  "|DWHStage|1|HtsPartnerNotificationServices|7|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
 ec3d7e40-bb10-11ea-b3de-0242ac130004|Migration|MGS|a6221860-0e85-11e8-ba89-0ed5f89f718b|"SELECT ID as MetricId,Dataset,Metric,MetricValue,Stage,SiteCode,Emr,FacilityName,'KenyaHMIS' as Project,CreateDate FROM DWAPI_Migration_Metrics"|MgsStage|1|MetricMigrationExtract|1|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
+
+
+2bbeec20-7754-11eb-9439-0242ac130002|Allergies ChronicIllness|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,0 AS FacilityId,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,v.visit_date,
+       group_concat(case if(o1.obs_group =159392 and o1.concept_id = 1284,o1.value_coded,null)
+          when 149019 then 'Alzheimers Disease and other Dementias'
+          when 148432 then 'Arthritis'
+          when 153754 then 'Asthma'
+          when 159351 then 'Cancer'
+          when 119270 then 'Cardiovascular diseases'
+          when 120637 then 'Chronic Hepatitis'
+          when 145438 then 'Chronic Kidney Disease'
+          when 1295 then 'Chronic Obstructive Pulmonary Disease(COPD)'
+          when 120576 then 'Chronic Renal Failure'
+          when 119692 then 'Cystic Fibrosis'
+          when 120291 then 'Deafness and Hearing impairment'
+          when 119481 then 'Diabetes'
+          when 118631 then 'Endometriosis'
+          when 117855 then 'Epilepsy'
+          when 117789 then 'Glaucoma'
+          when 139071 then 'Heart Disease'
+          when 115728 then 'Hyperlipidaemia'
+          when 117399 then 'Hypertension'
+          when 117321 then 'Hypothyroidism'
+          when 151342 then 'Mental illness'
+          when 133687 then 'Multiple Sclerosis'
+          when 115115 then 'Obesity'
+          when 114662 then 'Osteoporosis'
+          when 117703 then 'Sickle Cell Anaemia'
+          when 118976 then 'Thyroid disease'
+ end) as ChronicIllness,
+       group_concat(if(o1.obs_group =159392 and o1.concept_id = 159948,date(o1.value_datetime),null)) as ChronicOnsetDate,
+       (case v.has_known_allergies when 1 then 'Yes' when 2 then 'No' end) as knownAllergies, group_concat(case if(o1.obs_group =121689 and o1.concept_id = 160643,o1.value_coded,null)
+           when 162543 then 'Beef'
+           when 72609 then 'Caffeine'
+           when 162544 then 'Chocolate'
+           when 162545 then 'Dairy Food'
+           when 162171 then 'Eggs'
+           when 162546 then 'Fish'
+           when 162547 then 'Milk Protein'
+           when 162172 then 'Peanuts'
+           when 162175 then 'Shellfish'
+           when 162176 then 'Soy'
+           when 162548 then 'Strawberries'
+           when 162177 then 'Wheat'
+           when 162542 then 'Adhesive Tape'
+           when 162536 then 'Bee Stings'
+           when 162537 then 'Dust'
+           when 162538 then 'Latex'
+           when 162539 then 'Mold'
+           when 162540 then 'Pollen'
+           when 162541 then 'Ragweed'
+           when 5622 then 'Other'
+                     end SEPARATOR '|') as AllergyCausativeAgent, group_concat(case if(o1.obs_group =121689 and o1.concept_id = 159935,o1.value_coded,null)
+           when 1067 then 'Anaemia'
+           when 121629 then 'Anaphylaxis'
+           when 148888 then 'Angioedema'
+           when 148787 then 'Arrhythmia'
+           when 120148 then 'Bronchospasm'
+           when 108 then 'Cough'
+           when 143264 then 'Diarrhea'
+           when 142412 then 'Dystonia'
+           when 118773 then 'Fever'
+           when 140238 then 'Flushing'
+           when 140039 then 'GI upset'
+           when 139581 then 'Headache'
+           when 139084 then 'Hepatotoxicity'
+           when 159098 then 'Hives'
+           when 111061 then 'Hypertension'
+           when 117399 then 'Itching'
+           when 879 then 'Mental status change'
+           when 121677 then 'Musculoskeletal pain'
+           when 159347 then 'Myalgia'
+           when 121 then 'Rash'
+           when 512 then 'Other'
+           end SEPARATOR '|') as AllergicReaction,
+       group_concat(case if(o1.obs_group =121689 and o1.concept_id = 162760,o1.value_coded,null)
+                      when 160754 then 'Mild' when 160755 then 'Moderate' when 160756 then 'Severe' when 160758 then 'Fatal' when 1067 then 'Unknown'
+                        end SEPARATOR '|') as AllergySeverity, group_concat(if(o1.obs_group =121689 and o1.concept_id = 160753,date(o1.value_datetime),null) SEPARATOR '|') as AllergyOnsetDate,'' as Skin, '' as Eyes,'' as ENT, '' as Chest, '' as CVS,'' as Abdomen, '' as CNS, '' AS Genitourinary,
+       v.date_created as date_created, v.date_last_modified as date_last_modified
+from kenyaemr_etl.etl_patient_hiv_followup v
+       inner join kenyaemr_etl.etl_patient_demographics de on v.patient_id = de.patient_id
+       inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date from kenyaemr_etl.etl_hiv_enrollment e group by e.patient_id)e on v.patient_id = e.patient_id
+       left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
+                  where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
+       inner join (select o.person_id,o1.encounter_id, o.obs_id,o.concept_id as obs_group,o1.concept_id as concept_id,o1.value_coded,o1.value_datetime, o.value_datetime as grp_date_time
+                   from obs o join obs o1 on o.obs_id = o1.obs_group_id) o1 on o1.encounter_id = v.encounter_id
+       join kenyaemr_etl.etl_default_facility_info s
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date group by v.visit_id"|dwhstage|0|AllergiesChronicIllnessExtract|11|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec21-7754-11eb-9439-0242ac130002|IPT|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,0 AS FacilityId,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,v.visit_date,
+       case v.on_anti_tb_drugs when 1065 then 'Yes' when 1066 then 'No' end as OnTBDrugs,case v.on_ipt when 1065 then 'Yes' when 1066 then 'No' end as OnIPT, case v.ever_on_ipt when 1065 then 'Yes' when 1066 then 'No' end as EverOnIPT,
+       '' as Cough,
+       '' as Fever,
+       '' as NoticeableWeightLoss,
+       '' as NightSweats,
+       '' as Lethargy,
+       concat_ws('|',case v.spatum_smear_ordered when 1065 then 'Sputum smear' end, case v.chest_xray_ordered when 1065 then 'Chest Xray' end,
+                 case v.genexpert_ordered when 1065 then 'GeneXpert' end) as ICFActionTaken,
+       concat_ws('|',case v.spatum_smear_result when 703 then 'Positive' when 664 then 'Negative' end, case v.chest_xray_result when 1115 then 'Normal' when 152526 then 'Abnormal' end,
+                 case v.genexpert_result when 162203 then 'Mycobacterium Tuberculosis detected with Rifampicin resistance' when 664 then 'Negative' when 162204 then 'Mycobacterium Tuberculosis detected without Rifampicin resistance'
+                                         when 164104  then 'Mycobacterium Tuberculosis detected with indeterminate resistance'
+                                         when 163611 then 'Invalid' when 1138 then 'Indeterminate' end) as TestResult,
+       (case v.clinical_tb_diagnosis when 703 then 'Positive' when 664 then 'Negative' end) as TBClinicalDiagnosis,
+       (case v.contact_invitation when 1065 then 'Yes' when 1066 then 'No' end) as ContactsInvited,
+       (case v.evaluated_for_ipt when 1065 then 'Yes' when 1066 then 'No' end) as EvaluatedForIPT,
+       (case started_anti_TB when 1065 then 'Yes' when 1066 then 'No' end) as StartAntiTBs,
+       v.tb_rx_date as TBRxStartDate,
+       (case v.tb_status when 1660 then 'No Signs' when 142177 then 'Presumed TB' when 1662 then 'TB Confirmed'
+                         when 160737 then 'TB Screening not done' end) as TBScreening,
+       '' as IPTClientWorkUp,
+       v.date_created as date_created, v.date_last_modified as date_last_modified
+from kenyaemr_etl.etl_patient_hiv_followup v
+       inner join kenyaemr_etl.etl_patient_demographics de on v.patient_id = de.patient_id
+       inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date from kenyaemr_etl.etl_hiv_enrollment e group by e.patient_id)e on v.patient_id = e.patient_id
+       left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
+                  where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
+       join kenyaemr_etl.etl_default_facility_info s
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date group by v.encounter_id;"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec22-7754-11eb-9439-0242ac130002|Depression Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,0 AS FacilityId,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,
+       v.visit_id as VisitID,v.visit_date as VisitDate,
+       '' as PHQ9_1,'' as PHQ9_2,'' as PHQ9_3,'' as PHQ9_4,'' as PHQ9_5,'' as PHQ9_6,'' as PHQ9_7,'' as PHQ9_8,'' as PHQ9_9,'' as DepressionAssesmentScore,
+       v.PHQ_9_rating,
+       v.date_created as date_created, v.date_last_modified as date_last_modified
+from kenyaemr_etl.etl_depression_screening v
+       inner join kenyaemr_etl.etl_patient_demographics de on v.patient_id = de.patient_id
+       inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date from kenyaemr_etl.etl_hiv_enrollment e group by e.patient_id)e on v.patient_id = e.patient_id
+       left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
+                  where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
+       join kenyaemr_etl.etl_default_facility_info s
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|DepressionScreeningExtract|13|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec23-7754-11eb-9439-0242ac130002|Contact Listing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_related_to as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,
+       v.patient_id as PartnerPersonID,timestampdiff(YEAR,date(v.birth_date),current_date()) as ContactAge,v.sex as ContactSex,
+       (case v.marital_status when 1057 then 'Single' when 5555 then 'Married Monogamous' when 159715 then 'Married Polygamous'
+                              when 1058 then 'Divorced' when 1059 then 'Widowed' end)  as ContactMaritalStatus,
+       (case v.relationship_type when 970 then 'Mother' when 971 then 'Father' when 972 then 'Sibling' when 1528 then 'Child' when 5617 then 'Spouse'
+                                 when 163565 then 'Partner' when 162221 then 'Co-wife' when 157351 then 'Injectable drug user'end) as RelationshipWithPatient,'' as ScreenedForIpv,'' as IpvScreening,
+       v.ipv_outcome as IPVScreeningOutcome,v.living_with_patient as CurrentlyLivingWithIndexClient,
+       v.baseline_hiv_status as KnowledgeOfHivStatus, v.pns_approach as PnsApproach,
+       v.date_created as date_created, v.date_last_modified as date_last_modified
+from kenyaemr_etl.etl_patient_contact v
+       inner join kenyaemr_etl.etl_patient_demographics de on v.patient_related_to = de.patient_id
+       inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date from kenyaemr_etl.etl_hiv_enrollment e group by e.patient_id)e on v.patient_related_to = e.patient_id
+       left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
+                  where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
+       join kenyaemr_etl.etl_default_facility_info s
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|ContactListingExtract|14|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec24-7754-11eb-9439-0242ac130002|GBV Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,
+       v.visit_id as VisitID,v.visit_date as VisitDate,
+       (case v.ipv when 1065 then 'Yes' when 1066 then 'No' end) as IPV,
+       (case v.physical_ipv when 158358 then 'Yes' when 1066 then 'No' end) as PhysicalIPV,
+       (case v.emotional_ipv when 118688 then 'Yes' when 1066 then 'No' end) as EmotionalIPV,
+       (case v.sexual_ipv when 152370 then 'Yes' when 1066 then 'No' end) as SexualIPV,
+       (case v.ipv_relationship when 1582 then 'Yes' when 1066 then 'No' end) as IPVRelationship,
+       v.date_created as date_created, v.date_last_modified as date_last_modified
+from kenyaemr_etl.etl_gbv_screening v
+       inner join kenyaemr_etl.etl_patient_demographics de on v.patient_id = de.patient_id
+       inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date from kenyaemr_etl.etl_hiv_enrollment e group by e.patient_id)e on v.patient_id = e.patient_id
+       left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
+                  where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
+       join kenyaemr_etl.etl_default_facility_info s
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|GbvScreeningExtract|15|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec25-7754-11eb-9439-0242ac130002|Enhanced Adherence Counselling|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,
+       v.visit_id as VisitID,v.visit_date as VisitDate,v.session_number as SessionNumber,v.first_session_date as DateOfFirstSession,v.pill_count as PillCountAdherence,
+       '' as MMAS4_1,'' as MMAS4_2,'' as MMAS4_3,'' as MMAS4_4,'' as MMSA8_1,'' as MMSA8_2,'' as MMSA8_3,'' as MMSA8_4,
+       v.arv_adherence as MMSAScore ,v.has_vl_results as EACRecievedVL, v.vl_results_suppressed as EACVL,v.vl_results_feeling as EACVLConcerns,
+       v.cause_of_high_vl as EACVLThoughts,v.way_forward as EACWayForward,v.patient_hiv_knowledge as EACCognitiveBarrier,v.patient_drugs_uptake as EACBehaviouralBarrier_1,
+       v.patient_drugs_reminder_tools as EACBehaviouralBarrier_2,v.patient_drugs_uptake_during_travels as EACBehaviouralBarrier_3,v.patient_drugs_side_effects_response as EACBehaviouralBarrier_4,
+       v.patient_drugs_uptake_most_difficult_times as EACBehaviouralBarrier_5,v.patient_drugs_daily_uptake_feeling as EACEmotionalBarriers_1,v.patient_ambitions as EACEmotionalBarriers_2,
+       v.patient_has_people_to_talk as EACEconBarrier_1,v.patient_enlisting_social_support as EACEconBarrier_2,v.patient_income_sources as EACEconBarrier_3,v.patient_challenges_reaching_clinic as EACEconBarrier_4,
+       v.patient_worried_of_accidental_disclosure as EACEconBarrier_5, v.patient_treated_differently as EACEconBarrier_6,v.stigma_hinders_adherence as EACEconBarrier_7,v.patient_tried_faith_healing as EACEconBarrier_8,
+       v.patient_adherence_improved as EACReviewImprovement,v.patient_doses_missed as EACReviewMissedDoses,v.review_and_barriers_to_adherence as EACReviewStrategy,v.other_referrals as EACReferral,
+       v.appointments_honoured as EACReferralApp,v.referral_experience as EACReferralExperience,v.home_visit_benefit as EACHomevisit,v.adherence_plan as EACAdherencePlan,v.next_appointment_date as EACFollowupDate,
+       v.date_created as date_created, v.date_last_modified as date_last_modified
+from kenyaemr_etl.etl_enhanced_adherence v
+       inner join kenyaemr_etl.etl_patient_demographics de on v.patient_id = de.patient_id
+       inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date from kenyaemr_etl.etl_hiv_enrollment e group by e.patient_id)e on v.patient_id = e.patient_id
+       left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
+                  where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
+       join kenyaemr_etl.etl_default_facility_info s
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|EnhancedAdherenceCounsellingExtract|16|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec26-7754-11eb-9439-0242ac130002|Drug and Alcohol Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,
+       v.visit_id as VisitID,v.visit_date as VisitDate,
+       (case v.alcohol_drinking_frequency when 1090 then 'Never' when 1091 then 'Monthly or less' when 1092 then '2 to 4 times a month' when 1093 then '2 to 3 times a week' when 1094 then '4 or More Times a Week' end) as DrinkingAlcohol,
+       (case v.smoking_frequency when 1090 then 'Never smoked' when 156358 then 'Former cigarette smoker' when 163197 then 'Current some day smoker' when 163196 then 'Current light tobacco smoker'
+                                 when 163195 then 'Current heavy tobacco smoker' when 163200 then 'Unknown if ever smoked' end) as Smoking,
+       (case v.drugs_use_frequency when 1090 then 'Never' when 1091 then 'Monthly or less' when 1092 then '2 to 4 times a month' when 1093 then '2 to 3 times a week' when 1094 then '4 or More Times a Week' end) as DrugUse,
+       v.date_created as date_created, v.date_last_modified as date_last_modified
+from kenyaemr_etl.etl_alcohol_drug_abuse_screening v
+       inner join kenyaemr_etl.etl_patient_demographics de on v.patient_id = de.patient_id
+       inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date from kenyaemr_etl.etl_hiv_enrollment e group by e.patient_id)e on v.patient_id = e.patient_id
+       left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
+                  where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
+       join kenyaemr_etl.etl_default_facility_info s
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|DrugAlcoholScreeningExtract|17|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec27-7754-11eb-9439-0242ac130002|OVC|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,
+       v.encounter_id as EncounterID,v.visit_date as VisitDate,v.visit_date as OVCEnrolmentDate,coalesce(v.relationship_to_client,r.b_is_to_a) as RelationshipToClient,v.client_enrolled_cpims,
+       de.CPIMS_unique_identifier as CPIMSUniqueIdentifier,v.partner_offering_ovc as PartnerOfferingOVCServices,
+       concat_ws(',',NULLIF(if(v.ovc_comprehensive_program='Yes','OVC Comprehensive',''),''),
+                 NULLIF(if(v.dreams_program='Yes','DREAMS',''),''),
+                 NULLIF(if(v.ovc_preventive_program='Yes','OVC Preventive',''),'')) as ProgramModel,d.attrition_reason as OVCExitReason, d.Outcome_date as ExitDate, v.date_created as date_created, greatest(v.date_last_modified,v.date_last_modified) as date_last_modified
+from kenyaemr_etl.etl_ovc_enrolment v
+       inner join kenyaemr_etl.etl_patient_demographics de on v.patient_id = de.patient_id
+       left join (SELECT r.person_b,r.person_a,t.a_is_to_b,t.b_is_to_a FROM openmrs.relationship r inner join openmrs.relationship_type t on r.relationship = t.relationship_type_id where r.voided =0)r on v.patient_id = r.person_b
+       left join (select d.patient_id,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date,(case mid(max(concat(date(d.visit_date),d.discontinuation_reason)),11) when 160036 then 'Transfer out to a PEPFAR supported facility' when 159492 then 'Transfer out to a non PEPFAR supported facility'
+                                                                                                                                                                                                   when 165219 then 'Exit without graduation' when 1267 then 'Graduated out of OVC' when 160034 then 'Died' end ) as attrition_reason from kenyaemr_etl.etl_patient_program_discontinuation d
+                  where program_name='OVC' group by d.patient_id)d on d.patient_id = v.patient_id
+       join kenyaemr_etl.etl_default_facility_info s;"|dwhstage|0|OvcExtract|18|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,
+       a.visit_id as VisitId,a.visit_date as VisitDate,e.OTZEnrolmentDate,e.TransferInStatus, e.ModulesPreviouslyCovered
+    ,concat_ws(',',NULLIF(if(a.orientation='Yes','OTZ Orientation',null),''),NULLIF(if(a.participation='Yes','OTZ Participation',''),''),NULLIF(if(a.making_decision_future='Yes','OTZ Making decisions for the future',''),'')
+       ,NULLIF(if(a.transition_to_adult_care='Yes','OTZ Transition to Adult care',''),''),NULLIF(if(a.treatment_literacy='Yes','OTZ Treatment literacy',''),''),NULLIF(if(a.srh='Yes','OTZ SRH',''),''),
+               NULLIF(if(a.beyond_third_ninety='Yes','OTZ Beyond the 3rd 90',null),'')) as ModulesCompletedToday,a.attended_support_group as SupportGroupInvolvement,
+       a.remarks as Remarks,d.attrition_reason as TransitionAttritionReason, d.Outcome_date as OutcomeDate, a.date_created as date_created, greatest(NULLIF(a.date_last_modified,'0000-00-00'),NULLIF(a.date_last_modified,'0000-00-00')) as date_last_modified
+from kenyaemr_etl.etl_otz_activity a
+       inner join kenyaemr_etl.etl_patient_demographics de on a.patient_id = de.patient_id
+       inner join (select e.patient_id, greatest(max(e.visit_date),'0000-00-00') as OTZEnrolmentDate,mid(max(concat(e.visit_date,e.transfer_in)),11) as TransferInStatus,
+                          concat_ws(',',NULLIF(if(e.orientation='Yes','OTZ Orientation',null),''),NULLIF(if(e.participation='Yes','OTZ Participation',''),''),NULLIF(if(e.making_decision_future='Yes','OTZ Making decisions for the future',''),''),
+                                    NULLIF(if(e.transition_to_adult_care='Yes','OTZ Transition to Adult care',''),''),NULLIF(if(e.treatment_literacy='Yes','OTZ Treatment literacy',''),''),NULLIF(if(e.srh='Yes','OTZ SRH',''),''),
+                                    NULLIF(if(e.beyond_third_ninety='Yes','OTZ Beyond the 3rd 90',null),'')) as ModulesPreviouslyCovered,e.date_created as date_created, e.date_last_modified as date_last_modified
+                   from kenyaemr_etl.etl_otz_enrollment e group by e.patient_id)e on a.patient_id = e.patient_id
+       left join (select d.patient_id,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date,(case mid(max(concat(date(d.visit_date),d.discontinuation_reason)),11) when 5240 then 'LTFU' when 159492 then 'Transfer Out'
+                                                                                                                                                                                                   when 160034 then 'Died' when 159836 then 'Opt out of OTZ' when 165363 then 'Transition to Adult Care' end ) as attrition_reason from kenyaemr_etl.etl_patient_program_discontinuation d
+                  where program_name='OTZ' group by d.patient_id)d on d.patient_id = a.patient_id
+       join kenyaemr_etl.etl_default_facility_info s;"|dwhstage|0|OtzExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b

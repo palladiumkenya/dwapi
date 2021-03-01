@@ -13,6 +13,7 @@
     <PackageReference Include="Z.Dapper.Plus" Version="3.0.29" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dwapi.Contracts\Dwapi.Contracts.csproj" />
     <ProjectReference Include="..\Dwapi.SettingsManagement.Core\Dwapi.SettingsManagement.Core.csproj" />
     <ProjectReference Include="..\Dwapi.SharedKernel\Dwapi.SharedKernel.csproj" />
   </ItemGroup>
