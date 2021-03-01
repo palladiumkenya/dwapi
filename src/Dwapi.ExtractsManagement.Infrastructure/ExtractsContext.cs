@@ -148,24 +148,24 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<OtzExtract> OtzExtracts { get; set; }
 
 
-        // public DbSet<TempAllergiesChronicIllnessExtractError> TempAllergiesChronicIllnessExtractError { get; set; }
-        // public DbSet<TempAllergiesChronicIllnessExtractErrorSummary> TempAllergiesChronicIllnessExtractErrorSummary { get; set; }
-        // public DbSet<TempIptExtractError> TempIptExtractError { get; set; }
-        // public DbSet<TempIptExtractErrorSummary> TempIptExtractErrorSummary { get; set; }
-        // public DbSet<TempDepressionScreeningExtractError> TempDepressionScreeningExtractError { get; set; }
-        // public DbSet<TempDepressionScreeningExtractErrorSummary> TempDepressionScreeningExtractErrorSummary { get; set; }
-        // public DbSet<TempContactListingExtractError> TempContactListingExtractError { get; set; }
-        // public DbSet<TempContactListingExtractErrorSummary> TempContactListingExtractErrorSummary { get; set; }
-        // public DbSet<TempGbvScreeningExtractError> TempGbvScreeningExtractError { get; set; }
-        // public DbSet<TempGbvScreeningExtractErrorSummary> TempGbvScreeningExtractErrorSummary { get; set; }
-        // public DbSet<TempEnhancedAdherenceCounsellingExtractError> TempEnhancedAdherenceCounsellingExtractError { get; set; }
-        // public DbSet<TempEnhancedAdherenceCounsellingExtractErrorSummary> TempEnhancedAdherenceCounsellingExtractErrorSummary { get; set; }
-        // public DbSet<TempDrugAlcoholScreeningExtractError> TempDrugAlcoholScreeningExtractError { get; set; }
-        // public DbSet<TempDrugAlcoholScreeningExtractErrorSummary> TempDrugAlcoholScreeningExtractErrorSummary { get; set; }
-        // public DbSet<TempOvcExtractError> TempOvcExtractError{ get; set; }
-        // public DbSet<TempOvcExtractErrorSummary> TempOvcExtractErrorSummaries{ get; set; }
-        // public DbSet<TempOtzExtractError> TempOtzExtractError { get; set; }
-        // public DbSet<TempOtzExtractErrorSummary> TempOtzExtractErrorSummary { get; set; }
+        public DbSet<TempAllergiesChronicIllnessExtractError> TempAllergiesChronicIllnessExtractError { get; set; }
+        public DbSet<TempAllergiesChronicIllnessExtractErrorSummary> TempAllergiesChronicIllnessExtractErrorSummary { get; set; }
+        public DbSet<TempIptExtractError> TempIptExtractError { get; set; }
+        public DbSet<TempIptExtractErrorSummary> TempIptExtractErrorSummary { get; set; }
+        public DbSet<TempDepressionScreeningExtractError> TempDepressionScreeningExtractError { get; set; }
+        public DbSet<TempDepressionScreeningExtractErrorSummary> TempDepressionScreeningExtractErrorSummary { get; set; }
+        public DbSet<TempContactListingExtractError> TempContactListingExtractError { get; set; }
+        public DbSet<TempContactListingExtractErrorSummary> TempContactListingExtractErrorSummary { get; set; }
+        public DbSet<TempGbvScreeningExtractError> TempGbvScreeningExtractError { get; set; }
+        public DbSet<TempGbvScreeningExtractErrorSummary> TempGbvScreeningExtractErrorSummary { get; set; }
+        public DbSet<TempEnhancedAdherenceCounsellingExtractError> TempEnhancedAdherenceCounsellingExtractError { get; set; }
+        public DbSet<TempEnhancedAdherenceCounsellingExtractErrorSummary> TempEnhancedAdherenceCounsellingExtractErrorSummary { get; set; }
+        public DbSet<TempDrugAlcoholScreeningExtractError> TempDrugAlcoholScreeningExtractError { get; set; }
+        public DbSet<TempDrugAlcoholScreeningExtractErrorSummary> TempDrugAlcoholScreeningExtractErrorSummary { get; set; }
+        public DbSet<TempOvcExtractError> TempOvcExtractError{ get; set; }
+        public DbSet<TempOvcExtractErrorSummary> TempOvcExtractErrorSummaries{ get; set; }
+        public DbSet<TempOtzExtractError> TempOtzExtractError { get; set; }
+        public DbSet<TempOtzExtractErrorSummary> TempOtzExtractErrorSummary { get; set; }
 
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)

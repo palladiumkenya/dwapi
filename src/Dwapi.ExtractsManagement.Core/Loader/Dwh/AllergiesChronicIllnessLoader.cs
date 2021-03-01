@@ -1,0 +1,100 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Application.Events;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Events;
+using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
+using MediatR;
+using Serilog;
+
+namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
+{
+    public class AllergiesChronicIllnessLoader : IAllergiesChronicIllnessLoader
+    {
+        private readonly IAllergiesChronicIllnessExtractRepository _AllergiesChronicIllnessExtractRepository;
+        private readonly ITempAllergiesChronicIllnessExtractRepository _tempAllergiesChronicIllnessExtractRepository;
+        private readonly IMediator _mediator;
+
+        public AllergiesChronicIllnessLoader(IAllergiesChronicIllnessExtractRepository AllergiesChronicIllnessExtractRepository, ITempAllergiesChronicIllnessExtractRepository tempAllergiesChronicIllnessExtractRepository, IMediator mediator)
+        {
+            _AllergiesChronicIllnessExtractRepository = AllergiesChronicIllnessExtractRepository;
+            _tempAllergiesChronicIllnessExtractRepository = tempAllergiesChronicIllnessExtractRepository;
+            _mediator = mediator;
+        }
+
+        public async Task<int> Load(Guid extractId, int found)
+        {
+            int count = 0;
+
+            try
+            {
+                DomainEvents.Dispatch(
+                    new ExtractActivityNotification(extractId, new DwhProgress(
+                        nameof(AllergiesChronicIllnessExtract),
+                        nameof(ExtractStatus.Loading),
+                        found, 0, 0, 0, 0)));
+
+
+                StringBuilder query = new StringBuilder();
+                query.Append($" SELECT s.* FROM {nameof(TempAllergiesChronicIllnessExtract)}s s");
+                query.Append($" INNER JOIN PatientExtracts p ON ");
+                query.Append($" s.PatientPK = p.PatientPK AND ");
+                query.Append($" s.SiteCode = p.SiteCode ");
+
+                const int take = 1000;
+                var eCount = await  _tempAllergiesChronicIllnessExtractRepository.GetCount(query.ToString());
+                var pageCount = _tempAllergiesChronicIllnessExtractRepository.PageCount(take, eCount);
+
+                int page = 1;
+                while (page <= pageCount)
+                {
+                    var tempAllergiesChronicIllnessExtracts =await
+                        _tempAllergiesChronicIllnessExtractRepository.ReadAll(query.ToString(), page, take);
+
+                    var batch = tempAllergiesChronicIllnessExtracts.ToList();
+                    count += batch.Count;
+
+                    //Auto mapper
+                    var extractRecords = Mapper.Map<List<TempAllergiesChronicIllnessExtract>, List<AllergiesChronicIllnessExtract>>(batch);
+                    foreach (var record in extractRecords)
+                    {
+                        record.Id = LiveGuid.NewGuid();
+                    }
+                    //Batch Insert
+                    var inserted = _AllergiesChronicIllnessExtractRepository.BatchInsert(extractRecords);
+                    if (!inserted)
+                    {
+                        Log.Error($"Extract {nameof(AllergiesChronicIllnessExtract)} not Loaded");
+                        return 0;
+                    }
+                    Log.Debug("saved batch");
+                    page++;
+                    DomainEvents.Dispatch(
+                        new ExtractActivityNotification(extractId, new DwhProgress(
+                            nameof(AllergiesChronicIllnessExtract),
+                            nameof(ExtractStatus.Loading),
+                            found, count , 0, 0, 0)));
+                }
+
+                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(AllergiesChronicIllnessExtract)));
+
+                return count;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, $"Extract {nameof(AllergiesChronicIllnessExtract)} not Loaded");
+                return 0;
+            }
+        }
+    }
+}

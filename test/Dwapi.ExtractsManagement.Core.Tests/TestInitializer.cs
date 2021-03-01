@@ -209,6 +209,16 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddTransient<IPatientStatusExtractRepository, PatientStatusExtractRepository>();
             services.AddTransient<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
 
+            services.AddTransient<IAllergiesChronicIllnessExtractRepository, AllergiesChronicIllnessExtractRepository>();
+            services.AddTransient<IContactListingExtractRepository, ContactListingExtractRepository>();
+            services.AddTransient<IDepressionScreeningExtractRepository, DepressionScreeningExtractRepository>();
+            services.AddTransient<IDrugAlcoholScreeningExtractRepository, DrugAlcoholScreeningExtractRepository>();
+            services.AddTransient<IEnhancedAdherenceCounsellingExtractRepository, EnhancedAdherenceCounsellingExtractRepository>();
+            services.AddTransient<IGbvScreeningExtractRepository, GbvScreeningExtractRepository>();
+            services.AddTransient<IIptExtractRepository, IptExtractRepository>();
+            services.AddTransient<IOtzExtractRepository, OtzExtractRepository>();
+            services.AddTransient<IOvcExtractRepository, OvcExtractRepository>();
+
             #endregion
 
             #region TempExtracts
@@ -222,6 +232,16 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddTransient<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>();
             services.AddTransient<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>();
             services.AddTransient<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>();
+
+            services.AddTransient<ITempAllergiesChronicIllnessExtractRepository, TempAllergiesChronicIllnessExtractRepository>();
+            services.AddTransient<ITempContactListingExtractRepository, TempContactListingExtractRepository>();
+            services.AddTransient<ITempDepressionScreeningExtractRepository, TempDepressionScreeningExtractRepository>();
+            services.AddTransient<ITempDrugAlcoholScreeningExtractRepository, TempDrugAlcoholScreeningExtractRepository>();
+            services.AddTransient<ITempEnhancedAdherenceCounsellingExtractRepository, TempEnhancedAdherenceCounsellingExtractRepository>();
+            services.AddTransient<ITempGbvScreeningExtractRepository, TempGbvScreeningExtractRepository>();
+            services.AddTransient<ITempIptExtractRepository, TempIptExtractRepository>();
+            services.AddTransient<ITempOtzExtractRepository, TempOtzExtractRepository>();
+            services.AddTransient<ITempOvcExtractRepository, TempOvcExtractRepository>();
 
             #endregion
 
@@ -248,6 +268,16 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services
                 .AddScoped<ITempPatientVisitExtractErrorSummaryRepository, TempPatientVisitExtractErrorSummaryRepository
                 >();
+
+            services.AddTransient<ITempAllergiesChronicIllnessExtractErrorSummaryRepository, TempAllergiesChronicIllnessExtractErrorSummaryRepository>();
+            services.AddTransient<ITempContactListingExtractErrorSummaryRepository, TempContactListingExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDepressionScreeningExtractErrorSummaryRepository, TempDepressionScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDrugAlcoholScreeningExtractErrorSummaryRepository, TempDrugAlcoholScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempEnhancedAdherenceCounsellingExtractErrorSummaryRepository, TempEnhancedAdherenceCounsellingExtractErrorSummaryRepository>();
+            services.AddTransient<ITempGbvScreeningExtractErrorSummaryRepository, TempGbvScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempIptExtractErrorSummaryRepository, TempIptExtractErrorSummaryRepository>();
+            services.AddTransient<ITempOtzExtractErrorSummaryRepository, TempOtzExtractErrorSummaryRepository>();
+            services.AddTransient<ITempOvcExtractErrorSummaryRepository, TempOvcExtractErrorSummaryRepository>();
 
             #endregion
 
@@ -353,6 +383,17 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor>();
 
             services.AddScoped<IMetricMigrationSourceExtractor,MetricMigrationSourceExtractor>();
+
+
+            services.AddScoped<IAllergiesChronicIllnessSourceExtractor, AllergiesChronicIllnessSourceExtractor>();
+            services.AddScoped<IContactListingSourceExtractor, ContactListingSourceExtractor>();
+            services.AddScoped<IDepressionScreeningSourceExtractor, DepressionScreeningSourceExtractor>();
+            services.AddScoped<IDrugAlcoholScreeningSourceExtractor, DrugAlcoholScreeningSourceExtractor>();
+            services.AddScoped<IEnhancedAdherenceCounsellingSourceExtractor, EnhancedAdherenceCounsellingSourceExtractor>();
+            services.AddScoped<IGbvScreeningSourceExtractor, GbvScreeningSourceExtractor>();
+            services.AddScoped<IIptSourceExtractor, IptSourceExtractor>();
+            services.AddScoped<IOtzSourceExtractor, OtzSourceExtractor>();
+            services.AddScoped<IOvcSourceExtractor, OvcSourceExtractor>();
             #endregion
 
             #region Loaders
@@ -377,6 +418,16 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddScoped<IHtsPartnerNotificationServicesLoader, HtsPartnerNotificationServicesLoader >();
 
             services.AddScoped<IMetricMigrationLoader, MetricMigrationLoader>();
+
+            services.AddScoped<IAllergiesChronicIllnessLoader, AllergiesChronicIllnessLoader>();
+            services.AddScoped<IContactListingLoader, ContactListingLoader>();
+            services.AddScoped<IDepressionScreeningLoader, DepressionScreeningLoader>();
+            services.AddScoped<IDrugAlcoholScreeningLoader, DrugAlcoholScreeningLoader>();
+            services.AddScoped<IEnhancedAdherenceCounsellingLoader, EnhancedAdherenceCounsellingLoader>();
+            services.AddScoped<IGbvScreeningLoader, GbvScreeningLoader>();
+            services.AddScoped<IIptLoader, IptLoader>();
+            services.AddScoped<IOtzLoader, OtzLoader>();
+            services.AddScoped<IOvcLoader, OvcLoader>();
 
             #endregion
             #region Services
@@ -561,6 +612,27 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             LoadData(ServiceProvider.GetService<IPatientPharmacyLoader>(), ServiceProvider.GetService<IPatientPharmacySourceExtractor>(), nameof(PatientPharmacyExtract));
             LoadData(ServiceProvider.GetService<IPatientStatusLoader>(), ServiceProvider.GetService<IPatientStatusSourceExtractor>(), nameof(PatientStatusExtract));
             LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+
+
+            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+
+
+            LoadData(ServiceProvider.GetService<IAllergiesChronicIllnessLoader>(), ServiceProvider.GetService<IAllergiesChronicIllnessSourceExtractor>(), nameof(AllergiesChronicIllnessExtract));
+            LoadData(ServiceProvider.GetService<IIptLoader>(), ServiceProvider.GetService<IIptSourceExtractor>(), nameof(IptExtract));
+            LoadData(ServiceProvider.GetService<IDepressionScreeningLoader>(), ServiceProvider.GetService<IDepressionScreeningSourceExtractor>(), nameof(DepressionScreeningExtract));
+            LoadData(ServiceProvider.GetService<IContactListingLoader>(), ServiceProvider.GetService<IContactListingSourceExtractor>(), nameof(ContactListingExtract));
+            LoadData(ServiceProvider.GetService<IGbvScreeningLoader>(), ServiceProvider.GetService<IGbvScreeningSourceExtractor>(), nameof(GbvScreeningExtract));
+            LoadData(ServiceProvider.GetService<IEnhancedAdherenceCounsellingLoader>(), ServiceProvider.GetService<IEnhancedAdherenceCounsellingSourceExtractor>(), nameof(EnhancedAdherenceCounsellingExtract));
+            LoadData(ServiceProvider.GetService<IDrugAlcoholScreeningLoader>(), ServiceProvider.GetService<IDrugAlcoholScreeningSourceExtractor>(), nameof(DrugAlcoholScreeningExtract));
+            LoadData(ServiceProvider.GetService<IOvcLoader>(), ServiceProvider.GetService<IOvcSourceExtractor>(), nameof(OvcExtract));
+            LoadData(ServiceProvider.GetService<IOtzLoader>(), ServiceProvider.GetService<IOtzSourceExtractor>(), nameof(OtzExtract));
+
         }
 
         public static void LoadMgs()
