@@ -12,7 +12,7 @@ namespace Dwapi.Contracts.Ct
          string RelationshipWithPatient { get; set; }
          string ScreenedForIpv { get; set; }
          string IpvScreening { get; set; }
-         string IpvScreeningOutcome { get; set; }
+         string IPVScreeningOutcome { get; set; }
          string CurrentlyLivingWithIndexClient { get; set; }
          string KnowledgeOfHivStatus { get; set; }
          string PnsApproach { get; set; }

@@ -13,7 +13,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string RelationshipWithPatient { get; set; }
         public string ScreenedForIpv { get; set; }
         public string IpvScreening { get; set; }
-        public string IpvScreeningOutcome { get; set; }
+        public string IPVScreeningOutcome { get; set; }
         public string CurrentlyLivingWithIndexClient { get; set; }
         public string KnowledgeOfHivStatus { get; set; }
         public string PnsApproach { get; set; }

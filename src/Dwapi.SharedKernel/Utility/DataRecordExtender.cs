@@ -31,6 +31,20 @@ namespace Dwapi.SharedKernel.Utility
             return null;
         }
 
+        public static decimal? GetNullDecimalOrDefault(this IDataRecord reader, string columnName)
+        {
+            object columnValue = reader[reader.GetOrdinal(columnName)];
+            if (!(columnValue is DBNull))
+            {
+                decimal o;
+                if (decimal.TryParse(columnValue.ToString(), out o))
+                    return o;
+                return null;
+            }
+
+            return null;
+        }
+
         public static DateTime? GetNullDateOrDefault(this IDataRecord reader, string columnName)
         {
             object columnValue = reader[reader.GetOrdinal(columnName)];
@@ -97,6 +111,24 @@ namespace Dwapi.SharedKernel.Utility
                 Log.Warning(e.Message);
             }
 
+            return null;
+        }
+
+        public static string GetOptionalStringOrDefault(this IDataRecord reader, string columnName)
+        {
+            try
+            {
+                object columnValue = reader[reader.GetOrdinal(columnName)];
+                if (!(columnValue is DBNull))
+                {
+                    return columnValue.ToString();
+                }
+
+            }
+            catch (Exception e)
+            {
+              Log.Warning(e.Message);
+            }
 
             return null;
         }

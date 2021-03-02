@@ -9,7 +9,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     {
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }
-        public string DrinkAlcohol { get; set; }
+        public string DrinkingAlcohol { get; set; }
         public string Smoking { get; set; }
         public string DrugUse { get; set; }
         public DateTime? Date_Created { get; set; }

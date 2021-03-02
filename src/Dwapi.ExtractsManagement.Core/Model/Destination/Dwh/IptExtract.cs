@@ -15,7 +15,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string Fever { get; set; }
         public string NoticeableWeightLoss { get; set; }
         public string NightSweats { get; set; }
-        public string Lethergy  { get; set; }
+        public string Lethargy  { get; set; }
         public string ICFActionTaken { get; set; }
         public string TestResult { get; set; }
         public string TBClinicalDiagnosis { get; set; }

@@ -38,6 +38,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
         {
             var extractIds = _extracts.Select(x => x.Id).ToList();
 
+            /*
             Assert.True(_extractsContext.TempPatientExtracts.Any());
             Assert.True(_extractsContext.TempPatientArtExtracts.Any());
             Assert.True(_extractsContext.PatientArtExtracts.Any());
@@ -73,6 +74,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
             Assert.True(_extractsContext.OtzExtracts.Any());
             Assert.True(_extractsContext.TempOvcExtracts.Any());
             Assert.True(_extractsContext.OvcExtracts.Any());
+            */
 
             _clearDwh.Clear(extractIds).Wait();
 

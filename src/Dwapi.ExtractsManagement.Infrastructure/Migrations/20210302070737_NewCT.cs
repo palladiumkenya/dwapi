@@ -48,7 +48,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AllergiesChronicIllnessExtracts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AllergiesChronicIllnessExtracts_PatientExtracts_SiteCode_Pat~",
+                        name: "FK_AllergiesChronicIllnessExtracts_PatientExtracts_SiteCode_PatientPK",
                         columns: x => new { x.SiteCode, x.PatientPK },
                         principalTable: "PatientExtracts",
                         principalColumns: new[] { "SiteCode", "PatientPK" },
@@ -81,7 +81,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     RelationshipWithPatient = table.Column<string>(nullable: true),
                     ScreenedForIpv = table.Column<string>(nullable: true),
                     IpvScreening = table.Column<string>(nullable: true),
-                    IpvScreeningOutcome = table.Column<string>(nullable: true),
+                    IPVScreeningOutcome = table.Column<string>(nullable: true),
                     CurrentlyLivingWithIndexClient = table.Column<string>(nullable: true),
                     KnowledgeOfHivStatus = table.Column<string>(nullable: true),
                     PnsApproach = table.Column<string>(nullable: true)
@@ -127,14 +127,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     PHQ9_7 = table.Column<string>(nullable: true),
                     PHQ9_8 = table.Column<string>(nullable: true),
                     PHQ9_9 = table.Column<string>(nullable: true),
-                    PHQ_9_Rating = table.Column<string>(nullable: true),
+                    PHQ_9_rating = table.Column<string>(nullable: true),
                     DepressionAssesmentScore = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DepressionScreeningExtracts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DepressionScreeningExtracts_PatientExtracts_SiteCode_Patient~",
+                        name: "FK_DepressionScreeningExtracts_PatientExtracts_SiteCode_PatientPK",
                         columns: x => new { x.SiteCode, x.PatientPK },
                         principalTable: "PatientExtracts",
                         principalColumns: new[] { "SiteCode", "PatientPK" },
@@ -162,7 +162,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     FacilityName = table.Column<string>(nullable: true),
                     VisitID = table.Column<int>(nullable: true),
                     VisitDate = table.Column<DateTime>(nullable: true),
-                    DrinkAlcohol = table.Column<string>(nullable: true),
+                    DrinkingAlcohol = table.Column<string>(nullable: true),
                     Smoking = table.Column<string>(nullable: true),
                     DrugUse = table.Column<string>(nullable: true)
                 },
@@ -170,7 +170,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_DrugAlcoholScreeningExtracts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DrugAlcoholScreeningExtracts_PatientExtracts_SiteCode_Patien~",
+                        name: "FK_DrugAlcoholScreeningExtracts_PatientExtracts_SiteCode_PatientPK",
                         columns: x => new { x.SiteCode, x.PatientPK },
                         principalTable: "PatientExtracts",
                         principalColumns: new[] { "SiteCode", "PatientPK" },
@@ -199,16 +199,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     VisitID = table.Column<int>(nullable: true),
                     VisitDate = table.Column<DateTime>(nullable: true),
                     SessionNumber = table.Column<int>(nullable: true),
-                    DateoffirstSession = table.Column<DateTime>(nullable: true),
+                    DateOfFirstSession = table.Column<DateTime>(nullable: true),
                     PillCountAdherence = table.Column<int>(nullable: true),
                     MMAS4_1 = table.Column<string>(nullable: true),
                     MMAS4_2 = table.Column<string>(nullable: true),
                     MMAS4_3 = table.Column<string>(nullable: true),
                     MMAS4_4 = table.Column<string>(nullable: true),
                     MMSA8_1 = table.Column<string>(nullable: true),
-                    MMSA4_2 = table.Column<string>(nullable: true),
-                    MMSA4_3 = table.Column<string>(nullable: true),
-                    MMSA4_4 = table.Column<string>(nullable: true),
+                    MMSA8_2 = table.Column<string>(nullable: true),
+                    MMSA8_3 = table.Column<string>(nullable: true),
+                    MMSA8_4 = table.Column<string>(nullable: true),
                     MMSAScore = table.Column<string>(nullable: true),
                     EACRecievedVL = table.Column<string>(nullable: true),
                     EACVL = table.Column<string>(nullable: true),
@@ -245,7 +245,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_EnhancedAdherenceCounsellingExtracts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EnhancedAdherenceCounsellingExtracts_PatientExtracts_SiteCod~",
+                        name: "FK_EnhancedAdherenceCounsellingExtracts_PatientExtracts_SiteCode_PatientPK",
                         columns: x => new { x.SiteCode, x.PatientPK },
                         principalTable: "PatientExtracts",
                         principalColumns: new[] { "SiteCode", "PatientPK" },
@@ -318,7 +318,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     Fever = table.Column<string>(nullable: true),
                     NoticeableWeightLoss = table.Column<string>(nullable: true),
                     NightSweats = table.Column<string>(nullable: true),
-                    Lethergy = table.Column<string>(nullable: true),
+                    Lethargy = table.Column<string>(nullable: true),
                     ICFActionTaken = table.Column<string>(nullable: true),
                     TestResult = table.Column<string>(nullable: true),
                     TBClinicalDiagnosis = table.Column<string>(nullable: true),
@@ -485,7 +485,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     RelationshipWithPatient = table.Column<string>(nullable: true),
                     ScreenedForIpv = table.Column<string>(nullable: true),
                     IpvScreening = table.Column<string>(nullable: true),
-                    IpvScreeningOutcome = table.Column<string>(nullable: true),
+                    IPVScreeningOutcome = table.Column<string>(nullable: true),
                     CurrentlyLivingWithIndexClient = table.Column<string>(nullable: true),
                     KnowledgeOfHivStatus = table.Column<string>(nullable: true),
                     PnsApproach = table.Column<string>(nullable: true),
@@ -523,7 +523,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     PHQ9_7 = table.Column<string>(nullable: true),
                     PHQ9_8 = table.Column<string>(nullable: true),
                     PHQ9_9 = table.Column<string>(nullable: true),
-                    PHQ_9_Rating = table.Column<string>(nullable: true),
+                    PHQ_9_rating = table.Column<string>(nullable: true),
                     DepressionAssesmentScore = table.Column<int>(nullable: true),
                     Date_Created = table.Column<DateTime>(nullable: true),
                     Date_Last_Modified = table.Column<DateTime>(nullable: true)
@@ -550,7 +550,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     FacilityName = table.Column<string>(nullable: true),
                     VisitID = table.Column<int>(nullable: true),
                     VisitDate = table.Column<DateTime>(nullable: true),
-                    DrinkAlcohol = table.Column<string>(nullable: true),
+                    DrinkingAlcohol = table.Column<string>(nullable: true),
                     Smoking = table.Column<string>(nullable: true),
                     DrugUse = table.Column<string>(nullable: true),
                     Date_Created = table.Column<DateTime>(nullable: true),
@@ -579,16 +579,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     VisitID = table.Column<int>(nullable: true),
                     VisitDate = table.Column<DateTime>(nullable: true),
                     SessionNumber = table.Column<int>(nullable: true),
-                    DateoffirstSession = table.Column<DateTime>(nullable: true),
+                    DateOfFirstSession = table.Column<DateTime>(nullable: true),
                     PillCountAdherence = table.Column<int>(nullable: true),
                     MMAS4_1 = table.Column<string>(nullable: true),
                     MMAS4_2 = table.Column<string>(nullable: true),
                     MMAS4_3 = table.Column<string>(nullable: true),
                     MMAS4_4 = table.Column<string>(nullable: true),
                     MMSA8_1 = table.Column<string>(nullable: true),
-                    MMSA4_2 = table.Column<string>(nullable: true),
-                    MMSA4_3 = table.Column<string>(nullable: true),
-                    MMSA4_4 = table.Column<string>(nullable: true),
+                    MMSA8_2 = table.Column<string>(nullable: true),
+                    MMSA8_3 = table.Column<string>(nullable: true),
+                    MMSA8_4 = table.Column<string>(nullable: true),
                     MMSAScore = table.Column<string>(nullable: true),
                     EACRecievedVL = table.Column<string>(nullable: true),
                     EACVL = table.Column<string>(nullable: true),
@@ -682,7 +682,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     Fever = table.Column<string>(nullable: true),
                     NoticeableWeightLoss = table.Column<string>(nullable: true),
                     NightSweats = table.Column<string>(nullable: true),
-                    Lethergy = table.Column<string>(nullable: true),
+                    Lethargy = table.Column<string>(nullable: true),
                     ICFActionTaken = table.Column<string>(nullable: true),
                     TestResult = table.Column<string>(nullable: true),
                     TBClinicalDiagnosis = table.Column<string>(nullable: true),
@@ -813,7 +813,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 columns: new[] { "SiteCode", "PatientPK" });
 
 
-            if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
+  if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
             {
                 migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 0;");
 
@@ -839,6 +839,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                 migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 1;");
             }
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -896,6 +897,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "TempOvcExtracts");
+
         }
     }
 }

@@ -11,16 +11,16 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }
         public int? SessionNumber { get; set; }
-        public DateTime? DateoffirstSession { get; set; }
+        public DateTime? DateOfFirstSession { get; set; }
         public int? PillCountAdherence { get; set; }
         public string MMAS4_1 { get; set; }
         public string MMAS4_2 { get; set; }
         public string MMAS4_3 { get; set; }
         public string MMAS4_4 { get; set; }
         public string MMSA8_1 { get; set; }
-        public string MMSA4_2 { get; set; }
-        public string MMSA4_3 { get; set; }
-        public string MMSA4_4 { get; set; }
+        public string MMSA8_2 { get; set; }
+        public string MMSA8_3 { get; set; }
+        public string MMSA8_4 { get; set; }
         public string MMSAScore { get; set; }
         public string EACRecievedVL { get; set; }
         public string EACVL { get; set; }

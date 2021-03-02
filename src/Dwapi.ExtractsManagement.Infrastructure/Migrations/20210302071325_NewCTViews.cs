@@ -6,7 +6,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
             migrationBuilder.Sql(@"create view vTempAllergiesChronicIllnessExtractError as SELECT * FROM TempAllergiesChronicIllnessExtracts WHERE (CheckError = 1)");
             migrationBuilder.Sql(@"create view vTempIptExtractError as SELECT * FROM TempIptExtracts WHERE (CheckError = 1)");
             migrationBuilder.Sql(@"create view vTempDepressionScreeningExtractError as SELECT * FROM TempDepressionScreeningExtracts WHERE (CheckError = 1)");
@@ -133,8 +132,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 							 ValidationError ON vTempIptExtractError.Id = ValidationError.RecordId INNER JOIN
 							 Validator ON ValidationError.ValidatorId = Validator.Id
                 ");
-
-
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

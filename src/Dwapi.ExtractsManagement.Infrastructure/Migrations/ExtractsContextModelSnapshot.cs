@@ -3,6 +3,7 @@ using System;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
@@ -15,7 +16,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Cbs.MasterPatientIndex", b =>
                 {
@@ -228,9 +230,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("FacilityName");
 
-                    b.Property<string>("IpvScreening");
+                    b.Property<string>("IPVScreeningOutcome");
 
-                    b.Property<string>("IpvScreeningOutcome");
+                    b.Property<string>("IpvScreening");
 
                     b.Property<string>("KnowledgeOfHivStatus");
 
@@ -302,7 +304,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("PHQ9_9");
 
-                    b.Property<string>("PHQ_9_Rating");
+                    b.Property<string>("PHQ_9_rating");
 
                     b.Property<string>("PatientID");
 
@@ -342,7 +344,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("Date_Last_Modified");
 
-                    b.Property<string>("DrinkAlcohol");
+                    b.Property<string>("DrinkingAlcohol");
 
                     b.Property<string>("DrugUse");
 
@@ -388,11 +390,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DateExtracted");
 
+                    b.Property<DateTime?>("DateOfFirstSession");
+
                     b.Property<DateTime?>("Date_Created");
 
                     b.Property<DateTime?>("Date_Last_Modified");
-
-                    b.Property<DateTime?>("DateoffirstSession");
 
                     b.Property<string>("EACAdherencePlan");
 
@@ -468,13 +470,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("MMAS4_4");
 
-                    b.Property<string>("MMSA4_2");
-
-                    b.Property<string>("MMSA4_3");
-
-                    b.Property<string>("MMSA4_4");
-
                     b.Property<string>("MMSA8_1");
+
+                    b.Property<string>("MMSA8_2");
+
+                    b.Property<string>("MMSA8_3");
+
+                    b.Property<string>("MMSA8_4");
 
                     b.Property<string>("MMSAScore");
 
@@ -596,7 +598,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("IndicationForIPT");
 
-                    b.Property<string>("Lethergy");
+                    b.Property<string>("Lethargy");
 
                     b.Property<string>("NightSweats");
 
@@ -2281,9 +2283,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("FacilityName");
 
-                    b.Property<string>("IpvScreening");
+                    b.Property<string>("IPVScreeningOutcome");
 
-                    b.Property<string>("IpvScreeningOutcome");
+                    b.Property<string>("IpvScreening");
 
                     b.Property<string>("KnowledgeOfHivStatus");
 
@@ -2349,7 +2351,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("PHQ9_9");
 
-                    b.Property<string>("PHQ_9_Rating");
+                    b.Property<string>("PHQ_9_rating");
 
                     b.Property<string>("PatientID");
 
@@ -2381,7 +2383,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("Date_Last_Modified");
 
-                    b.Property<string>("DrinkAlcohol");
+                    b.Property<string>("DrinkingAlcohol");
 
                     b.Property<string>("DrugUse");
 
@@ -2421,11 +2423,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime>("DateExtracted");
 
+                    b.Property<DateTime?>("DateOfFirstSession");
+
                     b.Property<DateTime?>("Date_Created");
 
                     b.Property<DateTime?>("Date_Last_Modified");
-
-                    b.Property<DateTime?>("DateoffirstSession");
 
                     b.Property<string>("EACAdherencePlan");
 
@@ -2503,13 +2505,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("MMAS4_4");
 
-                    b.Property<string>("MMSA4_2");
-
-                    b.Property<string>("MMSA4_3");
-
-                    b.Property<string>("MMSA4_4");
-
                     b.Property<string>("MMSA8_1");
+
+                    b.Property<string>("MMSA8_2");
+
+                    b.Property<string>("MMSA8_3");
+
+                    b.Property<string>("MMSA8_4");
 
                     b.Property<string>("MMSAScore");
 
@@ -2619,7 +2621,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("IndicationForIPT");
 
-                    b.Property<string>("Lethergy");
+                    b.Property<string>("Lethargy");
 
                     b.Property<string>("NightSweats");
 

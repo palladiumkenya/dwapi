@@ -613,16 +613,6 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             LoadData(ServiceProvider.GetService<IPatientStatusLoader>(), ServiceProvider.GetService<IPatientStatusSourceExtractor>(), nameof(PatientStatusExtract));
             LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
 
-
-            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
-            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
-            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
-            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
-            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
-            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
-            LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
-
-
             LoadData(ServiceProvider.GetService<IAllergiesChronicIllnessLoader>(), ServiceProvider.GetService<IAllergiesChronicIllnessSourceExtractor>(), nameof(AllergiesChronicIllnessExtract));
             LoadData(ServiceProvider.GetService<IIptLoader>(), ServiceProvider.GetService<IIptSourceExtractor>(), nameof(IptExtract));
             LoadData(ServiceProvider.GetService<IDepressionScreeningLoader>(), ServiceProvider.GetService<IDepressionScreeningSourceExtractor>(), nameof(DepressionScreeningExtract));
