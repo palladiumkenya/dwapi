@@ -275,11 +275,45 @@ namespace Dwapi.Controller
             var idsB=_ctSendService.SendBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
             var idsC= _ctSendService.SendBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
         }
+        public void SendNewJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsAllergiesChronicIllness =_ctSendService.SendBatchExtractsAsync(package, 200, new AllergiesChronicIllnesssMessageBag()).Result;
+            var idsIpt =_ctSendService.SendBatchExtractsAsync(package, 200, new IptsMessageBag()).Result;
+            var idsDepressionScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new DepressionScreeningsMessageBag()).Result;
+            var idsContactListing =_ctSendService.SendBatchExtractsAsync(package, 200, new ContactListingsMessageBag()).Result;
+        }
+
+        public void SendNewOtherJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsGbvScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new GbvScreeningsMessageBag()).Result;
+            var idsEnhancedAdherenceCounselling =_ctSendService.SendBatchExtractsAsync(package, 200, new EnhancedAdherenceCounsellingsMessageBag()).Result;
+            var idsDrugAlcoholScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new DrugAlcoholScreeningsMessageBag()).Result;
+            var idsOvc =_ctSendService.SendBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
+            var idsOtz =_ctSendService.SendBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
+        }
+
         public void SendDiffJobProfiles(SendManifestPackageDTO package)
         {
             var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 500, new PharmacyMessageBag()).Result;
             var idsB=_ctSendService.SendDiffBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
             var idsC= _ctSendService.SendDiffBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
+        }
+
+        public void SendDiffNewJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsAllergiesChronicIllness =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new AllergiesChronicIllnesssMessageBag()).Result;
+            var idsIpt =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new IptsMessageBag()).Result;
+            var idsDepressionScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DepressionScreeningsMessageBag()).Result;
+            var idsContactListing =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new ContactListingsMessageBag()).Result;
+        }
+
+        public void SendDiffNewOtherJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsGbvScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new GbvScreeningsMessageBag()).Result;
+            var idsEnhancedAdherenceCounselling =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new EnhancedAdherenceCounsellingsMessageBag()).Result;
+            var idsDrugAlcoholScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DrugAlcoholScreeningsMessageBag()).Result;
+            var idsOvc =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
+            var idsOtz =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
         }
 
         [AutomaticRetry(Attempts = 0)]

@@ -523,6 +523,62 @@ namespace Dwapi
             services.AddScoped<IDiffLogReader, DiffLogReader>();
 
             services.AddScoped<IAppMetricRepository, AppMetricRepository>();
+
+            #region newCT
+            services.AddTransient<IAllergiesChronicIllnessExtractRepository, AllergiesChronicIllnessExtractRepository>();
+            services.AddTransient<IContactListingExtractRepository, ContactListingExtractRepository>();
+            services.AddTransient<IDepressionScreeningExtractRepository, DepressionScreeningExtractRepository>();
+            services.AddTransient<IDrugAlcoholScreeningExtractRepository, DrugAlcoholScreeningExtractRepository>();
+            services.AddTransient<IEnhancedAdherenceCounsellingExtractRepository, EnhancedAdherenceCounsellingExtractRepository>();
+            services.AddTransient<IGbvScreeningExtractRepository, GbvScreeningExtractRepository>();
+            services.AddTransient<IIptExtractRepository, IptExtractRepository>();
+            services.AddTransient<IOtzExtractRepository, OtzExtractRepository>();
+            services.AddTransient<IOvcExtractRepository, OvcExtractRepository>();
+
+            services.AddTransient<ITempAllergiesChronicIllnessExtractRepository, TempAllergiesChronicIllnessExtractRepository>();
+            services.AddTransient<ITempContactListingExtractRepository, TempContactListingExtractRepository>();
+            services.AddTransient<ITempDepressionScreeningExtractRepository, TempDepressionScreeningExtractRepository>();
+            services.AddTransient<ITempDrugAlcoholScreeningExtractRepository, TempDrugAlcoholScreeningExtractRepository>();
+            services.AddTransient<ITempEnhancedAdherenceCounsellingExtractRepository, TempEnhancedAdherenceCounsellingExtractRepository>();
+            services.AddTransient<ITempGbvScreeningExtractRepository, TempGbvScreeningExtractRepository>();
+            services.AddTransient<ITempIptExtractRepository, TempIptExtractRepository>();
+            services.AddTransient<ITempOtzExtractRepository, TempOtzExtractRepository>();
+            services.AddTransient<ITempOvcExtractRepository, TempOvcExtractRepository>();
+
+
+            services.AddTransient<ITempAllergiesChronicIllnessExtractErrorSummaryRepository, TempAllergiesChronicIllnessExtractErrorSummaryRepository>();
+            services.AddTransient<ITempContactListingExtractErrorSummaryRepository, TempContactListingExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDepressionScreeningExtractErrorSummaryRepository, TempDepressionScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDrugAlcoholScreeningExtractErrorSummaryRepository, TempDrugAlcoholScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempEnhancedAdherenceCounsellingExtractErrorSummaryRepository, TempEnhancedAdherenceCounsellingExtractErrorSummaryRepository>();
+            services.AddTransient<ITempGbvScreeningExtractErrorSummaryRepository, TempGbvScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempIptExtractErrorSummaryRepository, TempIptExtractErrorSummaryRepository>();
+            services.AddTransient<ITempOtzExtractErrorSummaryRepository, TempOtzExtractErrorSummaryRepository>();
+            services.AddTransient<ITempOvcExtractErrorSummaryRepository, TempOvcExtractErrorSummaryRepository>();
+
+            services.AddScoped<IAllergiesChronicIllnessSourceExtractor, AllergiesChronicIllnessSourceExtractor>();
+            services.AddScoped<IContactListingSourceExtractor, ContactListingSourceExtractor>();
+            services.AddScoped<IDepressionScreeningSourceExtractor, DepressionScreeningSourceExtractor>();
+            services.AddScoped<IDrugAlcoholScreeningSourceExtractor, DrugAlcoholScreeningSourceExtractor>();
+            services.AddScoped<IEnhancedAdherenceCounsellingSourceExtractor, EnhancedAdherenceCounsellingSourceExtractor>();
+            services.AddScoped<IGbvScreeningSourceExtractor, GbvScreeningSourceExtractor>();
+            services.AddScoped<IIptSourceExtractor, IptSourceExtractor>();
+            services.AddScoped<IOtzSourceExtractor, OtzSourceExtractor>();
+            services.AddScoped<IOvcSourceExtractor, OvcSourceExtractor>();
+
+            services.AddScoped<IAllergiesChronicIllnessLoader, AllergiesChronicIllnessLoader>();
+            services.AddScoped<IContactListingLoader, ContactListingLoader>();
+            services.AddScoped<IDepressionScreeningLoader, DepressionScreeningLoader>();
+            services.AddScoped<IDrugAlcoholScreeningLoader, DrugAlcoholScreeningLoader>();
+            services.AddScoped<IEnhancedAdherenceCounsellingLoader, EnhancedAdherenceCounsellingLoader>();
+            services.AddScoped<IGbvScreeningLoader, GbvScreeningLoader>();
+            services.AddScoped<IIptLoader, IptLoader>();
+            services.AddScoped<IOtzLoader, OtzLoader>();
+            services.AddScoped<IOvcLoader, OvcLoader>();
+
+
+            #endregion
+
             var container = new Container();
             container.Populate(services);
             ServiceProvider = container.GetInstance<IServiceProvider>();

@@ -35,6 +35,17 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
 
         public virtual DbSet<DiffLogView> DiffLogs { get; set; }
 
+        public virtual DbSet<AllergiesChronicIllnessExtractView> ClientAllergiesChronicIllnessExtracts { get; set; }
+        public virtual DbSet<IptExtractView> ClientIptExtracts { get; set; }
+        public virtual DbSet<DepressionScreeningExtractView> ClientDepressionScreeningExtracts { get; set; }
+        public virtual DbSet<ContactListingExtractView> ClientContactListingExtracts { get; set; }
+        public virtual DbSet<GbvScreeningExtractView> ClientGbvScreeningExtracts { get; set; }
+        public virtual DbSet<EnhancedAdherenceCounsellingExtractView> ClientEnhancedAdherenceCounsellingExtracts { get; set; }
+        public virtual DbSet<DrugAlcoholScreeningExtractView> ClientDrugAlcoholScreeningExtracts { get; set; }
+        public virtual DbSet<OvcExtractView> ClientOvcExtracts { get; set; }
+        public virtual DbSet<OtzExtractView> ClientOtzExtracts { get; set; }
+
+
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
 

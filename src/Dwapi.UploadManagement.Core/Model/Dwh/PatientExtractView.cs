@@ -77,6 +77,37 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         public ICollection<PatientAdverseEventView> PatientAdverseEventExtracts { get; set; } =
             new List<PatientAdverseEventView>();
 
+        [NotMapped]
+        public ICollection<AllergiesChronicIllnessExtractView> AllergiesChronicIllnessExtracts { get; set; } =
+            new List<AllergiesChronicIllnessExtractView>();
+
+        [NotMapped] public ICollection<IptExtractView> IptExtracts { get; set; } = new List<IptExtractView>();
+
+        [NotMapped]
+        public ICollection<DepressionScreeningExtractView> DepressionScreeningExtracts { get; set; } =
+            new List<DepressionScreeningExtractView>();
+
+        [NotMapped]
+        public ICollection<ContactListingExtractView> ContactListingExtracts { get; set; } =
+            new List<ContactListingExtractView>();
+
+        [NotMapped]
+        public ICollection<GbvScreeningExtractView> GbvScreeningExtracts { get; set; } =
+            new List<GbvScreeningExtractView>();
+
+        [NotMapped]
+        public ICollection<EnhancedAdherenceCounsellingExtractView> EnhancedAdherenceCounsellingExtracts { get; set; } =
+            new List<EnhancedAdherenceCounsellingExtractView>();
+
+        [NotMapped]
+        public ICollection<DrugAlcoholScreeningExtractView> DrugAlcoholScreeningExtracts { get; set; } =
+            new List<DrugAlcoholScreeningExtractView>();
+
+        [NotMapped] public ICollection<OvcExtractView> OvcExtracts { get; set; } = new List<OvcExtractView>();
+        [NotMapped] public ICollection<OtzExtractView> OtzExtracts { get; set; } = new List<OtzExtractView>();
+
+
+
         [NotMapped] public bool HasArt => null != PatientArtExtracts && PatientArtExtracts.Any();
         [NotMapped] public bool HasBaseline => null != PatientBaselinesExtracts && PatientBaselinesExtracts.Any();
         [NotMapped] public bool HasLab => null != PatientLaboratoryExtracts && PatientLaboratoryExtracts.Any();

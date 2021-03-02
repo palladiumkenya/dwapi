@@ -24,7 +24,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             await _mediator.Send(new ClearAllExtracts(extractIds), cancellationToken);
 
 
-            var patientProfile = request.Extracts.FirstOrDefault(x=>x.Extract.IsPriority);
+            var patientProfile = request.Extracts.FirstOrDefault(x => x.Extract.IsPriority);
             //Generate extract patient command
             if (patientProfile != null)
             {
@@ -42,12 +42,29 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     return false;
                 }
             }
+
             return await ExtractAll(request, cancellationToken);
         }
 
         private async Task<bool> ExtractAll(LoadFromEmrCommand request, CancellationToken cancellationToken)
         {
-            Task<bool> t1 = null, t2 = null, t3 = null, t4 = null, t5 = null, t6 = null, t7 = null;
+            Task<bool> t1 = null,
+                t2 = null,
+                t3 = null,
+                t4 = null,
+                t5 = null,
+                t6 = null,
+                t7 = null,
+                t8 = null,
+                t9 = null,
+                t10 = null,
+                t11 = null,
+                t12 = null,
+                t13 = null,
+                t14 = null,
+                t15 = null,
+                t16 = null;
+            ;
             // ExtractPatientART
             var patientArtProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientArtExtract");
             if (null != patientArtProfile)
@@ -61,7 +78,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             }
 
             // ExtractPatientBaselines
-            var patientBaselinesProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientBaselineExtract");
+            var patientBaselinesProfile =
+                request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientBaselineExtract");
             if (null != patientBaselinesProfile)
             {
                 var patientBaselinesCommand = new ExtractPatientBaselines()
@@ -85,7 +103,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             }
 
             // ExtractPatientPharmacy
-            var patientPharmacyProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientPharmacyExtract");
+            var patientPharmacyProfile =
+                request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientPharmacyExtract");
             if (null != patientPharmacyProfile)
             {
                 var patientPharmacyCommand = new ExtractPatientPharmacy()
@@ -121,7 +140,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             }
 
             // ExtractPatientAdverseEvent
-            var patientAdverseEventProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientAdverseEventExtract");
+            var patientAdverseEventProfile =
+                request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientAdverseEventExtract");
             if (null != patientAdverseEventProfile)
             {
                 var patientAdverseEventCommand = new ExtractPatientAdverseEvent()
@@ -132,11 +152,129 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 t7 = _mediator.Send(patientAdverseEventCommand, cancellationToken);
             }
 
+
+            // ExtractAllergiesChronicIllness
+            var allergiesChronicIllnessProfile =
+                request.Extracts.FirstOrDefault(x => x.Extract.Name == "AllergiesChronicIllnessExtract");
+            if (null != allergiesChronicIllnessProfile)
+            {
+                var allergiesChronicIllnessCommand = new ExtractAllergiesChronicIllness()
+                {
+                    Extract = allergiesChronicIllnessProfile?.Extract,
+                    DatabaseProtocol = allergiesChronicIllnessProfile?.DatabaseProtocol
+                };
+                t8 = _mediator.Send(allergiesChronicIllnessCommand, cancellationToken);
+            }
+
+            // ExtractContactListing
+            var contactListingProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "ContactListingExtract");
+            if (null != contactListingProfile)
+            {
+                var contactListingCommand = new ExtractContactListing()
+                {
+                    Extract = contactListingProfile?.Extract,
+                    DatabaseProtocol = contactListingProfile?.DatabaseProtocol
+                };
+                t9 = _mediator.Send(contactListingCommand, cancellationToken);
+            }
+
+            // ExtractDepressionScreening
+            var depressionScreeningProfile =
+                request.Extracts.FirstOrDefault(x => x.Extract.Name == "DepressionScreeningExtract");
+            if (null != depressionScreeningProfile)
+            {
+                var depressionScreeningCommand = new ExtractDepressionScreening()
+                {
+                    Extract = depressionScreeningProfile?.Extract,
+                    DatabaseProtocol = depressionScreeningProfile?.DatabaseProtocol
+                };
+                t10 = _mediator.Send(depressionScreeningCommand, cancellationToken);
+            }
+
+            // ExtractDrugAlcoholScreening
+            var drugAlcoholScreeningProfile =
+                request.Extracts.FirstOrDefault(x => x.Extract.Name == "DrugAlcoholScreeningExtract");
+            if (null != drugAlcoholScreeningProfile)
+            {
+                var drugAlcoholScreeningCommand = new ExtractDrugAlcoholScreening()
+                {
+                    Extract = drugAlcoholScreeningProfile?.Extract,
+                    DatabaseProtocol = drugAlcoholScreeningProfile?.DatabaseProtocol
+                };
+                t11 = _mediator.Send(drugAlcoholScreeningCommand, cancellationToken);
+            }
+
+            // ExtractEnhancedAdherenceCounselling
+            var enhancedAdherenceCounsellingProfile =
+                request.Extracts.FirstOrDefault(x => x.Extract.Name == "EnhancedAdherenceCounsellingExtract");
+            if (null != enhancedAdherenceCounsellingProfile)
+            {
+                var enhancedAdherenceCounsellingCommand = new ExtractEnhancedAdherenceCounselling()
+                {
+                    Extract = enhancedAdherenceCounsellingProfile?.Extract,
+                    DatabaseProtocol = enhancedAdherenceCounsellingProfile?.DatabaseProtocol
+                };
+                t12 = _mediator.Send(enhancedAdherenceCounsellingCommand, cancellationToken);
+            }
+
+            // ExtractGbvScreening
+            var gbvScreeningProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "GbvScreeningExtract");
+            if (null != gbvScreeningProfile)
+            {
+                var gbvScreeningCommand = new ExtractGbvScreening()
+                {
+                    Extract = gbvScreeningProfile?.Extract,
+                    DatabaseProtocol = gbvScreeningProfile?.DatabaseProtocol
+                };
+                t13 = _mediator.Send(gbvScreeningCommand, cancellationToken);
+            }
+
+            // ExtractPatientVisit
+            var iptProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "IptExtract");
+            if (null != iptProfile)
+            {
+                var iptCommand = new ExtractIpt()
+                {
+                    Extract = iptProfile?.Extract,
+                    DatabaseProtocol = iptProfile?.DatabaseProtocol
+                };
+                t14 = _mediator.Send(iptCommand, cancellationToken);
+            }
+
+
+            // ExtractOtz
+            var otzProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "OtzExtract");
+            if (null != otzProfile)
+            {
+                var otzCommand = new ExtractOtz()
+                {
+                    Extract = otzProfile?.Extract,
+                    DatabaseProtocol = otzProfile?.DatabaseProtocol
+                };
+                t15 = _mediator.Send(otzCommand, cancellationToken);
+            }
+
+            // ExtractOvc
+            var ovcProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "OvcExtract");
+            if (null != ovcProfile)
+            {
+                var ovcCommand = new ExtractOvc()
+                {
+                    Extract = ovcProfile?.Extract,
+                    DatabaseProtocol = ovcProfile?.DatabaseProtocol
+                };
+                t16 = _mediator.Send(ovcCommand, cancellationToken);
+            }
+
+
+
+
+
             // await all tasks
-            var ts = new List<Task<bool>> { t1, t2, t3, t4, t5, t6, t7};
+            var ts = new List<Task<bool>> {t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16};
             var result = await Task.WhenAll(ts);
 
-            return result.All(x=>x);
+            return result.All(x => x);
         }
     }
 }

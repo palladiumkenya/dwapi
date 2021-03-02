@@ -4143,7 +4143,7 @@ from kenyaemr_etl.etl_patient_hiv_followup v
                    from obs o join obs o1 on o.obs_id = o1.obs_group_id) o1 on o1.encounter_id = v.encounter_id
        join kenyaemr_etl.etl_default_facility_info s
 where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date group by v.visit_id"|dwhstage|0|AllergiesChronicIllnessExtract|11|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-2bbeec21-7754-11eb-9439-0242ac130002|IPT|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,0 AS FacilityId,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,v.visit_date,
+2bbeec21-7754-11eb-9439-0242ac130002|IPT|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,0 AS FacilityId,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,v.visit_date as VisitDate,
        case v.on_anti_tb_drugs when 1065 then 'Yes' when 1066 then 'No' end as OnTBDrugs,case v.on_ipt when 1065 then 'Yes' when 1066 then 'No' end as OnIPT, case v.ever_on_ipt when 1065 then 'Yes' when 1066 then 'No' end as EverOnIPT,
        '' as Cough,
        '' as Fever,
@@ -4249,7 +4249,7 @@ from kenyaemr_etl.etl_alcohol_drug_abuse_screening v
        join kenyaemr_etl.etl_default_facility_info s
 where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|DrugAlcoholScreeningExtract|17|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec27-7754-11eb-9439-0242ac130002|OVC|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,
-       v.encounter_id as EncounterID,v.visit_date as VisitDate,v.visit_date as OVCEnrolmentDate,coalesce(v.relationship_to_client,r.b_is_to_a) as RelationshipToClient,v.client_enrolled_cpims,
+       v.encounter_id as EncounterID,v.visit_date as VisitDate,v.visit_date as OVCEnrollmentDate,coalesce(v.relationship_to_client,r.b_is_to_a) as RelationshipToClient,v.client_enrolled_cpims,
        de.CPIMS_unique_identifier as CPIMSUniqueIdentifier,v.partner_offering_ovc as PartnerOfferingOVCServices,
        concat_ws(',',NULLIF(if(v.ovc_comprehensive_program='Yes','OVC Comprehensive',''),''),
                  NULLIF(if(v.dreams_program='Yes','DREAMS',''),''),
@@ -4262,14 +4262,14 @@ from kenyaemr_etl.etl_ovc_enrolment v
                   where program_name='OVC' group by d.patient_id)d on d.patient_id = v.patient_id
        join kenyaemr_etl.etl_default_facility_info s;"|dwhstage|0|OvcExtract|18|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id as PatientPK,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'HMIS' as Project,s.FacilityName as FacilityName,
-       a.visit_id as VisitId,a.visit_date as VisitDate,e.OTZEnrolmentDate,e.TransferInStatus, e.ModulesPreviouslyCovered
+       a.visit_id as VisitId,a.visit_date as VisitDate,e.OTZEnrollmentDate,e.TransferInStatus, e.ModulesPreviouslyCovered
     ,concat_ws(',',NULLIF(if(a.orientation='Yes','OTZ Orientation',null),''),NULLIF(if(a.participation='Yes','OTZ Participation',''),''),NULLIF(if(a.making_decision_future='Yes','OTZ Making decisions for the future',''),'')
        ,NULLIF(if(a.transition_to_adult_care='Yes','OTZ Transition to Adult care',''),''),NULLIF(if(a.treatment_literacy='Yes','OTZ Treatment literacy',''),''),NULLIF(if(a.srh='Yes','OTZ SRH',''),''),
                NULLIF(if(a.beyond_third_ninety='Yes','OTZ Beyond the 3rd 90',null),'')) as ModulesCompletedToday,a.attended_support_group as SupportGroupInvolvement,
        a.remarks as Remarks,d.attrition_reason as TransitionAttritionReason, d.Outcome_date as OutcomeDate, a.date_created as date_created, greatest(NULLIF(a.date_last_modified,'0000-00-00'),NULLIF(a.date_last_modified,'0000-00-00')) as date_last_modified
 from kenyaemr_etl.etl_otz_activity a
        inner join kenyaemr_etl.etl_patient_demographics de on a.patient_id = de.patient_id
-       inner join (select e.patient_id, greatest(max(e.visit_date),'0000-00-00') as OTZEnrolmentDate,mid(max(concat(e.visit_date,e.transfer_in)),11) as TransferInStatus,
+       inner join (select e.patient_id, greatest(max(e.visit_date),'0000-00-00') as OTZEnrollmentDate,mid(max(concat(e.visit_date,e.transfer_in)),11) as TransferInStatus,
                           concat_ws(',',NULLIF(if(e.orientation='Yes','OTZ Orientation',null),''),NULLIF(if(e.participation='Yes','OTZ Participation',''),''),NULLIF(if(e.making_decision_future='Yes','OTZ Making decisions for the future',''),''),
                                     NULLIF(if(e.transition_to_adult_care='Yes','OTZ Transition to Adult care',''),''),NULLIF(if(e.treatment_literacy='Yes','OTZ Treatment literacy',''),''),NULLIF(if(e.srh='Yes','OTZ SRH',''),''),
                                     NULLIF(if(e.beyond_third_ninety='Yes','OTZ Beyond the 3rd 90',null),'')) as ModulesPreviouslyCovered,e.date_created as date_created, e.date_last_modified as date_last_modified
