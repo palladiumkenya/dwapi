@@ -3,7 +3,7 @@ using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
-    public class IptExtract : ClientExtract,IIPt
+    public class IptExtract : ClientExtract,IIpt
     {
         public string FacilityName { get; set; }
         public int ? VisitID { get; set; }

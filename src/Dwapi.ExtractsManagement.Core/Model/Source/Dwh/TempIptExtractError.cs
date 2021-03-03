@@ -5,7 +5,7 @@ using Dwapi.Contracts.Ct;
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
     [Table("vTempIptExtractError")]
-    public class TempIptExtractError : TempExtract,IIPt
+    public class TempIptExtractError : TempExtract,IIpt
     {
         public string FacilityName { get; set; }
         public int? VisitID { get; set; }

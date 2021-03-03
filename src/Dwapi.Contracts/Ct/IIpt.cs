@@ -2,7 +2,7 @@ using System;
 
 namespace Dwapi.Contracts.Ct
 {
-    public interface IIPt
+    public interface IIpt
     {
         string FacilityName { get; set; }
         int? VisitID { get; set; }
