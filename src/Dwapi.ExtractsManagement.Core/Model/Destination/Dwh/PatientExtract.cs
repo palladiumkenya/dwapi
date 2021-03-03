@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
-    public class PatientExtract : ClientExtract
+    public class PatientExtract : ClientExtract,IPatient
     {
         public string FacilityName { get; set; }
         public string Gender { get; set; }
@@ -56,5 +57,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public virtual ICollection<IptExtract> IptExtracts { get; set; } = new List<IptExtract>();
         public virtual ICollection<OtzExtract> OtzExtracts { get; set; } = new List<OtzExtract>();
         public virtual ICollection<OvcExtract> OvcExtracts { get; set; } = new List<OvcExtract>();
+        public string Pkv { get; set; }
+        public string Occupation { get; set; }
     }
 }

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Dwapi.Contracts.Ct;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 
 namespace Dwapi.UploadManagement.Core.Model.Dwh
 {
     [Table("PatientExtracts")]
-    public class PatientExtractView : ClientExtract
+    public class PatientExtractView : ClientExtract,IPatient
     {
         public string FacilityName { get; set; }
         public string Gender { get; set; }
@@ -43,8 +44,9 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         public string PatientResidentWard { get; set; }
         public string PatientResidentVillage { get; set; }
         public DateTime? TransferInDate { get; set; }
-        public DateTime? Date_Created { get; set; }
-        public DateTime? Date_Last_Modified { get; set; }
+
+        public string Pkv { get; set; }
+        public string Occupation { get; set; }
 
         [NotMapped] public int PatientPID => PatientPK;
         [NotMapped] public string PatientCccNumber => PatientID;
@@ -121,5 +123,6 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         {
             return new Facility(SiteCode, FacilityName, Emr, Project);
         }
+
     }
 }

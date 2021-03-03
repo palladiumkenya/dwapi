@@ -50,16 +50,10 @@ namespace Dwapi.SharedKernel.Utility
             object columnValue = reader[reader.GetOrdinal(columnName)];
             if (!(columnValue is DBNull))
             {
-                //try
-                //{
-
-                    return DateTime.Parse(columnValue.ToString());
-                //}
-                //catch (Exception e)
-                //{
-                //    Log.Error(columnName, e);
-                //}
-
+                DateTime o;
+                if (DateTime.TryParse(columnValue.ToString(), out o))
+                    return o;
+                return null;
             }
 
             return null;
@@ -67,28 +61,14 @@ namespace Dwapi.SharedKernel.Utility
 
         public static DateTime? GetOptionalNullDateOrDefault(this IDataRecord reader, string columnName)
         {
-                try
-                {
-                    object columnValue = reader[reader.GetOrdinal(columnName)];
-                    if (!(columnValue is DBNull))
-                    {
-                        //try
-                        //{
-
-                        return DateTime.Parse(columnValue.ToString());
-                        //}
-                        //catch (Exception e)
-                        //{
-                        //    Log.Error(columnName, e);
-                        //}
-
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.Warning(e.Message);
-                }
-
+            try
+            {
+                return GetNullDateOrDefault(reader, columnName);
+            }
+            catch (Exception e)
+            {
+                Log.Warning(e.Message);
+            }
 
             return null;
         }
@@ -97,14 +77,7 @@ namespace Dwapi.SharedKernel.Utility
         {
             try
             {
-                object columnValue = reader[reader.GetOrdinal(columnName)];
-                if (!(columnValue is DBNull))
-                {
-                    int o;
-                    if (int.TryParse(columnValue.ToString(), out o))
-                        return o;
-                    return null;
-                }
+                return GetNullIntOrDefault(reader, columnName);
             }
             catch (Exception e)
             {
@@ -118,18 +91,25 @@ namespace Dwapi.SharedKernel.Utility
         {
             try
             {
-                object columnValue = reader[reader.GetOrdinal(columnName)];
-                if (!(columnValue is DBNull))
-                {
-                    return columnValue.ToString();
-                }
-
+                return GetStringOrDefault(reader, columnName);
             }
             catch (Exception e)
             {
               Log.Warning(e.Message);
             }
+            return null;
+        }
 
+        public static decimal? GetOptionalNullDecimalOrDefault(this IDataRecord reader, string columnName)
+        {
+            try
+            {
+                return GetNullDecimalOrDefault(reader, columnName);
+            }
+            catch (Exception e)
+            {
+                Log.Warning(e.Message);
+            }
             return null;
         }
 
