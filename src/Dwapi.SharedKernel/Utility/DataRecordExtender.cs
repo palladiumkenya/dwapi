@@ -69,7 +69,7 @@ namespace Dwapi.SharedKernel.Utility
             }
             catch (Exception e)
             {
-                // Log.Warning(e.Message);
+                Log.Warning(e.Message);
             }
 
             return null;
@@ -83,7 +83,7 @@ namespace Dwapi.SharedKernel.Utility
             }
             catch (Exception e)
             {
-                // Log.Warning(e.Message);
+                Log.Warning(e.Message);
             }
 
             return null;
@@ -97,7 +97,7 @@ namespace Dwapi.SharedKernel.Utility
             }
             catch (Exception e)
             {
-              // Log.Warning(e.Message);
+               Log.Warning(e.Message);
             }
             return null;
         }
@@ -110,7 +110,7 @@ namespace Dwapi.SharedKernel.Utility
             }
             catch (Exception e)
             {
-                // Log.Warning(e.Message);
+                Log.Warning(e.Message);
             }
             return null;
         }

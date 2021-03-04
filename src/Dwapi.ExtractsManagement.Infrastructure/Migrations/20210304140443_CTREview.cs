@@ -339,13 +339,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 //Patient Extract Errors
 
             migrationBuilder.Sql(@"
-                        create view vTempPatientExtractError as
+                        ALTER view vTempPatientExtractError as
                         SELECT  *
                         FROM    TempPatientExtracts
                         WHERE   (CheckError = 1)");
 
             migrationBuilder.Sql(@"
-                        CREATE VIEW vTempPatientExtractErrorSummary
+                        ALTER VIEW vTempPatientExtractErrorSummary
                         AS
                         SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, vTempPatientExtractError.PatientPK,vTempPatientExtractError.FacilityId,
                                                  vTempPatientExtractError.PatientID, vTempPatientExtractError.SiteCode, vTempPatientExtractError.FacilityName, ValidationError.RecordId
@@ -356,13 +356,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
             //Patient ART Errors
 
             migrationBuilder.Sql(@"
-	create view vTempPatientArtExtractError as
+	ALTER view vTempPatientArtExtractError as
 	SELECT        *
 	FROM            TempPatientArtExtracts
 	WHERE        (CheckError = 1)
                 ");
             migrationBuilder.Sql(@"
-	CREATE VIEW vTempPatientArtExtractErrorSummary
+	ALTER VIEW vTempPatientArtExtractErrorSummary
 	AS
 	SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, vTempPatientArtExtractError.PatientPK,vTempPatientArtExtractError.FacilityId,
 							 vTempPatientArtExtractError.PatientID, vTempPatientArtExtractError.SiteCode, vTempPatientArtExtractError.FacilityName, ValidationError.RecordId,
@@ -393,13 +393,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
              // Patient Pharmacy Errors
 
             migrationBuilder.Sql(@"
-	create view vTempPatientPharmacyExtractError as
+	ALTER view vTempPatientPharmacyExtractError as
 	SELECT        *
 	FROM            TempPatientPharmacyExtracts
 	WHERE        (CheckError = 1)
                 ");
             migrationBuilder.Sql(@"
-	CREATE VIEW vTempPatientPharmacyExtractErrorSummary
+	ALTER VIEW vTempPatientPharmacyExtractErrorSummary
 	AS
 	SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, vTempPatientPharmacyExtractError.PatientPK,vTempPatientPharmacyExtractError.FacilityId,
 							 vTempPatientPharmacyExtractError.PatientID, vTempPatientPharmacyExtractError.SiteCode,  ValidationError.RecordId,
@@ -423,13 +423,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
             //Patient Status Errors
 
             migrationBuilder.Sql(@"
-	create view vTempPatientStatusExtractError as
+	ALTER view vTempPatientStatusExtractError as
 	SELECT        *
 	FROM            TempPatientStatusExtracts
 	WHERE        (CheckError = 1)
                 ");
             migrationBuilder.Sql(@"
-	CREATE VIEW vTempPatientStatusExtractErrorSummary
+	ALTER VIEW vTempPatientStatusExtractErrorSummary
 	AS
 	SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, vTempPatientStatusExtractError.PatientPK,vTempPatientStatusExtractError.FacilityId,
 							 vTempPatientStatusExtractError.PatientID, vTempPatientStatusExtractError.SiteCode, vTempPatientStatusExtractError.FacilityName, ValidationError.RecordId,
@@ -446,14 +446,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
             //Patient visit errors
 
             migrationBuilder.Sql(@"
-	create view vTempPatientVisitExtractError as
+	ALTER view vTempPatientVisitExtractError as
 	SELECT        *
 	FROM            TempPatientVisitExtracts
 	WHERE        (CheckError = 1)
                 ");
             migrationBuilder.Sql(@"
 
-	CREATE VIEW vTempPatientVisitExtractErrorSummary
+	ALTER VIEW vTempPatientVisitExtractErrorSummary
 	AS
 	SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, vTempPatientVisitExtractError.PatientPK,vTempPatientVisitExtractError.FacilityId,
 							 vTempPatientVisitExtractError.PatientID, vTempPatientVisitExtractError.SiteCode, vTempPatientVisitExtractError.FacilityName, ValidationError.RecordId,

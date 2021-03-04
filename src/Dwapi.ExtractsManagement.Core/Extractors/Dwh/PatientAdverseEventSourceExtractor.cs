@@ -49,15 +49,12 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                 while (rdr.Read())
                 {
                     count++;
+                    loaded++;
 
                     // AutoMapper profiles
                     var extractRecord = Mapper.Map<IDataRecord, TempPatientAdverseEventExtract>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
-                    if (extractRecord.HasData())
-                    {
-                        loaded++;
-                        list.Add(extractRecord);
-                    }
+                    list.Add(extractRecord);
 
                     if (count == batch)
                     {

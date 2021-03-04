@@ -164,8 +164,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         localStorage.clear();
         this.errorMessage = [];
         this.load$ = this._ndwhExtractService
-            .extractAll(this.generateExtractLoadCommand(this.emr))
-            //.extractAll(this.generateExtractsLoadCommand(this.emr))
+            //.extractAll(this.generateExtractLoadCommand(this.emr))
+            .extractAll(this.generateExtractsLoadCommand(this.emr))
             .subscribe(
                 p => {
                 },
