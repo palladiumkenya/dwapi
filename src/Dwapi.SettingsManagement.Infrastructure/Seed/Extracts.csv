@@ -162,10 +162,9 @@ FROM
 													CAST(GREATEST(coalesce(max(hiv.visit_date),date('1000-01-01')),coalesce(max(de.visit_date),date('1000-01-01')), coalesce(max(enr.visit_date),date('1000-01-01'))) as Date) as LastVisit,
 													UPPER(d.marital_status) as MaritalStatus,
 													UPPER(d.education_level) as EducationLevel,
-						
 													CAST(min(hiv.date_confirmed_hiv_positive) as Date) as DateConfirmedHIVPositive,
 													max(hiv.arv_status) as PreviousARTExposure,
-													NULL as DatePreviousARTStart,
+													NULL as PreviousARTStartDate,
 													'KenyaEMR' as Emr,
 													'Kenya HMIS II' as Project,
 													CASE hiv.patient_type

@@ -39,7 +39,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string PatientResidentWard { get; set; }
         public string PatientResidentVillage { get; set; }
         public DateTime? TransferInDate { get; set; }
-
+        public string Pkv { get; set; }
+        public string Occupation { get; set; }
         public virtual ICollection<PatientArtExtract> PatientArtExtracts { get; set; } = new List<PatientArtExtract>();
         public virtual ICollection<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; } = new List<PatientBaselinesExtract>();
         public virtual ICollection<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; } = new List<PatientLaboratoryExtract>();
@@ -57,7 +58,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public virtual ICollection<IptExtract> IptExtracts { get; set; } = new List<IptExtract>();
         public virtual ICollection<OtzExtract> OtzExtracts { get; set; } = new List<OtzExtract>();
         public virtual ICollection<OvcExtract> OvcExtracts { get; set; } = new List<OvcExtract>();
-        public string Pkv { get; set; }
-        public string Occupation { get; set; }
+
     }
 }

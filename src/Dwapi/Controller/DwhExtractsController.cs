@@ -49,7 +49,9 @@ namespace Dwapi.Controller
         [HttpPost("extract")]
         public async Task<IActionResult> Load([FromBody]ExtractPatient request)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if(!request.IsValid())
+                return BadRequest();
+
             var result = await _mediator.Send(request, HttpContext.RequestAborted);
             return Ok(result);
         }
@@ -57,7 +59,8 @@ namespace Dwapi.Controller
         [HttpPost("extractAll")]
         public async Task<IActionResult> Load([FromBody]LoadExtracts request)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if(!request.IsValid())
+                return BadRequest();
 
             var ver = GetType().Assembly.GetName().Version;
             string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
