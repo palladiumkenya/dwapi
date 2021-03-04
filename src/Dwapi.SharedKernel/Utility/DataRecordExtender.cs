@@ -56,6 +56,8 @@ namespace Dwapi.SharedKernel.Utility
                 return null;
             }
 
+
+
             return null;
         }
 
@@ -67,7 +69,7 @@ namespace Dwapi.SharedKernel.Utility
             }
             catch (Exception e)
             {
-                Log.Warning(e.Message);
+                // Log.Warning(e.Message);
             }
 
             return null;
@@ -81,7 +83,7 @@ namespace Dwapi.SharedKernel.Utility
             }
             catch (Exception e)
             {
-                Log.Warning(e.Message);
+                // Log.Warning(e.Message);
             }
 
             return null;
@@ -95,7 +97,7 @@ namespace Dwapi.SharedKernel.Utility
             }
             catch (Exception e)
             {
-              Log.Warning(e.Message);
+              // Log.Warning(e.Message);
             }
             return null;
         }
@@ -108,9 +110,19 @@ namespace Dwapi.SharedKernel.Utility
             }
             catch (Exception e)
             {
-                Log.Warning(e.Message);
+                // Log.Warning(e.Message);
             }
             return null;
+        }
+
+        public static bool HasColumn(this IDataRecord dr, string columnName)
+        {
+            for (int i=0; i < dr.FieldCount; i++)
+            {
+                if (dr.GetName(i).Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            }
+            return false;
         }
 
     }

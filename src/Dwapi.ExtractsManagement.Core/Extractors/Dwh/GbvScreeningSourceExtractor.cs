@@ -38,7 +38,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
             }
             extract.SetupDiffSql(dbProtocol);
 
-            int batch = 5000;
+            int batch = 500;
 
             var list = new List<TempGbvScreeningExtract>();
 
