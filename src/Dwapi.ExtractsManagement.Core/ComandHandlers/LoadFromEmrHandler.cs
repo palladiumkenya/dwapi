@@ -48,23 +48,9 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
         private async Task<bool> ExtractAll(LoadFromEmrCommand request, CancellationToken cancellationToken)
         {
-            Task<bool> t1 = null,
-                t2 = null,
-                t3 = null,
-                t4 = null,
-                t5 = null,
-                t6 = null,
-                t7 = null,
-                t8 = null,
-                t9 = null,
-                t10 = null,
-                t11 = null,
-                t12 = null,
-                t13 = null,
-                t14 = null,
-                t15 = null,
-                t16 = null;
-            ;
+
+            var ts = new List<Task<bool>>();
+
             // ExtractPatientART
             var patientArtProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientArtExtract");
             if (null != patientArtProfile)
@@ -74,7 +60,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = patientArtProfile?.Extract,
                     DatabaseProtocol = patientArtProfile?.DatabaseProtocol
                 };
-                t1 = _mediator.Send(patientArtCommand, cancellationToken);
+                ts.Add(_mediator.Send(patientArtCommand, cancellationToken));
             }
 
             // ExtractPatientBaselines
@@ -87,7 +73,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = patientBaselinesProfile?.Extract,
                     DatabaseProtocol = patientBaselinesProfile?.DatabaseProtocol
                 };
-                t2 = _mediator.Send(patientBaselinesCommand, cancellationToken);
+                ts.Add( _mediator.Send(patientBaselinesCommand, cancellationToken));
             }
 
             // ExtractPatientLaboratory
@@ -99,7 +85,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = patientLaboratoryProfile?.Extract,
                     DatabaseProtocol = patientLaboratoryProfile?.DatabaseProtocol
                 };
-                t3 = _mediator.Send(patientLaboratoryCommand, cancellationToken);
+                ts.Add( _mediator.Send(patientLaboratoryCommand, cancellationToken));
             }
 
             // ExtractPatientPharmacy
@@ -112,7 +98,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = patientPharmacyProfile?.Extract,
                     DatabaseProtocol = patientPharmacyProfile?.DatabaseProtocol
                 };
-                t4 = _mediator.Send(patientPharmacyCommand, cancellationToken);
+                ts.Add(_mediator.Send(patientPharmacyCommand, cancellationToken));
             }
 
             // ExtractPatientStatus
@@ -124,7 +110,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = patientStatusProfile?.Extract,
                     DatabaseProtocol = patientStatusProfile?.DatabaseProtocol
                 };
-                t5 = _mediator.Send(patientStatusCommand, cancellationToken);
+                ts.Add( _mediator.Send(patientStatusCommand, cancellationToken));
             }
 
             // ExtractPatientVisit
@@ -136,7 +122,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = patientVisitProfile?.Extract,
                     DatabaseProtocol = patientVisitProfile?.DatabaseProtocol
                 };
-                t6 = _mediator.Send(patientVisitCommand, cancellationToken);
+                ts.Add(_mediator.Send(patientVisitCommand, cancellationToken));
             }
 
             // ExtractPatientAdverseEvent
@@ -149,7 +135,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = patientAdverseEventProfile?.Extract,
                     DatabaseProtocol = patientAdverseEventProfile?.DatabaseProtocol
                 };
-                t7 = _mediator.Send(patientAdverseEventCommand, cancellationToken);
+                ts.Add( _mediator.Send(patientAdverseEventCommand, cancellationToken));
             }
 
 
@@ -163,7 +149,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = allergiesChronicIllnessProfile?.Extract,
                     DatabaseProtocol = allergiesChronicIllnessProfile?.DatabaseProtocol
                 };
-                t8 = _mediator.Send(allergiesChronicIllnessCommand, cancellationToken);
+                ts.Add(_mediator.Send(allergiesChronicIllnessCommand, cancellationToken));
             }
 
             // ExtractContactListing
@@ -175,7 +161,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = contactListingProfile?.Extract,
                     DatabaseProtocol = contactListingProfile?.DatabaseProtocol
                 };
-                t9 = _mediator.Send(contactListingCommand, cancellationToken);
+                ts.Add(_mediator.Send(contactListingCommand, cancellationToken));
             }
 
             // ExtractDepressionScreening
@@ -188,7 +174,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = depressionScreeningProfile?.Extract,
                     DatabaseProtocol = depressionScreeningProfile?.DatabaseProtocol
                 };
-                t10 = _mediator.Send(depressionScreeningCommand, cancellationToken);
+                ts.Add( _mediator.Send(depressionScreeningCommand, cancellationToken));
             }
 
             // ExtractDrugAlcoholScreening
@@ -201,7 +187,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = drugAlcoholScreeningProfile?.Extract,
                     DatabaseProtocol = drugAlcoholScreeningProfile?.DatabaseProtocol
                 };
-                t11 = _mediator.Send(drugAlcoholScreeningCommand, cancellationToken);
+                ts.Add( _mediator.Send(drugAlcoholScreeningCommand, cancellationToken));
             }
 
             // ExtractEnhancedAdherenceCounselling
@@ -214,7 +200,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = enhancedAdherenceCounsellingProfile?.Extract,
                     DatabaseProtocol = enhancedAdherenceCounsellingProfile?.DatabaseProtocol
                 };
-                t12 = _mediator.Send(enhancedAdherenceCounsellingCommand, cancellationToken);
+                ts.Add(_mediator.Send(enhancedAdherenceCounsellingCommand, cancellationToken));
             }
 
             // ExtractGbvScreening
@@ -226,7 +212,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = gbvScreeningProfile?.Extract,
                     DatabaseProtocol = gbvScreeningProfile?.DatabaseProtocol
                 };
-                t13 = _mediator.Send(gbvScreeningCommand, cancellationToken);
+                ts.Add( _mediator.Send(gbvScreeningCommand, cancellationToken));
             }
 
             // ExtractPatientVisit
@@ -238,7 +224,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = iptProfile?.Extract,
                     DatabaseProtocol = iptProfile?.DatabaseProtocol
                 };
-                t14 = _mediator.Send(iptCommand, cancellationToken);
+                ts.Add( _mediator.Send(iptCommand, cancellationToken));
             }
 
 
@@ -251,7 +237,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = otzProfile?.Extract,
                     DatabaseProtocol = otzProfile?.DatabaseProtocol
                 };
-                t15 = _mediator.Send(otzCommand, cancellationToken);
+                ts.Add(_mediator.Send(otzCommand, cancellationToken));
             }
 
             // ExtractOvc
@@ -263,17 +249,10 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                     Extract = ovcProfile?.Extract,
                     DatabaseProtocol = ovcProfile?.DatabaseProtocol
                 };
-                t16 = _mediator.Send(ovcCommand, cancellationToken);
+                ts.Add( _mediator.Send(ovcCommand, cancellationToken));
             }
 
-
-
-
-
-            // await all tasks
-            var ts = new List<Task<bool>> {t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16};
             var result = await Task.WhenAll(ts);
-
             return result.All(x => x);
         }
     }
