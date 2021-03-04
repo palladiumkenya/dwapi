@@ -11,8 +11,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class AllergiesChronicIllnesssMessageBag:IAllergiesChronicIllnessMessageBag
     {
-        private int stake = 30;
-        public string EndPoint => "AllergiesChronicIllnesss";
+        private int stake = 5;
+        public string EndPoint => "AllergiesChronicIllness";
         public IMessage<AllergiesChronicIllnessExtractView> Message { get; set; }
         public List<IMessage<AllergiesChronicIllnessExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();

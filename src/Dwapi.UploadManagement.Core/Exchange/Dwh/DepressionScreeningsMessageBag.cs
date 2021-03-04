@@ -11,8 +11,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class DepressionScreeningsMessageBag:IDepressionScreeningMessageBag
     {
-        private int stake = 30;
-        public string EndPoint => "DepressionScreenings";
+        private int stake = 5;
+        public string EndPoint => "DepressionScreening";
         public IMessage<DepressionScreeningExtractView> Message { get; set; }
         public List<IMessage<DepressionScreeningExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();

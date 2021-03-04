@@ -11,7 +11,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class LabMessageBag:ILaboratoryMessageBag
     {
-        private int stake = 20;
+        private int stake = 10;
         public string EndPoint => "PatientLabs";
         public IMessage<PatientLaboratoryExtractView> Message { get; set; }
         public List<IMessage<PatientLaboratoryExtractView>> Messages { get; set; }

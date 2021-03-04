@@ -11,8 +11,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class DrugAlcoholScreeningsMessageBag:IDrugAlcoholScreeningMessageBag
     {
-        private int stake = 30;
-        public string EndPoint => "DrugAlcoholScreenings";
+        private int stake = 5;
+        public string EndPoint => "DrugAlcoholScreening";
         public IMessage<DrugAlcoholScreeningExtractView> Message { get; set; }
         public List<IMessage<DrugAlcoholScreeningExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();

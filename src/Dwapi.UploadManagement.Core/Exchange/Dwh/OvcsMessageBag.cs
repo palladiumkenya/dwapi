@@ -11,8 +11,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class OvcsMessageBag:IOvcMessageBag
     {
-        private int stake = 30;
-        public string EndPoint => "Ovcs";
+        private int stake = 5;
+        public string EndPoint => "Ovc";
         public IMessage<OvcExtractView> Message { get; set; }
         public List<IMessage<OvcExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();

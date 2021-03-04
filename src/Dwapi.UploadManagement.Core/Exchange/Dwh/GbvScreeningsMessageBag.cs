@@ -11,8 +11,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class GbvScreeningsMessageBag:IGbvScreeningMessageBag
     {
-        private int stake = 30;
-        public string EndPoint => "GbvScreenings";
+        private int stake = 5;
+        public string EndPoint => "GbvScreening";
         public IMessage<GbvScreeningExtractView> Message { get; set; }
         public List<IMessage<GbvScreeningExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();

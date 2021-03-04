@@ -11,8 +11,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class OtzsMessageBag:IOtzMessageBag
     {
-        private int stake = 30;
-        public string EndPoint => "Otzs";
+        private int stake = 5;
+        public string EndPoint => "Otz";
         public IMessage<OtzExtractView> Message { get; set; }
         public List<IMessage<OtzExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();

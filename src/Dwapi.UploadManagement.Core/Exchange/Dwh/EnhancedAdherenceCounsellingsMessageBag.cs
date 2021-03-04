@@ -11,8 +11,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class EnhancedAdherenceCounsellingsMessageBag:IEnhancedAdherenceCounsellingMessageBag
     {
-        private int stake = 30;
-        public string EndPoint => "EnhancedAdherenceCounsellings";
+        private int stake = 5;
+        public string EndPoint => "EnhancedAdherenceCounselling";
         public IMessage<EnhancedAdherenceCounsellingExtractView> Message { get; set; }
         public List<IMessage<EnhancedAdherenceCounsellingExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();

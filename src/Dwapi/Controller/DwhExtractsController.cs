@@ -234,8 +234,14 @@ namespace Dwapi.Controller
             var job2 =
                 BatchJob.ContinueBatchWith(job1, x => { SendJobProfiles(package); });
 
+            var job3 =
+                BatchJob.ContinueBatchWith(job2, x => { SendNewJobProfiles(package); });
+
+            var job4 =
+                BatchJob.ContinueBatchWith(job3, x => { SendNewOtherJobProfiles(package); });
+
             var jobEnd =
-                BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(); });
+                BatchJob.ContinueBatchWith(job4, x => { _ctSendService.NotifyPostSending(); });
         }
 
         [AutomaticRetry(Attempts = 0)]
@@ -254,8 +260,14 @@ namespace Dwapi.Controller
             var job2 =
                 BatchJob.ContinueBatchWith(job1, x => { SendDiffJobProfiles(package); });
 
+            var job3 =
+                BatchJob.ContinueBatchWith(job2, x => { SendDiffNewJobProfiles(package); });
+
+            var job4 =
+                BatchJob.ContinueBatchWith(job3, x => { SendDiffNewOtherJobProfiles(package); });
+
             var jobEnd =
-                BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(); });
+                BatchJob.ContinueBatchWith(job4, x => { _ctSendService.NotifyPostSending(); });
         }
 
         public void SendJobBaselines(SendManifestPackageDTO package)

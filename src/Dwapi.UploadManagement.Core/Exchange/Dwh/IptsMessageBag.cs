@@ -11,8 +11,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class IptsMessageBag:IIptMessageBag
     {
-        private int stake = 30;
-        public string EndPoint => "Ipts";
+        private int stake = 5;
+        public string EndPoint => "Ipt";
         public IMessage<IptExtractView> Message { get; set; }
         public List<IMessage<IptExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();

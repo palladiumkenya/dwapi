@@ -11,7 +11,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class ArtMessageBag : IArtMessageBag
     {
-        private int stake = 10;
+        private int stake = 5;
         public string EndPoint => "PatientArt";
         public IMessage<PatientArtExtractView> Message { get; set; }
         public List<IMessage<PatientArtExtractView>> Messages { get; set; }

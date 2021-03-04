@@ -11,8 +11,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class ContactListingsMessageBag:IContactListingMessageBag
     {
-        private int stake = 30;
-        public string EndPoint => "ContactListings";
+        private int stake = 5;
+        public string EndPoint => "ContactListing";
         public IMessage<ContactListingExtractView> Message { get; set; }
         public List<IMessage<ContactListingExtractView>> Messages { get; set; }
         public List<Guid> SendIds => GetIds();
