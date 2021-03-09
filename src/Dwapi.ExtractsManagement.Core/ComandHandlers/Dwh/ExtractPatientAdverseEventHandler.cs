@@ -44,7 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
                 $"{nameof(TempPatientAdverseEventExtract)}s");
 
             //Load
-            int loaded = await _patientAdverseEventLoader.Load(request.Extract.Id, found);
+            int loaded = await _patientAdverseEventLoader.Load(request.Extract.Id, found, false);
 
             int rejected =
                 _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract);

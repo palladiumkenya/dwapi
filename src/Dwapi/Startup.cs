@@ -691,24 +691,24 @@ namespace Dwapi
                 }
             );
 
-            Mapper.Initialize(cfg =>
-                {
-                    cfg.AddDataReaderMapping();
-                    cfg.AddProfile<TempExtractProfile>();
-                    cfg.AddProfile<TempMasterPatientIndexProfile>();
-                    cfg.AddProfile<EmrProfiles>();
-                    cfg.AddProfile<TempHtsExtractProfile>();
-                    if (null != AppFeature && AppFeature.PKV.IsValid)
-                    {
-                        cfg.AddProfile<MasterPatientIndexProfileResearch>();
-                    }
-                    else
-                    {
-                        cfg.AddProfile<MasterPatientIndexProfile>();
-                    }
-                    cfg.AddProfile<TempMetricExtractProfile>();
-                }
-            );
+            // Mapper.Initialize(cfg =>
+            //     {
+            //         cfg.AddDataReaderMapping();
+            //         // cfg.AddProfile<TempExtractProfile>();
+            //         cfg.AddProfile<TempMasterPatientIndexProfile>();
+            //         cfg.AddProfile<EmrProfiles>();
+            //         cfg.AddProfile<TempHtsExtractProfile>();
+            //         if (null != AppFeature && AppFeature.PKV.IsValid)
+            //         {
+            //             cfg.AddProfile<MasterPatientIndexProfileResearch>();
+            //         }
+            //         else
+            //         {
+            //             cfg.AddProfile<MasterPatientIndexProfile>();
+            //         }
+            //         cfg.AddProfile<TempMetricExtractProfile>();
+            //     }
+            // );
 
             DomainEvents.Init();
 

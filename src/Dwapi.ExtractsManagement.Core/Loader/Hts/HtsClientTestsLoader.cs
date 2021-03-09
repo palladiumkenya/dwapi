@@ -10,6 +10,7 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
@@ -31,8 +32,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
             _tempHtsClientTestsExtractRepository = tempHtsClientTestsExtractRepository;
         }
 
-        public async Task<int> Load()
+        public async Task<int> Load(bool diffSupport)
         {
+            var mapper = diffSupport ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
             int count = 0;
 
             try
@@ -50,7 +52,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     var batch = tempHtsClientTests.ToList();
                     count += batch.Count;
                     //Auto mapper
-                    var extractRecords = Mapper.Map<List<TempHtsClientTests>, List<HtsClientTests>>(batch);
+                    var extractRecords = mapper.Map<List<TempHtsClientTests>, List<HtsClientTests>>(batch);
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
@@ -86,11 +88,11 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
             }
         }
 
-        public Task<int> Load(Guid extractId, int found)
+        public Task<int> Load(Guid extractId, int found, bool diffSupport)
         {
             Found = found;
             ExtractId = extractId;
-            return Load();
+            return Load(diffSupport);
         }
     }
 }

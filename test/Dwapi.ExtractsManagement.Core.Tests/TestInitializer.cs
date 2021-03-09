@@ -634,7 +634,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         {
             var extract = Extracts.First(x => x.Name.IsSameAs(extractName));
             var countA = extractor.Extract(extract, Protocol).Result;
-            var countB = loader.Load(extract.Id, countA).Result;
+            var countB = loader.Load(extract.Id, countA, false).Result;
         }
     }
 }

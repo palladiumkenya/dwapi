@@ -38,7 +38,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Dwh
             var patientLoader = TestInitializer.ServiceProvider.GetService<IPatientLoader>();
             var patientSourceExtractor = TestInitializer.ServiceProvider.GetService<IPatientSourceExtractor>();
             var tempCount = patientSourceExtractor.Extract(patientExtract, _protocol).Result;
-            var patientCount = patientLoader.Load(patientExtract.Id, tempCount).Result;
+            var patientCount = patientLoader.Load(patientExtract.Id, tempCount, false).Result;
         }
 
         [SetUp]
@@ -57,7 +57,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Dwh
             Assert.True(_count > 0);
             Assert.False(_extractsContext.DrugAlcoholScreeningExtracts.Any());
 
-            var count = _loader.Load(_extract.Id,_count).Result;
+            var count = _loader.Load(_extract.Id,_count, false).Result;
 
             Assert.True(count >0);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();

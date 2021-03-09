@@ -48,7 +48,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Application.Events
         [Test]
         public void should_Log_Send()
         {
-            var count = _loader.Load(_extract.Id, _count).Result;
+            var count = _loader.Load(_extract.Id, _count, false).Result;
             Assert.True(count > 0);
 
             _mediator.Publish(new DocketExtractSent("NDWH", nameof(PatientAdverseEventExtract))).Wait();
@@ -76,7 +76,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Application.Events
             var patientLoader = TestInitializer.ServiceProvider.GetService<IPatientLoader>();
             var patientSourceExtractor = TestInitializer.ServiceProvider.GetService<IPatientSourceExtractor>();
             var tempCount = patientSourceExtractor.Extract(patientExtract, _protocol).Result;
-            var patientCount = patientLoader.Load(patientExtract.Id, tempCount).Result;
+            var patientCount = patientLoader.Load(patientExtract.Id, tempCount, false).Result;
         }
 
         private void SetupExtractor()

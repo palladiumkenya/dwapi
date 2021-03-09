@@ -41,7 +41,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Cbs
             //  await _patientValidator.Validate();
 
             DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "loading...", found, 0, 0, 0, 0)));
-            int loaded = await _patientLoader.Load(request.Extract.Id, found);
+            int loaded = await _patientLoader.Load(request.Extract.Id, found, false);
             DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "loaded", found, loaded, found-loaded, loaded, 0)));
             //notify loaded
             return true;

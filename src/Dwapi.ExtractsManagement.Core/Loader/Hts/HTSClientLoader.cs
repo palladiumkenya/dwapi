@@ -8,6 +8,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Serilog;
@@ -28,8 +29,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
             _tempPatientExtractRepository = tempPatientExtractRepository;
         }
 
-        public Task<int> Load()
+        public Task<int> Load(bool diffSupport)
         {
+            var mapper = diffSupport ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
             try
             {
                 //load temp extracts without errors
@@ -37,7 +39,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                 var tempPatientExtracts = _tempPatientExtractRepository.GetAll().Where(a => a.ErrorType == 0).ToList();
 
                 //Auto mapper
-                var extractRecords = Mapper.Map<List<TempHTSClientExtract>, List<HTSClientExtract>>(tempPatientExtracts);
+                var extractRecords = mapper.Map<List<TempHTSClientExtract>, List<HTSClientExtract>>(tempPatientExtracts);
 
                 //Batch Insert
                 _patientExtractRepository.BatchInsert(extractRecords);
@@ -54,11 +56,11 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
             }
         }
 
-        public Task<int> Load(Guid extractId, int found)
+        public Task<int> Load(Guid extractId, int found, bool diffSupport)
         {
             Found = found;
             ExtractId = extractId;
-            return Load();
+            return Load(diffSupport);
         }
     }
 }

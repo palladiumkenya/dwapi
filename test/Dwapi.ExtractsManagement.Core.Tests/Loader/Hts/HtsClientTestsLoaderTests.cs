@@ -38,7 +38,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
             var clientLoader = TestInitializer.ServiceProvider.GetService<IHtsClientsLoader>();
             var clientsSourceExtractor = TestInitializer.ServiceProvider.GetService<IHtsClientsSourceExtractor>();
             var tempCount = clientsSourceExtractor.Extract(clientExtract, _protocol).Result;
-            var patientCount = clientLoader.Load(clientExtract.Id, tempCount).Result;
+            var patientCount = clientLoader.Load(clientExtract.Id, tempCount, false).Result;
         }
 
         [SetUp]
@@ -56,7 +56,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
             Assert.True(_count > 0);
             Assert.False(_extractsContext.HtsClientTestsExtracts.Any());
 
-            var count = _loader.Load(_extract.Id,_count).Result;
+            var count = _loader.Load(_extract.Id,_count, false).Result;
 
             Assert.True(count > 0);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
