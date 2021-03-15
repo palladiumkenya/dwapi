@@ -12,6 +12,7 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mts;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Serilog;
@@ -31,14 +32,15 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mts
             _tempExtractRepository = tempExtractRepository;
         }
 
-        public Task<int> Load()
+        public Task<int> Load(bool diffSupport)
         {
+            var mapper = diffSupport ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
             try
             {
                 var tempIndicatorExtracts = _tempExtractRepository.GetAll().ToList();
 
                 //Auto mapper
-                var extractRecords = Mapper.Map<List<TempIndicatorExtract>, List<IndicatorExtract>>(tempIndicatorExtracts);
+                var extractRecords = mapper.Map<List<TempIndicatorExtract>, List<IndicatorExtract>>(tempIndicatorExtracts);
 
                 //Batch Insert
                 _extractRepository.CreateBatch(extractRecords);
@@ -55,11 +57,11 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mts
             }
         }
 
-        public Task<int> Load(Guid extractId, int found)
+        public Task<int> Load(Guid extractId, int found,bool diffSupport)
         {
             Found = found;
             ExtractId = extractId;
-            return Load();
+            return Load(diffSupport);
         }
     }
 }
