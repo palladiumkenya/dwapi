@@ -43,7 +43,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mgs
             await _extractValidator.Validate(request.Extract.Id, found, "Migration", "TempMetricMigrationExtracts");
 
             //Load
-            int loaded = await _migrationLoader.Load(request.Extract.Id, found);
+            int loaded = await _migrationLoader.Load(request.Extract.Id, found, false);
 
             int rejected =
                // TODO: CHECK MGS Rejection

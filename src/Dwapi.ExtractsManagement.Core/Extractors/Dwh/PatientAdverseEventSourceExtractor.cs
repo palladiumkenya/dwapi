@@ -8,6 +8,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
@@ -31,12 +32,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
-            if (!AppConstants.DiffSupportChecked)
-            {
-                AppConstants.DiffSupport = _reader.CheckDiffSupport(dbProtocol);
-                AppConstants.DiffSupportChecked = true;
-            }
-            extract.SetupDiffSql(dbProtocol);
+            var mapper = dbProtocol.SupportsDifferential ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
 
             int batch = 500;
 
@@ -49,15 +45,12 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                 while (rdr.Read())
                 {
                     count++;
+                    loaded++;
 
                     // AutoMapper profiles
-                    var extractRecord = Mapper.Map<IDataRecord, TempPatientAdverseEventExtract>(rdr);
+                    var extractRecord =   mapper.Map<IDataRecord, TempPatientAdverseEventExtract>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
-                    if (extractRecord.HasData())
-                    {
-                        loaded++;
-                        list.Add(extractRecord);
-                    }
+                    list.Add(extractRecord);
 
                     if (count == batch)
                     {

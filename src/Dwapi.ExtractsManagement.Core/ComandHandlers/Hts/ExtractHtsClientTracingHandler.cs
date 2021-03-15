@@ -46,7 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
             await _extractValidator.Validate(request.Extract.Id, found, "HtsClientTracingExtracts", "TempHtsClientTracingExtracts");
 
             //Load
-            int loaded = await _patientLoader.Load(request.Extract.Id, found);
+            int loaded = await _patientLoader.Load(request.Extract.Id, found, false);
 
             int rejected =
                 _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract);

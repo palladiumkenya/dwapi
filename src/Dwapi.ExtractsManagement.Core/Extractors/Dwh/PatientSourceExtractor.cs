@@ -8,6 +8,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
@@ -31,10 +32,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
-            AppConstants.DiffSupport = _reader.CheckDiffSupport(dbProtocol);
-            AppConstants.DiffSupportChecked = true;
-            extract.SetupDiffSql(dbProtocol);
-
+            var mapper = dbProtocol.SupportsDifferential ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
             // TODO: PLEASE FIND OUT WHY LOADED COUNT
             int batch = 500;
 
@@ -49,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                     count++;
                     loaded++;
                     // AutoMapper profiles
-                    var extractRecord = Mapper.Map<IDataRecord, TempPatientExtract>(rdr);
+                    var extractRecord =   mapper.Map<IDataRecord, TempPatientExtract>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
                     list.Add(extractRecord);
 

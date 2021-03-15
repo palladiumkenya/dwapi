@@ -52,12 +52,10 @@ ce7b571e-160f-11e7-93ae-92361f002671|TempPatientExtracts|Gender|Required|Gender 
 6c5c81b2-2a95-11e7-93ae-92361f002671|TempPatientVisitExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 6c5c83b0-2a95-11e7-93ae-92361f002671|TempPatientVisitExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 61bbe02e-35a1-11e7-a919-92ebcb67fe33|TempPatientVisitExtracts|VisitDate|Logical|VisitDate IS NULL|VisitDate is required
+
 a7922445-bbc4-42cd-955e-f2fe1d5673ac|TempPatientAdverseEventExtracts|PatientID|Required|PatientID IS NULL OR PatientID=''|PatientID Required
 c691fceb-3ee9-4a8f-a075-e39c0a1a225f|TempPatientAdverseEventExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
-177db6a8-353b-4041-9103-d0eecf135139|TempPatientAdverseEventExtracts|SiteCode|Required|SiteCode IS NULL|SiteCode is Required
-5a662658-0582-4156-9478-a1c63bfe096b|TempPatientAdverseEventExtracts|AdverseEvent|Logical|AdverseEvent IS NULL|AdverseEvent is Required
-aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEventStartDate|Logical|AdverseEventStartDate IS NULL|AdverseEventStartDate is Required
-4f62bd0b-674f-48cb-bb68-9d26497eb4de|TempPatientAdverseEventExtracts|AdverseEventRegimen|Logical|AdverseEventRegimen IS NULL|AdverseEventRegimen is Required
+177db6a8-353b-4041-9103-d0eecf135139|TempPatientAdverseEventExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
 
 4f62bd1b-674f-48cb-bb49-9d26497eb4de|TempHtsClientsExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk Required
 4f62bd1b-674f-48cb-bb50-9d26497eb4de|TempHtsClientsExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
@@ -91,4 +89,21 @@ aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEven
 2a4c26ea-74f4-11ea-bc55-0242ac130003|TempMetricMigrationExtracts|MetricId|Required|MetricId IS NULL|MetricId is Required
 2a4c291a-74f4-11ea-bc55-0242ac130003|TempMetricMigrationExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
 
-
+7266ee30-7a96-11eb-9439-0242ac130002|TempAllergiesChronicIllnessExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee31-7a96-11eb-9439-0242ac130002|TempAllergiesChronicIllnessExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee32-7a96-11eb-9439-0242ac130002|TempContactListingExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee33-7a96-11eb-9439-0242ac130002|TempContactListingExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee34-7a96-11eb-9439-0242ac130002|TempDepressionScreeningExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee35-7a96-11eb-9439-0242ac130002|TempDepressionScreeningExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee36-7a96-11eb-9439-0242ac130002|TempDrugAlcoholScreeningExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee37-7a96-11eb-9439-0242ac130002|TempDrugAlcoholScreeningExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee38-7a96-11eb-9439-0242ac130002|TempEnhancedAdherenceCounsellingExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee39-7a96-11eb-9439-0242ac130002|TempEnhancedAdherenceCounsellingExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee40-7a96-11eb-9439-0242ac130002|TempGbvScreeningExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee41-7a96-11eb-9439-0242ac130002|TempGbvScreeningExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee42-7a96-11eb-9439-0242ac130002|TempIptExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee43-7a96-11eb-9439-0242ac130002|TempIptExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee44-7a96-11eb-9439-0242ac130002|TempOtzExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee45-7a96-11eb-9439-0242ac130002|TempOtzExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee46-7a96-11eb-9439-0242ac130002|TempOvcExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee47-7a96-11eb-9439-0242ac130002|TempOvcExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required

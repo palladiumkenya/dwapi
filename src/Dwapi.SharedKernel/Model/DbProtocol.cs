@@ -31,6 +31,8 @@ namespace Dwapi.SharedKernel.Model
         [NotMapped] public string DiffSqlCheck => GetSql();
         [NotMapped] public bool DiffSupport => !string.IsNullOrWhiteSpace(GetSql());
 
+        [NotMapped] public bool SupportsDifferential => DiffSupport;
+
         public DbProtocol()
         {
         }

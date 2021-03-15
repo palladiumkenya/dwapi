@@ -38,6 +38,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
         {
             var extractIds = _extracts.Select(x => x.Id).ToList();
 
+            /*
             Assert.True(_extractsContext.TempPatientExtracts.Any());
             Assert.True(_extractsContext.TempPatientArtExtracts.Any());
             Assert.True(_extractsContext.PatientArtExtracts.Any());
@@ -54,6 +55,26 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
             Assert.True(_extractsContext.TempPatientAdverseEventExtracts.Any());
             Assert.True(_extractsContext.PatientAdverseEventExtracts.Any());
             Assert.True(_extractsContext.PatientExtracts.Any());
+
+            Assert.True(_extractsContext.TempAllergiesChronicIllnessExtracts.Any());
+            Assert.True(_extractsContext.AllergiesChronicIllnessExtracts.Any());
+            Assert.True(_extractsContext.TempContactListingExtracts.Any());
+            Assert.True(_extractsContext.ContactListingExtracts.Any());
+            Assert.True(_extractsContext.DepressionScreeningExtracts.Any());
+            Assert.True(_extractsContext.TempDepressionScreeningExtracts.Any());
+            Assert.True(_extractsContext.TempDrugAlcoholScreeningExtracts.Any());
+            Assert.True(_extractsContext.DrugAlcoholScreeningExtracts.Any());
+            Assert.True(_extractsContext.TempEnhancedAdherenceCounsellingExtracts.Any());
+            Assert.True(_extractsContext.EnhancedAdherenceCounsellingExtracts.Any());
+            Assert.True(_extractsContext.TempGbvScreeningExtracts.Any());
+            Assert.True(_extractsContext.GbvScreeningExtracts.Any());
+            Assert.True(_extractsContext.TempIptExtracts.Any());
+            Assert.True(_extractsContext.IptExtracts.Any());
+            Assert.True(_extractsContext.TempOtzExtracts.Any());
+            Assert.True(_extractsContext.OtzExtracts.Any());
+            Assert.True(_extractsContext.TempOvcExtracts.Any());
+            Assert.True(_extractsContext.OvcExtracts.Any());
+            */
 
             _clearDwh.Clear(extractIds).Wait();
 
@@ -73,6 +94,26 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
             Assert.False(_extractsContext.TempPatientAdverseEventExtracts.Any());
             Assert.False(_extractsContext.PatientAdverseEventExtracts.Any());
             Assert.False(_extractsContext.PatientExtracts.Any());
+
+            Assert.False(_extractsContext.TempAllergiesChronicIllnessExtracts.Any());
+            Assert.False(_extractsContext.AllergiesChronicIllnessExtracts.Any());
+            Assert.False(_extractsContext.TempContactListingExtracts.Any());
+            Assert.False(_extractsContext.ContactListingExtracts.Any());
+            Assert.False(_extractsContext.DepressionScreeningExtracts.Any());
+            Assert.False(_extractsContext.TempDepressionScreeningExtracts.Any());
+            Assert.False(_extractsContext.TempDrugAlcoholScreeningExtracts.Any());
+            Assert.False(_extractsContext.DrugAlcoholScreeningExtracts.Any());
+            Assert.False(_extractsContext.TempEnhancedAdherenceCounsellingExtracts.Any());
+            Assert.False(_extractsContext.EnhancedAdherenceCounsellingExtracts.Any());
+            Assert.False(_extractsContext.TempGbvScreeningExtracts.Any());
+            Assert.False(_extractsContext.GbvScreeningExtracts.Any());
+            Assert.False(_extractsContext.TempIptExtracts.Any());
+            Assert.False(_extractsContext.IptExtracts.Any());
+            Assert.False(_extractsContext.TempOtzExtracts.Any());
+            Assert.False(_extractsContext.OtzExtracts.Any());
+            Assert.False(_extractsContext.TempOvcExtracts.Any());
+            Assert.False(_extractsContext.OvcExtracts.Any());
+
             Assert.False(_extractsContext.ExtractHistory.Any(x => extractIds.Contains(x.ExtractId)));
         }
 

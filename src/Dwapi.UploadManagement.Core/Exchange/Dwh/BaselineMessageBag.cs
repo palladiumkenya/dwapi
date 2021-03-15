@@ -11,7 +11,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class BaselineMessageBag:IBaselinesMessageBag
     {
-        private int stake = 10;
+        private int stake = 5;
         public string EndPoint => "PatientBaselines";
         public IMessage<PatientBaselinesExtractView> Message { get; set; }
         public List<IMessage<PatientBaselinesExtractView>> Messages { get; set; }

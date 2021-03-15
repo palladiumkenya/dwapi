@@ -168,7 +168,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         localStorage.clear();
         this.errorMessage = [];
         this.load$ = this._ndwhExtractService
-            .extractAll(this.generateExtractLoadCommand(this.emr))
+            //.extractAll(this.generateExtractLoadCommand(this.emr))
+            .extractAll(this.generateExtractsLoadCommand(this.emr))
             .subscribe(
                 p => {
                 },
@@ -623,6 +624,21 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         return this.loadExtractsCommand;
     }
 
+    private generateExtractsLoadCommand(currentEmr: EmrSystem): LoadExtracts {
+
+        this.extractLoadCommand = {
+            extracts: this.generateExtractProfiles(currentEmr)
+        };
+
+        this.loadExtractsCommand = {
+            loadFromEmrCommand: this.extractLoadCommand,
+            extractMpi: null,
+            loadMpi: false
+        };
+
+        return this.loadExtractsCommand;
+    }
+
     private generateExtractPatient(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'PatientExtract').databaseProtocolId;
         this.extractPatient = {
@@ -693,6 +709,19 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             extract: this.extracts.find(x => x.name === 'PatientAdverseEventExtract')
         };
         return this.extractPatientAdverseEvent;
+    }
+
+    private generateExtractProfiles(currentEmr: EmrSystem): ExtractProfile[]{
+        let profiles: ExtractProfile[] = [];
+        this.extracts.forEach(e => {
+            const profile= {
+                databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === e.databaseProtocolId)[0],
+                extract: e
+            };
+            profiles.push(profile);
+        })
+
+        return profiles;
     }
 
     private generateExtractMpi(currentEmr: EmrSystem): ExtractProfile {

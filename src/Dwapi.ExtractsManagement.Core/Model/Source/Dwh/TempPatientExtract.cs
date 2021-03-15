@@ -1,8 +1,9 @@
 ﻿using System;
+using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
 {
-    public class TempPatientExtract:TempExtract
+    public class TempPatientExtract:TempExtract,IPatient
     {
         public string FacilityName { get; set; }
         public string Gender { get; set; }
@@ -40,5 +41,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? TransferInDate { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
+        public string Pkv { get; set; }
+        public string Occupation { get; set; }
     }
 }

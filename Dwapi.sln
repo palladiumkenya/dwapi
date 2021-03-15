@@ -69,6 +69,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "Integra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.IntegrationTests", "test\Dwapi.IntegrationTests\Dwapi.IntegrationTests.csproj", "{FCF225B9-2031-4002-A0E8-D8C46C51F779}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{CA1F555D-7AFC-46C4-B8EF-0616BC8B35D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.Contracts", "src\Dwapi.Contracts\Dwapi.Contracts.csproj", "{D0BF02C2-2D89-4063-8658-B3BC7B262860}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,6 +159,10 @@ Global
 		{FCF225B9-2031-4002-A0E8-D8C46C51F779}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCF225B9-2031-4002-A0E8-D8C46C51F779}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCF225B9-2031-4002-A0E8-D8C46C51F779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0BF02C2-2D89-4063-8658-B3BC7B262860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0BF02C2-2D89-4063-8658-B3BC7B262860}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0BF02C2-2D89-4063-8658-B3BC7B262860}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0BF02C2-2D89-4063-8658-B3BC7B262860}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -190,6 +198,8 @@ Global
 		{BD52DA44-1998-4433-A328-06E9516D341A} = {6AD79AFC-A97F-495A-9A48-4FAB0145330A}
 		{9E02822F-48BA-4120-968F-838239C48505} = {6AD79AFC-A97F-495A-9A48-4FAB0145330A}
 		{FCF225B9-2031-4002-A0E8-D8C46C51F779} = {9E02822F-48BA-4120-968F-838239C48505}
+		{CA1F555D-7AFC-46C4-B8EF-0616BC8B35D0} = {EA314005-C21E-4724-9AC2-E66B8556C433}
+		{D0BF02C2-2D89-4063-8658-B3BC7B262860} = {CA1F555D-7AFC-46C4-B8EF-0616BC8B35D0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E11F9C16-45D7-4C0D-B672-1F72F0A3A625}

@@ -51,7 +51,9 @@ namespace Dwapi.Controller
         [HttpPost("extract")]
         public async Task<IActionResult> Load([FromBody]ExtractPatient request)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if(!request.IsValid())
+                return BadRequest();
+
             var result = await _mediator.Send(request, HttpContext.RequestAborted);
             return Ok(result);
         }
@@ -59,7 +61,8 @@ namespace Dwapi.Controller
         [HttpPost("extractAll")]
         public async Task<IActionResult> Load([FromBody]LoadExtracts request)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if(!request.IsValid())
+                return BadRequest();
 
             string version = GetType().Assembly.GetName().Version.ToString();
 
@@ -222,8 +225,6 @@ namespace Dwapi.Controller
         [AutomaticRetry(Attempts = 0)]
         private void QueueDwh(SendManifestPackageDTO package)
         {
-
-
             var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
 
             if (extracts.Any())
@@ -237,12 +238,14 @@ namespace Dwapi.Controller
             var job2 =
                 BatchJob.ContinueBatchWith(job1, x => { SendJobProfiles(package); });
 
-            var jobEnd =
-                BatchJob.ContinueBatchWith(job2, x =>
-                {
-                    _ctSendService.NotifyPostSending(package,_version);
+            var job3 =
+                BatchJob.ContinueBatchWith(job2, x => { SendNewJobProfiles(package); });
 
-                });
+            var job4 =
+                BatchJob.ContinueBatchWith(job3, x => { SendNewOtherJobProfiles(package); });
+
+            var jobEnd =
+                BatchJob.ContinueBatchWith(job4, x => { _ctSendService.NotifyPostSending(package,_version); });
         }
 
         [AutomaticRetry(Attempts = 0)]
@@ -261,8 +264,14 @@ namespace Dwapi.Controller
             var job2 =
                 BatchJob.ContinueBatchWith(job1, x => { SendDiffJobProfiles(package); });
 
+            var job3 =
+                BatchJob.ContinueBatchWith(job2, x => { SendDiffNewJobProfiles(package); });
+
+            var job4 =
+                BatchJob.ContinueBatchWith(job3, x => { SendDiffNewOtherJobProfiles(package); });
+
             var jobEnd =
-                BatchJob.ContinueBatchWith(job2, x => { _ctSendService.NotifyPostSending(package, _version); });
+                BatchJob.ContinueBatchWith(job4, x => { _ctSendService.NotifyPostSending(package, _version); });
         }
 
         public void SendJobBaselines(SendManifestPackageDTO package)
@@ -285,11 +294,45 @@ namespace Dwapi.Controller
             var idsB=_ctSendService.SendBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
             var idsC= _ctSendService.SendBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
         }
+        public void SendNewJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsAllergiesChronicIllness =_ctSendService.SendBatchExtractsAsync(package, 200, new AllergiesChronicIllnesssMessageBag()).Result;
+            var idsIpt =_ctSendService.SendBatchExtractsAsync(package, 200, new IptsMessageBag()).Result;
+            var idsDepressionScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new DepressionScreeningsMessageBag()).Result;
+            var idsContactListing =_ctSendService.SendBatchExtractsAsync(package, 200, new ContactListingsMessageBag()).Result;
+        }
+
+        public void SendNewOtherJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsGbvScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new GbvScreeningsMessageBag()).Result;
+            var idsEnhancedAdherenceCounselling =_ctSendService.SendBatchExtractsAsync(package, 200, new EnhancedAdherenceCounsellingsMessageBag()).Result;
+            var idsDrugAlcoholScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new DrugAlcoholScreeningsMessageBag()).Result;
+            var idsOvc =_ctSendService.SendBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
+            var idsOtz =_ctSendService.SendBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
+        }
+
         public void SendDiffJobProfiles(SendManifestPackageDTO package)
         {
             var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 500, new PharmacyMessageBag()).Result;
             var idsB=_ctSendService.SendDiffBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
             var idsC= _ctSendService.SendDiffBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
+        }
+
+        public void SendDiffNewJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsAllergiesChronicIllness =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new AllergiesChronicIllnesssMessageBag()).Result;
+            var idsIpt =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new IptsMessageBag()).Result;
+            var idsDepressionScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DepressionScreeningsMessageBag()).Result;
+            var idsContactListing =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new ContactListingsMessageBag()).Result;
+        }
+
+        public void SendDiffNewOtherJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsGbvScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new GbvScreeningsMessageBag()).Result;
+            var idsEnhancedAdherenceCounselling =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new EnhancedAdherenceCounsellingsMessageBag()).Result;
+            var idsDrugAlcoholScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DrugAlcoholScreeningsMessageBag()).Result;
+            var idsOvc =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
+            var idsOtz =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
         }
 
         [AutomaticRetry(Attempts = 0)]

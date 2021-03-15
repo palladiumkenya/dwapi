@@ -16,6 +16,13 @@ namespace Dwapi.SettingsManagement.Core.Model
         [NotMapped]
         public Resource Metric => Resources.FirstOrDefault(x => x.Name.IsSameAs("EMR Metrics"));
 
+        [NotMapped] public bool SupportsDifferential => CheckDiffSupport();
+
+        private bool CheckDiffSupport()
+        {
+            return EmrSystemId == new Guid("a6221856-0e85-11e8-ba89-0ed5f89f718b");
+        }
+
         public RestProtocol()
         {
         }

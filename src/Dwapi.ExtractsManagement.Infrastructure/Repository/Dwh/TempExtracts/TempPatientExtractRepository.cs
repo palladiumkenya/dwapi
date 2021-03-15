@@ -84,7 +84,26 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
                 nameof(ExtractsContext.TempPatientVisitExtracts),
                 nameof(ExtractsContext.PatientVisitExtracts),
                 nameof(ExtractsContext.TempPatientAdverseEventExtracts),
-                nameof(ExtractsContext.PatientAdverseEventExtracts)
+                nameof(ExtractsContext.PatientAdverseEventExtracts),
+
+                nameof(ExtractsContext.TempAllergiesChronicIllnessExtracts),
+                nameof(ExtractsContext.AllergiesChronicIllnessExtracts),
+                nameof(ExtractsContext.TempContactListingExtracts),
+                nameof(ExtractsContext.ContactListingExtracts),
+                nameof(ExtractsContext.TempDepressionScreeningExtracts),
+                nameof(ExtractsContext.DepressionScreeningExtracts),
+                nameof(ExtractsContext.TempDrugAlcoholScreeningExtracts),
+                nameof(ExtractsContext.DrugAlcoholScreeningExtracts),
+                nameof(ExtractsContext.TempEnhancedAdherenceCounsellingExtracts),
+                nameof(ExtractsContext.EnhancedAdherenceCounsellingExtracts),
+                nameof(ExtractsContext.TempGbvScreeningExtracts),
+                nameof(ExtractsContext.GbvScreeningExtracts),
+                nameof(ExtractsContext.TempIptExtracts),
+                nameof(ExtractsContext.IptExtracts),
+                nameof(ExtractsContext.TempOtzExtracts),
+                nameof(ExtractsContext.OtzExtracts),
+                nameof(ExtractsContext.TempOvcExtracts),
+                nameof(ExtractsContext.OvcExtracts)
             };
 
             var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };

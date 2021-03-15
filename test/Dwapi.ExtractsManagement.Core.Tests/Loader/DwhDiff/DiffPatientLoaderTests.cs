@@ -51,7 +51,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.DwhDiff
             Assert.True(_count > 0);
             Assert.False(_extractsContext.PatientExtracts.Any());
 
-            var count = _loader.Load(_extract.Id,_count).Result;
+            var count = _loader.Load(_extract.Id,_count, false).Result;
 
             Assert.True(count >= _count);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
