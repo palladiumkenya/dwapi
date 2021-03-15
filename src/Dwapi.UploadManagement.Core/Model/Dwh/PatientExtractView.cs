@@ -44,7 +44,8 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         public string PatientResidentWard { get; set; }
         public string PatientResidentVillage { get; set; }
         public DateTime? TransferInDate { get; set; }
-
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
         public string Pkv { get; set; }
         public string Occupation { get; set; }
 
