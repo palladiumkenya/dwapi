@@ -204,6 +204,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientStatusExtract.Date_Last_Modified))))
                .ForMember(x => x.TOVerified, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientStatusExtract.TOVerified))))
                .ForMember(x => x.TOVerifiedDate, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientStatusExtract.TOVerifiedDate))))
+               .ForMember(x => x.ReEnrollmentDate, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientStatusExtract.ReEnrollmentDate))))
                ;
 
             CreateMap<TempPatientStatusExtract, PatientStatusExtract>();

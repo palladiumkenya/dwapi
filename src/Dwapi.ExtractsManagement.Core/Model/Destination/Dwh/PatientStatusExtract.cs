@@ -12,5 +12,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string ExitReason { get; set; }
         public string TOVerified { get; set; }
         public DateTime? TOVerifiedDate { get; set; }
+        public DateTime? ReEnrollmentDate { get; set; }
     }
 }
