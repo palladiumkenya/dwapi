@@ -125,14 +125,8 @@ FROM
 											0 AS FacilityId,d.unique_patient_no as PatientID,
 											d.patient_id as PatientPK,
 											pkv.PKV as Pkv,
-											(select value_reference from location_attribute
-												where location_id in (select property_value
-																																		from global_property
-																																		where property='kenyaemr.defaultLocation') and attribute_type_id=1) as SiteCode,
-											(select name from location
-												where location_id in (select property_value
-																																		from global_property
-																																		where property='kenyaemr.defaultLocation')) as FacilityName,
+											(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+											(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 											case d.gender when 'M' then 'Male' when 'F' then 'Female' end  as Gender,
 											d.dob as DOB,
 											CAST(min(hiv.visit_date) as Date) as RegistrationDate,
@@ -262,14 +256,8 @@ FROM
 									timestampdiff(year,d.DOB, hiv.visit_date) as AgeEnrollment,
 									timestampdiff(year,d.DOB, reg.art_start_date) as AgeARTStart,
 									timestampdiff(year,d.DOB, reg.latest_vis_date) as AgeLastVisit,
-									(select value_reference from location_attribute
-										where location_id in (select property_value
-																																from global_property
-																																where property='kenyaemr.defaultLocation') and attribute_type_id=1) as SiteCode,
-									(select name from location
-										where location_id in (select property_value
-																																from global_property
-																																where property='kenyaemr.defaultLocation')) as FacilityName,
+									(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+									(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 									CAST(coalesce(date_first_enrolled_in_care,min(hiv.visit_date)) as Date) as RegistrationDate,
 									case  max(hiv.entry_point)
 											when 160542 then 'OPD'
@@ -370,14 +358,7 @@ FROM
 		having min(hiv.visit_date) is not null and reg.art_start_date is not null;"|dwhstage|0|PatientArtExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3C742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Baselines|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
-(select value_reference from location_attribute
-where location_id in (select property_value
-from global_property
-where property='kenyaemr.defaultLocation') and attribute_type_id=1) as facilityId,
-(select value_reference from location_attribute
-where location_id in (select property_value
-from global_property
-where property='kenyaemr.defaultLocation') and attribute_type_id=1) as siteCode,
+(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
  mid(max(if(l.visit_date<=p_dates.enrollment_date,concat(l.visit_date,test_result),null)),11) as eCd4,
  CAST(left(max(if(l.visit_date<=p_dates.enrollment_date,concat(l.visit_date,test_result),null)),10) AS DATE) as eCd4Date,
  if(fup.visit_date<=p_dates.enrollment_date,
@@ -479,14 +460,8 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 				order by disc.visit_date ASC;"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID, d.patient_id as PatientPK, l.encounter_id as VisitId,
 																					CAST(l.visit_date AS DATE) as OrderedByDate,CAST(l.visit_date AS DATE) as ReportedByDate,
-																					(select value_reference from location_attribute
-																						where location_id in (select property_value
-																																												from global_property
-																																												where property='kenyaemr.defaultLocation') and attribute_type_id=1) as SiteCode,
-																					(select name from location
-																						where location_id in (select property_value
-																																												from global_property
-																																												where property='kenyaemr.defaultLocation')) as FacilityName,
+																				(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+																				(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 																					cn.name as TestName,
 																					l.date_test_requested as DateSampleTaken,
 																					(case l.order_reason when 843 then 'Confirmation of treatment failure (repeat VL)'
@@ -577,14 +552,8 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 				40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct
 																				'' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 																				d.patient_id as PatientPK,
-																				(select name from location
-																					where location_id in (select property_value
-																																											from global_property
-																																											where property='kenyaemr.defaultLocation')) as FacilityName,
-																				(select value_reference from location_attribute
-																					where location_id in (select property_value
-																																											from global_property
-																																											where property='kenyaemr.defaultLocation') and attribute_type_id=1) as SiteCode,
+																				(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+																				(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 																				fup.visit_id as VisitId,
 																				case when fup.visit_date < '1990-01-01' then null else CAST(fup.visit_date AS DATE) end  AS VisitDate,
 																				'Out Patient' as Service,
@@ -1327,8 +1296,8 @@ on h.PatientPK=p.PatientPK
 order by KeyPopulationType"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT  distinct d.patient_id as PatientPK,
-	SC.value_reference AS SiteCode,
-	SN.name as FacilityName,
+	(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 	'KenyaEMR' as Emr,
 	'Kenya HMIS II' AS Project,
 	id.identifier AS HtsNumber,
@@ -1381,8 +1350,8 @@ on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-
 
 8578afbc-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
 	t.patient_id as PatientPK,
-	SC.value_reference AS SiteCode,
-	 SN.name as FacilityName,
+	(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 	'KenyaEMR' as Emr,
 	'Kenya HMIS II' AS Project,
     id.identifier AS HtsNumber,
@@ -1439,8 +1408,8 @@ r.ArtStartDate as ReportedStartARTDate
   left join Referral ref on pat.personid=ref.personid"|DWHStage|1|HtsClientLinkage|3|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578b21e-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"select distinct a.patient_id as PatientPK,
-SC.value_reference AS SiteCode,
-SN.name as FacilityName,
+(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 'KenyaEMR' as Emr,
 'Kenya HMIS II' AS Project,
 id.identifier AS HtsNumber,
@@ -1498,8 +1467,8 @@ on h.PatientPK=p.PatientPK"|DWHStage|1|HtsTestKits|4|A6221983-0E85-11E8-BA89-0ED
 
 8578b700-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
     t.patient_id AS PatientPK,
-	SC.value_reference AS SiteCode,
-	SN.name as FacilityName,
+	(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 	'KenyaEMR' as Emr,
 	'Kenya HMIS II' AS Project,
     id.identifier AS HtsNumber,
@@ -1544,10 +1513,10 @@ where a.Tpe='Enrolment'"|DWHStage|1|HtsClientTracing|5|A6221983-0E85-11E8-BA89-0
 
 8578b962-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tracing|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
 	ht.patient_id as PatientPK,
-	SC.value_reference AS SiteCode,
+	(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 	htsrl.tracing_type as TracingType,
 	htsrl.visit_date as TracingDate,
-	SN.name as FacilityName,
 	'KenyaEMR' as Emr,
 	'Kenya HMIS II' AS Project,
 	id.identifier AS HtsNumber,
@@ -1594,10 +1563,10 @@ id.identifier as HtsNumber,
 client_id as PartnerPersonId,
 contact_type as TraceType,
 encounter_date as TraceDate,
-SN.name as FacilityName,
+(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 'KenyaEMR' as Emr,
 'Kenya HMIS II' AS Project,
-SC.value_reference AS SiteCode,
 status as TraceOutcome,
 tc.appointment_date as BookingDate
 from
@@ -1635,8 +1604,8 @@ pns.MaritalStatus
 8578c042-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Partner Notification Services|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
 DISTINCT
                t.patient_id AS PatientPK,
-               SC.value_reference AS SiteCode,
-               SN.name as FacilityName,
+               (select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+               (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
                'KenyaEMR' as Emr,
                'Kenya HMIS II' AS Project,
                id.identifier AS HtsNumber,
