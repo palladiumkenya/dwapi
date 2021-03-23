@@ -12,6 +12,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Extract} from '../../../../settings/model/extract';
 import {NdwhPatientAdverseEventService} from '../../../services/ndwh-patient-adverse-event.service';
 import {PageModel} from '../../../models/page-model';
+import {NdwhSummaryService} from '../../../services/ndwh-summary.service';
 
 @Component({
     selector: 'liveapp-valid-record-details',
@@ -34,6 +35,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     public getValid$: Subscription;
     public getValidCount$: Subscription;
     private exName: string;
+    private exN: string;
     public pageModel: PageModel;
     public initialRows: number = 10;
     public loadingData = false;
@@ -43,7 +45,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     constructor(patientExtractsService: NdwhPatientsExtractService, patientArtService: NdwhPatientArtService,
                 patientBaselineService: NdwhPatientBaselineService, patientLabService: NdwhPatientLaboratoryService,
                 patientPharmacyService: NdwhPatientPharmacyService, patientStatusService: NdwhPatientStatusService,
-                patientVisitService: NdwhPatientVisitService, patientAdverseEventService: NdwhPatientAdverseEventService) {
+                patientVisitService: NdwhPatientVisitService, patientAdverseEventService: NdwhPatientAdverseEventService,
+                private summaryService: NdwhSummaryService) {
         this._patientExtractsService = patientExtractsService;
         this._patientArtService = patientArtService;
         this._patientBaselineService = patientBaselineService;
@@ -93,6 +96,16 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         }
     }
 
+
+    get extractN(): string {
+        return this.exN;
+    }
+
+    @Input()
+    set extractN(extract: string) {
+        this.exN = extract;
+    }
+
     ngOnInit() {
         this.exName = 'Patient Adverse Events';
         this.getPatientColumns();
@@ -101,54 +114,98 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     public getValidExtracts(): void {
         if (this.extract === 'All Patients') {
             this.getPatients();
+            return;
         }
         if (this.extract === 'ART Patients') {
             this.getPatientsART();
+            return;
         }
         if (this.extract === 'Patient Baselines') {
             this.getPatientsBases();
+            return;
         }
         if (this.extract === 'Patient Labs') {
             this.getPatientsLabs();
+            return;
         }
         if (this.extract === 'Patient Pharmacy') {
             this.getPatientsPharms();
+            return;
         }
         if (this.extract === 'Patient Status') {
             this.getPatientsStats();
+            return;
         }
         if (this.extract === 'Patient Visit') {
             this.getPatientsVisits();
+            return;
         }
         if (this.extract === 'Patient Adverse Events') {
             this.getPatientsAdverse();
+            return;
+        }
+        if (this.extractN) {
+            this.getSummaryExtracts();
         }
     }
 
     private getColumns(): void {
         if (this.extract === 'All Patients') {
             this.getPatientColumns();
+            return;
         }
         if (this.extract === 'ART Patients') {
             this.getPatientArtColumns();
+            return;
         }
         if (this.extract === 'Patient Baselines') {
             this.getPatientBaselineColumns();
+            return;
         }
         if (this.extract === 'Patient Labs') {
             this.getPatientLaboratoryColumns();
+            return;
         }
         if (this.extract === 'Patient Pharmacy') {
             this.getPatientPharmacyColumns();
+            return;
         }
         if (this.extract === 'Patient Status') {
-            this.getPatientStatusColumns();
+            this.getPatientStatusColumns();        return;
         }
         if (this.extract === 'Patient Visit') {
-            this.getPatientVisitColumns();
+            this.getPatientVisitColumns();        return;
         }
         if (this.extract === 'Patient Adverse Events') {
-            this.getPatientAdverseEventColumns();
+            this.getPatientAdverseEventColumns();        return;
+        }
+
+        if (this.extract === 'Allergies Chronic Illness') {
+            this.getAllergiesChronicIllnessColumns();        return;
+        }
+        if (this.extract === 'Contact Listing') {
+            this.getContactListingColumns();        return;
+        }
+        if (this.extract === 'Depression Screening') {
+            this.getDepressionScreeningColumns()  ;     return;
+        }
+        if (this.extract === 'Drug and Alcohol Screening') {
+            this.getDrugAlcoholScreeningColumns();        return;
+        }
+        if (this.extract === 'Enhanced Adherence Counselling') {
+            this.getEnhancedAdherenceCounsellingColumns();
+        }
+        if (this.extract === 'GBV Screening') {
+            this.getGbvScreeningColumns();        return;
+        }
+        if (this.extract === 'IPT') {
+            this.getIptColumns();        return;
+        }
+        if (this.extract === 'OTZ') {
+            this.getOtzColumns();        return;
+        }
+        if (this.extract === 'OVC') {
+            this.getOvcColumns();        return;
         }
     }
 
@@ -329,6 +386,27 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             );
     }
 
+    private getSummaryExtracts(): void {
+        this.loadingData = true;
+        this.getValidCount$ = this.summaryService.loadValidCount(this.extractN.replace('Extract',''))
+            .subscribe(
+                p => {
+                    this.recordCount = p;
+                    this.getValidSummaryExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({
+                        severity: 'error',
+                        summary: 'Error Loading data',
+                        detail: <any>e
+                    });
+                },
+                () => {
+                    this.loadingData = false;
+                }
+            );
+    }
     private getValidPatientExtracts(): void {
         this.getValid$ = this._patientExtractsService.loadValid(this.pageModel).subscribe(
             pc => {
@@ -470,6 +548,25 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
     private getValidPatientAdverseEventExtracts(): void {
         this.loadingData = true;
         this.getValid$ = this._patientAdverseEventService.loadValid(this.pageModel).subscribe(
+            p => {
+                this.validExtracts = p;
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+                this.loadingData = false;
+            }
+        );
+    }
+    private getValidSummaryExtracts(): void {
+        this.loadingData = true;
+        this.getValid$ = this.summaryService.loadValid(this.extractN.replace('Extract',''), this.pageModel).subscribe(
             p => {
                 this.validExtracts = p;
             },
@@ -727,6 +824,108 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         ];
     }
 
+    private getAllergiesChronicIllnessColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'}
+        ];
+    }
+    private getContactListingColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'}
+        ];
+    }
+
+    private getDepressionScreeningColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'}
+        ];
+    }
+
+    private getDrugAlcoholScreeningColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+        ];
+    }
+    private getEnhancedAdherenceCounsellingColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'}
+        ];
+    }
+    private getGbvScreeningColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'}
+        ];
+    }
+
+    private getIptColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'}
+        ];
+    }
+    private getOtzColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'}
+        ];
+    }
+    private getOvcColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'}
+        ];
+    }
 
     pageView(event: any) {
         this.pageModel = {

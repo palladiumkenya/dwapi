@@ -11,6 +11,7 @@ import {NdwhPatientStatusService} from '../../../services/ndwh-patient-status.se
 import {NdwhPatientVisitService} from '../../../services/ndwh-patient-visit.service';
 import {Extract} from '../../../../settings/model/extract';
 import {NdwhPatientAdverseEventService} from '../../../services/ndwh-patient-adverse-event.service';
+import {NdwhSummaryService} from "../../../services/ndwh-summary.service";
 
 @Component({
     selector: 'liveapp-invalid-record-details',
@@ -20,6 +21,7 @@ import {NdwhPatientAdverseEventService} from '../../../services/ndwh-patient-adv
 export class InvalidRecordDetailsComponent implements OnInit {
 
     private exName: string;
+    private exN: string;
     private _patientExtractsService: NdwhPatientsExtractService;
     private _patientArtService: NdwhPatientArtService;
     private _patientBaselineService: NdwhPatientBaselineService;
@@ -40,7 +42,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
     constructor(patientExtractsService: NdwhPatientsExtractService, patientArtService: NdwhPatientArtService,
                 patientBaselineService: NdwhPatientBaselineService, patientLabService: NdwhPatientLaboratoryService,
                 patientPharmacyService: NdwhPatientPharmacyService, patientStatusService: NdwhPatientStatusService,
-                patientVisitService: NdwhPatientVisitService, patientAdverseEventService: NdwhPatientAdverseEventService) {
+                patientVisitService: NdwhPatientVisitService, patientAdverseEventService: NdwhPatientAdverseEventService,
+                private summaryService: NdwhSummaryService) {
         this._patientExtractsService = patientExtractsService;
         this._patientArtService = patientArtService;
         this._patientBaselineService = patientBaselineService;
@@ -75,6 +78,15 @@ export class InvalidRecordDetailsComponent implements OnInit {
         }
     }
 
+    get extractN(): string {
+        return this.exN;
+    }
+
+    @Input()
+    set extractN(extract: string) {
+        this.exN = extract;
+    }
+
     ngOnInit() {
         this.getPatientColumns();
         // this.getInvalidPatientExtracts();
@@ -83,54 +95,110 @@ export class InvalidRecordDetailsComponent implements OnInit {
     public getInvalidExtracts(): void {
         if (this.extract === 'All Patients') {
             this.getInvalidPatientExtracts();
+            return;
         }
         if (this.extract === 'ART Patients') {
             this.getInvalidPatientArtExtracts();
+            return;
         }
         if (this.extract === 'Patient Baselines') {
             this.getInvalidPatientBaselineExtracts();
+            return;
         }
         if (this.extract === 'Patient Labs') {
             this.getInvalidPatientLabExtracts();
+            return;
         }
         if (this.extract === 'Patient Pharmacy') {
             this.getInvalidPatientPharmacyExtracts();
+            return;
         }
         if (this.extract === 'Patient Status') {
             this.getInvalidPatientStatusExtracts();
+            return;
         }
         if (this.extract === 'Patient Visit') {
             this.getInvalidPatientVisitExtracts();
+            return;
         }
         if (this.extract === 'Patient Adverse Events') {
             this.getInvalidPatientAdverseEventExtracts();
+            return;
+        }
+        if (this.extractN) {
+            this.getSummaryInvalidExtracts();
         }
     }
 
     private getColumns(): void {
         if (this.extract === 'All Patients') {
             this.getPatientColumns();
+            return;
         }
         if (this.extract === 'ART Patients') {
             this.getPatientArtColumns();
+            return;
         }
         if (this.extract === 'Patient Baselines') {
             this.getPatientBaselineColumns();
+            return;
         }
         if (this.extract === 'Patient Labs') {
             this.getPatientLaboratoryColumns();
+            return;
         }
         if (this.extract === 'Patient Pharmacy') {
             this.getPatientPharmacyColumns();
+            return;
         }
         if (this.extract === 'Patient Status') {
             this.getPatientStatusColumns();
+            return;
         }
         if (this.extract === 'Patient Visit') {
             this.getPatientVisitColumns();
+            return;
         }
         if (this.extract === 'Patient Adverse Events') {
             this.getPatientAdverseEventColumns();
+            return;
+        }
+
+        if (this.extract === 'Allergies Chronic Illness') {
+            this.getAllergiesChronicIllnessColumns();
+            return;
+        }
+        if (this.extract === 'Contact Listing') {
+            this.getContactListingColumns();
+            return;
+        }
+        if (this.extract === 'Depression Screening') {
+            this.getDepressionScreeningColumns()
+            return;
+        }
+        if (this.extract === 'Drug and Alcohol Screening') {
+            this.getDrugAlcoholScreeningColumns();
+            return;
+        }
+        if (this.extract === 'Enhanced Adherence Counselling') {
+            this.getEnhancedAdherenceCounsellingColumns();
+            return;
+        }
+        if (this.extract === 'GBV Screening') {
+            this.getGbvScreeningColumns();
+            return;
+        }
+        if (this.extract === 'IPT') {
+            this.getIptColumns();
+            return;
+        }
+        if (this.extract === 'OTZ') {
+            this.getOtzColumns();
+            return;
+        }
+        if (this.extract === 'OVC') {
+            this.getOvcColumns();
+            return;
         }
     }
 
@@ -277,6 +345,26 @@ export class InvalidRecordDetailsComponent implements OnInit {
     private getInvalidPatientAdverseEventExtracts(): void {
         this.loadingData = true;
         this.getInvalid$ = this._patientAdverseEventService.loadValidations().subscribe(
+            p => {
+                this.invalidExtracts = p;
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+                this.loadingData = false;
+            }
+        );
+    }
+
+    private getSummaryInvalidExtracts(): void {
+        this.loadingData = true;
+        this.getInvalid$ = this.summaryService.loadValidations(this.extractN.replace('Extract','')).subscribe(
             p => {
                 this.invalidExtracts = p;
             },
@@ -521,6 +609,118 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'adverseEventActionTaken', header: 'Action Taken'},
             {field: 'adverseEventIsPregnant', header: 'Is Pregnant?'},
             {field: 'visitDate', header: 'Visit Date'}
+        ];
+    }
+
+    private getAllergiesChronicIllnessColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+        ];
+    }
+    private getContactListingColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+        ];
+    }
+
+    private getDepressionScreeningColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+        ];
+    }
+
+    private getDrugAlcoholScreeningColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+        ];
+    }
+    private getEnhancedAdherenceCounsellingColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+        ];
+    }
+    private getGbvScreeningColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+        ];
+    }
+
+    private getIptColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+        ];
+    }
+    private getOtzColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+        ];
+    }
+    private getOvcColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
         ];
     }
 

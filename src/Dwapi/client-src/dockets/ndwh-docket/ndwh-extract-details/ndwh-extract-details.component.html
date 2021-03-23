@@ -4,10 +4,10 @@
       <p-tabPanel [header]="item.display" *ngFor="let item of extracts; let i = index" [selected]="i == selectedIndex">
           <p-tabView>
               <p-tabPanel [header]="item.display + ' Records'">
-                <liveapp-valid-record-details [extract]="extractName" [preventLoad]="isLoading"></liveapp-valid-record-details>
+                <liveapp-valid-record-details [extract]="extractName" [preventLoad]="isLoading" [extractN]="item.name"></liveapp-valid-record-details>
               </p-tabPanel>
               <p-tabPanel [header]="item.display + ' Validation Summary'">
-                <liveapp-invalid-record-details [extract]="extractName" [preventLoad]="isLoading"></liveapp-invalid-record-details>
+                <liveapp-invalid-record-details [extract]="extractName" [preventLoad]="isLoading" [extractN]="item.name"></liveapp-invalid-record-details>
               </p-tabPanel>
               <p-tabPanel [header]="item.display + ' Send Summary'">
               </p-tabPanel>
