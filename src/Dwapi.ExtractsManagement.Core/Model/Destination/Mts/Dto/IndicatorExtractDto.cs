@@ -41,7 +41,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                     indicatorExtractDtos,
                     Indicator,
                     "RETENTION_ON_ART_12_MONTHS",
-                    "RETENTION_ON_ART_VL_1000_12_MONTHS Subset of RETENTION_ON_ART_12_MONTHS Cannot be greater than RETENTION_ON_ART_12_MONTHS Please check your data. Value cannot be greater than RETENTION_ON_ART_12_MONTHS");
+                    "RETENTION_ON_ART_VL_1000_12_MONTHS Subset of RETENTION_ON_ART_12_MONTHS Cannot be greater than RETENTION_ON_ART_12_MONTHS, Please check your data. Value cannot be greater than RETENTION_ON_ART_12_MONTHS");
+                return;
             }
 
             if (Indicator =="HTS_TESTED_POS")
@@ -50,7 +51,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                     indicatorExtractDtos,
                     Indicator,
                     "HTS_TESTED",
-                    "HTS_TESTED_POS Subset of HTS_TESTED Cannot be greater than HST_TESTED Please check your data. Value cannot be greater than HST_TESTED");
+                    "HTS_TESTED_POS Subset of HTS_TESTED Cannot be greater than HST_TESTED, Please check your data. Value cannot be greater than HST_TESTED. ");
+                return;
+
             }
 
             if (Indicator =="HTS_INDEX_POS")
@@ -59,17 +62,19 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                     indicatorExtractDtos,
                     Indicator,
                     "HTS_INDEX",
-                    "HTS_INDEX_POS Subset of HTS_INDEX Cannot be greater than HTS_INDEX Please check your data. Value cannot be greater than HTS_INDEX");
+                    "HTS_INDEX_POS Subset of HTS_INDEX Cannot be greater than HTS_INDEX, Please check your data. Value cannot be greater than HTS_INDEX");
+                return;
             }
 
             if (Indicator =="HTS_TESTED_POS")
             {
-                Status = GetStatus(
+                var    moreStatus = GetStatus(
                     indicatorExtractDtos,
                     Indicator,
                     "TX_NEW",
                     "Please check for linkage to other facilities or Newly initiated clients tested elsewhere",
                     LogicCalc.NEQ);
+                return;
             }
 
             if (Indicator =="TX_CURR")
@@ -78,8 +83,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                     indicatorExtractDtos,
                     Indicator,
                     "TX_NEW",
-                    "Please check your data  TX_CURR Should be greater than or equals to TX_NEW TX_CURR cannot be less than TX_NEW",
-                    LogicCalc.NEQ);
+                    "Please check your data, TX_CURR Should be greater than or equal to TX_NEW. TX_CURR cannot be less than TX_NEW",
+                    LogicCalc.LT);
+                return;
             }
 
             if (Indicator =="TX_PVLS")
@@ -88,8 +94,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                     indicatorExtractDtos,
                     Indicator,
                     "TX_CURR",
-                    "TX_PVLS Subset of TX_CURR Cannot be greater than TX_CURR	Please check your data .Value cannot be greater than TX_CURR",
+                    "TX_PVLS Subset of TX_CURR Cannot be greater than TX_CURR, Please check your data. Value cannot be greater than TX_CURR",
                     LogicCalc.GT);
+                return;
             }
             if (Indicator =="MMD")
             {
@@ -97,8 +104,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                     indicatorExtractDtos,
                     Indicator,
                     "TX_CURR",
-                    "MMD Subset of TX_CURR Cannot be greater than TX_CURR Please check your data .Value cannot be greater than TX_CURR",
+                    "MMD Subset of TX_CURR Cannot be greater than TX_CURR, Please check your data .Value cannot be greater than TX_CURR",
                     LogicCalc.GT);
+                return;
             }
         }
 
