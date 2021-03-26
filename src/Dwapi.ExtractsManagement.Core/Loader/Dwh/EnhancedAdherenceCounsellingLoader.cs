@@ -72,10 +72,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                     count += batch.Count;
 
                     //Auto mapper
-                    var extractRecords =
-                        Mapper
-                            .Map<List<TempEnhancedAdherenceCounsellingExtract>,
-                                List<EnhancedAdherenceCounsellingExtract>>(batch);
+                    var extractRecords = mapper.Map<List<TempEnhancedAdherenceCounsellingExtract>,List<EnhancedAdherenceCounsellingExtract>>(batch);
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
