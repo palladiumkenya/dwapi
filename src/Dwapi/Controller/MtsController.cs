@@ -85,9 +85,7 @@ namespace Dwapi.Controller
         [HttpGet("indicator")]
         public IActionResult Indicator()
         {
-            var list = _extractRepository.Load().ToList();
-
-            //var list = IndicatorExtractDto.GenerateValidations(_extractRepository.Load().ToList());
+            var list = IndicatorExtractDto.GenerateValidations(_extractRepository.Load().ToList());
 
             return Ok(list.OrderBy(x=>x.Rank));
         }
