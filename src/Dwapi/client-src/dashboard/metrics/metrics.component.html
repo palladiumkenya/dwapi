@@ -24,11 +24,11 @@
                     <p-column field="indicator" header="Indicator"></p-column>
                     <p-column field="indicatorValue" header="Value"></p-column>
                     <p-column field="description" header="Description"></p-column>
-                    <p-column field="status" header="Status">
-                        <ng-template let-col let-check="rowData" pTemplate="body">
-                            <span [style.color]="check.status===''?'Green':'Red'">{{check[col.field]}}</span>
-                        </ng-template>
-                    </p-column>
+                    <!-- <p-column field="status" header="Status"> -->
+                    <!--     <ng-template let-col let-check="rowData" pTemplate="body"> -->
+                    <!--         <span [style.color]="check.status===''?'Green':'Red'">{{check[col.field]}}</span> -->
+                    <!--     </ng-template> -->
+                    <!-- </p-column> -->
                     <p-column field="indicatorDate" header="Period">
                         <ng-template let-col let-detail="rowData" pTemplate="body">
                             {{detail.indicatorDate| date: 'mediumDate'}}
