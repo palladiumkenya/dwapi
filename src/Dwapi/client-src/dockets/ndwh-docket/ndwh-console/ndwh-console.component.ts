@@ -146,14 +146,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.updateEvent();
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
-            const em=environment.emrs.filter(x=>x.name===this.emrName)[0];
-            if (this.emrName == 'KenyaEMR') {
+            const em = environment.emrs.filter(x => x.name === this.emrName)[0];
+            if (this.emrName === 'KenyaEMR') {
                 this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version})`;
-            }
-            else if (this.emrName === 'IQCare') {
+            } else if (this.emrName === 'IQCare') {
                 this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version})`;
-            }
-            else {
+            } else {
                 this.minEMRVersion = '';
             }
         }
@@ -168,7 +166,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         localStorage.clear();
         this.errorMessage = [];
         this.load$ = this._ndwhExtractService
-            //.extractAll(this.generateExtractLoadCommand(this.emr))
             .extractAll(this.generateExtractsLoadCommand(this.emr))
             .subscribe(
                 p => {
@@ -347,7 +344,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     // this.sendResponse = p;
                 },
                 e => {
-                    this.notifications=[];
+                    this.notifications = [];
                     console.error('SEND ERROR', e);
                     if (e && e.ProgressEvent) {
 
@@ -357,7 +354,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     }
                 },
                 () => {
-                    this.notifications=[];
+                    this.notifications = [];
                     this.errorMessage.push({severity: 'success', summary: 'Sending Extracts Completed '});
                     this.updateEvent();
                 }
@@ -479,7 +476,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private updateExractStats(dwhProgress: any) {
-        if(dwhProgress) {
+        if (dwhProgress) {
            this.extracts.map(e => {
                     if (e.name === dwhProgress.extract && e.extractEvent) {
                         e.extractEvent.sent = dwhProgress.sent;
@@ -711,15 +708,15 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         return this.extractPatientAdverseEvent;
     }
 
-    private generateExtractProfiles(currentEmr: EmrSystem): ExtractProfile[]{
-        let profiles: ExtractProfile[] = [];
+    private generateExtractProfiles(currentEmr: EmrSystem): ExtractProfile[] {
+        const profiles: ExtractProfile[] = [];
         this.extracts.forEach(e => {
-            const profile= {
+            const profile = {
                 databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === e.databaseProtocolId)[0],
                 extract: e
             };
             profiles.push(profile);
-        })
+        });
 
         return profiles;
     }
