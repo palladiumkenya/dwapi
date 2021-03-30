@@ -256,8 +256,8 @@ FROM
        timestampdiff(year,d.DOB, hiv.visit_date) as AgeEnrollment,
        timestampdiff(year,d.DOB, reg.art_start_date) as AgeARTStart,
        timestampdiff(year,d.DOB, reg.latest_vis_date) as AgeLastVisit,
-       (select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-	      (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
+       i.siteCode as SiteCode,
+       i.FacilityName as FacilityName,
        CAST(coalesce(date_first_enrolled_in_care,min(hiv.visit_date)) as Date) as RegistrationDate,
        case  max(hiv.entry_point)
          when 160542 then 'OPD'
@@ -266,7 +266,7 @@ FROM
          when 160538 then 'PMTCT'
          when 160541 then 'TB'
          when 160536 then 'IPD - Adult'
-         else cn.name
+         else ''
            end as PatientSource,
        reg.art_start_date as StartARTDate,
        hiv.date_started_art_at_transferring_facility as PreviousARTStartDate,
@@ -349,8 +349,7 @@ from kenyaemr_etl.etl_hiv_enrollment hiv
                                left outer join kenyaemr_etl.etl_hiv_enrollment enr on enr.patient_id=e.patient_id
                                left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=e.patient_id
                         group by e.patient_id)reg on reg.patient_id=hiv.patient_id
-       left outer join concept_name cn on cn.concept_id=hiv.entry_point  and cn.concept_name_type='FULLY_SPECIFIED'
-                                            and cn.locale='en'
+       join kenyaemr_etl.etl_default_facility_info i
        left join (select o.person_id,o1.encounter_id, o.obs_id,o.concept_id as obs_group,o1.concept_id as concept_id,o1.value_coded
                   from obs o join obs o1 on o.obs_id = o1.obs_group_id) o1 on o1.encounter_id = hiv.encounter_id
 where d.unique_patient_no is not null
@@ -552,8 +551,8 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct
                 '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
                 d.patient_id as PatientPK,
-                (select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-				(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
+                i.facilityName as FacilityName,
+                i.siteCode as SiteCode,
                 fup.visit_id as VisitId,
                 case when fup.visit_date < '1990-01-01' then null else CAST(fup.visit_date AS DATE) end  AS VisitDate,
                 'Out Patient' as Service,
@@ -585,7 +584,7 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
                 fup.respiratory_rate as RespiratoryRate,
                 fup.oxygen_saturation as OxygenSaturation,
                 fup.muac as Muac,
-                (case fup.nutritional_status when 1115 then 'Normal' when 163302 then 'Severe acute malnutrition' when 163303 then 'Moderate acute malnutrition' when 114413 then 'Overweight/Obese' else '' end) as NutritionalStatus,
+                (case fup.nutritional_status when 1115 then 'Normal' when 163302 then 'Severe acute malnutrition' when 163303 then 'Moderate acute malnutrition' when 114413 then 'Overweight/Obese' else '' end) as nutritional_status,
                 (case fup.ever_had_menses when 1065 then 'Yes' when 1066 then 'No' when 1175 then 'N/A' end) as EverHadMenses,
                 null as Breastfeeding,
                 (case menopausal when 113928 then 'Yes' end) as Menopausal,
@@ -639,11 +638,9 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
                 CASE fup.stability
                   WHEN 1 THEN 'Stable'
                   WHEN 2 THEN 'Not Stable' END as StabilityAssessment,
-                dc.name as DifferentiatedCare,
-                CASE
-                  WHEN fup.key_population_type  IS NOT NULL AND fup.key_population_type  !=1175
-                          THEN 'Key population'
-                  ELSE pt.name  END as PopulationType,
+                (case fup.differentiated_care when 164942 then 'Standard Care' when 164943 then 'Fast Track' when 164944 then 'Community ART Distribution - HCW Led' when 164945 then 'Community ART Distribution - Peer Led'
+                                              when 164946 then 'Facility ART Distribution Group' else '' end) as DifferentiatedCare,
+                (case population_type when 164928 then 'General Population' when 164929 then 'Key Population' else '' end) as PopulationType,
                 case fup.key_population_type
                   WHEN 105 THEN 'PWID'
                   WHEN 160578 THEN 'MSM'
@@ -658,8 +655,7 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
                 GREATEST(COALESCE(d.date_last_modified, fup.date_last_modified), COALESCE(fup.date_last_modified, d.date_last_modified)) as Date_Last_Modified
 from kenyaemr_etl.etl_patient_demographics d
        join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=d.patient_id
-       left join concept_name dc on dc.concept_id =  fup.differentiated_care and dc.concept_name_type='FULLY_SPECIFIED'
-       left join concept_name pt on fup.population_type = pt.concept_id AND pt.concept_name_type='FULLY_SPECIFIED'
+       join kenyaemr_etl.etl_default_facility_info i
        left join (select de.patient_id,mid(max(concat(de.visit_date,de.regimen)),11) as regimen from kenyaemr_etl.etl_drug_event de
                   where de.discontinued is null group by de.patient_id)de on fup.patient_id = de.patient_id
 where d.unique_patient_no is not null and fup.visit_date > '1990-01-01' and fup.visit_id is not null;"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
