@@ -103,6 +103,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public sendMpi: boolean = false;
     public loading = false;
     extractSent = [];
+    isLoadingMet = false;
 
     public constructor(
         confirmationService: ConfirmationService,
@@ -258,7 +259,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public loadMet(): void {
-
+        this.isLoadingMet=true;
         this.loadMet$ = this._ndwhExtractService
             .loadMet()
             .subscribe(
@@ -272,8 +273,16 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         summary: 'Error loading stats ',
                         detail: <any>e
                     });
+                    this.isLoadingMet=false;
+                    if(this.canSend) {
+                        this.canSend = true;
+                    }
                 },
                 () => {
+                    this.isLoadingMet=false;
+                    if(this.canSend) {
+                        this.canSend = true;
+                    }
                 }
             );
 

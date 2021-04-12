@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Humanizer;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
@@ -17,6 +18,14 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
         public string TimeAgo => GetTimeAgo();
         public string Status { get; set; }
 
+        private bool Deferred => CheckDeferred();
+
+        private bool CheckDeferred()
+        {
+            var list = new List<string>() {"TX_ML", "TX_RTT", "MMD", "TX_PVLS"};
+            return list.Any(x => x.ToLower() == Indicator.ToLower());
+        }
+
         private string GetTimeAgo()
         {
             return DateCreated.Humanize(false);
@@ -27,11 +36,16 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
             var list = new List<IndicatorExtractDto>();
             foreach (var indicatorExtractDto in indicatorExtractDtos)
             {
-                indicatorExtractDto.Validate(indicatorExtractDtos);
-                list.Add(indicatorExtractDto);
+                if (!indicatorExtractDto.Deferred)
+                {
+                    indicatorExtractDto.Validate(indicatorExtractDtos);
+                    list.Add(indicatorExtractDto);
+                }
             }
             return list;
         }
+
+
 
         private void Validate(List<IndicatorExtractDto> indicatorExtractDtos)
         {
@@ -172,6 +186,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
     {
         GT,EQ,NEQ,LT,GTEQ,LTEQ
     }
+
+
 
 
 }
