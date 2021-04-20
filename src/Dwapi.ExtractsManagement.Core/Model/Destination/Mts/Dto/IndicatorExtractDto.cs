@@ -22,7 +22,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
 
         private bool CheckDeferred()
         {
-            var list = new List<string>() {"TX_ML", "TX_RTT", "MMD", "TX_PVLS"};
+            var list = new List<string>() {"TX_ML", "TX_RTT", "MMD", "TX_PVLS","MFL_CODE"};
             return list.Any(x => x.ToLower() == Indicator.ToLower());
         }
 

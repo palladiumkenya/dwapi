@@ -4277,10 +4277,10 @@ UNION
 UNION
 (
     select 'HTS_INDEX_POS' AS 'INDICATOR', count( distinct c.patient_id) as 'INDICATORVALUE',date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATORDATE'
-    from openmrs.kenyaemr_hiv_testing_patient_contact c inner join kenyaemr_etl.etl_hts_test t
-                                                                   on c.patient_id = t.patient_id where c.relationship_type in(971, 972, 1528, 162221, 163565, 970, 5617)
-                                                                                                    and t.final_test_result = 'Positive' and t.voided=0 and c.voided = 0 and t.test_type = 2 and date(c.date_created)
-    between DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -3 MONTH) and date(last_day(date_sub(current_date(),interval 1 MONTH)))
+				from openmrs.kenyaemr_hiv_testing_patient_contact c inner join kenyaemr_etl.etl_hts_test t
+         																																																										on c.patient_id = t.patient_id where c.relationship_type in(971, 972, 1528, 162221, 163565, 970, 5617)
+                                          																																																										and t.final_test_result = 'Positive' and t.voided=0 and c.voided = 0 and date(c.date_created)
+			 between DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -3 MONTH) and date(last_day(date_sub(current_date(),interval 1 MONTH)))
 )
 UNION
 (

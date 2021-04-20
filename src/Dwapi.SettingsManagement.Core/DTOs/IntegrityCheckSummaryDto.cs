@@ -16,6 +16,12 @@ namespace Dwapi.SettingsManagement.Core.DTOs
         public string Status { get; set; }
         public DateTime RunDate { get; set; }
         public string TimeAgo => GetTimeAgo();
+        private bool Deferred => CheckDeferred();
+        private bool CheckDeferred()
+        {
+            var list = new List<string>() {"MFL_CODE"};
+            return list.Any(x => x.ToLower() == Name.ToLower());
+        }
 
         public IntegrityCheckSummaryDto(string name, string description, string logic, string message, string docket,
             List<IntegrityCheckRun> runs)
@@ -45,7 +51,8 @@ namespace Dwapi.SettingsManagement.Core.DTOs
                     check.Docket,
                     check.IntegrityCheckRuns.ToList());
 
-                list.Add(summary);
+                if(!summary.Deferred)
+                    list.Add(summary);
             }
 
             return list;
