@@ -2,8 +2,8 @@
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch
 {
-    public interface IMnchValidator
+    public interface IMnchValidator:IExtractValidator
     {
-        Task<bool> Validate(string sourceTable);
+
     }
 }
