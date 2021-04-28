@@ -37,6 +37,11 @@ namespace Dwapi.SettingsManagement.Core.DTOs
                 Message = ParseMessage(message, run, logic);
                 Status = $"{run.RunStatus}";
             }
+            else
+            {
+                Message = "Not uploaded";
+                Status= $"{LogicStatus.Fail}";
+            }
         }
 
         private string FormatName(string name)

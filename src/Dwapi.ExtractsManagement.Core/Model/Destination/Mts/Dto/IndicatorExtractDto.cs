@@ -38,6 +38,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
             {
                 if (!indicatorExtractDto.Deferred)
                 {
+                    indicatorExtractDto.Status = "Checked";
                     indicatorExtractDto.Validate(indicatorExtractDtos);
                     list.Add(indicatorExtractDto);
                 }
@@ -159,7 +160,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
             }
         }
 
-        private string GetStatus(List<IndicatorExtractDto> indicatorExtractDtos,string indiA,string indiB,string msg,LogicCalc cal=LogicCalc.GT)
+        private string GetStatus(List<IndicatorExtractDto> indicatorExtractDtos, string indiA, string indiB, string msg,
+            LogicCalc cal = LogicCalc.GT)
         {
             var status = "";
             if (Indicator == indiA)
@@ -197,6 +199,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                                 ? msg
                                 : "";
                         }
+
                         if (cal == LogicCalc.LT)
                         {
                             status = intA < intB
@@ -213,6 +216,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                     }
                 }
             }
+
+            status = string.IsNullOrWhiteSpace(status) ? "Checked" : status;
+
             return status;
         }
     }

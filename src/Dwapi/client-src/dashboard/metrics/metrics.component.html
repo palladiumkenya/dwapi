@@ -26,7 +26,7 @@
                     <p-column field="description" header="Description" [headerStyle]="{'font-weight':'bold'}"></p-column>
                     <p-column field="status" header="Status" [headerStyle]="{'font-weight':'bold'}">
                         <ng-template let-col let-check="rowData" pTemplate="body">
-                            <span [style.color]="check.status===''?'Green':'Red'">{{check[col.field]}}</span>
+                            <span [style.color]="check.status==='Checked'?'Green':'Red'">{{check[col.field]}}</span>
                         </ng-template>
                     </p-column>
                     <p-column field="indicatorDate" header="Period" [headerStyle]="{'font-weight':'bold'}">
