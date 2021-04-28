@@ -5,6 +5,7 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Diff;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
@@ -12,6 +13,7 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
+using Dwapi.ExtractsManagement.Core.Model.Source.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mts;
 using Dwapi.SharedKernel.Infrastructure;
 using LiveSeeder.Core;
@@ -171,6 +173,32 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempOvcExtractErrorSummary> TempOvcExtractErrorSummaries{ get; set; }
         public DbSet<TempOtzExtractError> TempOtzExtractError { get; set; }
         public DbSet<TempOtzExtractErrorSummary> TempOtzExtractErrorSummary { get; set; }
+
+        #region Mnch
+        public virtual DbSet<TempPatientMnchExtract> TempPatientMnchExtracts { get; set; }
+        public virtual DbSet<TempMnchEnrolmentExtract> TempMnchEnrolmentExtracts { get; set; }
+        public virtual DbSet<TempMnchArtExtract> TempMnchArtExtracts { get; set; }
+        public virtual DbSet<TempAncVisitExtract> TempAncVisitExtracts { get; set; }
+        public virtual DbSet<TempMatVisitExtract> TempMatVisitExtracts { get; set; }
+        public virtual DbSet<TempPncVisitExtract> TempPncVisitExtracts { get; set; }
+        public virtual DbSet<TempMotherBabyPairExtract> TempMotherBabyPairExtracts { get; set; }
+        public virtual DbSet<TempCwcEnrolmentExtract> TempCwcEnrolmentExtracts { get; set; }
+        public virtual DbSet<TempCwcVisitExtract> TempCwcVisitExtracts { get; set; }
+        public virtual DbSet<TempHeiExtract> TempHeiExtracts { get; set; }
+        public virtual DbSet<TempMnchLabExtract> TempMnchLabExtracts { get; set; }
+
+        public virtual DbSet<PatientMnchExtract> PatientMnchExtracts { get; set; }
+        public virtual DbSet<MnchEnrolmentExtract> MnchEnrolmentExtracts { get; set; }
+        public virtual DbSet<MnchArtExtract> MnchArtExtracts { get; set; }
+        public virtual DbSet<AncVisitExtract> AncVisitExtracts { get; set; }
+        public virtual DbSet<MatVisitExtract> MatVisitExtracts { get; set; }
+        public virtual DbSet<PncVisitExtract> PncVisitExtracts { get; set; }
+        public virtual DbSet<MotherBabyPairExtract> MotherBabyPairExtracts { get; set; }
+        public virtual DbSet<CwcEnrolmentExtract> CwcEnrolmentExtracts { get; set; }
+        public virtual DbSet<CwcVisitExtract> CwcVisitExtracts { get; set; }
+        public virtual DbSet<HeiExtract> HeiExtracts { get; set; }
+        public virtual DbSet<MnchLabExtract> MnchLabExtracts { get; set; }
+        #endregion
 
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)

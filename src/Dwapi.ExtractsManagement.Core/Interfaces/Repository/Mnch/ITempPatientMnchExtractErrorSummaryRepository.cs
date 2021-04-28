@@ -5,5 +5,5 @@ using Dwapi.SharedKernel.Interfaces;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mnch
 {
-   public interface ITempPatientMnchExtractExtractErrorSummaryRepository : ITempExtractErrorSummaryRepository<TempPatientMnchExtractErrorSummary>{}
+   public interface ITempPatientMnchExtractErrorSummaryRepository : ITempMnchExtractErrorSummaryRepository<TempPatientMnchExtractErrorSummary>{}
 }
