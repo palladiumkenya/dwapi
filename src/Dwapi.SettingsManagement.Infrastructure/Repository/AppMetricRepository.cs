@@ -123,6 +123,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 
             //Migration
 
+             /*
             var mgsLoaded = DbSet.AsNoTracking()
                 .Where(x => x.Name == "MigrationService" && x.LogValue.Contains("NoLoaded"))
                 .OrderByDescending(x => x.LogDate).FirstOrDefault();
@@ -146,6 +147,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
                 ap.CreatMgs("NoSent");
                 list.Add(ap);
             }
+            */
 
             return list;
         }

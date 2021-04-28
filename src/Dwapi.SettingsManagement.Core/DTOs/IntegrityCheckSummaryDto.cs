@@ -26,7 +26,7 @@ namespace Dwapi.SettingsManagement.Core.DTOs
         public IntegrityCheckSummaryDto(string name, string description, string logic, string message, string docket,
             List<IntegrityCheckRun> runs)
         {
-            Name = name;
+            Name = FormatName(name);
             Description = description;
             Docket = docket;
 
@@ -39,6 +39,10 @@ namespace Dwapi.SettingsManagement.Core.DTOs
             }
         }
 
+        private string FormatName(string name)
+        {
+            return name.Replace('_', ' ');
+        }
 
 
         public static List<IntegrityCheckSummaryDto> Generate(List<IntegrityCheck> checks)

@@ -6,13 +6,13 @@
             <div class="card card-w-title">
                 <h1>Quality Indicators</h1>
                 <p-dataTable [value]="appChecks">
-                    <p-column field="description" header="Indicator"></p-column>
-                    <p-column field="message" header="Status">
+                    <p-column field="description" header="Indicator" [headerStyle]="{'font-weight':'bold'}"></p-column>
+                    <p-column field="message" header="Status" [headerStyle]="{'font-weight':'bold'}">
                         <ng-template let-col let-check="rowData" pTemplate="body">
                             <span [style.color]="check.status==='Pass'?'Green':'Red'">{{check[col.field]}}</span>
                         </ng-template>
                     </p-column>
-                    <p-column field="timeAgo" header="Checked"></p-column>
+                    <p-column field="timeAgo" header="Checked" [headerStyle]="{'font-weight':'bold'}"></p-column>
                 </p-dataTable>
             </div>
         </div>
@@ -21,15 +21,15 @@
             <div class="card card-w-title">
                 <h1>EMR Indicators</h1>
                 <p-dataTable [value]="indicators">
-                    <p-column field="indicator" header="Indicator"></p-column>
-                    <p-column field="indicatorValue" header="Value"></p-column>
-                    <p-column field="description" header="Description"></p-column>
-                    <p-column field="status" header="Status">
+                    <p-column field="indicator" header="Indicator" [headerStyle]="{'font-weight':'bold'}"></p-column>
+                    <p-column field="indicatorValue" header="Value" [headerStyle]="{'font-weight':'bold'}"></p-column>
+                    <p-column field="description" header="Description" [headerStyle]="{'font-weight':'bold'}"></p-column>
+                    <p-column field="status" header="Status" [headerStyle]="{'font-weight':'bold'}">
                         <ng-template let-col let-check="rowData" pTemplate="body">
                             <span [style.color]="check.status===''?'Green':'Red'">{{check[col.field]}}</span>
                         </ng-template>
                     </p-column>
-                    <p-column field="indicatorDate" header="Period">
+                    <p-column field="indicatorDate" header="Period" [headerStyle]="{'font-weight':'bold'}">
                         <ng-template let-col let-detail="rowData" pTemplate="body">
                             {{detail.indicatorDate| date: 'mediumDate'}}
                         </ng-template>
@@ -49,9 +49,9 @@
                 <div class="card card-w-title">
                     <h1>DWAPI Metrics</h1>
                     <p-dataTable [value]="appMetrics">
-                        <p-column field="name" header="Docket"></p-column>
-                        <p-column field="action" header="Activity"></p-column>
-                        <p-column field="timeAgo" header=""></p-column>
+                        <p-column field="name" header="Docket" [headerStyle]="{'font-weight':'bold'}"></p-column>
+                        <p-column field="action" header="Activity" [headerStyle]="{'font-weight':'bold'}"></p-column>
+                        <p-column field="timeAgo" header="" [headerStyle]="{'font-weight':'bold'}"></p-column>
                     </p-dataTable>
                 </div>
             </div>
