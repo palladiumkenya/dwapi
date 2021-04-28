@@ -3,7 +3,7 @@ using Dwapi.Contracts.Mnch;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
 {
-    public class TempPncVisitExtract : MnchClientExtract, IPncVisit
+    public class PncVisitExtract : MnchClientExtract, IPncVisit
     {
         public string PatientMnchID { get; set; }
         public int? VisitID { get; set; }
