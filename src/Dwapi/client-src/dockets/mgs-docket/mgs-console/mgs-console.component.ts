@@ -135,10 +135,10 @@ export class MgsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             this.emrVersion = `(Ver. ${this.emr.version})`;
             const em=environment.emrs.filter(x=>x.name===this.emrName)[0];
             if (this.emrName == 'KenyaEMR') {
-                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version})`;
+                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version}) or higher`;
             }
             else if (this.emrName === 'IQCare') {
-                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version})`;
+                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version}) or higher`;
             }
             else {
                 this.minEMRVersion = '';

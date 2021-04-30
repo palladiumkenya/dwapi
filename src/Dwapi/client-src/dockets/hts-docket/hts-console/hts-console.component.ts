@@ -137,10 +137,10 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             const em=environment.emrs.filter(x=>x.name===this.emrName)[0];
 
             if (this.emrName == 'KenyaEMR') {
-                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version})`;
+                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version}) or higher`;
             }
             else if (this.emrName === 'IQCare') {
-                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version})`;
+                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version}) or higher`;
             }
             else {
                 this.minEMRVersion = '';
