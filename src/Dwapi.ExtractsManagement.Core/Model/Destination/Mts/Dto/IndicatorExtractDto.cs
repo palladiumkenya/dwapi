@@ -64,7 +64,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                         return num.ToString("N0");
                     }
                 }
-                if (indicator.EndsWith("DATE"))
+                if (indicator.EndsWith("DATE") || (indicator.Contains("ETL") && indicator.Contains("Refresh")))
                 {
                     DateTime dateval;
                     if (DateTime.TryParse(indicatorValue, out dateval))
