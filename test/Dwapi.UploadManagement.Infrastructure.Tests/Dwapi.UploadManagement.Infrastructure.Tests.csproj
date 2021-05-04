@@ -27,8 +27,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Data" Version="2.0.0" />
-    <PackageReference Include="Dapper" Version="2.0.35" />
-    <PackageReference Include="Dapper.Contrib" Version="2.0.35" />
+    <PackageReference Include="Dapper" Version="2.0.78" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
     <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
@@ -48,7 +48,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Z.Dapper.Plus" Version="3.0.5" />
+    <PackageReference Include="Z.Dapper.Plus" Version="3.0.29" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Dwapi.ExtractsManagement.Core\Dwapi.ExtractsManagement.Core.csproj" />

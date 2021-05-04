@@ -65,7 +65,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientExtract), $"{nameof(TempPatientExtract)}s");
 
             //Load
-            int loaded = await _patientLoader.Load(request.Extract.Id, found);
+            int loaded = await _patientLoader.Load(request.Extract.Id, found, request.DatabaseProtocol.SupportsDifferential);
 
             int rejected =
                 _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract);

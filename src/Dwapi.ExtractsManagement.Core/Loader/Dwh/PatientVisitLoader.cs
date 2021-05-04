@@ -10,6 +10,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
@@ -32,9 +33,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
             _mediator = mediator;
         }
 
-        public async Task<int> Load(Guid extractId, int found)
+        public async Task<int> Load(Guid extractId, int found, bool diffSupport)
         {
-            int count = 0;
+            int count = 0; var mapper = diffSupport ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
 
             try
             {
@@ -59,13 +60,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 while (page <= pageCount)
                 {
                     var tempPatientVisitExtracts =await
-                        _tempPatientVisitExtractRepository.GetAll(query.ToString(), page, take);
+                        _tempPatientVisitExtractRepository.ReadAll(query.ToString(), page, take);
 
                     var batch = tempPatientVisitExtracts.ToList();
                     count += batch.Count;
 
                     //Auto mapper
-                    var extractRecords = Mapper.Map<List<TempPatientVisitExtract>, List<PatientVisitExtract>>(batch);
+                    var extractRecords = mapper.Map<List<TempPatientVisitExtract>, List<PatientVisitExtract>>(batch);
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();

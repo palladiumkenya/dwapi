@@ -134,5 +134,14 @@ namespace Dwapi.SharedKernel.Infrastructure.Tests.Repository
                 Console.WriteLine(car);
             }
         }
+
+
+        [Test]
+        public void should_Get_Tablename()
+        {
+            var cars = _testCarRepository.GetTableName();
+            Assert.AreEqual(nameof(TestDbContext.TestCars), cars);
+            Console.WriteLine(cars);
+        }
     }
 }

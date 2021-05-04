@@ -134,12 +134,13 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             this.updateEvent();
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
+            const em=environment.emrs.filter(x=>x.name===this.emrName)[0];
 
             if (this.emrName == 'KenyaEMR') {
-                this.minEMRVersion = '(The minimum version EMR is 17.3.0)';
+                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version}) or higher`;
             }
             else if (this.emrName === 'IQCare') {
-                this.minEMRVersion = '(The minimum version EMR is 2.2.1)';
+                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version}) or higher`;
             }
             else {
                 this.minEMRVersion = '';
@@ -405,6 +406,24 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
 
+    public sendHandshake(): void {
+        this.manifestPackage = this.getSendManifestPackage();
+        this.send$ = this._htsSenderService.sendHandshake(this.manifestPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    // this.errorMessage.push({ severity: 'error', summary: 'Error sending handshake', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
     /*public sendClientExtract(): void {
         this.sendEvent = {sentProgress: 0};
         this.sending = true;
@@ -626,6 +645,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
                 this.updateEvent();
+                this.sendHandshake();
                 this.sending = false;
             } else {
                 this.updateEvent();

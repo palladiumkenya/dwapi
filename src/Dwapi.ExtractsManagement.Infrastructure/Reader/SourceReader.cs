@@ -50,21 +50,27 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
             if (null == sourceConnection)
                 throw new Exception("Data connection not initialized");
 
-
             using (sourceConnection)
             {
-                sourceConnection.Open();
+                if(sourceConnection.State!=ConnectionState.Open)
+                    sourceConnection.Open();
                 var commandDefinition = new CommandDefinition(protocol.DiffSqlCheck, null, null, 0);
 
                 try
                 {
                     if (sourceConnection is SqliteConnection)
                     {
-                        sourceConnection.ExecuteReader(commandDefinition);
+                        using (var diffReader =sourceConnection.ExecuteReader(commandDefinition))
+                        {
+                            diffReader.Read();
+                        }
                     }
                     else
                     {
-                        sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection);
+                        using (var diffReader = sourceConnection.ExecuteReader(commandDefinition, CommandBehavior.CloseConnection))
+                        {
+                            diffReader.Read();
+                        }
                     }
 
                     return true;

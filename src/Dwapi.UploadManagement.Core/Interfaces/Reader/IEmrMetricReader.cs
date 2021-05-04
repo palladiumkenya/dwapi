@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Dwapi.UploadManagement.Core.Model;
 
@@ -7,5 +8,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader
     {
         IEnumerable<EmrMetricView> ReadAll();
         IEnumerable<AppMetricView> ReadAppAll();
+        Guid GetSession(string notificationName);
     }
 }

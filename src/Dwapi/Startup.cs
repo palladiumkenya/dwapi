@@ -12,32 +12,39 @@ using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
 using Dwapi.ExtractsManagement.Core.Cleaner.Hts;
 using Dwapi.ExtractsManagement.Core.Cleaner.Mgs;
+using Dwapi.ExtractsManagement.Core.Cleaner.Mts;
 using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Extractors.Hts;
 using Dwapi.ExtractsManagement.Core.Extractors.Mgs;
+using Dwapi.ExtractsManagement.Core.Extractors.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
@@ -48,17 +55,20 @@ using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Dwh;
 using Dwapi.ExtractsManagement.Core.Loader.Hts;
 using Dwapi.ExtractsManagement.Core.Loader.Mgs;
+using Dwapi.ExtractsManagement.Core.Loader.Mts;
 using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Profiles.Hts;
 using Dwapi.ExtractsManagement.Core.Profiles.Mgs;
+using Dwapi.ExtractsManagement.Core.Profiles.Mts;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Hts;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Mgs;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Mts;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
@@ -72,6 +82,8 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Validations;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Hts;
@@ -99,20 +111,24 @@ using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Mgs;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Mts;
 using Dwapi.UploadManagement.Core.Interfaces.Services;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Mgs;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Mts;
 using Dwapi.UploadManagement.Core.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Packager.Hts;
 using Dwapi.UploadManagement.Core.Packager.Mgs;
+using Dwapi.UploadManagement.Core.Packager.Mts;
 using Dwapi.UploadManagement.Core.Profiles;
 using Dwapi.UploadManagement.Core.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services.Dwh;
 using Dwapi.UploadManagement.Core.Services.Hts;
 using Dwapi.UploadManagement.Core.Services.Mgs;
+using Dwapi.UploadManagement.Core.Services.Mts;
 using Dwapi.UploadManagement.Core.Services.Psmart;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Dwapi.UploadManagement.Infrastructure.Reader;
@@ -120,6 +136,7 @@ using Dwapi.UploadManagement.Infrastructure.Reader.Cbs;
 using Dwapi.UploadManagement.Infrastructure.Reader.Dwh;
 using Dwapi.UploadManagement.Infrastructure.Reader.Hts;
 using Dwapi.UploadManagement.Infrastructure.Reader.Mgs;
+using Dwapi.UploadManagement.Infrastructure.Reader.Mts;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using MediatR;
@@ -523,6 +540,79 @@ namespace Dwapi
             services.AddScoped<IDiffLogReader, DiffLogReader>();
 
             services.AddScoped<IAppMetricRepository, AppMetricRepository>();
+
+            #region newCT
+            services.AddTransient<IAllergiesChronicIllnessExtractRepository, AllergiesChronicIllnessExtractRepository>();
+            services.AddTransient<IContactListingExtractRepository, ContactListingExtractRepository>();
+            services.AddTransient<IDepressionScreeningExtractRepository, DepressionScreeningExtractRepository>();
+            services.AddTransient<IDrugAlcoholScreeningExtractRepository, DrugAlcoholScreeningExtractRepository>();
+            services.AddTransient<IEnhancedAdherenceCounsellingExtractRepository, EnhancedAdherenceCounsellingExtractRepository>();
+            services.AddTransient<IGbvScreeningExtractRepository, GbvScreeningExtractRepository>();
+            services.AddTransient<IIptExtractRepository, IptExtractRepository>();
+            services.AddTransient<IOtzExtractRepository, OtzExtractRepository>();
+            services.AddTransient<IOvcExtractRepository, OvcExtractRepository>();
+
+            services.AddTransient<ITempAllergiesChronicIllnessExtractRepository, TempAllergiesChronicIllnessExtractRepository>();
+            services.AddTransient<ITempContactListingExtractRepository, TempContactListingExtractRepository>();
+            services.AddTransient<ITempDepressionScreeningExtractRepository, TempDepressionScreeningExtractRepository>();
+            services.AddTransient<ITempDrugAlcoholScreeningExtractRepository, TempDrugAlcoholScreeningExtractRepository>();
+            services.AddTransient<ITempEnhancedAdherenceCounsellingExtractRepository, TempEnhancedAdherenceCounsellingExtractRepository>();
+            services.AddTransient<ITempGbvScreeningExtractRepository, TempGbvScreeningExtractRepository>();
+            services.AddTransient<ITempIptExtractRepository, TempIptExtractRepository>();
+            services.AddTransient<ITempOtzExtractRepository, TempOtzExtractRepository>();
+            services.AddTransient<ITempOvcExtractRepository, TempOvcExtractRepository>();
+
+
+            services.AddTransient<ITempAllergiesChronicIllnessExtractErrorSummaryRepository, TempAllergiesChronicIllnessExtractErrorSummaryRepository>();
+            services.AddTransient<ITempContactListingExtractErrorSummaryRepository, TempContactListingExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDepressionScreeningExtractErrorSummaryRepository, TempDepressionScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDrugAlcoholScreeningExtractErrorSummaryRepository, TempDrugAlcoholScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempEnhancedAdherenceCounsellingExtractErrorSummaryRepository, TempEnhancedAdherenceCounsellingExtractErrorSummaryRepository>();
+            services.AddTransient<ITempGbvScreeningExtractErrorSummaryRepository, TempGbvScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempIptExtractErrorSummaryRepository, TempIptExtractErrorSummaryRepository>();
+            services.AddTransient<ITempOtzExtractErrorSummaryRepository, TempOtzExtractErrorSummaryRepository>();
+            services.AddTransient<ITempOvcExtractErrorSummaryRepository, TempOvcExtractErrorSummaryRepository>();
+
+            services.AddScoped<IAllergiesChronicIllnessSourceExtractor, AllergiesChronicIllnessSourceExtractor>();
+            services.AddScoped<IContactListingSourceExtractor, ContactListingSourceExtractor>();
+            services.AddScoped<IDepressionScreeningSourceExtractor, DepressionScreeningSourceExtractor>();
+            services.AddScoped<IDrugAlcoholScreeningSourceExtractor, DrugAlcoholScreeningSourceExtractor>();
+            services.AddScoped<IEnhancedAdherenceCounsellingSourceExtractor, EnhancedAdherenceCounsellingSourceExtractor>();
+            services.AddScoped<IGbvScreeningSourceExtractor, GbvScreeningSourceExtractor>();
+            services.AddScoped<IIptSourceExtractor, IptSourceExtractor>();
+            services.AddScoped<IOtzSourceExtractor, OtzSourceExtractor>();
+            services.AddScoped<IOvcSourceExtractor, OvcSourceExtractor>();
+
+            services.AddScoped<IAllergiesChronicIllnessLoader, AllergiesChronicIllnessLoader>();
+            services.AddScoped<IContactListingLoader, ContactListingLoader>();
+            services.AddScoped<IDepressionScreeningLoader, DepressionScreeningLoader>();
+            services.AddScoped<IDrugAlcoholScreeningLoader, DrugAlcoholScreeningLoader>();
+            services.AddScoped<IEnhancedAdherenceCounsellingLoader, EnhancedAdherenceCounsellingLoader>();
+            services.AddScoped<IGbvScreeningLoader, GbvScreeningLoader>();
+            services.AddScoped<IIptLoader, IptLoader>();
+            services.AddScoped<IOtzLoader, OtzLoader>();
+            services.AddScoped<IOvcLoader, OvcLoader>();
+
+
+            #endregion
+
+
+
+            services.AddScoped<ITempIndicatorExtractRepository, TempIndicatorExtractRepository>();
+            services.AddScoped<IIndicatorExtractRepository, IndicatorExtractRepository>();
+            services.AddScoped<IClearMtsExtracts, ClearMtsExtracts>();
+
+            services.AddScoped<IMtsExtractSourceReader, MtsExtractSourceReader>();
+            services.AddScoped<IIndicatorSourceExtractor, IndicatorSourceExtractor>();
+            services.AddScoped<IMtsMigrationLoader, MtsMigrationLoader>();
+
+            services.AddScoped<IMtsExtractReader, MtsExtractReader>();
+            services.AddScoped<IMtsPackager, MtsPackager>();
+            services.AddScoped<IMtsSendService, MtsSendService>();
+
+            services.AddScoped<IIntegrityCheckRepository, IntegrityCheckRepository>();
+
+
             var container = new Container();
             container.Populate(services);
             ServiceProvider = container.GetInstance<IServiceProvider>();
@@ -602,7 +692,7 @@ namespace Dwapi
 
             try
             {
-                DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
+                DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "218460a6-02d0-c26b-9add-e6b8d13ccbf4");
                 if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
                 {
                     throw new Exception(licenseErrorMessage);
@@ -635,24 +725,24 @@ namespace Dwapi
                 }
             );
 
-            Mapper.Initialize(cfg =>
-                {
-                    cfg.AddDataReaderMapping();
-                    cfg.AddProfile<TempExtractProfile>();
-                    cfg.AddProfile<TempMasterPatientIndexProfile>();
-                    cfg.AddProfile<EmrProfiles>();
-                    cfg.AddProfile<TempHtsExtractProfile>();
-                    if (null != AppFeature && AppFeature.PKV.IsValid)
-                    {
-                        cfg.AddProfile<MasterPatientIndexProfileResearch>();
-                    }
-                    else
-                    {
-                        cfg.AddProfile<MasterPatientIndexProfile>();
-                    }
-                    cfg.AddProfile<TempMetricExtractProfile>();
-                }
-            );
+            // Mapper.Initialize(cfg =>
+            //     {
+            //         cfg.AddDataReaderMapping();
+            //         // cfg.AddProfile<TempExtractProfile>();
+            //         cfg.AddProfile<TempMasterPatientIndexProfile>();
+            //         cfg.AddProfile<EmrProfiles>();
+            //         cfg.AddProfile<TempHtsExtractProfile>();
+            //         if (null != AppFeature && AppFeature.PKV.IsValid)
+            //         {
+            //             cfg.AddProfile<MasterPatientIndexProfileResearch>();
+            //         }
+            //         else
+            //         {
+            //             cfg.AddProfile<MasterPatientIndexProfile>();
+            //         }
+            //         cfg.AddProfile<TempMetricExtractProfile>();
+            //     }
+            // );
 
             DomainEvents.Init();
 

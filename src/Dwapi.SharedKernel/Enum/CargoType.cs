@@ -5,6 +5,7 @@
         Patient,
         Metrics,
         AppMetrics,
-        Migration
+        Migration,
+        Indicators
     }
 }

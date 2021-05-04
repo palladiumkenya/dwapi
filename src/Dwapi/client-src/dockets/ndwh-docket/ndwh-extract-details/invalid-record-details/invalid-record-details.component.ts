@@ -11,6 +11,7 @@ import {NdwhPatientStatusService} from '../../../services/ndwh-patient-status.se
 import {NdwhPatientVisitService} from '../../../services/ndwh-patient-visit.service';
 import {Extract} from '../../../../settings/model/extract';
 import {NdwhPatientAdverseEventService} from '../../../services/ndwh-patient-adverse-event.service';
+import {NdwhSummaryService} from '../../../services/ndwh-summary.service';
 
 @Component({
     selector: 'liveapp-invalid-record-details',
@@ -40,7 +41,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
     constructor(patientExtractsService: NdwhPatientsExtractService, patientArtService: NdwhPatientArtService,
                 patientBaselineService: NdwhPatientBaselineService, patientLabService: NdwhPatientLaboratoryService,
                 patientPharmacyService: NdwhPatientPharmacyService, patientStatusService: NdwhPatientStatusService,
-                patientVisitService: NdwhPatientVisitService, patientAdverseEventService: NdwhPatientAdverseEventService) {
+                patientVisitService: NdwhPatientVisitService, patientAdverseEventService: NdwhPatientAdverseEventService,
+                private summaryService: NdwhSummaryService) {
         this._patientExtractsService = patientExtractsService;
         this._patientArtService = patientArtService;
         this._patientBaselineService = patientBaselineService;
@@ -83,54 +85,144 @@ export class InvalidRecordDetailsComponent implements OnInit {
     public getInvalidExtracts(): void {
         if (this.extract === 'All Patients') {
             this.getInvalidPatientExtracts();
+            return;
         }
         if (this.extract === 'ART Patients') {
             this.getInvalidPatientArtExtracts();
+            return;
         }
         if (this.extract === 'Patient Baselines') {
             this.getInvalidPatientBaselineExtracts();
+            return;
         }
         if (this.extract === 'Patient Labs') {
             this.getInvalidPatientLabExtracts();
+            return;
         }
         if (this.extract === 'Patient Pharmacy') {
             this.getInvalidPatientPharmacyExtracts();
+            return;
         }
         if (this.extract === 'Patient Status') {
             this.getInvalidPatientStatusExtracts();
+            return;
         }
         if (this.extract === 'Patient Visit') {
             this.getInvalidPatientVisitExtracts();
+            return;
         }
         if (this.extract === 'Patient Adverse Events') {
             this.getInvalidPatientAdverseEventExtracts();
+            return;
+        }
+
+        if (this.extract === 'Allergies Chronic Illness') {
+            this.getSummaryInvalidExtracts('AllergiesChronicIllness');
+            return;
+        }
+        if (this.extract === 'Contact Listing') {
+            this.getSummaryInvalidExtracts('ContactListing');
+            return;
+        }
+        if (this.extract === 'Depression Screening') {
+            this.getSummaryInvalidExtracts('DepressionScreening');
+            return;
+        }
+        if (this.extract === 'Drug and Alcohol Screening') {
+            this.getSummaryInvalidExtracts('DrugAlcoholScreening');
+            return;
+        }
+        if (this.extract === 'Enhanced Adherence Counselling') {
+            this.getSummaryInvalidExtracts('EnhancedAdherenceCounselling');
+            return;
+        }
+        if (this.extract === 'GBV Screening') {
+            this.getSummaryInvalidExtracts('GbvScreening');
+            return;
+        }
+        if (this.extract === 'IPT') {
+            this.getSummaryInvalidExtracts('Ipt');
+            return;
+        }
+        if (this.extract === 'OTZ') {
+            this.getSummaryInvalidExtracts('Otz');
+            return;
+        }
+        if (this.extract === 'OVC') {
+            this.getSummaryInvalidExtracts('Ovc');
+            return;
         }
     }
 
     private getColumns(): void {
         if (this.extract === 'All Patients') {
             this.getPatientColumns();
+            return;
         }
         if (this.extract === 'ART Patients') {
             this.getPatientArtColumns();
+            return;
         }
         if (this.extract === 'Patient Baselines') {
             this.getPatientBaselineColumns();
+            return;
         }
         if (this.extract === 'Patient Labs') {
             this.getPatientLaboratoryColumns();
+            return;
         }
         if (this.extract === 'Patient Pharmacy') {
             this.getPatientPharmacyColumns();
+            return;
         }
         if (this.extract === 'Patient Status') {
             this.getPatientStatusColumns();
+            return;
         }
         if (this.extract === 'Patient Visit') {
             this.getPatientVisitColumns();
+            return;
         }
         if (this.extract === 'Patient Adverse Events') {
             this.getPatientAdverseEventColumns();
+            return;
+        }
+
+        if (this.extract === 'Allergies Chronic Illness') {
+            this.getAllergiesChronicIllnessColumns();
+            return;
+        }
+        if (this.extract === 'Contact Listing') {
+            this.getContactListingColumns();
+            return;
+        }
+        if (this.extract === 'Depression Screening') {
+            this.getDepressionScreeningColumns();
+            return;
+        }
+        if (this.extract === 'Drug and Alcohol Screening') {
+            this.getDrugAlcoholScreeningColumns();
+            return;
+        }
+        if (this.extract === 'Enhanced Adherence Counselling') {
+            this.getEnhancedAdherenceCounsellingColumns();
+            return;
+        }
+        if (this.extract === 'GBV Screening') {
+            this.getGbvScreeningColumns();
+            return;
+        }
+        if (this.extract === 'IPT') {
+            this.getIptColumns();
+            return;
+        }
+        if (this.extract === 'OTZ') {
+            this.getOtzColumns();
+            return;
+        }
+        if (this.extract === 'OVC') {
+            this.getOvcColumns();
+            return;
         }
     }
 
@@ -277,6 +369,26 @@ export class InvalidRecordDetailsComponent implements OnInit {
     private getInvalidPatientAdverseEventExtracts(): void {
         this.loadingData = true;
         this.getInvalid$ = this._patientAdverseEventService.loadValidations().subscribe(
+            p => {
+                this.invalidExtracts = p;
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+                this.loadingData = false;
+            }
+        );
+    }
+
+    private getSummaryInvalidExtracts(ex: string): void {
+        this.loadingData = true;
+        this.getInvalid$ = this.summaryService.loadValidations(ex).subscribe(
             p => {
                 this.invalidExtracts = p;
             },
@@ -521,6 +633,255 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'adverseEventActionTaken', header: 'Action Taken'},
             {field: 'adverseEventIsPregnant', header: 'Is Pregnant?'},
             {field: 'visitDate', header: 'Visit Date'}
+        ];
+    }
+
+    private getAllergiesChronicIllnessColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'}, {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'chronicIllness', header: 'chronicIllness'},
+            {field: 'chronicOnsetDate', header: 'chronicOnsetDate'},
+            {field: 'knownAllergies', header: 'knownAllergies'},
+            {field: 'allergyCausativeAgent', header: 'allergyCausativeAgent'},
+            {field: 'allergicReaction', header: 'allergicReaction'},
+            {field: 'allergySeverity', header: 'allergySeverity'},
+            {field: 'allergyOnsetDate', header: 'allergyOnsetDate'},
+            {field: 'skin', header: 'skin'},
+            {field: 'eyes', header: 'eyes'},
+            {field: 'ent', header: 'ent'},
+            {field: 'chest', header: 'chest'},
+            {field: 'cvs', header: 'cvs'},
+            {field: 'abdomen', header: 'abdomen'},
+            {field: 'cns', header: 'cns'},
+            {field: 'genitourinary', header: 'genitourinary'}
+
+        ];
+    }
+    private getContactListingColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+            {field: 'partnerPersonID', header: 'partnerPersonID'},
+            {field: 'contactAge', header: 'contactAge'},
+            {field: 'contactSex', header: 'contactSex'},
+            {field: 'contactMaritalStatus', header: 'contactMaritalStatus'},
+            {field: 'relationshipWithPatient', header: 'relationshipWithPatient'},
+            {field: 'screenedForIpv', header: 'screenedForIpv'},
+            {field: 'ipvScreening', header: 'ipvScreening'},
+            {field: 'ipvScreeningOutcome', header: 'ipvScreeningOutcome'},
+            {field: 'currentlyLivingWithIndexClient', header: 'currentlyLivingWithIndexClient'},
+            {field: 'knowledgeOfHivStatus', header: 'knowledgeOfHivStatus'},
+            {field: 'pnsApproach', header: 'pnsApproach'}
+        ];
+    }
+
+    private getDepressionScreeningColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'phQ9_1', header: 'phQ9_1'},
+            {field: 'phQ9_2', header: 'phQ9_2'},
+            {field: 'phQ9_3', header: 'phQ9_3'},
+            {field: 'phQ9_4', header: 'phQ9_4'},
+            {field: 'phQ9_5', header: 'phQ9_5'},
+            {field: 'phQ9_6', header: 'phQ9_6'},
+            {field: 'phQ9_7', header: 'phQ9_7'},
+            {field: 'phQ9_8', header: 'phQ9_8'},
+            {field: 'phQ9_9', header: 'phQ9_9'},
+            {field: 'phQ_9_rating', header: 'phQ_9_rating'},
+            {field: 'depressionAssesmentScore', header: 'depressionAssesmentScore'}
+        ];
+    }
+
+    private getDrugAlcoholScreeningColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'drinkingAlcohol', header: 'drinkingAlcohol'},
+            {field: 'smoking', header: 'smoking'},
+            {field: 'drugUse', header: 'drugUse'}
+        ];
+    }
+    private getEnhancedAdherenceCounsellingColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'sessionNumber', header: 'sessionNumber'},
+            {field: 'dateOfFirstSession', header: 'dateOfFirstSession'},
+            {field: 'pillCountAdherence', header: 'pillCountAdherence'},
+            {field: 'mmaS4_1', header: 'mmaS4_1'},
+            {field: 'mmaS4_2', header: 'mmaS4_2'},
+            {field: 'mmaS4_3', header: 'mmaS4_3'},
+            {field: 'mmaS4_4', header: 'mmaS4_4'},
+            {field: 'mmsA8_1', header: 'mmsA8_1'},
+            {field: 'mmsA8_2', header: 'mmsA8_2'},
+            {field: 'mmsA8_3', header: 'mmsA8_3'},
+            {field: 'mmsA8_4', header: 'mmsA8_4'},
+            {field: 'mmsaScore', header: 'mmsaScore'},
+            {field: 'eacRecievedVL', header: 'eacRecievedVL'},
+            {field: 'eacvl', header: 'eacvl'},
+            {field: 'eacvlConcerns', header: 'eacvlConcerns'},
+            {field: 'eacvlThoughts', header: 'eacvlThoughts'},
+            {field: 'eacWayForward', header: 'eacWayForward'},
+            {field: 'eacCognitiveBarrier', header: 'eacCognitiveBarrier'},
+            {field: 'eacBehaviouralBarrier_1', header: 'eacBehaviouralBarrier_1'},
+            {field: 'eacBehaviouralBarrier_2', header: 'eacBehaviouralBarrier_2'},
+            {field: 'eacBehaviouralBarrier_3', header: 'eacBehaviouralBarrier_3'},
+            {field: 'eacBehaviouralBarrier_4', header: 'eacBehaviouralBarrier_4'},
+            {field: 'eacBehaviouralBarrier_5', header: 'eacBehaviouralBarrier_5'},
+            {field: 'eacEmotionalBarriers_1', header: 'eacEmotionalBarriers_1'},
+            {field: 'eacEmotionalBarriers_2', header: 'eacEmotionalBarriers_2'},
+            {field: 'eacEconBarrier_1', header: 'eacEconBarrier_1'},
+            {field: 'eacEconBarrier_2', header: 'eacEconBarrier_2'},
+            {field: 'eacEconBarrier_3', header: 'eacEconBarrier_3'},
+            {field: 'eacEconBarrier_4', header: 'eacEconBarrier_4'},
+            {field: 'eacEconBarrier_5', header: 'eacEconBarrier_5'},
+            {field: 'eacEconBarrier_6', header: 'eacEconBarrier_6'},
+            {field: 'eacEconBarrier_7', header: 'eacEconBarrier_7'},
+            {field: 'eacEconBarrier_8', header: 'eacEconBarrier_8'},
+            {field: 'eacReviewImprovement', header: 'eacReviewImprovement'},
+            {field: 'eacReviewMissedDoses', header: 'eacReviewMissedDoses'},
+            {field: 'eacReviewStrategy', header: 'eacReviewStrategy'},
+            {field: 'eacReferral', header: 'eacReferral'},
+            {field: 'eacReferralApp', header: 'eacReferralApp'},
+            {field: 'eacReferralExperience', header: 'eacReferralExperience'},
+            {field: 'eacHomevisit', header: 'eacHomevisit'},
+            {field: 'eacAdherencePlan', header: 'eacAdherencePlan'},
+            {field: 'eacFollowupDate', header: 'eacFollowupDate'}
+        ];
+    }
+    private getGbvScreeningColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'ipv', header: 'ipv'},
+            {field: 'physicalIPV', header: 'physicalIPV'},
+            {field: 'emotionalIPV', header: 'emotionalIPV'},
+            {field: 'sexualIPV', header: 'sexualIPV'},
+            {field: 'ipvRelationship', header: 'ipvRelationship'}
+        ];
+    }
+
+    private getIptColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'onTBDrugs', header: 'onTBDrugs'},
+            {field: 'onIPT', header: 'onIPT'},
+            {field: 'everOnIPT', header: 'everOnIPT'},
+            {field: 'cough', header: 'cough'},
+            {field: 'fever', header: 'fever'},
+            {field: 'noticeableWeightLoss', header: 'noticeableWeightLoss'},
+            {field: 'nightSweats', header: 'nightSweats'},
+            {field: 'lethargy', header: 'lethargy'},
+            {field: 'icfActionTaken', header: 'icfActionTaken'},
+            {field: 'testResult', header: 'testResult'},
+            {field: 'tbClinicalDiagnosis', header: 'tbClinicalDiagnosis'},
+            {field: 'contactsInvited', header: 'contactsInvited'},
+            {field: 'evaluatedForIPT', header: 'evaluatedForIPT'},
+            {field: 'startAntiTBs', header: 'startAntiTBs'},
+            {field: 'tbRxStartDate', header: 'tbRxStartDate'},
+            {field: 'tbScreening', header: 'tbScreening'},
+            {field: 'iptClientWorkUp', header: 'iptClientWorkUp'},
+            {field: 'startIPT', header: 'startIPT'},
+            {field: 'indicationForIPT', header: 'indicationForIPT'}
+        ];
+    }
+    private getOtzColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'otzEnrollmentDate', header: 'otzEnrollmentDate'},
+            {field: 'transferInStatus', header: 'transferInStatus'},
+            {field: 'modulesPreviouslyCovered', header: 'modulesPreviouslyCovered'},
+            {field: 'modulesCompletedToday', header: 'modulesCompletedToday'},
+            {field: 'supportGroupInvolvement', header: 'supportGroupInvolvement'},
+            {field: 'remarks', header: 'remarks'},
+            {field: 'transitionAttritionReason', header: 'transitionAttritionReason'},
+            {field: 'outcomeDate', header: 'outcomeDate'}
+        ];
+    }
+    private getOvcColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'emr', header: 'Emr'},
+            {field: 'project', header: 'Project'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'ovcEnrollmentDate', header: 'ovcEnrollmentDate'},
+            {field: 'relationshipToClient', header: 'relationshipToClient'},
+            {field: 'enrolledinCPIMS', header: 'enrolledinCPIMS'},
+            {field: 'cpimsUniqueIdentifier', header: 'cpimsUniqueIdentifier'},
+            {field: 'partnerOfferingOVCServices', header: 'partnerOfferingOVCServices'},
+            {field: 'ovcExitReason', header: 'ovcExitReason'},
+            {field: 'exitDate', header: 'exitDate'}
         ];
     }
 

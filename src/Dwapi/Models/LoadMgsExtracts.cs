@@ -6,4 +6,8 @@ namespace Dwapi.Models
     {
         public LoadMgsFromEmrCommand LoadMgsFromEmrCommand { get; set; }
     }
+    public class LoadMtsExtracts
+    {
+        public LoadMtsFromEmrCommand LoadMtsFromEmrCommand { get; set; }
+    }
 }

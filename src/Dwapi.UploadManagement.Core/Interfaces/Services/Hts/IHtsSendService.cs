@@ -12,8 +12,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Hts
     {
         HttpClient Client { get; set; }
 
-        Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo);
-        Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag messageBag);
+        Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,string version);
+        Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag messageBag,string version);
 
         Task<List<SendMpiResponse>> SendClientsAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> SendClientsAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
@@ -33,5 +33,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Hts
 
         //Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo);
         //Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
+
+        Task NotifyPostSending(SendManifestPackageDTO sendTo,string version);
     }
 }

@@ -10,6 +10,7 @@ using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Mts;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 
 namespace Dwapi.UploadManagement.Core.Packager.Dwh
@@ -19,12 +20,13 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         private readonly IDwhExtractReader _reader;
         private readonly IEmrMetricReader _metricReader;
         private readonly IDiffLogReader _diffLogReader;
-
-        public DwhPackager(IDwhExtractReader reader, IEmrMetricReader metricReader, IDiffLogReader diffLogReader)
+        private readonly IMtsExtractReader _mtsExtractReader;
+        public DwhPackager(IDwhExtractReader reader, IEmrMetricReader metricReader, IDiffLogReader diffLogReader, IMtsExtractReader mtsExtractReader)
         {
             _reader = reader;
             _metricReader = metricReader;
             _diffLogReader = diffLogReader;
+            _mtsExtractReader = mtsExtractReader;
         }
 
 
@@ -40,6 +42,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
             var metrics = _metricReader.ReadAll().FirstOrDefault();
             var appMetrics = _metricReader.ReadAppAll().ToList();
             var manifests = Generate(emrSetup).ToList();
+            var indicators = _mtsExtractReader.ReadAll().ToList();
 
             if (null != metrics)
             {
@@ -56,6 +59,17 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
                     foreach (var m in appMetrics)
                     {
                         manifest.AddCargo(CargoType.AppMetrics, m);
+                    }
+                }
+            }
+
+            if (indicators.Any())
+            {
+                foreach (var manifest in manifests)
+                {
+                    foreach (var m in indicators)
+                    {
+                        manifest.AddCargo(CargoType.Indicators, m);
                     }
                 }
             }

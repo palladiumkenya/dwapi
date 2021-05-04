@@ -303,7 +303,130 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
       ^EmrSystemId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^,
       ^DocketId^: ^MGS^,
       ^DatabaseProtocolId^: ^A6221AA4-0E85-11E8-BA89-0ED5F89F718B^
+    },
+   {
+      ^Id^: ^48743EB0-6656-E811-8E16-9CB6D0DA773C^,
+      ^IsPriority^: true,
+      ^Rank^: 1.00,
+      ^Name^: ^IndicatorExtract^,
+      ^Display^: ^IndicatorExtract^,
+      ^ExtractSql^: ^SELECT indicator,indicator_value,indicator_date FROM temp_metrics^,
+      ^Destination^: ^IndicatorExtract^,
+      ^EmrSystemId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^,
+      ^DocketId^: ^MTS^,
+      ^DatabaseProtocolId^: ^A6221AA4-0E85-11E8-BA89-0ED5F89F718B^
     }
+      ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+    },
+
+{
+    ^Id^: ^2bbeec20-7754-11eb-9439-0242ac130002^,
+    ^Display^: ^Allergies ChronicIllness^,
+    ^DocketId^: ^NDWH^,
+    ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+    ^ExtractSql^: ^select *,visitdate VisitDate from tempAllergiesChronicIllness^,
+    ^Destination^: ^dwhstage^,
+    ^IsPriority^: 0,
+    ^Name^: ^AllergiesChronicIllnessExtract^,
+    ^Rank^: 11,
+    ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+  },
+  {
+    ^Id^: ^2bbeec21-7754-11eb-9439-0242ac130002^,
+    ^Display^: ^IPT^,
+    ^DocketId^: ^NDWH^,
+    ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+    ^ExtractSql^: ^select *,visit_date VisitDate from  tempIpt^,
+    ^Destination^: ^dwhstage^,
+    ^IsPriority^: 0,
+    ^Name^: ^IptExtract^,
+    ^Rank^: 12,
+    ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+  },
+  {
+    ^Id^: ^2bbeec22-7754-11eb-9439-0242ac130002^,
+    ^Display^: ^Depression Screening^,
+    ^DocketId^: ^NDWH^,
+    ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+    ^ExtractSql^: ^select * from tempDepressionScreening^,
+    ^Destination^: ^dwhstage^,
+    ^IsPriority^: 0,
+    ^Name^: ^DepressionScreeningExtract^,
+    ^Rank^: 13,
+    ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+  },
+  {
+    ^Id^: ^2bbeec23-7754-11eb-9439-0242ac130002^,
+    ^Display^: ^Contact Listing^,
+    ^DocketId^: ^NDWH^,
+    ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+    ^ExtractSql^: ^select * from tempContactListing^,
+    ^Destination^: ^dwhstage^,
+    ^IsPriority^: 0,
+    ^Name^: ^ContactListingExtract^,
+    ^Rank^: 14,
+    ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+  },
+  {
+    ^Id^: ^2bbeec24-7754-11eb-9439-0242ac130002^,
+    ^Display^: ^GBV Screening^,
+    ^DocketId^: ^NDWH^,
+    ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+    ^ExtractSql^: ^select * from tempGbvScreening^,
+    ^Destination^: ^dwhstage^,
+    ^IsPriority^: 0,
+    ^Name^: ^GbvScreeningExtract^,
+    ^Rank^: 15,
+    ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+  },
+  {
+    ^Id^: ^2bbeec25-7754-11eb-9439-0242ac130002^,
+    ^Display^: ^Enhanced Adherence Counselling^,
+    ^DocketId^: ^NDWH^,
+    ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+    ^ExtractSql^: ^select * from tempEnhancedAdherenceCounselling^,
+    ^Destination^: ^dwhstage^,
+    ^IsPriority^: 0,
+    ^Name^: ^EnhancedAdherenceCounsellingExtract^,
+    ^Rank^: 16,
+    ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+  },
+  {
+    ^Id^: ^2bbeec26-7754-11eb-9439-0242ac130002^,
+    ^Display^: ^Drug and Alcohol Screening^,
+    ^DocketId^: ^NDWH^,
+    ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+    ^ExtractSql^: ^select * from tempDrugAlcoholScreening^,
+    ^Destination^: ^dwhstage^,
+    ^IsPriority^: 0,
+    ^Name^: ^DrugAlcoholScreeningExtract^,
+    ^Rank^: 17,
+    ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+  },
+  {
+    ^Id^: ^2bbeec27-7754-11eb-9439-0242ac130002^,
+    ^Display^: ^OVC^,
+    ^DocketId^: ^NDWH^,
+    ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+    ^ExtractSql^: ^select *,OVCEnrolmentDate OVCEnrollmentDate from tempOvc^,
+    ^Destination^: ^dwhstage^,
+    ^IsPriority^: 0,
+    ^Name^: ^OvcExtract^,
+    ^Rank^: 18,
+    ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+  },
+  {
+    ^Id^: ^2bbeec28-7754-11eb-9439-0242ac130002^,
+    ^Display^: ^OTZ^,
+    ^DocketId^: ^NDWH^,
+    ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+    ^ExtractSql^: ^select *,OTZEnrolmentDate OTZEnrollmentDate from tempOtz^,
+    ^Destination^: ^dwhstage^,
+    ^IsPriority^: 0,
+    ^Name^: ^OtzExtract^,
+    ^Rank^: 19,
+    ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+  }
   ]
             ";
 

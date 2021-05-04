@@ -13,6 +13,7 @@ COPY src/Dwapi.UploadManagement.Core/Dwapi.UploadManagement.Core.csproj src/Dwap
 COPY src/Dwapi.ExtractsManagement.Core/Dwapi.ExtractsManagement.Core.csproj src/Dwapi.ExtractsManagement.Core/
 COPY src/Dwapi.SettingsManagement.Infrastructure/Dwapi.SettingsManagement.Infrastructure.csproj src/Dwapi.SettingsManagement.Infrastructure/
 COPY src/Dwapi.ExtractsManagement.Infrastructure/Dwapi.ExtractsManagement.Infrastructure.csproj src/Dwapi.ExtractsManagement.Infrastructure/
+COPY src/Dwapi.Contracts/Dwapi.Contracts.csproj src/Dwapi.Contracts/
 RUN dotnet restore src/Dwapi/Dwapi.csproj
 COPY . .
 WORKDIR /src/src/Dwapi

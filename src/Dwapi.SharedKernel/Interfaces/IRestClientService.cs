@@ -7,6 +7,6 @@ namespace Dwapi.SharedKernel.Interfaces
     public interface IRestClientService<T>
     {
         HttpClient Client { get; set; }
-        Task<T> Read(AuthProtocol authProtocol, string url);
+        Task<T> Read(AuthProtocol authProtocol, string url, bool diffSupport);
     }
 }

@@ -11,7 +11,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class PharmacyMessageBag:IPharmacyMessageBag
     {
-        private int stake = 20;
+        private int stake = 10;
         public string EndPoint => "PatientPharmacy";
         public IMessage<PatientPharmacyExtractView> Message { get; set; }
         public List<IMessage<PatientPharmacyExtractView>> Messages { get; set; }

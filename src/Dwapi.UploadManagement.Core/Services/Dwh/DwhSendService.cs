@@ -24,8 +24,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Model;
 using Hangfire;
+using MediatR;
 
 namespace Dwapi.UploadManagement.Core.Services.Dwh
 {
@@ -63,15 +65,17 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private readonly ExtractEventDTO _patientStatusExtractStatus;
         private readonly ExtractEventDTO _patientVisitExtractStatus;
         private readonly ExtractEventDTO _patientAdverseEventExtractStatus;
+        private readonly IMediator _mediator;
 
         public HttpClient Client { get; set; }
 
-        public DwhSendService(IDwhPackager packager, IDwhExtractReader reader, IExtractStatusService extractStatusService, IEmrSystemRepository emrSystemRepository)
+        public DwhSendService(IDwhPackager packager, IDwhExtractReader reader, IExtractStatusService extractStatusService, IEmrSystemRepository emrSystemRepository, IMediator mediator)
         {
             _packager = packager;
             _reader = reader;
             _extractStatusService = extractStatusService;
             _emrSystemRepository = emrSystemRepository;
+            _mediator = mediator;
             _endPoint = "api/";
             var defaultEmr = _emrSystemRepository.GetDefault();
             var extracts = defaultEmr.Extracts;
@@ -99,19 +103,22 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             _patientAdverseEventExtractStatus = _extractStatusService.GetStatus(_patientAdverseEventExtract.Id);
 
         }
-        public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
+        public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,string  version)
         {
-            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
+            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()),version);
         }
 
-        public Task<List<SendDhwManifestResponse>> SendDiffManifestAsync(SendManifestPackageDTO sendTo)
+        public Task<List<SendDhwManifestResponse>> SendDiffManifestAsync(SendManifestPackageDTO sendTo,string  version)
         {
-            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateDiffWithMetrics(sendTo.GetEmrDto()).ToList()));
+            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateDiffWithMetrics(sendTo.GetEmrDto()).ToList()),version);
         }
 
-        public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, DwhManifestMessageBag messageBag)
+        public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, DwhManifestMessageBag messageBag,string version)
         {
             var responses = new List<SendDhwManifestResponse>();
+
+            await _mediator.Publish(new HandshakeStart("CTSendStart", version, messageBag.Session));
+
             HttpClientHandler handler = new HttpClientHandler()
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate

@@ -42,7 +42,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientPharmacyExtract), $"{nameof(TempPatientPharmacyExtract)}s");
 
             //Load
-            int loaded = await _patientPharmacyLoader.Load(request.Extract.Id, found);
+            int loaded = await _patientPharmacyLoader.Load(request.Extract.Id, found, request.DatabaseProtocol.SupportsDifferential);
 
             int rejected =
                 _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract);

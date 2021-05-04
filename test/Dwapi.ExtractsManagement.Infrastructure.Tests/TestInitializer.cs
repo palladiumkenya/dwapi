@@ -162,6 +162,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services.AddTransient<IPatientStatusExtractRepository, PatientStatusExtractRepository>();
             services.AddTransient<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
 
+            services.AddTransient<IAllergiesChronicIllnessExtractRepository, AllergiesChronicIllnessExtractRepository>();
+            services.AddTransient<IContactListingExtractRepository, ContactListingExtractRepository>();
+            services.AddTransient<IDepressionScreeningExtractRepository, DepressionScreeningExtractRepository>();
+            services.AddTransient<IDrugAlcoholScreeningExtractRepository, DrugAlcoholScreeningExtractRepository>();
+            services.AddTransient<IEnhancedAdherenceCounsellingExtractRepository, EnhancedAdherenceCounsellingExtractRepository>();
+            services.AddTransient<IGbvScreeningExtractRepository, GbvScreeningExtractRepository>();
+            services.AddTransient<IIptExtractRepository, IptExtractRepository>();
+            services.AddTransient<IOtzExtractRepository, OtzExtractRepository>();
+            services.AddTransient<IOvcExtractRepository, OvcExtractRepository>();
+
             #endregion
 
             #region TempExtracts
@@ -175,6 +185,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services.AddTransient<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>();
             services.AddTransient<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>();
             services.AddTransient<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>();
+
+            services.AddTransient<ITempAllergiesChronicIllnessExtractRepository, TempAllergiesChronicIllnessExtractRepository>();
+            services.AddTransient<ITempContactListingExtractRepository, TempContactListingExtractRepository>();
+            services.AddTransient<ITempDepressionScreeningExtractRepository, TempDepressionScreeningExtractRepository>();
+            services.AddTransient<ITempDrugAlcoholScreeningExtractRepository, TempDrugAlcoholScreeningExtractRepository>();
+            services.AddTransient<ITempEnhancedAdherenceCounsellingExtractRepository, TempEnhancedAdherenceCounsellingExtractRepository>();
+            services.AddTransient<ITempGbvScreeningExtractRepository, TempGbvScreeningExtractRepository>();
+            services.AddTransient<ITempIptExtractRepository, TempIptExtractRepository>();
+            services.AddTransient<ITempOtzExtractRepository, TempOtzExtractRepository>();
+            services.AddTransient<ITempOvcExtractRepository, TempOvcExtractRepository>();
 
             #endregion
 
@@ -201,6 +221,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services
                 .AddScoped<ITempPatientVisitExtractErrorSummaryRepository, TempPatientVisitExtractErrorSummaryRepository
                 >();
+
+            services.AddTransient<ITempAllergiesChronicIllnessExtractErrorSummaryRepository, TempAllergiesChronicIllnessExtractErrorSummaryRepository>();
+            services.AddTransient<ITempContactListingExtractErrorSummaryRepository, TempContactListingExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDepressionScreeningExtractErrorSummaryRepository, TempDepressionScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDrugAlcoholScreeningExtractErrorSummaryRepository, TempDrugAlcoholScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempEnhancedAdherenceCounsellingExtractErrorSummaryRepository, TempEnhancedAdherenceCounsellingExtractErrorSummaryRepository>();
+            services.AddTransient<ITempGbvScreeningExtractErrorSummaryRepository, TempGbvScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempIptExtractErrorSummaryRepository, TempIptExtractErrorSummaryRepository>();
+            services.AddTransient<ITempOtzExtractErrorSummaryRepository, TempOtzExtractErrorSummaryRepository>();
+            services.AddTransient<ITempOvcExtractErrorSummaryRepository, TempOvcExtractErrorSummaryRepository>();
 
             #endregion
 
@@ -371,7 +401,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
         private void RegisterLicence()
         {
-            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
+            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "218460a6-02d0-c26b-9add-e6b8d13ccbf4");
             if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
             {
                 throw new Exception(licenseErrorMessage);

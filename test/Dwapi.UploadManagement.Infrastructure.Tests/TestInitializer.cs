@@ -589,7 +589,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
 
         private void RegisterLicence()
         {
-            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
+            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "218460a6-02d0-c26b-9add-e6b8d13ccbf4");
             if (!DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
             {
                 throw new Exception(licenseErrorMessage);
@@ -702,7 +702,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         {
             var extract = Extracts.First(x => x.Name.IsSameAs(extractName));
             var countA = extractor.Extract(extract, Protocol).Result;
-            var countB = loader.Load(extract.Id, countA).Result;
+            var countB = loader.Load(extract.Id, countA, false).Result;
         }
 
         public static void LoadDiffs(DateTime dateCreated, DateTime dateModified)

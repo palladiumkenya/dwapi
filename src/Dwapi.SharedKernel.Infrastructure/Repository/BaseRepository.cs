@@ -13,9 +13,11 @@ using Dwapi.SharedKernel.Enum;
 using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using X.PagedList;
+using Z.Dapper.Plus;
 
 namespace Dwapi.SharedKernel.Infrastructure.Repository
 {
+
     public abstract class BaseRepository<T, TId> : IRepository<T, TId> where T : Entity<TId>
     {
         protected internal DbContext Context;
@@ -81,11 +83,35 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             }
         }
 
+        public void Create<TC>(List<TC> entity)
+        {
+            if (entity.Any())
+            {
+                Context.Database.GetDbConnection().BulkInsert(entity);
+            }
+        }
+
+        public void CreateBatch(List<T> entity)
+        {
+            if (entity.Any())
+            {
+                Context.Database.GetDbConnection().BulkInsert(entity);
+            }
+        }
+
         public virtual void Update(T entity)
         {
             if (null != entity)
             {
                 Context.Update(entity);
+            }
+        }
+
+        public void Update<TC>(List<TC> entity)
+        {
+            if (entity.Any())
+            {
+                Context.Database.GetDbConnection().BulkUpdate(entity);
             }
         }
 
@@ -269,6 +295,42 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
                 return (int)Math.Ceiling(totalRecords / (double)batchSize);
             }
             return 0;
+        }
+
+        public async Task<IEnumerable<T>> ReadAll(string exSql, int pageNumber, int pageSize)
+        {
+            var sql = $"{exSql} ORDER BY s.Id ";
+
+            var sqlPaging = @"
+                 OFFSET @Offset ROWS 
+                 FETCH NEXT @PageSize ROWS ONLY
+            ";
+
+            if (Context.Database.IsMySql() || Context.Database.IsSqlite())
+            {
+                sqlPaging = @" LIMIT @PageSize OFFSET @Offset;";
+            }
+
+            sql = $"{sql}{sqlPaging}";
+
+
+            using (var cn = GetNewConnection())
+            {
+                if(cn.State!=ConnectionState.Open)
+                    cn.Open();
+                var results = await cn.QueryAsync<T>(sql, new
+                {
+                    Offset = (pageNumber - 1) * pageSize,
+                    PageSize = pageSize
+                });
+                return results.ToList();
+            }
+        }
+
+        public string GetTableName()
+        {
+            var mapping = Context.Model.FindEntityType(typeof(T)).Relational();
+            return mapping.TableName;
         }
     }
 }

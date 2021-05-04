@@ -41,9 +41,7 @@ export class NdwhDocketComponent implements OnInit, OnDestroy {
     }
 
     public loadData(): void {
-
         this.loadingData = true;
-
         this.getEmr$ = this._emrConfigService.getDefault()
             .subscribe(
                 p => {
@@ -58,12 +56,9 @@ export class NdwhDocketComponent implements OnInit, OnDestroy {
                     this.loadMetrics();
                 }
             );
-
-
     }
 
     public loadMetrics(): void {
-
         this.getEmr$ = this._emrConfigService.loadMetrics(this.emrSystem)
             .subscribe(
                 p => {

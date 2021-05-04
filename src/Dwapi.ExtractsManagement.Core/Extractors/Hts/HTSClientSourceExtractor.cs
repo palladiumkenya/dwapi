@@ -9,6 +9,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
@@ -34,6 +35,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
+            var mapper = dbProtocol.SupportsDifferential ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
             int batch = 500;
 
             DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HTSClientExtract), "extracting...")));
@@ -51,7 +53,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
                     totalCount++;
                     count++;
                     // AutoMapper profiles
-                    var extractRecord = Mapper.Map<IDataRecord, TempHTSClientExtract>(rdr);
+                    var extractRecord = mapper.Map<IDataRecord, TempHTSClientExtract>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
                     list.Add(extractRecord);
 

@@ -318,7 +318,7 @@ namespace Dwapi.Controller
 
              try
              {
-                 var metric =await _metricsService.Read(restProtocol, restProtocol.Metric.EndPoint);
+                 var metric =await _metricsService.Read(restProtocol, restProtocol.Metric.EndPoint, restProtocol.SupportsDifferential);
 
                  if(null==metric)
                     throw new Exception("could not load EMR metrics");

@@ -49,7 +49,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Hts
             Assert.True(_count > 0);
             Assert.False(_extractsContext.HtsClientsExtracts.Any());
 
-            var count = _loader.Load(_extract.Id,_count).Result;
+            var count = _loader.Load(_extract.Id,_count, false).Result;
 
             Assert.True(count > 0);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();

@@ -31,6 +31,8 @@ namespace Dwapi.SharedKernel.Model
         [NotMapped] public string DiffSqlCheck => GetSql();
         [NotMapped] public bool DiffSupport => !string.IsNullOrWhiteSpace(GetSql());
 
+        [NotMapped] public bool SupportsDifferential => DiffSupport;
+
         public DbProtocol()
         {
         }
@@ -82,6 +84,13 @@ namespace Dwapi.SharedKernel.Model
                 : $"{connectionString}{AdvancedProperties}";
 
             return connectionString;
+        }
+
+        public void AddConnectionTimeout()
+        {
+            if (AdvancedProperties.Contains("Connection Timeout=0"))
+                return;
+            AdvancedProperties = ";Connection Timeout=0";
         }
 
         private string GetSql()
