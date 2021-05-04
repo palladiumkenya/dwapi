@@ -1086,7 +1086,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             sortOrder: event.sortOrder
         };
         this.getColumns();
-        console.log('pageview', this.preventLoad, this.extract);
         if (!this.preventLoad) {
             this.getValidExtracts();
         }

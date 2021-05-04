@@ -20,7 +20,9 @@ namespace Dwapi.SettingsManagement.Core.DTOs
         private bool CheckDeferred()
         {
             var list = new List<string>() {"MFL_CODE"};
-            return list.Any(x => x.ToLower() == Name.ToLower());
+            return list.Any(x =>
+                x.ToLower() == Name.ToLower()||
+                x.ToLower().Replace('_',' ') == Name.ToLower().Replace('_',' '));
         }
 
         public IntegrityCheckSummaryDto(string name, string description, string logic, string message, string docket,

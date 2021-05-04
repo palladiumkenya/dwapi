@@ -302,9 +302,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
 
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    }
                 },
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});
@@ -329,9 +332,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
 
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    }
                 },
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});
