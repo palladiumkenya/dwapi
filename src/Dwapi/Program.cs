@@ -18,6 +18,7 @@ namespace Dwapi
                 .Enrich.FromLogContext()
                 .WriteTo.Console(LogEventLevel.Debug)
                 .WriteTo.RollingFile("logs/dwapilog-{Date}.txt", LogEventLevel.Error)
+                .WriteTo.RollingFile("logs/dwapilog-warnings-{Date}.txt", LogEventLevel.Warning)
                 .CreateLogger();
 
             try

@@ -43,6 +43,11 @@ export class NdwhExtractService {
             .catch(this.handleError);
     }
 
+    public loadMet(): Observable<any> {
+        return this._http.get<any>( './api/Mts/load')
+            .catch(this.handleError);
+    }
+
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {
             return Observable.throw('no record(s) found');

@@ -14,5 +14,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string AdverseEventActionTaken { get; set; }
         public bool? AdverseEventIsPregnant { get; set; }
         public DateTime? VisitDate { get; set; }
+
     }
 }

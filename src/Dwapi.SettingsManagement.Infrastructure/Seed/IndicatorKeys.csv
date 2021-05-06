@@ -1,0 +1,17 @@
+Id,Description,Rank
+HTS_TESTED,Individuals who received a HIV test. Computation : Count of all individuals who received HIV Testing Services (HTS) and received their test results in a given month,10
+HTS_TESTED_POS,Individuals who tested positive during a HIV test. Computation: Count of all individuals with a positive in a given month,11
+HTS_LINKED,Individuals who tested positive and have been enrolled to care Computation: Count of all individuals. Computation: Count of all individuals with a linkage record in the EMR in a given month ,12
+HTS_INDEX,Individuals who were identified and tested using Index Testing Services (PNS or contact tracing) and received their results. Computation: Count of all individuals identified and tested using Index Testing Services in a given month,13
+HTS_INDEX_POS,Individuals who tested positive using Index Testing Services (PNS or contact tracing) and received their results . Computation: Count of individuals who tested positive using Index Testing Services in a given month,14
+TX_NEW,Individuals newly enrolled on antiretroviral therapy (ART). Computation: Count of individuals newly initiated on ART in a given month,20
+TX_CURR,Individuals currently receiving antiretroviral therapy (ART). Computation: Count of individuals receiving ART as at end of a given month ,21
+TX_RTT,"Individuals who experienced interruption in treatment previously and restarted ARVs in this month. Computation : Count individuals who had an ART Outcome of TO, LTFU and STOP in the last month but have an ART Outcome of Active in this month" ,22
+TX_ML,"Individuals who were on ART previously then had no clinical contact since their last expected contact. Computation: Count individuals who had an ART Outcome last month but have an ART Outcome of TO, LFTU or STOP in this month",23
+TX_PVLS,Percentage of ART patients with a suppressed viral load (<1000 copies/ml) within the past 12 months. Computation: Numerator: Count individuals with a suppressed VL (<1000copies/ml)in the last 12 months Denominator: Count individuals with a VL result documented in the past 12 months ,24
+MMD,Individuals dispensed drugs for Multi month dispense (>= 90 days).Computation: Count individuals who have been dispensed drugs >=90 days,25
+RETENTION_ON_ART_12_MONTHS,Individuals who are still alive and on ART 12 months after initiating treatment. : Count individuals newly initiated on ART 12 months prior,30
+RETENTION_ON_ART_VL_1000_12_MONTHS,Individuals who are suppressed 12 months after initiating treatment. Computation: Count individuals who initiated ART are virally suppressed 12 months after initiating ART ,31
+LAST_ENCOUNTER_CREATE_DATE,Last EMR Encounter Create date,40
+EMR_ETL_Refresh,Last EMR ETL Refresh date,41
+MFL_CODE,Sites Found in the Database,42

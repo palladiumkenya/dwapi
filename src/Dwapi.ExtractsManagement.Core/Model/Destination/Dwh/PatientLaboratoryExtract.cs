@@ -1,9 +1,10 @@
 using System;
+using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
-    
-    public class PatientLaboratoryExtract :ClientExtract
+
+    public class PatientLaboratoryExtract :ClientExtract,ILab
     {
         public string FacilityName { get; set; }
         public string SatelliteName { get; set; }
@@ -14,5 +15,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string TestName { get; set; }
         public int? EnrollmentTest { get; set; }
         public string TestResult { get; set; }
+        public DateTime? DateSampleTaken { get; set; }
+        public string SampleType { get; set; }
     }
 }

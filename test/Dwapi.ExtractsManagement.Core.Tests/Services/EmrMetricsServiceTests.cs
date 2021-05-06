@@ -38,7 +38,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Services
         [Test]
         public void should_read_by_token()
         {
-            var metrics = _metricsService.Read(_authProtocol, _url).Result;
+            var metrics = _metricsService.Read(_authProtocol, _url,false).Result;
             var savedMetrics = _emrMetricRepository.GetAll().First();
 
             Assert.NotNull(metrics);
@@ -57,7 +57,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Services
             _authProtocol.UserName = "user";
             _authProtocol.Password = "pass";
 
-            var metrics = _metricsService.Read(_authProtocol, _url).Result;
+            var metrics = _metricsService.Read(_authProtocol, _url,false).Result;
 
             var savedMetrics = _emrMetricRepository.GetAll().First();
             Assert.NotNull(metrics);

@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using MediatR;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
@@ -20,16 +23,18 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
     {
         private readonly IPatientExtractRepository _patientExtractRepository;
         private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
+        private readonly IMediator _mediator;
 
-        public PatientLoader(IPatientExtractRepository patientExtractRepository, ITempPatientExtractRepository tempPatientExtractRepository)
+        public PatientLoader(IPatientExtractRepository patientExtractRepository, ITempPatientExtractRepository tempPatientExtractRepository, IMediator mediator)
         {
             _patientExtractRepository = patientExtractRepository;
             _tempPatientExtractRepository = tempPatientExtractRepository;
+            _mediator = mediator;
         }
 
-        public async Task<int> Load(Guid extractId, int found)
+        public async Task<int> Load(Guid extractId, int found, bool diffSupport)
         {
-            int count = 0;
+            int count = 0; var mapper = diffSupport ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
 
             try
             {
@@ -52,7 +57,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                     var batch = tempPatientExtracts.ToList();
                     count += batch.Count;
                     //Auto mapper
-                    var extractRecords = Mapper.Map<List<TempPatientExtract>, List<PatientExtract>>(batch);
+                    var extractRecords = mapper.Map<List<TempPatientExtract>, List<PatientExtract>>(batch);
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
@@ -72,6 +77,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                             nameof(ExtractStatus.Loading),
                             found, count, 0, 0, 0)));
                 }
+
+                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(PatientExtract)));
+
                 return count;
             }
             catch (Exception e)

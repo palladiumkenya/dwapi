@@ -4,9 +4,17 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="appsettings.json" />
     <None Remove="appsettings.mysql.json" />
     <None Update="TestArtifacts\Database\dwapi.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestArtifacts\Database\dwapidiff.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestArtifacts\Database\emr.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -14,8 +22,8 @@
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Data" Version="2.0.0" />
     <PackageReference Include="CsvHelper" Version="13.0.0" />
-    <PackageReference Include="Dapper" Version="2.0.35" />
-    <PackageReference Include="Dapper.Contrib" Version="2.0.35" />
+    <PackageReference Include="Dapper" Version="2.0.78" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
     <PackageReference Include="LiveSeeder" Version="1.0.0-CI-20200427-182214" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6" />
@@ -35,18 +43,13 @@
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="X.PagedList" Version="7.6.0" />
-    <PackageReference Include="Z.Dapper.Plus" Version="3.0.5" />
+    <PackageReference Include="Z.Dapper.Plus" Version="3.0.29" />
   </ItemGroup>
   
   <ItemGroup>
-    <Content Include="appsettings.json">
+    <None Include="TestArtifacts\Database\emrdiff.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <None Remove="TestArtifacts\Database\emr.db" />
-    <Content Include="TestArtifacts\Database\emr.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   
   <ItemGroup>

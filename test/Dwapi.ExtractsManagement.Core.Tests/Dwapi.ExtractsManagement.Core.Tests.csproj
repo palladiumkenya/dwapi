@@ -9,11 +9,14 @@
     <None Update="TestArtifacts\Database\dwapi.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestArtifacts\Database\dwapi-diff.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="AutoMapper.Data" Version="2.0.0" />
-    <PackageReference Include="Dapper.Contrib" Version="2.0.35" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
     <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
@@ -46,8 +49,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="TestArtifacts\Database\emr.db">
+    <None Include="TestArtifacts\Database\emr-diff.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
+    <None Include="TestArtifacts\Database\emr.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

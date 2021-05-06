@@ -1,6 +1,7 @@
 ﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+ using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
  using Dwapi.SharedKernel.Enum;
  using Dwapi.UploadManagement.Core.Interfaces.Exchange;
 using Dwapi.UploadManagement.Core.Interfaces.Exchange.Dwh;
@@ -10,7 +11,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class LabMessageBag:ILaboratoryMessageBag
     {
-        private int stake = 20;
+        private int stake = 10;
         public string EndPoint => "PatientLabs";
         public IMessage<PatientLaboratoryExtractView> Message { get; set; }
         public List<IMessage<PatientLaboratoryExtractView>> Messages { get; set; }
@@ -18,6 +19,8 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
         public string ExtractName => "PatientLabExtract";
         public ExtractType ExtractType => ExtractType.PatientLab;
 
+        public string Docket  => "NDWH";
+        public string DocketExtract => nameof(PatientLaboratoryExtract);
         public int GetProgress(int count, int total)
         {
             if (total == 0)

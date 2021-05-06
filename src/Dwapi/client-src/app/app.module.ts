@@ -161,6 +161,7 @@ import {MgsInvalidComponent} from '../dockets/mgs-docket/mgs-extract-details/mgs
 import {MgsValidComponent} from '../dockets/mgs-docket/mgs-extract-details/mgs-valid/mgs-valid.component';
 import {MgsSenderService} from '../dockets/services/mgs-sender.service';
 import {MetricMigrationService} from '../dockets/services/metric-migration.service';
+import {NdwhSummaryService} from "../dockets/services/ndwh-summary.service";
 
 @NgModule({
     imports: [
@@ -294,7 +295,7 @@ import {MetricMigrationService} from '../dockets/services/metric-migration.servi
         SetupService, MpiSearchService, NdwhPatientAdverseEventService, AppDetailsService, HtsService, HtsSenderService,
         HtsClientsService, HtsClientTestsService, HtsClientsLinkageService, HtsTestKitsService, HtsClientTracingService, HtsPartnerTracingService,
         HtsPartnerNotificationServicesService, HtsClientService, HtsClientPartnerService, HtsClientLinkageService,
-        MetricsService,MgsService,MgsSenderService,MetricMigrationService
+        MetricsService,MgsService,MgsSenderService,MetricMigrationService,NdwhSummaryService
     ],
     bootstrap: [AppComponent]
 })

@@ -92,15 +92,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
         public void DwhUpdateStatus(Guid extractId, ExtractStatus status, int? stats, string statusInfo = "")
         {
                 var history = new ExtractHistory(status, stats, statusInfo, extractId);
-                Create(history);
-                SaveChanges();
+                CreateBatch(new List<ExtractHistory> {history});
         }
 
         public void Complete(Guid extractId)
         {
             var history = new ExtractHistory(ExtractStatus.Idle,extractId);
-            Create(history);
-            SaveChanges();
+            CreateBatch(new List<ExtractHistory> {history});
         }
 
         //public int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract)

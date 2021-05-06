@@ -1,9 +1,10 @@
 using System;
+using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
-    
-    public class PatientPharmacyExtract : ClientExtract
+
+    public class PatientPharmacyExtract : ClientExtract, IPharmacy
     {
         public int? VisitID { get; set; }
         public string Drug { get; set; }
@@ -15,5 +16,10 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string RegimenLine { get; set; }
         public string PeriodTaken { get; set; }
         public string ProphylaxisType { get; set; }
+
+        public string RegimenChangedSwitched { get; set; }
+        public string RegimenChangeSwitchReason { get; set; }
+        public string StopRegimenReason { get; set; }
+        public DateTime? StopRegimenDate { get; set; }
     }
 }

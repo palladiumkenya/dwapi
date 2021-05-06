@@ -33,6 +33,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
@@ -56,6 +57,7 @@ using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Profiles.Hts;
 using Dwapi.ExtractsManagement.Core.Profiles.Mgs;
 using Dwapi.ExtractsManagement.Core.Services;
+using Dwapi.ExtractsManagement.Core.Tests.TestArtifacts;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
@@ -64,6 +66,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader.Mgs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Diff;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Validations;
@@ -111,9 +114,12 @@ namespace Dwapi.ExtractsManagement.Core.Tests
         public static string MsSqlConnectionString;
         public static string MySqlConnectionString;
         public static string EmrConnectionString;
+        public static string EmrDiffConnectionString;
         public static string ConnectionString;
+        public static string DiffConnectionString;
         public static DatabaseProtocol Protocol;
         public static List<Extract> Extracts;
+        public static ServiceCollection AllServices;
 
         [OneTimeSetUp]
         public void Setup()
@@ -135,7 +141,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests
                 .Build();
 
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
+            EmrDiffConnectionString = GenerateConnection(config, "emrDiffConnection", false);
             ConnectionString = GenerateCopyConnection(config, "dwapiConnection");
+            DiffConnectionString = GenerateCopyConnection(config, "dwapiDiffConnection");
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
@@ -179,6 +187,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddTransient<IValidatorRepository, ValidatorRepository>();
             services.AddTransient<IPsmartStageRepository, PsmartStageRepository>();
+            services.AddTransient<IDiffLogRepository, DiffLogRepository>();
 
             #region CBS
 
@@ -200,6 +209,16 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddTransient<IPatientStatusExtractRepository, PatientStatusExtractRepository>();
             services.AddTransient<IPatientVisitExtractRepository, PatientVisitExtractRepository>();
 
+            services.AddTransient<IAllergiesChronicIllnessExtractRepository, AllergiesChronicIllnessExtractRepository>();
+            services.AddTransient<IContactListingExtractRepository, ContactListingExtractRepository>();
+            services.AddTransient<IDepressionScreeningExtractRepository, DepressionScreeningExtractRepository>();
+            services.AddTransient<IDrugAlcoholScreeningExtractRepository, DrugAlcoholScreeningExtractRepository>();
+            services.AddTransient<IEnhancedAdherenceCounsellingExtractRepository, EnhancedAdherenceCounsellingExtractRepository>();
+            services.AddTransient<IGbvScreeningExtractRepository, GbvScreeningExtractRepository>();
+            services.AddTransient<IIptExtractRepository, IptExtractRepository>();
+            services.AddTransient<IOtzExtractRepository, OtzExtractRepository>();
+            services.AddTransient<IOvcExtractRepository, OvcExtractRepository>();
+
             #endregion
 
             #region TempExtracts
@@ -213,6 +232,16 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddTransient<ITempPatientPharmacyExtractRepository, TempPatientPharmacyExtractRepository>();
             services.AddTransient<ITempPatientStatusExtractRepository, TempPatientStatusExtractRepository>();
             services.AddTransient<ITempPatientVisitExtractRepository, TempPatientVisitExtractRepository>();
+
+            services.AddTransient<ITempAllergiesChronicIllnessExtractRepository, TempAllergiesChronicIllnessExtractRepository>();
+            services.AddTransient<ITempContactListingExtractRepository, TempContactListingExtractRepository>();
+            services.AddTransient<ITempDepressionScreeningExtractRepository, TempDepressionScreeningExtractRepository>();
+            services.AddTransient<ITempDrugAlcoholScreeningExtractRepository, TempDrugAlcoholScreeningExtractRepository>();
+            services.AddTransient<ITempEnhancedAdherenceCounsellingExtractRepository, TempEnhancedAdherenceCounsellingExtractRepository>();
+            services.AddTransient<ITempGbvScreeningExtractRepository, TempGbvScreeningExtractRepository>();
+            services.AddTransient<ITempIptExtractRepository, TempIptExtractRepository>();
+            services.AddTransient<ITempOtzExtractRepository, TempOtzExtractRepository>();
+            services.AddTransient<ITempOvcExtractRepository, TempOvcExtractRepository>();
 
             #endregion
 
@@ -239,6 +268,16 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services
                 .AddScoped<ITempPatientVisitExtractErrorSummaryRepository, TempPatientVisitExtractErrorSummaryRepository
                 >();
+
+            services.AddTransient<ITempAllergiesChronicIllnessExtractErrorSummaryRepository, TempAllergiesChronicIllnessExtractErrorSummaryRepository>();
+            services.AddTransient<ITempContactListingExtractErrorSummaryRepository, TempContactListingExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDepressionScreeningExtractErrorSummaryRepository, TempDepressionScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDrugAlcoholScreeningExtractErrorSummaryRepository, TempDrugAlcoholScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempEnhancedAdherenceCounsellingExtractErrorSummaryRepository, TempEnhancedAdherenceCounsellingExtractErrorSummaryRepository>();
+            services.AddTransient<ITempGbvScreeningExtractErrorSummaryRepository, TempGbvScreeningExtractErrorSummaryRepository>();
+            services.AddTransient<ITempIptExtractErrorSummaryRepository, TempIptExtractErrorSummaryRepository>();
+            services.AddTransient<ITempOtzExtractErrorSummaryRepository, TempOtzExtractErrorSummaryRepository>();
+            services.AddTransient<ITempOvcExtractErrorSummaryRepository, TempOvcExtractErrorSummaryRepository>();
 
             #endregion
 
@@ -344,6 +383,17 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor>();
 
             services.AddScoped<IMetricMigrationSourceExtractor,MetricMigrationSourceExtractor>();
+
+
+            services.AddScoped<IAllergiesChronicIllnessSourceExtractor, AllergiesChronicIllnessSourceExtractor>();
+            services.AddScoped<IContactListingSourceExtractor, ContactListingSourceExtractor>();
+            services.AddScoped<IDepressionScreeningSourceExtractor, DepressionScreeningSourceExtractor>();
+            services.AddScoped<IDrugAlcoholScreeningSourceExtractor, DrugAlcoholScreeningSourceExtractor>();
+            services.AddScoped<IEnhancedAdherenceCounsellingSourceExtractor, EnhancedAdherenceCounsellingSourceExtractor>();
+            services.AddScoped<IGbvScreeningSourceExtractor, GbvScreeningSourceExtractor>();
+            services.AddScoped<IIptSourceExtractor, IptSourceExtractor>();
+            services.AddScoped<IOtzSourceExtractor, OtzSourceExtractor>();
+            services.AddScoped<IOvcSourceExtractor, OvcSourceExtractor>();
             #endregion
 
             #region Loaders
@@ -369,6 +419,16 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
 
             services.AddScoped<IMetricMigrationLoader, MetricMigrationLoader>();
 
+            services.AddScoped<IAllergiesChronicIllnessLoader, AllergiesChronicIllnessLoader>();
+            services.AddScoped<IContactListingLoader, ContactListingLoader>();
+            services.AddScoped<IDepressionScreeningLoader, DepressionScreeningLoader>();
+            services.AddScoped<IDrugAlcoholScreeningLoader, DrugAlcoholScreeningLoader>();
+            services.AddScoped<IEnhancedAdherenceCounsellingLoader, EnhancedAdherenceCounsellingLoader>();
+            services.AddScoped<IGbvScreeningLoader, GbvScreeningLoader>();
+            services.AddScoped<IIptLoader, IptLoader>();
+            services.AddScoped<IOtzLoader, OtzLoader>();
+            services.AddScoped<IOvcLoader, OvcLoader>();
+
             #endregion
             #region Services
             services.AddScoped<ICbsSendService, CbsSendService>();
@@ -382,8 +442,9 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             #endregion
 
 
-            services.AddMediatR(typeof(LoadFromEmrCommand));
+            services.AddMediatR(typeof(LoadFromEmrCommand),typeof(TestDiffEventHandler));
 
+            AllServices = services;
             ServiceProvider = services.BuildServiceProvider();
 
               Mapper.Initialize(cfg =>
@@ -413,9 +474,42 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
         }
 
+        public static void ClearDiffDb()
+        {
+            AllServices.RemoveService(typeof(SettingsContext));
+            AllServices.RemoveService(typeof(ExtractsContext));
+            AllServices.RemoveService(typeof(DbContextOptions<SettingsContext>));
+            AllServices.RemoveService(typeof(DbContextOptions<ExtractsContext>));
+
+            var diffConnection = new SqliteConnection(DiffConnectionString);
+            diffConnection.Open();
+
+            AllServices.AddDbContext<SettingsContext>(x => x.UseSqlite(diffConnection));
+            AllServices.AddDbContext<ExtractsContext>(x => x.UseSqlite(diffConnection));
+
+            ServiceProvider = AllServices.BuildServiceProvider();
+
+            var context = ServiceProvider.GetService<SettingsContext>();
+            context.EnsureSeeded();
+
+            var econtext = ServiceProvider.GetService<ExtractsContext>();
+            econtext.EnsureSeeded();
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempPatientExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.PatientExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempHtsClientsExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
+        }
+
         public static void SeedData(params IEnumerable<object>[] entities)
         {
             var context = ServiceProvider.GetService<SettingsContext>();
+
+            if (entities.Any(x => x.First().GetType() == typeof(EmrSystem)))
+            {
+                context.EmrSystems.RemoveRange(context.EmrSystems);
+                context.SaveChanges();
+            }
+
             foreach (IEnumerable<object> t in entities)
             {
                 context.AddRange(t);
@@ -437,7 +531,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         }
         private void RegisterLicence()
         {
-            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
+            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "218460a6-02d0-c26b-9add-e6b8d13ccbf4");
             if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
             {
                 throw new Exception(licenseErrorMessage);
@@ -477,7 +571,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =
-                {"dwapi.db", "emr.db"};
+                {"dwapi.db", "dwapi-diff.db", "emr.db", "emr-diff.db"};
             string[] keyDirs = {@"TestArtifacts/Database".ToOsStyle()};
 
             foreach (var keyDir in keyDirs)
@@ -518,6 +612,17 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             LoadData(ServiceProvider.GetService<IPatientPharmacyLoader>(), ServiceProvider.GetService<IPatientPharmacySourceExtractor>(), nameof(PatientPharmacyExtract));
             LoadData(ServiceProvider.GetService<IPatientStatusLoader>(), ServiceProvider.GetService<IPatientStatusSourceExtractor>(), nameof(PatientStatusExtract));
             LoadData(ServiceProvider.GetService<IPatientVisitLoader>(), ServiceProvider.GetService<IPatientVisitSourceExtractor>(), nameof(PatientVisitExtract));
+
+            LoadData(ServiceProvider.GetService<IAllergiesChronicIllnessLoader>(), ServiceProvider.GetService<IAllergiesChronicIllnessSourceExtractor>(), nameof(AllergiesChronicIllnessExtract));
+            LoadData(ServiceProvider.GetService<IIptLoader>(), ServiceProvider.GetService<IIptSourceExtractor>(), nameof(IptExtract));
+            LoadData(ServiceProvider.GetService<IDepressionScreeningLoader>(), ServiceProvider.GetService<IDepressionScreeningSourceExtractor>(), nameof(DepressionScreeningExtract));
+            LoadData(ServiceProvider.GetService<IContactListingLoader>(), ServiceProvider.GetService<IContactListingSourceExtractor>(), nameof(ContactListingExtract));
+            LoadData(ServiceProvider.GetService<IGbvScreeningLoader>(), ServiceProvider.GetService<IGbvScreeningSourceExtractor>(), nameof(GbvScreeningExtract));
+            LoadData(ServiceProvider.GetService<IEnhancedAdherenceCounsellingLoader>(), ServiceProvider.GetService<IEnhancedAdherenceCounsellingSourceExtractor>(), nameof(EnhancedAdherenceCounsellingExtract));
+            LoadData(ServiceProvider.GetService<IDrugAlcoholScreeningLoader>(), ServiceProvider.GetService<IDrugAlcoholScreeningSourceExtractor>(), nameof(DrugAlcoholScreeningExtract));
+            LoadData(ServiceProvider.GetService<IOvcLoader>(), ServiceProvider.GetService<IOvcSourceExtractor>(), nameof(OvcExtract));
+            LoadData(ServiceProvider.GetService<IOtzLoader>(), ServiceProvider.GetService<IOtzSourceExtractor>(), nameof(OtzExtract));
+
         }
 
         public static void LoadMgs()
@@ -529,7 +634,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         {
             var extract = Extracts.First(x => x.Name.IsSameAs(extractName));
             var countA = extractor.Extract(extract, Protocol).Result;
-            var countB = loader.Load(extract.Id, countA).Result;
+            var countB = loader.Load(extract.Id, countA, false).Result;
         }
     }
 }

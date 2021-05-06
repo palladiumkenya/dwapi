@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
@@ -15,8 +16,11 @@ using Dwapi.UploadManagement.Core.Event.Hts;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Exchange.Hts;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Hts;
+using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
+using Dwapi.UploadManagement.Core.Notifications.Dwh;
 using Dwapi.UploadManagement.Core.Notifications.Hts;
+using MediatR;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -26,23 +30,27 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
     {
         private readonly string _endPoint;
         private readonly IHtsPackager _packager;
+        private readonly IMediator _mediator;
+        private readonly IEmrMetricReader _reader;
 
         public HttpClient Client { get; set; }
-        public HtsSendService(IHtsPackager packager)
+        public HtsSendService(IHtsPackager packager, IMediator mediator, IEmrMetricReader reader)
         {
             _packager = packager;
+            _mediator = mediator;
+            _reader = reader;
             _endPoint = "api/hts/";
         }
 
-        public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
+        public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,string version)
         {
-            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
+            return SendManifestAsync(sendTo, ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()),version);
         }
 
-        public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage)
+        public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage,string version)
         {
             var responses=new List<SendManifestResponse>();
-
+            await _mediator.Publish(new HandshakeStart("HTSSendStart", version, manifestMessage.Session));
             var client = Client ?? new HttpClient();
 
             foreach (var message in manifestMessage.Messages)
@@ -448,6 +456,22 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
             DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
             return responses;
+        }
+
+        public async Task NotifyPostSending(SendManifestPackageDTO sendTo,string version)
+        {
+            var notificationend = new HandshakeEnd("HTSSendEnd", version);
+            await _mediator.Publish(notificationend);
+            var client = Client ?? new HttpClient();
+            try
+            {
+                var session = _reader.GetSession(notificationend.EndName);
+                var response = await client.PostAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Handshake?session={session}"),null);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, $"Send Handshake Error");
+            }
         }
     }
 

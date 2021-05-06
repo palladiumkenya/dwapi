@@ -8,8 +8,14 @@
                     icon="ui-icon-file-download" class="green-btn"></button>
         </div>
 
+        <div class="ui-toolbar-group-right" *ngIf="(emrName && emrName === 'KenyaEMR')">
+            <button pButton type="button" [disabled]="!canSend" (click)="sendDiff()" label="Send Changes Only"
+                    icon="ui-icon-cloud-upload"
+                    class="orange-btn"></button>
+        </div>
+
         <div class="ui-toolbar-group-right">
-            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse"
+            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send All"
                     icon="ui-icon-cloud-upload"
                     class="blue-btn"></button>
         </div>
@@ -35,7 +41,6 @@
             <p-progressBar mode="indeterminate"></p-progressBar>
         </div>
     </div>
-
     <div class="ui-g" *ngIf="sending">
         <div class="ui-g-12">
             Stage 2 of 2: Sending Extracts, please wait ...

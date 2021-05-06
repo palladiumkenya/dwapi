@@ -4,12 +4,14 @@ using System.Linq;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
 using Newtonsoft.Json;
 
 namespace Dwapi.SharedKernel.Exchange
 {
     public class DwhManifest
     {
+        public Guid Id { get; private set; }
         public int SiteCode { get; set; }
         public List<int> PatientPks { get; set; } = new List<int>();
         public string Metrics { get; set; }
@@ -19,6 +21,11 @@ namespace Dwapi.SharedKernel.Exchange
         public string EmrName { get; set; }
         public EmrSetup EmrSetup { get; set; }
         public List<FacMetric> FacMetrics { get; set; } = new List<FacMetric>();
+        public UploadMode UploadMode { get; set; }
+
+        public Guid Session { get; set; }
+        public DateTime Start { get; set; }
+        public string Tag { get; set; }
 
         public DwhManifest()
         {
@@ -26,11 +33,13 @@ namespace Dwapi.SharedKernel.Exchange
 
         public DwhManifest(int siteCode)
         {
+            Id = LiveGuid.NewGuid();
             SiteCode = siteCode;
         }
 
         public DwhManifest(int siteCode, List<int> patientPks,string siteName,EmrDto emrDto)
         {
+            Id = LiveGuid.NewGuid();
             SiteCode = siteCode;
             PatientPks = patientPks;
             Name = siteName;
@@ -88,6 +97,13 @@ namespace Dwapi.SharedKernel.Exchange
             var items = JsonConvert.SerializeObject(metric);
 
             FacMetrics.Add(new FacMetric(cargoType,items));
+        }
+
+        public void InitSession(Guid session,DateTime start, string tag)
+        {
+            Session = session;
+            Start = start;
+            Tag = tag;
         }
     }
 }

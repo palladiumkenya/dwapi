@@ -8,6 +8,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
@@ -31,6 +32,8 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
         public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
+            var mapper = dbProtocol.SupportsDifferential ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
+
             int batch = 500;
 
             var list = new List<TempPatientStatusExtract>();
@@ -44,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                     count++;
                     loaded++;
                     // AutoMapper profiles
-                    var extractRecord = Mapper.Map<IDataRecord, TempPatientStatusExtract>(rdr);
+                    var extractRecord =   mapper.Map<IDataRecord, TempPatientStatusExtract>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
                     list.Add(extractRecord);
 

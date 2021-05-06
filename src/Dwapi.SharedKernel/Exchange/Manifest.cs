@@ -18,6 +18,10 @@ namespace Dwapi.SharedKernel.Exchange
         public EmrSetup EmrSetup { get; set; }
         public Guid Id { get; set; } = LiveGuid.NewGuid();
         public DateTime DateLogged { get; set; } = DateTime.Now;
+
+        public Guid Session { get; set; }
+        public DateTime Start { get; set; }
+        public string Tag { get; set; }
         public List<Cargo> Cargoes { get; set; } = new List<Cargo>();
 
 
@@ -129,6 +133,13 @@ namespace Dwapi.SharedKernel.Exchange
         public override string ToString()
         {
             return $"{SiteCode}-{Name}";
+        }
+
+        public void InitSession(Guid session, DateTime sessionStart, string tag)
+        {
+            Session = session;
+            Start = sessionStart;
+            Tag = tag;
         }
     }
 }

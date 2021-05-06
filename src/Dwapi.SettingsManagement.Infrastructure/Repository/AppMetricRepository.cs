@@ -1,10 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Dapper;
+using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
+using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Repository
 {
@@ -12,6 +18,16 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
     {
         public AppMetricRepository(SettingsContext context) : base(context)
         {
+        }
+
+        public void Clear(string area)
+        {
+            var ctLoaded = DbSet.Where(x => x.Name == area);
+            if (ctLoaded.Any())
+            {
+                DbSet.RemoveRange(ctLoaded);
+                SaveChanges();
+            }
         }
 
         public void Clear(string area, string action)
@@ -107,6 +123,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 
             //Migration
 
+             /*
             var mgsLoaded = DbSet.AsNoTracking()
                 .Where(x => x.Name == "MigrationService" && x.LogValue.Contains("NoLoaded"))
                 .OrderByDescending(x => x.LogDate).FirstOrDefault();
@@ -130,8 +147,62 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
                 ap.CreatMgs("NoSent");
                 list.Add(ap);
             }
+            */
 
             return list;
+        }
+
+        public Guid GetSession(string notificationName)
+        {
+            var metric = DbSet.AsNoTracking().FirstOrDefault(x => x.Name == notificationName);
+            if (null != metric)
+            {
+                var handshake = JsonConvert.DeserializeObject<HandshakeStart>(metric.LogValue);
+                return handshake.Session;
+            }
+            return Guid.Empty;
+        }
+
+        public IEnumerable<ExtractCargoDto> LoadCargo()
+        {
+            var sql = @"
+                select distinct e.DocketId,e.Name,h.Stats
+                from ExtractHistory h inner join Extracts e on h.ExtractId=e.Id
+                where Status=6";
+
+            return Context.Database.GetDbConnection().Query<ExtractCargoDto>(sql).ToList();
+        }
+
+        public IEnumerable<ExtractCargoDto> LoadDetainedCargo()
+        {
+            var builder = new StringBuilder();
+            var exlist = new List<string>();
+
+            var list = new List<string>
+            {
+                "PatientArtExtracts",
+                "PatientBaselinesExtracts",
+                "PatientLaboratoryExtracts",
+                "PatientPharmacyExtracts",
+                "PatientStatusExtracts",
+                "PatientVisitExtracts",
+                "PatientAdverseEventExtracts"
+            };
+
+            builder.AppendLine( @"
+                select 'NDWH' DocketId,'Detained' Name, p.SiteCode ,count(p.Id) Stats 
+                from PatientExtracts p left outer join (
+                ");
+
+            foreach (var i in list) exlist.Add($"select distinct PatientPK,SiteCode from {i}");
+
+            builder.AppendLine(exlist.Join(" union "));
+            builder.AppendLine(@" )x on p.SiteCode=x.SiteCode and p.PatientPK=x.PatientPK
+                where x.PatientPK is null
+                GROUP BY p.SiteCode");
+            var sql = builder.ToString();
+
+            return Context.Database.GetDbConnection().Query<ExtractCargoDto>(sql).ToList();
         }
     }
 }

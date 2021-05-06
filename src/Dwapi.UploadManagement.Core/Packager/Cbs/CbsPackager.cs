@@ -9,6 +9,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.UploadManagement.Core.Model;
 using Dwapi.UploadManagement.Core.Model.Cbs.Dtos;
+using Dwapi.UploadManagement.Core.Profiles;
 
 namespace Dwapi.UploadManagement.Core.Packager.Cbs
 {
@@ -52,8 +53,9 @@ namespace Dwapi.UploadManagement.Core.Packager.Cbs
 
         public IEnumerable<MasterPatientIndexDto> GenerateDtoMpi()
         {
+            var mapper = UploadMapper.Instance;
             var mpis = _cbsExtractReader.ReadAll().ToList();
-            return Mapper.Map<List<MasterPatientIndexDto>>(mpis);
+            return mapper.Map<List<MasterPatientIndexDto>>(mpis);
         }
     }
 }

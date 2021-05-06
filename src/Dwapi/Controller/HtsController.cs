@@ -24,7 +24,6 @@ namespace Dwapi.Controller
         private readonly IHubContext<HtsActivity> _hubContext;
         private readonly IHubContext<HtsSendActivity> _hubSendContext;
         private readonly IHtsSendService _htsSendService;
-
         public HtsController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<HtsActivity> hubContext, IHtsSendService htsSendService,
             IHubContext<HtsSendActivity> hubSendContext)
@@ -41,11 +40,9 @@ namespace Dwapi.Controller
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
-            await _mediator.Publish(new ExtractLoaded("HivTestingService", version));
-
+            string version = GetType().Assembly.GetName().Version.ToString();
             var result = await _mediator.Send(request.LoadHtsFromEmrCommand, HttpContext.RequestAborted);
+            await _mediator.Publish(new ExtractLoaded("HivTestingService", version));
             return Ok(result);
         }
 
@@ -80,13 +77,12 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid())
                 return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            string version = GetType().Assembly.GetName().Version.ToString();
             await _mediator.Publish(new ExtractSent("HivTestingService", version));
 
             try
             {
-                var result = await _htsSendService.SendManifestAsync(packageDto);
+                var result = await _htsSendService.SendManifestAsync(packageDto,version);
                 return Ok(result);
             }
             catch (Exception e)
@@ -221,6 +217,26 @@ namespace Dwapi.Controller
             try
             {
                 _htsSendService.SendClientsLinkagesAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("endsession")]
+        public IActionResult SendEndSession([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                string version = GetType().Assembly.GetName().Version.ToString();
+                _htsSendService.NotifyPostSending(packageDto,version);
                 return Ok();
             }
             catch (Exception e)

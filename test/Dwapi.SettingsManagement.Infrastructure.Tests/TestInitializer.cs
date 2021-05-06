@@ -68,6 +68,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
             services.AddTransient<IEmrSystemRepository,EmrSystemRepository>();
             services.AddTransient<IExtractRepository,ExtractRepository>();
             services.AddTransient<IRestProtocolRepository,RestProtocolRepository>();
+            services.AddTransient<IIntegrityCheckRepository,IntegrityCheckRepository>();
 
             ServiceProvider = services.BuildServiceProvider();
         }
@@ -97,7 +98,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Tests
 
         private void RegisterLicence()
         {
-            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "2073303b-0cfc-fbb9-d45f-1723bb282a3c");
+            DapperPlusManager.AddLicense("1755;700-ThePalladiumGroup", "218460a6-02d0-c26b-9add-e6b8d13ccbf4");
             if (!Z.Dapper.Plus.DapperPlusManager.ValidateLicense(out var licenseErrorMessage))
             {
                 throw new Exception(licenseErrorMessage);

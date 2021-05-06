@@ -3,7 +3,6 @@ using System;
 using Dwapi.SettingsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Migrations
@@ -15,9 +14,8 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.AppMetric", b =>
                 {
@@ -171,6 +169,66 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.ToTable("Extracts");
                 });
 
+            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.IndicatorKey", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.Property<decimal>("Rank");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IndicatorKeys");
+                });
+
+            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.IntegrityCheck", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Docket");
+
+                    b.Property<Guid>("EmrSystemId");
+
+                    b.Property<string>("Logic");
+
+                    b.Property<int>("LogicType");
+
+                    b.Property<string>("Message");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Stage");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IntegrityChecks");
+                });
+
+            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.IntegrityCheckRun", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Finding");
+
+                    b.Property<Guid>("IntegrityCheckId");
+
+                    b.Property<DateTime>("RunDate");
+
+                    b.Property<int>("RunStatus");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IntegrityCheckId");
+
+                    b.ToTable("IntegrityCheckRuns");
+                });
+
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.Resource", b =>
                 {
                     b.Property<Guid>("Id")
@@ -243,6 +301,14 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.HasOne("Dwapi.SettingsManagement.Core.Model.EmrSystem")
                         .WithMany("Extracts")
                         .HasForeignKey("EmrSystemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.IntegrityCheckRun", b =>
+                {
+                    b.HasOne("Dwapi.SettingsManagement.Core.Model.IntegrityCheck")
+                        .WithMany("IntegrityCheckRuns")
+                        .HasForeignKey("IntegrityCheckId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

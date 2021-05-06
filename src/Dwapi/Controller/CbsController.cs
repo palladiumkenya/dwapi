@@ -29,7 +29,7 @@ namespace Dwapi.Controller
         private readonly IMasterPatientIndexRepository _masterPatientIndexRepository;
         private readonly ICbsSendService _cbsSendService;
         private readonly IMpiSearchService _mpiSearchService;
-
+        private readonly string _version;
 
         public CbsController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<CbsActivity> hubContext, IMasterPatientIndexRepository masterPatientIndexRepository,
@@ -42,6 +42,8 @@ namespace Dwapi.Controller
             _mpiSearchService = mpiSearchService;
             Startup.CbsSendHubContext= _hubSendContext = hubSendContext;
             Startup.CbsHubContext = _hubContext = hubContext;
+            var ver = GetType().Assembly.GetName().Version;
+            _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
         }
 
 
@@ -50,12 +52,10 @@ namespace Dwapi.Controller
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
-            await _mediator.Publish(new ExtractLoaded("MasterPatientIndex", version));
+            string version = GetType().Assembly.GetName().Version.ToString();
 
             var result = await _mediator.Send(request, HttpContext.RequestAborted);
-
+            await _mediator.Publish(new ExtractLoaded("MasterPatientIndex", version));
 
             return Ok(result);
         }
@@ -161,14 +161,14 @@ namespace Dwapi.Controller
             if (!packageDTO.IsValid())
                 return BadRequest();
 
-            var ver = GetType().Assembly.GetName().Version;
-            string version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            string version = GetType().Assembly.GetName().Version.ToString();
+
             await _mediator.Publish(new ExtractSent("MasterPatientIndex", version));
 
 
             try
             {
-                await _cbsSendService.SendManifestAsync(packageDTO);
+                await _cbsSendService.SendManifestAsync(packageDTO,_version);
                 return Ok();
             }
             catch (Exception e)
@@ -189,6 +189,7 @@ namespace Dwapi.Controller
             try
             {
                 await _cbsSendService.SendMpiAsync(packageDTO);
+                await _cbsSendService.NotifyPostSending(packageDTO, _version);
                 return Ok();
             }
             catch (Exception e)

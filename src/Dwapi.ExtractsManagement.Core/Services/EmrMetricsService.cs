@@ -8,6 +8,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Model.Destination;
 using Dwapi.ExtractsManagement.Core.Model.Source;
+using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Serilog;
@@ -31,10 +32,11 @@ namespace Dwapi.ExtractsManagement.Core.Services
             _httpClient=new HttpClient();
         }
 
-        public async Task<EmrMetricSource> Read(AuthProtocol authProtocol, string url)
+        public async Task<EmrMetricSource> Read(AuthProtocol authProtocol, string url, bool diffSupport)
         {
             EmrMetricSource metricSoruce = null;
             string metricsUrl=string.Empty;
+            var mapper = diffSupport ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
 
             if (authProtocol.HasAuth)
             {
@@ -72,7 +74,7 @@ namespace Dwapi.ExtractsManagement.Core.Services
             {
                 try
                 {
-                    var metric = Mapper.Map<EmrMetricSource, EmrMetric>(metricSoruce);
+                    var metric = mapper.Map<EmrMetricSource, EmrMetric>(metricSoruce);
                     _emrMetricRepository.CreateOrUpdate(metric);
 
                 }

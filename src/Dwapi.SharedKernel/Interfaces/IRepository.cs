@@ -19,7 +19,10 @@ namespace Dwapi.SharedKernel.Interfaces
         Task<IPagedList<T>> GetAll(string sql, int? page, int pageSize);
         Task<IPagedList<T>> GetAll(Expression<Func<T, bool>> predicate,int? page, int pageSize);
         void Create(T entity);
+        void Create<TC>(List<TC> entity);
+        void CreateBatch(List<T> entity);
         void Update(T entity);
+        void Update<TC>(List<TC> entity);
         void CreateOrUpdate(T entity);
         IEnumerable<T> GetFromSql(string query);
         DatabaseProvider GetConnectionProvider();
@@ -37,5 +40,7 @@ namespace Dwapi.SharedKernel.Interfaces
        Task<int> GetCount();
        Task<int> GetCount(string sql);
        int PageCount(int batchSize, long totalRecords);
+       Task<IEnumerable<T>> ReadAll( string sql, int pageNumber, int pageSize);
+       string GetTableName();
     }
 }

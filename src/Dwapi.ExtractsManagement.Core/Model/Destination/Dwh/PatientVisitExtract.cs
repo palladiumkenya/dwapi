@@ -1,9 +1,10 @@
 using System;
+using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
 
-    public class PatientVisitExtract : ClientExtract
+    public class PatientVisitExtract : ClientExtract, IVisit
     {
         public string FacilityName { get; set; }
         public int? VisitId { get; set; }
@@ -32,12 +33,27 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string PwP { get; set; }
         public decimal? GestationAge { get; set; }
         public DateTime? NextAppointmentDate { get; set; }
-
         public string StabilityAssessment { get; set; }
         public string DifferentiatedCare { get; set; }
         public string PopulationType  { get; set; }
         public string KeyPopulationType { get; set; }
 
-
+        public string VisitBy { get; set; }
+        public decimal? Temp { get; set; }
+        public int? PulseRate { get; set; }
+        public int? RespiratoryRate { get; set; }
+        public decimal? OxygenSaturation { get; set; }
+        public int? Muac { get; set; }
+        public string NutritionalStatus { get; set; }
+        public string EverHadMenses { get; set; }
+        public string Breastfeeding { get; set; }
+        public string Menopausal { get; set; }
+        public string NoFPReason { get; set; }
+        public string ProphylaxisUsed { get; set; }
+        public string CTXAdherence { get; set; }
+        public string CurrentRegimen { get; set; }
+        public string HCWConcern { get; set; }
+        public string TCAReason { get; set; }
+        public string ClinicalNotes { get; set; }
     }
 }

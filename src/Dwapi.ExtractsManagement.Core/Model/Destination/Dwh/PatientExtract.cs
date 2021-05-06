@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
-    public class PatientExtract : ClientExtract
+    public class PatientExtract : ClientExtract,IPatient
     {
         public string FacilityName { get; set; }
         public string Gender { get; set; }
@@ -38,7 +39,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string PatientResidentWard { get; set; }
         public string PatientResidentVillage { get; set; }
         public DateTime? TransferInDate { get; set; }
-
+        public string Pkv { get; set; }
+        public string Occupation { get; set; }
         public virtual ICollection<PatientArtExtract> PatientArtExtracts { get; set; } = new List<PatientArtExtract>();
         public virtual ICollection<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; } = new List<PatientBaselinesExtract>();
         public virtual ICollection<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; } = new List<PatientLaboratoryExtract>();
@@ -46,5 +48,16 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public virtual ICollection<PatientStatusExtract> PatientStatusExtracts { get; set; } = new List<PatientStatusExtract>();
         public virtual ICollection<PatientVisitExtract> PatientVisitExtracts { get; set; } = new List<PatientVisitExtract>();
         public virtual ICollection<PatientAdverseEventExtract> PatientAdverseEventExtracts { get; set; } = new List<PatientAdverseEventExtract>();
+
+        public virtual ICollection<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; } = new List<AllergiesChronicIllnessExtract>();
+        public virtual ICollection<ContactListingExtract> ContactListingExtracts { get; set; } = new List<ContactListingExtract>();
+        public virtual ICollection<DepressionScreeningExtract> DepressionScreeningExtracts { get; set; } = new List<DepressionScreeningExtract>();
+        public virtual ICollection<DrugAlcoholScreeningExtract> DrugAlcoholScreeningExtracts { get; set; } = new List<DrugAlcoholScreeningExtract>();
+        public virtual ICollection<EnhancedAdherenceCounsellingExtract> EnhancedAdherenceCounsellingExtracts { get; set; } = new List<EnhancedAdherenceCounsellingExtract>();
+        public virtual ICollection<GbvScreeningExtract> GbvScreeningExtracts { get; set; } = new List<GbvScreeningExtract>();
+        public virtual ICollection<IptExtract> IptExtracts { get; set; } = new List<IptExtract>();
+        public virtual ICollection<OtzExtract> OtzExtracts { get; set; } = new List<OtzExtract>();
+        public virtual ICollection<OvcExtract> OvcExtracts { get; set; } = new List<OvcExtract>();
+
     }
 }
