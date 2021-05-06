@@ -149,9 +149,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.emrVersion = `(Ver. ${this.emr.version})`;
             const em = environment.emrs.filter(x => x.name === this.emrName)[0];
             if (this.emrName === 'KenyaEMR') {
-                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version})`;
+                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version}) or higher`;
             } else if (this.emrName === 'IQCare') {
-                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version})`;
+                this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version}) or higher`;
             } else {
                 this.minEMRVersion = '';
             }
@@ -302,9 +302,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
 
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    }
                 },
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});
@@ -329,9 +332,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
 
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    }
                 },
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});

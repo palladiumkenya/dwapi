@@ -22,7 +22,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
 
         private bool CheckDeferred()
         {
-            var list = new List<string>() {"TX_ML", "TX_RTT", "MMD", "TX_PVLS"};
+            var list = new List<string>() {"HTS_LINKED","TX_ML", "TX_RTT", "MMD", "TX_PVLS","MFL_CODE"};
             return list.Any(x => x.ToLower() == Indicator.ToLower());
         }
 
@@ -38,13 +38,49 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
             {
                 if (!indicatorExtractDto.Deferred)
                 {
+                    indicatorExtractDto.Status = "Checked";
                     indicatorExtractDto.Validate(indicatorExtractDtos);
                     list.Add(indicatorExtractDto);
                 }
             }
+
+            list.ForEach(x =>
+            {
+                x.Indicator = FormatName(x.Indicator);
+                x.IndicatorValue = FormatValue(x.Indicator,x.IndicatorValue);
+            });
             return list;
         }
 
+        private static string FormatValue(string indicator,string indicatorValue)
+        {
+            if (!string.IsNullOrWhiteSpace(indicatorValue))
+            {
+                if (!indicator.EndsWith("DATE"))
+                {
+                    int num;
+                    if (int.TryParse(indicatorValue, out num))
+                    {
+                        return num.ToString("N0");
+                    }
+                }
+                if (indicator.EndsWith("DATE") || (indicator.Contains("ETL") && indicator.Contains("Refresh")))
+                {
+                    DateTime dateval;
+                    if (DateTime.TryParse(indicatorValue, out dateval))
+                    {
+                        return dateval.ToString("MMM dd, yyyy  hh:mm tt");
+                    }
+                }
+            }
+
+            return indicatorValue;
+        }
+
+        private static string FormatName(string indicator)
+        {
+            return indicator.Replace('_', ' ');
+        }
 
 
         private void Validate(List<IndicatorExtractDto> indicatorExtractDtos)
@@ -124,7 +160,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
             }
         }
 
-        private string GetStatus(List<IndicatorExtractDto> indicatorExtractDtos,string indiA,string indiB,string msg,LogicCalc cal=LogicCalc.GT)
+        private string GetStatus(List<IndicatorExtractDto> indicatorExtractDtos, string indiA, string indiB, string msg,
+            LogicCalc cal = LogicCalc.GT)
         {
             var status = "";
             if (Indicator == indiA)
@@ -162,6 +199,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                                 ? msg
                                 : "";
                         }
+
                         if (cal == LogicCalc.LT)
                         {
                             status = intA < intB
@@ -178,6 +216,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto
                     }
                 }
             }
+
+            status = string.IsNullOrWhiteSpace(status) ? "Checked" : status;
+
             return status;
         }
     }

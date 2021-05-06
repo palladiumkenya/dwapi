@@ -157,10 +157,10 @@ export class CbsDocketComponent implements OnInit, OnDestroy {
                         this.emrVersion = this.emrSystem.version;
                         const em=environment.emrs.filter(x=>x.name===this.emrSystem.name)[0];
                         if (this.emrSystem.name == 'KenyaEMR') {
-                            this.minEMRVersion = `(This version of DWAPI works best with ${this.emrSystem.name} version ${em.version})`;
+                            this.minEMRVersion = `(This version of DWAPI works best with ${this.emrSystem.name} version ${em.version}) or higher`;
                         }
                         else if (this.emrSystem.name === 'IQCare') {
-                            this.minEMRVersion = `(This version of DWAPI works best with ${this.emrSystem.name} version ${em.version})`;
+                            this.minEMRVersion = `(This version of DWAPI works best with ${this.emrSystem.name} version ${em.version}) or higher`;
                         }
                         else {
                             this.minEMRVersion = '';

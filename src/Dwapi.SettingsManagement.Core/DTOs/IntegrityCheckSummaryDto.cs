@@ -16,11 +16,19 @@ namespace Dwapi.SettingsManagement.Core.DTOs
         public string Status { get; set; }
         public DateTime RunDate { get; set; }
         public string TimeAgo => GetTimeAgo();
+        private bool Deferred => CheckDeferred();
+        private bool CheckDeferred()
+        {
+            var list = new List<string>() {"MFL_CODE"};
+            return list.Any(x =>
+                x.ToLower() == Name.ToLower()||
+                x.ToLower().Replace('_',' ') == Name.ToLower().Replace('_',' '));
+        }
 
         public IntegrityCheckSummaryDto(string name, string description, string logic, string message, string docket,
             List<IntegrityCheckRun> runs)
         {
-            Name = name;
+            Name = FormatName(name);
             Description = description;
             Docket = docket;
 
@@ -31,8 +39,17 @@ namespace Dwapi.SettingsManagement.Core.DTOs
                 Message = ParseMessage(message, run, logic);
                 Status = $"{run.RunStatus}";
             }
+            else
+            {
+                Message = "Not uploaded";
+                Status= $"{LogicStatus.Fail}";
+            }
         }
 
+        private string FormatName(string name)
+        {
+            return name.Replace('_', ' ');
+        }
 
 
         public static List<IntegrityCheckSummaryDto> Generate(List<IntegrityCheck> checks)
@@ -45,7 +62,8 @@ namespace Dwapi.SettingsManagement.Core.DTOs
                     check.Docket,
                     check.IntegrityCheckRuns.ToList());
 
-                list.Add(summary);
+                if(!summary.Deferred)
+                    list.Add(summary);
             }
 
             return list;

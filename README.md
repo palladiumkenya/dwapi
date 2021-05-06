@@ -5,87 +5,76 @@ DWAPI
 
 # Running DWAPI with docker
 
-1) Download docker
---------------
-[Ubuntu 12 64 bit](https://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_17.04.0~ce-0~ubuntu-precise_amd64.deb)
+If you do not have Docker installed, visit https://docs.docker.com/get-started/#download-and-install-docker and choose your preferred operating system to download and install Docker
 
-[Ubuntu 14 64 bit](https://download.docker.com/linux/ubuntu/dists/trusty/pool/stable/amd64/docker-ce_17.03.2~ce-0~ubuntu-trusty_amd64.deb)
 
-[Ubuntu 16 64 bit](https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_17.03.2~ce-0~ubuntu-xenial_amd64.deb)
+# DWAPI Setup
+#### a) New Installation
+1. Install DWAPI
+ ```sh
+sudo docker run --name dwapi -p 5757:5757 -p 5753:5753 -d --restart unless-stopped kenyahmis/dwapi:latest
+```
 
-2) Install docker
----
-*changing the path below to the path where you downloaded the Docker package*
-- - -
-***sudo dpkg -i /path/to/package.deb***
-- - -
+#### b) Upgrading Existing Installation
+1. Upgrading DWAPI to latest version
+ ```sh
+sudo docker ps -a | grep "dwapi" | awk '{print $1}' | xargs sudo docker rm -f
+sudo docker images -a | grep "dwapi" | awk '{print $3}' | xargs sudo docker rmi
+sudo docker run --name dwapi -p 5757:5757 -p 5753:5753 -d --restart unless-stopped kenyahmis/dwapi:latest
+```
 
-3) Install DWAPI
----
-- - -
-***sudo docker run --name dwapi -p 5757:5757 -d --restart unless-stopped kenyahmis/dwapi:latest***
-- - -
+# MySQL Setup
+1. Configure MySQL to allow remote access. Edit your my.cnf file which is found on
+   **/etc/mysql/my.cnf**  OR  **/etc/mysql/mysql.conf.d/mysqld.cnf** depending on your mysql installation.
 
-4) Upgrading DWAPI to latest version
----
-- - -
-***sudo docker pull kenyahmis/dwapi***
+#### a)  MySQL 5.5
 
-***sudo docker stop dwapi***
+Change line bind-address = 127.0.0.1 to #bind-address = 127.0.0.1
 
-***sudo docker rm dwapi***
+#### b)  MySQL 5.6 - add the line if it does not exists
+		bind-address = *
 
-***sudo docker run --name dwapi -p 5757:5757 -d --restart unless-stopped kenyahmis/dwapi:latest***
+2. Create a DWAPI database user for MySQL
+```sh
+ create user 'dwapi'@'%' identified by 'dwapi';
+```
+3. Assign privileges to the DWAPI database user for MySQL
+```sh
+GRANT ALL PRIVILEGES ON *.* TO 'dwapi'@'%' IDENTIFIED BY 'dwapi' WITH GRANT OPTION; 
+FLUSH PRIVILEGES;
+```
 
-***Configure your data sources and verify registries***
+# Using DWAPI
 
-***sudo docker restart dwapi***
-- - -
+1. Start DWAPI
 
-5) Update your browser
----
-***sudo apt-get update***
+On your browser open dwapi on `https://localhost:5753`
 
-***sudo apt-get install firefox***
+2. Configure your data sources and verify registries
 
-6) Configure MySQL
----
->Edit your my.cnf file, which usually lives on /etc/mysql/my.cnf on Unix/OSX systems. In some cases the location for the file is /etc/mysql/mysql.conf.d/mysqld.cnf).
+> Please note that for the database connection will need to specify the IP address of the computer and **NOT** localhost or 127.0.0.1
 
->Change line bind-address = 127.0.0.1 to #bind-address = 127.0.0.1
+3. Restart DWAPI
+```sh
+sudo docker restart dwapi
+```
 
- >run this SQL command locally:
+# Troubleshooting DWAPI
+i)  View log files
+```sh
+sudo docker exec -it dwapi ls logs
+```
+ii)  Copying log files folder to your pc current directory.
 
- >GRANT ALL PRIVILEGES ON *.* TO 'dwapi'@'%' IDENTIFIED BY 'dwapi' WITH GRANT OPTION;
- FLUSH PRIVILEGES;
-
-8) Start DWAPI
----
- ***On your browser open dwapi on `http://localhost:5757`***
-
- ***Configure your data sources and verify registries***
-
-9) Restart DWAPI
----
-- - -
-***sudo docker restart dwapi***
-- - -
-Troubleshooting DWAPI
---------------
-
-i)  View log files   
---
- ***sudo docker exec -it dwapi ls logs***
-
-ii)  Copying log files folder to your pc current directory. 
---
-***sudo docker cp dwapi:/app/logs/ .***
+```sh
+sudo docker cp dwapi:/app/logs/ .
+```
 
 # Dwapi for Windows Instruction
 
 1) Install prerequisite(NetCore Runtime)
   https://www.microsoft.com/net/download/dotnet-core/2.1
 2) Install DWAPI
-  http://data.kenyahmis.org:81/dwapi/client/downloads/dwapi.exe
+  https://data.kenyahmis.org:444/dwapi/client/downloads/dwapi.exe
 
 

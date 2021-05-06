@@ -1,4 +1,5 @@
 using System;
+using System.Reflection.Metadata.Ecma335;
 using Humanizer;
 
 namespace Dwapi.SettingsManagement.Core.DTOs
@@ -13,7 +14,7 @@ namespace Dwapi.SettingsManagement.Core.DTOs
 
         public AppMetricDto(string name, string action, DateTime lastAction, int rank)
         {
-            Name = name.Contains("Master Patient Index") ? "PKV Services" : name;
+            Name = FormatName(name);
             Action = action;
             LastAction = lastAction;
             Rank = rank;
@@ -25,6 +26,17 @@ namespace Dwapi.SettingsManagement.Core.DTOs
                 return string.Empty;
 
             return LastAction.Humanize(false);
+        }
+
+        private string FormatName(string name)
+        {
+            if (name.Contains("Master Patient Index"))
+                return "PKV Services";
+
+            if (name.Contains("Hiv Testing Services"))
+                return "HIV Testing Services";
+
+            return name;
         }
     }
 }
