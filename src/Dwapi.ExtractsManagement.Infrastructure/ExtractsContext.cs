@@ -198,6 +198,32 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<CwcVisitExtract> CwcVisitExtracts { get; set; }
         public virtual DbSet<HeiExtract> HeiExtracts { get; set; }
         public virtual DbSet<MnchLabExtract> MnchLabExtracts { get; set; }
+
+        /*
+        public virtual DbSet<TempPatientMnchExtractError> TempPatientMnchExtractError { get; set; }
+        public virtual DbSet<TempMnchEnrolmentExtractError> TempMnchEnrolmentExtractError { get; set; }
+        public virtual DbSet<TempMnchArtExtractError> TempMnchArtExtractError { get; set; }
+        public virtual DbSet<TempAncVisitExtractError> TempAncVisitExtractError { get; set; }
+        public virtual DbSet<TempMatVisitExtractError> TempMatVisitExtractError { get; set; }
+        public virtual DbSet<TempPncVisitExtractError> TempPncVisitExtractError { get; set; }
+        public virtual DbSet<TempMotherBabyPairExtractError> TempMotherBabyPairExtractError { get; set; }
+        public virtual DbSet<TempCwcEnrolmentExtractError> TempCwcEnrolmentExtractError { get; set; }
+        public virtual DbSet<TempCwcVisitExtractError> TempCwcVisitExtractError { get; set; }
+        public virtual DbSet<TempHeiExtractError> TempHeiExtractError { get; set; }
+        public virtual DbSet<TempMnchLabExtractError> TempMnchLabExtractError { get; set; }
+
+        public virtual DbSet<TempPatientMnchExtractErrorSummary> TempPatientMnchExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMnchEnrolmentExtractErrorSummary> TempMnchEnrolmentExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMnchArtExtractErrorSummary> TempMnchArtExtractErrorSummary { get; set; }
+        public virtual DbSet<TempAncVisitExtractErrorSummary> TempAncVisitExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMatVisitExtractErrorSummary> TempMatVisitExtractErrorSummary { get; set; }
+        public virtual DbSet<TempPncVisitExtractErrorSummary> TempPncVisitExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMotherBabyPairExtractErrorSummary> TempMotherBabyPairExtractErrorSummary { get; set; }
+        public virtual DbSet<TempCwcEnrolmentExtractErrorSummary> TempCwcEnrolmentExtractErrorSummary { get; set; }
+        public virtual DbSet<TempCwcVisitExtractErrorSummary> TempCwcVisitExtractErrorSummary { get; set; }
+        public virtual DbSet<TempHeiExtractErrorSummary> TempHeiExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMnchLabExtractErrorSummary> TempMnchLabExtractErrorSummary { get; set; }
+        */
         #endregion
 
 
