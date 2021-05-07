@@ -4616,3 +4616,16 @@ from kenyaemr_etl.etl_otz_activity a
 7c2e4f6e-8728-11eb-8dcd-0242ac130003|Patient Pharmacy|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientPharmacyExtract|6|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 7c2e51ee-8728-11eb-8dcd-0242ac130003|Patient Visits|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientVisitExtract|7|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 7c2e52c0-8728-11eb-8dcd-0242ac130003|Patient Adverse Events|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientAdverseEventExtract|8|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
+
+
+82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempPatientMnchExtract"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651214-9db2-11eb-a8b3-0242ac130003|Mnch Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempMnchEnrolmentExtract"|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651386-9db2-11eb-a8b3-0242ac130003|Mnch Art|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempMnchArtExtract"|TempMnchArtExtract|0|MnchArtExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651494-9db2-11eb-a8b3-0242ac130003|Anc Visit|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempAncVisitExtract"|TempAncVisitExtract|0|AncVisitExtract|22|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+826515fc-9db2-11eb-a8b3-0242ac130003|Mat Visit|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempMatVisitExtract"|TempMatVisitExtract|0|MatVisitExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651750-9db2-11eb-a8b3-0242ac130003|Pnc Visit|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempPncVisitExtract"|TempPncVisitExtract|0|PncVisitExtract|24|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651886-9db2-11eb-a8b3-0242ac130003|Mother Baby Pair|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempMotherBabyPairExtract"|TempMotherBabyPairExtract|0|MotherBabyPairExtract|25|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+826519c6-9db2-11eb-a8b3-0242ac130003|Cwc Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempCwcEnrolmentExtract"|TempCwcEnrolmentExtract|0|CwcEnrolmentExtract|26|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651ade-9db2-11eb-a8b3-0242ac130003|Cwc Visit|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempCwcVisitExtract"|TempCwcVisitExtract|0|CwcVisitExtract|27|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651c00-9db2-11eb-a8b3-0242ac130003|Hei|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempHeiExtract"|TempHeiExtract|0|HeiExtract|28|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651cfa-9db2-11eb-a8b3-0242ac130003|Mnch Labs|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from TempMnchLabExtract"|TempMnchLabExtract|0|MnchLabExtract|29|a6221aa4-0e85-11e8-ba89-0ed5f89f718b

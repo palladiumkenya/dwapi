@@ -46,6 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         public string HIVTest1 { get; set; }
         public string HIV1Results { get; set; }
         public string HIVTest2 { get; set; }
+        public string HIV2Results { get; set; }
         public string HIVTestFinalResult { get; set; }
         public string OnARTANC { get; set; }
         public string BabyGivenProphylaxis { get; set; }

@@ -199,7 +199,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<HeiExtract> HeiExtracts { get; set; }
         public virtual DbSet<MnchLabExtract> MnchLabExtracts { get; set; }
 
-        /*
         public virtual DbSet<TempPatientMnchExtractError> TempPatientMnchExtractError { get; set; }
         public virtual DbSet<TempMnchEnrolmentExtractError> TempMnchEnrolmentExtractError { get; set; }
         public virtual DbSet<TempMnchArtExtractError> TempMnchArtExtractError { get; set; }
@@ -223,7 +222,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<TempCwcVisitExtractErrorSummary> TempCwcVisitExtractErrorSummary { get; set; }
         public virtual DbSet<TempHeiExtractErrorSummary> TempHeiExtractErrorSummary { get; set; }
         public virtual DbSet<TempMnchLabExtractErrorSummary> TempMnchLabExtractErrorSummary { get; set; }
-        */
+
         #endregion
 
 
@@ -370,6 +369,71 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasKey(f => new {f.SiteCode, f.PatientPK});
+
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.AncVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.CwcEnrolmentExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.CwcVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.HeiExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MatVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MnchArtExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MnchEnrolmentExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MnchLabExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MotherBabyPairExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.PncVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
             DapperPlusManager.Entity<TempPatientArtExtract>().Key(x => x.Id).Table($"{nameof(TempPatientArtExtracts)}");
             DapperPlusManager.Entity<TempPatientBaselinesExtract>().Key(x => x.Id)
@@ -456,6 +520,29 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<OtzExtract>().Key(x => x.Id).Table($"{nameof(OtzExtracts)}");
 
 
+            DapperPlusManager.Entity<TempPatientMnchExtract>().Key(x => x.Id).Table($"{nameof(TempPatientMnchExtracts)}");
+            DapperPlusManager.Entity<TempMnchEnrolmentExtract>().Key(x => x.Id).Table($"{nameof(TempMnchEnrolmentExtracts)}");
+            DapperPlusManager.Entity<TempMnchArtExtract>().Key(x => x.Id).Table($"{nameof(TempMnchArtExtracts)}");
+            DapperPlusManager.Entity<TempAncVisitExtract>().Key(x => x.Id).Table($"{nameof(TempAncVisitExtracts)}");
+            DapperPlusManager.Entity<TempMatVisitExtract>().Key(x => x.Id).Table($"{nameof(TempMatVisitExtracts)}");
+            DapperPlusManager.Entity<TempPncVisitExtract>().Key(x => x.Id).Table($"{nameof(TempPncVisitExtracts)}");
+            DapperPlusManager.Entity<TempMotherBabyPairExtract>().Key(x => x.Id).Table($"{nameof(TempMotherBabyPairExtracts)}");
+            DapperPlusManager.Entity<TempCwcEnrolmentExtract>().Key(x => x.Id).Table($"{nameof(TempCwcEnrolmentExtracts)}");
+            DapperPlusManager.Entity<TempCwcVisitExtract>().Key(x => x.Id).Table($"{nameof(TempCwcVisitExtracts)}");
+            DapperPlusManager.Entity<TempHeiExtract>().Key(x => x.Id).Table($"{nameof(TempHeiExtracts)}");
+            DapperPlusManager.Entity<TempMnchLabExtract>().Key(x => x.Id).Table($"{nameof(TempMnchLabExtracts)}");
+
+            DapperPlusManager.Entity<PatientMnchExtract>().Key(x => x.Id).Table($"{nameof(PatientMnchExtracts)}");
+            DapperPlusManager.Entity<MnchEnrolmentExtract>().Key(x => x.Id).Table($"{nameof(MnchEnrolmentExtracts)}");
+            DapperPlusManager.Entity<MnchArtExtract>().Key(x => x.Id).Table($"{nameof(MnchArtExtracts)}");
+            DapperPlusManager.Entity<AncVisitExtract>().Key(x => x.Id).Table($"{nameof(AncVisitExtracts)}");
+            DapperPlusManager.Entity<MatVisitExtract>().Key(x => x.Id).Table($"{nameof(MatVisitExtracts)}");
+            DapperPlusManager.Entity<PncVisitExtract>().Key(x => x.Id).Table($"{nameof(PncVisitExtracts)}");
+            DapperPlusManager.Entity<MotherBabyPairExtract>().Key(x => x.Id).Table($"{nameof(MotherBabyPairExtracts)}");
+            DapperPlusManager.Entity<CwcEnrolmentExtract>().Key(x => x.Id).Table($"{nameof(CwcEnrolmentExtracts)}");
+            DapperPlusManager.Entity<CwcVisitExtract>().Key(x => x.Id).Table($"{nameof(CwcVisitExtracts)}");
+            DapperPlusManager.Entity<HeiExtract>().Key(x => x.Id).Table($"{nameof(HeiExtracts)}");
+            DapperPlusManager.Entity<MnchLabExtract>().Key(x => x.Id).Table($"{nameof(MnchLabExtracts)}");
         }
 
         public override void EnsureSeeded()

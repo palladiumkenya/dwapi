@@ -44,6 +44,7 @@ namespace Dwapi.Contracts.Mnch
         string HIVTest1 { get; set; }
         string HIV1Results { get; set; }
         string HIVTest2 { get; set; }
+        string HIV2Results { get; set; }
         string HIVTestFinalResult { get; set; }
         string OnARTANC { get; set; }
         string BabyGivenProphylaxis { get; set; }

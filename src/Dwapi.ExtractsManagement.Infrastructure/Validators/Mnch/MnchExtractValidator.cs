@@ -12,7 +12,7 @@ using Serilog;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Validators.Mnch
 {
-    public class MnchExtractValidator : IMnchValidator
+    public class MnchExtractValidator : IMnchExtractValidator
     {
         private readonly IValidatorRepository _validatorRepository;
 

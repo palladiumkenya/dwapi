@@ -2,7 +2,7 @@
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch
 {
-    public interface IMnchValidator:IExtractValidator
+    public interface IMnchExtractValidator:IExtractValidator
     {
 
     }
