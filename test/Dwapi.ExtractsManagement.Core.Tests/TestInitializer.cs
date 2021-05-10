@@ -9,53 +9,64 @@ using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Cleaner.Dwh;
 using Dwapi.ExtractsManagement.Core.Cleaner.Hts;
 using Dwapi.ExtractsManagement.Core.Cleaner.Mgs;
+using Dwapi.ExtractsManagement.Core.Cleaner.Mnch;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Extractors.Cbs;
 using Dwapi.ExtractsManagement.Core.Extractors.Dwh;
 using Dwapi.ExtractsManagement.Core.Extractors.Hts;
 using Dwapi.ExtractsManagement.Core.Extractors.Mgs;
+using Dwapi.ExtractsManagement.Core.Extractors.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch;
 using Dwapi.ExtractsManagement.Core.Loader.Cbs;
 using Dwapi.ExtractsManagement.Core.Loader.Dwh;
 using Dwapi.ExtractsManagement.Core.Loader.Hts;
 using Dwapi.ExtractsManagement.Core.Loader.Mgs;
+using Dwapi.ExtractsManagement.Core.Loader.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Profiles.Hts;
 using Dwapi.ExtractsManagement.Core.Profiles.Mgs;
+using Dwapi.ExtractsManagement.Core.Profiles.Mnch;
 using Dwapi.ExtractsManagement.Core.Services;
 using Dwapi.ExtractsManagement.Core.Tests.TestArtifacts;
 using Dwapi.ExtractsManagement.Infrastructure;
@@ -63,6 +74,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Hts;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Mgs;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Mnch;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
@@ -76,10 +88,14 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Validations;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.Extracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.TempExtracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Hts;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Mgs;
+using Dwapi.ExtractsManagement.Infrastructure.Validators.Mnch;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
@@ -179,8 +195,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddTransient<IDwhExtractSourceReader, DwhExtractSourceReader>();
             services.AddTransient<IHTSExtractSourceReader, HTSExtractSourceReader>();
             services.AddTransient<IPsmartSourceReader, PsmartSourceReader>();
-            // NEW
             services.AddScoped<IMgsExtractSourceReader,MgsExtractSourceReader>();
+            // NEW
+            services.AddScoped<IMnchExtractSourceReader, MnchExtractSourceReader>();
             #endregion
 
             services.AddTransient<IEmrMetricRepository, EmrMetricRepository>();
@@ -344,12 +361,66 @@ namespace Dwapi.ExtractsManagement.Core.Tests
 
             #endregion
 
+            #region MNCH
+
+                #region Extracts
+
+            services.AddTransient<IPatientMnchExtractRepository, PatientMnchExtractRepository>();
+            services.AddTransient<IMnchEnrolmentExtractRepository, MnchEnrolmentExtractRepository>();
+            services.AddTransient<IMnchArtExtractRepository, MnchArtExtractRepository>();
+            services.AddTransient<IAncVisitExtractRepository, AncVisitExtractRepository>();
+            services.AddTransient<IMatVisitExtractRepository, MatVisitExtractRepository>();
+            services.AddTransient<IPncVisitExtractRepository, PncVisitExtractRepository>();
+            services.AddTransient<IMotherBabyPairExtractRepository, MotherBabyPairExtractRepository>();
+            services.AddTransient<ICwcEnrolmentExtractRepository, CwcEnrolmentExtractRepository>();
+            services.AddTransient<ICwcVisitExtractRepository, CwcVisitExtractRepository>();
+            services.AddTransient<IHeiExtractRepository, HeiExtractRepository>();
+            services.AddTransient<IMnchLabExtractRepository, MnchLabExtractRepository>();
+
+            #endregion
+
+            #region TempExtracts
+
+            services.AddTransient<ITempPatientMnchExtractRepository, TempPatientMnchExtractRepository>();
+            services.AddTransient<ITempMnchEnrolmentExtractRepository, TempMnchEnrolmentExtractRepository>();
+            services.AddTransient<ITempMnchArtExtractRepository, TempMnchArtExtractRepository>();
+            services.AddTransient<ITempAncVisitExtractRepository, TempAncVisitExtractRepository>();
+            services.AddTransient<ITempMatVisitExtractRepository, TempMatVisitExtractRepository>();
+            services.AddTransient<ITempPncVisitExtractRepository, TempPncVisitExtractRepository>();
+            services.AddTransient<ITempMotherBabyPairExtractRepository, TempMotherBabyPairExtractRepository>();
+            services.AddTransient<ITempCwcEnrolmentExtractRepository, TempCwcEnrolmentExtractRepository>();
+            services.AddTransient<ITempCwcVisitExtractRepository, TempCwcVisitExtractRepository>();
+            services.AddTransient<ITempHeiExtractRepository, TempHeiExtractRepository>();
+            services.AddTransient<ITempMnchLabExtractRepository, TempMnchLabExtractRepository>();
+
+            #endregion
+
+            #region Validations
+
+            services.AddTransient<ITempPatientMnchExtractErrorSummaryRepository, TempPatientMnchExtractErrorSummaryRepository>();
+            services.AddTransient<ITempMnchEnrolmentExtractErrorSummaryRepository, TempMnchEnrolmentExtractErrorSummaryRepository>();
+            services.AddTransient<ITempMnchArtExtractErrorSummaryRepository, TempMnchArtExtractErrorSummaryRepository>();
+            services.AddTransient<ITempAncVisitExtractErrorSummaryRepository, TempAncVisitExtractErrorSummaryRepository>();
+            services.AddTransient<ITempMatVisitExtractErrorSummaryRepository, TempMatVisitExtractErrorSummaryRepository>();
+            services.AddTransient<ITempPncVisitExtractErrorSummaryRepository, TempPncVisitExtractErrorSummaryRepository>();
+            services.AddTransient<ITempMotherBabyPairExtractErrorSummaryRepository, TempMotherBabyPairExtractErrorSummaryRepository>();
+            services.AddTransient<ITempCwcEnrolmentExtractErrorSummaryRepository, TempCwcEnrolmentExtractErrorSummaryRepository>();
+            services.AddTransient<ITempCwcVisitExtractErrorSummaryRepository, TempCwcVisitExtractErrorSummaryRepository>();
+            services.AddTransient<ITempHeiExtractErrorSummaryRepository, TempHeiExtractErrorSummaryRepository>();
+            services.AddTransient<ITempMnchLabExtractErrorSummaryRepository, TempMnchLabExtractErrorSummaryRepository>();
+
+
+            #endregion
+
+            #endregion
+
             #region Validators
             services.AddTransient<IMasterPatientIndexValidator, MasterPatientIndexValidator>();
             services.AddTransient<IExtractValidator, ExtractValidator>();
             services.AddTransient<IHtsExtractValidator, HtsExtractValidator>();
             // NEW
             services.AddScoped<IMetricExtractValidator,MetricExtractValidator>();
+            services.AddScoped<IMnchExtractValidator, MnchExtractValidator>();
             #endregion
 
             #endregion
@@ -360,6 +431,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddScoped<IClearDwhExtracts, ClearDwhExtracts>();
             services.AddScoped<IClearHtsExtracts, ClearHtsExtracts>();
             services.AddScoped<IClearMgsExtracts, ClearMgsExtracts>();
+            //NEW
+            services.AddScoped<IClearMnchExtracts, ClearMnchExtracts>();
 
             #endregion
             #region Extractors
@@ -394,6 +467,20 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddScoped<IIptSourceExtractor, IptSourceExtractor>();
             services.AddScoped<IOtzSourceExtractor, OtzSourceExtractor>();
             services.AddScoped<IOvcSourceExtractor, OvcSourceExtractor>();
+
+            //NEW
+            services.AddScoped<IPatientMnchSourceExtractor, PatientMnchSourceExtractor>();
+            services.AddScoped<IMnchEnrolmentSourceExtractor, MnchEnrolmentSourceExtractor>();
+            services.AddScoped<IMnchArtSourceExtractor, MnchArtSourceExtractor>();
+            services.AddScoped<IAncVisitSourceExtractor, AncVisitSourceExtractor>();
+            services.AddScoped<IMatVisitSourceExtractor, MatVisitSourceExtractor>();
+            services.AddScoped<IPncVisitSourceExtractor, PncVisitSourceExtractor>();
+            services.AddScoped<IMotherBabyPairSourceExtractor, MotherBabyPairSourceExtractor>();
+            services.AddScoped<ICwcEnrolmentSourceExtractor, CwcEnrolmentSourceExtractor>();
+            services.AddScoped<ICwcVisitSourceExtractor, CwcVisitSourceExtractor>();
+            services.AddScoped<IHeiSourceExtractor, HeiSourceExtractor>();
+            services.AddScoped<IMnchLabSourceExtractor, MnchLabSourceExtractor>();
+
             #endregion
 
             #region Loaders
@@ -429,6 +516,18 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddScoped<IOtzLoader, OtzLoader>();
             services.AddScoped<IOvcLoader, OvcLoader>();
 
+            //NEW
+            services.AddScoped<IPatientMnchLoader, PatientMnchLoader>();
+            services.AddScoped<IMnchEnrolmentLoader, MnchEnrolmentLoader>();
+            services.AddScoped<IMnchArtLoader, MnchArtLoader>();
+            services.AddScoped<IAncVisitLoader, AncVisitLoader>();
+            services.AddScoped<IMatVisitLoader, MatVisitLoader>();
+            services.AddScoped<IPncVisitLoader, PncVisitLoader>();
+            services.AddScoped<IMotherBabyPairLoader, MotherBabyPairLoader>();
+            services.AddScoped<ICwcEnrolmentLoader, CwcEnrolmentLoader>();
+            services.AddScoped<ICwcVisitLoader, CwcVisitLoader>();
+            services.AddScoped<IHeiLoader, HeiLoader>();
+            services.AddScoped<IMnchLabLoader, MnchLabLoader>();
             #endregion
             #region Services
             services.AddScoped<ICbsSendService, CbsSendService>();
@@ -450,12 +549,13 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
               Mapper.Initialize(cfg =>
                             {
                                 cfg.AddDataReaderMapping();
-                                cfg.AddProfile<TempExtractProfile>();
+                                cfg.AddProfile<DiffCtExtractProfile>();
                                 cfg.AddProfile<TempMasterPatientIndexProfile>();
                                 cfg.AddProfile<EmrProfiles>();
                                 cfg.AddProfile<TempHtsExtractProfile>();
                                 cfg.AddProfile<MasterPatientIndexProfile>();
                                 cfg.AddProfile<TempMetricExtractProfile>();
+                                cfg.AddProfile<DiffMnchExtractProfile>();
                             }
                         );
 
@@ -472,6 +572,8 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.PatientExtracts)}");
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempHtsClientsExtracts)}");
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempPatientMnchExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.PatientMnchExtracts)}");
         }
 
         public static void ClearDiffDb()
@@ -498,6 +600,8 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.PatientExtracts)}");
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempHtsClientsExtracts)}");
             econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.HtsClientsExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.TempPatientMnchExtracts)}");
+            econtext.Database.GetDbConnection().Execute($"DELETE FROM {nameof(ExtractsContext.PatientMnchExtracts)}");
         }
 
         public static void SeedData(params IEnumerable<object>[] entities)
@@ -628,6 +732,22 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         public static void LoadMgs()
         {
             LoadData(ServiceProvider.GetService<IMetricMigrationLoader>(), ServiceProvider.GetService<IMetricMigrationSourceExtractor>(), nameof(MetricMigrationExtract));
+        }
+
+          public static void LoadMnch()
+        {
+            LoadData(ServiceProvider.GetService<IPatientMnchLoader>(), ServiceProvider.GetService<IPatientMnchSourceExtractor>(), nameof(PatientMnchExtract));
+
+            LoadData(ServiceProvider.GetService<IMnchEnrolmentLoader>(), ServiceProvider.GetService<IMnchEnrolmentSourceExtractor>(), nameof(MnchEnrolmentExtract));
+            LoadData(ServiceProvider.GetService<IMnchArtLoader>(), ServiceProvider.GetService<IMnchArtSourceExtractor>(), nameof(MnchArtExtract));
+            LoadData(ServiceProvider.GetService<IAncVisitLoader>(), ServiceProvider.GetService<IAncVisitSourceExtractor>(), nameof(AncVisitExtract));
+            LoadData(ServiceProvider.GetService<IMatVisitLoader>(), ServiceProvider.GetService<IMatVisitSourceExtractor>(), nameof(MatVisitExtract));
+            LoadData(ServiceProvider.GetService<IPncVisitLoader>(), ServiceProvider.GetService<IPncVisitSourceExtractor>(), nameof(PncVisitExtract));
+            LoadData(ServiceProvider.GetService<IMotherBabyPairLoader>(), ServiceProvider.GetService<IMotherBabyPairSourceExtractor>(), nameof(MotherBabyPairExtract));
+            LoadData(ServiceProvider.GetService<ICwcEnrolmentLoader>(), ServiceProvider.GetService<ICwcEnrolmentSourceExtractor>(), nameof(CwcEnrolmentExtract));
+            LoadData(ServiceProvider.GetService<ICwcVisitLoader>(), ServiceProvider.GetService<ICwcVisitSourceExtractor>(), nameof(CwcVisitExtract));
+            LoadData(ServiceProvider.GetService<IHeiLoader>(), ServiceProvider.GetService<IHeiSourceExtractor>(), nameof(HeiExtract));
+            LoadData(ServiceProvider.GetService<IMnchLabLoader>(), ServiceProvider.GetService<IMnchLabSourceExtractor>(), nameof(MnchLabExtract));
         }
 
         private static void LoadData<TM, T>(ILoader<TM> loader, ISourceExtractor<T> extractor, string extractName) where TM : class

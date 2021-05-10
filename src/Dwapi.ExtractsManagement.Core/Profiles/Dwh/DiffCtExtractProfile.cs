@@ -6,9 +6,9 @@ using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
 {
-    public class TempExtractProfile : Profile
+    public class DiffCtExtractProfile : Profile
     {
-        public TempExtractProfile()
+        public DiffCtExtractProfile()
         {
             #region CT
    //Patient Extract

@@ -6,6 +6,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Cleaner.Mnch
 {
     public interface IClearMnchExtracts
     {
-        Task Clear(List<Guid> extractIds);
+        Task<int> Clear(List<Guid> extractIds);
     }
 }

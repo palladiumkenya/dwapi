@@ -53,10 +53,13 @@ using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -100,8 +103,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
             EmrDiffConnectionString = GenerateConnection(config, "emrDiffConnection", false);
-            ConnectionString = GenerateConnection(config, "dwapiConnection", false);
-            DiffConnectionString = GenerateConnection(config, "dwapiDiffConnection", false);
+            ConnectionString = GenerateConnection(config, "dwapiConnection", true);
+            DiffConnectionString = GenerateConnection(config, "dwapiDiffConnection", true);
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
@@ -404,8 +407,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
         public static void ClearDb()
         {
-            var econtext = ServiceProvider.GetService<ExtractsContext>();
-            econtext.EnsureSeeded();
+            NewDb();
+            ServiceProvider.GetService<ExtractsContext>().EnsureSeeded();
         }
 
         public static void ClearDiffDb()
@@ -423,8 +426,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
             ServiceProvider = AllServices.BuildServiceProvider();
 
-            var econtext = ServiceProvider.GetService<ExtractsContext>();
-            econtext.EnsureSeeded();
+            NewDb();
+            ServiceProvider.GetService<ExtractsContext>().EnsureSeeded();
+        }
+
+        public static void NewDb()
+        {
+            CreateDb(ServiceProvider.GetService<SettingsContext>(), true);
+            CreateDb(ServiceProvider.GetService<ExtractsContext>());
         }
 
         public static void SeedData(params IEnumerable<object>[] entities)
@@ -456,6 +465,33 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             }
 
             context.SaveChanges();
+        }
+
+        private static void CreateDb(BaseContext context, bool seed = false)
+        {
+            try
+            {
+                var databaseCreator = (RelationalDatabaseCreator) context.Database.GetService<IDatabaseCreator>();
+                databaseCreator.CreateTables();
+                if (context is ExtractsContext)
+                {
+                    context.Database.ExecuteSqlCommand(@"
+                        CREATE VIEW vMasterPatientIndicesJaro
+                        AS
+                        SELECT 
+	                        *,0 AS [JaroWinklerScore]
+                        FROM   
+	                        [MasterPatientIndices]
+                        ");
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Debug("Tables already Exist");
+            }
+
+            if (seed)
+                context.EnsureSeeded();
         }
 
         private void RegisterLicence()

@@ -485,7 +485,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             Mapper.Initialize(cfg =>
                 {
                     cfg.AddDataReaderMapping();
-                    cfg.AddProfile<TempExtractProfile>();
+                    cfg.AddProfile<DiffCtExtractProfile>();
                     cfg.AddProfile<TempMasterPatientIndexProfile>();
                     cfg.AddProfile<EmrProfiles>();
                     cfg.AddProfile<TempHtsExtractProfile>();

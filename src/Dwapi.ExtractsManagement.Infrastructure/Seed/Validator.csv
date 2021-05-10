@@ -110,3 +110,26 @@ aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEven
 7266ee45-7a96-11eb-9439-0242ac130002|TempOtzExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 7266ee46-7a96-11eb-9439-0242ac130002|TempOvcExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 7266ee47-7a96-11eb-9439-0242ac130002|TempOvcExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+
+82652c40-9db2-11eb-a8b3-0242ac130003|TempPatientMnchExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+82651dea-9db2-11eb-a8b3-0242ac130003|TempPatientMnchExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+82652fec-9db2-11eb-a8b3-0242ac130003|TempAncVisitExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+8265213c-9db2-11eb-a8b3-0242ac130003|TempAncVisitExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+8265347e-9db2-11eb-a8b3-0242ac130003|TempCwcEnrolmentExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+8265256a-9db2-11eb-a8b3-0242ac130003|TempCwcEnrolmentExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+8265358c-9db2-11eb-a8b3-0242ac130003|TempCwcVisitExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+826528b2-9db2-11eb-a8b3-0242ac130003|TempCwcVisitExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+826536b8-9db2-11eb-a8b3-0242ac130003|TempHeiExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+826529f2-9db2-11eb-a8b3-0242ac130003|TempHeiExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+82653122-9db2-11eb-a8b3-0242ac130003|TempMatVisitExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+82652272-9db2-11eb-a8b3-0242ac130003|TempMatVisitExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+82652ede-9db2-11eb-a8b3-0242ac130003|TempMnchArtExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+8265201a-9db2-11eb-a8b3-0242ac130003|TempMnchArtExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+82652d9e-9db2-11eb-a8b3-0242ac130003|TempMnchEnrolmentExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+82651f02-9db2-11eb-a8b3-0242ac130003|TempMnchEnrolmentExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+826537bc-9db2-11eb-a8b3-0242ac130003|TempMnchLabExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+82652b32-9db2-11eb-a8b3-0242ac130003|TempMnchLabExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+82653366-9db2-11eb-a8b3-0242ac130003|TempMotherBabyPairExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+82652470-9db2-11eb-a8b3-0242ac130003|TempMotherBabyPairExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+8265326c-9db2-11eb-a8b3-0242ac130003|TempPncVisitExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+82652358-9db2-11eb-a8b3-0242ac130003|TempPncVisitExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
