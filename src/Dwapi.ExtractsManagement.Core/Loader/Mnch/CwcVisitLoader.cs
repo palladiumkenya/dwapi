@@ -21,13 +21,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 {
     public class CwcVisitLoader : ICwcVisitLoader
     {
-        private readonly ICwcVisitExtractRepository _CwcVisitExtractRepository;
+        private readonly ICwcVisitExtractRepository _cwcVisitExtractRepository;
         private readonly ITempCwcVisitExtractRepository _tempCwcVisitExtractRepository;
         private readonly IMediator _mediator;
 
-        public CwcVisitLoader(ICwcVisitExtractRepository CwcVisitExtractRepository, ITempCwcVisitExtractRepository tempCwcVisitExtractRepository, IMediator mediator)
+        public CwcVisitLoader(ICwcVisitExtractRepository cwcVisitExtractRepository, ITempCwcVisitExtractRepository tempCwcVisitExtractRepository, IMediator mediator)
         {
-            _CwcVisitExtractRepository = CwcVisitExtractRepository;
+            _cwcVisitExtractRepository = cwcVisitExtractRepository;
             _tempCwcVisitExtractRepository = tempCwcVisitExtractRepository;
             _mediator = mediator;
         }
@@ -71,7 +71,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                         record.Id = LiveGuid.NewGuid();
                     }
                     //Batch Insert
-                    var inserted = _CwcVisitExtractRepository.BatchInsert(extractRecords);
+                    var inserted = _cwcVisitExtractRepository.BatchInsert(extractRecords);
                     if (!inserted)
                     {
                         Log.Error($"Extract {nameof(CwcVisitExtract)} not Loaded");

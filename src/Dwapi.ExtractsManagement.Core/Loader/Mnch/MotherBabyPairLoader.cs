@@ -21,13 +21,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 {
     public class MotherBabyPairLoader : IMotherBabyPairLoader
     {
-        private readonly IMotherBabyPairExtractRepository _MotherBabyPairExtractRepository;
+        private readonly IMotherBabyPairExtractRepository _motherBabyPairExtractRepository;
         private readonly ITempMotherBabyPairExtractRepository _tempMotherBabyPairExtractRepository;
         private readonly IMediator _mediator;
 
-        public MotherBabyPairLoader(IMotherBabyPairExtractRepository MotherBabyPairExtractRepository, ITempMotherBabyPairExtractRepository tempMotherBabyPairExtractRepository, IMediator mediator)
+        public MotherBabyPairLoader(IMotherBabyPairExtractRepository motherBabyPairExtractRepository, ITempMotherBabyPairExtractRepository tempMotherBabyPairExtractRepository, IMediator mediator)
         {
-            _MotherBabyPairExtractRepository = MotherBabyPairExtractRepository;
+            _motherBabyPairExtractRepository = motherBabyPairExtractRepository;
             _tempMotherBabyPairExtractRepository = tempMotherBabyPairExtractRepository;
             _mediator = mediator;
         }
@@ -71,7 +71,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                         record.Id = LiveGuid.NewGuid();
                     }
                     //Batch Insert
-                    var inserted = _MotherBabyPairExtractRepository.BatchInsert(extractRecords);
+                    var inserted = _motherBabyPairExtractRepository.BatchInsert(extractRecords);
                     if (!inserted)
                     {
                         Log.Error($"Extract {nameof(MotherBabyPairExtract)} not Loaded");

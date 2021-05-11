@@ -21,13 +21,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 {
     public class MnchArtLoader : IMnchArtLoader
     {
-        private readonly IMnchArtExtractRepository _MnchArtExtractRepository;
+        private readonly IMnchArtExtractRepository _mnchArtExtractRepository;
         private readonly ITempMnchArtExtractRepository _tempMnchArtExtractRepository;
         private readonly IMediator _mediator;
 
-        public MnchArtLoader(IMnchArtExtractRepository MnchArtExtractRepository, ITempMnchArtExtractRepository tempMnchArtExtractRepository, IMediator mediator)
+        public MnchArtLoader(IMnchArtExtractRepository mnchArtExtractRepository, ITempMnchArtExtractRepository tempMnchArtExtractRepository, IMediator mediator)
         {
-            _MnchArtExtractRepository = MnchArtExtractRepository;
+            _mnchArtExtractRepository = mnchArtExtractRepository;
             _tempMnchArtExtractRepository = tempMnchArtExtractRepository;
             _mediator = mediator;
         }
@@ -71,7 +71,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                         record.Id = LiveGuid.NewGuid();
                     }
                     //Batch Insert
-                    var inserted = _MnchArtExtractRepository.BatchInsert(extractRecords);
+                    var inserted = _mnchArtExtractRepository.BatchInsert(extractRecords);
                     if (!inserted)
                     {
                         Log.Error($"Extract {nameof(MnchArtExtract)} not Loaded");

@@ -21,13 +21,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 {
     public class MnchEnrolmentLoader : IMnchEnrolmentLoader
     {
-        private readonly IMnchEnrolmentExtractRepository _MnchEnrolmentExtractRepository;
+        private readonly IMnchEnrolmentExtractRepository _mnchEnrolmentExtractRepository;
         private readonly ITempMnchEnrolmentExtractRepository _tempMnchEnrolmentExtractRepository;
         private readonly IMediator _mediator;
 
-        public MnchEnrolmentLoader(IMnchEnrolmentExtractRepository MnchEnrolmentExtractRepository, ITempMnchEnrolmentExtractRepository tempMnchEnrolmentExtractRepository, IMediator mediator)
+        public MnchEnrolmentLoader(IMnchEnrolmentExtractRepository mnchEnrolmentExtractRepository, ITempMnchEnrolmentExtractRepository tempMnchEnrolmentExtractRepository, IMediator mediator)
         {
-            _MnchEnrolmentExtractRepository = MnchEnrolmentExtractRepository;
+            _mnchEnrolmentExtractRepository = mnchEnrolmentExtractRepository;
             _tempMnchEnrolmentExtractRepository = tempMnchEnrolmentExtractRepository;
             _mediator = mediator;
         }
@@ -71,7 +71,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                         record.Id = LiveGuid.NewGuid();
                     }
                     //Batch Insert
-                    var inserted = _MnchEnrolmentExtractRepository.BatchInsert(extractRecords);
+                    var inserted = _mnchEnrolmentExtractRepository.BatchInsert(extractRecords);
                     if (!inserted)
                     {
                         Log.Error($"Extract {nameof(MnchEnrolmentExtract)} not Loaded");

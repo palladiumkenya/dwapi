@@ -21,13 +21,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 {
     public class PncVisitLoader : IPncVisitLoader
     {
-        private readonly IPncVisitExtractRepository _PncVisitExtractRepository;
+        private readonly IPncVisitExtractRepository _pncVisitExtractRepository;
         private readonly ITempPncVisitExtractRepository _tempPncVisitExtractRepository;
         private readonly IMediator _mediator;
 
-        public PncVisitLoader(IPncVisitExtractRepository PncVisitExtractRepository, ITempPncVisitExtractRepository tempPncVisitExtractRepository, IMediator mediator)
+        public PncVisitLoader(IPncVisitExtractRepository pncVisitExtractRepository, ITempPncVisitExtractRepository tempPncVisitExtractRepository, IMediator mediator)
         {
-            _PncVisitExtractRepository = PncVisitExtractRepository;
+            _pncVisitExtractRepository = pncVisitExtractRepository;
             _tempPncVisitExtractRepository = tempPncVisitExtractRepository;
             _mediator = mediator;
         }
@@ -71,7 +71,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                         record.Id = LiveGuid.NewGuid();
                     }
                     //Batch Insert
-                    var inserted = _PncVisitExtractRepository.BatchInsert(extractRecords);
+                    var inserted = _pncVisitExtractRepository.BatchInsert(extractRecords);
                     if (!inserted)
                     {
                         Log.Error($"Extract {nameof(PncVisitExtract)} not Loaded");

@@ -24,7 +24,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Mnch
             TestInitializer.ClearDb();
             TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
             _extracts = TestInitializer.Extracts.Where(x => x.DocketId.IsSameAs("MNCH")).ToList();
-            //TestInitializer.LoadCt();
+            TestInitializer.LoadMnch();
         }
 
         [SetUp]

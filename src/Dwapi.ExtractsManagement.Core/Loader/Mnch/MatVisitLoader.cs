@@ -21,13 +21,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 {
     public class MatVisitLoader : IMatVisitLoader
     {
-        private readonly IMatVisitExtractRepository _MatVisitExtractRepository;
+        private readonly IMatVisitExtractRepository _matVisitExtractRepository;
         private readonly ITempMatVisitExtractRepository _tempMatVisitExtractRepository;
         private readonly IMediator _mediator;
 
-        public MatVisitLoader(IMatVisitExtractRepository MatVisitExtractRepository, ITempMatVisitExtractRepository tempMatVisitExtractRepository, IMediator mediator)
+        public MatVisitLoader(IMatVisitExtractRepository matVisitExtractRepository, ITempMatVisitExtractRepository tempMatVisitExtractRepository, IMediator mediator)
         {
-            _MatVisitExtractRepository = MatVisitExtractRepository;
+            _matVisitExtractRepository = matVisitExtractRepository;
             _tempMatVisitExtractRepository = tempMatVisitExtractRepository;
             _mediator = mediator;
         }
@@ -71,7 +71,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                         record.Id = LiveGuid.NewGuid();
                     }
                     //Batch Insert
-                    var inserted = _MatVisitExtractRepository.BatchInsert(extractRecords);
+                    var inserted = _matVisitExtractRepository.BatchInsert(extractRecords);
                     if (!inserted)
                     {
                         Log.Error($"Extract {nameof(MatVisitExtract)} not Loaded");

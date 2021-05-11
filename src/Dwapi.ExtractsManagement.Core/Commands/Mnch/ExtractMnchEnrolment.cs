@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.Commands.Mnch
 {
-    public class ExtractMcnhEnrolment : IRequest<bool>
+    public class ExtractMnchEnrolment : IRequest<bool>
     {
         public DbExtract Extract { get; set; }
         public DbProtocol DatabaseProtocol { get; set; }

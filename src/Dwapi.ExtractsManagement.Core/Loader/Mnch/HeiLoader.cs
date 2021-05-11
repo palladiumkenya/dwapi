@@ -21,13 +21,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 {
     public class HeiLoader : IHeiLoader
     {
-        private readonly IHeiExtractRepository _HeiExtractRepository;
+        private readonly IHeiExtractRepository _heiExtractRepository;
         private readonly ITempHeiExtractRepository _tempHeiExtractRepository;
         private readonly IMediator _mediator;
 
-        public HeiLoader(IHeiExtractRepository HeiExtractRepository, ITempHeiExtractRepository tempHeiExtractRepository, IMediator mediator)
+        public HeiLoader(IHeiExtractRepository heiExtractRepository, ITempHeiExtractRepository tempHeiExtractRepository, IMediator mediator)
         {
-            _HeiExtractRepository = HeiExtractRepository;
+            _heiExtractRepository = heiExtractRepository;
             _tempHeiExtractRepository = tempHeiExtractRepository;
             _mediator = mediator;
         }
@@ -71,7 +71,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                         record.Id = LiveGuid.NewGuid();
                     }
                     //Batch Insert
-                    var inserted = _HeiExtractRepository.BatchInsert(extractRecords);
+                    var inserted = _heiExtractRepository.BatchInsert(extractRecords);
                     if (!inserted)
                     {
                         Log.Error($"Extract {nameof(HeiExtract)} not Loaded");
