@@ -47,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 
                 StringBuilder query = new StringBuilder();
                 query.Append($" SELECT s.* FROM {nameof(TempAncVisitExtract)}s s");
-                query.Append($" INNER JOIN PatientExtracts p ON ");
+                query.Append($" INNER JOIN PatientMnchExtracts p ON ");
                 query.Append($" s.PatientPK = p.PatientPK AND ");
                 query.Append($" s.SiteCode = p.SiteCode ");
 
@@ -86,7 +86,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(AncVisitExtract)));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(AncVisitExtract)));
 
                 return count;
             }

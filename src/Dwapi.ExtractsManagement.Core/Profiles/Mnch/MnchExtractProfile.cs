@@ -13,6 +13,12 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
         public MnchExtractProfile()
         {
      CreateMap<IDataRecord, TempPatientMnchExtract>()
+         .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+         .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+         .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+         .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+         .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
                      .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.FacilityName))))
                      .ForMember(x => x.Pkv, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Pkv))))
                      .ForMember(x => x.PatientMnchID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.PatientMnchID))))
@@ -31,6 +37,13 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
 
 
                  CreateMap<IDataRecord, TempMnchEnrolmentExtract>()
+
+                     .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+                     .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+                     .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+                     .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+                     .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
                      .ForMember(x => x.PatientMnchID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchEnrolmentExtract.PatientMnchID))))
                      .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchEnrolmentExtract.FacilityName))))
                      .ForMember(x => x.ServiceType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchEnrolmentExtract.ServiceType))))
@@ -50,6 +63,13 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
 
 
                  CreateMap<IDataRecord, TempMnchArtExtract>().ForMember(x => x.Pkv, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchArtExtract.Pkv))))
+
+                     .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+                     .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+                     .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+                     .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+                     .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
                      .ForMember(x => x.PatientMnchID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchArtExtract.PatientMnchID))))
                      .ForMember(x => x.PatientHeiID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchArtExtract.PatientHeiID))))
                      .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchArtExtract.FacilityName))))
@@ -65,6 +85,13 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
 
 
                  CreateMap<IDataRecord, TempAncVisitExtract>()
+
+                     .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+                     .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+                     .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+                     .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+                     .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
      .ForMember(x => x.PatientMnchID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.PatientMnchID))))
      .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.FacilityName))))
      .ForMember(x => x.VisitID, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempAncVisitExtract.VisitID))))
@@ -130,6 +157,13 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
 
 
                  CreateMap<IDataRecord, TempMatVisitExtract>()
+
+                     .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+                     .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+                     .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+                     .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+                     .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
                      .ForMember(x => x.PatientMnchID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMatVisitExtract.PatientMnchID))))
      .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMatVisitExtract.FacilityName))))
      .ForMember(x => x.VisitID, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMatVisitExtract.VisitID))))
@@ -184,6 +218,12 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
 
 
                  CreateMap<IDataRecord, TempPncVisitExtract>()
+                     .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+                     .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+                     .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+                     .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+                     .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
                      .ForMember(x => x.PatientMnchID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPncVisitExtract.PatientMnchID))))
      .ForMember(x => x.VisitID, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPncVisitExtract.VisitID))))
      .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPncVisitExtract.VisitDate))))
@@ -245,6 +285,13 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
 
 
                  CreateMap<IDataRecord, TempMotherBabyPairExtract>()
+                     .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+                     .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+                     .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+                     .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+                     .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
+
                      .ForMember(x => x.BabyPatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMotherBabyPairExtract.BabyPatientPK))))
                      .ForMember(x => x.MotherPatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMotherBabyPairExtract.MotherPatientPK))))
                      .ForMember(x => x.BabyPatientMncHeiID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMotherBabyPairExtract.BabyPatientMncHeiID))))
@@ -254,6 +301,13 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
 
 
                  CreateMap<IDataRecord, TempCwcEnrolmentExtract>()
+
+                     .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+                     .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+                     .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+                     .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+                     .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
                      .ForMember(x => x.Pkv, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcEnrolmentExtract.Pkv))))
      .ForMember(x => x.PatientIDCWC, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcEnrolmentExtract.PatientIDCWC))))
      .ForMember(x => x.HEIID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcEnrolmentExtract.HEIID))))
@@ -288,6 +342,12 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
 
 
                  CreateMap<IDataRecord, TempCwcVisitExtract>()
+                     .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+                     .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+                     .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+                     .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+                     .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
                      .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcVisitExtract.FacilityName))))
      .ForMember(x => x.PatientMnchID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcVisitExtract.PatientMnchID))))
      .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempCwcVisitExtract.VisitDate))))
@@ -321,6 +381,12 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
 
 
                  CreateMap<IDataRecord, TempHeiExtract>()
+                     .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+                     .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+                     .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+                     .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+                     .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
                      .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.FacilityName))))
                      .ForMember(x => x.PatientMnchID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.PatientMnchID))))
                      .ForMember(x => x.DNAPCR1Date, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.DNAPCR1Date))))
@@ -341,6 +407,13 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
 
 
                  CreateMap<IDataRecord, TempMnchLabExtract>()
+
+                     .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.PatientPK))))
+                     .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.SiteCode))))
+                     .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.FacilityId))))
+                     .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Project))))
+                     .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.Emr))))
+
                      .ForMember(x => x.PatientMNCH_ID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchLabExtract.PatientMNCH_ID))))
                      .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchLabExtract.FacilityName))))
                      .ForMember(x => x.SatelliteName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchLabExtract.SatelliteName))))
