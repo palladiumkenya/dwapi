@@ -6,6 +6,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mnch;
 using Dwapi.ExtractsManagement.Core.Notifications;
@@ -19,11 +20,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
     public class ExtractHeiHandler :IRequestHandler<ExtractHei,bool>
     {
         private readonly IHeiSourceExtractor _heiSourceExtractor;
-        private readonly IExtractValidator _extractValidator;
+        private readonly IMnchExtractValidator _extractValidator;
         private readonly IHeiLoader _heiLoader;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractHeiHandler(IHeiSourceExtractor heiSourceExtractor, IExtractValidator extractValidator, IHeiLoader heiLoader, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractHeiHandler(IHeiSourceExtractor heiSourceExtractor, IMnchExtractValidator extractValidator, IHeiLoader heiLoader, IExtractHistoryRepository extractHistoryRepository)
         {
             _heiSourceExtractor = heiSourceExtractor;
             _extractValidator = extractValidator;
@@ -50,7 +51,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
 
             //notify loaded
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(request.Extract.Id, new DwhProgress(
+                new MnchExtractActivityNotification(request.Extract.Id, new DwhProgress(
                     nameof(HeiExtract),
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));

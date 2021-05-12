@@ -38,7 +38,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
             try
             {
                 DomainEvents.Dispatch(
-                    new ExtractActivityNotification(extractId, new DwhProgress(
+                    new MnchExtractActivityNotification(extractId, new DwhProgress(
                         nameof(PatientMnchExtract),
                         nameof(ExtractStatus.Loading),
                         found, 0, 0, 0, 0)));
@@ -71,13 +71,13 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                     Log.Debug("saved batch");
                     page++;
                     DomainEvents.Dispatch(
-                        new ExtractActivityNotification(extractId, new DwhProgress(
+                        new MnchExtractActivityNotification(extractId, new DwhProgress(
                             nameof(PatientMnchExtract),
                             nameof(ExtractStatus.Loading),
                             found, count, 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(PatientMnchExtract)));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(PatientMnchExtract)));
 
                 return count;
             }

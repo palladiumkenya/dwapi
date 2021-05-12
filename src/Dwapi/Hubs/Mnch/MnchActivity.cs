@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Dwapi.Hubs.Mnch
 {
-    public class MnchExtractActivity : Hub
+    public class MnchActivity : Hub
     {
         public async Task ShowProgress(MnchExtractActivityNotification extractActivityNotification)
         {

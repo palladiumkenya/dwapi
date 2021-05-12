@@ -6,6 +6,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mnch;
 using Dwapi.ExtractsManagement.Core.Notifications;
@@ -19,11 +20,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
     public class ExtractMatVisitHandler :IRequestHandler<ExtractMatVisit,bool>
     {
         private readonly IMatVisitSourceExtractor _matVisitSourceExtractor;
-        private readonly IExtractValidator _extractValidator;
+        private readonly IMnchExtractValidator _extractValidator;
         private readonly IMatVisitLoader _matVisitLoader;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractMatVisitHandler(IMatVisitSourceExtractor matVisitSourceExtractor, IExtractValidator extractValidator, IMatVisitLoader matVisitLoader, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractMatVisitHandler(IMatVisitSourceExtractor matVisitSourceExtractor, IMnchExtractValidator extractValidator, IMatVisitLoader matVisitLoader, IExtractHistoryRepository extractHistoryRepository)
         {
             _matVisitSourceExtractor = matVisitSourceExtractor;
             _extractValidator = extractValidator;
@@ -50,7 +51,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
 
             //notify loaded
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(request.Extract.Id, new DwhProgress(
+                new MnchExtractActivityNotification(request.Extract.Id, new DwhProgress(
                     nameof(MatVisitExtract),
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));

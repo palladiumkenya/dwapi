@@ -10,6 +10,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mnch;
 using Dwapi.ExtractsManagement.Core.Notifications;
@@ -23,12 +24,12 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
     public class ExtractPatientMnchHandler :IRequestHandler<ExtractPatientMnch,bool>
     {
         private readonly IPatientMnchSourceExtractor _patientSourceExtractor;
-        private readonly IExtractValidator _extractValidator;
+        private readonly IMnchExtractValidator _extractValidator;
         private readonly IPatientMnchLoader _patientLoader;
         private readonly ITempPatientMnchExtractRepository _tempPatientMnchExtractRepository;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractPatientMnchHandler(IPatientMnchSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientMnchLoader patientLoader, ITempPatientMnchExtractRepository tempPatientMnchExtractRepository, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractPatientMnchHandler(IPatientMnchSourceExtractor patientSourceExtractor, IMnchExtractValidator extractValidator, IPatientMnchLoader patientLoader, ITempPatientMnchExtractRepository tempPatientMnchExtractRepository, IExtractHistoryRepository extractHistoryRepository)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
@@ -56,7 +57,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
             if (duplicates.Any())
             {
                 var readDuplicates = string.Join(", ", duplicates.ToArray());
-                throw new DuplicatePatientMnchException($"Duplicate patient(s) with PatientMnchPK(s) {readDuplicates} found");
+                throw new DuplicatePatientMnchException($"Duplicate patient(s) with PatientPK(s) {readDuplicates} found");
             }
 
             //Validate
@@ -74,7 +75,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
 
             //notify loaded
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(request.Extract.Id, new DwhProgress(
+                new MnchExtractActivityNotification(request.Extract.Id, new DwhProgress(
                     nameof(PatientMnchExtract),
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));

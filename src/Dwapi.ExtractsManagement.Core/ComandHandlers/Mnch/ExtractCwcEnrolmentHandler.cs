@@ -6,6 +6,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mnch;
 using Dwapi.ExtractsManagement.Core.Notifications;
@@ -19,11 +20,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
     public class ExtractCwcEnrolmentHandler :IRequestHandler<ExtractCwcEnrolment,bool>
     {
         private readonly ICwcEnrolmentSourceExtractor _cwcEnrolmentSourceExtractor;
-        private readonly IExtractValidator _extractValidator;
+        private readonly IMnchExtractValidator _extractValidator;
         private readonly ICwcEnrolmentLoader _cwcEnrolmentLoader;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractCwcEnrolmentHandler(ICwcEnrolmentSourceExtractor cwcEnrolmentSourceExtractor, IExtractValidator extractValidator, ICwcEnrolmentLoader cwcEnrolmentLoader, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractCwcEnrolmentHandler(ICwcEnrolmentSourceExtractor cwcEnrolmentSourceExtractor, IMnchExtractValidator extractValidator, ICwcEnrolmentLoader cwcEnrolmentLoader, IExtractHistoryRepository extractHistoryRepository)
         {
             _cwcEnrolmentSourceExtractor = cwcEnrolmentSourceExtractor;
             _extractValidator = extractValidator;
@@ -50,7 +51,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
 
             //notify loaded
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(request.Extract.Id, new DwhProgress(
+                new MnchExtractActivityNotification(request.Extract.Id, new DwhProgress(
                     nameof(CwcEnrolmentExtract),
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));

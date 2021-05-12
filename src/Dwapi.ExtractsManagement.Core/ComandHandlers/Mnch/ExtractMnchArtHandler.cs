@@ -6,6 +6,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mnch;
 using Dwapi.ExtractsManagement.Core.Notifications;
@@ -19,11 +20,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
     public class ExtractMnchArtHandler :IRequestHandler<ExtractMnchArt,bool>
     {
         private readonly IMnchArtSourceExtractor _mnchArtSourceExtractor;
-        private readonly IExtractValidator _extractValidator;
+        private readonly IMnchExtractValidator _extractValidator;
         private readonly IMnchArtLoader _mnchArtLoader;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
 
-        public ExtractMnchArtHandler(IMnchArtSourceExtractor mnchArtSourceExtractor, IExtractValidator extractValidator, IMnchArtLoader mnchArtLoader, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractMnchArtHandler(IMnchArtSourceExtractor mnchArtSourceExtractor, IMnchExtractValidator extractValidator, IMnchArtLoader mnchArtLoader, IExtractHistoryRepository extractHistoryRepository)
         {
             _mnchArtSourceExtractor = mnchArtSourceExtractor;
             _extractValidator = extractValidator;
@@ -50,7 +51,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
 
             //notify loaded
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(request.Extract.Id, new DwhProgress(
+                new MnchExtractActivityNotification(request.Extract.Id, new DwhProgress(
                     nameof(MnchArtExtract),
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));

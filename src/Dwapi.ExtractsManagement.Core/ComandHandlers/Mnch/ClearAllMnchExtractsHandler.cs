@@ -10,16 +10,16 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
 {
     public class ClearAllMnchExtractsHandler : IRequestHandler<ClearAllMnchExtracts,bool>
     {
-        private readonly IClearMnchExtracts _clearHtsExtracts;
+        private readonly IClearMnchExtracts _clearMnchExtracts;
 
-        public ClearAllMnchExtractsHandler(IClearMnchExtracts clearHtsExtracts)
+        public ClearAllMnchExtractsHandler(IClearMnchExtracts clearMnchExtracts)
         {
-            _clearHtsExtracts = clearHtsExtracts;
+            _clearMnchExtracts = clearMnchExtracts;
         }
 
         public async Task<bool> Handle(ClearAllMnchExtracts request, CancellationToken cancellationToken)
         {
-            await _clearHtsExtracts.Clear(request.ExtractIds);
+            await _clearMnchExtracts.Clear(request.ExtractIds);
             return true;
         }
     }

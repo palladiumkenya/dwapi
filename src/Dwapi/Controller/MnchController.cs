@@ -6,6 +6,7 @@ using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Commands.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Dwh;
+using Dwapi.Hubs.Mnch;
 using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
@@ -25,19 +26,19 @@ using Serilog;
 namespace Dwapi.Controller
 {
     [Produces("application/json")]
-    [Route("api/MnchExtracts")]
-    public class MnchExtractsController : Microsoft.AspNetCore.Mvc.Controller
+    [Route("api/Mnch")]
+    public class MnchController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly IMediator _mediator;
         private readonly IExtractStatusService _extractStatusService;
-        private readonly IHubContext<ExtractActivity> _hubContext;
+        private readonly IHubContext<MnchActivity> _hubContext;
         private readonly IDwhSendService _dwhSendService;
         private readonly ICbsSendService _cbsSendService;
         private readonly ICTSendService _ctSendService;
         private readonly IExtractRepository _extractRepository;
         private readonly string _version;
 
-        public MnchExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository)
+        public MnchController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<MnchActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -45,7 +46,7 @@ namespace Dwapi.Controller
             _cbsSendService = cbsSendService;
             _ctSendService = ctSendService;
             _extractRepository = extractRepository;
-            Startup.HubContext= _hubContext = hubContext;
+            Startup.MnchHubContext= _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
         }
 
@@ -60,28 +61,18 @@ namespace Dwapi.Controller
         }
 
         [HttpPost("extractAll")]
-        public async Task<IActionResult> Load([FromBody]LoadMnchExtracts request)
+        public async Task<IActionResult> Load([FromBody] LoadMnchExtracts request)
         {
-            if(!request.IsValid())
+            if (!request.IsValid())
                 return BadRequest();
 
             string version = GetType().Assembly.GetName().Version.ToString();
 
-            if (!request.LoadMpi)
-            {
-                var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
+            var result = await _mediator.Send(request.LoadMnchFromEmrCommand, HttpContext.RequestAborted);
 
-                await _mediator.Publish(new ExtractLoaded("MNCH", version));
+            await _mediator.Publish(new ExtractLoaded("MNCH", version));
 
-                return Ok(result);
-            }
-
-            var mnchExtractsTask = Task.Run(() => _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted));
-            
-            var extractTasks = new List<Task<bool>> {  mnchExtractsTask};
-            // wait for both tasks but doesn't throw an error for mpi load
-            var result1 = await Task.WhenAll(extractTasks);
-            return Ok(mnchExtractsTask);
+            return Ok(result);
         }
 
         // GET: api/DwhExtracts/status/id

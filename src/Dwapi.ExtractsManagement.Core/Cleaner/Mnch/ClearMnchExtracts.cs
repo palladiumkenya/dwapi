@@ -7,6 +7,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
@@ -35,8 +36,8 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Mnch
             foreach (var extractId in extractIds)
             {
                 DomainEvents.Dispatch(
-                    new ExtractActivityNotification(extractId, new DwhProgress(
-                        nameof(PatientExtract),
+                    new MnchExtractActivityNotification(extractId, new DwhProgress(
+                        nameof(PatientMnchExtract),
                         nameof(ExtractStatus.Clearing),
                         0, 0, 0, 0, 0)));
             }
@@ -49,8 +50,8 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Mnch
             foreach (var extractId in extractIds)
             {
                 DomainEvents.Dispatch(
-                    new ExtractActivityNotification(extractId, new DwhProgress(
-                        nameof(PatientExtract),
+                    new MnchExtractActivityNotification(extractId, new DwhProgress(
+                        nameof(PatientMnchExtract),
                         nameof(ExtractStatus.Cleared),
                         0, 0, 0, 0, 0)));
             }

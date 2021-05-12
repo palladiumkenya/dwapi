@@ -9,7 +9,7 @@ using Dwapi.ExtractsManagement.Core.Commands.Mnch;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 {
-    public class LoadMnchFromEmrHandler : IRequestHandler<LoadFromEmrCommand, bool>
+    public class LoadMnchFromEmrHandler : IRequestHandler<LoadMnchFromEmrCommand, bool>
     {
         private IMediator _mediator;
 
@@ -18,7 +18,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             _mediator = mediator;
         }
 
-        public async Task<bool> Handle(LoadFromEmrCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(LoadMnchFromEmrCommand request, CancellationToken cancellationToken)
         {
             var extractIds = request.Extracts.Select(x => x.Extract.Id).ToList();
 
@@ -47,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             return await ExtractAll(request, cancellationToken);
         }
 
-        private async Task<bool> ExtractAll(LoadFromEmrCommand request, CancellationToken cancellationToken)
+        private async Task<bool> ExtractAll(LoadMnchFromEmrCommand request, CancellationToken cancellationToken)
         {
             var ts1 = new List<Task<bool>>();
             var ts2 = new List<Task<bool>>();
@@ -91,7 +91,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 ts1.Add( _mediator.Send(patientLaboratoryCommand, cancellationToken));
             }
 
-            // ExtractMatVisitExtract 
+            // ExtractMatVisitExtract
             var patientPharmacyProfile =
                 request.Extracts.FirstOrDefault(x => x.Extract.Name == "MatVisitExtract");
             if (null != patientPharmacyProfile)
@@ -180,7 +180,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 ts4.Add( _mediator.Send(depressionScreeningCommand, cancellationToken));
             }
 
-          
+
 
             var result1 = await Task.WhenAll(ts1);
             var result2 = await Task.WhenAll(ts2);

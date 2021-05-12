@@ -36,6 +36,8 @@ namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events
                 cargos = cargoDtos.Where(x => x.DocketId == "HTS").ToList();
             if (Name == "MasterPatientIndex")
                 cargos = cargoDtos.Where(x => x.DocketId == "CBS").ToList();
+            if (Name == "MNCH")
+                cargos = cargoDtos.Where(x => x.DocketId == "MNCH").ToList();
 
             ExtractCargos = cargos;
         }

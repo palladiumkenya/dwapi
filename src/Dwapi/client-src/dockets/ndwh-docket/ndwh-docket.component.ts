@@ -17,6 +17,7 @@ export class NdwhDocketComponent implements OnInit, OnDestroy {
     private _emrConfigService: EmrConfigService;
 
     public getEmr$: Subscription;
+    public getMetrics$: Subscription;
     public emrSystem: EmrSystem;
     public errorMessage: Message[];
     public otherMessage: Message[];
@@ -59,7 +60,7 @@ export class NdwhDocketComponent implements OnInit, OnDestroy {
     }
 
     public loadMetrics(): void {
-        this.getEmr$ = this._emrConfigService.loadMetrics(this.emrSystem)
+        this.getMetrics$ = this._emrConfigService.loadMetrics(this.emrSystem)
             .subscribe(
                 p => {
                     this.emrMetric = p;
@@ -79,6 +80,9 @@ export class NdwhDocketComponent implements OnInit, OnDestroy {
     public ngOnDestroy(): void {
         if (this.getEmr$) {
             this.getEmr$.unsubscribe();
+        }
+        if (this.getMetrics$) {
+            this.getMetrics$.unsubscribe();
         }
     }
 }

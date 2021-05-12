@@ -363,7 +363,7 @@ namespace Dwapi.ExtractsManagement.Core.Tests
 
             #region MNCH
 
-                #region Extracts
+            #region Extracts
 
             services.AddTransient<IPatientMnchExtractRepository, PatientMnchExtractRepository>();
             services.AddTransient<IMnchEnrolmentExtractRepository, MnchEnrolmentExtractRepository>();
@@ -418,8 +418,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests
             services.AddTransient<IMasterPatientIndexValidator, MasterPatientIndexValidator>();
             services.AddTransient<IExtractValidator, ExtractValidator>();
             services.AddTransient<IHtsExtractValidator, HtsExtractValidator>();
-            // NEW
             services.AddScoped<IMetricExtractValidator,MetricExtractValidator>();
+            // NEW
             services.AddScoped<IMnchExtractValidator, MnchExtractValidator>();
             #endregion
 

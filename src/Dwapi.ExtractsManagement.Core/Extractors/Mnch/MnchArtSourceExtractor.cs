@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mnch;
@@ -18,11 +19,11 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Mnch
 {
     public class MnchArtSourceExtractor : IMnchArtSourceExtractor
     {
-        private readonly IDwhExtractSourceReader _reader;
+        private readonly IMnchExtractSourceReader _reader;
         private readonly IMediator _mediator;
         private readonly ITempMnchArtExtractRepository _extractRepository;
 
-        public MnchArtSourceExtractor(IDwhExtractSourceReader reader, IMediator mediator, ITempMnchArtExtractRepository extractRepository)
+        public MnchArtSourceExtractor(IMnchExtractSourceReader reader, IMediator mediator, ITempMnchArtExtractRepository extractRepository)
         {
             _reader = reader;
             _mediator = mediator;
@@ -58,7 +59,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Mnch
 
 
                         DomainEvents.Dispatch(
-                            new ExtractActivityNotification(extract.Id, new DwhProgress(
+                            new MnchExtractActivityNotification(extract.Id, new DwhProgress(
                                 nameof(MnchArtExtract),
                                 nameof(ExtractStatus.Finding),
                                 loaded, 0, 0, 0, 0)));
@@ -76,7 +77,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Mnch
 
             // TODO: Notify Completed;
             DomainEvents.Dispatch(
-                new ExtractActivityNotification(extract.Id, new DwhProgress(
+                new MnchExtractActivityNotification(extract.Id, new DwhProgress(
                     nameof(MnchArtExtract),
                     nameof(ExtractStatus.Found),
                     loaded, 0, 0, 0, 0)));
