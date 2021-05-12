@@ -617,24 +617,23 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
         this._hubConnection.on('ShowMnchProgress', (extractActivityNotification: any) => {
-            console.log('ShowMnchProgress',extractActivityNotification)
             this.currentExtract = {};
             this.currentExtract = this.extracts.find(
-                x => x.name === extractActivityNotification.extract
+                x => x.id === extractActivityNotification.extractId
             );
             if (this.currentExtract) {
                 this.extractEvent = {
-                    lastStatus: `${extractActivityNotification.status}`,
-                    found: extractActivityNotification.found,
-                    loaded: extractActivityNotification.loaded,
-                    rejected: extractActivityNotification.rejected,
-                    queued: extractActivityNotification.queued,
-                    sent: extractActivityNotification.sent
+                    lastStatus: `${extractActivityNotification.progress.status}`,
+                    found: extractActivityNotification.progress.found,
+                    loaded: extractActivityNotification.progress.loaded,
+                    rejected: extractActivityNotification.progress.rejected,
+                    queued: extractActivityNotification.progress.queued,
+                    sent: extractActivityNotification.progress.sent
                 };
                 this.currentExtract.extractEvent = {};
                 this.currentExtract.extractEvent = this.extractEvent;
                 const newWithoutPatientExtract = this.extracts.filter(
-                    x => x.name !== extractActivityNotification.extract
+                    x => x.id !== extractActivityNotification.extractId
                 );
                 this.extracts = [
                     ...newWithoutPatientExtract,

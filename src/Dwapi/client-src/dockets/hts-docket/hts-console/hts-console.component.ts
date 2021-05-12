@@ -134,15 +134,13 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             this.updateEvent();
             this.emrName = this.emr.name;
             this.emrVersion = `(Ver. ${this.emr.version})`;
-            const em=environment.emrs.filter(x=>x.name===this.emrName)[0];
+            const em = environment.emrs.filter(x => x.name === this.emrName)[0];
 
             if (this.emrName == 'KenyaEMR') {
                 this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version}) or higher`;
-            }
-            else if (this.emrName === 'IQCare') {
+            } else if (this.emrName === 'IQCare') {
                 this.minEMRVersion = `(This version of DWAPI works best with ${this.emrName} version ${em.version}) or higher`;
-            }
-            else {
+            } else {
                 this.minEMRVersion = '';
             }
         }
@@ -500,8 +498,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             destination: this.centralRegistry,
             extractId: this.extracts.find(x => x.name === 'HtsClient').id,
             emrSetup: this.emr.emrSetup,
-            emrId:this.emr.id,
-            emrName:this.emr.name
+            emrId: this.emr.id,
+            emrName: this.emr.name
         };
     }
 
@@ -607,8 +605,9 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
         this._hubConnection.on('ShowHtsProgress', (extractActivityNotification: any) => {
             this.currentExtract = {};
+            const otheNamer = extractActivityNotification.extract.replace('Extracts', '');
             this.currentExtract = this.extracts.find(
-                x => x.name === extractActivityNotification.extract
+                x => x.name === otheNamer
             );
             if (this.currentExtract) {
                 this.extractEvent = {
@@ -622,7 +621,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 this.currentExtract.extractEvent = {};
                 this.currentExtract.extractEvent = this.extractEvent;
                 const newWithoutPatientExtract = this.extracts.filter(
-                    x => x.name !== extractActivityNotification.extract
+                    x => x.name !== otheNamer
                 );
                 this.extracts = [
                     ...newWithoutPatientExtract,
