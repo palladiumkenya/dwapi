@@ -4,14 +4,14 @@ using Dwapi.SharedKernel.Events;
 
 namespace Dwapi.ExtractsManagement.Core.Notifications
 {
-    public class MnhcStatusNotification : IDomainEvent
+    public class MnchStatusNotification : IDomainEvent
     {
         public Guid ExtractId { get; }
         public ExtractStatus Status { get; }
         public int? Stats { get;  }
         public string StatusInfo { get; }
 
-        public MnhcStatusNotification(Guid extractId, ExtractStatus status, int? stats=null, string statusInfo="")
+        public MnchStatusNotification(Guid extractId, ExtractStatus status, int? stats=null, string statusInfo="")
         {
             ExtractId = extractId;
             Status = status;

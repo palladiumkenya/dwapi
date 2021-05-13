@@ -105,13 +105,17 @@ using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
 using Dwapi.SharedKernel.Interfaces;
 using Dwapi.SharedKernel.Utility;
+using Dwapi.UploadManagement.Core.Interfaces.Packager.Mnch;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Mnch;
+using Dwapi.UploadManagement.Core.Packager.Mnch;
 using Dwapi.UploadManagement.Core.Profiles;
 using Dwapi.UploadManagement.Core.Services.Cbs;
 using Dwapi.UploadManagement.Core.Services.Dwh;
 using Dwapi.UploadManagement.Core.Services.Hts;
+using Dwapi.UploadManagement.Core.Services.Mnch;
 using MediatR;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -537,6 +541,8 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
             services.AddScoped<IHtsSendService, HtsSendService>();
             services.AddScoped<IEmrMetricsService, EmrMetricsService>();
            // services.AddScoped<IMgsSendService, MgsSendService>();
+           services.AddScoped<IMnchSendService, MnchSendService>();
+           services.AddTransient<IMnchPackager, MnchPackager>();
 
             #endregion
 

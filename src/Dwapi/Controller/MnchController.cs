@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Commands.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
-using Dwapi.Hubs.Dwh;
 using Dwapi.Hubs.Mnch;
 using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
@@ -13,11 +9,9 @@ using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
-using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
-using Hangfire;
-using Hangfire.States;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Mnch;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -32,28 +26,30 @@ namespace Dwapi.Controller
         private readonly IMediator _mediator;
         private readonly IExtractStatusService _extractStatusService;
         private readonly IHubContext<MnchActivity> _hubContext;
-        private readonly IDwhSendService _dwhSendService;
+        private readonly IMnchSendService _mnchSendService;
         private readonly ICbsSendService _cbsSendService;
         private readonly ICTSendService _ctSendService;
         private readonly IExtractRepository _extractRepository;
         private readonly string _version;
 
-        public MnchController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<MnchActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository)
+        public MnchController(IMediator mediator, IExtractStatusService extractStatusService,
+            IHubContext<MnchActivity> hubContext, IMnchSendService mnchSendService, ICbsSendService cbsSendService,
+            ICTSendService ctSendService, IExtractRepository extractRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
-            _dwhSendService = dwhSendService;
+            _mnchSendService = mnchSendService;
             _cbsSendService = cbsSendService;
             _ctSendService = ctSendService;
             _extractRepository = extractRepository;
-            Startup.MnchHubContext= _hubContext = hubContext;
+            Startup.MnchHubContext = _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
         }
 
         [HttpPost("extract")]
-        public async Task<IActionResult> Load([FromBody]ExtractPatientMnch request)
+        public async Task<IActionResult> Load([FromBody] ExtractPatientMnch request)
         {
-            if(!request.IsValid())
+            if (!request.IsValid())
                 return BadRequest();
 
             var result = await _mediator.Send(request, HttpContext.RequestAborted);
@@ -100,26 +96,18 @@ namespace Dwapi.Controller
 
         // POST: api/DwhExtracts/manifest
         [HttpPost("manifest")]
-        public async Task<IActionResult> SendManifest([FromBody] CombinedSendManifestDto packageDto)
+        public async Task<IActionResult> SendManifest([FromBody] SendManifestPackageDTO packageDto)
         {
             if (!packageDto.IsValid())
                 return BadRequest();
 
             string version = GetType().Assembly.GetName().Version.ToString();
-
-            await _mediator.Publish(new ExtractSent("MNCH", version));
+            await _mediator.Publish(new ExtractSent("HivTestingService", version));
 
             try
             {
-                if (!packageDto.SendMpi)
-                {
-                    var result = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage,_version);
-                    return Ok(result);
-                }
-
-                var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage,_version);
-                var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage,_version);
-                return Ok();
+                var result = await _mnchSendService.SendManifestAsync(packageDto, version);
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -129,56 +117,14 @@ namespace Dwapi.Controller
             }
         }
 
-        // POST: api/DwhExtracts/diffmanifest
-        [HttpPost("diffmanifest")]
-        public async Task<IActionResult> SendDiffManifest([FromBody] CombinedSendManifestDto packageDto)
+        [HttpPost("PatientMnchs")]
+        public IActionResult SendPatientMnchsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            if (!packageDto.IsValid())
-                return BadRequest();
-
-
-            string version = GetType().Assembly.GetName().Version.ToString();
-
-            await _mediator.Publish(new ExtractSent("MNCH", version));
-
+            if (!packageDto.IsValid()) return BadRequest();
             try
             {
-                if (!packageDto.SendMpi)
-                {
-                    var result = await _dwhSendService.SendDiffManifestAsync(packageDto.DwhPackage,_version);
-                    return Ok(result);
-                }
-
-                var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage,_version);
-                var dwhTask = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage,_version);
+                _mnchSendService.SendPatientMnchsAsync(packageDto);
                 return Ok();
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error sending  Manifest {e.Message}";
-                Log.Error(e, msg);
-                return StatusCode(500, msg);
-            }
-        }
-
-
-        // POST: api/DwhExtracts/patients
-        [HttpPost("patients")]
-        public IActionResult SendPatientMnchExtracts([FromBody] CombinedSendManifestDto packageDto)
-        {
-            if (!packageDto.IsValid())
-                return BadRequest();
-            try
-            {
-                if (!packageDto.SendMpi)
-                {
-                    QueueDwh(packageDto.DwhPackage);
-                    return Ok();
-                }
-                QueueDwh(packageDto.DwhPackage);
-                QueueMpi(packageDto.MpiPackage);
-                return Ok();
-
             }
             catch (Exception e)
             {
@@ -188,23 +134,14 @@ namespace Dwapi.Controller
             }
         }
 
-        // POST: api/DwhExtracts/patients
-        [HttpPost("diffpatients")]
-        public IActionResult SendDiffPatientMnchExtracts([FromBody] CombinedSendManifestDto packageDto)
+        [HttpPost("MnchEnrolments")]
+        public IActionResult SendMnchEnrolmentsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            if (!packageDto.IsValid())
-                return BadRequest();
+            if (!packageDto.IsValid()) return BadRequest();
             try
             {
-                if (!packageDto.SendMpi)
-                {
-                    QueueDwhDiff(packageDto.DwhPackage);
-                    return Ok();
-                }
-                QueueDwh(packageDto.DwhPackage);
-                QueueMpi(packageDto.MpiPackage);
+                _mnchSendService.SendMnchEnrolmentsAsync(packageDto);
                 return Ok();
-
             }
             catch (Exception e)
             {
@@ -214,125 +151,179 @@ namespace Dwapi.Controller
             }
         }
 
-        [AutomaticRetry(Attempts = 0)]
-        private void QueueDwh(SendManifestPackageDTO package)
+        [HttpPost("MnchArts")]
+        public IActionResult SendMnchArtsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
-
-            if (extracts.Any())
-                package.Extracts = extracts.Select(x => new ExtractDto() {Id = x.Id, Name = x.Name}).ToList();
-
-            _ctSendService.NotifyPreSending();
-
-            var job1 =
-                BatchJob.StartNew(x => { SendJobBaselines(package); });
-
-            var job2 =
-                BatchJob.ContinueBatchWith(job1, x => { SendJobProfiles(package); });
-
-            var job3 =
-                BatchJob.ContinueBatchWith(job2, x => { SendNewJobProfiles(package); });
-
-            var job4 =
-                BatchJob.ContinueBatchWith(job3, x => { SendNewOtherJobProfiles(package); });
-
-            var jobEnd =
-                BatchJob.ContinueBatchWith(job4, x => { _ctSendService.NotifyPostSending(package,_version); });
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchSendService.SendMnchArtsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
         }
 
-        [AutomaticRetry(Attempts = 0)]
-        private void QueueDwhDiff(SendManifestPackageDTO package)
+        [HttpPost("AncVisits")]
+        public IActionResult SendAncVisitsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
-
-            if (extracts.Any())
-                package.Extracts = extracts.Select(x => new ExtractDto() {Id = x.Id, Name = x.Name}).ToList();
-
-            _ctSendService.NotifyPreSending();
-
-            var job1 =
-                BatchJob.StartNew(x => { SendDiffJobBaselines(package); });
-
-            var job2 =
-                BatchJob.ContinueBatchWith(job1, x => { SendDiffJobProfiles(package); });
-
-            var job3 =
-                BatchJob.ContinueBatchWith(job2, x => { SendDiffNewJobProfiles(package); });
-
-            var job4 =
-                BatchJob.ContinueBatchWith(job3, x => { SendDiffNewOtherJobProfiles(package); });
-
-            var jobEnd =
-                BatchJob.ContinueBatchWith(job4, x => { _ctSendService.NotifyPostSending(package, _version); });
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchSendService.SendAncVisitsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
         }
 
-        public void SendJobBaselines(SendManifestPackageDTO package)
+        [HttpPost("MatVisits")]
+        public IActionResult SendMatVisitsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            var idsA =_ctSendService.SendBatchExtractsAsync(package, 500, new ArtMessageBag()).Result;
-            var idsB=_ctSendService.SendBatchExtractsAsync(package, 500, new BaselineMessageBag()).Result;
-            var idsC= _ctSendService.SendBatchExtractsAsync(package, 500, new StatusMessageBag()).Result;
-            var idsD=_ctSendService.SendBatchExtractsAsync(package, 500, new AdverseEventsMessageBag()).Result;
-        }
-        public void SendDiffJobBaselines(SendManifestPackageDTO package)
-        {
-            var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 500, new ArtMessageBag()).Result;
-            var idsB=_ctSendService.SendDiffBatchExtractsAsync(package, 500, new BaselineMessageBag()).Result;
-            var idsC= _ctSendService.SendDiffBatchExtractsAsync(package, 500, new StatusMessageBag()).Result;
-            var idsD=_ctSendService.SendDiffBatchExtractsAsync(package, 500, new AdverseEventsMessageBag()).Result;
-        }
-        public void SendJobProfiles(SendManifestPackageDTO package)
-        {
-            var idsA =_ctSendService.SendBatchExtractsAsync(package, 500, new PharmacyMessageBag()).Result;
-            var idsB=_ctSendService.SendBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
-            var idsC= _ctSendService.SendBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
-        }
-        public void SendNewJobProfiles(SendManifestPackageDTO package)
-        {
-            var idsAllergiesChronicIllness =_ctSendService.SendBatchExtractsAsync(package, 200, new AllergiesChronicIllnesssMessageBag()).Result;
-            var idsIpt =_ctSendService.SendBatchExtractsAsync(package, 200, new IptsMessageBag()).Result;
-            var idsDepressionScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new DepressionScreeningsMessageBag()).Result;
-            var idsContactListing =_ctSendService.SendBatchExtractsAsync(package, 200, new ContactListingsMessageBag()).Result;
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchSendService.SendMatVisitsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
         }
 
-        public void SendNewOtherJobProfiles(SendManifestPackageDTO package)
+        [HttpPost("PncVisits")]
+        public IActionResult SendPncVisitsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            var idsGbvScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new GbvScreeningsMessageBag()).Result;
-            var idsEnhancedAdherenceCounselling =_ctSendService.SendBatchExtractsAsync(package, 200, new EnhancedAdherenceCounsellingsMessageBag()).Result;
-            var idsDrugAlcoholScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new DrugAlcoholScreeningsMessageBag()).Result;
-            var idsOvc =_ctSendService.SendBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
-            var idsOtz =_ctSendService.SendBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchSendService.SendPncVisitsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
         }
 
-        public void SendDiffJobProfiles(SendManifestPackageDTO package)
+        [HttpPost("MotherBabyPairs")]
+        public IActionResult SendMotherBabyPairsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 500, new PharmacyMessageBag()).Result;
-            var idsB=_ctSendService.SendDiffBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
-            var idsC= _ctSendService.SendDiffBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchSendService.SendMotherBabyPairsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
         }
 
-        public void SendDiffNewJobProfiles(SendManifestPackageDTO package)
+        [HttpPost("CwcEnrolments")]
+        public IActionResult SendCwcEnrolmentsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            var idsAllergiesChronicIllness =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new AllergiesChronicIllnesssMessageBag()).Result;
-            var idsIpt =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new IptsMessageBag()).Result;
-            var idsDepressionScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DepressionScreeningsMessageBag()).Result;
-            var idsContactListing =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new ContactListingsMessageBag()).Result;
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchSendService.SendCwcEnrolmentsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
         }
 
-        public void SendDiffNewOtherJobProfiles(SendManifestPackageDTO package)
+        [HttpPost("CwcVisits")]
+        public IActionResult SendCwcVisitsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            var idsGbvScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new GbvScreeningsMessageBag()).Result;
-            var idsEnhancedAdherenceCounselling =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new EnhancedAdherenceCounsellingsMessageBag()).Result;
-            var idsDrugAlcoholScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DrugAlcoholScreeningsMessageBag()).Result;
-            var idsOvc =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
-            var idsOtz =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchSendService.SendCwcVisitsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
         }
 
-        [AutomaticRetry(Attempts = 0)]
-        private void QueueMpi(SendManifestPackageDTO package)
+        [HttpPost("Heis")]
+        public IActionResult SendHeisExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
-            var client = new BackgroundJobClient();
-            var state = new EnqueuedState("mpi");
-            client.Create(() => _cbsSendService.SendMpiAsync(package), state);
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchSendService.SendHeisAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpPost("MnchLabs")]
+        public IActionResult SendMnchLabsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchSendService.SendMnchLabsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("endsession")]
+        public IActionResult SendEndSession([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                string version = GetType().Assembly.GetName().Version.ToString();
+                _mnchSendService.NotifyPostSending(packageDto, version);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
         }
     }
 }

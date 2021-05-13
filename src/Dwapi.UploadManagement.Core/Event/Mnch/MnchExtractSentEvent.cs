@@ -11,9 +11,15 @@ namespace Dwapi.UploadManagement.Core.Event.Mnch
     {
         public List<SentItem> SentItems { get; }
 
-        public MnchExtractSentEvent(List<Guid> sentIds,SendStatus status,ExtractType extractType, string statusInfo="")
+        public MnchExtractSentEvent(List<Guid> sentIds,SendStatus status,string extract, string statusInfo="")
         {
-            SentItems = sentIds.Select(x => new SentItem(x,status, statusInfo,extractType)).ToList();
+            SentItems = sentIds.Select(x => new SentItem(x,status, statusInfo,extract)).ToList();
+        }
+
+        public MnchExtractSentEvent(List<SentItem> sentItems)
+        {
+
+            SentItems = sentItems;
         }
     }
 }
