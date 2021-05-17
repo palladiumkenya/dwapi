@@ -21,55 +21,55 @@ export class MnchSenderService {
     }
 
     public sendPatientMnchExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/patientmnch`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/patientmnchs`, sendPackage)
             .catch(this.handleError);
     }
     public sendAncVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/ancvisit`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/ancvisits`, sendPackage)
             .catch(this.handleError);
     }
     public sendCwcEnrolmentExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/cwcenrolment`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/cwcenrolments`, sendPackage)
             .catch(this.handleError);
     }
 
     public sendCwcVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/cwcvisit`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/cwcvisits`, sendPackage)
             .catch(this.handleError);
     }
 
     public sendHeiExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/hei`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/heis`, sendPackage)
             .catch(this.handleError);
     }
 
     public sendMatVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/matvisit`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/matvisits`, sendPackage)
             .catch(this.handleError);
     }
 
     public sendMnchArtExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/mnchart`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/mncharts`, sendPackage)
             .catch(this.handleError);
     }
 
     public sendMnchEnrolmentExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/mnchenrolment`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/mnchenrolments`, sendPackage)
             .catch(this.handleError);
     }
 
     public sendMnchLabExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/mnchlab`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/mnchlabs`, sendPackage)
             .catch(this.handleError);
     }
 
     public sendMotherBabyPairExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/motherbabypair`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/motherbabypairs`, sendPackage)
             .catch(this.handleError);
     }
 
     public sendPncVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/pncvisit`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/pncvisits`, sendPackage)
             .catch(this.handleError);
     }
 

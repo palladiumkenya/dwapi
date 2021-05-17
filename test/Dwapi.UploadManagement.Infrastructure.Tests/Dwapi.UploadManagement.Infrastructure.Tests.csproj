@@ -17,9 +17,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="TestArtifacts\Database\emr.db">
+    <None Include="TestArtifacts\Database\emr.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <None Include="TestArtifacts\Database\emr_diff.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

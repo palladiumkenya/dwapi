@@ -500,7 +500,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private getSendManifestPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'MnchClient').id,
+            extractId: this.extracts.find(x => x.name === 'PatientMnchExtract').id,
             emrSetup: this.emr.emrSetup,
             emrId: this.emr.id,
             emrName: this.emr.name

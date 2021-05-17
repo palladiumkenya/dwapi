@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using Newtonsoft.Json;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
 {
@@ -12,6 +13,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         public virtual int SiteCode { get; set; }
 
         public virtual string PatientID { get; set; }
+        [JsonIgnore]
         public virtual int? FacilityId { get; set; }
         public virtual bool? Processed { get; set; }
         public virtual string QueueId { get; set; }
