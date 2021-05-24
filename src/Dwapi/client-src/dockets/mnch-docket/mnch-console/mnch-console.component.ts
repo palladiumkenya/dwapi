@@ -135,6 +135,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public loadFromEmr(): void {
+        this.clearDocketStore();
         this.errorMessage = [];
         this.load$ = this._mnchService
             .extractAll(this.generateExtractLoadCommand(this.emr))
@@ -205,6 +206,8 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public send(): void {
+        localStorage.setItem('dwapi.hts.send', '0');
+        this.sendEvent = {sentProgress: 0};
         this.sendingManifest = true;
         this.errorMessage = [];
         this.notifications = [];
@@ -230,7 +233,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public sendPatientMnchExtract(): void {
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getPatientMnchExtractPackage();
@@ -243,7 +246,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending client', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending client', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -253,7 +256,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendAncVisitExtracts(): void {
         this.sendStage = 2;
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getAncVisitExtractPackage();
@@ -266,7 +269,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending client tests', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending client tests', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -276,7 +279,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendCwcEnrolmentExtracts(): void {
         this.sendStage = 3;
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getCwcEnrolmentExtractPackage();
@@ -289,7 +292,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending test kits', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending test kits', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -299,7 +302,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendCwcVisitExtracts(): void {
         this.sendStage = 4;
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getCwcVisitExtractPackage();
@@ -312,7 +315,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending client tracing', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending client tracing', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -322,7 +325,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendHeiExtracts(): void {
         this.sendStage = 5;
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getHeiExtractPackage();
@@ -335,7 +338,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending partner tracing', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner tracing', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -345,7 +348,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendMatVisitExtracts(): void {
         this.sendStage = 6;
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getMatVisitExtractPackage();
@@ -358,16 +361,17 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending partner notification service', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
                 }
             );
     }
+
     public sendMnchArtExtracts(): void {
         this.sendStage = 7;
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getMnchArtExtractPackage();
@@ -380,7 +384,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending partner notification service', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -390,7 +394,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendMnchEnrolmentExtracts(): void {
         this.sendStage = 8;
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getMnchEnrolmentExtractPackage();
@@ -403,7 +407,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending partner notification service', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -413,7 +417,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendMnchLabExtracts(): void {
         this.sendStage = 9;
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getMnchLabExtractPackage();
@@ -426,7 +430,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending partner notification service', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -436,7 +440,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendMotherBabyPairExtracts(): void {
         this.sendStage = 10;
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getMotherBabyPairExtractPackage();
@@ -449,7 +453,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending partner notification service', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -459,7 +463,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendPncVisitExtracts(): void {
         this.sendStage = 11;
-        this.sendEvent = { sentProgress: 0 };
+        this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getPncVisitExtractPackage();
@@ -471,7 +475,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending client linkage', detail: <any>e });
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending client linkage', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -606,6 +610,29 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
+    private clearDocketStore() {
+        const search = 'MNCH';
+        Object.keys(localStorage)
+            .filter((key) => key.startsWith(search))
+            .map((key) => localStorage.removeItem(key));
+    }
+
+    private getCurrrentProgress(extract: string, progress: string) {
+        let overallProgress = 0;
+        let cSum = 0;
+        const keys = this.extracts.map(x => `MNCH-${x.name}`);
+        const key = `MNCH-${extract}`;
+        localStorage.setItem(key, progress);
+        keys.forEach(k => {
+            const data = localStorage.getItem(k);
+            if (data) {
+                cSum += (+data);
+                overallProgress = Math.trunc(cSum / 11);
+            }
+        });
+        return overallProgress;
+    }
+
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
@@ -643,9 +670,12 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this._hubConnection.on('ShowMnchSendProgress', (dwhProgress: any) => {
-            this.sendEvent = {
-                sentProgress: dwhProgress.progress
+            const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);
+            console.log(`${dwhProgress.extract}:${dwhProgress.progress}, Overall:${progress}`);
+            const st = {
+                sentProgress: progress
             };
+            this.sendEvent = {...st};
             this.updateExractStats(dwhProgress);
             this.canLoadFromEmr = this.canSend = !this.sending;
         });
@@ -764,6 +794,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             extract: this.extracts.find(x => x.name === 'MnchEnrolmentExtract')
         };
     }
+
     private generateExtractMnchLab(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'MnchLabExtract').databaseProtocolId;
         return {
@@ -771,6 +802,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             extract: this.extracts.find(x => x.name === 'MnchLabExtract')
         };
     }
+
     private generateExtractMotherBabyPair(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'MotherBabyPairExtract').databaseProtocolId;
         return {
@@ -778,6 +810,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             extract: this.extracts.find(x => x.name === 'MotherBabyPairExtract')
         };
     }
+
     private generateExtractPncVisit(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'PncVisitExtract').databaseProtocolId;
         return {

@@ -2,11 +2,13 @@
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.SharedKernel.Utility;
+using Humanizer;
 
 namespace Dwapi.UploadManagement.Core.Exchange.Mnch
 {
     public class MnchMessage
     {
+        private static readonly int batch = 2;
         public List<PatientMnchExtract> PatientMnchExtracts { get; set; } = new List<PatientMnchExtract>();
         public List<MnchEnrolmentExtract> MnchEnrolmentExtracts { get; set; } = new List<MnchEnrolmentExtract>();
         public List<MnchArtExtract> MnchArtExtracts { get; set; } = new List<MnchArtExtract>();
@@ -82,7 +84,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<PatientMnchExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
@@ -94,7 +96,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<MnchEnrolmentExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
@@ -106,7 +108,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<MnchArtExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
@@ -118,7 +120,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<AncVisitExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
@@ -130,7 +132,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<MatVisitExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
@@ -142,7 +144,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<PncVisitExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
@@ -154,7 +156,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<MotherBabyPairExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
@@ -166,7 +168,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<CwcEnrolmentExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
@@ -178,7 +180,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<CwcVisitExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
@@ -190,7 +192,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<HeiExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
@@ -202,7 +204,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         public static List<MnchMessage> Create(List<MnchLabExtract> extracts)
         {
             var list = new List<MnchMessage>();
-            var chunks = extracts.ToList().ChunkBy(500);
+            var chunks = extracts.ToList().ChunkBy(batch);
             foreach (var chunk in chunks)
             {
                 list.Add(new MnchMessage(chunk));
