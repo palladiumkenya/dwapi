@@ -14,7 +14,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles
             _config = new AutoMapperConfig();
             var cfg = _config.BaseMaps();
             cfg.AddProfile<DiffCtExtractProfile>();
-            cfg.AddProfile<DiffMnchExtractProfile>();
+            cfg.AddProfile<MnchExtractProfile>();//TODO :PMTCT DIFF
             _instance = new MapperConfiguration(cfg).CreateMapper();
         }
 
