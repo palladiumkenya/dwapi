@@ -4618,7 +4618,7 @@ from kenyaemr_etl.etl_otz_activity a
 7c2e52c0-8728-11eb-8dcd-0242ac130003|Patient Adverse Events|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientAdverseEventExtract|8|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 
 
-82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|select pkv.pkv                                                          as Pkv,
+82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select pkv.pkv as Pkv,
        d.patient_id                                                     as PatientPK,
        i.siteCode                                                       as SiteCode,
        d.openmrs_id                                                     as PatientMnchID,
