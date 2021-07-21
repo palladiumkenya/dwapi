@@ -37,7 +37,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string DifferentiatedCare { get; set; }
         public string PopulationType  { get; set; }
         public string KeyPopulationType { get; set; }
-
         public string VisitBy { get; set; }
         public decimal? Temp { get; set; }
         public int? PulseRate { get; set; }
@@ -55,5 +54,16 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string HCWConcern { get; set; }
         public string TCAReason { get; set; }
         public string ClinicalNotes { get; set; }
+
+        public string GeneralExamination { get; set; }
+        public string SystemExamination { get; set; }
+        public string Skin { get; set; }
+        public string Eyes { get; set; }
+        public string ENT { get; set; }
+        public string Chest { get; set; }
+        public string CVS { get; set; }
+        public string Abdomen { get; set; }
+        public string CNS { get; set; }
+        public string Genitourinary { get; set; }
     }
 }

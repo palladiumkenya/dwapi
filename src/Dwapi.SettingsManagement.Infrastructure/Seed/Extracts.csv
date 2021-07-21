@@ -249,7 +249,7 @@ FROM
 				where unique_patient_no is not null
 				group by d.patient_id
 				order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName,
+39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select ''                                                                                  AS SatelliteName,
        0                                                                                   AS FacilityId,
        d.DOB,
        d.Gender,
@@ -275,30 +275,10 @@ FROM
        reg.date_started_art_this_facility                                                  as StartARTAtThisFAcility,
        least(ifnull(mid(min(concat(hiv.visit_date, hiv.date_started_art_at_transferring_facility)), 11),
                     reg.date_started + interval rand()*1000 year), reg.date_started)       as StartARTDate,
-       (case (if(o1.obs_group = 1085 and o1.concept_id = 1088, o1.value_coded, null))
-            when 164968 then 'AZT/3TC/DTG'
-            when 164969 then 'TDF/3TC/DTG'
-            when 164970 then 'ABC/3TC/DTG'
-            when 164505 then 'TDF-3TC-EFV'
-            when 792 then 'D4T/3TC/NVP'
-            when 160124 then 'AZT/3TC/EFV'
-            when 160104 then 'D4T/3TC/EFV'
-            when 1652 then '3TC/NVP/AZT'
-            when 161361 then 'EDF/3TC/EFV'
-            when 104565 then 'EFV/FTC/TDF'
-            when 162201 then '3TC/LPV/TDF/r'
-            when 817 then 'ABC/3TC/AZT'
-            when 162199 then 'ABC/NVP/3TC'
-            when 162200 then '3TC/ABC/LPV/r'
-            when 162565 then '3TC/NVP/TDF'
-            when 164511 then '3TC/NVP/AZT'
-            when 162561 then '3TC/AZT/LPV/r'
-            when 162561 then 'AZT-3TC-ATV/r'
-            when 164512 then 'TDF-3TC-ATV/r'
-            when 162560 then '3TC/D4T/LPV/r'
-            when 162563 then '3TC/ABC/EFV'
-            when 162562 then 'ABC/LPV/R/TDF'
-            when 162559 then 'ABC/DDI/LPV/r' END)                                            as PreviousARTRegimen,
+       reg.PreviousARTUse                                                                  as PreviousARTUse,
+       reg.PreviousARTPurpose                                                              as PreviousARTPurpose,
+       reg.PreviousARTRegimen                                                              as PreviousARTRegimen,
+       reg.DateLastUsed                                                                    as DateLastUsed,
        reg.regimen                                                                         as StartRegimen,
        reg.regimen_line                                                                    as StartRegimenLine,
        case
@@ -319,7 +299,7 @@ FROM
                COALESCE(disc.date_last_modified, reg.date_last_modified, hiv.date_last_modified),
                COALESCE(reg.date_last_modified, hiv.date_last_modified, disc.date_last_modified)
            )                                                                               as Date_Last_Modified
-							from kenyaemr_etl.etl_hiv_enrollment hiv
+from kenyaemr_etl.etl_hiv_enrollment hiv
          join kenyaemr_etl.etl_patient_demographics d on d.patient_id = hiv.patient_id
          left outer join (select d.patient_id,
                                  coalesce(max(date(d.effective_discontinuation_date)),
@@ -335,22 +315,26 @@ FROM
                           where d.program_name = 'HIV'
                           group by d.patient_id) disc on disc.patient_id = hiv.patient_id
          left outer join (select e.patient_id,
-                                 min(e.date_started)                        as art_start_date,
-                                 min(e.date_started)                        as date_started_art_this_facility,
+                                 min(e.date_started)                                              as art_start_date,
+                                 min(e.date_started)                                              as date_started_art_this_facility,
                                  e.date_started,
                                  e.gender,
                                  e.dob,
-                                 d.ExitDate                                 as dis_date,
-                                 if(d.ExitDate is not null, 1, 0)           as TOut,
+                                 d.ExitDate                                                       as dis_date,
+                                 if(d.ExitDate is not null, 1, 0)                                 as TOut,
                                  e.regimen,
                                  e.regimen_line,
                                  e.alternative_regimen,
-                                 max(fup.next_appointment_date)             as latest_tca,
+                                 max(fup.next_appointment_date)                                   as latest_tca,
                                  last_art_date,
                                  last_regimen,
                                  last_regimen_line,
-                                 if(enr.transfer_in_date is not null, 1, 0) as TIn,
-                                 max(fup.visit_date)                        as latest_vis_date,
+                                 if(enr.transfer_in_date is not null, 1, 0)                       as TIn,
+                                 case enr.previous_art_use when 1 then 'Yes' when 0 then 'No' end as PreviousARTUse,
+                                 enr.previous_art_purpose                                         as PreviousARTPurpose,
+                                 enr.previous_art_regimen                                         as PreviousARTRegimen,
+                                 ''                                                               as DateLastUsed,
+                                 max(fup.visit_date)                                              as latest_vis_date,
                                  e.date_created,
                                  e.date_last_modified
                           from (select e.patient_id,
@@ -380,22 +364,130 @@ FROM
                                                     from kenyaemr_etl.etl_patient_program_discontinuation d
                                                     where d.program_name = 'HIV'
                                                     group by d.patient_id)d on d.patient_id = e.patient_id
-                                   left outer join kenyaemr_etl.etl_hiv_enrollment enr on enr.patient_id = e.patient_id
+                                   inner join (select e.patient_id                                           as patient_id,
+                                                      mid(max(concat(e.visit_date, e.transfer_in_date)), 11) as transfer_in_date,
+                                                      case mid(max(concat(e.visit_date, e.arv_status)), 11)
+                                                          when 1 then 'Yes'
+                                                          when 0
+                                                              then 'No' end                                as previous_art_use,
+                                                      concat_ws('|', NULLIF(
+                                                              case mid(max(concat(pre.visit_date, pre.PMTCT)), 11)
+                                                                  when 1065 then 'PMTCT' end, ''),
+                                                                NULLIF(case mid(max(concat(pre.visit_date, pre.PEP)), 11)
+                                                                           when 1 then 'PEP' end, ''),
+                                                                NULLIF(case mid(max(concat(pre.visit_date, pre.PrEP)), 11)
+                                                                           when 1065 then 'PrEP' end, ''),
+                                                                NULLIF(case mid(max(concat(pre.visit_date, pre.HAART)), 11)
+                                                                           when 1185 then 'HAART' end, '')
+                                                          )                                                  as previous_art_purpose,
+                                                      concat_ws('|', NULLIF(
+                                                              case mid(max(concat(pre.visit_date, pre.PMTCT_regimen)), 11)
+                                                                  when 164968 then 'AZT/3TC/DTG'
+                                                                  when 164969 then 'TDF/3TC/DTG'
+                                                                  when 164970 then 'ABC/3TC/DTG'
+                                                                  when 164505 then 'TDF-3TC-EFV'
+                                                                  when 792 then 'D4T/3TC/NVP'
+                                                                  when 160124 then 'AZT/3TC/EFV'
+                                                                  when 160104 then 'D4T/3TC/EFV'
+                                                                  when 161361 then 'EDF/3TC/EFV'
+                                                                  when 104565 then 'EFV/FTC/TDF'
+                                                                  when 162201 then '3TC/LPV/TDF/r'
+                                                                  when 817 then 'ABC/3TC/AZT'
+                                                                  when 162199 then 'ABC/NVP/3TC'
+                                                                  when 162200 then '3TC/ABC/LPV/r'
+                                                                  when 162565 then '3TC/NVP/TDF'
+                                                                  when 1652 then '3TC/NVP/AZT'
+                                                                  when 162561 then '3TC/AZT/LPV/r'
+                                                                  when 164511 then 'AZT-3TC-ATV/r'
+                                                                  when 164512 then 'TDF-3TC-ATV/r'
+                                                                  when 162560 then '3TC/D4T/LPV/r'
+                                                                  when 162563 then '3TC/ABC/EFV'
+                                                                  when 162562 then 'ABC/LPV/R/TDF'
+                                                                  when 162559 then 'ABC/DDI/LPV/r' end, ''),
+                                                                NULLIF(
+                                                                        case mid(max(concat(pre.visit_date, pre.PEP_regimen)), 11)
+                                                                            when 164968 then 'AZT/3TC/DTG'
+                                                                            when 164969 then 'TDF/3TC/DTG'
+                                                                            when 164970 then 'ABC/3TC/DTG'
+                                                                            when 164505 then 'TDF-3TC-EFV'
+                                                                            when 792 then 'D4T/3TC/NVP'
+                                                                            when 160124 then 'AZT/3TC/EFV'
+                                                                            when 160104 then 'D4T/3TC/EFV'
+                                                                            when 1652 then '3TC/NVP/AZT'
+                                                                            when 161361 then 'EDF/3TC/EFV'
+                                                                            when 104565 then 'EFV/FTC/TDF'
+                                                                            when 162201 then '3TC/LPV/TDF/r'
+                                                                            when 817 then 'ABC/3TC/AZT'
+                                                                            when 162199 then 'ABC/NVP/3TC'
+                                                                            when 162200 then '3TC/ABC/LPV/r'
+                                                                            when 162565 then '3TC/NVP/TDF'
+                                                                            when 162561 then '3TC/AZT/LPV/r'
+                                                                            when 164511 then 'AZT-3TC-ATV/r'
+                                                                            when 164512 then 'TDF-3TC-ATV/r'
+                                                                            when 162560 then '3TC/D4T/LPV/r'
+                                                                            when 162563 then '3TC/ABC/EFV'
+                                                                            when 162562 then 'ABC/LPV/R/TDF'
+                                                                            when 162559 then 'ABC/DDI/LPV/r' end, ''),
+                                                                NULLIF(
+                                                                        case mid(max(concat(pre.visit_date, pre.PrEP_regimen)), 11)
+                                                                            when 164968 then 'AZT/3TC/DTG'
+                                                                            when 164969 then 'TDF/3TC/DTG'
+                                                                            when 164970 then 'ABC/3TC/DTG'
+                                                                            when 164505 then 'TDF-3TC-EFV'
+                                                                            when 792 then 'D4T/3TC/NVP'
+                                                                            when 160124 then 'AZT/3TC/EFV'
+                                                                            when 160104 then 'D4T/3TC/EFV'
+                                                                            when 161361 then 'EDF/3TC/EFV'
+                                                                            when 104565 then 'EFV/FTC/TDF'
+                                                                            when 162201 then '3TC/LPV/TDF/r'
+                                                                            when 817 then 'ABC/3TC/AZT'
+                                                                            when 162199 then 'ABC/NVP/3TC'
+                                                                            when 162200 then '3TC/ABC/LPV/r'
+                                                                            when 162565 then '3TC/NVP/TDF'
+                                                                            when 1652 then '3TC/NVP/AZT'
+                                                                            when 162561 then '3TC/AZT/LPV/r'
+                                                                            when 164511 then 'AZT-3TC-ATV/r'
+                                                                            when 164512 then 'TDF-3TC-ATV/r'
+                                                                            when 162560 then '3TC/D4T/LPV/r'
+                                                                            when 162563 then '3TC/ABC/EFV'
+                                                                            when 162562 then 'ABC/LPV/R/TDF'
+                                                                            when 162559 then 'ABC/DDI/LPV/r' end, ''),
+                                                                NULLIF(
+                                                                        case mid(max(concat(pre.visit_date, pre.HAART_regimen)), 11)
+                                                                            when 164968 then 'AZT/3TC/DTG'
+                                                                            when 164969 then 'TDF/3TC/DTG'
+                                                                            when 164970 then 'ABC/3TC/DTG'
+                                                                            when 164505 then 'TDF-3TC-EFV'
+                                                                            when 792 then 'D4T/3TC/NVP'
+                                                                            when 160124 then 'AZT/3TC/EFV'
+                                                                            when 160104 then 'D4T/3TC/EFV'
+                                                                            when 161361 then 'EDF/3TC/EFV'
+                                                                            when 104565 then 'EFV/FTC/TDF'
+                                                                            when 162201 then '3TC/LPV/TDF/r'
+                                                                            when 817 then 'ABC/3TC/AZT'
+                                                                            when 162199 then 'ABC/NVP/3TC'
+                                                                            when 162200 then '3TC/ABC/LPV/r'
+                                                                            when 162565 then '3TC/NVP/TDF'
+                                                                            when 1652 then '3TC/NVP/AZT'
+                                                                            when 162561 then '3TC/AZT/LPV/r'
+                                                                            when 164511 then 'AZT-3TC-ATV/r'
+                                                                            when 164512 then 'TDF-3TC-ATV/r'
+                                                                            when 162560 then '3TC/D4T/LPV/r'
+                                                                            when 162563 then '3TC/ABC/EFV'
+                                                                            when 162562 then 'ABC/LPV/R/TDF'
+                                                                            when 162559 then 'ABC/DDI/LPV/r' end, '')
+                                                          )                                                  as previous_art_regimen
+                                               from kenyaemr_etl.etl_hiv_enrollment e
+                                                        left join kenyaemr_etl.etl_pre_hiv_enrollment_art pre
+                                                                  on e.visit_id = pre.visit_id and e.patient_id = pre.patient_id
+                                               group by e.patient_id) enr on enr.patient_id = e.patient_id
                                    left outer join kenyaemr_etl.etl_patient_hiv_followup fup
                                                    on fup.patient_id = e.patient_id
                           group by e.patient_id)reg on reg.patient_id = hiv.patient_id
          join kenyaemr_etl.etl_default_facility_info i
-         left join (select o.person_id,
-                           o1.encounter_id,
-                           o.obs_id,
-                           o.concept_id  as obs_group,
-                           o1.concept_id as concept_id,
-                           o1.value_coded
-                    from obs o
-                             join obs o1 on o.obs_id = o1.obs_group_id) o1 on o1.encounter_id = hiv.encounter_id
-	where d.unique_patient_no is not null
-	group by d.patient_id
-	having min(hiv.visit_date) is not null
+where d.unique_patient_no is not null
+group by d.patient_id
+having min(hiv.visit_date) is not null
    and StartARTDate is not null;"|dwhstage|0|PatientArtExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3C742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Baselines|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
@@ -590,117 +682,251 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 																																																																												and fup.patient_id=ph.patient_id
 						where unique_patient_no is not null and (is_arv=1 OR is_ctx=1 OR is_dapsone =1 ) and drugreg is not null
 						order by ph.patient_id,ph.DispenseDate;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct
-                '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
-                d.patient_id as PatientPK,
-                i.facilityName as FacilityName,
-                i.siteCode as SiteCode,
-                fup.visit_id as VisitId,
-                case when fup.visit_date < '1990-01-01' then null else CAST(fup.visit_date AS DATE) end  AS VisitDate,
-                'Out Patient' as Service,
-                (case fup.visit_scheduled when 1 then 'Scheduled' when 2 then 'Unscheduled' else '' end ) as VisitType,
-                (case fup.person_present when 978 then 'Self' when 161642 then 'Treatment supporter' when 159802 then 'Refill visit documentation' when 5622 then 'Other' end) as VisitBy,
+40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct ''                                                                     AS SatelliteName,
+                0                                                                      AS FacilityId,
+                d.unique_patient_no                                                    as PatientID,
+                d.patient_id                                                           as PatientPK,
+                i.facilityName                                                         as FacilityName,
+                i.siteCode                                                             as SiteCode,
+                fup.visit_id                                                           as VisitId,
+                case
+                    when fup.visit_date < '1990-01-01' then null
+                    else CAST(fup.visit_date AS DATE) end                                AS VisitDate,
+                'Out Patient'                                                          as Service,
+                (case fup.visit_scheduled
+                     when 1 then 'Scheduled'
+                     when 2 then 'Unscheduled'
+                     else '' end)                                                        as VisitType,
+                (case fup.person_present
+                     when 978 then 'Self'
+                     when 161642 then 'Treatment supporter'
+                     when 159802 then 'Refill visit documentation'
+                     when 5622 then 'Other' end)                                         as VisitBy,
                 case fup.who_stage
-                  when 1220 then 'WHO I'
-                  when 1221 then 'WHO II'
-                  when 1222 then 'WHO III'
-                  when 1223 then 'WHO IV'
-                  when 1204 then 'WHO I'
-                  when 1205 then 'WHO II'
-                  when 1206 then 'WHO III'
-                  when 1207 then 'WHO IV'
-                  else ''
-                    end as WHOStage,
-                null as WABStage,
+                    when 1220 then 'WHO I'
+                    when 1221 then 'WHO II'
+                    when 1222 then 'WHO III'
+                    when 1223 then 'WHO IV'
+                    when 1204 then 'WHO I'
+                    when 1205 then 'WHO II'
+                    when 1206 then 'WHO III'
+                    when 1207 then 'WHO IV'
+                    else ''
+                    end                                                                as WHOStage,
+                null                                                                   as WABStage,
                 case fup.pregnancy_status
-                  when 1065 then 'Yes'
-                  when 1066 then 'No'
-                    end as Pregnant,
-                CAST(fup.last_menstrual_period AS DATE) as LMP,
-                CAST(fup.expected_delivery_date AS DATE) as EDD,
-                fup.height as Height,
-                fup.weight as Weight,
-                concat(fup.systolic_pressure,'/',fup.diastolic_pressure) as BP,
-                fup.temperature as Temp,
-                fup.pulse_rate as PulseRate,
-                fup.respiratory_rate as RespiratoryRate,
-                fup.oxygen_saturation as OxygenSaturation,
-                fup.muac as Muac,
-                (case fup.nutritional_status when 1115 then 'Normal' when 163302 then 'Severe acute malnutrition' when 163303 then 'Moderate acute malnutrition' when 114413 then 'Overweight/Obese' else '' end) as NutritionalStatus,
-                (case fup.ever_had_menses when 1065 then 'Yes' when 1066 then 'No' when 1175 then 'N/A' end) as EverHadMenses,
-                null as Breastfeeding,
-                (case menopausal when 113928 then 'Yes' end) as Menopausal,
-                (case prophylaxis_given when 105281 then 'Cotrimoxazole' when 74250 then 'Dapsone' when 1107 then 'None'  end) as ProphylaxisUsed,
-                (case fup.ctx_adherence when 159405 then 'Good' when 163794 then 'Fair' when 159407 then 'Bad' else '' end) as CTXAdherence,
-                de.regimen as CurrentRegimen,
+                    when 1065 then 'Yes'
+                    when 1066 then 'No'
+                    end                                                                as Pregnant,
+                CAST(fup.last_menstrual_period AS DATE)                                as LMP,
+                CAST(fup.expected_delivery_date AS DATE)                               as EDD,
+                fup.height                                                             as Height,
+                fup.weight                                                             as Weight,
+                concat(fup.systolic_pressure, '/', fup.diastolic_pressure)             as BP,
+                fup.temperature                                                        as Temp,
+                fup.pulse_rate                                                         as PulseRate,
+                fup.respiratory_rate                                                   as RespiratoryRate,
+                fup.oxygen_saturation                                                  as OxygenSaturation,
+                fup.muac                                                               as Muac,
+                (case fup.nutritional_status
+                     when 1115 then 'Normal'
+                     when 163302 then 'Severe acute malnutrition'
+                     when 163303 then 'Moderate acute malnutrition'
+                     when 114413 then 'Overweight/Obese'
+                     else '' end)                                                        as NutritionalStatus,
+                (case fup.ever_had_menses
+                     when 1065 then 'Yes'
+                     when 1066 then 'No'
+                     when 1175 then 'N/A' end)                                           as EverHadMenses,
+                null                                                                   as Breastfeeding,
+                (case menopausal when 113928 then 'Yes' end)                           as Menopausal,
+                (case prophylaxis_given
+                     when 105281 then 'Cotrimoxazole'
+                     when 74250 then 'Dapsone'
+                     when 1107 then 'None' end)                                          as ProphylaxisUsed,
+                (case fup.ctx_adherence
+                     when 159405 then 'Good'
+                     when 163794 then 'Fair'
+                     when 159407 then 'Bad'
+                     else '' end)                                                        as CTXAdherence,
+                de.regimen                                                             as CurrentRegimen,
                 (case fup.reason_not_using_family_planning
-                   when 160572 then 'Thinks cant get pregnant' when 160573 then 'Not sexually active now' when 5622 then 'Other' else '' end) as NoFPReason,
-                'ART|CTX' as AdherenceCategory,
+                     when 160572 then 'Thinks cant get pregnant'
+                     when 160573 then 'Not sexually active now'
+                     when 5622 then 'Other'
+                     else '' end)                                                        as NoFPReason,
+                'ART|CTX'                                                              as AdherenceCategory,
                 concat(
-                  IF(fup.arv_adherence=159405, 'Good', IF(fup.arv_adherence=159406, 'Fair', IF(fup.arv_adherence=159407, 'Poor', ''))), IF(fup.arv_adherence in (159405,159406,159407), '|','') ,
-                  IF(fup.ctx_adherence=159405, 'Good', IF(fup.ctx_adherence=159406, 'Fair', IF(fup.ctx_adherence=159407, 'Poor', '')))
-                    ) AS Adherence,
-                (case next_appointment_reason when 160523 then 'Follow up' when 1283 then 'Lab tests' when 159382 then 'Counseling' when 160521 then 'Pharmacy Refill' when 5622 then 'Other'  else '' end) as TCAReason,
-                fup.clinical_notes as ClinicalNotes,
-                '' as OI,
-                NULL as OIDate,
-                case ifnull(fup.family_planning_status,'')
-                  when 695 then 'Currently using FP'
-                  when 160652 then 'Not using FP'
-                  when 1360 then 'Wants FP'
-                  else ''
-                    end as FamilyPlanningMethod,
+                        IF(fup.arv_adherence = 159405, 'Good',
+                           IF(fup.arv_adherence = 159406, 'Fair', IF(fup.arv_adherence = 159407, 'Poor', ''))),
+                        IF(fup.arv_adherence in (159405, 159406, 159407), '|', ''),
+                        IF(fup.ctx_adherence = 159405, 'Good',
+                           IF(fup.ctx_adherence = 159406, 'Fair', IF(fup.ctx_adherence = 159407, 'Poor', '')))
+                    )                                                                  AS Adherence,
+                (case next_appointment_reason
+                     when 160523 then 'Follow up'
+                     when 1283 then 'Lab tests'
+                     when 159382 then 'Counseling'
+                     when 160521 then 'Pharmacy Refill'
+                     when 5622 then 'Other'
+                     else '' end)                                                        as TCAReason,
+                fup.clinical_notes                                                     as ClinicalNotes,
+                ''                                                                     as OI,
+                NULL                                                                   as OIDate,
+                fup.general_examination                                                as GeneralExamination,
+                (case fup.system_examination
+                     when 1115 then 'Normal'
+                     when 1116 then 'Abnormal' end)                                      as SystemExamination,
+                (case fup.skin_findings
+                     when 150555 then 'Abscess'
+                     when 125201 then 'Swelling/Growth'
+                     when 135591 then 'Hair Loss'
+                     when 136455 then 'Itching'
+                     when 507 then 'Kaposi Sarcoma'
+                     when 1249 then 'Skin eruptions/Rashes'
+                     when 5244 then 'Oral sores' end)                                    as Skin,
+                (case fup.eyes_findings
+                     when 123074 then 'Visual Disturbance'
+                     when 140940 then 'Excessive tearing'
+                     when 131040 then 'Eye pain'
+                     when 127777 then 'Eye redness'
+                     when 140827 then 'Light sensitive'
+                     when 139100 then 'Itchy eyes' end)                                  as Eyes,
+                (case fup.ent_findings
+                     when 148517 then 'Apnea'
+                     when 139075 then 'Hearing disorder'
+                     when 119558 then 'Dental caries'
+                     when 118536 then 'Erythema'
+                     when 106 then 'Frequent colds'
+                     when 147230 then 'Gingival bleeding'
+                     when 135841 then 'Hairy cell leukoplakia'
+                     when 117698
+                         then 'Hearing loss'
+                     when 138554 then 'Hoarseness'
+                     when 507 then 'Kaposi Sarcoma'
+                     when 152228 then 'Masses'
+                     when 128055 then 'Nasal discharge'
+                     when 133499 then 'Nosebleed'
+                     when 160285 then 'Pain'
+                     when 110099 then 'Post nasal discharge'
+                     when 126423 then 'Sinus problems'
+                     when 126318 then 'Snoring'
+                     when 158843 then 'Sore throat'
+                     when 5244 then 'Oral sores'
+                     when 5334 then 'Thrush'
+                     when 123588 then 'Tinnitus'
+                     when 124601 then 'Toothache'
+                     when 123919 then 'Ulcers'
+                     when 111525 then 'Vertigo' end)                                     as ENT,
+                (case fup.chest_findings
+                     when 146893 then 'Bronchial breathing'
+                     when 127640 then 'Crackles'
+                     when 145712 then 'Dullness'
+                     when 164440 then 'Reduced breathing'
+                     when 127639 then 'Respiratory distress'
+                     when 5209 then 'Wheezing' end)                                      as Chest,
+                (case fup.cvs_findings
+                     when 140147 then 'Elevated blood pressure'
+                     when 136522 then 'Irregular heartbeat'
+                     when 562 then 'Cardiac murmur'
+                     when 130560 then 'Cardiac rub' end)                                 as CVS,
+                (case fup.abdomen_findings
+                     when 150915 then 'Abdominal distension'
+                     when 5008 then 'Hepatomegaly'
+                     when 5103 then 'Abdominal mass'
+                     when 5009 then 'Splenomegaly'
+                     when 5105 then 'Abdominal tenderness' end)                          as Abdomen,
+                (case fup.cns_findings
+                     when 118872 then 'Altered sensations'
+                     when 1836 then 'Bulging fontenelle'
+                     when 150817 then 'Abnormal reflexes'
+                     when 120345 then 'Confusion'
+                     when 157498 then 'Limb weakness'
+                     when 112721 then 'Stiff neck'
+                     when 136282 then 'Kernicterus' end)                                 as CNS,
+                (case fup.genitourinary_findings
+                     when 147241 then 'Bleeding'
+                     when 154311 then 'Rectal discharge'
+                     when 123529 then 'Urethral discharge'
+                     when 123396 then 'Vaginal discharge'
+                     when 124087 then 'Ulceration' end)                                  as Genitourinary,
+                case ifnull(fup.family_planning_status, '')
+                    when 695 then 'Currently using FP'
+                    when 160652 then 'Not using FP'
+                    when 1360 then 'Wants FP'
+                    else ''
+                    end                                                                as FamilyPlanningMethod,
                 concat_ws('|',
+                          nullif(case fup.substance_abuse_screening
+                                     when 1065 then 'Screened for substance abuse'
+                                     else ''
+                                     end, ''),
                           nullif(case fup.condom_provided
-                                   when 1065 then 'Condoms'
-                                   else ''
-                                     end,''),
+                                     when 1065 then 'Condoms'
+                                     else ''
+                                     end, ''),
                           nullif(case fup.pwp_disclosure
-                                   when 1065 then 'Disclosure'
-                                   else ''
-                                     end,''),
+                                     when 1065 then 'Disclosure'
+                                     else ''
+                                     end, ''),
                           nullif(case fup.pwp_partner_tested
-                                   when 1065 then 'Partner Testing'
-                                   else ''
-                                     end,''),
+                                     when 1065 then 'Partner Testing'
+                                     else ''
+                                     end, ''),
                           nullif(case fup.screened_for_sti
-                                   when 1065 then 'Screened for STI'
-                                   else ''
-                                     end,''))as PwP,
-                if(fup.last_menstrual_period is not null, timestampdiff(week,fup.last_menstrual_period,fup.visit_date),'') as GestationAge,
-                case when fup.next_appointment_date < '1990-01-01' then null else CAST(fup.next_appointment_date AS DATE) end  AS NextAppointmentDate,
-                'KenyaEMR' as Emr,
-                'Kenya HMIS II' as Project,
-                CAST(fup.substitution_first_line_regimen_date AS DATE)  AS SubstitutionFirstlineRegimenDate,
-                fup.substitution_first_line_regimen_reason AS SubstitutionFirstlineRegimenReason,
-                CAST(fup.substitution_second_line_regimen_date AS DATE) AS SubstitutionSecondlineRegimenDate,
-                fup.substitution_second_line_regimen_reason AS SubstitutionSecondlineRegimenReason,
-                CAST(fup.second_line_regimen_change_date AS DATE) AS SecondlineRegimenChangeDate,
-                fup.second_line_regimen_change_reason AS SecondlineRegimenChangeReason,
+                                     when 1065 then 'Screened for STI'
+                                     else ''
+                                     end, ''))as                                          PwP,
+                if(fup.last_menstrual_period is not null,
+                   timestampdiff(week, fup.last_menstrual_period, fup.visit_date), '') as GestationAge,
+                case
+                    when fup.next_appointment_date < '1990-01-01' then null
+                    else CAST(fup.next_appointment_date AS DATE) end                     AS NextAppointmentDate,
+                'KenyaEMR'                                                             as Emr,
+                'Kenya HMIS II'                                                        as Project,
+                CAST(fup.substitution_first_line_regimen_date AS DATE)                 AS SubstitutionFirstlineRegimenDate,
+                fup.substitution_first_line_regimen_reason                             AS SubstitutionFirstlineRegimenReason,
+                CAST(fup.substitution_second_line_regimen_date AS DATE)                AS SubstitutionSecondlineRegimenDate,
+                fup.substitution_second_line_regimen_reason                            AS SubstitutionSecondlineRegimenReason,
+                CAST(fup.second_line_regimen_change_date AS DATE)                      AS SecondlineRegimenChangeDate,
+                fup.second_line_regimen_change_reason                                  AS SecondlineRegimenChangeReason,
                 CASE fup.stability
-                  WHEN 1 THEN 'Stable'
-                  WHEN 2 THEN 'Not Stable' END as StabilityAssessment,
-                (case fup.differentiated_care when 164942 then 'Standard Care' when 164943 then 'Fast Track' when 164944 then 'Community ART Distribution - HCW Led' when 164945 then 'Community ART Distribution - Peer Led'
-                                              when 164946 then 'Facility ART Distribution Group' else '' end) as DifferentiatedCare,
-                (case population_type when 164928 then 'General Population' when 164929 then 'Key Population' else '' end) as PopulationType,
+                    WHEN 1 THEN 'Stable'
+                    WHEN 2 THEN 'Not Stable' END                                         as StabilityAssessment,
+                (case fup.differentiated_care
+                     when 164942 then 'Standard Care'
+                     when 164943 then 'Fast Track'
+                     when 164944 then 'Community ART Distribution - HCW Led'
+                     when 164945 then 'Community ART Distribution - Peer Led'
+                     when 164946 then 'Facility ART Distribution Group'
+                     else '' end)                                                        as DifferentiatedCare,
+                (case population_type
+                     when 164928 then 'General Population'
+                     when 164929 then 'Key Population'
+                     else '' end)                                                        as PopulationType,
                 case fup.key_population_type
-                  WHEN 105 THEN 'PWID'
-                  WHEN 160578 THEN 'MSM'
-                  WHEN 160579  THEN 'FSW'
-                  when 165084 then 'MSW'
-                  when 165085 then  'PWUD'
-                  when 165100 then 'Transgender'
-                  WHEN 1175 THEN 'N/A'
-                  ELSE null  END as KeyPopulationType,
-                '' as HCWConcern,
-                fup.date_created as Date_Created,
-                GREATEST(COALESCE(d.date_last_modified, fup.date_last_modified), COALESCE(fup.date_last_modified, d.date_last_modified)) as Date_Last_Modified
+                    WHEN 105 THEN 'PWID'
+                    WHEN 160578 THEN 'MSM'
+                    WHEN 160579 THEN 'FSW'
+                    when 165084 then 'MSW'
+                    when 165085 then 'PWUD'
+                    when 165100 then 'Transgender'
+                    WHEN 1175 THEN 'N/A'
+                    ELSE null END                                                        as KeyPopulationType,
+                ''                                                                     as HCWConcern,
+                fup.date_created                                                       as Date_Created,
+                GREATEST(COALESCE(d.date_last_modified, fup.date_last_modified),
+                         COALESCE(fup.date_last_modified, d.date_last_modified))       as Date_Last_Modified
 from kenyaemr_etl.etl_patient_demographics d
-       join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=d.patient_id
-       join kenyaemr_etl.etl_default_facility_info i
-       left join (select de.patient_id,mid(max(concat(de.visit_date,de.regimen)),11) as regimen from kenyaemr_etl.etl_drug_event de
-                  where de.discontinued is null group by de.patient_id)de on fup.patient_id = de.patient_id
-where d.unique_patient_no is not null and fup.visit_date > '1990-01-01' and fup.visit_id is not null;"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+         join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id = d.patient_id
+         join kenyaemr_etl.etl_default_facility_info i
+         left join (select de.patient_id, mid(max(concat(de.visit_date, de.regimen)), 11) as regimen
+                    from kenyaemr_etl.etl_drug_event de
+                    where de.discontinued is null
+                    group by de.patient_id)de on fup.patient_id = de.patient_id
+where d.unique_patient_no is not null
+  and fup.visit_date > '1990-01-01'
+  and fup.visit_id is not null;"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT	*,
 						LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
 						LEFT([Gender],1)+
@@ -4618,7 +4844,8 @@ from kenyaemr_etl.etl_otz_activity a
 7c2e52c0-8728-11eb-8dcd-0242ac130003|Patient Adverse Events|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientAdverseEventExtract|8|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 
 
-82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select pkv.pkv as Pkv,
+82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct * from
+  (select pkv.pkv as Pkv,
        d.patient_id                                                     as PatientPK,
        i.siteCode                                                       as SiteCode,
        d.openmrs_id                                                     as PatientMnchID,
@@ -4637,54 +4864,53 @@ from kenyaemr_etl.etl_otz_activity a
        a.sub_county                                                     as PatientResidentSubCounty,
        a.ward                                                           as PatientResidentWard,
        (case e.in_school when 1 then 'Yes' when 2 then 'No' end)        as Inschool
-			from kenyaemr_etl.etl_patient_demographics d
-       left join (select m.patient_id, min(m.visit_date) as first_mch_enrolment_date
-                  from kenyaemr_etl.etl_mch_enrollment m
-                  group by m.patient_id)m on d.patient_id = m.patient_id
-       left join (select c.patient_id, min(c.visit_date) as first_hei_enrolment_date
-                  from kenyaemr_etl.etl_hei_enrollment c
-                  group by c.patient_id)c on d.patient_id = c.patient_id
-       left join (select a.patient_id, a.county, a.sub_county, a.ward from kenyaemr_etl.etl_person_address a)a
-         on d.patient_id = a.patient_id
-       left join (select * from kenyaemr_etl.etl_hiv_enrollment e)e on d.patient_id = e.patient_id
-       inner join (select x.patient_id as patient_id,
-                          x.sxFirstName,
-                          x.sxLastname,
-                          x.sxMiddleName,
-                          x.dmFirstName,
-                          x.dmLastName,
-                          x.dmMiddleName,
-                          x.Gender,
-                          x.DOB,
-                          CASE
-                            WHEN locate(';', dmLastName) > 0 THEN CONCAT(
-                                                                    CAST(LEFT(Gender, 1) AS CHAR CHARACTER SET utf8),
-                                                                    CAST(sxFirstName AS CHAR CHARACTER SET utf8), CAST(
-                                                                                                                    SUBSTRING(dmLastName, locate(';', dmLastName) + 1, LENGTH(dmLastName))
-                                                                                                                    AS
-                                                                                                                    CHAR CHARACTER SET utf8),
-                                                                    CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
-                              )
-                            ELSE CONCAT(
-                                   CAST(LEFT(Gender, 1)AS CHAR CHARACTER SET utf8),
-                                   CAST(sxFirstName AS CHAR CHARACTER SET utf8),
-                                   CAST(dmLastName AS CHAR CHARACTER SET utf8),
-                                   CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
-                              )
-                              END      AS PKV
-                   from (SELECT patient_id,
-                                SOUNDEX(UPPER(REPLACE(given_name, '0', 'O')))                           AS sxFirstName,
-                                SOUNDEX(UPPER(REPLACE(family_name, '0', 'O')))                          AS sxLastName,
-                                SOUNDEX(UPPER(REPLACE(middle_name, '0', 'O')))                          AS sxMiddleName,
-                                fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name, '0', 'O')))  AS dmFirstName,
-                                fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name, '0', 'O'))) AS dmLastName,
-                                fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name, '0', 'O'))) AS dmMiddleName,
-                                Gender,
-                                DOB
-                         FROM kenyaemr_etl.etl_patient_demographics)x)pkv on pkv.patient_id = d.patient_id
-       join kenyaemr_etl.etl_default_facility_info i
-		where m.patient_id is not null
-   or c.patient_id is not null"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+  from kenyaemr_etl.etl_patient_demographics d
+         left join (select m.patient_id, min(m.visit_date) as first_mch_enrolment_date
+                    from kenyaemr_etl.etl_mch_enrollment m
+                    group by m.patient_id)m on d.patient_id = m.patient_id
+         left join (select c.patient_id, min(c.visit_date) as first_hei_enrolment_date
+                    from kenyaemr_etl.etl_hei_enrollment c
+                    group by c.patient_id)c on d.patient_id = c.patient_id
+         left join (select a.patient_id,max(a.county) county, max(a.sub_county) sub_county, max(a.ward) ward from kenyaemr_etl.etl_person_address a group by patient_id)a
+                   on d.patient_id = a.patient_id
+         left join (select * from kenyaemr_etl.etl_hiv_enrollment e)e on d.patient_id = e.patient_id
+         inner join (select x.patient_id as patient_id,
+                            x.sxFirstName,
+                            x.sxLastname,
+                            x.sxMiddleName,
+                            x.dmFirstName,
+                            x.dmLastName,
+                            x.dmMiddleName,
+                            x.Gender,
+                            x.DOB,
+                            CASE
+                                WHEN locate(';', dmLastName) > 0 THEN CONCAT(
+                                        CAST(LEFT(Gender, 1) AS CHAR CHARACTER SET utf8),
+                                        CAST(sxFirstName AS CHAR CHARACTER SET utf8), CAST(
+                                                SUBSTRING(dmLastName, locate(';', dmLastName) + 1, LENGTH(dmLastName))
+                                            AS
+                                            CHAR CHARACTER SET utf8),
+                                        CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+                                    )
+                                ELSE CONCAT(
+                                        CAST(LEFT(Gender, 1)AS CHAR CHARACTER SET utf8),
+                                        CAST(sxFirstName AS CHAR CHARACTER SET utf8),
+                                        CAST(dmLastName AS CHAR CHARACTER SET utf8),
+                                        CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+                                    )
+                                END      AS PKV
+                     from (SELECT patient_id,
+                                  SOUNDEX(UPPER(REPLACE(given_name, '0', 'O')))                           AS sxFirstName,
+                                  SOUNDEX(UPPER(REPLACE(family_name, '0', 'O')))                          AS sxLastName,
+                                  SOUNDEX(UPPER(REPLACE(middle_name, '0', 'O')))                          AS sxMiddleName,
+                                  fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name, '0', 'O')))  AS dmFirstName,
+                                  fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name, '0', 'O'))) AS dmLastName,
+                                  fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name, '0', 'O'))) AS dmMiddleName,
+                                  Gender,
+                                  DOB
+                           FROM kenyaemr_etl.etl_patient_demographics)x)pkv on pkv.patient_id = d.patient_id
+         join kenyaemr_etl.etl_default_facility_info i
+   where m.patient_id is not null or c.patient_id is not null)x"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651214-9db2-11eb-a8b3-0242ac130003|Mnch Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
        i.siteCode                                                                   as SiteCode,
        d.openmrs_id                                                                 as PatientMnchID,

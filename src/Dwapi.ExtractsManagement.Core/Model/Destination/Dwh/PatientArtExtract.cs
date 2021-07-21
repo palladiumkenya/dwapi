@@ -1,9 +1,10 @@
 using System;
+using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 {
 
-    public class PatientArtExtract : ClientExtract
+    public class PatientArtExtract : ClientExtract,IArt
     {
         public string FacilityName { get; set; }
         public DateTime? DOB { get; set; }
@@ -29,5 +30,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string ExitReason { get; set; }
         public DateTime? ExitDate { get; set; }
 
+
+        public string PreviousARTUse { get; set; }
+        public string  PreviousARTPurpose { get; set; }
+        public DateTime?  DateLastUsed { get; set; }
     }
 }
