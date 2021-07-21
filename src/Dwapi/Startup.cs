@@ -440,6 +440,7 @@ namespace Dwapi
             services.AddScoped<IDwhSendService, DwhSendService>();
             services.AddScoped<ICTSendService, CTSendService>();
             services.AddScoped<IDwhExtractSentServcie, DwhExtractSentServcie>();
+            services.AddScoped<IMnchExtractSentServcie, MnchExtractSentServcie>();
 
             services.AddScoped<ITempHTSClientExtractRepository, TempHTSClientExtractRepository>();
             services.AddScoped<ITempHTSClientLinkageExtractRepository, TempHTSClientLinkageExtractRepository>();

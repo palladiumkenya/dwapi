@@ -8,11 +8,11 @@ namespace Dwapi.EventHandlers.Mnch
 {
     public class MnchExtractSentEventHandlers : IHandler<MnchExtractSentEvent>
     {
-        private readonly IDwhExtractSentServcie _service;
+        private readonly IMnchExtractSentServcie _service;
 
         public MnchExtractSentEventHandlers()
         {
-            _service = Startup.ServiceProvider.GetService<IDwhExtractSentServcie>();
+            _service = Startup.ServiceProvider.GetService<IMnchExtractSentServcie>();
         }
 
         public void Handle(MnchExtractSentEvent domainEvent)

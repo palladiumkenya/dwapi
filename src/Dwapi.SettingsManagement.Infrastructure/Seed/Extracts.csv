@@ -4834,14 +4834,14 @@ from kenyaemr_etl.etl_otz_activity a
                   where program_name='OTZ' group by d.patient_id)d on d.patient_id = a.patient_id
        join kenyaemr_etl.etl_default_facility_info s;"|dwhstage|0|OtzExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
-7c2e4a14-8728-11eb-8dcd-0242ac130003|All Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|1|PatientExtract|1|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
-7c2e4c44-8728-11eb-8dcd-0242ac130003|ART Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientArtExtract|2|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
-7c2e4d34-8728-11eb-8dcd-0242ac130003|Patient Baselines|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientBaselineExtract|3|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
-7c2e4dfc-8728-11eb-8dcd-0242ac130003|Patient Status|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientStatusExtract|4|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
-7c2e4eba-8728-11eb-8dcd-0242ac130003|Patient Labs|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientLabExtract|5|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
-7c2e4f6e-8728-11eb-8dcd-0242ac130003|Patient Pharmacy|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientPharmacyExtract|6|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
-7c2e51ee-8728-11eb-8dcd-0242ac130003|Patient Visits|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientVisitExtract|7|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
-7c2e52c0-8728-11eb-8dcd-0242ac130003|Patient Adverse Events|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientAdverseEventExtract|8|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
+7c2e4a14-8728-11eb-8dcd-0242ac130003|All Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_Extract"|dwhstage|1|PatientExtract|1|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
+7c2e4c44-8728-11eb-8dcd-0242ac130003|ART Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_ART_EXTRACT"|dwhstage|0|PatientArtExtract|2|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
+7c2e4d34-8728-11eb-8dcd-0242ac130003|Patient Baselines|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_Baseline_Extract"|dwhstage|0|PatientBaselineExtract|3|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
+7c2e4dfc-8728-11eb-8dcd-0242ac130003|Patient Status|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_STATUS_Extract"|dwhstage|0|PatientStatusExtract|4|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
+7c2e4eba-8728-11eb-8dcd-0242ac130003|Patient Labs|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_LABS_EXTRACT"|dwhstage|0|PatientLabExtract|5|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
+7c2e4f6e-8728-11eb-8dcd-0242ac130003|Patient Pharmacy|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_PHARMACY_EXTRACT"|dwhstage|0|PatientPharmacyExtract|6|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
+7c2e51ee-8728-11eb-8dcd-0242ac130003|Patient Visits|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_VISIT_Extract"|dwhstage|0|PatientVisitExtract|7|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
+7c2e52c0-8728-11eb-8dcd-0242ac130003|Patient Adverse Events|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_Adverse_Events"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 
 
 82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct * from

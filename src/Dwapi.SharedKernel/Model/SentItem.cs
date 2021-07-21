@@ -21,6 +21,7 @@ namespace Dwapi.SharedKernel.Model
         {
             Extract = extract;
             StatusInfo = statusInfo;
+            // if(extract=nameof())
         }
         public SentItem(Guid id, SendStatus status, string statusInfo,ExtractType extractType):this(id,status)
         {
