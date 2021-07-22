@@ -622,7 +622,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         let cSum = 0;
         const keys = this.extracts.map(x => `MNCH-${x.name}`);
         const key = `MNCH-${extract}`;
-        localStorage.setItem(key, progress);
+        localStorage.setItem(key, this.ConvertStringToNumber(progress));
         keys.forEach(k => {
             const data = localStorage.getItem(k);
             if (data) {
@@ -670,6 +670,9 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this._hubConnection.on('ShowMnchSendProgress', (dwhProgress: any) => {
+            if (dwhProgress.extract === 'MatVisitExtract') {
+                console.log('xxx');
+            }
             const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);
             console.log(`${dwhProgress.extract}:${dwhProgress.progress}, Overall:${progress}`);
             const st = {
@@ -826,6 +829,25 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             docket: docketId,
             endpoint: ''
         };
+    }
+
+    private ConvertStringToNumber(input: string) {
+        let finnum = 0;
+
+        if (!input) {
+            finnum = 0;
+        }
+
+        if (input.length === 0) {
+            finnum = 0;
+        }
+        const num = Number(input);
+        if (num < 0) {
+            finnum = 0;
+        } else {
+            finnum = num;
+        }
+        return `${finnum}`;
     }
 
     public ngOnDestroy(): void {
