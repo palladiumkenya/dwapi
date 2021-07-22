@@ -30,7 +30,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Mnch
             _extractRepository = extractRepository;
         }
 
-        public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
+        public Task<int> Extract(DbExtract extract, DbProtocol dbProtocol)
         {
             var mapper = dbProtocol.SupportsDifferential ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
 
@@ -40,7 +40,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Mnch
 
             int count = 0;
             int loaded = 0;
-            using (var rdr = await _reader.ExecuteReader(dbProtocol, extract))
+            using (var rdr =  _reader.ExecuteReaderSync(dbProtocol, extract))
             {
                 while (rdr.Read())
                 {
@@ -82,7 +82,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Mnch
                     nameof(ExtractStatus.Found),
                     loaded, 0, 0, 0, 0)));
 
-            return loaded;
+            return Task.FromResult(loaded);
         }
     }
 }

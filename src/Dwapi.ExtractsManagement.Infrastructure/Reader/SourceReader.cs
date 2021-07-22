@@ -33,7 +33,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
                 sourceConnection.Open();
 
             Connection = sourceConnection;
-            var commandDefinition = new CommandDefinition(extract.ExtractSql, null, null, 0);
+            var commandDefinition = new CommandDefinition(extract.ExtractSql, null, null, 3600);
 
             if (sourceConnection is SqliteConnection)
                 return Task.FromResult<IDataReader>(sourceConnection.ExecuteReader(commandDefinition));
