@@ -102,7 +102,7 @@ namespace Dwapi.Controller
                 return BadRequest();
 
             string version = GetType().Assembly.GetName().Version.ToString();
-            await _mediator.Publish(new ExtractSent("HivTestingService", version));
+            await _mediator.Publish(new ExtractSent("MnchService", version));
 
             try
             {
