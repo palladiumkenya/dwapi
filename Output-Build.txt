@@ -1,9 +1,0 @@
-﻿1>------ Build started: Project: Dwapi.ExtractsManagement.Core.Tests, Configuration: Debug Any CPU ------
-1>F:\Palladium\dwh\dwapi\test\Dwapi.ExtractsManagement.Core.Tests\TestInitializer.cs(321,32,321,63): warning CS0618: 'ITempHTSClientExtractRepository' is obsolete: 'Class is obsolete,use ITempHtsClientsExtractRepository'
-1>F:\Palladium\dwh\dwapi\test\Dwapi.ExtractsManagement.Core.Tests\TestInitializer.cs(321,65,321,95): warning CS0618: 'TempHTSClientExtractRepository' is obsolete: 'Class is obsolete,use TempHtsClientsExtractRepository'
-1>F:\Palladium\dwh\dwapi\test\Dwapi.ExtractsManagement.Core.Tests\TestInitializer.cs(322,72,322,109): warning CS0612: 'TempHTSClientLinkageExtractRepository' is obsolete
-1>F:\Palladium\dwh\dwapi\test\Dwapi.ExtractsManagement.Core.Tests\TestInitializer.cs(323,72,323,109): warning CS0612: 'TempHTSClientPartnerExtractRepository' is obsolete
-1>F:\Palladium\dwh\dwapi\test\Dwapi.ExtractsManagement.Core.Tests\TestInitializer.cs(534,51,534,67): warning CS0612: 'MpiSearchService' is obsolete
-1>Dwapi.ExtractsManagement.Core.Tests -> F:\Palladium\dwh\dwapi\test\Dwapi.ExtractsManagement.Core.Tests\bin\Debug\netcoreapp2.1\Dwapi.ExtractsManagement.Core.Tests.dll
-1>Done building project "Dwapi.ExtractsManagement.Core.Tests.csproj".
-========== Build: 1 succeeded, 0 failed, 10 up-to-date, 0 skipped ==========
