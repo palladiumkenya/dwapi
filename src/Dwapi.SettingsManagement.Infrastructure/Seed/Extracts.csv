@@ -5834,7 +5834,7 @@ from kenyaemr_etl.etl_otz_activity a
 											ab.final_antibody_date       as FinalyAntibodyDate,
 											a.1st_DNA_PCR_result         as DNAPCR1,
 											b.2nd_DNA_PCR_result         as DNAPCR2,
-											C.3rd_DNA_PCR_result         as DNAPCR3,
+											c.3rd_DNA_PCR_result         as DNAPCR3,
 											v.dna_confirmatory_results   as ConfirmatoryPCR,
 											baseline.baseline_vl_results as BasellineVL,
 											ab.final_antibody_result     as FinalyAntibody,
