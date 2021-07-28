@@ -100,6 +100,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard
             throw new NotImplementedException();
         }
 
+        public IDataReader ExecuteReaderSync(DbProtocol protocol, DbExtract extract)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool CheckDiffSupport(DbProtocol protocol)
         {
             throw new NotImplementedException();

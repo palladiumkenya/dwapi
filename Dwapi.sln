@@ -71,7 +71,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.IntegrationTests", "t
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{CA1F555D-7AFC-46C4-B8EF-0616BC8B35D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwapi.Contracts", "src\Dwapi.Contracts\Dwapi.Contracts.csproj", "{D0BF02C2-2D89-4063-8658-B3BC7B262860}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dwapi.Contracts", "src\Dwapi.Contracts\Dwapi.Contracts.csproj", "{D0BF02C2-2D89-4063-8658-B3BC7B262860}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

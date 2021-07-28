@@ -5,6 +5,7 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Diff;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
@@ -12,6 +13,7 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
+using Dwapi.ExtractsManagement.Core.Model.Source.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mts;
 using Dwapi.SharedKernel.Infrastructure;
 using LiveSeeder.Core;
@@ -172,6 +174,57 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempOtzExtractError> TempOtzExtractError { get; set; }
         public DbSet<TempOtzExtractErrorSummary> TempOtzExtractErrorSummary { get; set; }
 
+        #region Mnch
+        public virtual DbSet<TempPatientMnchExtract> TempPatientMnchExtracts { get; set; }
+        public virtual DbSet<TempMnchEnrolmentExtract> TempMnchEnrolmentExtracts { get; set; }
+        public virtual DbSet<TempMnchArtExtract> TempMnchArtExtracts { get; set; }
+        public virtual DbSet<TempAncVisitExtract> TempAncVisitExtracts { get; set; }
+        public virtual DbSet<TempMatVisitExtract> TempMatVisitExtracts { get; set; }
+        public virtual DbSet<TempPncVisitExtract> TempPncVisitExtracts { get; set; }
+        public virtual DbSet<TempMotherBabyPairExtract> TempMotherBabyPairExtracts { get; set; }
+        public virtual DbSet<TempCwcEnrolmentExtract> TempCwcEnrolmentExtracts { get; set; }
+        public virtual DbSet<TempCwcVisitExtract> TempCwcVisitExtracts { get; set; }
+        public virtual DbSet<TempHeiExtract> TempHeiExtracts { get; set; }
+        public virtual DbSet<TempMnchLabExtract> TempMnchLabExtracts { get; set; }
+
+        public virtual DbSet<PatientMnchExtract> PatientMnchExtracts { get; set; }
+        public virtual DbSet<MnchEnrolmentExtract> MnchEnrolmentExtracts { get; set; }
+        public virtual DbSet<MnchArtExtract> MnchArtExtracts { get; set; }
+        public virtual DbSet<AncVisitExtract> AncVisitExtracts { get; set; }
+        public virtual DbSet<MatVisitExtract> MatVisitExtracts { get; set; }
+        public virtual DbSet<PncVisitExtract> PncVisitExtracts { get; set; }
+        public virtual DbSet<MotherBabyPairExtract> MotherBabyPairExtracts { get; set; }
+        public virtual DbSet<CwcEnrolmentExtract> CwcEnrolmentExtracts { get; set; }
+        public virtual DbSet<CwcVisitExtract> CwcVisitExtracts { get; set; }
+        public virtual DbSet<HeiExtract> HeiExtracts { get; set; }
+        public virtual DbSet<MnchLabExtract> MnchLabExtracts { get; set; }
+
+        // public virtual DbSet<TempPatientMnchExtractError> TempPatientMnchExtractError { get; set; }
+        // public virtual DbSet<TempMnchEnrolmentExtractError> TempMnchEnrolmentExtractError { get; set; }
+        // public virtual DbSet<TempMnchArtExtractError> TempMnchArtExtractError { get; set; }
+        // public virtual DbSet<TempAncVisitExtractError> TempAncVisitExtractError { get; set; }
+        // public virtual DbSet<TempMatVisitExtractError> TempMatVisitExtractError { get; set; }
+        // public virtual DbSet<TempPncVisitExtractError> TempPncVisitExtractError { get; set; }
+        // public virtual DbSet<TempMotherBabyPairExtractError> TempMotherBabyPairExtractError { get; set; }
+        // public virtual DbSet<TempCwcEnrolmentExtractError> TempCwcEnrolmentExtractError { get; set; }
+        // public virtual DbSet<TempCwcVisitExtractError> TempCwcVisitExtractError { get; set; }
+        // public virtual DbSet<TempHeiExtractError> TempHeiExtractError { get; set; }
+        // public virtual DbSet<TempMnchLabExtractError> TempMnchLabExtractError { get; set; }
+        //
+        // public virtual DbSet<TempPatientMnchExtractErrorSummary> TempPatientMnchExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempMnchEnrolmentExtractErrorSummary> TempMnchEnrolmentExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempMnchArtExtractErrorSummary> TempMnchArtExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempAncVisitExtractErrorSummary> TempAncVisitExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempMatVisitExtractErrorSummary> TempMatVisitExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempPncVisitExtractErrorSummary> TempPncVisitExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempMotherBabyPairExtractErrorSummary> TempMotherBabyPairExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempCwcEnrolmentExtractErrorSummary> TempCwcEnrolmentExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempCwcVisitExtractErrorSummary> TempCwcVisitExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempHeiExtractErrorSummary> TempHeiExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempMnchLabExtractErrorSummary> TempMnchLabExtractErrorSummary { get; set; }
+
+        #endregion
+
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
@@ -316,6 +369,71 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasKey(f => new {f.SiteCode, f.PatientPK});
+
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.AncVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.CwcEnrolmentExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.CwcVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.HeiExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MatVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MnchArtExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MnchEnrolmentExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MnchLabExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MotherBabyPairExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.PncVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
             DapperPlusManager.Entity<TempPatientArtExtract>().Key(x => x.Id).Table($"{nameof(TempPatientArtExtracts)}");
             DapperPlusManager.Entity<TempPatientBaselinesExtract>().Key(x => x.Id)
@@ -402,6 +520,29 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<OtzExtract>().Key(x => x.Id).Table($"{nameof(OtzExtracts)}");
 
 
+            DapperPlusManager.Entity<TempPatientMnchExtract>().Key(x => x.Id).Table($"{nameof(TempPatientMnchExtracts)}");
+            DapperPlusManager.Entity<TempMnchEnrolmentExtract>().Key(x => x.Id).Table($"{nameof(TempMnchEnrolmentExtracts)}");
+            DapperPlusManager.Entity<TempMnchArtExtract>().Key(x => x.Id).Table($"{nameof(TempMnchArtExtracts)}");
+            DapperPlusManager.Entity<TempAncVisitExtract>().Key(x => x.Id).Table($"{nameof(TempAncVisitExtracts)}");
+            DapperPlusManager.Entity<TempMatVisitExtract>().Key(x => x.Id).Table($"{nameof(TempMatVisitExtracts)}");
+            DapperPlusManager.Entity<TempPncVisitExtract>().Key(x => x.Id).Table($"{nameof(TempPncVisitExtracts)}");
+            DapperPlusManager.Entity<TempMotherBabyPairExtract>().Key(x => x.Id).Table($"{nameof(TempMotherBabyPairExtracts)}");
+            DapperPlusManager.Entity<TempCwcEnrolmentExtract>().Key(x => x.Id).Table($"{nameof(TempCwcEnrolmentExtracts)}");
+            DapperPlusManager.Entity<TempCwcVisitExtract>().Key(x => x.Id).Table($"{nameof(TempCwcVisitExtracts)}");
+            DapperPlusManager.Entity<TempHeiExtract>().Key(x => x.Id).Table($"{nameof(TempHeiExtracts)}");
+            DapperPlusManager.Entity<TempMnchLabExtract>().Key(x => x.Id).Table($"{nameof(TempMnchLabExtracts)}");
+
+            DapperPlusManager.Entity<PatientMnchExtract>().Key(x => x.Id).Table($"{nameof(PatientMnchExtracts)}");
+            DapperPlusManager.Entity<MnchEnrolmentExtract>().Key(x => x.Id).Table($"{nameof(MnchEnrolmentExtracts)}");
+            DapperPlusManager.Entity<MnchArtExtract>().Key(x => x.Id).Table($"{nameof(MnchArtExtracts)}");
+            DapperPlusManager.Entity<AncVisitExtract>().Key(x => x.Id).Table($"{nameof(AncVisitExtracts)}");
+            DapperPlusManager.Entity<MatVisitExtract>().Key(x => x.Id).Table($"{nameof(MatVisitExtracts)}");
+            DapperPlusManager.Entity<PncVisitExtract>().Key(x => x.Id).Table($"{nameof(PncVisitExtracts)}");
+            DapperPlusManager.Entity<MotherBabyPairExtract>().Key(x => x.Id).Table($"{nameof(MotherBabyPairExtracts)}");
+            DapperPlusManager.Entity<CwcEnrolmentExtract>().Key(x => x.Id).Table($"{nameof(CwcEnrolmentExtracts)}");
+            DapperPlusManager.Entity<CwcVisitExtract>().Key(x => x.Id).Table($"{nameof(CwcVisitExtracts)}");
+            DapperPlusManager.Entity<HeiExtract>().Key(x => x.Id).Table($"{nameof(HeiExtracts)}");
+            DapperPlusManager.Entity<MnchLabExtract>().Key(x => x.Id).Table($"{nameof(MnchLabExtracts)}");
         }
 
         public override void EnsureSeeded()

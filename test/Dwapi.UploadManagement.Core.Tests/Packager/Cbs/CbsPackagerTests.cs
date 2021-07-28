@@ -151,7 +151,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
             Mapper.Initialize(cfg =>
                 {
                     cfg.AddDataReaderMapping();
-                    cfg.AddProfile<TempExtractProfile>();
+                    cfg.AddProfile<DiffCtExtractProfile>();
                     cfg.AddProfile<TempMasterPatientIndexProfile>();
                     cfg.AddProfile<EmrProfiles>();
                     cfg.AddProfile<TempHtsExtractProfile>();
@@ -166,7 +166,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Cbs
             Mapper.Initialize(cfg =>
                 {
                     cfg.AddDataReaderMapping();
-                    cfg.AddProfile<TempExtractProfile>();
+                    cfg.AddProfile<DiffCtExtractProfile>();
                     cfg.AddProfile<TempMasterPatientIndexProfile>();
                     cfg.AddProfile<EmrProfiles>();
                     cfg.AddProfile<TempHtsExtractProfile>();
