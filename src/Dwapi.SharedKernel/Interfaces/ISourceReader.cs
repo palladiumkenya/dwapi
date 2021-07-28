@@ -9,6 +9,7 @@ namespace Dwapi.SharedKernel.Interfaces
         IDbConnection Connection { get; }
         int Find(DbProtocol protocol, DbExtract extract);
         Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract);
+        IDataReader ExecuteReaderSync(DbProtocol protocol, DbExtract extract);
         bool CheckDiffSupport(DbProtocol protocol);
     }
 }

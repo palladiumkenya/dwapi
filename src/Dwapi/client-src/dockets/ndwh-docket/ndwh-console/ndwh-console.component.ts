@@ -173,7 +173,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     this.canSend = this.canLoadFromEmr = true;
-                    console.error('LOADING>>>', e);
                     this.errorMessage = [];
                     this.errorMessage.push({
                         severity: 'error',

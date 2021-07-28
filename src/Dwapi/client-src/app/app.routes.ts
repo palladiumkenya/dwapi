@@ -9,6 +9,7 @@ import {RegistryManagerComponent} from '../settings/registry-manager/registry-ma
 import { MpiSearchComponent } from '../dockets/cbs-docket/mpi-search/mpi-search.component';
 import {HtsDocketComponent} from '../dockets/hts-docket/hts-docket.component';
 import {MgsDocketComponent} from '../dockets/mgs-docket/mgs-docket.component';
+import {MnchDocketComponent} from '../dockets/mnch-docket/mnch-docket.component';
 
 export const routes: Routes = [
     {path: 'dashboard', component: DashboardComponent},
@@ -20,6 +21,7 @@ export const routes: Routes = [
     {path: 'cbs', component: CbsDocketComponent},
     {path: 'hts', component: HtsDocketComponent},
     {path: 'mgs', component: MgsDocketComponent},
+    {path: 'mnch', component: MnchDocketComponent},
     {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
     {path: '**', component: DashboardComponent }
 ];

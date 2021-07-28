@@ -28,6 +28,7 @@ export class AppMenuComponent implements OnInit {
                             {label: 'PKV Services', icon: 'search', routerLink: ['/registry', 'CBS']},
                             {label: 'HIV Testing Services', icon: 'local_hospital', routerLink: ['/registry', 'HTS']},
                             // {label: 'Migration Services', icon: 'flight_takeoff', routerLink: ['/registry', 'MGS']}
+                            {label: 'MNCH Services', icon: 'pregnant_woman', routerLink: ['/registry', 'MNCH']}
                         ]
                     },
                     {label: 'EMR Settings', icon: 'dvr', routerLink: ['/emrconfig']}
@@ -41,6 +42,7 @@ export class AppMenuComponent implements OnInit {
                     {label: 'PKV Services', icon: 'search', routerLink: ['/cbs']},
                     {label: 'HIV Testing Services', icon: 'local_hospital', routerLink: ['/hts']},
                     // {label: 'Migration Services', icon: 'flight_takeoff', routerLink: ['/mgs']}
+                    {label: 'MNCH Services', icon: 'pregnant_woman', routerLink: ['/mnch']}
                 ]
             }
         ];

@@ -8,20 +8,24 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mgs;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Hts;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Mgs;
+using Dwapi.ExtractsManagement.Infrastructure.Reader.Mnch;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard;
 using Dwapi.ExtractsManagement.Infrastructure.Repository;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Cbs;
@@ -35,20 +39,27 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Validations;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.Extracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.TempExtracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Hts;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Mgs;
+using Dwapi.ExtractsManagement.Infrastructure.Validators.Mnch;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SettingsManagement.Infrastructure;
 using Dwapi.SettingsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.SharedKernel.Infrastructure.Tests.TestHelpers;
 using Dwapi.SharedKernel.Utility;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -92,8 +103,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
             EmrConnectionString = GenerateConnection(config, "emrConnection", false);
             EmrDiffConnectionString = GenerateConnection(config, "emrDiffConnection", false);
-            ConnectionString = GenerateConnection(config, "dwapiConnection", false);
-            DiffConnectionString = GenerateConnection(config, "dwapiDiffConnection", false);
+            ConnectionString = GenerateConnection(config, "dwapiConnection", true);
+            DiffConnectionString = GenerateConnection(config, "dwapiDiffConnection", true);
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
@@ -127,8 +138,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services.AddTransient<IDwhExtractSourceReader, DwhExtractSourceReader>();
             services.AddTransient<IHTSExtractSourceReader, HTSExtractSourceReader>();
             services.AddTransient<IPsmartSourceReader, PsmartSourceReader>();
-            // NEW
             services.AddScoped<IMgsExtractSourceReader, MgsExtractSourceReader>();
+            services.AddScoped<IMnchExtractSourceReader, MnchExtractSourceReader>();
 
             #endregion
 
@@ -329,14 +340,65 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
             #endregion
 
+            #region MNCH
+
+            #region Extracts
+
+            services.AddTransient<IPatientMnchExtractRepository, PatientMnchExtractRepository>();
+            services.AddTransient<IMnchEnrolmentExtractRepository, MnchEnrolmentExtractRepository>();
+            services.AddTransient<IMnchArtExtractRepository, MnchArtExtractRepository>();
+            services.AddTransient<IAncVisitExtractRepository, AncVisitExtractRepository>();
+            services.AddTransient<IMatVisitExtractRepository, MatVisitExtractRepository>();
+            services.AddTransient<IPncVisitExtractRepository, PncVisitExtractRepository>();
+            services.AddTransient<IMotherBabyPairExtractRepository, MotherBabyPairExtractRepository>();
+            services.AddTransient<ICwcEnrolmentExtractRepository, CwcEnrolmentExtractRepository>();
+            services.AddTransient<ICwcVisitExtractRepository, CwcVisitExtractRepository>();
+            services.AddTransient<IHeiExtractRepository, HeiExtractRepository>();
+            services.AddTransient<IMnchLabExtractRepository, MnchLabExtractRepository>();
+
+            #endregion
+
+            #region TempExtracts
+
+            services.AddTransient<ITempPatientMnchExtractRepository, TempPatientMnchExtractRepository>();
+            services.AddTransient<ITempMnchEnrolmentExtractRepository, TempMnchEnrolmentExtractRepository>();
+            services.AddTransient<ITempMnchArtExtractRepository, TempMnchArtExtractRepository>();
+            services.AddTransient<ITempAncVisitExtractRepository, TempAncVisitExtractRepository>();
+            services.AddTransient<ITempMatVisitExtractRepository, TempMatVisitExtractRepository>();
+            services.AddTransient<ITempPncVisitExtractRepository, TempPncVisitExtractRepository>();
+            services.AddTransient<ITempMotherBabyPairExtractRepository, TempMotherBabyPairExtractRepository>();
+            services.AddTransient<ITempCwcEnrolmentExtractRepository, TempCwcEnrolmentExtractRepository>();
+            services.AddTransient<ITempCwcVisitExtractRepository, TempCwcVisitExtractRepository>();
+            services.AddTransient<ITempHeiExtractRepository, TempHeiExtractRepository>();
+            services.AddTransient<ITempMnchLabExtractRepository, TempMnchLabExtractRepository>();
+
+            #endregion
+
+            #region Validations
+
+            services.AddTransient<ITempPatientMnchExtractErrorSummaryRepository, TempPatientMnchExtractErrorSummaryRepository>();
+            services.AddTransient<ITempMnchEnrolmentExtractErrorSummaryRepository, TempMnchEnrolmentExtractErrorSummaryRepository>();
+            services.AddTransient<ITempMnchArtExtractErrorSummaryRepository, TempMnchArtExtractErrorSummaryRepository>();
+            services.AddTransient<ITempAncVisitExtractErrorSummaryRepository, TempAncVisitExtractErrorSummaryRepository>();
+            services.AddTransient<ITempMatVisitExtractErrorSummaryRepository, TempMatVisitExtractErrorSummaryRepository>();
+            services.AddTransient<ITempPncVisitExtractErrorSummaryRepository, TempPncVisitExtractErrorSummaryRepository>();
+            services.AddTransient<ITempMotherBabyPairExtractErrorSummaryRepository, TempMotherBabyPairExtractErrorSummaryRepository>();
+            services.AddTransient<ITempCwcEnrolmentExtractErrorSummaryRepository, TempCwcEnrolmentExtractErrorSummaryRepository>();
+            services.AddTransient<ITempCwcVisitExtractErrorSummaryRepository, TempCwcVisitExtractErrorSummaryRepository>();
+            services.AddTransient<ITempHeiExtractErrorSummaryRepository, TempHeiExtractErrorSummaryRepository>();
+            services.AddTransient<ITempMnchLabExtractErrorSummaryRepository, TempMnchLabExtractErrorSummaryRepository>();
+
+
+            #endregion
+
+            #endregion
             #region Validators
 
             services.AddTransient<IMasterPatientIndexValidator, MasterPatientIndexValidator>();
             services.AddTransient<IExtractValidator, ExtractValidator>();
             services.AddTransient<IHtsExtractValidator, HtsExtractValidator>();
-            // NEW
             services.AddScoped<IMetricExtractValidator, MetricExtractValidator>();
-
+            services.AddScoped<IMnchExtractValidator, MnchExtractValidator>();
             #endregion
 
             AllServices = services;
@@ -345,8 +407,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
         public static void ClearDb()
         {
-            var econtext = ServiceProvider.GetService<ExtractsContext>();
-            econtext.EnsureSeeded();
+            NewDb();
+            ServiceProvider.GetService<ExtractsContext>().EnsureSeeded();
         }
 
         public static void ClearDiffDb()
@@ -364,8 +426,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
             ServiceProvider = AllServices.BuildServiceProvider();
 
-            var econtext = ServiceProvider.GetService<ExtractsContext>();
-            econtext.EnsureSeeded();
+            NewDb();
+            ServiceProvider.GetService<ExtractsContext>().EnsureSeeded();
+        }
+
+        public static void NewDb()
+        {
+            CreateDb(ServiceProvider.GetService<SettingsContext>(), true);
+            CreateDb(ServiceProvider.GetService<ExtractsContext>());
         }
 
         public static void SeedData(params IEnumerable<object>[] entities)
@@ -397,6 +465,33 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             }
 
             context.SaveChanges();
+        }
+
+        private static void CreateDb(BaseContext context, bool seed = false)
+        {
+            try
+            {
+                var databaseCreator = (RelationalDatabaseCreator) context.Database.GetService<IDatabaseCreator>();
+                databaseCreator.CreateTables();
+                if (context is ExtractsContext)
+                {
+                    context.Database.ExecuteSqlCommand(@"
+                        CREATE VIEW vMasterPatientIndicesJaro
+                        AS
+                        SELECT 
+	                        *,0 AS [JaroWinklerScore]
+                        FROM   
+	                        [MasterPatientIndices]
+                        ");
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Debug("Tables already Exist");
+            }
+
+            if (seed)
+                context.EnsureSeeded();
         }
 
         private void RegisterLicence()

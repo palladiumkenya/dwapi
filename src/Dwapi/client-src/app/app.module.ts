@@ -111,7 +111,8 @@ import {NdwhExtractDetailsComponent} from '../dockets/ndwh-docket/ndwh-extract-d
 import {NdwhPatientsExtractService} from '../dockets/services/ndwh-patients-extract.service';
 import {DbProtocolComponent} from '../settings/db-protocol/db-protocol.component';
 // tslint:disable-next-line:max-line-length
-import {ValidRecordDetailsComponent} from '../dockets/ndwh-docket/ndwh-extract-details/valid-record-details/valid-record-details.component';
+import {ValidRecordDetailsComponent} from
+        '../dockets/ndwh-docket/ndwh-extract-details/valid-record-details/valid-record-details.component';
 // tslint:disable-next-line:max-line-length
 import {InvalidRecordDetailsComponent} from '../dockets/ndwh-docket/ndwh-extract-details/invalid-record-details/invalid-record-details.component';
 import {EmrDocketComponent} from '../settings/emr-docket/emr-docket.component';
@@ -161,7 +162,17 @@ import {MgsInvalidComponent} from '../dockets/mgs-docket/mgs-extract-details/mgs
 import {MgsValidComponent} from '../dockets/mgs-docket/mgs-extract-details/mgs-valid/mgs-valid.component';
 import {MgsSenderService} from '../dockets/services/mgs-sender.service';
 import {MetricMigrationService} from '../dockets/services/metric-migration.service';
-import {NdwhSummaryService} from "../dockets/services/ndwh-summary.service";
+import {NdwhSummaryService} from '../dockets/services/ndwh-summary.service';
+import {MnchClientService} from '../dockets/services/mnch-client.service';
+import {MnchSenderService} from '../dockets/services/mnch-sender.service';
+import {MnchService} from '../dockets/services/mnch.service';
+import {MnchClientLinkageService} from '../dockets/services/mnch-client-linkage.service';
+import {MnchDocketComponent} from '../dockets/mnch-docket/mnch-docket.component';
+import {MnchConsoleComponent} from '../dockets/mnch-docket/mnch-console/mnch-console.component';
+import {MnchExtractDetailsComponent} from '../dockets/mnch-docket/mnch-extract-details/mnch-extract-details.component';
+import {MnchInvalidComponent} from '../dockets/mnch-docket/mnch-extract-details/mnch-invalid/mnch-invalid.component';
+import {MnchValidComponent} from '../dockets/mnch-docket/mnch-extract-details/mnch-valid/mnch-valid.component';
+import {MnchSummaryService} from "../dockets/services/mnch-summary.service";
 
 @NgModule({
     imports: [
@@ -284,7 +295,12 @@ import {NdwhSummaryService} from "../dockets/services/ndwh-summary.service";
         MgsConsoleComponent,
         MgsExtractDetailsComponent,
         MgsInvalidComponent,
-        MgsValidComponent
+        MgsValidComponent,
+        MnchDocketComponent,
+        MnchConsoleComponent,
+        MnchExtractDetailsComponent,
+        MnchInvalidComponent,
+        MnchValidComponent,
 ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
@@ -293,9 +309,10 @@ import {NdwhSummaryService} from "../dockets/services/ndwh-summary.service";
         CbsService, NdwhPatientArtService, NdwhPatientBaselineService, NdwhPatientLaboratoryService, NdwhPatientPharmacyService,
         NdwhPatientStatusService, NdwhPatientVisitService,
         SetupService, MpiSearchService, NdwhPatientAdverseEventService, AppDetailsService, HtsService, HtsSenderService,
-        HtsClientsService, HtsClientTestsService, HtsClientsLinkageService, HtsTestKitsService, HtsClientTracingService, HtsPartnerTracingService,
-        HtsPartnerNotificationServicesService, HtsClientService, HtsClientPartnerService, HtsClientLinkageService,
-        MetricsService,MgsService,MgsSenderService,MetricMigrationService,NdwhSummaryService
+        HtsClientsService, HtsClientTestsService, HtsClientsLinkageService, HtsTestKitsService, HtsClientTracingService,
+        HtsPartnerTracingService, HtsPartnerNotificationServicesService, HtsClientService, HtsClientPartnerService, HtsClientLinkageService,
+        MetricsService, MgsService, MgsSenderService, MetricMigrationService, NdwhSummaryService,
+        MnchService, MnchSenderService, MnchClientService, MnchClientLinkageService, MnchSummaryService
     ],
     bootstrap: [AppComponent]
 })

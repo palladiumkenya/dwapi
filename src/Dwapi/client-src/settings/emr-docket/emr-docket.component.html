@@ -51,8 +51,23 @@
             </p-column>
         </p-dataTable>
     </p-tabPanel>
-    <p-tabPanel header="Migration Services">
-        <p-dataTable [value]="mgsExtracts" selectionMode="single" [(selection)]="selectedMgsExtract" dataKey="id">
+
+<!--    <p-tabPanel header="Migration Services">-->
+<!--        <p-dataTable [value]="mgsExtracts" selectionMode="single" [(selection)]="selectedMgsExtract" dataKey="id">-->
+<!--            <p-header>Extract Settings</p-header>-->
+<!--            <p-column field="name" header="Name"></p-column>-->
+<!--            <p-column field="display" header="Display"></p-column>-->
+<!--            <p-column field="destination" header="Destination"></p-column>-->
+<!--            <p-column styleClass="col-button" header="Action">-->
+<!--                <ng-template let-extract="rowData" pTemplate="body">-->
+<!--                    <button type="button" pButton (click)="editExtract(extract)" icon="ui-icon-edit" class="green-btn"></button>-->
+<!--                </ng-template>-->
+<!--            </p-column>&ndash;&gt;-->
+<!--        </p-dataTable>-->
+<!--    </p-tabPanel>-->
+
+    <p-tabPanel header="MNCH Services">
+        <p-dataTable [value]="mnchExtracts" selectionMode="single" [(selection)]="selectedMnchExtract" dataKey="id">
             <p-header>Extract Settings</p-header>
             <p-column field="name" header="Name"></p-column>
             <p-column field="display" header="Display"></p-column>

@@ -68,5 +68,23 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Data
         {
             Assert.True(_context.DiffLogs.Any());
         }
+
+
+        [Test]
+        public void should_load_MNCH_From_References()
+        {
+            Assert.True(_context.ClientPatientMnchExtracts.Any());
+            Assert.True(_context.ClientMnchEnrolmentExtracts.Any());
+            Assert.True(_context.ClientMnchArtExtracts.Any());
+            Assert.True(_context.ClientAncVisitExtracts.Any());
+            Assert.True(_context.ClientMatVisitExtracts.Any());
+            Assert.True(_context.ClientPncVisitExtracts.Any());
+            Assert.True(_context.ClientMotherBabyPairExtracts.Any());
+            Assert.True(_context.ClientCwcEnrolmentExtracts.Any());
+            Assert.True(_context.ClientCwcVisitExtracts.Any());
+            Assert.True(_context.ClientHeiExtracts.Any());
+            Assert.True(_context.ClientMnchLabExtracts.Any());
+
+        }
     }
 }
