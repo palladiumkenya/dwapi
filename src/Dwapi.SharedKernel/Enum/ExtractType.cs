@@ -18,6 +18,19 @@
         EnhancedAdherenceCounselling,
         DrugAlcoholScreening,
         Ovc,
-        Otz
+        Otz,
+
+        PatientMnch,
+        AncVisit,
+        CwcEnrollment,
+        CwcVisit,
+        Hei,
+        MatVisit,
+        MnchArt,
+        MnchEnrollment,
+        MnchLab,
+        MotherBabyPair,
+        PncVisit
+
     }
 }

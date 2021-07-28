@@ -294,6 +294,20 @@ namespace Dwapi.ExtractsManagement.Core.Tests.TestArtifacts
       ^DocketId^: ^MGS^,
       ^DatabaseProtocolId^: ^A6221AA4-0E85-11E8-BA89-0ED5F89F718B^
     },
+
+   {
+      ^Id^: ^48743EB0-6656-E811-8E16-9CB6D0DA773C^,
+      ^IsPriority^: true,
+      ^Rank^: 1.00,
+      ^Name^: ^IndicatorExtract^,
+      ^Display^: ^IndicatorExtract^,
+      ^ExtractSql^: ^SELECT indicator,indicatorvalue,indicatordate FROM IndicatorExtracts^,
+      ^Destination^: ^IndicatorExtract^,
+      ^EmrSystemId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^,
+      ^DocketId^: ^MTS^,
+      ^DatabaseProtocolId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^
+    },
+
 {
     ^Id^: ^2bbeec20-7754-11eb-9439-0242ac130002^,
     ^Display^: ^Allergies ChronicIllness^,
@@ -401,7 +415,141 @@ namespace Dwapi.ExtractsManagement.Core.Tests.TestArtifacts
     ^Name^: ^OtzExtract^,
     ^Rank^: 19,
     ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
-  }
+  },
+
+
+  {
+      ^Id^: ^82650e9a-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^PatientMnch^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from PatientMnchExtracts^,
+      ^Destination^: ^TempPatientMnchExtract^,
+      ^IsPriority^: 1,
+      ^Name^: ^PatientMnchExtract^,
+      ^Rank^: 19,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^82651214-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^MnchEnrolment^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from MnchEnrolmentExtracts^,
+      ^Destination^: ^TempMnchEnrolmentExtract^,
+      ^IsPriority^: 0,
+      ^Name^: ^MnchEnrolmentExtract^,
+      ^Rank^: 20,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^82651386-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^MnchArt^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from MnchArtExtracts^,
+      ^Destination^: ^TempMnchArtExtract^,
+      ^IsPriority^: 0,
+      ^Name^: ^MnchArtExtract^,
+      ^Rank^: 21,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^82651494-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^AncVisit^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from AncVisitExtracts^,
+      ^Destination^: ^TempAncVisitExtract^,
+      ^IsPriority^: 0,
+      ^Name^: ^AncVisitExtract^,
+      ^Rank^: 22,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^826515fc-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^MatVisit^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from MatVisitExtracts^,
+      ^Destination^: ^TempMatVisitExtract^,
+      ^IsPriority^: 0,
+      ^Name^: ^MatVisitExtract^,
+      ^Rank^: 23,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^82651750-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^PncVisit^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from PncVisitExtracts^,
+      ^Destination^: ^TempPncVisitExtract^,
+      ^IsPriority^: 0,
+      ^Name^: ^PncVisitExtract^,
+      ^Rank^: 24,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^82651886-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^MotherBabyPair^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from MotherBabyPairExtracts^,
+      ^Destination^: ^TempMotherBabyPairExtract^,
+      ^IsPriority^: 0,
+      ^Name^: ^MotherBabyPairExtract^,
+      ^Rank^: 25,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^826519c6-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^CwcEnrolment^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from CwcEnrolmentExtracts^,
+      ^Destination^: ^TempCwcEnrolmentExtract^,
+      ^IsPriority^: 0,
+      ^Name^: ^CwcEnrolmentExtract^,
+      ^Rank^: 26,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^82651ade-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^CwcVisit^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from CwcVisitExtracts^,
+      ^Destination^: ^TempCwcVisitExtract^,
+      ^IsPriority^: 0,
+      ^Name^: ^CwcVisitExtract^,
+      ^Rank^: 27,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^82651c00-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^Hei^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from HeiExtracts^,
+      ^Destination^: ^TempHeiExtract^,
+      ^IsPriority^: 0,
+      ^Name^: ^HeiExtract^,
+      ^Rank^: 28,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^82651cfa-9db2-11eb-a8b3-0242ac130003^,
+      ^Display^: ^MnchLab^,
+      ^DocketId^: ^MNCH^,
+      ^EmrSystemId^: ^a6221856-0e85-11e8-ba89-0ed5f89f718b^,
+      ^ExtractSql^: ^select * from MnchLabExtracts^,
+      ^Destination^: ^TempMnchLabExtract^,
+      ^IsPriority^: 0,
+      ^Name^: ^MnchLabExtract^,
+      ^Rank^: 29,
+      ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    }
   ]
             ";
 

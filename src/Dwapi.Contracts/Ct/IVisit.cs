@@ -19,5 +19,17 @@ namespace Dwapi.Contracts.Ct
         string HCWConcern { get; set; }
         string TCAReason { get; set; }
         string ClinicalNotes { get; set; }
+
+
+        string GeneralExamination {get;set;}
+        string SystemExamination {get;set;}
+        string Skin {get;set;}
+        string Eyes {get;set;}
+        string ENT {get;set;}
+        string Chest {get;set;}
+        string CVS {get;set;}
+        string Abdomen {get;set;}
+        string CNS {get;set;}
+        string Genitourinary {get;set;}
     }
 }

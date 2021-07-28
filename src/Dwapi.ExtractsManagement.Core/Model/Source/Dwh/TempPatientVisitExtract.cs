@@ -57,5 +57,15 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string HCWConcern { get; set; }
         public string TCAReason { get; set; }
         public string ClinicalNotes { get; set; }
+        public string GeneralExamination { get; set; }
+        public string SystemExamination { get; set; }
+        public string Skin { get; set; }
+        public string Eyes { get; set; }
+        public string ENT { get; set; }
+        public string Chest { get; set; }
+        public string CVS { get; set; }
+        public string Abdomen { get; set; }
+        public string CNS { get; set; }
+        public string Genitourinary { get; set; }
     }
 }

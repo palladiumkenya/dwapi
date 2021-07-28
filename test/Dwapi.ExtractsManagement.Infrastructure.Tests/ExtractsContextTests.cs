@@ -13,7 +13,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
         [OneTimeSetUp]
         public void Init()
         {
-            //TestInitializer.ClearDb();
+            TestInitializer.NewDb();
             TestInitializer.SeedData(TestData.GenerateEmrSystems(TestInitializer.EmrConnectionString));
         }
 

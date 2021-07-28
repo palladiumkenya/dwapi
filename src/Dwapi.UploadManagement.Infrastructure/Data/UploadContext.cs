@@ -4,6 +4,7 @@ using Dwapi.UploadManagement.Core.Model.Cbs;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 using Dwapi.UploadManagement.Core.Model.Hts;
 using Dwapi.UploadManagement.Core.Model.Mgs;
+using Dwapi.UploadManagement.Core.Model.Mnch;
 using Dwapi.UploadManagement.Core.Model.Mts;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,6 +48,17 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<OvcExtractView> ClientOvcExtracts { get; set; }
         public virtual DbSet<OtzExtractView> ClientOtzExtracts { get; set; }
 
+        public virtual DbSet<PatientMnchExtractView> ClientPatientMnchExtracts { get; set; }
+        public virtual DbSet<MnchEnrolmentExtractView> ClientMnchEnrolmentExtracts { get; set; }
+        public virtual DbSet<MnchArtExtractView> ClientMnchArtExtracts { get; set; }
+        public virtual DbSet<AncVisitExtractView> ClientAncVisitExtracts { get; set; }
+        public virtual DbSet<MatVisitExtractView> ClientMatVisitExtracts { get; set; }
+        public virtual DbSet<PncVisitExtractView> ClientPncVisitExtracts { get; set; }
+        public virtual DbSet<MotherBabyPairExtractView> ClientMotherBabyPairExtracts { get; set; }
+        public virtual DbSet<CwcEnrolmentExtractView> ClientCwcEnrolmentExtracts { get; set; }
+        public virtual DbSet<CwcVisitExtractView> ClientCwcVisitExtracts { get; set; }
+        public virtual DbSet<HeiExtractView> ClientHeiExtracts { get; set; }
+        public virtual DbSet<MnchLabExtractView> ClientMnchLabExtracts { get; set; }
 
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
@@ -61,6 +73,9 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
                 .HasKey(f => new {f.SiteCode, f.PatientPK});
 
             modelBuilder.Entity<HtsClientsExtractView>()
+                .HasKey(f => f.Id);
+
+            modelBuilder.Entity<PatientMnchExtractView>()
                 .HasKey(f => f.Id);
         }
     }
