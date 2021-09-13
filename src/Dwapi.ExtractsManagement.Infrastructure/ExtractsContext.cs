@@ -144,6 +144,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempOvcExtract> TempOvcExtracts { get; set; }
         public DbSet<TempOtzExtract> TempOtzExtracts { get; set; }
 
+
+        public DbSet<TempCovidExtract> TempCovidExtracts { get; set; }
+        public DbSet<TempDefaulterTracingExtract> TempDefaulterTracingExtracts { get; set; }
+
         public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
         public DbSet<IptExtract> IptExtracts { get; set; }
         public DbSet<DepressionScreeningExtract> DepressionScreeningExtracts { get; set; }
@@ -153,6 +157,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<DrugAlcoholScreeningExtract> DrugAlcoholScreeningExtracts { get; set; }
         public DbSet<OvcExtract> OvcExtracts { get; set; }
         public DbSet<OtzExtract> OtzExtracts { get; set; }
+
+        public DbSet<CovidExtract> CovidExtracts { get; set; }
+        public DbSet<DefaulterTracingExtract> DefaulterTracingExtracts { get; set; }
 
 
         public DbSet<TempAllergiesChronicIllnessExtractError> TempAllergiesChronicIllnessExtractError { get; set; }
@@ -173,6 +180,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempOvcExtractErrorSummary> TempOvcExtractErrorSummaries{ get; set; }
         public DbSet<TempOtzExtractError> TempOtzExtractError { get; set; }
         public DbSet<TempOtzExtractErrorSummary> TempOtzExtractErrorSummary { get; set; }
+
+        public DbSet<TempCovidExtractError> TempCovidExtractError { get; set; }
+        public DbSet<TempCovidExtractErrorSummary> TempCovidExtractErrorSummary { get; set; }
+        public DbSet<TempDefaulterTracingExtractError> TempDefaulterTracingExtractError { get; set; }
+        public DbSet<TempDefaulterTracingExtractErrorSummary> TempDefaulterTracingExtractErrorSummary { get; set; }
 
         #region Mnch
         public virtual DbSet<TempPatientMnchExtract> TempPatientMnchExtracts { get; set; }
@@ -369,6 +381,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.CovidExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.DefaulterTracingExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
 
             modelBuilder.Entity<PatientMnchExtract>()
                 .HasKey(f => new {f.SiteCode, f.PatientPK});
@@ -508,6 +531,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempOvcExtract>().Key(x => x.Id).Table($"{nameof(TempOvcExtracts)}");
             DapperPlusManager.Entity<TempOtzExtract>().Key(x => x.Id).Table($"{nameof(TempOtzExtracts)}");
 
+            DapperPlusManager.Entity<TempCovidExtract>().Key(x => x.Id).Table($"{nameof(TempCovidExtracts)}");
+            DapperPlusManager.Entity<TempDefaulterTracingExtract>().Key(x => x.Id).Table($"{nameof(TempDefaulterTracingExtracts)}");
+
 
             DapperPlusManager.Entity<AllergiesChronicIllnessExtract>().Key(x => x.Id).Table($"{nameof(AllergiesChronicIllnessExtracts)}");
             DapperPlusManager.Entity<IptExtract>().Key(x => x.Id).Table($"{nameof(IptExtracts)}");
@@ -518,6 +544,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<DrugAlcoholScreeningExtract>().Key(x => x.Id).Table($"{nameof(DrugAlcoholScreeningExtracts)}");
             DapperPlusManager.Entity<OvcExtract>().Key(x => x.Id).Table($"{nameof(OvcExtracts)}");
             DapperPlusManager.Entity<OtzExtract>().Key(x => x.Id).Table($"{nameof(OtzExtracts)}");
+
+            DapperPlusManager.Entity<CovidExtract>().Key(x => x.Id).Table($"{nameof(CovidExtracts)}");
+            DapperPlusManager.Entity<DefaulterTracingExtract>().Key(x => x.Id).Table($"{nameof(DefaulterTracingExtracts)}");
 
 
             DapperPlusManager.Entity<TempPatientMnchExtract>().Key(x => x.Id).Table($"{nameof(TempPatientMnchExtracts)}");
