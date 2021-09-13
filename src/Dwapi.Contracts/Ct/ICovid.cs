@@ -6,7 +6,6 @@ namespace Dwapi.Contracts.Ct
     {
         DateTime? FacilityName { get; set; }
         int? VisitID { get; set; }
-        DateTime? InitialVisitDate { get; set; }
         DateTime? Covid19AssessmentDate { get; set; }
         string ReceivedCOVID19Vaccine { get; set; }
         DateTime? DateGivenFirstDose { get; set; }

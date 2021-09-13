@@ -240,6 +240,14 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             this.getOvcColumns();
             return;
         }
+        if (this.extract === 'Covid') {
+            this.getCovidColumns();
+            return;
+        }
+        if (this.extract === 'Defaulter Tracing') {
+            this.getDefaulterTracingColumns();
+            return;
+        }
     }
 
     private getPatients(): void {
@@ -1075,6 +1083,30 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'partnerOfferingOVCServices', header: 'partnerOfferingOVCServices'},
             {field: 'ovcExitReason', header: 'ovcExitReason'},
             {field: 'exitDate', header: 'exitDate'}
+        ];
+    }
+
+    private getCovidColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientID', header: 'patientID'},
+            {field: 'facilityId', header: 'facilityId'},
+            {field: 'facilityName', header: 'facilityName'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'}
+        ];
+    }
+
+    private getDefaulterTracingColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientID', header: 'patientID'},
+            {field: 'facilityId', header: 'facilityId'},
+            {field: 'facilityName', header: 'facilityName'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'}
         ];
     }
 

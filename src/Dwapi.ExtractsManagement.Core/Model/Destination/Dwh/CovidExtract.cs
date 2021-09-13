@@ -7,7 +7,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
     {
         public DateTime? FacilityName { get; set; }
         public int? VisitID { get; set; }
-        public DateTime? InitialVisitDate { get; set; }
         public DateTime? Covid19AssessmentDate { get; set; }
         public string ReceivedCOVID19Vaccine { get; set; }
         public DateTime? DateGivenFirstDose { get; set; }

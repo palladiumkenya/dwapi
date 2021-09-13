@@ -176,7 +176,14 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.FacilityName))))
                .ForMember(x => x.ExitDescription, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.ExitDescription))))
                .ForMember(x => x.ExitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.ExitDate))))
-               .ForMember(x => x.ExitReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.ExitReason))));
+               .ForMember(x => x.ExitReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.ExitReason))))
+               //TODO:Check why these were NOT mapped
+               .ForMember(x => x.TOVerified, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.TOVerified))))
+               .ForMember(x => x.TOVerifiedDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.TOVerifiedDate))))
+               .ForMember(x => x.ReEnrollmentDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.ReEnrollmentDate))))
+               .ForMember(x => x.ReasonForDeath, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.ReasonForDeath))))
+               .ForMember(x => x.SpecificDeathReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.SpecificDeathReason))))
+               .ForMember(x => x.DeathDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.DeathDate))));
 
             CreateMap<TempPatientStatusExtract, PatientStatusExtract>();
 

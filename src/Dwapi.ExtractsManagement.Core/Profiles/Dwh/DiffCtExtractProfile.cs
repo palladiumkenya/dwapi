@@ -205,7 +205,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                .ForMember(x => x.TOVerified, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientStatusExtract.TOVerified))))
                .ForMember(x => x.TOVerifiedDate, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientStatusExtract.TOVerifiedDate))))
                .ForMember(x => x.ReEnrollmentDate, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientStatusExtract.ReEnrollmentDate))))
-               ;
+               .ForMember(x => x.ReasonForDeath, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.ReasonForDeath))))
+               .ForMember(x => x.SpecificDeathReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientStatusExtract.SpecificDeathReason))))
+               .ForMember(x => x.DeathDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientStatusExtract.DeathDate))));
 
             CreateMap<TempPatientStatusExtract, PatientStatusExtract>();
 
@@ -567,7 +569,6 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
             CreateMap<IDataRecord,TempCovidExtract>()
                 .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.FacilityName))))
 .ForMember(x => x.VisitID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.VisitID))))
-.ForMember(x => x.InitialVisitDate, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.InitialVisitDate))))
 .ForMember(x => x.Covid19AssessmentDate, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.Covid19AssessmentDate))))
 .ForMember(x => x.ReceivedCOVID19Vaccine, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.ReceivedCOVID19Vaccine))))
 .ForMember(x => x.DateGivenFirstDose, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.DateGivenFirstDose))))

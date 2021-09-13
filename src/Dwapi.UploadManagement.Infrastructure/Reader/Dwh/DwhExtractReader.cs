@@ -54,6 +54,8 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 .Include(x => x.DrugAlcoholScreeningExtracts)
                 .Include(x => x.OvcExtracts)
                 .Include(x => x.OtzExtracts)
+                .Include(x => x.CovidExtracts)
+                .Include(x => x.DefaulterTracingExtracts)
                 .AsNoTracking()
                 .FirstOrDefault(x => x.Id == id);
             return patientExtractView;

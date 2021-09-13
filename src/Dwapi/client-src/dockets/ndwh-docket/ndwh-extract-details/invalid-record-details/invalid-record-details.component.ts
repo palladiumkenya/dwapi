@@ -152,6 +152,15 @@ export class InvalidRecordDetailsComponent implements OnInit {
             this.getSummaryInvalidExtracts('Ovc');
             return;
         }
+
+        if (this.extract === 'Covid') {
+            this.getSummaryInvalidExtracts('Covid');
+            return;
+        }
+        if (this.extract === 'Defaulter Tracing') {
+            this.getSummaryInvalidExtracts('DefaulterTracing');
+            return;
+        }
     }
 
     private getColumns(): void {
@@ -222,6 +231,14 @@ export class InvalidRecordDetailsComponent implements OnInit {
         }
         if (this.extract === 'OVC') {
             this.getOvcColumns();
+            return;
+        }
+        if (this.extract === 'Covid') {
+            this.getCovidColumns();
+            return;
+        }
+        if (this.extract === 'Defaulter Tracing') {
+            this.getDefaulterTracingColumns();
             return;
         }
     }
@@ -882,6 +899,32 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'partnerOfferingOVCServices', header: 'partnerOfferingOVCServices'},
             {field: 'ovcExitReason', header: 'ovcExitReason'},
             {field: 'exitDate', header: 'exitDate'}
+        ];
+    }
+
+    private getCovidColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientID', header: 'patientID'},
+            {field: 'facilityId', header: 'facilityId'},
+            {field: 'facilityName', header: 'facilityName'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'}
+        ];
+    }
+
+    private getDefaulterTracingColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientID', header: 'patientID'},
+            {field: 'facilityId', header: 'facilityId'},
+            {field: 'facilityName', header: 'facilityName'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'}
         ];
     }
 
