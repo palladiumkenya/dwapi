@@ -549,6 +549,30 @@ namespace Dwapi.ExtractsManagement.Core.Tests.TestArtifacts
       ^Name^: ^MnchLabExtract^,
       ^Rank^: 29,
       ^DatabaseProtocolId^: ^a6221aa4-0e85-11e8-ba89-0ed5f89f718b^
+    },
+    {
+      ^Id^: ^2BBEEC30-7754-11EB-9439-0242AC130002^,
+      ^IsPriority^: false,
+      ^Rank^: 20.00,
+      ^Name^: ^CovidExtract^,
+      ^Display^: ^Covid^,
+      ^ExtractSql^: ^select * from TempCovidExtracts^,
+      ^Destination^: ^dwhstage^,
+      ^EmrSystemId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^,
+      ^DocketId^: ^NDWH^,
+      ^DatabaseProtocolId^: ^A6221AA4-0E85-11E8-BA89-0ED5F89F718B^
+    },
+    {
+      ^Id^: ^2BBEEC31-7754-11EB-9439-0242AC130002^,
+      ^IsPriority^: false,
+      ^Rank^: 21.00,
+      ^Name^: ^DefaulterTracingExtract^,
+      ^Display^: ^Defaulter Tracing^,
+      ^ExtractSql^: ^select * from TempDefaulterTracingExtracts^,
+      ^Destination^: ^dwhstage^,
+      ^EmrSystemId^: ^A6221856-0E85-11E8-BA89-0ED5F89F718B^,
+      ^DocketId^: ^NDWH^,
+      ^DatabaseProtocolId^: ^A6221AA4-0E85-11E8-BA89-0ED5F89F718B^
     }
   ]
             ";

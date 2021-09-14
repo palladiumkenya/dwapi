@@ -681,7 +681,7 @@ services.AddScoped<IHTSClientPartnerLoader, HTSClientPartnerLoader>();*/
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =
-                {"dwapi.db", "dwapi-diff.db", "emr.db", "emr-diff.db"};
+                {"dwapi.db", "dwapi-diff.db", "emr.db", "emr-diff.db","ct.sqlite"};
             string[] keyDirs = {@"TestArtifacts/Database".ToOsStyle()};
 
             foreach (var keyDir in keyDirs)

@@ -181,10 +181,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempOtzExtractError> TempOtzExtractError { get; set; }
         public DbSet<TempOtzExtractErrorSummary> TempOtzExtractErrorSummary { get; set; }
 
-        public DbSet<TempCovidExtractError> TempCovidExtractError { get; set; }
-        public DbSet<TempCovidExtractErrorSummary> TempCovidExtractErrorSummary { get; set; }
-        public DbSet<TempDefaulterTracingExtractError> TempDefaulterTracingExtractError { get; set; }
-        public DbSet<TempDefaulterTracingExtractErrorSummary> TempDefaulterTracingExtractErrorSummary { get; set; }
+        //public DbSet<TempCovidExtractError> TempCovidExtractError { get; set; }
+        //public DbSet<TempCovidExtractErrorSummary> TempCovidExtractErrorSummary { get; set; }
+        //public DbSet<TempDefaulterTracingExtractError> TempDefaulterTracingExtractError { get; set; }
+        //public DbSet<TempDefaulterTracingExtractErrorSummary> TempDefaulterTracingExtractErrorSummary { get; set; }
 
         #region Mnch
         public virtual DbSet<TempPatientMnchExtract> TempPatientMnchExtracts { get; set; }

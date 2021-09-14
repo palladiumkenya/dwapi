@@ -520,7 +520,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =
-                {"dwapi.db", "dwapidiff.db", "emr.db", "emrdiff.db"};
+                {"dwapi.db", "dwapidiff.db", "emr.db", "emrdiff.db","ct.sqlite"};
             string[] keyDirs = {@"TestArtifacts/Database".ToOsStyle()};
 
             foreach (var keyDir in keyDirs)
