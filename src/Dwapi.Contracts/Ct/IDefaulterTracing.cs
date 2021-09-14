@@ -4,7 +4,7 @@ namespace Dwapi.Contracts.Ct
 {
     public interface IDefaulterTracing
     {
-        DateTime? FacilityName { get; set; }
+        string FacilityName { get; set; }
         int? VisitID { get; set; }
         DateTime? VisitDate { get; set; }
         int? EncounterId { get; set; }

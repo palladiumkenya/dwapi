@@ -4,7 +4,7 @@ namespace Dwapi.Contracts.Ct
 {
     public interface ICovid
     {
-        DateTime? FacilityName { get; set; }
+        string FacilityName { get; set; }
         int? VisitID { get; set; }
         DateTime? Covid19AssessmentDate { get; set; }
         string ReceivedCOVID19Vaccine { get; set; }

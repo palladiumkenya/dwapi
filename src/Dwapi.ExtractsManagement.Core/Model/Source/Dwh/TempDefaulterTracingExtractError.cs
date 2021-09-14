@@ -7,7 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     [Table("vTempDefaulterTracingExtractError")]
     public class TempDefaulterTracingExtractError : TempExtract,IDefaulterTracing
     {
-        public DateTime? FacilityName { get; set; }
+        public string FacilityName { get; set; }
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }
         public int? EncounterId { get; set; }

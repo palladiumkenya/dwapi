@@ -7,7 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     [Table("vTempCovidExtractError")]
     public class TempCovidExtractError : TempExtract,ICovid
     {
-        public DateTime? FacilityName { get; set; }
+        public string FacilityName { get; set; }
         public int? VisitID { get; set; }
         public DateTime? Covid19AssessmentDate { get; set; }
         public string ReceivedCOVID19Vaccine { get; set; }

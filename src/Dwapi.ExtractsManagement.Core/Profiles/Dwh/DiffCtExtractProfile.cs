@@ -567,6 +567,11 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
 
 
             CreateMap<IDataRecord,TempCovidExtract>()
+                .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.PatientPK))))
+                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.SiteCode))))
+                .ForMember(x => x.PatientID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.PatientID))))
+                .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.Emr))))
+                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.Project))))
                 .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.FacilityName))))
 .ForMember(x => x.VisitID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.VisitID))))
 .ForMember(x => x.Covid19AssessmentDate, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCovidExtract.Covid19AssessmentDate))))
@@ -603,7 +608,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
             CreateMap<TempOvcExtract,CovidExtract>();
 
             CreateMap<IDataRecord,TempDefaulterTracingExtract>()
-                .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempDefaulterTracingExtract.PatientPK))))
+.ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempDefaulterTracingExtract.PatientPK))))
 .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempDefaulterTracingExtract.SiteCode))))
 .ForMember(x => x.PatientID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempDefaulterTracingExtract.PatientID))))
 .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempDefaulterTracingExtract.Emr))))

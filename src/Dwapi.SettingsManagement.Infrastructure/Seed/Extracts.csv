@@ -6391,5 +6391,5 @@ A4498816-5690-43CB-A15E-DA02DB82262D|Patient Visit|NDWH|a6221858-0e85-11e8-ba89-
 CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|PSmartStage|1|pSmart|1.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
 
 
-2bbeec30-7754-11eb-9439-0242ac130002|Covid|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|CovidExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-2bbeec31-7754-11eb-9439-0242ac130002|Defaulter Tracing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec30-7754-11eb-9439-0242ac130002|Covid|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from tempcovidextracts"|dwhstage|0|CovidExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec31-7754-11eb-9439-0242ac130002|Defaulter Tracing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select * from tempdefaultertracingextracts"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
