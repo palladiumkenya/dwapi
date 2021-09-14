@@ -17,6 +17,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 				SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated,ValidationError.RecordId,
 							
 							vTempDefaulterTracingExtractError.PatientPK,
+							vTempDefaulterTracingExtractError.FacilityId,
 							vTempDefaulterTracingExtractError.SiteCode,
 							vTempDefaulterTracingExtractError.PatientID,
 							vTempDefaulterTracingExtractError.Emr,
