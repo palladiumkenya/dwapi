@@ -55,7 +55,6 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
             return new AdverseEventsMessageBag(message);
         }
 
-
         public IMessageBag<PatientAdverseEventView> Generate(List<PatientAdverseEventView> extracts)
         {
             var messages = new List<IMessage<PatientAdverseEventView>>();
@@ -67,6 +66,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 
             return new AdverseEventsMessageBag(messages);
         }
+
         private List<Guid> GetIds()
         {
             var ids= Messages.SelectMany(x => x.SendIds).ToList();
