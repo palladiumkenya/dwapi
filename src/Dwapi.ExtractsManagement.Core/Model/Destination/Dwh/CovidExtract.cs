@@ -35,5 +35,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string PatientVentilated { get; set; }
         public string TracingFinalOutcome { get; set; }
         public string CauseOfDeath { get; set; }
+        public string COVID19TestResult { get; set; }
+        public string Sequence { get; set; }
     }
 }

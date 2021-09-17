@@ -36,5 +36,8 @@ namespace Dwapi.Contracts.Ct
         string CauseOfDeath { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
+
+        string COVID19TestResult { get; set; }
+        string Sequence { get; set; }
     }
 }
