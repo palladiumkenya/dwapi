@@ -6452,7 +6452,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
        (case a.symptomatic
             when 1068 then 'Yes'
             when 165912 then 'No' END)                                            as PatientStatus,
-       (case a.hospital_admimission
+       (case a.hospital_admission
             when 1065 then 'Yes'
             when 1066 then 'No' end)                                              as AdmissionStatus,
        a.admission_unit                                                           as AdmissionUnit,
