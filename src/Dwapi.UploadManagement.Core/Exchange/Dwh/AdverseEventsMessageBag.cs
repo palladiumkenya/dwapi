@@ -11,7 +11,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class AdverseEventsMessageBag:IAdverseEventsMessageBag
     {
-        private int stake = 5;
+        private int stake = 2;
         public string EndPoint => "PatientAdverseEvents";
         public IMessage<PatientAdverseEventView> Message { get; set; }
         public List<IMessage<PatientAdverseEventView>> Messages { get; set; }
@@ -55,6 +55,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
             return new AdverseEventsMessageBag(message);
         }
 
+
         public IMessageBag<PatientAdverseEventView> Generate(List<PatientAdverseEventView> extracts)
         {
             var messages = new List<IMessage<PatientAdverseEventView>>();
@@ -66,7 +67,6 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 
             return new AdverseEventsMessageBag(messages);
         }
-
         private List<Guid> GetIds()
         {
             var ids= Messages.SelectMany(x => x.SendIds).ToList();

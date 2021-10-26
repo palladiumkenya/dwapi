@@ -11,7 +11,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class CovidsMessageBag:ICovidMessageBag
     {
-        private int stake = 5;
+        private int stake = 1;
         public string EndPoint => "Covid";
         public IMessage<CovidExtractView> Message { get; set; }
         public List<IMessage<CovidExtractView>> Messages { get; set; }
