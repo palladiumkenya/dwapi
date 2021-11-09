@@ -204,6 +204,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 name: "IX_DefaulterTracingExtracts_SiteCode_PatientPK",
                 table: "DefaulterTracingExtracts",
                 columns: new[] { "SiteCode", "PatientPK" });
+
+            if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
+            {
+                migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 0;");
+                migrationBuilder.Sql(@"alter table TempCovidExtracts convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql(@"alter table TempDefaulterTracingExtracts convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql(@"alter table CovidExtracts convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql(@"alter table DefaulterTracingExtracts convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 1;");
+            }
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
