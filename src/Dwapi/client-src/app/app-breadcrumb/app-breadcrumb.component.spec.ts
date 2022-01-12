@@ -1,25 +1,29 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { RouterTestingModule } from "@angular/router/testing";
+import { BreadcrumbService } from "../breadcrumb.service";
+import { AppBreadcrumbComponent } from "./app-breadcrumb.component";
 
-import { AppBreadcrumbComponent } from './app-breadcrumb.component';
+describe("AppBreadcrumbComponent", () => {
+    let component: AppBreadcrumbComponent;
+    let fixture: ComponentFixture<AppBreadcrumbComponent>;
+    //let service: BreadcrumbService;
 
-describe('AppBreadcrumbComponent', () => {
-  let component: AppBreadcrumbComponent;
-  let fixture: ComponentFixture<AppBreadcrumbComponent>;
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [RouterTestingModule],
+            declarations: [AppBreadcrumbComponent],
+            providers:[BreadcrumbService]
+        }).compileComponents();
+    }));
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ AppBreadcrumbComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(() => {
+        fixture = TestBed.createComponent(AppBreadcrumbComponent);
+        component = fixture.componentInstance;
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AppBreadcrumbComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });
