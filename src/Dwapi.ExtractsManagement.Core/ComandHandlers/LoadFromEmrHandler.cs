@@ -56,6 +56,9 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             var ts5 = new List<Task<bool>>();
             var ts6 = new List<Task<bool>>();
 
+            var ts7 = new List<Task<bool>>();
+            var ts8 = new List<Task<bool>>();
+
             // ExtractPatientART
             var patientArtProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "PatientArtExtract");
             if (null != patientArtProfile)
@@ -220,7 +223,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 ts5.Add( _mediator.Send(gbvScreeningCommand, cancellationToken));
             }
 
-            // ExtractPatientVisit
+            // ExtractIpt
             var iptProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "IptExtract");
             if (null != iptProfile)
             {
@@ -257,12 +260,39 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 ts6.Add( _mediator.Send(ovcCommand, cancellationToken));
             }
 
+            // ExtractCovid
+            var covidProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "CovidExtract");
+            if (null != covidProfile)
+            {
+                var covidCommand = new ExtractCovid()
+                {
+                    Extract = covidProfile?.Extract,
+                    DatabaseProtocol = covidProfile?.DatabaseProtocol
+                };
+                ts7.Add( _mediator.Send(covidCommand, cancellationToken));
+            }
+
+            // ExtractDefaulterTracing
+            var defaulterTracingProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "DefaulterTracingExtract");
+            if (null != defaulterTracingProfile)
+            {
+                var defaulterTracingCommand = new ExtractDefaulterTracing()
+                {
+                    Extract = defaulterTracingProfile?.Extract,
+                    DatabaseProtocol = defaulterTracingProfile?.DatabaseProtocol
+                };
+                ts8.Add( _mediator.Send(defaulterTracingCommand, cancellationToken));
+            }
+
             var result1 = await Task.WhenAll(ts1);
             var result2 = await Task.WhenAll(ts2);
             var result3 = await Task.WhenAll(ts3);
             var result4 = await Task.WhenAll(ts4);
             var result5 = await Task.WhenAll(ts5);
             var result6 = await Task.WhenAll(ts6);
+
+            var result7 = await Task.WhenAll(ts7);
+            var result8 = await Task.WhenAll(ts8);
 
             var result = new List<bool>();
 
@@ -272,6 +302,9 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             result.AddRange(result4);
             result.AddRange(result5);
             result.AddRange(result6);
+
+            result.AddRange(result7);
+            result.AddRange(result8);
 
             return result.All(x => x);
         }

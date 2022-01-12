@@ -85,7 +85,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
                 nameof(ExtractsContext.PatientVisitExtracts),
                 nameof(ExtractsContext.TempPatientAdverseEventExtracts),
                 nameof(ExtractsContext.PatientAdverseEventExtracts),
-
                 nameof(ExtractsContext.TempAllergiesChronicIllnessExtracts),
                 nameof(ExtractsContext.AllergiesChronicIllnessExtracts),
                 nameof(ExtractsContext.TempContactListingExtracts),
@@ -103,7 +102,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
                 nameof(ExtractsContext.TempOtzExtracts),
                 nameof(ExtractsContext.OtzExtracts),
                 nameof(ExtractsContext.TempOvcExtracts),
-                nameof(ExtractsContext.OvcExtracts)
+                nameof(ExtractsContext.OvcExtracts),
+
+                nameof(ExtractsContext.TempCovidExtracts),
+                nameof(ExtractsContext.CovidExtracts),
+                nameof(ExtractsContext.TempDefaulterTracingExtracts),
+                nameof(ExtractsContext.DefaulterTracingExtracts)
             };
 
             var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };

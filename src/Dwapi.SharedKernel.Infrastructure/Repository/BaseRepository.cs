@@ -28,6 +28,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         {
             Context = context;
             DbSet = context.Set<T>();
+            Dapper.SqlMapper.Settings.CommandTimeout = 0;
         }
 
         public virtual T Get(TId id)
