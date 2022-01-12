@@ -56,7 +56,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Reader.Dwh
         [TestCase(nameof(OtzExtract))]
         [TestCase(nameof(OvcExtract))]
 
-
+        [TestCase(nameof(CovidExtract))]
+        [TestCase(nameof(DefaulterTracingExtract))]
         public void should_Execute_Reader(string name)
         {
             var extract = _extracts.First(x => x.Name.IsSameAs(name));

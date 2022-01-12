@@ -244,8 +244,11 @@ namespace Dwapi.Controller
             var job4 =
                 BatchJob.ContinueBatchWith(job3, x => { SendNewOtherJobProfiles(package); });
 
+            var job5 =
+                BatchJob.ContinueBatchWith(job4, x => { SendCovidJobProfiles(package); });
+
             var jobEnd =
-                BatchJob.ContinueBatchWith(job4, x => { _ctSendService.NotifyPostSending(package,_version); });
+                BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package,_version); });
         }
 
         [AutomaticRetry(Attempts = 0)]
@@ -270,8 +273,11 @@ namespace Dwapi.Controller
             var job4 =
                 BatchJob.ContinueBatchWith(job3, x => { SendDiffNewOtherJobProfiles(package); });
 
+            var job5 =
+                BatchJob.ContinueBatchWith(job4, x => { SendDiffCovidJobProfiles(package); });
+
             var jobEnd =
-                BatchJob.ContinueBatchWith(job4, x => { _ctSendService.NotifyPostSending(package, _version); });
+                BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package, _version); });
         }
 
         public void SendJobBaselines(SendManifestPackageDTO package)
@@ -311,6 +317,12 @@ namespace Dwapi.Controller
             var idsOtz =_ctSendService.SendBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
         }
 
+        public void SendCovidJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsCovid =_ctSendService.SendBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
+            var idsDefaulterTracing =_ctSendService.SendBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
+        }
+
         public void SendDiffJobProfiles(SendManifestPackageDTO package)
         {
             var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 500, new PharmacyMessageBag()).Result;
@@ -333,6 +345,12 @@ namespace Dwapi.Controller
             var idsDrugAlcoholScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DrugAlcoholScreeningsMessageBag()).Result;
             var idsOvc =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
             var idsOtz =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
+        }
+
+        public void SendDiffCovidJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsCovid =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
+            var idsDefaulterTracing =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
         }
 
         [AutomaticRetry(Attempts = 0)]

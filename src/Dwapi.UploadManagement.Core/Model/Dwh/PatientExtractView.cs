@@ -110,6 +110,9 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         [NotMapped] public ICollection<OtzExtractView> OtzExtracts { get; set; } = new List<OtzExtractView>();
 
 
+        [NotMapped] public ICollection<CovidExtractView> CovidExtracts { get; set; } = new List<CovidExtractView>();
+        [NotMapped] public ICollection<DefaulterTracingExtractView> DefaulterTracingExtracts { get; set; } = new List<DefaulterTracingExtractView>();
+
 
         [NotMapped] public bool HasArt => null != PatientArtExtracts && PatientArtExtracts.Any();
         [NotMapped] public bool HasBaseline => null != PatientBaselinesExtracts && PatientBaselinesExtracts.Any();

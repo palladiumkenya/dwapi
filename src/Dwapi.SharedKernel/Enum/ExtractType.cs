@@ -19,6 +19,8 @@
         DrugAlcoholScreening,
         Ovc,
         Otz,
+        Covid,
+        DefaulterTracing,
 
         PatientMnch,
         AncVisit,

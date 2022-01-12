@@ -575,6 +575,10 @@ namespace Dwapi
             services.AddTransient<IOtzExtractRepository, OtzExtractRepository>();
             services.AddTransient<IOvcExtractRepository, OvcExtractRepository>();
 
+            //DefaulterTracing
+            services.AddTransient<ICovidExtractRepository, CovidExtractRepository>();
+            services.AddTransient<IDefaulterTracingExtractRepository, DefaulterTracingExtractRepository>();
+
             services.AddTransient<ITempAllergiesChronicIllnessExtractRepository, TempAllergiesChronicIllnessExtractRepository>();
             services.AddTransient<ITempContactListingExtractRepository, TempContactListingExtractRepository>();
             services.AddTransient<ITempDepressionScreeningExtractRepository, TempDepressionScreeningExtractRepository>();
@@ -585,6 +589,9 @@ namespace Dwapi
             services.AddTransient<ITempOtzExtractRepository, TempOtzExtractRepository>();
             services.AddTransient<ITempOvcExtractRepository, TempOvcExtractRepository>();
 
+            //DefaulterTracing
+            services.AddTransient<ITempDefaulterTracingExtractRepository, TempDefaulterTracingExtractRepository>();
+            services.AddTransient<ITempCovidExtractRepository, TempCovidExtractRepository>();
 
             services.AddTransient<ITempAllergiesChronicIllnessExtractErrorSummaryRepository, TempAllergiesChronicIllnessExtractErrorSummaryRepository>();
             services.AddTransient<ITempContactListingExtractErrorSummaryRepository, TempContactListingExtractErrorSummaryRepository>();
@@ -596,6 +603,12 @@ namespace Dwapi
             services.AddTransient<ITempOtzExtractErrorSummaryRepository, TempOtzExtractErrorSummaryRepository>();
             services.AddTransient<ITempOvcExtractErrorSummaryRepository, TempOvcExtractErrorSummaryRepository>();
 
+
+            //DefaulterTracing
+            services.AddTransient<ITempCovidExtractErrorSummaryRepository, TempCovidExtractErrorSummaryRepository>();
+            services.AddTransient<ITempDefaulterTracingExtractErrorSummaryRepository, TempDefaulterTracingExtractErrorSummaryRepository>();
+
+
             services.AddScoped<IAllergiesChronicIllnessSourceExtractor, AllergiesChronicIllnessSourceExtractor>();
             services.AddScoped<IContactListingSourceExtractor, ContactListingSourceExtractor>();
             services.AddScoped<IDepressionScreeningSourceExtractor, DepressionScreeningSourceExtractor>();
@@ -605,6 +618,10 @@ namespace Dwapi
             services.AddScoped<IIptSourceExtractor, IptSourceExtractor>();
             services.AddScoped<IOtzSourceExtractor, OtzSourceExtractor>();
             services.AddScoped<IOvcSourceExtractor, OvcSourceExtractor>();
+
+            //DefaulterTracing
+            services.AddScoped<ICovidSourceExtractor, CovidSourceExtractor>();
+            services.AddScoped<IDefaulterTracingSourceExtractor, DefaulterTracingSourceExtractor>();
 
             services.AddScoped<IAllergiesChronicIllnessLoader, AllergiesChronicIllnessLoader>();
             services.AddScoped<IContactListingLoader, ContactListingLoader>();
@@ -616,6 +633,9 @@ namespace Dwapi
             services.AddScoped<IOtzLoader, OtzLoader>();
             services.AddScoped<IOvcLoader, OvcLoader>();
 
+            //DefaulterTracing
+            services.AddScoped<ICovidLoader, CovidLoader>();
+            services.AddScoped<IDefaulterTracingLoader, DefaulterTracingLoader>();
 
             #endregion
 
