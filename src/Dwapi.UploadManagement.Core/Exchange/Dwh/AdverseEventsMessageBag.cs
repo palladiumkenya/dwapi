@@ -11,7 +11,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
 {
     public class AdverseEventsMessageBag:IAdverseEventsMessageBag
     {
-        private int stake = 5;
+        private int stake = 2;
         public string EndPoint => "PatientAdverseEvents";
         public IMessage<PatientAdverseEventView> Message { get; set; }
         public List<IMessage<PatientAdverseEventView>> Messages { get; set; }

@@ -267,6 +267,170 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("ContactListingExtracts");
                 });
 
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.CovidExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("AdmissionEndDate");
+
+                    b.Property<DateTime?>("AdmissionStartDate");
+
+                    b.Property<string>("AdmissionStatus");
+
+                    b.Property<string>("AdmissionStatusSinceLastVisit");
+
+                    b.Property<string>("AdmissionUnit");
+
+                    b.Property<string>("AdmissionUnitSinceLastVisit");
+
+                    b.Property<string>("BoosterDose");
+
+                    b.Property<DateTime?>("BoosterDoseDate");
+
+                    b.Property<string>("BoosterGiven");
+
+                    b.Property<string>("COVID19PositiveSinceLasVisit");
+
+                    b.Property<DateTime?>("COVID19TestDate");
+
+                    b.Property<DateTime?>("COVID19TestDateSinceLastVisit");
+
+                    b.Property<string>("COVID19TestResult");
+
+                    b.Property<string>("CauseOfDeath");
+
+                    b.Property<DateTime?>("Covid19AssessmentDate");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("DateGivenFirstDose");
+
+                    b.Property<DateTime?>("DateGivenSecondDose");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("EverCOVID19Positive");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("FirstDoseVaccineAdministered");
+
+                    b.Property<string>("MissedAppointmentDueToCOVID19");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<string>("PatientStatus");
+
+                    b.Property<string>("PatientStatusSinceLastVisit");
+
+                    b.Property<string>("PatientVentilated");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<string>("ReceivedCOVID19Vaccine");
+
+                    b.Property<string>("SecondDoseVaccineAdministered");
+
+                    b.Property<string>("Sequence");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("SupplementalOxygenReceived");
+
+                    b.Property<string>("TracingFinalOutcome");
+
+                    b.Property<string>("VaccinationStatus");
+
+                    b.Property<string>("VaccineVerification");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SiteCode", "PatientPK");
+
+                    b.ToTable("CovidExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.DefaulterTracingExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("AttemptNumber");
+
+                    b.Property<DateTime?>("BookingDate");
+
+                    b.Property<string>("CauseOfDeath");
+
+                    b.Property<string>("Comments");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("EncounterId");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("IsFinalTrace");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("TracingOutcome");
+
+                    b.Property<string>("TracingType");
+
+                    b.Property<string>("TrueStatus");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SiteCode", "PatientPK");
+
+                    b.ToTable("DefaulterTracingExtracts");
+                });
+
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.DepressionScreeningExtract", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1239,6 +1403,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("Date_Last_Modified");
 
+                    b.Property<DateTime?>("DeathDate");
+
                     b.Property<string>("Emr");
 
                     b.Property<DateTime?>("ExitDate");
@@ -1263,7 +1429,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("ReEnrollmentDate");
 
+                    b.Property<string>("ReasonForDeath");
+
                     b.Property<int>("SiteCode");
+
+                    b.Property<string>("SpecificDeathReason");
 
                     b.Property<string>("Status");
 
@@ -3687,6 +3857,158 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("vTempContactListingExtractErrorSummary");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempCovidExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("AdmissionEndDate");
+
+                    b.Property<DateTime?>("AdmissionStartDate");
+
+                    b.Property<string>("AdmissionStatus");
+
+                    b.Property<string>("AdmissionStatusSinceLastVisit");
+
+                    b.Property<string>("AdmissionUnit");
+
+                    b.Property<string>("AdmissionUnitSinceLastVisit");
+
+                    b.Property<string>("BoosterDose");
+
+                    b.Property<DateTime?>("BoosterDoseDate");
+
+                    b.Property<string>("BoosterGiven");
+
+                    b.Property<string>("COVID19PositiveSinceLasVisit");
+
+                    b.Property<DateTime?>("COVID19TestDate");
+
+                    b.Property<DateTime?>("COVID19TestDateSinceLastVisit");
+
+                    b.Property<string>("COVID19TestResult");
+
+                    b.Property<string>("CauseOfDeath");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime?>("Covid19AssessmentDate");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("DateGivenFirstDose");
+
+                    b.Property<DateTime?>("DateGivenSecondDose");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("EverCOVID19Positive");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("FirstDoseVaccineAdministered");
+
+                    b.Property<string>("MissedAppointmentDueToCOVID19");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("PatientStatus");
+
+                    b.Property<string>("PatientStatusSinceLastVisit");
+
+                    b.Property<string>("PatientVentilated");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("ReceivedCOVID19Vaccine");
+
+                    b.Property<string>("SecondDoseVaccineAdministered");
+
+                    b.Property<string>("Sequence");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("SupplementalOxygenReceived");
+
+                    b.Property<string>("TracingFinalOutcome");
+
+                    b.Property<string>("VaccinationStatus");
+
+                    b.Property<string>("VaccineVerification");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempCovidExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempDefaulterTracingExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("AttemptNumber");
+
+                    b.Property<DateTime?>("BookingDate");
+
+                    b.Property<string>("CauseOfDeath");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("Comments");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("EncounterId");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("IsFinalTrace");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("TracingOutcome");
+
+                    b.Property<string>("TracingType");
+
+                    b.Property<string>("TrueStatus");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempDefaulterTracingExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempDepressionScreeningExtract", b =>
@@ -6222,6 +6544,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("Date_Last_Modified");
 
+                    b.Property<DateTime?>("DeathDate");
+
                     b.Property<string>("Emr");
 
                     b.Property<int>("ErrorType");
@@ -6244,7 +6568,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("ReEnrollmentDate");
 
+                    b.Property<string>("ReasonForDeath");
+
                     b.Property<int?>("SiteCode");
+
+                    b.Property<string>("SpecificDeathReason");
 
                     b.Property<string>("TOVerified");
 
@@ -9383,6 +9711,22 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
                         .WithMany("ContactListingExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.CovidExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("CovidExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.DefaulterTracingExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("DefaulterTracingExtracts")
                         .HasForeignKey("SiteCode", "PatientPK")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

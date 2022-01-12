@@ -59,5 +59,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public virtual ICollection<OtzExtract> OtzExtracts { get; set; } = new List<OtzExtract>();
         public virtual ICollection<OvcExtract> OvcExtracts { get; set; } = new List<OvcExtract>();
 
+        public virtual ICollection<CovidExtract> CovidExtracts { get; set; } = new List<CovidExtract>();
+        public virtual ICollection<DefaulterTracingExtract> DefaulterTracingExtracts { get; set; } = new List<DefaulterTracingExtract>();
+
     }
 }

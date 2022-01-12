@@ -152,6 +152,15 @@ export class InvalidRecordDetailsComponent implements OnInit {
             this.getSummaryInvalidExtracts('Ovc');
             return;
         }
+
+        if (this.extract === 'Covid') {
+            this.getSummaryInvalidExtracts('Covid');
+            return;
+        }
+        if (this.extract === 'Defaulter Tracing') {
+            this.getSummaryInvalidExtracts('DefaulterTracing');
+            return;
+        }
     }
 
     private getColumns(): void {
@@ -222,6 +231,14 @@ export class InvalidRecordDetailsComponent implements OnInit {
         }
         if (this.extract === 'OVC') {
             this.getOvcColumns();
+            return;
+        }
+        if (this.extract === 'Covid') {
+            this.getCovidColumns();
+            return;
+        }
+        if (this.extract === 'Defaulter Tracing') {
+            this.getDefaulterTracingColumns();
             return;
         }
     }
@@ -882,6 +899,71 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'partnerOfferingOVCServices', header: 'partnerOfferingOVCServices'},
             {field: 'ovcExitReason', header: 'ovcExitReason'},
             {field: 'exitDate', header: 'exitDate'}
+        ];
+    }
+
+    private getCovidColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientID', header: 'patientID'},
+            {field: 'facilityName', header: 'facilityName'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'covid19AssessmentDate', header: 'covid19AssessmentDate'},
+            {field: 'receivedCOVID19Vaccine', header: 'receivedCOVID19Vaccine'},
+            {field: 'dateGivenFirstDose', header: 'dateGivenFirstDose'},
+            {field: 'firstDoseVaccineAdministered', header: 'firstDoseVaccineAdministered'},
+            {field: 'dateGivenSecondDose', header: 'dateGivenSecondDose'},
+            {field: 'secondDoseVaccineAdministered', header: 'secondDoseVaccineAdministered'},
+            {field: 'vaccinationStatus', header: 'vaccinationStatus'},
+            {field: 'vaccineVerification', header: 'vaccineVerification'},
+            {field: 'boosterGiven', header: 'boosterGiven'},
+            {field: 'boosterDose', header: 'boosterDose'},
+            {field: 'boosterDoseDate', header: 'boosterDoseDate'},
+            {field: 'everCOVID19Positive', header: 'everCOVID19Positive'},
+            {field: 'coviD19TestDate', header: 'coviD19TestDate'},
+            {field: 'patientStatus', header: 'patientStatus'},
+            {field: 'admissionStatus', header: 'admissionStatus'},
+            {field: 'admissionUnit', header: 'admissionUnit'},
+            {field: 'missedAppointmentDueToCOVID19', header: 'missedAppointmentDueToCOVID19'},
+            {field: 'coviD19PositiveSinceLasVisit', header: 'coviD19PositiveSinceLasVisit'},
+            {field: 'coviD19TestDateSinceLastVisit', header: 'coviD19TestDateSinceLastVisit'},
+            {field: 'patientStatusSinceLastVisit', header: 'patientStatusSinceLastVisit'},
+            {field: 'admissionStatusSinceLastVisit', header: 'admissionStatusSinceLastVisit'},
+            {field: 'admissionStartDate', header: 'admissionStartDate'},
+            {field: 'admissionEndDate', header: 'admissionEndDate'},
+            {field: 'admissionUnitSinceLastVisit', header: 'admissionUnitSinceLastVisit'},
+            {field: 'supplementalOxygenReceived', header: 'supplementalOxygenReceived'},
+            {field: 'patientVentilated', header: 'patientVentilated'},
+            {field: 'tracingFinalOutcome', header: 'tracingFinalOutcome'},
+            {field: 'causeOfDeath', header: 'causeOfDeath'},
+            {field: 'emr', header: 'emr'},
+            {field: 'project', header: 'project'},
+            {field: 'id', header: 'id'}
+        ];
+    }
+
+    private getDefaulterTracingColumns(): void {
+        this.cols = [
+            {field: 'summary', header: 'Summary'},
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientID', header: 'patientID'},
+            {field: 'facilityName', header: 'facilityName'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'encounterId', header: 'encounterId'},
+            {field: 'tracingType', header: 'tracingType'},
+            {field: 'tracingOutcome', header: 'tracingOutcome'},
+            {field: 'attemptNumber', header: 'attemptNumber'},
+            {field: 'isFinalTrace', header: 'isFinalTrace'},
+            {field: 'trueStatus', header: 'trueStatus'},
+            {field: 'causeOfDeath', header: 'causeOfDeath'},
+            {field: 'comments', header: 'comments'},
+            {field: 'bookingDate', header: 'bookingDate'},
+            {field: 'id', header: 'id'}
         ];
     }
 

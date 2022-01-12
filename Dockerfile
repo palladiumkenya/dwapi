@@ -1,8 +1,8 @@
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+FROM mcr.microsoft.com/dotnet/aspnet:2.1 AS base
 WORKDIR /app
 EXPOSE 5757 5753
 
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM mcr.microsoft.com/dotnet/sdk:2.1 AS build
 WORKDIR /src
 COPY src/Dwapi/Dwapi.csproj src/Dwapi/
 COPY src/Dwapi.SharedKernel/Dwapi.SharedKernel.csproj src/Dwapi.SharedKernel/
