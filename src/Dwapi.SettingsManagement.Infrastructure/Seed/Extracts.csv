@@ -6446,6 +6446,10 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
        (case a.ever_tested_covid_19_positive
             when 703 then 'Yes'
             when 664 then 'No'
+            when 1067 then 'Unknown' end)                                         as EverCOVID19Positive,
+       (case a.ever_tested_covid_19_positive
+            when 703 then 'Yes'
+            when 664 then 'No'
             when 1067 then 'Unknown' end)                                         as COVID19TestResult,
        (case booster_dose_verified when 164134 then 'Yes' end)                    as BoosterDoseVerified,
        a.date_tested_positive                                                     as COVID19TestDate,
@@ -6468,7 +6472,6 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
        (case a.on_ventillator when 1065 then 'Yes' when 1066 then 'No' end)       as PatientVentilated,
        a.date_created                                                             as Date_Created,
        a.date_last_modified                                                       as Date_Last_Modified,
-       '' as EverCOVID19Positive,
        '' as TracingFinalOutcome,
        '' as CauseOfDeath
 from kenyaemr_etl.etl_patient_demographics d
