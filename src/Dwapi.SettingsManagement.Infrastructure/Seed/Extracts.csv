@@ -6400,7 +6400,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
        0 as                                                                          FacilityId,
        a.visit_id                                                                    VisitID,
        a.visit_date                                                                  Covid19AssessmentDate,
-       if(a.final_vaccination_status in (66192, 5585), 'Yes', 'No')               as ReceivedCOVID19Vaccine,
+       if(a.final_vaccination_status in (166192, 5585), 'Yes', 'No')               as ReceivedCOVID19Vaccine,
        a.first_dose_date                                                          as DateGivenFirstDose,
        (case a.first_vaccine_type
             when 166156 then 'Astrazeneca'
