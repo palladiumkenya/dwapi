@@ -11,7 +11,10 @@
         "docker": "ng build --prod --env=qaDocker",
         "test": "ng test",
         "lint": "ng lint",
-        "e2e": "ng e2e"
+        "e2e": "ng e2e",
+        "cy:open": "concurrently  \"ng serve --proxy-config proxy.config.json\" \"cypress open\"",
+        "cy:run": "cypress run",
+        "cypress:open": "cypress open"
     },
     "private": true,
     "dependencies": {
@@ -47,6 +50,9 @@
         "@types/jasminewd2": "~2.0.2",
         "@types/node": "^6.0.98",
         "codelyzer": "^4.0.1",
+        "concurrently": "^7.0.0",
+        "cypress": "^9.3.1",
+        "cypress-xpath": "^1.6.2",
         "jasmine-core": "~2.8.0",
         "jasmine-spec-reporter": "~4.2.1",
         "karma": "~2.0.0",
