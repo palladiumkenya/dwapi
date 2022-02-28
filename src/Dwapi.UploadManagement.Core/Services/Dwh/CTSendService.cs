@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -16,6 +17,7 @@ using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Event.Dwh;
+using Dwapi.UploadManagement.Core.Exceptions;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Exchange;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
@@ -292,20 +294,33 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         public async Task NotifyPostSending(SendManifestPackageDTO sendTo,string version)
         {
+            int maxRetries = 4;
+            int retries = 0;
             var notificationend = new HandshakeEnd("CTSendEnd", version);
             DomainEvents.Dispatch(new DwhMessageNotification(false, $"Sending completed"));
             await _mediator.Publish(new HandshakeEnd("CTSendEnd", version));
 
+            Thread.Sleep(3000);
+
             var client = Client ?? new HttpClient();
-            try
+
+            while (retries < maxRetries)
             {
-                var session = _reader.GetSession(notificationend.EndName);
-                var response = await client.PostAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Handshake?session={session}"),null);
+                try
+                {
+                    var session = _reader.GetSession(notificationend.EndName);
+                    var response =
+                        await client.PostAsync(
+                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Handshake?session={session}"), null);
+                    retries++;
+                }
+                catch (Exception e)
+                {
+
+                    Log.Error(e, $"Send Handshake Error");
+                }
             }
-            catch (Exception e)
-            {
-                Log.Error(e, $"Send Handshake Error");
-            }
+
         }
     }
 }
