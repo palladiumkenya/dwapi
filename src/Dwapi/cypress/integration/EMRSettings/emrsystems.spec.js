@@ -55,7 +55,7 @@ describe("Emr Settings configuration", () => {
     });
 
     it("set Openmrs End Point", () => {
-        cy.wait(6000);
+        cy.wait(10000);
 
         cy.xpath(
             "/html/body/liveapp-root/div/div/div[2]/div[1]/liveapp-emr-settings/div/div[1]/div/div/p-datatable/div/div[2]/table/tbody/tr[3]/td[1]/span/span"

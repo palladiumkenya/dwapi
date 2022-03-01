@@ -23,7 +23,7 @@ describe("Dashboard", () => {
             .type(`{selectall}${host}`);
     });
     it("Successfully setup the port", () => {
-        cy.wait(21000);
+        cy.wait(2100);
         cy.get('[formcontrolName="port"]')
             .click()
             .focused()
