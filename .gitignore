@@ -266,3 +266,5 @@ logs
 # DWAPI dev files
 *.Development.json
 !*kenyahmis.pfx
+
+node_modules/
