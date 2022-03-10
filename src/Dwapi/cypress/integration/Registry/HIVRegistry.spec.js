@@ -4,7 +4,9 @@ before(function () {
 });
 
 describe("HIV Testing Services  Registry", () => {
+
     it("Edit the url registry", () => {
+        cy.wait(1000);
         cy.xpath('//*[@id="url"]')
             .clear()
             .type("https://auth.kenyahmis.org:7773");

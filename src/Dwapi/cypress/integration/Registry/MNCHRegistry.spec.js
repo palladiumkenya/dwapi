@@ -7,7 +7,7 @@ describe("Care and Treatment MNCH Registry", () => {
     it("Edit the url registry", () => {
         cy.xpath('//*[@id="url"]')
             .clear()
-            .type("https://auth.kenyahmis.org:444/MNCH");
+            .type("https://auth.kenyahmis.org/MNCH");
     });
     it("Verify the url registry", () => {
         cy.xpath(
