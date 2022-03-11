@@ -3,6 +3,7 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {SendResponse} from '../../settings/model/send-response';
 import { CombinedPackage } from '../../settings/model/combined-package';
+import {ManifestResponse} from "../models/manifest-response";
 
 @Injectable()
 export class NdwhSenderService {
@@ -15,7 +16,7 @@ export class NdwhSenderService {
     }
 
 
-    public sendManifest(sendPackage: CombinedPackage): Observable<boolean> {
+    public sendManifest(sendPackage: CombinedPackage): Observable<ManifestResponse> {
         return this._http.post<boolean>(`${this._url}/manifest`, sendPackage)
             .catch(this.handleError);
     }

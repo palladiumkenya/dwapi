@@ -5,4 +5,5 @@ export interface CombinedPackage {
     dwhPackage?: SendPackage;
     mpiPackage?: SendPackage;
     sendMpi?: boolean;
+    jobId?:string;
 }

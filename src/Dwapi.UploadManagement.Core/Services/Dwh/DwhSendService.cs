@@ -103,17 +103,17 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             _patientAdverseEventExtractStatus = _extractStatusService.GetStatus(_patientAdverseEventExtract.Id);
 
         }
-        public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,string  version)
+        public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,string  version,string apiVersion="")
         {
-            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()),version);
+            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()),version,apiVersion);
         }
 
-        public Task<List<SendDhwManifestResponse>> SendDiffManifestAsync(SendManifestPackageDTO sendTo,string  version)
+        public Task<List<SendDhwManifestResponse>> SendDiffManifestAsync(SendManifestPackageDTO sendTo,string  version,string apiVersion="")
         {
-            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateDiffWithMetrics(sendTo.GetEmrDto()).ToList()),version);
+            return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateDiffWithMetrics(sendTo.GetEmrDto()).ToList()),version,apiVersion);
         }
 
-        public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, DwhManifestMessageBag messageBag,string version)
+        public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, DwhManifestMessageBag messageBag,string version,string apiVersion="")
         {
             var responses = new List<SendDhwManifestResponse>();
 
@@ -130,11 +130,19 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             {
                 try
                 {
-                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}spot"), message.Manifest);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}spot",apiVersion), message.Manifest);
                     if (response.IsSuccessStatusCode)
                     {
-                        var content = await response.Content.ReadAsStringAsync();
-                        responses.Add(new SendDhwManifestResponse(content));
+                        if (string.IsNullOrWhiteSpace(apiVersion))
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            responses.Add(new SendDhwManifestResponse(content));
+                        }
+                        else
+                        {
+                            var content = await response.Content.ReadAsJsonAsync<ManifestResponse>();
+                            responses.Add(new SendDhwManifestResponse(content));
+                        }
                     }
                     else
                     {

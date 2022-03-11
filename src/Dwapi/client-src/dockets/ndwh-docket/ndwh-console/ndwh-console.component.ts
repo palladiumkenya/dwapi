@@ -27,6 +27,7 @@ import {LoadExtracts} from '../../../settings/model/load-extracts';
 import {CombinedPackage} from '../../../settings/model/combined-package';
 import {CbsService} from '../../services/cbs.service';
 import {environment} from '../../../environments/environment';
+import {ManifestResponse} from "../../models/manifest-response";
 
 @Component({
     selector: 'liveapp-ndwh-console',
@@ -104,6 +105,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loading = false;
     extractSent = [];
     isLoadingMet = false;
+    manifestResponse:ManifestResponse;
 
     public constructor(
         confirmationService: ConfirmationService,
@@ -298,6 +300,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             .subscribe(
                 p => {
                     this.canSendPatients = true;
+                    this.manifestResponse = p;
                 },
                 e => {
                     console.error('SEND ERROR', e);
@@ -352,6 +355,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.sending = true;
         this.errorMessage = [];
         this.extractPackage = this.getExtractsPackage();
+        if(this.manifestResponse) {
+            this.extractPackage.jobId = this.manifestResponse.jobId;
+        }
         this.send$ = this._ndwhSenderService.sendPatientExtracts(this.extractPackage)
             .subscribe(
                 p => {
