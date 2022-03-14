@@ -87,6 +87,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
             var mainResponses = _sendService.SendSmartBatchExtractsAsync(sendTo, 2000, new PatientMessageSourceBag()).Result;
 
             var responses = _sendService.SendSmartBatchExtractsAsync(sendTo, 2000, new ArtMessageSourceBag()).Result;
+
             Assert.NotNull(manifestResponses);
             Assert.NotNull(mainResponses);
             Assert.NotNull(responses);

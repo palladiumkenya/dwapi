@@ -19,7 +19,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Exchange.Ct
         public virtual Guid? SessionId { get; set; }
         public virtual Guid? FacilityId { get; set; }
         public virtual string Tag { get; set; }
-        public virtual List<T> Extracts { get; set; }
+        public virtual List<T> Extracts { get; set; } = new List<T>();
         public virtual int Stake => 5;
         [JsonIgnore]
         public virtual   string EndPoint { get; }
@@ -31,6 +31,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Exchange.Ct
         public virtual string DocketExtract { get; }
         [JsonIgnore]
         public virtual List<Guid> SendIds =>GetIds();
+        public int MinPk => Extracts.Min(x => x.PatientPK);
+        public int MaxPk => Extracts.Max(x => x.PatientPK);
 
         private List<Guid> GetIds()
         {

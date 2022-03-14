@@ -111,7 +111,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
 
         public IEnumerable<T> GenerateSmartBatchExtracts<T>(int page, int batchSize) where T : ClientExtract
         {
-            return GenerateSmartBatchExtracts<T, Guid>(page, batchSize);
+            return _reader.ReadSmart<T>(page, batchSize);
         }
 
         public IEnumerable<T> GenerateDiffBatchExtracts<T>(int page, int batchSize, string docket, string extract)

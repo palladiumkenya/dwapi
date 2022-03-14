@@ -279,16 +279,14 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
             try
             {
-                string jobId=string.Empty;
-                Guid manifestId;
-                Guid facilityId;
+                string jobId=string.Empty;Guid manifestId;Guid facilityId;
+                var manifest = _transportLogRepository.GetManifest();
 
                 if (messageBag.ExtractName == nameof(PatientExtract))
                 {
                     var mainExtract = _transportLogRepository.GetMainExtract();
                     if (null == mainExtract)
                     {
-                        var manifest = _transportLogRepository.GetManifest();
                         jobId = manifest.JobId;
                         manifestId = manifest.ManifestId;
                         facilityId = manifest.FacilityId;
@@ -314,10 +312,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     count++;
                     var extracts = _packager.GenerateSmartBatchExtracts<T>(page, packageInfo.PageSize).ToList();
                     recordCount = recordCount + extracts.Count;
-                    Log.Debug(
-                        $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords} Page:{page} of {packageInfo.PageCount}");
                     messageBag.Generate(extracts, manifestId, facilityId,jobId);
                     var message = messageBag;
+
+                    Log.Debug(
+                        $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords}  Pks:[{messageBag.MinPk}-{messageBag.MaxPk}] Page:{page} of {packageInfo.PageCount}");
+
                     try
                     {
                         int retryCount = 0;
