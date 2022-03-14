@@ -1,3 +1,6 @@
+using System;
+using Dwapi.SharedKernel.Model;
+
 namespace Dwapi.SharedKernel.Exchange
 {
     public class ManifestResponse
@@ -7,5 +10,10 @@ namespace Dwapi.SharedKernel.Exchange
         public string ManifestId { get; set; }
         public string SessionId { get; set; }
         public string JobId { get; set; }
+        public Guid FacilityId { get; set; }
+        public override string ToString()
+        {
+            return $"{Code}-{Name} M:{ManifestId}|J:{JobId}|F:[{FacilityId}]";
+        }
     }
 }

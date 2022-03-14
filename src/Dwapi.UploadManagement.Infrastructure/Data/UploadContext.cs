@@ -62,10 +62,10 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<CwcVisitExtractView> ClientCwcVisitExtracts { get; set; }
         public virtual DbSet<HeiExtractView> ClientHeiExtracts { get; set; }
         public virtual DbSet<MnchLabExtractView> ClientMnchLabExtracts { get; set; }
+        public virtual DbSet<TransportLogView> TransportLogs { get; set; }
 
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

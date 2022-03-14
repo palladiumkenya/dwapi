@@ -6,6 +6,7 @@ using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Tests.TestHelpers;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
+using Dwapi.UploadManagement.Core.Exchange.Dwh.Smart;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -20,7 +21,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
     {
         private readonly string _authToken = Guid.NewGuid().ToString();
         private readonly string _subId = "DWAPI";
-        private readonly string url = "https://kenyahmis.org/api";
+        private readonly string url = "http://localhost:21751";
 
         private ICTSendService _sendService;
         private CentralRegistry _registry;
@@ -53,8 +54,46 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
             responses.ForEach(sendManifestResponse => Log.Debug($"SENT! > {sendManifestResponse}"));
         }
 
+        [Test]
+        public void should_Send_Smart_Manifest()
+        {
+            var sendTo = new SendManifestPackageDTO(_registry);
+
+            var responses = _sendService.SendSmartManifestAsync(sendTo,"2.8.0.0","3").Result;
+
+            Assert.NotNull(responses);
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+            responses.ForEach(sendManifestResponse => Log.Debug($"SENT! > {sendManifestResponse}"));
+        }
+
+
+        [Test, Order(1)]
+        public void should_Send_Smart_Patient()
+        {
+            var sendTo = new SendManifestPackageDTO(_registry);
+            var manifestResponses = _sendService.SendSmartManifestAsync(sendTo,"2.8.0.0","3").Result;
+
+            var responses = _sendService.SendSmartBatchExtractsAsync(sendTo, 2000, new PatientMessageSourceBag()).Result;
+            Assert.NotNull(manifestResponses);
+            Assert.NotNull(responses);
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+        }
 
         [Test, Order(2)]
+        public void should_Send_Smart_Art()
+        {
+            var sendTo = new SendManifestPackageDTO(_registry);
+            var manifestResponses = _sendService.SendSmartManifestAsync(sendTo,"2.8.0.0","3").Result;
+            var mainResponses = _sendService.SendSmartBatchExtractsAsync(sendTo, 2000, new PatientMessageSourceBag()).Result;
+
+            var responses = _sendService.SendSmartBatchExtractsAsync(sendTo, 2000, new ArtMessageSourceBag()).Result;
+            Assert.NotNull(manifestResponses);
+            Assert.NotNull(mainResponses);
+            Assert.NotNull(responses);
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+        }
+
+        [Test, Order(3)]
         public void should_Send_ART()
         {
             _sendService.Client = new HttpClient(_handlerMock.Object);
@@ -65,7 +104,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
         }
 
-        [Test, Order(2)]
+        [Test, Order(4)]
         public void should_Send_AdverseEvent()
         {
             _sendService.Client = new HttpClient(_handlerMock.Object);
@@ -76,7 +115,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
         }
 
-        [Test, Order(2)]
+        [Test, Order(4)]
         public void should_Send_Baseline()
         {
             _sendService.Client = new HttpClient(_handlerMock.Object);
@@ -87,7 +126,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
         }
 
-        [Test, Order(2)]
+        [Test, Order(4)]
         public void should_Send_Lab()
         {
             _sendService.Client = new HttpClient(_handlerMock.Object);
@@ -98,7 +137,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
         }
 
-        [Test, Order(2)]
+        [Test, Order(4)]
         public void should_Send_Pharmacy()
         {
             _sendService.Client = new HttpClient(_handlerMock.Object);
@@ -109,7 +148,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
         }
 
-        [Test, Order(2)]
+        [Test, Order(4)]
         public void should_Send_Status()
         {
             _sendService.Client = new HttpClient(_handlerMock.Object);
@@ -120,7 +159,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
             Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
         }
 
-        [Test, Order(2)]
+        [Test, Order(4)]
         public void should_Send_Visit()
         {
             _sendService.Client = new HttpClient(_handlerMock.Object);

@@ -1,6 +1,10 @@
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.UploadManagement.Core.Interfaces.Exchange.Ct;
+using Dwapi.UploadManagement.Core.Model.Dwh;
 
 namespace Dwapi.UploadManagement.Core.Exchange.Dwh.Smart
 {
-    public class DefaulterTracingSourceBag : SourceBag<DefaulterTracingExtract>{}
+    public class DefaulterTracingMessageSourceBag : MessageSourceBag<DefaulterTracingExtractView>{
+        public override string EndPoint => "DefaulterTracing";
+        public override string ExtractName => $"{nameof(DefaulterTracingExtract)}";}
 }

@@ -99,9 +99,19 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
             return _reader.Read<T, TId>(page, batchSize);
         }
 
+        public IEnumerable<T> GenerateSmartBatchExtracts<T, TId>(int page, int batchSize) where T : Entity<TId>
+        {
+            return _reader.ReadSmart<T, TId>(page, batchSize);
+        }
+
         public IEnumerable<T> GenerateBatchExtracts<T>(int page, int batchSize) where T : ClientExtract
         {
             return GenerateBatchExtracts<T, Guid>(page, batchSize);
+        }
+
+        public IEnumerable<T> GenerateSmartBatchExtracts<T>(int page, int batchSize) where T : ClientExtract
+        {
+            return GenerateSmartBatchExtracts<T, Guid>(page, batchSize);
         }
 
         public IEnumerable<T> GenerateDiffBatchExtracts<T>(int page, int batchSize, string docket, string extract)

@@ -35,8 +35,9 @@ namespace Dwapi.Controller
         private readonly ICTSendService _ctSendService;
         private readonly IExtractRepository _extractRepository;
         private readonly string _version;
+        private readonly ITransportLogRepository _transportLogRepository;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, ITransportLogRepository transportLogRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -44,6 +45,7 @@ namespace Dwapi.Controller
             _cbsSendService = cbsSendService;
             _ctSendService = ctSendService;
             _extractRepository = extractRepository;
+            _transportLogRepository = transportLogRepository;
             Startup.HubContext= _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
         }
@@ -197,6 +199,26 @@ namespace Dwapi.Controller
         }
 
         // POST: api/DwhExtracts/patients
+        [HttpPost("smart/patients")]
+        public IActionResult SmartSendPatientExtracts([FromBody] CombinedSendManifestDto packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                QueueDwh(packageDto.DwhPackage);
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        // POST: api/DwhExtracts/patients
         [HttpPost("diffpatients")]
         public IActionResult SendDiffPatientExtracts([FromBody] CombinedSendManifestDto packageDto)
         {
@@ -252,6 +274,36 @@ namespace Dwapi.Controller
         }
 
         [AutomaticRetry(Attempts = 0)]
+        private void QueueDwhPatients(SendManifestPackageDTO package)
+        {
+            var manifest = _transportLogRepository.GetManifest();
+            var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
+
+            if (extracts.Any())
+                package.Extracts = extracts.Select(x => new ExtractDto() {Id = x.Id, Name = x.Name}).ToList();
+
+            _ctSendService.NotifyPreSending();
+
+            var job1 =
+                BatchJob.StartNew(x => { SendJobBaselines(package); });
+
+            var job2 =
+                BatchJob.ContinueBatchWith(job1, x => { SendJobProfiles(package); });
+
+            var job3 =
+                BatchJob.ContinueBatchWith(job2, x => { SendNewJobProfiles(package); });
+
+            var job4 =
+                BatchJob.ContinueBatchWith(job3, x => { SendNewOtherJobProfiles(package); });
+
+            var job5 =
+                BatchJob.ContinueBatchWith(job4, x => { SendCovidJobProfiles(package); });
+
+            var jobEnd =
+                BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package,_version); });
+        }
+
+        [AutomaticRetry(Attempts = 0)]
         private void QueueDwhDiff(SendManifestPackageDTO package)
         {
             var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
@@ -278,6 +330,11 @@ namespace Dwapi.Controller
 
             var jobEnd =
                 BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package, _version); });
+        }
+
+        public void SendJobPatients(SendManifestPackageDTO package)
+        {
+            var idsA =_ctSendService.SendBatchExtractsAsync(package, 500, new ArtMessageBag()).Result;
         }
 
         public void SendJobBaselines(SendManifestPackageDTO package)

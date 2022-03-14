@@ -4,7 +4,9 @@ using Dwapi.UploadManagement.Core.Model.Dwh;
 
 namespace Dwapi.UploadManagement.Core.Exchange.Dwh.Smart
 {
-    public class OvcMessageSourceBag : MessageSourceBag<OvcExtractView>{
-        public override string EndPoint => "Ovc";
-        public override string ExtractName => $"{nameof(OvcExtract)}";}
+    public class ArtMessageSourceBag : MessageSourceBag<PatientArtExtractView>
+    {
+        public override string EndPoint => "PatientArt";
+        public override string ExtractName => $"PatientArtExtract";
+    }
 }

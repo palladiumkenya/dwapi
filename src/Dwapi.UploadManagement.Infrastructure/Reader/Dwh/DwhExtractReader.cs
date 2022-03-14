@@ -107,6 +107,25 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 .AsNoTracking().ToList();
         }
 
+        public IEnumerable<T> ReadSmart<T, TId>(int page, int pageSize) where T : Entity<TId>
+        {
+            var skip = (page - 1) * pageSize;
+
+            return _context.Set<T>()
+                .OrderBy(x => x.Id)
+                .Skip(skip).Take(pageSize)
+                .AsNoTracking().ToList();
+        }
+
+        public IEnumerable<T> ReadSmart<T, TId>(int page, int pageSize, Expression<Func<T, bool>> predicate) where T : Entity<TId>
+        {
+            return _context.Set<T>()
+                .Where(predicate)
+                .OrderBy(x => x.Id)
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .AsNoTracking().ToList();
+        }
+
         public IEnumerable<T> ReadMainExtract<T, TId>(int page, int pageSize, Expression<Func<T, bool>> predicate) where T : Entity<TId>
         {
             return _context.Set<T>()

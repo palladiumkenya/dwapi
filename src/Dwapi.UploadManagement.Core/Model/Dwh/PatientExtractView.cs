@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Dwapi.Contracts.Ct;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Newtonsoft.Json;
 
 namespace Dwapi.UploadManagement.Core.Model.Dwh
 {
@@ -53,74 +54,82 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         [NotMapped] public string PatientCccNumber => PatientID;
         [NotMapped] public int FacilityId => SiteCode;
 
+        [JsonIgnore]
         [NotMapped]
         public ICollection<PatientArtExtractView> PatientArtExtracts { get; set; } = new List<PatientArtExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<PatientBaselinesExtractView> PatientBaselinesExtracts { get; set; } =
             new List<PatientBaselinesExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<PatientLaboratoryExtractView> PatientLaboratoryExtracts { get; set; } =
             new List<PatientLaboratoryExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<PatientPharmacyExtractView> PatientPharmacyExtracts { get; set; } =
             new List<PatientPharmacyExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<PatientStatusExtractView> PatientStatusExtracts { get; set; } =
             new List<PatientStatusExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<PatientVisitExtractView> PatientVisitExtracts { get; set; } =
             new List<PatientVisitExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<PatientAdverseEventView> PatientAdverseEventExtracts { get; set; } =
             new List<PatientAdverseEventView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<AllergiesChronicIllnessExtractView> AllergiesChronicIllnessExtracts { get; set; } =
             new List<AllergiesChronicIllnessExtractView>();
-
+        [JsonIgnore]
         [NotMapped] public ICollection<IptExtractView> IptExtracts { get; set; } = new List<IptExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<DepressionScreeningExtractView> DepressionScreeningExtracts { get; set; } =
             new List<DepressionScreeningExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<ContactListingExtractView> ContactListingExtracts { get; set; } =
             new List<ContactListingExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<GbvScreeningExtractView> GbvScreeningExtracts { get; set; } =
             new List<GbvScreeningExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<EnhancedAdherenceCounsellingExtractView> EnhancedAdherenceCounsellingExtracts { get; set; } =
             new List<EnhancedAdherenceCounsellingExtractView>();
-
+        [JsonIgnore]
         [NotMapped]
         public ICollection<DrugAlcoholScreeningExtractView> DrugAlcoholScreeningExtracts { get; set; } =
             new List<DrugAlcoholScreeningExtractView>();
 
+        [JsonIgnore]
         [NotMapped] public ICollection<OvcExtractView> OvcExtracts { get; set; } = new List<OvcExtractView>();
+        [JsonIgnore]
         [NotMapped] public ICollection<OtzExtractView> OtzExtracts { get; set; } = new List<OtzExtractView>();
-
-
+        [JsonIgnore]
         [NotMapped] public ICollection<CovidExtractView> CovidExtracts { get; set; } = new List<CovidExtractView>();
+        [JsonIgnore]
         [NotMapped] public ICollection<DefaulterTracingExtractView> DefaulterTracingExtracts { get; set; } = new List<DefaulterTracingExtractView>();
 
-
+        [JsonIgnore]
         [NotMapped] public bool HasArt => null != PatientArtExtracts && PatientArtExtracts.Any();
+        [JsonIgnore]
         [NotMapped] public bool HasBaseline => null != PatientBaselinesExtracts && PatientBaselinesExtracts.Any();
+        [JsonIgnore]
         [NotMapped] public bool HasLab => null != PatientLaboratoryExtracts && PatientLaboratoryExtracts.Any();
+        [JsonIgnore]
         [NotMapped] public bool HasPharmacy => null != PatientPharmacyExtracts && PatientPharmacyExtracts.Any();
+        [JsonIgnore]
         [NotMapped] public bool HasStatus => null != PatientStatusExtracts && PatientStatusExtracts.Any();
+        [JsonIgnore]
         [NotMapped] public bool HasVisit => null != PatientVisitExtracts && PatientVisitExtracts.Any();
-
+        [JsonIgnore]
         [NotMapped] public bool HasAdverse => null != PatientAdverseEventExtracts && PatientAdverseEventExtracts.Any();
 
         public Facility GetFacility()
