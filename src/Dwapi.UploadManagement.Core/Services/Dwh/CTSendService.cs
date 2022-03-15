@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,11 +22,13 @@ using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Event.Dwh;
 using Dwapi.UploadManagement.Core.Exceptions;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
+using Dwapi.UploadManagement.Core.Exchange.Dwh.Smart;
 using Dwapi.UploadManagement.Core.Interfaces.Exchange;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Notifications.Dwh;
+using Humanizer;
 using MediatR;
 using Serilog;
 
@@ -261,7 +264,9 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         public async Task<List<SendCTResponse>> SendSmartBatchExtractsAsync<T>(SendManifestPackageDTO sendTo, int batchSize, IMessageSourceBag<T> messageBag) where T : ClientExtract
         {
-             HttpClientHandler handler = new HttpClientHandler()
+            Stopwatch stopWatch = Stopwatch.StartNew();
+
+            HttpClientHandler handler = new HttpClientHandler()
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             };
@@ -276,6 +281,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sending));
             long recordCount = 0;
+
+            if (messageBag.ExtractName == "PatientArtExtract")
+            {
+                string x = "ss";
+            }
+
 
             try
             {
@@ -378,9 +389,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 messageBag.GetProgress(count, total), recordCount,true)));
 
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
-                {UpdatePatient = (messageBag is ArtMessageBag || messageBag is BaselineMessageBag || messageBag is StatusMessageBag)}
+                {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
             );
-
+            stopWatch.Stop();
+            Log.Debug(new string('*',40));
+            Log.Debug($"Sent {recordCount} | {messageBag.ExtractName} in [{stopWatch.ElapsedMilliseconds/1000}] s");
+            Log.Debug(new string('*',40));
             return responses;
         }
 
@@ -505,15 +519,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     var response =
                         await client.PostAsync(
                             sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Handshake?session={session}"), null);
-                    retries++;
+
+                    if (!session.IsNullOrEmpty())
+                    {
+                        Log.Debug(new string('*',50));
+                        Log.Debug("SUCCESS Sent Handshake");
+                        Log.Debug(new string('*',50));
+                    }
                 }
                 catch (Exception e)
                 {
-
                     Log.Error(e, $"Send Handshake Error");
                 }
+                retries++;
             }
-
         }
     }
 }

@@ -558,10 +558,11 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 overallProgress = overallProgress + (+data);
             }
         });
-
+        console.log(`>>>>>>>>>> ${overallProgress}`,ecount)
         if(this.smartMode) {
             return overallProgress / ecount;
         }
+        console.log(`>>>>>>>>>> ${overallProgress}`,ecount)
         return overallProgress;
     }
 

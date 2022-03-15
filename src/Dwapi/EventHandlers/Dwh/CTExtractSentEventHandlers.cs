@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
@@ -16,12 +17,13 @@ namespace Dwapi.EventHandlers.Dwh
             _service = Startup.ServiceProvider.GetService<IDwhExtractSentServcie>();
         }
 
-        public void Handle(CTExtractSentEvent domainEvent)
+        public Task Handle(CTExtractSentEvent domainEvent)
         {
             if (domainEvent.SentItems.Any())
             {
                 _service.UpdateSendStatus(domainEvent.SentItems.First().ExtractType, domainEvent.SentItems);
             }
+            return Task.CompletedTask;
         }
     }
 }

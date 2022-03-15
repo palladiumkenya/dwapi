@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Enum;
@@ -12,7 +13,7 @@ namespace Dwapi.NotificationHandlers
     {
         private IExtractHistoryRepository _extractHistoryRepository;
 
-        public async void Handle(HtsExtractActivityNotification domainEvent)
+        public async Task Handle(HtsExtractActivityNotification domainEvent)
         {
             _extractHistoryRepository = Startup.ServiceProvider.GetService<IExtractHistoryRepository>();
 

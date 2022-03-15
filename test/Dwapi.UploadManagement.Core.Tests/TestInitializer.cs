@@ -649,9 +649,16 @@ namespace Dwapi.UploadManagement.Core.Tests
         {
             if (goLive)
             {
+                /*
                 services.AddDbContext<UploadContext>(x => x.UseSqlServer(MsSqlConnectionString));
                 services.AddDbContext<SettingsContext>(x => x.UseSqlServer(MsSqlConnectionString));
                 services.AddDbContext<ExtractsContext>(x => x.UseSqlServer(MsSqlConnectionString));
+                */
+                services.AddDbContext<UploadContext>(x => x.UseMySql(MySqlConnectionString));
+                services.AddDbContext<SettingsContext>(x => x.UseMySql(MySqlConnectionString));
+                services.AddDbContext<ExtractsContext>(x => x.UseMySql(MySqlConnectionString));
+                return;
+
                 return;
             }
 

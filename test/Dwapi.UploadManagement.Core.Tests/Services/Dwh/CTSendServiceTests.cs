@@ -84,9 +84,24 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
         {
             var sendTo = new SendManifestPackageDTO(_registry);
             var manifestResponses = _sendService.SendSmartManifestAsync(sendTo,"2.8.0.0","3").Result;
-            var mainResponses = _sendService.SendSmartBatchExtractsAsync(sendTo, 2000, new PatientMessageSourceBag()).Result;
+            var mainResponses = _sendService.SendSmartBatchExtractsAsync(sendTo, 1000, new PatientMessageSourceBag()).Result;
 
-            var responses = _sendService.SendSmartBatchExtractsAsync(sendTo, 2000, new ArtMessageSourceBag()).Result;
+            var responses = _sendService.SendSmartBatchExtractsAsync(sendTo, 1000, new ArtMessageSourceBag()).Result;
+
+            Assert.NotNull(manifestResponses);
+            Assert.NotNull(mainResponses);
+            Assert.NotNull(responses);
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+        }
+
+        [Test, Order(4)]
+        public void should_Send_Smart_Visit()
+        {
+            var sendTo = new SendManifestPackageDTO(_registry);
+            var manifestResponses = _sendService.SendSmartManifestAsync(sendTo,"2.8.0.0","3").Result;
+            var mainResponses = _sendService.SendSmartBatchExtractsAsync(sendTo, 1000, new PatientMessageSourceBag()).Result;
+
+            var responses = _sendService.SendSmartBatchExtractsAsync(sendTo, 2000, new VisitMessageSourceBag()).Result;
 
             Assert.NotNull(manifestResponses);
             Assert.NotNull(mainResponses);
