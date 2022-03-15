@@ -20,6 +20,10 @@ export class NdwhSenderService {
         return this._http.post<boolean>(`${this._url}/manifest`, sendPackage)
             .catch(this.handleError);
     }
+    public sendSmartManifest(sendPackage: CombinedPackage): Observable<ManifestResponse> {
+        return this._http.post<boolean>(`${this._url}/smart/manifest`, sendPackage)
+            .catch(this.handleError);
+    }
     public sendDiffManifest(sendPackage: CombinedPackage): Observable<boolean> {
         return this._http.post<boolean>(`${this._url}/diffmanifest`, sendPackage)
             .catch(this.handleError);
@@ -29,6 +33,13 @@ export class NdwhSenderService {
         return this._http.post<boolean>(`${this._url}/patients`, sendPackage)
             .catch(this.handleError);
     }
+
+
+    public sendSmartPatientExtracts(sendPackage: CombinedPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/smart/patients`, sendPackage)
+            .catch(this.handleError);
+    }
+
     public sendDiffPatientExtracts(sendPackage: CombinedPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/diffpatients`, sendPackage)
             .catch(this.handleError);

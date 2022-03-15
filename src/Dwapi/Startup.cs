@@ -655,6 +655,8 @@ namespace Dwapi
 
             services.AddScoped<IIntegrityCheckRepository, IntegrityCheckRepository>();
 
+            services.AddScoped<ITransportLogRepository, TransportLogRepository>();
+
              #region Extracts
 
              services.AddTransient<ITempPatientMnchExtractRepository, TempPatientMnchExtractRepository>();

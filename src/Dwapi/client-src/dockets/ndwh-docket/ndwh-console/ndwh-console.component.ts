@@ -106,6 +106,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     extractSent = [];
     isLoadingMet = false;
     manifestResponse:ManifestResponse;
+    smartMode = false;
+    hideMe = true;
 
     public constructor(
         confirmationService: ConfirmationService,
@@ -320,6 +322,38 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             );
     }
 
+    public sendSmart(): void {
+        this.smartMode=true;
+        localStorage.clear();
+        this.sendingManifest = true;
+        this.errorMessage = [];
+        this.notifications = [];
+        this.canSendPatients = false;
+        this.manifestPackage = this.getSendManifestPackage();
+        this.sendManifest$ = this._ndwhSenderService.sendSmartManifest(this.manifestPackage)
+            .subscribe(
+                p => {
+                    this.canSendPatients = true;
+                    this.manifestResponse = p;
+                },
+                e => {
+                    console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
+
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    }
+                },
+                () => {
+                    this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+                    this.sendSmartExtracts();
+                    this.sendingManifest = false;
+                    this.updateEvent();
+                }
+            );
+    }
+
     public sendDiff(): void {
         localStorage.clear();
         this.sendingManifest = true;
@@ -359,6 +393,37 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             this.extractPackage.jobId = this.manifestResponse.jobId;
         }
         this.send$ = this._ndwhSenderService.sendPatientExtracts(this.extractPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                },
+                e => {
+                    this.notifications = [];
+                    console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
+
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    }
+                },
+                () => {
+                    this.notifications = [];
+                    this.errorMessage.push({severity: 'success', summary: 'Sending Extracts Completed '});
+                    this.updateEvent();
+                }
+            );
+    }
+
+    public sendSmartExtracts(): void {
+        this.sendEvent = {sentProgress: 0};
+        this.sending = true;
+        this.errorMessage = [];
+        this.extractPackage = this.getExtractsPackage();
+        if(this.manifestResponse) {
+            this.extractPackage.jobId = this.manifestResponse.jobId;
+        }
+        this.send$ = this._ndwhSenderService.sendSmartPatientExtracts(this.extractPackage)
             .subscribe(
                 p => {
                     // this.sendResponse = p;
@@ -483,6 +548,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     private getCurrrentProgress(extract: string, progress: string) {
         let overallProgress = 0;
+        const ecount= this.extracts.length;
         const keys = this.extracts.map(x => `CT-${x.name}`);
         const key = `CT-${extract}`;
         localStorage.setItem(key, progress);
@@ -492,6 +558,10 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 overallProgress = overallProgress + (+data);
             }
         });
+
+        if(this.smartMode) {
+            return overallProgress / ecount;
+        }
         return overallProgress;
     }
 

@@ -20,7 +20,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Exchange.Ct
         public virtual Guid? FacilityId { get; set; }
         public virtual string Tag { get; set; }
         public virtual List<T> Extracts { get; set; } = new List<T>();
-        public virtual int Stake => 5;
+        public virtual int Stake => 100;
         [JsonIgnore]
         public virtual   string EndPoint { get; }
         [JsonIgnore]
