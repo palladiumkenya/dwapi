@@ -334,7 +334,15 @@ namespace Dwapi
                 var name = Configuration["Features:PKV:Name"];
                 var description = Configuration["Features:PKV:Description"];
                 var key = Configuration["Features:PKV:Key"];
-                AppFeature = AppFeature.Load(name, description, key, CurrrentEnv.IsDevelopment());
+
+                int.TryParse(Configuration["Features:BatchSize:Patients"], out var p);
+                int.TryParse(Configuration["Features:BatchSize:Visits"],out var v);
+                int.TryParse(Configuration["Features:BatchSize:Extracts"],out var e);
+
+                AppFeature = AppFeature.Load(
+                    name, description, key,
+                    p, v, e,
+                    CurrrentEnv.IsDevelopment());
             }
             catch (Exception e)
             {
@@ -871,6 +879,10 @@ namespace Dwapi
                 Log.Debug(new string('=', 50));
                 Log.Debug("Features");
                 Log.Debug($"    {AppFeature.PKV}");
+                Log.Debug(new string('=', 50));
+                Log.Debug(new string('=', 50));
+                Log.Debug("Features");
+                Log.Debug($"    {AppFeature.BatchSize}");
                 Log.Debug(new string('=', 50));
             }
 

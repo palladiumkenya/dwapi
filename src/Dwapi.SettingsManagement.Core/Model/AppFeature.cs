@@ -6,18 +6,22 @@ namespace Dwapi.SettingsManagement.Core.Model
     public class AppFeature
     {
         public Feature PKV { get;  }
-
-        public AppFeature()
+        public FeatureBatchSize BatchSize { get;  }
+        private AppFeature()
         {
         }
-        public AppFeature(Feature pkv)
+        public AppFeature(Feature pkv, FeatureBatchSize batchSize)
         {
             PKV = pkv;
+            BatchSize = batchSize;
         }
 
-        public static AppFeature Load(string name, string description, string key, bool isDevMode = false)
+        public static AppFeature Load(string name, string description, string key,int pats,int visits,int extracts,bool isDevMode = false)
         {
-            return new AppFeature(new Feature(name, description, key, isDevMode));
+            return new AppFeature(
+                new Feature(name, description, key, isDevMode),
+                new FeatureBatchSize(pats,visits,extracts)
+            );
         }
     }
 
@@ -58,6 +62,25 @@ namespace Dwapi.SettingsManagement.Core.Model
         public override string ToString()
         {
             return $"{Description} | Enabled:{IsValid}";
+        }
+    }
+    public class FeatureBatchSize
+    {
+        public int Patients { get; set; }
+        public int Visits { get; set; }
+        public int Extracts { get; set; }
+
+
+        public FeatureBatchSize(int patients, int visits, int extracts)
+        {
+            Patients = patients > 2000 ? 2000 : patients;
+            Visits = visits > 2000 ? 2000 : visits;
+            Extracts = extracts > 2000 ? 2000 : extracts;
+        }
+
+        public override string ToString()
+        {
+            return $"Upload Batch Patients:{Patients} | Visits:{Visits} |Extracts:{Extracts}";
         }
     }
 }

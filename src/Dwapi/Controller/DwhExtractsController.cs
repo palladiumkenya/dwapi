@@ -361,40 +361,40 @@ namespace Dwapi.Controller
         }
         public void SendJobSmartPateints(SendManifestPackageDTO package)
         {
-            var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new PatientMessageSourceBag()).Result;
+            var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new PatientMessageSourceBag()).Result;
         }
         public void SendJobSmartBaselines(SendManifestPackageDTO package)
         {
-            var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new ArtMessageSourceBag()).Result;
-            var idsB=_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new BaselineMessageSourceBag()).Result;
-            var idsC= _ctSendService.SendSmartBatchExtractsAsync(package, 2000, new StatusMessageSourceBag()).Result;
-            var idsD=_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new AdverseEventMessageSourceBag()).Result;
+            var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new ArtMessageSourceBag()).Result;
+            var idsB=_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new BaselineMessageSourceBag()).Result;
+            var idsC= _ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new StatusMessageSourceBag()).Result;
+            var idsD=_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new AdverseEventMessageSourceBag()).Result;
         }
         public void SendJobSmartProfiles(SendManifestPackageDTO package)
         {
-            var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new PharmacyMessageSourceBag()).Result;
-            var idsB=_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new LaboratoryMessageSourceBag()).Result;
-            var idsC= _ctSendService.SendSmartBatchExtractsAsync(package, 2000, new VisitMessageSourceBag()).Result;
+            var idsC= _ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Visits, new VisitMessageSourceBag()).Result;
+            var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new PharmacyMessageSourceBag()).Result;
+            var idsB=_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new LaboratoryMessageSourceBag()).Result;
         }
         public void SendNewJobSmartProfiles(SendManifestPackageDTO package)
         {
-            var idsAllergiesChronicIllness =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new AllergiesChronicIllnessMessageSourceBag()).Result;
-            var idsIpt =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new IptMessageSourceBag()).Result;
-            var idsDepressionScreening =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new DepressionScreeningMessageSourceBag()).Result;
-            var idsContactListing =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new ContactListingMessageSourceBag()).Result;
+            var idsAllergiesChronicIllness =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new AllergiesChronicIllnessMessageSourceBag()).Result;
+            var idsIpt =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new IptMessageSourceBag()).Result;
+            var idsDepressionScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DepressionScreeningMessageSourceBag()).Result;
+            var idsContactListing =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new ContactListingMessageSourceBag()).Result;
         }
         public void SendNewOtherJobSmartProfiles(SendManifestPackageDTO package)
         {
-            var idsGbvScreening =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new GbvScreeningMessageSourceBag()).Result;
-            var idsEnhancedAdherenceCounselling =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new EnhancedAdherenceCounsellingMessageSourceBag()).Result;
-            var idsDrugAlcoholScreening =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new DrugAlcoholScreeningMessageSourceBag()).Result;
-            var idsOvc =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new OvcMessageSourceBag()).Result;
-            var idsOtz =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new OtzMessageSourceBag()).Result;
+            var idsGbvScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new GbvScreeningMessageSourceBag()).Result;
+            var idsEnhancedAdherenceCounselling =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new EnhancedAdherenceCounsellingMessageSourceBag()).Result;
+            var idsDrugAlcoholScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DrugAlcoholScreeningMessageSourceBag()).Result;
+            var idsOvc =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new OvcMessageSourceBag()).Result;
+            var idsOtz =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new OtzMessageSourceBag()).Result;
         }
         public void SendCovidJobSmartProfiles(SendManifestPackageDTO package)
         {
-            var idsCovid =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new CovidMessageSourceBag()).Result;
-            var idsDefaulterTracing =_ctSendService.SendSmartBatchExtractsAsync(package, 2000, new DefaulterTracingMessageSourceBag()).Result;
+            var idsCovid =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CovidMessageSourceBag()).Result;
+            var idsDefaulterTracing =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DefaulterTracingMessageSourceBag()).Result;
         }
 
         #endregion
