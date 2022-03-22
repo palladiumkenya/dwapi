@@ -21,7 +21,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
     {
         private readonly string _authToken = Guid.NewGuid().ToString();
         private readonly string _subId = "DWAPI";
-        private readonly string url = "http://localhost:21751";
+        private readonly string url = "http://livedev.local:8000";
 
         private ICTSendService _sendService;
         private CentralRegistry _registry;
@@ -56,6 +56,18 @@ namespace Dwapi.UploadManagement.Core.Tests.Services.Dwh
 
         [Test]
         public void should_Send_Smart_Manifest()
+        {
+            var sendTo = new SendManifestPackageDTO(_registry);
+
+            var responses = _sendService.SendSmartManifestAsync(sendTo,"2.8.0.0","3").Result;
+
+            Assert.NotNull(responses);
+            Assert.False(responses.Select(x => x.IsValid()).Any(x => false));
+            responses.ForEach(sendManifestResponse => Log.Debug($"SENT! > {sendManifestResponse}"));
+        }
+
+        [Test]
+        public void should_Send_Smart_Multi_Manifest()
         {
             var sendTo = new SendManifestPackageDTO(_registry);
 

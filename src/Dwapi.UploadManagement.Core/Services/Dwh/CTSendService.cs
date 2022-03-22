@@ -282,12 +282,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sending));
             long recordCount = 0;
 
-            if (messageBag.ExtractName == "PatientArtExtract")
-            {
-                string x = "ss";
-            }
-
-
             try
             {
                 string jobId=string.Empty;Guid manifestId;Guid facilityId;

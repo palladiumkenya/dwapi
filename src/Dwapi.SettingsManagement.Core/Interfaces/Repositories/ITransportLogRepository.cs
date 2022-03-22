@@ -6,7 +6,7 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Repositories
 {
     public interface ITransportLogRepository : IRepository<TransportLog,Guid>
     {
-        void Clear(string docket);
+        void Clear(string docket, int siteCode);
         void CreateLatest(TransportLog transportLog);
 
         TransportLog GetManifest();
