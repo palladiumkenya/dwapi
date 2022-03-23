@@ -71,7 +71,7 @@ namespace Dwapi.Controller
             {
                 var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
 
-                await _mediator.Publish(new ExtractLoaded("CareTreatment", version));
+                await _mediator.Publish(new ExtractLoaded("CareTreatment", version, request.EmrSetup));
 
                 return Ok(result);
             }

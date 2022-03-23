@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Dwapi.Contracts.Exchange;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.SharedKernel.Enum;
+using Dwapi.UploadManagement.Core.Interfaces.Exchange.Ct;
 using Humanizer;
 
 namespace Dwapi.UploadManagement.Core.Interfaces.Exchange

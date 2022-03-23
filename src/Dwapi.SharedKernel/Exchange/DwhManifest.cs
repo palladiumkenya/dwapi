@@ -78,7 +78,7 @@ namespace Dwapi.SharedKernel.Exchange
                 list.Add(manifest);
             }
 
-            return list;
+            return list.OrderByDescending(x=>x.PatientPks.Count);
         }
 
         public void AddCargo(Metric metric)

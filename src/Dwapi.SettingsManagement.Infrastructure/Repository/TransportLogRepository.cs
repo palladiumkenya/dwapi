@@ -13,9 +13,9 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
         {
         }
 
-        public void Clear(string docket, int siteCode)
+        public void Clear(string docket)
         {
-            var sql = $@"DELETE FROM {nameof(TransportLog)}s WHERE {nameof(TransportLog.Docket)}='{docket}' AND {nameof(TransportLog.SiteCode)}={siteCode}";
+            var sql = $@"DELETE FROM {nameof(TransportLog)}s WHERE {nameof(TransportLog.Docket)}='{docket}'";
             Context.Database
                 .ExecuteSqlCommand(sql);
         }
@@ -24,22 +24,17 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
         {
             if (transportLog.IsManifest)
             {
-                Clear(transportLog.Docket, transportLog.SiteCode);
+                Clear(transportLog.Docket);
                 Context.Set<TransportLog>().Add(transportLog);
                 Context.SaveChanges();
                 return;
             }
 
-            var log = Context.Set<TransportLog>().FirstOrDefault(x =>
-                x.Extract == transportLog.Extract &&
-                x.SiteCode == transportLog.SiteCode);
+            var log = Context.Set<TransportLog>().FirstOrDefault(x => x.Extract == transportLog.Extract);
 
             if (null == log)
             {
-                var manifest = Context.Set<TransportLog>()
-                    .FirstOrDefault(x =>
-                        x.Extract == "Manifest" &&
-                        x.SiteCode == transportLog.SiteCode);
+                var manifest = Context.Set<TransportLog>().FirstOrDefault(x => x.Extract == "Manifest");
                 if (null != manifest)
                     transportLog.SetManifest(manifest);
 

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
+using Dwapi.SharedKernel.Enum;
 using MediatR;
 using Newtonsoft.Json;
 
@@ -21,7 +22,7 @@ namespace Dwapi.SettingsManagement.Core.Application.Metrics.Events.Handlers
         {
             var cargoes = _repository.LoadCargo().ToList();
 
-            if (notification.Name == "CareTreatment")
+            if (notification.Name == "CareTreatment" && notification.EmrSetup != EmrSetup.SingleFacility)
             {
                 var detainedCargoes = _repository.LoadDetainedCargo().ToList();
                 cargoes.AddRange(detainedCargoes);

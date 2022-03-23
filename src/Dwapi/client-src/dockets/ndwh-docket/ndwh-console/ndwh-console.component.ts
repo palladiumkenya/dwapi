@@ -1,11 +1,4 @@
-import {
-    Component,
-    OnInit,
-    OnChanges,
-    OnDestroy,
-    SimpleChange,
-    Input
-} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange} from '@angular/core';
 import {Extract} from '../../../settings/model/extract';
 import {EmrSystem} from '../../../settings/model/emr-system';
 import {ConfirmationService, Message} from 'primeng/api';
@@ -28,6 +21,7 @@ import {CombinedPackage} from '../../../settings/model/combined-package';
 import {CbsService} from '../../services/cbs.service';
 import {environment} from '../../../environments/environment';
 import {ManifestResponse} from "../../models/manifest-response";
+import {EmrSetup} from "../../../settings/model/emr-setup";
 
 @Component({
     selector: 'liveapp-ndwh-console',
@@ -323,6 +317,11 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public sendSmart(): void {
+        if(this.emr.emrSetup==EmrSetup.MultiFacility) {
+            this.smartMode = false;
+            this.send();
+            return;
+        }
         this.smartMode=true;
         localStorage.clear();
         this.sendingManifest = true;
@@ -548,7 +547,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     private getCurrrentProgress(extract: string, progress: string) {
         let overallProgress = 0;
-        const ecount= this.extracts.length;
+        const ecount = this.extracts.length;
         const keys = this.extracts.map(x => `CT-${x.name}`);
         const key = `CT-${extract}`;
         localStorage.setItem(key, progress);
@@ -558,11 +557,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 overallProgress = overallProgress + (+data);
             }
         });
-        console.log(`>>>>>>>>>> ${overallProgress}`,ecount)
-        if(this.smartMode) {
+        if (this.smartMode) {
             return overallProgress / ecount;
         }
-        console.log(`>>>>>>>>>> ${overallProgress}`,ecount)
         return overallProgress;
     }
 
@@ -721,7 +718,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.loadExtractsCommand = {
             loadFromEmrCommand: this.extractLoadCommand,
             extractMpi: null,
-            loadMpi: false
+            loadMpi: false,
+            emrSetup: this.emr.emrSetup
         };
 
         return this.loadExtractsCommand;
