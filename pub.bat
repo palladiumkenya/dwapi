@@ -1,2 +1,2 @@
-docker build -t kenyahmis/dwapi:qa .
-docker push kenyahmis/dwapi:qa
+docker build -t kenyahmis/dwapi:latest .
+docker push kenyahmis/dwapi:latest
