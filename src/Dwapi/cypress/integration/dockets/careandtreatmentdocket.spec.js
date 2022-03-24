@@ -18,5 +18,16 @@ it("Load from the EMR", () => {
         console.log(req);
     }).as("status");
 
-    cy.wait("@status", { times: 45 });
+    cy.intercept("POST", "/api/DwhExtracts/extractAll", {
+        timeout: 100000,
+    }).then(function (response) {
+        cy.log(response);
+        //expect(response.status).equal(200);
+        //expect(response.body).to.not.be.null;
+        console.log(response);
+    });
+
+    cy.wait("@status", { timeout: 100000 })
+        .its("response.statusCode")
+        .should("equal", 200);
 });

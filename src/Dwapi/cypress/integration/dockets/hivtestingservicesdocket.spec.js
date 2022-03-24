@@ -10,6 +10,7 @@ before(function () {
     cy.visit("/#/hts", { timeout: 100000 });
 });
 
+
 it("Load from the EMR HIV testing services data", () => {
     cy.wait(3000);
     cy.contains("Load from EMR").click({ force: true });
@@ -21,7 +22,7 @@ it("Load from the EMR HIV testing services data", () => {
         .should("equal", 200);
 
 
-
+    
 
     /* cy.wait("@status", {
         requestTimeout: 1000000,
