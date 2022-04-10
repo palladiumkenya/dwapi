@@ -7,6 +7,7 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Prep;
 using Dwapi.ExtractsManagement.Core.Model.Diff;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
@@ -15,6 +16,7 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mts;
+using Dwapi.ExtractsManagement.Core.Model.Source.Prep;
 using Dwapi.SharedKernel.Infrastructure;
 using LiveSeeder.Core;
 using Microsoft.EntityFrameworkCore;
@@ -234,6 +236,41 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         // public virtual DbSet<TempCwcVisitExtractErrorSummary> TempCwcVisitExtractErrorSummary { get; set; }
         // public virtual DbSet<TempHeiExtractErrorSummary> TempHeiExtractErrorSummary { get; set; }
         // public virtual DbSet<TempMnchLabExtractErrorSummary> TempMnchLabExtractErrorSummary { get; set; }
+
+        #endregion
+
+        #region Prep
+        public DbSet<TempPatientPrepExtract> TempPatientPrepExtracts { get; set; }
+        public DbSet<TempPrepAdverseEventExtract> TempPrepAdverseEventExtracts { get; set; }
+        public DbSet<TempPrepBehaviourRiskExtract> TempPrepBehaviourRiskExtracts { get; set; }
+        public DbSet<TempPrepCareTerminationExtract> TempPrepCareTerminationExtracts { get; set; }
+        public DbSet<TempPrepLabExtract> TempPrepLabExtracts { get; set; }
+        public DbSet<TempPrepPharmacyExtract> TempPrepPharmacyExtracts { get; set; }
+        public DbSet<TempPrepVisitExtract> TempPrepVisitExtracts { get; set; }
+
+        public DbSet<PatientPrepExtract> PatientPrepExtracts { get; set; }
+        public DbSet<PrepAdverseEventExtract> PrepAdverseEventExtracts { get; set; }
+        public DbSet<PrepBehaviourRiskExtract> PrepBehaviourRiskExtracts { get; set; }
+        public DbSet<PrepCareTerminationExtract> PrepCareTerminationExtracts { get; set; }
+        public DbSet<PrepLabExtract> PrepLabExtracts { get; set; }
+        public DbSet<PrepPharmacyExtract> PrepPharmacyExtracts { get; set; }
+        public DbSet<PrepVisitExtract> PrepVisitExtracts { get; set; }
+
+        public DbSet<TempPatientPrepExtractError> TempPatientPrepExtractError { get; set; }
+        public DbSet<TempPrepAdverseEventExtractError> TempPrepAdverseEventExtractError { get; set; }
+        public DbSet<TempPrepBehaviourRiskExtractError> TempPrepBehaviourRiskExtractError { get; set; }
+        public DbSet<TempPrepCareTerminationExtractError> TempPrepCareTerminationExtractError { get; set; }
+        public DbSet<TempPrepLabExtractError> TempPrepLabExtractError { get; set; }
+        public DbSet<TempPrepPharmacyExtractError> TempPrepPharmacyExtractError { get; set; }
+        public DbSet<TempPrepVisitExtractError> TempPrepVisitExtractError { get; set; }
+
+        public DbSet<TempPatientPrepExtractErrorSummary> TempPatientPrepExtractErrorSummary { get; set; }
+        public DbSet<TempPrepAdverseEventExtractErrorSummary> TempPrepAdverseEventExtractErrorSummary { get; set; }
+        public DbSet<TempPrepBehaviourRiskExtractErrorSummary> TempPrepBehaviourRiskExtractErrorSummary { get; set; }
+        public DbSet<TempPrepCareTerminationExtractErrorSummary> TempPrepCareTerminationExtractErrorSummary { get; set; }
+        public DbSet<TempPrepLabExtractErrorSummary> TempPrepLabExtractErrorSummary { get; set; }
+        public DbSet<TempPrepPharmacyExtractErrorSummary> TempPrepPharmacyExtractErrorSummary { get; set; }
+        public DbSet<TempPrepVisitExtractErrorSummary> TempPrepVisitExtractErrorSummary { get; set; }
 
         #endregion
 

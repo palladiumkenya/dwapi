@@ -5,7 +5,7 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Prep
 {
-    [Table("vTempPrepBehaviourRiskExtractErrorSummary")]public class TempPrepBehaviourRiskExtractErrorSummary:TempExtract,IPrepBehaviourRisk
+    [Table("vTempPrepBehaviourRiskExtractErrorSummary")]public class TempPrepBehaviourRiskExtractErrorSummary:TempPrepExtractErrorSummary,IPrepBehaviourRisk
     {
         public string FacilityName { get; set; }
         public string PrepNumber { get; set; }
