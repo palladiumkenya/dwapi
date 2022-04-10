@@ -1,4 +1,6 @@
-﻿using Dwapi.SharedKernel.Infrastructure;
+﻿using Dwapi.ExtractsManagement.Core.Loader.Prep;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Prep;
+using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Model;
 using Dwapi.UploadManagement.Core.Model.Cbs;
 using Dwapi.UploadManagement.Core.Model.Dwh;
@@ -6,6 +8,7 @@ using Dwapi.UploadManagement.Core.Model.Hts;
 using Dwapi.UploadManagement.Core.Model.Mgs;
 using Dwapi.UploadManagement.Core.Model.Mnch;
 using Dwapi.UploadManagement.Core.Model.Mts;
+using Dwapi.UploadManagement.Core.Model.Prep;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dwapi.UploadManagement.Infrastructure.Data
@@ -64,6 +67,15 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<MnchLabExtractView> ClientMnchLabExtracts { get; set; }
         public virtual DbSet<TransportLogView> TransportLogs { get; set; }
 
+
+        public virtual DbSet<PatientPrepExtractView> ClientPatientPrepExtracts { get; set; }
+        public virtual DbSet<PrepAdverseEventExtractView> ClientPrepAdverseEventExtracts   { get; set; }
+        public virtual DbSet<PrepBehaviourRiskExtractView> ClientPrepBehaviourRiskExtracts  { get; set; }
+        public virtual DbSet<PrepCareTerminationExtractView> ClientPrepCareTerminationExtracts   { get; set; }
+        public virtual DbSet<PrepLabExtractView> ClientPrepLabExtracts   { get; set; }
+        public virtual DbSet<PrepPharmacyExtractView> ClientPrepPharmacyExtracts   { get; set; }
+        public virtual DbSet<PrepVisitExtractView> ClientPrepVisitExtracts   { get; set; }
+
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
         }
@@ -79,6 +91,9 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
                 .HasKey(f => f.Id);
 
             modelBuilder.Entity<PatientMnchExtractView>()
+                .HasKey(f => f.Id);
+
+            modelBuilder.Entity<PatientPrepExtractView>()
                 .HasKey(f => f.Id);
         }
     }
