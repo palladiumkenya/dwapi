@@ -14,7 +14,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Prep
         IEnumerable<PrepBehaviourRiskExtract> generatePrepBehaviourRisks();
         IEnumerable<PrepCareTerminationExtract> generatePrepCareTerminations();
         IEnumerable<PrepLabExtract> GeneratePrepLabs();
-        IEnumerable<PrepPharmacyExtract> GeneratePrepPharmcays();
+        IEnumerable<PrepPharmacyExtract> GeneratePrepPharmacys();
         IEnumerable<PrepVisitExtract> GeneratePrepVisits();
     }
 }

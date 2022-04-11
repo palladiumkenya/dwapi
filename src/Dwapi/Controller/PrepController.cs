@@ -140,7 +140,7 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid()) return BadRequest();
             try
             {
-                _prepSendService.SendPrepAdverseEventAsync(packageDto);
+                _prepSendService.SendPrepAdverseEventsAsync(packageDto);
                 return Ok();
             }
             catch (Exception e)
@@ -220,8 +220,6 @@ namespace Dwapi.Controller
             }
         }
 
-
-
         [HttpPost("PrepVisits")]
         public IActionResult SendPncVisitsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
@@ -238,10 +236,6 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
-
-
-
-
 
         // POST: api/DwhExtracts/patients
         [HttpPost("endsession")]

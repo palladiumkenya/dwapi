@@ -18,8 +18,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Prep
         Task<List<SendMpiResponse>> SendPatientPrepsAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> SendPatientPrepsAsync(SendManifestPackageDTO sendTo, PrepMessageBag messageBag);
 
-        Task<List<SendMpiResponse>> SendPrepAdverseEventAsync(SendManifestPackageDTO sendTo);
-        Task<List<SendMpiResponse>> SendPrepAdverseEventAsync(SendManifestPackageDTO sendTo, PrepMessageBag messageBag);
+        Task<List<SendMpiResponse>> SendPrepAdverseEventsAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> SendPrepAdverseEventsAsync(SendManifestPackageDTO sendTo, PrepMessageBag messageBag);
 
         Task<List<SendMpiResponse>> SendPrepBehaviourRisksAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> SendPrepBehaviourRisksAsync(SendManifestPackageDTO sendTo, PrepMessageBag messageBag);
