@@ -10,9 +10,9 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Prep
         IEnumerable<Manifest> Generate(EmrDto emrDto);
         IEnumerable<Manifest> GenerateWithMetrics(EmrDto emrDto);
         IEnumerable<PatientPrepExtract> GeneratePatientPreps();
-        IEnumerable<PrepAdverseEventExtract> generatePrepAdverseEvents();
-        IEnumerable<PrepBehaviourRiskExtract> generatePrepBehaviourRisks();
-        IEnumerable<PrepCareTerminationExtract> generatePrepCareTerminations();
+        IEnumerable<PrepAdverseEventExtract> GeneratePrepAdverseEvents();
+        IEnumerable<PrepBehaviourRiskExtract> GeneratePrepBehaviourRisks();
+        IEnumerable<PrepCareTerminationExtract> GeneratePrepCareTerminations();
         IEnumerable<PrepLabExtract> GeneratePrepLabs();
         IEnumerable<PrepPharmacyExtract> GeneratePrepPharmacys();
         IEnumerable<PrepVisitExtract> GeneratePrepVisits();

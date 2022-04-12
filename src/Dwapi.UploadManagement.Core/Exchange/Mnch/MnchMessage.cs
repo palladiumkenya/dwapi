@@ -8,7 +8,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
 {
     public class MnchMessage
     {
-        private static readonly int batch = 2;
+        private static readonly int batch = 200;
         public List<PatientMnchExtract> PatientMnchExtracts { get; set; } = new List<PatientMnchExtract>();
         public List<MnchEnrolmentExtract> MnchEnrolmentExtracts { get; set; } = new List<MnchEnrolmentExtract>();
         public List<MnchArtExtract> MnchArtExtracts { get; set; } = new List<MnchArtExtract>();

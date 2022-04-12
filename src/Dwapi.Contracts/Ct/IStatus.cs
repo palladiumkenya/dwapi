@@ -12,5 +12,6 @@ namespace Dwapi.Contracts.Ct
         string ReasonForDeath { get; set; }
         string SpecificDeathReason { get; set; }
         DateTime? DeathDate { get; set; }
+        DateTime? EffectiveDiscontinuationDate { get; set; }
     }
 }

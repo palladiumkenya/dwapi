@@ -206,7 +206,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public send(): void {
-        localStorage.setItem('dwapi.hts.send', '0');
+        localStorage.setItem('dwapi.mnch.send', '0');
         this.sendEvent = {sentProgress: 0};
         this.sendingManifest = true;
         this.errorMessage = [];

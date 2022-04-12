@@ -6581,11 +6581,215 @@ from kenyaemr_etl.etl_patient_demographics d
 											join kenyaemr_etl.etl_default_facility_info i
 		group by f.visit_id;"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
-82651dea-9db2-11eb-a8b3-0242ac130003|PatientPrep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|""|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-82651f02-9db2-11eb-a8b3-0242ac130003|PrepBehaviourRisk|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|""|TempPrepBehaviourRiskExtract|0|PrepBehaviourRiskExtract|31|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-8265201a-9db2-11eb-a8b3-0242ac130003|PrepVisit|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|""|TempPrepVisitExtract|0|PrepVisitExtract|32|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-8265213c-9db2-11eb-a8b3-0242ac130003|PrepLab|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|""|TempPrepLabExtract|0|PrepLabExtract|33|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-82652272-9db2-11eb-a8b3-0242ac130003|PrepPharmacy|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|""|TempPrepPharmacyExtract|0|PrepPharmacyExtract|34|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-82652358-9db2-11eb-a8b3-0242ac130003|PrepAdverseEvent|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|""|TempPrepAdverseEventExtract|0|PrepAdverseEventExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-82652470-9db2-11eb-a8b3-0242ac130003|PrepCareTermination|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|""|TempPrepCareTerminationExtract|0|PrepCareTerminationExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                  as PatientPK,
+														i.siteCode                                                    as SiteCode,
+														i.facilityName                                                as FacilityName,
+														d.unique_prep_number                                          as PrepNumber,
+														d.openmrs_id                                                  as HtsNumber,
+														'KenyaEMR'                                                    as Emr,
+														'HMIS'                                                        as Project,
+														min(date(e.visit_date))                                       as PrepEnrollmentDate,
+														case d.gender when 'M' then 'Male' when 'F' then 'Female' end as Sex,
+														d.dob                                                         as DateOfBirth,
+														d.birth_place                                                 as CountyOfBirth,
+														pa.county                                                     as County,
+														pa.sub_county                                                 as SubCounty,
+														pa.location                                                   as Location,
+														pa.land_mark                                                  as LandMark,
+														pa.ward                                                       as Ward,
+														e.patient_type                                                as ClientType,
+														e.transfer_in_entry_point                                     as ReferralPoint,
+														d.marital_status                                              as MaritalStatus,
+														e.in_school                                                   as Inschool,
+														(case e.population_type
+																			when 164928 then 'General Population'
+																			when 6096 then 'Discordant Couple'
+																			when 164929 then 'Key Population'
+																			else NULL end)                                           as PopulationType,
+														e.kp_type                                                     as KeyPopulationType,
+														e.referred_from                                               as Refferedfrom,
+														if(e.transfer_in_date is not null, 'Yes', 'No')               as TransferIn,
+														date(e.transfer_in_date)                                      as TransferInDate,
+														e.transfer_from                                               as TransferFromFacility,
+														e.date_started_prep_trf_facility                              as DatefirstinitiatedinPrepCare,
+														e.date_started_prep_trf_facility                              as DateStartedPrEPattransferringfacility,
+														e.previously_on_prep                                          as ClientPreviouslyonPrep,
+														e.regimen                                                     as PrevPrepReg,
+														e.prep_last_date                                              as DateLastUsedPrev,
+														e.date_created 																																															as Date_Created,
+														e.date_last_modified 																																									as Date_Last_Modified
+							from kenyaemr_etl.etl_prep_enrolment e
+																left join kenyaemr_etl.etl_person_address pa on e.patient_id = pa.patient_id
+																inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
+																inner join kenyaemr_etl.etl_prep_behaviour_risk_assessment r on e.patient_id = r.patient_id
+																join kenyaemr_etl.etl_default_facility_info i
+							group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651f02-9db2-11eb-a8b3-0242ac130003|Prep Behaviour Risk|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
+														i.siteCode                                                                   as SiteCode,
+														d.unique_prep_number                                                         as PrepNumber,
+														d.openmrs_id                                                                 as HtsNumber,
+														'KenyaEMR'                                                                   as Emr,
+														'HMIS'                                                                       as Project,
+														h.visit_date                                                                 as VisitDate,
+														h.visit_id                                                                   as VisitId,
+														h.sexual_partner_hiv_status                                                  as SexPartnerHIVStatus,
+														h.sexual_partner_on_art                                                      as IsHIVPositivePartnerCurrentonART,
+														(case h.high_risk_partner when 'High risk partner' then 'Yes' else 'No' end) as IsPartnerHighRisk,
+														h.risk                                                                       as PartnerARTRisk,
+														concat_ws(',', case sex_with_multiple_partners when 'Yes' then 'Has Sex with more than one partner' end,
+																								case ipv_gbv when 'Yes' then 'Ongoing IPVor/and GBV' end,
+																								case transactional_sex when 'Yes' then 'Transactional sex' end,
+																								case recent_sti_infected when 'Yes' then 'Recent STI in the last 6 months' end,
+																								case recurrent_pep_use when 'Yes' then 'Recurrent use of PEP' end,
+																								case recurrent_sex_under_influence
+																												when 'Yes' then 'Recurrent sex under influence of alcohol/recreational drugs'
+																												end,
+																								case inconsistent_no_condom_use when 'Yes' then 'Inconsistent or no condom use' end,
+																								case sharing_drug_needles
+																												when 'Yes' then 'IDU with shared needles and/or syringes'
+																												end, other_reason_specify)                                     as ClientAssessments,
+														h.assessment_outcome                                                         as ClientRisk,
+														h.willing_to_take_prep                                                       as ClientWillingToTakePrEP,
+														h.reason_not_willing                                                         as PrEPDeclineReason,
+														h.risk_edu_offered                                                           as RiskReductionEducationOffered,
+														h.referral_for_prevention_services                                           as ReferralToOtherPrevServices,
+														date(h.time_partner_hiv_positive_known)                                      as FirstEstablishPartnerStatus,
+														h.partner_enrolled_ccc                                                       as PartnerEnrolledToCCC,
+														h.partner_ccc_number                                                         as HIVPartnerCCCNumber,
+														h.partner_art_start_date                                                     as HIVPartnerARTStartDate,
+														h.HIV_serodiscordant_duration_months                                         as MonthsKnownHIVSeroDiscordant,
+														h.recent_unprotected_sex_with_positive_partner                               as SexWithoutCondom,
+														h.children_with_hiv_positive_partner                                         as NumberofchildrenWithPartner,
+														h.date_created 																																																														as Date_Created,
+														h.date_last_modified 																																																								as Date_Last_Modified
+							from kenyaemr_etl.etl_prep_behaviour_risk_assessment h
+																inner join kenyaemr_etl.etl_prep_enrolment e on h.patient_id = e.patient_id
+																inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
+																join kenyaemr_etl.etl_default_facility_info i;"|TempPrepBehaviourRiskExtract|0|PrepBehaviourRiskExtract|31|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+8265201a-9db2-11eb-a8b3-0242ac130003|Prep Visit|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                              as PatientPK,
+																		i.siteCode                                                as SiteCode,
+																		d.unique_prep_number                                      as PrepNumber,
+																		d.openmrs_id                                              as HtsNumber,
+																		f.encounter_id                                            as EncounterId,
+																		'KenyaEMR'                                                as Emr,
+																		'HMIS'                                                    as Project,
+																		f.visit_date                                              as VisitDate,
+																		f.visit_id                                                as VisitID,
+																		concat_ws('/', t.systolic_pressure, t.diastolic_pressure) as BloodPressure,
+																		t.temperature                                             as Temperature,
+																		t.weight                                                  as Weight,
+																		t.height                                                  as Height,
+																		f.sti_screened                                            as STIScreening,
+																		concat_ws(',', f.genital_ulcer_disease,
+																												f.vaginal_discharge,
+																												f.cervical_discharge,
+																												f.pid,
+																												f.urethral_discharge,
+																												f.anal_discharge,
+																												f.other_sti_symptoms)                           as STISymptoms,
+																		f.sti_treated                                             as STITreated,
+																		f.vmmc_status                                             as Circumcised,
+																		f.vmmc_referred                                           as VMMCReferral,
+																		f.lmp                                                     as LMP,
+																		f.menopausal_status                                       as MenopausalStatus,
+																		f.pregnant                                                as PregnantAtThisVisit,
+																		f.edd                                                     as EDD,
+																		f.wanted_pregnancy                                        as PlanningToGetPregnant,
+																		f.planned_pregnancy                                       as PregnancyPlanned,
+																		f.ended_pregnancy                                         as PregnancyEnded,
+																		f.outcome_date                                            as PregnancyEndDate,
+																		f.pregnancy_outcome                                       as PregnancyOutcome,
+																		f.defects                                                 as BirthDefects,
+																		f.breastfeeding                                           as BreastFeeding,
+																		f.fp_status                                               as FamilyPlanningStatus,
+																		f.fp_method                                               as FPMethods,
+																		f.adherence_counselled                                    as AdherenceDone,
+																		f.adherence_outcome                                       as AdherenceOutcome,
+																		f.prep_contraindications                                  as ContraindicationsPrep,
+																		f.treatment_plan                                          as PrepTreatmentPlan,
+																		f.prescribed_PrEP                                         as PrepPrescribed,
+																		f.regimen_prescribed                                      as RegimenPrescribed,
+																		f.months_prescribed_regimen                               as MonthsPrescribed,
+																		f.condoms_issued                                          as CondomsIssued,
+																		f.appointment_given                                       as Tobegivennextappointment,
+																		f.reason_no_appointment                                   as Reasonfornotgivingnextappointment,
+																		f.appointment_date                                        as NextAppointment,
+																		f.clinical_notes                                          as ClinicalNotes,
+																		'' as AdherenceReasons,
+																		'' as BMI,
+																		'' as HepatitisBPositiveResult,
+																		'' as HepatitisCPositiveResult,
+																		'' as SymptomsAcuteHIV,
+																		case f.hepatitisB_vaccinated when 1065 then 'Yes' when 1066 then 'No' end as VaccinationForHepBStarted,
+																		case f.hepatitisB_treated when 1065 then 'Yes' when 1066 then 'No' when 1788 then 'Referred' end as TreatedForHepB,
+																		case f.hepatitisC_vaccinated when 1065 then 'Yes' when 1066 then 'No'  end as VaccinationForHepCStarted,
+																		case f.hepatitisC_treated when 1065 then 'Yes' when 1066 then 'No' when 1788 then 'Referred' end as TreatedForHepC,
+																		f.date_created 																																											as Date_Created,
+																		f.date_last_modified 																																					as Date_Last_Modified
+											from kenyaemr_etl.etl_prep_followup f
+																				left join kenyaemr_etl.etl_patient_triage t on f.patient_id = t.patient_id and f.visit_date = t.visit_date
+																				inner join kenyaemr_etl.etl_prep_enrolment e on f.patient_id = e.patient_id
+																				inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
+																				join kenyaemr_etl.etl_default_facility_info i;"|TempPrepVisitExtract|0|PrepVisitExtract|32|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+8265213c-9db2-11eb-a8b3-0242ac130003|Prep Labs|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 0 as PatientPK,0 as SiteCode,
+																					null as FacilityName,
+																					null as PrepNumber,
+																					null as HtsNumber,
+																					null as VisitID,
+																					null as TestName,
+																					null as TestResult,
+																					null as SampleDate,
+																					null as TestResultDate,
+																					null as Reason,
+																					'KenyaEMR' as Emr,
+																					'HMIS' as Project,
+																					null as Date_Created,
+																					null as Date_Last_Modified"|TempPrepLabExtract|0|PrepLabExtract|33|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82652272-9db2-11eb-a8b3-0242ac130003|Prep Pharmacy|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                as PatientPK,
+																								i.siteCode                  as SiteCode,
+																								d.unique_prep_number        as PrEPNumber,
+																								d.openmrs_id                as HtsNumber,
+																								0                           as FacilityID,
+																								'KenyaEMR'                  as Emr,
+																								'HMIS'                      as Project,
+																								f.visit_id                  as VisitID,
+																								f.regimen_prescribed        as RegimenPrescribed,
+																								f.visit_date                as DispenseDate,
+																								f.months_prescribed_regimen as Duration,
+																								f.date_created              as Date_Created,
+																								f.date_last_modified        as Date_Last_Modified
+																	from kenyaemr_etl.etl_prep_followup f
+																										join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id
+																										join kenyaemr_etl.etl_default_facility_info i
+																	where f.prescribed_PrEP = 'Yes';"|TempPrepPharmacyExtract|0|PrepPharmacyExtract|34|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82652358-9db2-11eb-a8b3-0242ac130003|Prep Adverse Events|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 0 as PatientPK,0 as SiteCode,
+																																											null as FacilityName,
+																																											null as PrepNumber,
+																																											null as AdverseEvent,
+																																											null as AdverseEventStartDate,
+																																											null as AdverseEventEndDate,
+																																											null as Severity,
+																																											null as VisitDate,
+																																											null as AdverseEventActionTaken,
+																																											null as AdverseEventClinicalOutcome,
+																																											null as AdverseEventIsPregnant,
+																																											null as AdverseEventCause,
+																																											null as AdverseEventRegimen,
+																																											'KenyaEMR' as Emr,
+																																											'HMIS' as Project,
+																																											null as Date_Created,
+																																											null as Date_Last_Modified"|TempPrepAdverseEventExtract|0|PrepAdverseEventExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82652470-9db2-11eb-a8b3-0242ac130003|Prep Care Termination|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id as PatientPK,
+								i.siteCode as SiteCode,
+								d.unique_prep_number as PrEPNumber,
+								d.openmrs_id as HtsNumber,
+								'KenyaEMR' as Emr, 'HMIS' as Project,
+																	f.visit_date as ExitDate,
+																	f.discontinue_reason as ExitReason,
+																	CAST(f.last_prep_dose_date AS DATE) as DateOfLastPrepDose,
+																				f.date_created as DateCreated,
+																				f.date_last_modified as DateModified
+													from kenyaemr_etl.etl_prep_discontinuation f
+														join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id
+						join kenyaemr_etl.etl_default_facility_info i;"|TempPrepCareTerminationExtract|0|PrepCareTerminationExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 

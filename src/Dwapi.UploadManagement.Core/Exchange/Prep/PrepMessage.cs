@@ -8,7 +8,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Prep
 {
     public class PrepMessage
     {
-        private static readonly int batch = 2;
+        private static readonly int batch = 200;
         public List<PatientPrepExtract> PatientPrepExtracts { get; set; } = new List<PatientPrepExtract>();
         public List<PrepAdverseEventExtract> PrepAdverseEventExtracts { get; set; } = new List<PrepAdverseEventExtract>();
         public List<PrepBehaviourRiskExtract> PrepBehaviourRiskExtracts { get; set; } = new List<PrepBehaviourRiskExtract>();

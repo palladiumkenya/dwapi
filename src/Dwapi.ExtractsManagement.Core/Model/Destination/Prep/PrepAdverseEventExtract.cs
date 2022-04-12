@@ -7,7 +7,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Prep
     {
         public string FacilityName { get; set; }
         public string PrepNumber { get; set; }
-        public int? FacilityID { get; set; }
         public string AdverseEvent { get; set; }
         public DateTime? AdverseEventStartDate { get; set; }
         public DateTime? AdverseEventEndDate { get; set; }

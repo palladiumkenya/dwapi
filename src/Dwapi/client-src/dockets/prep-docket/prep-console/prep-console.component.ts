@@ -135,6 +135,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public loadFromEmr(): void {
+        this.canLoadFromEmr=false;
         this.clearDocketStore();
         this.errorMessage = [];
         this.load$ = this._prepService
@@ -144,6 +145,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                     // this.isVerfied = p;
                 },
                 e => {
+                    this.canLoadFromEmr=true;
                     this.errorMessage = [];
                     this.errorMessage.push({
                         severity: 'error',
@@ -156,6 +158,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         severity: 'success',
                         summary: 'load was successful '
                     });
+                    this.canLoadFromEmr=true;
                     this.updateEvent();
                 }
             );
@@ -206,7 +209,8 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public send(): void {
-        localStorage.setItem('dwapi.hts.send', '0');
+        this.canSend=false;
+        localStorage.setItem('dwapi.prep.send', '0');
         this.sendEvent = {sentProgress: 0};
         this.sendingManifest = true;
         this.errorMessage = [];
@@ -224,16 +228,16 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                    this.canSend = true;
                 },
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});
-
                 }
             );
     }
 
     public sendPatientPrepExtract(): void {
-        this.sendEvent = {sentProgress: 0};
+        //this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getPatientPrepExtractPackage();
@@ -242,11 +246,12 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 p => {
                     // this.sendResponse = p;
                     this.updateEvent();
-                    this.sendAncVisitExtracts();
+                    this.sendPrepAdverseEventExtracts();
                 },
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending client', detail: <any>e});
+                    this.canSend=true;
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -256,11 +261,82 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendPrepAdverseEventExtracts(): void {
         this.sendStage = 8;
-        this.sendEvent = {sentProgress: 0};
+        //this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getPrepAdverseEventExtractPackage();
         this.send$ = this._prepSenderService.sendPrepAdverseEventExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendPrepBehaviourRiskExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+
+
+    public sendPrepBehaviourRiskExtracts(): void {
+        this.sendStage = 6;
+        //this.sendEvent = {sentProgress: 0};
+        this.sending = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPrepBehaviourRiskExtractPackage();
+        this.send$ = this._prepSenderService.sendPrepBehaviourRiskExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendCareTerminationExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+    public sendCareTerminationExtracts(): void {
+        this.sendStage = 10;
+        //this.sendEvent = {sentProgress: 0};
+        this.sending = true;
+        this.errorMessage = [];
+        const patientPackage = this.getCareTerminationExtractPackage();
+        this.send$ = this._prepSenderService.sendPrepCareTerminationExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.sendPrepPharmacyExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+    public sendPrepPharmacyExtracts(): void {
+        this.sendStage = 7;
+        //this.sendEvent = {sentProgress: 0};
+        this.sending = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPrepPharmacyExtractPackage();
+        this.send$ = this._prepSenderService.sendPrepPharmacyExtracts(patientPackage)
             .subscribe(
                 p => {
                     // this.sendResponse = p;
@@ -279,36 +355,13 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
 
 
-    public sendPrepBehaviourRiskExtracts(): void {
-        this.sendStage = 6;
-        this.sendEvent = {sentProgress: 0};
+    public sendPrepLabExtracts(): void {
+        this.sendStage = 9;
+        //this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
-        const patientPackage = this.getPrepBehaviourRiskExtractPackage();
-        this.send$ = this._prepSenderService.sendPrepBehaviourRiskExtracts(patientPackage)
-            .subscribe(
-                p => {
-                    // this.sendResponse = p;
-                    this.updateEvent();
-                    this.sendPrepPharmacyExtracts();
-                },
-                e => {
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
-                },
-                () => {
-                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
-                }
-            );
-    }
-
-    public sendCareTerminationExtracts(): void {
-        this.sendStage = 10;
-        this.sendEvent = {sentProgress: 0};
-        this.sending = true;
-        this.errorMessage = [];
-        const patientPackage = this.getCareTerminationExtractPackage();
-        this.send$ = this._prepSenderService.sendCareTerminationExtracts(patientPackage)
+        const patientPackage = this.getPrepLabExtractPackage();
+        this.send$ = this._prepSenderService.sendPrepLabExtracts(patientPackage)
             .subscribe(
                 p => {
                     // this.sendResponse = p;
@@ -325,59 +378,11 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
 
-    public sendPrepPharmacyExtracts(): void {
-        this.sendStage = 7;
-        this.sendEvent = {sentProgress: 0};
-        this.sending = true;
-        this.errorMessage = [];
-        const patientPackage = this.getPrepPharmacyExtractPackage();
-        this.send$ = this._prepSenderService.sendPrepPharmacyExtracts(patientPackage)
-            .subscribe(
-                p => {
-                    // this.sendResponse = p;
-                    this.updateEvent();
-                    this.sendPrepAdverseEventExtracts();
-                },
-                e => {
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
-                },
-                () => {
-                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
-                }
-            );
-    }
-
-
-
-    public sendPrepLabExtracts(): void {
-        this.sendStage = 9;
-        this.sendEvent = {sentProgress: 0};
-        this.sending = true;
-        this.errorMessage = [];
-        const patientPackage = this.getPrepLabExtractPackage();
-        this.send$ = this._prepSenderService.sendPrepLabExtracts(patientPackage)
-            .subscribe(
-                p => {
-                    // this.sendResponse = p;
-                    this.updateEvent();
-                    this.sendCareTerminationExtracts();
-                },
-                e => {
-                    this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
-                },
-                () => {
-                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
-                }
-            );
-    }
-
 
 
     public sendPrepVisitExtracts(): void {
         this.sendStage = 11;
-        this.sendEvent = {sentProgress: 0};
+        //this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getPrepVisitExtractPackage();
@@ -452,8 +457,8 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private getCareTerminationExtractPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
-            extractId: this.extracts.find(x => x.name === 'CareTerminationExtract').id,
-            extractName: 'CareTerminationExtract'
+            extractId: this.extracts.find(x => x.name === 'PrepCareTerminationExtract').id,
+            extractName: 'PrepCareTerminationExtract'
         };
     }
 
@@ -504,18 +509,17 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     private getCurrrentProgress(extract: string, progress: string) {
         let overallProgress = 0;
-        let cSum = 0;
+        const ecount = this.extracts.length;
         const keys = this.extracts.map(x => `PREP-${x.name}`);
         const key = `PREP-${extract}`;
         localStorage.setItem(key, this.ConvertStringToNumber(progress));
         keys.forEach(k => {
             const data = localStorage.getItem(k);
             if (data) {
-                cSum += (+data);
-                overallProgress = Math.trunc(cSum / 11);
+                overallProgress = overallProgress + (+data);
             }
         });
-        return overallProgress;
+        return overallProgress / ecount;
     }
 
     private liveOnInit() {
@@ -525,6 +529,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             )
             .configureLogging(LogLevel.Information)
             .build();
+        this._hubConnection.serverTimeoutInMilliseconds = 120000;
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
@@ -555,22 +560,18 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this._hubConnection.on('ShowPrepSendProgress', (dwhProgress: any) => {
-            if (dwhProgress.extract === 'PrepBehaviourRiskExtract') {
-                console.log('xxx');
-            }
             const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);
-            console.log(`${dwhProgress.extract}:${dwhProgress.progress}, Overall:${progress}`);
-            const st = {
+            // console.log(`${dwhProgress.extract}:${dwhProgress.progress}, Overall:${progress}`);
+            this.sendEvent = {
                 sentProgress: progress
             };
-            this.sendEvent = {...st};
             this.updateExractStats(dwhProgress);
             this.canLoadFromEmr = this.canSend = !this.sending;
         });
 
         this._hubConnection.on('ShowPrepSendProgressDone', (extractName: string) => {
             this.extractSent.push(extractName);
-            if (this.extractSent.length === 11) {
+            if (this.extractSent.length === this.extracts.length) {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
                 this.updateEvent();
@@ -623,7 +624,15 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         };
     }
 
-generateExtractPrepBehaviourRisk(currentEmr: EmrSystem): ExtractProfile {
+    private generateExtractPrepAdverseEvent(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PrepAdverseEventExtract').databaseProtocolId;
+        return {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'PrepAdverseEventExtract')
+        };
+    }
+
+    private generateExtractPrepBehaviourRisk(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'PrepBehaviourRiskExtract').databaseProtocolId;
         return {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
@@ -631,19 +640,11 @@ generateExtractPrepBehaviourRisk(currentEmr: EmrSystem): ExtractProfile {
         };
     }
 
-    private generateExtractPrepPharmacy(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'PrepPharmacyExtract').databaseProtocolId;
+    private generateExtractCareTermination(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PrepCareTerminationExtract').databaseProtocolId;
         return {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'PrepPharmacyExtract')
-        };
-    }
-
-    private generateExtractPrepAdverseEvent(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'PrepAdverseEventExtract').databaseProtocolId;
-        return {
-            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'PrepAdverseEventExtract')
+            extract: this.extracts.find(x => x.name === 'PrepCareTerminationExtract')
         };
     }
 
@@ -655,11 +656,11 @@ generateExtractPrepBehaviourRisk(currentEmr: EmrSystem): ExtractProfile {
         };
     }
 
-    private generateExtractCareTermination(currentEmr: EmrSystem): ExtractProfile {
-        const selectedProtocal = this.extracts.find(x => x.name === 'CareTerminationExtract').databaseProtocolId;
+    private generateExtractPrepPharmacy(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PrepPharmacyExtract').databaseProtocolId;
         return {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
-            extract: this.extracts.find(x => x.name === 'CareTerminationExtract')
+            extract: this.extracts.find(x => x.name === 'PrepPharmacyExtract')
         };
     }
 

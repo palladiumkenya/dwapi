@@ -6,7 +6,6 @@ namespace Dwapi.Contracts.Prep
     {
         string FacilityName { get; set; }
         string PrepNumber { get; set; }
-        int? FacilityID { get; set; }
         string AdverseEvent { get; set; }
         DateTime? AdverseEventStartDate { get; set; }
         DateTime? AdverseEventEndDate { get; set; }

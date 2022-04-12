@@ -7,7 +7,6 @@ namespace Dwapi.Contracts.Prep
         string FacilityName { get; set; }
         string PrepNumber { get; set; }
         string HtsNumber { get; set; }
-        int? FacilityID { get; set; }
         int? VisitID { get; set; }
         string RegimenPrescribed { get; set; }
         DateTime? DispenseDate { get; set; }

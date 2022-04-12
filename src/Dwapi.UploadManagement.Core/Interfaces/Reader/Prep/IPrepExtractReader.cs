@@ -9,11 +9,11 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Prep
         IEnumerable<Site> GetSites();
         IEnumerable<SitePatientProfile> GetSitePatientProfiles();
         IEnumerable<PatientPrepExtractView> ReadAllPatientPreps();
-        IEnumerable<PrepAdverseEventExtractView> readAllAdverseEventExtracts();
-        IEnumerable<PrepBehaviourRiskExtractView> readAllPrepBehaviourRisks();
-        IEnumerable<PrepCareTerminationExtractView> readAllPrepCareTerminations();
+        IEnumerable<PrepAdverseEventExtractView> ReadAllPrepAdverseEvents();
+        IEnumerable<PrepBehaviourRiskExtractView> ReadAllPrepBehaviourRisks();
+        IEnumerable<PrepCareTerminationExtractView> ReadAllPrepCareTerminations();
         IEnumerable<PrepLabExtractView> ReadAllPrepLabs();
-        IEnumerable<PrepPharmacyExtractView> readAllPrepPharmacys();
+        IEnumerable<PrepPharmacyExtractView> ReadAllPrepPharmacys();
         IEnumerable<PrepVisitExtractView> ReadAllPrepVisits();
     }
 }

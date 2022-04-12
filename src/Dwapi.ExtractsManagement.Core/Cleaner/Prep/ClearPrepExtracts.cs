@@ -43,7 +43,7 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Prep
             }
 
             await _historyRepository.ClearHistory(extractIds);
-            _validatorRepository.ClearByDocket("MNCH");
+            _validatorRepository.ClearByDocket("PREP");
             await _tempPatientExtractRepository.Clear();
 
 

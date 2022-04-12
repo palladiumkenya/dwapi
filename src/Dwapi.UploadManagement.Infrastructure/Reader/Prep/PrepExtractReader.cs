@@ -51,19 +51,19 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Prep
                 .Query<PatientPrepExtractView>("Select * From PatientPrepExtracts").ToList().Where(x => !x.IsSent);
         }
 
-        public IEnumerable<PrepAdverseEventExtractView> readAllAdverseEventExtracts()
+        public IEnumerable<PrepAdverseEventExtractView> ReadAllPrepAdverseEvents()
         {
             return _context.Database.GetDbConnection().Query<PrepAdverseEventExtractView>("Select * From PrepAdverseEventExtracts")
                 .ToList().Where(x => !x.IsSent);
         }
 
-        public IEnumerable<PrepBehaviourRiskExtractView> readAllPrepBehaviourRisks()
+        public IEnumerable<PrepBehaviourRiskExtractView> ReadAllPrepBehaviourRisks()
         {
             return _context.Database.GetDbConnection().Query<PrepBehaviourRiskExtractView>("Select * From PrepBehaviourRiskExtracts")
                 .ToList().Where(x => !x.IsSent);
         }
 
-        public IEnumerable<PrepCareTerminationExtractView> readAllPrepCareTerminations()
+        public IEnumerable<PrepCareTerminationExtractView> ReadAllPrepCareTerminations()
         {
             return _context.Database.GetDbConnection().Query<PrepCareTerminationExtractView>("Select * From PrepCareTerminationExtracts")
                 .ToList().Where(x => !x.IsSent);
@@ -75,7 +75,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Prep
                 .ToList().Where(x => !x.IsSent);
         }
 
-        public IEnumerable<PrepPharmacyExtractView> readAllPrepPharmacys()
+        public IEnumerable<PrepPharmacyExtractView> ReadAllPrepPharmacys()
         {
             return _context.Database.GetDbConnection().Query<PrepPharmacyExtractView>("Select * From PrepPharmacyExtracts")
                 .ToList().Where(x => !x.IsSent);

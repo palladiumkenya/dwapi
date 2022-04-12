@@ -81,15 +81,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Prep.TempExtracts
                 nameof(ExtractsContext.TempPrepPharmacyExtracts),
                 nameof(ExtractsContext.TempPrepVisitExtracts),
 
-                nameof(ExtractsContext.PatientPrepExtracts),
                 nameof(ExtractsContext.PrepAdverseEventExtracts),
                 nameof(ExtractsContext.PrepBehaviourRiskExtracts),
                 nameof(ExtractsContext.PrepCareTerminationExtracts),
                 nameof(ExtractsContext.PrepLabExtracts),
                 nameof(ExtractsContext.PrepPharmacyExtracts),
                 nameof(ExtractsContext.PrepVisitExtracts)
-
-
             };
 
             var deletes = new List<string> {nameof(ExtractsContext.PatientPrepExtracts)};

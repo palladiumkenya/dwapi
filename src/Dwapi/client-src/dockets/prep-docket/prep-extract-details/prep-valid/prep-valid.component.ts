@@ -66,32 +66,23 @@ export class PrepValidComponent implements OnInit, OnDestroy {
     }
 
     public getValidExtracts(): void {
-        if (this.extract === 'Pnc Visit') {this.getSummaryExtracts('PncVisit');return;}
-        if (this.extract === 'Mother Baby Pair') {this.getSummaryExtracts('MotherBabyPair');return;}
         if (this.extract === 'Prep Patient') {this.getSummaryExtracts('PatientPrep');return;}
+        if (this.extract === 'Prep Adverse Events') {this.getSummaryExtracts('PrepAdverseEvent');return;}
+        if (this.extract === 'Prep Behaviour Risk') {this.getSummaryExtracts('PrepBehaviourRisk');return;}
+        if (this.extract === 'Prep Care Termination') {this.getSummaryExtracts('PrepCareTermination');return;}
+        if (this.extract === 'Prep Pharmacy') {this.getSummaryExtracts('PrepPharmacy');return;}
         if (this.extract === 'Prep Labs') {this.getSummaryExtracts('PrepLab');return;}
-        if (this.extract === 'Prep Enrolment') {this.getSummaryExtracts('PrepEnrolment');return;}
-        if (this.extract === 'Prep Art') {this.getSummaryExtracts('PrepArt');return;}
-        if (this.extract === 'Mat Visit') {this.getSummaryExtracts('MatVisit');return;}
-        if (this.extract === 'Hei') {this.getSummaryExtracts('Hei');return;}
-        if (this.extract === 'Cwc Visit') {this.getSummaryExtracts('CwcVisit');return;}
-        if (this.extract === 'Cwc Enrolment') {this.getSummaryExtracts('CwcEnrolment');return;}
-        if (this.extract === 'Anc Visit') {this.getSummaryExtracts('AncVisit');return;}
+        if (this.extract === 'Prep Visit') {this.getSummaryExtracts('PrepVisit');return;}
     }
 
     private getColumns(): void {
-        if (this.extract === 'Pnc Visit') {this.getPncVisitExtractColumns();return;}
-        if (this.extract === 'Mother Baby Pair') {this.getMotherBabyPairExtractColumns();return;}
         if (this.extract === 'Prep Patient') {this.getPatientPrepExtractColumns();return;}
+        if (this.extract === 'Prep Adverse Events') {this.getPrepAdverseEventExtractColumns();return;}
+        if (this.extract === 'Prep Behaviour Risk') {this.getPrepBehaviourRiskExtractColumns();return;}
+        if (this.extract === 'Prep Care Termination') {this.getPrepCareTerminationExtractColumns();return;}
+        if (this.extract === 'Prep Pharmacy') {this.getPrepPharmacyExtractColumns();return;}
         if (this.extract === 'Prep Labs') {this.getPrepLabExtractColumns();return;}
-        if (this.extract === 'Prep Enrolment') {this.getPrepEnrolmentExtractColumns();return;}
-        if (this.extract === 'Prep Art') {this.getPrepArtExtractColumns();return;}
-        if (this.extract === 'Mat Visit') {this.getMatVisitExtractColumns();return;}
-        if (this.extract === 'Hei') {this.getHeiExtractColumns();return;}
-        if (this.extract === 'Cwc Visit') {this.getCwcVisitExtractColumns();return;}
-        if (this.extract === 'Cwc Enrolment') {this.getCwcEnrolmentExtractColumns();return;}
-        if (this.extract === 'Anc Visit') {this.getPncVisitExtractColumns();return;}
-
+        if (this.extract === 'Prep Visit') {this.getPrepVisitExtractColumns();return;}
     }
 
     private getSummaryExtracts(ex: string): void {
@@ -136,32 +127,43 @@ export class PrepValidComponent implements OnInit, OnDestroy {
         );
     }
 
-    private getPncVisitExtractColumns() {
-
-        this.cols = [
-            {field: 'patientPK', header: 'Patient PK'},
-            {field: 'patientID', header: 'Patient ID'},
-            {field: 'facilityId', header: 'Facility Id'},
-            {field: 'siteCode', header: 'Site Code'},
-            {field: 'emr', header: 'EMR'},
-            {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
-        ]
-    }
-
-    private getMotherBabyPairExtractColumns() {
-        this.cols = [
-            {field: 'patientPK', header: 'Patient PK'},
-            {field: 'patientID', header: 'Patient ID'},
-            {field: 'facilityId', header: 'Facility Id'},
-            {field: 'siteCode', header: 'Site Code'},
-            {field: 'emr', header: 'EMR'},
-            {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
-        ]
-    }
-
     private getPatientPrepExtractColumns() {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'emr', header: 'EMR'},
+            {field: 'project', header: 'Project'},
+            {field: 'facilityName', header: 'Facility Name'}
+        ]
+    }
+
+    private getPrepAdverseEventExtractColumns() {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'emr', header: 'EMR'},
+            {field: 'project', header: 'Project'},
+            {field: 'facilityName', header: 'Facility Name'}
+        ]
+    }
+
+    private getPrepBehaviourRiskExtractColumns() {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'emr', header: 'EMR'},
+            {field: 'project', header: 'Project'},
+            {field: 'facilityName', header: 'Facility Name'}
+        ]
+    }
+
+    private getPrepCareTerminationExtractColumns() {
         this.cols = [
             {field: 'patientPK', header: 'Patient PK'},
             {field: 'patientID', header: 'Patient ID'},
@@ -185,7 +187,7 @@ export class PrepValidComponent implements OnInit, OnDestroy {
         ]
     }
 
-    private getPrepEnrolmentExtractColumns() {
+    private getPrepPharmacyExtractColumns() {
         this.cols = [
             {field: 'patientPK', header: 'Patient PK'},
             {field: 'patientID', header: 'Patient ID'},
@@ -197,55 +199,7 @@ export class PrepValidComponent implements OnInit, OnDestroy {
         ]
     }
 
-    private getPrepArtExtractColumns() {
-        this.cols = [
-            {field: 'patientPK', header: 'Patient PK'},
-            {field: 'patientID', header: 'Patient ID'},
-            {field: 'facilityId', header: 'Facility Id'},
-            {field: 'siteCode', header: 'Site Code'},
-            {field: 'emr', header: 'EMR'},
-            {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
-        ]
-    }
-
-    private getMatVisitExtractColumns() {
-        this.cols = [
-            {field: 'patientPK', header: 'Patient PK'},
-            {field: 'patientID', header: 'Patient ID'},
-            {field: 'facilityId', header: 'Facility Id'},
-            {field: 'siteCode', header: 'Site Code'},
-            {field: 'emr', header: 'EMR'},
-            {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
-        ]
-    }
-
-    private getHeiExtractColumns() {
-        this.cols = [
-            {field: 'patientPK', header: 'Patient PK'},
-            {field: 'patientID', header: 'Patient ID'},
-            {field: 'facilityId', header: 'Facility Id'},
-            {field: 'siteCode', header: 'Site Code'},
-            {field: 'emr', header: 'EMR'},
-            {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
-        ]
-    }
-
-    private getCwcVisitExtractColumns() {
-        this.cols = [
-            {field: 'patientPK', header: 'Patient PK'},
-            {field: 'patientID', header: 'Patient ID'},
-            {field: 'facilityId', header: 'Facility Id'},
-            {field: 'siteCode', header: 'Site Code'},
-            {field: 'emr', header: 'EMR'},
-            {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
-        ]
-    }
-
-    private getCwcEnrolmentExtractColumns() {
+    private getPrepVisitExtractColumns() {
         this.cols = [
             {field: 'patientPK', header: 'Patient PK'},
             {field: 'patientID', header: 'Patient ID'},

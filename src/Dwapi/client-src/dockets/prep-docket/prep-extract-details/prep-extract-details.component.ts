@@ -30,7 +30,7 @@ export class PrepExtractDetailsComponent implements OnInit {
     @Input()
     set emr(emr: EmrSystem) {
         if (emr) {
-            this.extracts = emr.extracts.filter(x => x.docketId === 'MNCH');
+            this.extracts = emr.extracts.filter(x => x.docketId === 'PREP');
         }
     }
 

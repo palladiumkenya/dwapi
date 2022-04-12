@@ -173,6 +173,16 @@ import {MnchExtractDetailsComponent} from '../dockets/mnch-docket/mnch-extract-d
 import {MnchInvalidComponent} from '../dockets/mnch-docket/mnch-extract-details/mnch-invalid/mnch-invalid.component';
 import {MnchValidComponent} from '../dockets/mnch-docket/mnch-extract-details/mnch-valid/mnch-valid.component';
 import {MnchSummaryService} from "../dockets/services/mnch-summary.service";
+import {PrepDocketComponent} from "../dockets/prep-docket/prep-docket.component";
+import {PrepConsoleComponent} from "../dockets/prep-docket/prep-console/prep-console.component";
+import {PrepValidComponent} from "../dockets/prep-docket/prep-extract-details/prep-valid/prep-valid.component";
+import {PrepInvalidComponent} from "../dockets/prep-docket/prep-extract-details/prep-invalid/prep-invalid.component";
+import {PrepExtractDetailsComponent} from "../dockets/prep-docket/prep-extract-details/prep-extract-details.component";
+import {PrepService} from "../dockets/services/prep.service";
+import {PrepClientLinkageService} from "../dockets/services/prep-client-linkage.service";
+import {PrepSummaryService} from "../dockets/services/prep-summary.service";
+import {PrepClientService} from "../dockets/services/prep-client.service";
+import {PrepSenderService} from "../dockets/services/prep-sender.service";
 
 @NgModule({
     imports: [
@@ -301,6 +311,11 @@ import {MnchSummaryService} from "../dockets/services/mnch-summary.service";
         MnchExtractDetailsComponent,
         MnchInvalidComponent,
         MnchValidComponent,
+        PrepDocketComponent,
+        PrepConsoleComponent,
+        PrepExtractDetailsComponent,
+        PrepInvalidComponent,
+        PrepValidComponent,
 ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
@@ -312,7 +327,8 @@ import {MnchSummaryService} from "../dockets/services/mnch-summary.service";
         HtsClientsService, HtsClientTestsService, HtsClientsLinkageService, HtsTestKitsService, HtsClientTracingService,
         HtsPartnerTracingService, HtsPartnerNotificationServicesService, HtsClientService, HtsClientPartnerService, HtsClientLinkageService,
         MetricsService, MgsService, MgsSenderService, MetricMigrationService, NdwhSummaryService,
-        MnchService, MnchSenderService, MnchClientService, MnchClientLinkageService, MnchSummaryService
+        MnchService, MnchSenderService, MnchClientService, MnchClientLinkageService, MnchSummaryService,
+        PrepService, PrepSenderService, PrepClientService, PrepClientLinkageService, PrepSummaryService
     ],
     bootstrap: [AppComponent]
 })
