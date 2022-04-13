@@ -6732,12 +6732,13 @@ from kenyaemr_etl.etl_patient_demographics d
 																				inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
 																				join kenyaemr_etl.etl_default_facility_info i;"|TempPrepVisitExtract|0|PrepVisitExtract|32|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 8265213c-9db2-11eb-a8b3-0242ac130003|Prep Labs|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId,
-																								d.unique_prep_number as PatientID, d.patient_id as PatientPK, l.encounter_id as VisitID,
-																									CAST(l.visit_date AS DATE) as OrderedByDate,CAST(l.visit_date AS DATE) as ReportedByDate,
+																								d.unique_prep_number as PrepNumber, d.patient_id as PatientPK,
+																								 d.openmrs_id as HtsNumber,l.encounter_id as VisitID,
+																									CAST(l.visit_date AS DATE) as OrderedByDate,CAST(l.visit_date AS DATE) as TestResultDate,
 																									i.siteCode as SiteCode,
 																									i.facilityName as FacilityName,
 																									cn.name as TestName,
-																									l.date_test_requested as DateSampleTaken,
+																									l.date_test_requested as SampleDate,
 																									(case l.order_reason when 843 then 'Confirmation of treatment failure (repeat VL)'
 																										when 1434 then 'Pregnancy' when 162080 then 'Baseline VL (for infants diagnosed through EID)'
 																										when 1259 then 'Single Drug Substitution' when 159882 then 'Breastfeeding'
@@ -6763,7 +6764,7 @@ from kenyaemr_etl.etl_patient_demographics d
                                       and cn2.locale='en' where p.patient_id is not null;"|TempPrepLabExtract|0|PrepLabExtract|33|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82652272-9db2-11eb-a8b3-0242ac130003|Prep Pharmacy|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                as PatientPK,
 																								i.siteCode                  as SiteCode,
-																								d.unique_prep_number        as PrEPNumber,
+																								d.unique_prep_number        as PrepNumber,
 																								d.openmrs_id                as HtsNumber,
 																								0                           as FacilityID,
 																								'KenyaEMR'                  as Emr,
@@ -6780,7 +6781,7 @@ from kenyaemr_etl.etl_patient_demographics d
 																	where f.prescribed_PrEP = 'Yes';"|TempPrepPharmacyExtract|0|PrepPharmacyExtract|34|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82652358-9db2-11eb-a8b3-0242ac130003|Prep Adverse Events|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                 as PatientPK,
 														s.siteCode                                                   as SiteCode,
-														de.unique_prep_number                                         as PatientID,
+														de.unique_prep_number                                         as PrepNumber,
 														0                                                            AS FacilityId,
 														'KenyaEMR'                                                   as Emr,
 														'Kenya HMIS II'                                              as Project,
@@ -6888,7 +6889,7 @@ from kenyaemr_etl.etl_patient_demographics d
 							group by a.patient_id,a.visit_date;"|TempPrepAdverseEventExtract|0|PrepAdverseEventExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82652470-9db2-11eb-a8b3-0242ac130003|Prep Care Termination|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id as PatientPK,
 								i.siteCode as SiteCode,
-								d.unique_prep_number as PrEPNumber,
+								d.unique_prep_number as PrepNumber,
 								d.openmrs_id as HtsNumber,
 								'KenyaEMR' as Emr, 'HMIS' as Project,
 																	f.visit_date as ExitDate,
