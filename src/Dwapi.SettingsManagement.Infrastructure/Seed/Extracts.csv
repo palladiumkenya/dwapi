@@ -245,7 +245,7 @@ FROM
 													from kenyaemr_etl.etl_patient_program
 													group by Patient_Id,program
 													) as prg on prg.patient_id = d.patient_id
-											left join kenyaemr_etl.etl_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP'
+											left join kenyaemr_etl.etl_kp_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP'
 				where unique_patient_no is not null
 				group by d.patient_id
 				order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
@@ -972,7 +972,7 @@ from kenyaemr_etl.etl_patient_demographics d
                     where de.discontinued is null
                     group by de.patient_id)de on fup.patient_id = de.patient_id
 where d.unique_patient_no is not null
-  and fup.visit_date > '1990-01-01'
+  and fup.visit_date > '1990-01-01' and fup.next_appointment_date is not null
   and fup.visit_id is not null;"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT	*,
 						LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
