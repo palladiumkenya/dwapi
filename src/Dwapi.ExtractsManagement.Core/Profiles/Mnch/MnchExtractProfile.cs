@@ -395,12 +395,12 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.ConfirmatoryPCRDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.ConfirmatoryPCRDate))))
                      .ForMember(x => x.BasellineVLDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.BasellineVLDate))))
                      .ForMember(x => x.FinalyAntibodyDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.FinalyAntibodyDate))))
-                     .ForMember(x => x.DNAPCR1, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.DNAPCR1))))
-                     .ForMember(x => x.DNAPCR2, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.DNAPCR2))))
-                     .ForMember(x => x.DNAPCR3, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.DNAPCR3))))
-                     .ForMember(x => x.ConfirmatoryPCR, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.ConfirmatoryPCR))))
-                     .ForMember(x => x.BasellineVL, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.BasellineVL))))
-                     .ForMember(x => x.FinalyAntibody, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.FinalyAntibody))))
+                     .ForMember(x => x.DNAPCR1, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.DNAPCR1))))
+                     .ForMember(x => x.DNAPCR2, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.DNAPCR2))))
+                     .ForMember(x => x.DNAPCR3, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.DNAPCR3))))
+                     .ForMember(x => x.ConfirmatoryPCR, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.ConfirmatoryPCR))))
+                     .ForMember(x => x.BasellineVL, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.BasellineVL))))
+                     .ForMember(x => x.FinalyAntibody, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.FinalyAntibody))))
                      .ForMember(x => x.HEIExitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.HEIExitDate))))
                      .ForMember(x => x.HEIHIVStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.HEIHIVStatus)))).ForMember(x => x.HEIExitCritearia, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.HEIExitCritearia))));
 
