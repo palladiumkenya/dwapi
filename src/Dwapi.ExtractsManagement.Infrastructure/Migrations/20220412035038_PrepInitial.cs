@@ -669,6 +669,26 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 name: "IX_PrepVisitExtracts_SiteCode_PatientPK",
                 table: "PrepVisitExtracts",
                 columns: new[] { "SiteCode", "PatientPK" });
+
+            if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
+            {
+                migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 0;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.TempPatientPrepExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.TempPrepAdverseEventExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.TempPrepBehaviourRiskExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.TempPrepCareTerminationExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.TempPrepLabExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.TempPrepPharmacyExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.TempPrepVisitExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.PatientPrepExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.PrepAdverseEventExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.PrepBehaviourRiskExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.PrepCareTerminationExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.PrepLabExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.PrepPharmacyExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.PrepVisitExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 1;");
+            }
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

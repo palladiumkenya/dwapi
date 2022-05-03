@@ -245,7 +245,7 @@ FROM
 													from kenyaemr_etl.etl_patient_program
 													group by Patient_Id,program
 													) as prg on prg.patient_id = d.patient_id
-											left join kenyaemr_etl.etl_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP'
+											left join kenyaemr_etl.etl_kp_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP'
 				where unique_patient_no is not null
 				group by d.patient_id
 				order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
@@ -972,7 +972,7 @@ from kenyaemr_etl.etl_patient_demographics d
                     where de.discontinued is null
                     group by de.patient_id)de on fup.patient_id = de.patient_id
 where d.unique_patient_no is not null
-  and fup.visit_date > '1990-01-01'
+  and fup.visit_date > '1990-01-01' and fup.next_appointment_date is not null
   and fup.visit_id is not null;"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT	*,
 						LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
@@ -6731,23 +6731,40 @@ from kenyaemr_etl.etl_patient_demographics d
 																				inner join kenyaemr_etl.etl_prep_enrolment e on f.patient_id = e.patient_id
 																				inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
 																				join kenyaemr_etl.etl_default_facility_info i;"|TempPrepVisitExtract|0|PrepVisitExtract|32|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-8265213c-9db2-11eb-a8b3-0242ac130003|Prep Labs|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 0 as PatientPK,0 as SiteCode,
-																					null as FacilityName,
-																					null as PrepNumber,
-																					null as HtsNumber,
-																					null as VisitID,
-																					null as TestName,
-																					null as TestResult,
-																					null as SampleDate,
-																					null as TestResultDate,
-																					null as Reason,
-																					'KenyaEMR' as Emr,
-																					'HMIS' as Project,
-																					null as Date_Created,
-																					null as Date_Last_Modified"|TempPrepLabExtract|0|PrepLabExtract|33|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+8265213c-9db2-11eb-a8b3-0242ac130003|Prep Labs|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId,
+																								d.unique_prep_number as PrepNumber, d.patient_id as PatientPK,
+																								 d.openmrs_id as HtsNumber,l.encounter_id as VisitID,
+																									CAST(l.visit_date AS DATE) as OrderedByDate,CAST(l.visit_date AS DATE) as TestResultDate,
+																									i.siteCode as SiteCode,
+																									i.facilityName as FacilityName,
+																									cn.name as TestName,
+																									l.date_test_requested as SampleDate,
+																									(case l.order_reason when 843 then 'Confirmation of treatment failure (repeat VL)'
+																										when 1434 then 'Pregnancy' when 162080 then 'Baseline VL (for infants diagnosed through EID)'
+																										when 1259 then 'Single Drug Substitution' when 159882 then 'Breastfeeding'
+																										when 163523 then 'Clinical failure' when 161236 then 'Routine'
+																										when 160032 then 'Confirmation of persistent low level Viremia (PLLV)' end) as Reason,
+																									case
+																									when c.datatype_id=2 then cn2.name
+																									else
+																											l.test_result
+																									end as TestResult,
+																									NULL as EnrollmentTest,'' as SampleType,
+																									'KenyaEMR' as Emr,
+																									'Kenya HMIS II' as Project,
+																									l.date_created as Date_Created,
+																									GREATEST(COALESCE(l.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, l.date_last_modified)) as Date_Last_Modified
+									from kenyaemr_etl.etl_laboratory_extract l
+											join kenyaemr_etl.etl_patient_demographics d on d.patient_id=l.patient_id
+											join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
+											join concept c on c.concept_id = l.lab_test
+											join kenyaemr_etl.etl_default_facility_info i
+											join (select p.patient_id from kenyaemr_etl.etl_prep_enrolment p)p on l.patient_id = p.patient_id
+											left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
+                                      and cn2.locale='en' where p.patient_id is not null;"|TempPrepLabExtract|0|PrepLabExtract|33|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82652272-9db2-11eb-a8b3-0242ac130003|Prep Pharmacy|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                as PatientPK,
 																								i.siteCode                  as SiteCode,
-																								d.unique_prep_number        as PrEPNumber,
+																								d.unique_prep_number        as PrepNumber,
 																								d.openmrs_id                as HtsNumber,
 																								0                           as FacilityID,
 																								'KenyaEMR'                  as Emr,
@@ -6762,26 +6779,117 @@ from kenyaemr_etl.etl_patient_demographics d
 																										join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id
 																										join kenyaemr_etl.etl_default_facility_info i
 																	where f.prescribed_PrEP = 'Yes';"|TempPrepPharmacyExtract|0|PrepPharmacyExtract|34|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-82652358-9db2-11eb-a8b3-0242ac130003|Prep Adverse Events|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 0 as PatientPK,0 as SiteCode,
-																																											null as FacilityName,
-																																											null as PrepNumber,
-																																											null as AdverseEvent,
-																																											null as AdverseEventStartDate,
-																																											null as AdverseEventEndDate,
-																																											null as Severity,
-																																											null as VisitDate,
-																																											null as AdverseEventActionTaken,
-																																											null as AdverseEventClinicalOutcome,
-																																											null as AdverseEventIsPregnant,
-																																											null as AdverseEventCause,
-																																											null as AdverseEventRegimen,
-																																											'KenyaEMR' as Emr,
-																																											'HMIS' as Project,
-																																											null as Date_Created,
-																																											null as Date_Last_Modified"|TempPrepAdverseEventExtract|0|PrepAdverseEventExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82652358-9db2-11eb-a8b3-0242ac130003|Prep Adverse Events|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                 as PatientPK,
+														s.siteCode                                                   as SiteCode,
+														de.unique_prep_number                                         as PrepNumber,
+														0                                                            AS FacilityId,
+														'KenyaEMR'                                                   as Emr,
+														'Kenya HMIS II'                                              as Project,
+														s.FacilityName                                               as FacilityName,
+														a.visit_date                                                 as VisitDate,
+														group_concat(case a.cause
+																															when 70056 then 'Abicavir'
+																															when 162298 then 'ACE inhibitors'
+																															when 70878 then 'Allopurinol'
+																															when 155060 then 'Aminoglycosides'
+																															when 162299 then 'ARBs (angiotensin II receptor blockers)'
+																															when 103727 then 'Aspirin'
+																															when 71647 then 'Atazanavir'
+																															when 72822 then 'Carbamazepine'
+																															when 162301 then 'Cephalosporins'
+																															when 73300 then 'Chloroquine'
+																															when 73667 then 'Codeine'
+																															when 74807 then 'Didanosine'
+																															when 75523 then 'Efavirenz'
+																															when 162302 then 'Erythromycins'
+																															when
+																																			75948 then 'Ethambutol'
+																															when 77164 then 'Griseofulvin'
+																															when 162305 then 'Heparins'
+																															when 77675 then 'Hydralazine'
+																															when 78280 then 'Isoniazid'
+																															when 794 then 'Lopinavir/ritonavir'
+																															when 80106 then 'Morphine'
+																															when 80586 then 'Nevirapine'
+																															when 80696 then 'Nitrofurans'
+																															when 162306 then 'Non-steroidal anti-inflammatory drugs'
+																															when 81723 then 'Penicillamine'
+																															when 81724 then 'Penicillin'
+																															when 81959 then 'Phenolphthaleins'
+																															when 82023 then 'Phenytoin'
+																															when
+																																			82559 then 'Procainamide'
+																															when 82900 then 'Pyrazinamide'
+																															when 83018 then 'Quinidine'
+																															when 767 then 'Rifampin'
+																															when 162307 then 'Statins'
+																															when 84309 then 'Stavudine'
+																															when 162170 then 'Sulfonamides'
+																															when 84795 then 'Tenofovir'
+																															when 84893 then 'Tetracycline'
+																															when 86663 then 'Zidovudine'
+																															when 5622 then 'Other' end SEPARATOR '|')   as AdverseEventCause,
+														group_concat(case a.adverse_event
+																															when 1067 then 'Unknown'
+																															when 121629 then 'Anaemia'
+																															when 148888 then 'Anaphylaxis'
+																															when 148787 then 'Angioedema'
+																															when 120148 then 'Arrhythmia'
+																															when 108 then 'Bronchospasm'
+																															when 143264 then 'Cough'
+																															when 142412 then 'Diarrhea'
+																															when 118773 then 'Dystonia'
+																															when 140238 then 'Fever'
+																															when 140039 then 'Flushing'
+																															when 139581 then 'GI upset'
+																															when 139084 then 'Headache'
+																															when 159098 then 'Hepatotoxicity'
+																															when 111061 then 'Hives'
+																															when 117399 then 'Hypertension'
+																															when 879 then 'Itching'
+																															when 121677 then 'Mental status change'
+																															when 159347 then 'Musculoskeletal pain'
+																															when 121 then 'Myalgia'
+																															when 512 then 'Rash'
+																															when 5622 then 'Other' end SEPARATOR '|')   as AdverseEvent,
+														group_concat(case a.severity
+																															when 1498 then 'Mild'
+																															when 1499 then 'Moderate'
+																															when 1500 then 'Severe'
+																															when 162819 then 'Fatal'
+																															when 1067 then 'Unknown' end SEPARATOR '|') as Severity,
+														group_concat(a.start_date SEPARATOR '|')                     as AdverseEventStartDate,
+														''                                                           as AdverseEventEndDate,
+														group_concat(case a.action_taken
+																															when 1257 then 'CONTINUE REGIMEN'
+																															when 1259 then 'SWITCHED REGIMEN'
+																															when 981 then 'CHANGED DOSE'
+																															when 1258 then 'SUBSTITUTED DRUG'
+																															when 1107 then 'NONE'
+																															when 1260 then 'STOP'
+																															when 5622 then 'Other' end SEPARATOR '|')   as AdverseEventActionTaken,
+														''                                                           as AdverseEventClinicalOutcome,
+														''                                                           as AdverseEventIsPregnant,
+														''                                                           as AdverseEventRegimen,
+														a.date_created                                               as Date_Created,
+														a.date_last_modified                                         as Date_Last_Modified
+							from kenyaemr_etl.etl_adverse_events a
+																left join (select pe.patient_id, max(pe.visit_date) as prep_latest_enrolment_date
+																											from kenyaemr_etl.etl_prep_enrolment pe
+																											group by pe.patient_id) pe on a.patient_id = pe.patient_id
+																left join kenyaemr_etl.etl_prep_followup p on a.encounter_id = p.encounter_id
+																left join (select d.patient_id as         PrEP_disc_patient,
+																																		max(date(d.visit_date)) PrEP_Outcome_date
+																											from kenyaemr_etl.etl_prep_discontinuation d
+																											group by d.patient_id) pd on pd.PrEP_disc_patient = a.patient_id
+																inner join kenyaemr_etl.etl_patient_demographics de on a.patient_id = de.patient_id
+																join kenyaemr_etl.etl_default_facility_info s
+							where a.form in ('prep-initial','prep-consultation')
+									and (pd.PrEP_disc_patient is null or pd.PrEP_Outcome_date < pe.prep_latest_enrolment_date)
+							group by a.patient_id,a.visit_date;"|TempPrepAdverseEventExtract|0|PrepAdverseEventExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82652470-9db2-11eb-a8b3-0242ac130003|Prep Care Termination|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id as PatientPK,
 								i.siteCode as SiteCode,
-								d.unique_prep_number as PrEPNumber,
+								d.unique_prep_number as PrepNumber,
 								d.openmrs_id as HtsNumber,
 								'KenyaEMR' as Emr, 'HMIS' as Project,
 																	f.visit_date as ExitDate,
