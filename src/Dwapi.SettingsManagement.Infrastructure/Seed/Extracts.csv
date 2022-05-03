@@ -679,8 +679,8 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 																								when is_arv=1 then ph.drugreg
 																								else if(cn2.name is not null, cn2.name,cn.name) END as Drug,
 																						ph.visit_date as DispenseDate,
-																						ph.duration AS Duration,
-																						ph.duration AS PeriodTaken,
+																						ph.duration_in_days AS Duration,
+																						ph.duration_in_days AS PeriodTaken,
 																						fup.next_appointment_date as ExpectedReturn,
 																						'KenyaEMR' as Emr,
 																						'Kenya HMIS II' as Project,
@@ -697,7 +697,7 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 																						GREATEST(COALESCE(ph.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, ph.date_last_modified)) as Date_Last_Modified
 						from (SELECT * FROM (
 																										( select patient_id, visit_id,visit_date,encounter_id,drug,is_arv, is_ctx,is_dapsone,drug_name as drugreg,frequency,
-																																			'' as DispenseDate,duration, duration PeriodTaken,
+																																			'' as DispenseDate,duration_in_days, duration_in_days PeriodTaken,
 																																			''ExpectedReturn, CASE WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,'' as RegimenLine,'' as regimen,
 																																			CASE WHEN is_ctx=1 THEN 'CTX'
 																																								WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,'' as previousRegimen,'' as RegimenChangedSwitched,'' as RegimenChangeSwitchReason, '' as StopRegimenReason,'' as StopRegimenDate,'' as prev_Regimen,/*'' as regimen,*/
@@ -708,7 +708,7 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 																										UNION
 																										(SELECT  e.patient_id as patient_id,'' as visit_id,e.visit_date,e.encounter_id,regimen drug,1 as is_arv, 0 as is_ctx, 0 as is_dapsone, regimen_name as drugreg, '' frequency, date_started as DispenseDate,''duration,''PeriodTaken,''ExpectedReturn, 'ARV' AS TreatmentType,e.regimen_line as regimen_line,
 																																			e.regimen as regimen,'' as ProphylaxisType,
-																																			@prev_regimen previousRegimen,coalesce(@s := (if(ifnull(@prev_regimen_line,'')<>regimen_line and discontinued=1,'Change',NULL)),(if(@prev_regimen<>regimen and discontinued=1,'Switch',NULL))) as RegimenChangedSwitched,
+																																			@prev_regimen previousRegimen,coalesce(@s := (if(ifnull(@prev_regimen_line,'')<>regimen_line and discontinued=1,'Switch',NULL)),(if(@prev_regimen<>regimen and discontinued=1,'Substitution',NULL))) as RegimenChangedSwitched,
 																																			(case reason_discontinued when 160559 then 'Risk of pregnancy' when 160561 then 'New drug available'
 																																																													when 160567 then 'New diagnosis of Tuberculosis'  when 160569 then 'Virological failure'
 																																																													when 159598 then 'Non-compliance with treatment or therapy' when 1754 then 'Drugs out of stock'
