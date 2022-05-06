@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,9 +15,13 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
     {
         HttpClient Client { get; set; }
         Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendDhwManifestResponse>> SendSmartManifestAsync(SendManifestPackageDTO sendTo,string version,string apiVersion="");
 
         Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,
             DwhManifestMessageBag messageBag);
+
+        Task<List<SendDhwManifestResponse>> SendSmartManifestAsync(SendManifestPackageDTO sendTo,
+            DwhManifestMessageBag messageBag,string version,string apiVersion="");
 
         void NotifyPreSending();
 
@@ -24,6 +29,12 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
             SendManifestPackageDTO sendTo,
             int batchSize,
             IMessageBag<T> messageBag)
+            where T : ClientExtract;
+
+        Task<List<SendCTResponse>> SendSmartBatchExtractsAsync<T>(
+            SendManifestPackageDTO sendTo,
+            int batchSize,
+            IMessageSourceBag<T> messageBag)
             where T : ClientExtract;
 
         Task<List<SendCTResponse>> SendDiffBatchExtractsAsync<T>(

@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.SharedKernel.Events;
 using Dwapi.UploadManagement.Core.Event.Hts;
@@ -10,11 +11,11 @@ namespace Dwapi.EventHandlers
     {
         private readonly IHtsClientsExtractRepository _clientExtractRepository;
         private readonly IHtsClientsLinkageExtractRepository _clientLinkageExtractRepository;
-        private readonly IHtsClientTestsExtractRepository _clientTestsExtractRepository; 
+        private readonly IHtsClientTestsExtractRepository _clientTestsExtractRepository;
         private readonly IHtsClientTracingExtractRepository _clientTracingExtractRepository;
         private readonly IHtsPartnerTracingExtractRepository _partnerTracingExtractRepository;
         private readonly IHtsTestKitsExtractRepository _testKitsExtractRepository;
-        private readonly IHtsPartnerNotificationServicesExtractRepository _partnerNotificationServicesExtractRepository; 
+        private readonly IHtsPartnerNotificationServicesExtractRepository _partnerNotificationServicesExtractRepository;
 
         public HtsExtractSentEventHandlers()
         {
@@ -27,14 +28,14 @@ namespace Dwapi.EventHandlers
             _partnerNotificationServicesExtractRepository = Startup.ServiceProvider.GetService<IHtsPartnerNotificationServicesExtractRepository>();
         }
 
-        public void Handle(HtsExtractSentEvent domainEvent)
+        public Task Handle(HtsExtractSentEvent domainEvent)
         {
             if (domainEvent.SentItems.Any())
             {
                 if (domainEvent.SentItems.First().Extract == "HtsClientsExtracts")
                     _clientExtractRepository.UpdateSendStatus(domainEvent.SentItems);
                 if (domainEvent.SentItems.First().Extract == "HtsClientsLinkageExtracts")
-                    _clientLinkageExtractRepository.UpdateSendStatus(domainEvent.SentItems); 
+                    _clientLinkageExtractRepository.UpdateSendStatus(domainEvent.SentItems);
                 if (domainEvent.SentItems.First().Extract == "HtsClientTestsExtracts")
                     _clientTestsExtractRepository.UpdateSendStatus(domainEvent.SentItems);
                 if (domainEvent.SentItems.First().Extract == "HtsClientTracingExtracts")
@@ -46,6 +47,8 @@ namespace Dwapi.EventHandlers
                 if (domainEvent.SentItems.First().Extract == "HtsPartnerNotificationServicesExtracts")
                     _partnerNotificationServicesExtractRepository.UpdateSendStatus(domainEvent.SentItems);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -12,7 +12,6 @@ Id|Extract|Field|Type|Logic|Summary
 61bc1d96-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|LastVisit|Logical|LastVisit IS NULL|LastVisit is missing
 6c5c63e4-2a95-11e7-93ae-92361f002671|TempPatientArtExtracts|PatientID|Required|PatientID IS NULL OR PatientID=''|PatientID Required
 6c5c6100-2a95-11e7-93ae-92361f002671|TempPatientArtExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
-
 6c5c64fc-2a95-11e7-93ae-92361f002671|TempPatientArtExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 ce7b5db8-160f-11e7-93ae-92361f002671|TempPatientArtExtracts|StartARTDate|Logical|StartARTDate IS NULL|StartARTDate Required
 61bc1c9c-35a1-11e7-a919-92ebcb67fe33|TempPatientArtExtracts|StartARTDate|Logical|StartARTDate > ExitDate AND ExitDate IS NOT NULL|StartARTDate after Exit Date
@@ -52,46 +51,36 @@ ce7b571e-160f-11e7-93ae-92361f002671|TempPatientExtracts|Gender|Required|Gender 
 6c5c81b2-2a95-11e7-93ae-92361f002671|TempPatientVisitExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 6c5c83b0-2a95-11e7-93ae-92361f002671|TempPatientVisitExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 61bbe02e-35a1-11e7-a919-92ebcb67fe33|TempPatientVisitExtracts|VisitDate|Logical|VisitDate IS NULL|VisitDate is required
-
 a7922445-bbc4-42cd-955e-f2fe1d5673ac|TempPatientAdverseEventExtracts|PatientID|Required|PatientID IS NULL OR PatientID=''|PatientID Required
 c691fceb-3ee9-4a8f-a075-e39c0a1a225f|TempPatientAdverseEventExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 177db6a8-353b-4041-9103-d0eecf135139|TempPatientAdverseEventExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
 5a662658-0582-4156-9478-a1c63bfe096b|TempPatientAdverseEventExtracts|AdverseEvent|Logical|AdverseEvent IS NULL|AdverseEvent is Required
 aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEventStartDate|Logical|AdverseEventStartDate IS NULL|AdverseEventStartDate is Required
 4f62bd0b-674f-48cb-bb68-9d26497eb4de|TempPatientAdverseEventExtracts|AdverseEventRegimen|Logical|AdverseEventRegimen IS NULL|AdverseEventRegimen is Required
-
 4f62bd1b-674f-48cb-bb49-9d26497eb4de|TempHtsClientsExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk Required
 4f62bd1b-674f-48cb-bb50-9d26497eb4de|TempHtsClientsExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 4f62bd1b-674f-48cb-bb69-9d26497eb4de|TempHtsClientsExtracts|Dob|Required|Dob IS NULL|DOB is Required
 4f62bd1b-674f-48cb-bb70-9d26497eb4de|TempHtsClientsExtracts|Gender|Required|Gender IS NULL|Gender is Required
-
 4f62bd2b-674f-48cb-bb49-9d26497eb4de|TempHtsClientTestsExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk Required
 4f62bd2b-674f-48cb-bb50-9d26497eb4de|TempHtsClientTestsExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 4f62bd2b-674f-48cb-bb71-9d26497eb4de|TempHtsClientTestsExtracts|TestDate|Logical|TestDate IS NULL|TestDate is Required
 4f62bd2b-674f-48cb-bb73-9d26497eb4de|TempHtsClientTestsExtracts|TestResult1|Logical|TestResult1 IS NULL|TestResult1 is Required
 4f62bd2b-674f-48cb-bb74-9d26497eb4de|TempHtsClientTestsExtracts|FinalTestResult|Logical|FinalTestResult IS NULL|FinalTestResult is Required
 4f62bd2b-674f-48cb-bb75-9d26497eb4de|TempHtsClientTestsExtracts|TestResult2|Logical|TestResult2 IS NULL AND TestResult1 = 'Positive' |TestResult1 is positive and TestResult2 is Missing
-
 4f62bd3b-674f-48cb-bb77-9d26497eb4de|TempHtsPartnerNotificationServicesExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk is Required
 4f62bd3b-674f-48cb-bb78-9d26497eb4de|TempHtsPartnerNotificationServicesExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
-
 4f62bd4b-674f-48cb-bb80-9d26497eb4de|TempHtsClientTracingExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk is Required
 4f62bd4b-674f-48cb-bb81-9d26497eb4de|TempHtsClientTracingExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
-
 4f62bd5b-674f-48cb-bb83-9d26497eb4de|TempHtsPartnerTracingExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk is Required
 4f62bd5b-674f-48cb-bb84-9d26497eb4de|TempHtsPartnerTracingExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
-
 4f62bd7b-674f-48cb-bb83-9d26497eb4de|TempHtsTestKitsExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk is Required
 4f62bd7b-674f-48cb-bb84-9d26497eb4de|TempHtsTestKitsExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
 4f62bd7b-674f-48cb-bb73-9d26497eb4de|TempHtsTestKitsExtracts|TestResult1|Logical|TestResult1 IS NULL|TestResult1 is Required
 4f62bd7b-674f-48cb-bb75-9d26497eb4de|TempHtsTestKitsExtracts|TestResult2|Logical|TestResult2 IS NULL AND TestResult1 = 'Positive' |TestResult1 is positive and TestResult2 is Missing
-
 4f62bd8b-674f-48cb-bb83-9d26497eb4de|TempHtsClientsLinkageExtracts|PatientPk|Required|PatientPk IS NULL|PatientPk is Required
 4f62bd8b-674f-48cb-bb84-9d26497eb4de|TempHtsClientsLinkageExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
-
 2a4c26ea-74f4-11ea-bc55-0242ac130003|TempMetricMigrationExtracts|MetricId|Required|MetricId IS NULL|MetricId is Required
 2a4c291a-74f4-11ea-bc55-0242ac130003|TempMetricMigrationExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode is Required
-
 7266ee30-7a96-11eb-9439-0242ac130002|TempAllergiesChronicIllnessExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 7266ee31-7a96-11eb-9439-0242ac130002|TempAllergiesChronicIllnessExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 7266ee32-7a96-11eb-9439-0242ac130002|TempContactListingExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
@@ -110,7 +99,6 @@ aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEven
 7266ee45-7a96-11eb-9439-0242ac130002|TempOtzExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 7266ee46-7a96-11eb-9439-0242ac130002|TempOvcExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 7266ee47-7a96-11eb-9439-0242ac130002|TempOvcExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
-
 82652c40-9db2-11eb-a8b3-0242ac130003|TempPatientMnchExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 82651dea-9db2-11eb-a8b3-0242ac130003|TempPatientMnchExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 82652fec-9db2-11eb-a8b3-0242ac130003|TempAncVisitExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
@@ -133,9 +121,22 @@ aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEven
 82652470-9db2-11eb-a8b3-0242ac130003|TempMotherBabyPairExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 8265326c-9db2-11eb-a8b3-0242ac130003|TempPncVisitExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 82652358-9db2-11eb-a8b3-0242ac130003|TempPncVisitExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
-
 7266ee48-7a96-11eb-9439-0242ac130002|TempCovidExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 7266ee49-7a96-11eb-9439-0242ac130002|TempCovidExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
-
 7266ee50-7a96-11eb-9439-0242ac130002|TempDefaulterTracingExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 7266ee51-7a96-11eb-9439-0242ac130002|TempDefaulterTracingExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+
+7266ee60-7a96-11eb-9439-0242ac130002|TempPatientPrepExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee61-7a96-11eb-9439-0242ac130002|TempPatientPrepExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee62-7a96-11eb-9439-0242ac130002|TempPrepBehaviourRiskExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee63-7a96-11eb-9439-0242ac130002|TempPrepBehaviourRiskExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee64-7a96-11eb-9439-0242ac130002|TempPrepVisitExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee65-7a96-11eb-9439-0242ac130002|TempPrepVisitExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee66-7a96-11eb-9439-0242ac130002|TempPrepLabExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee67-7a96-11eb-9439-0242ac130002|TempPrepLabExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee68-7a96-11eb-9439-0242ac130002|TempPrepPharmacyExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee69-7a96-11eb-9439-0242ac130002|TempPrepPharmacyExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee70-7a96-11eb-9439-0242ac130002|TempPrepAdverseEventExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee71-7a96-11eb-9439-0242ac130002|TempPrepAdverseEventExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
+7266ee72-7a96-11eb-9439-0242ac130002|TempPrepCareTerminationExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
+7266ee73-7a96-11eb-9439-0242ac130002|TempPrepCareTerminationExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required

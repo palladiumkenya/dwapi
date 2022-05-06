@@ -13,12 +13,12 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         public DateTime? ConfirmatoryPCRDate { get; set; }
         public DateTime? BasellineVLDate { get; set; }
         public DateTime? FinalyAntibodyDate { get; set; }
-        public DateTime? DNAPCR1 { get; set; }
-        public DateTime? DNAPCR2 { get; set; }
-        public DateTime? DNAPCR3 { get; set; }
-        public DateTime? ConfirmatoryPCR { get; set; }
-        public DateTime? BasellineVL { get; set; }
-        public DateTime? FinalyAntibody { get; set; }
+        public string DNAPCR1 { get; set; }
+        public string DNAPCR2 { get; set; }
+        public string DNAPCR3 { get; set; }
+        public string ConfirmatoryPCR { get; set; }
+        public string BasellineVL { get; set; }
+        public string FinalyAntibody { get; set; }
         public DateTime? HEIExitDate { get; set; }
         public string HEIHIVStatus { get; set; }
         public string HEIExitCritearia { get; set; }

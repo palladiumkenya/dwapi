@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Dwapi.UploadManagement.Infrastructure.Reader
 {
@@ -31,6 +32,8 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader
 
         public Guid GetSession(string notificationName)
         {
+            Log.Debug(_context.Database.GetDbConnection().ConnectionString);
+
             var metric = _context.AppMetrics.AsNoTracking().FirstOrDefault(x => x.Name == notificationName);
             if (null != metric)
             {

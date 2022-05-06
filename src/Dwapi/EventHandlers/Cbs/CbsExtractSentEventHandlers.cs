@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.SharedKernel.Events;
 using Dwapi.UploadManagement.Core.Event.Cbs;
@@ -14,9 +15,10 @@ namespace Dwapi.EventHandlers
             _repository = Startup.ServiceProvider.GetService<IMasterPatientIndexRepository>();
         }
 
-        public void Handle(CbsExtractSentEvent domainEvent)
+        public Task Handle(CbsExtractSentEvent domainEvent)
         {
             _repository.UpdateSendStatus(domainEvent.SentItems);
+            return Task.CompletedTask;
         }
     }
 }

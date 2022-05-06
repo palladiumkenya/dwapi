@@ -32,7 +32,14 @@
         MnchEnrollment,
         MnchLab,
         MotherBabyPair,
-        PncVisit
+        PncVisit,
 
+        PatientPrep,
+        PrepAdverseEvent,
+        PrepBehaviourRisk,
+        PrepCareTermination,
+        PrepLab,
+        PrepPharmacy,
+        PrepVisit
     }
 }

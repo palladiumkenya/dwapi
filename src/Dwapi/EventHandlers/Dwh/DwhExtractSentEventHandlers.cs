@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.SharedKernel.Events;
 using Dwapi.UploadManagement.Core.Event.Dwh;
@@ -14,9 +15,10 @@ namespace Dwapi.EventHandlers.Dwh
             _service = Startup.ServiceProvider.GetService<IDwhExtractSentServcie>();
         }
 
-        public void Handle(DwhExtractSentEvent domainEvent)
+        public Task Handle(DwhExtractSentEvent domainEvent)
         {
             _service.UpdateSendStatus(domainEvent.ExtractType, domainEvent.SentItems);
+            return Task.CompletedTask;
         }
     }
 }

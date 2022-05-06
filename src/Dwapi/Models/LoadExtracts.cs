@@ -1,6 +1,7 @@
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Commands.Cbs;
+using Dwapi.SharedKernel.Enum;
 
 namespace Dwapi.Models
 {
@@ -9,6 +10,7 @@ namespace Dwapi.Models
         public LoadFromEmrCommand LoadFromEmrCommand { get; set; }
         public ExtractMasterPatientIndex ExtractMpi { get; set; }
         public bool LoadMpi { get; set; }
+        public EmrSetup EmrSetup { get; set; }
 
         public bool IsValid()
         {

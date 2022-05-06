@@ -10,6 +10,7 @@ import { MpiSearchComponent } from '../dockets/cbs-docket/mpi-search/mpi-search.
 import {HtsDocketComponent} from '../dockets/hts-docket/hts-docket.component';
 import {MgsDocketComponent} from '../dockets/mgs-docket/mgs-docket.component';
 import {MnchDocketComponent} from '../dockets/mnch-docket/mnch-docket.component';
+import {PrepDocketComponent} from "../dockets/prep-docket/prep-docket.component";
 
 export const routes: Routes = [
     {path: 'dashboard', component: DashboardComponent},
@@ -22,6 +23,7 @@ export const routes: Routes = [
     {path: 'hts', component: HtsDocketComponent},
     {path: 'mgs', component: MgsDocketComponent},
     {path: 'mnch', component: MnchDocketComponent},
+    {path: 'prep', component: PrepDocketComponent},
     {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
     {path: '**', component: DashboardComponent }
 ];

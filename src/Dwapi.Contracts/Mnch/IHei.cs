@@ -12,12 +12,12 @@ namespace Dwapi.Contracts.Mnch
         DateTime? ConfirmatoryPCRDate { get; set; }
         DateTime? BasellineVLDate { get; set; }
         DateTime? FinalyAntibodyDate { get; set; }
-        DateTime? DNAPCR1 { get; set; }
-        DateTime? DNAPCR2 { get; set; }
-        DateTime? DNAPCR3 { get; set; }
-        DateTime? ConfirmatoryPCR { get; set; }
-        DateTime? BasellineVL { get; set; }
-        DateTime? FinalyAntibody { get; set; }
+        string DNAPCR1 { get; set; }
+        string DNAPCR2 { get; set; }
+        string DNAPCR3 { get; set; }
+        string ConfirmatoryPCR { get; set; }
+        string BasellineVL { get; set; }
+        string FinalyAntibody { get; set; }
         DateTime? HEIExitDate { get; set; }
         string HEIHIVStatus { get; set; }
         string HEIExitCritearia { get; set; }

@@ -17,7 +17,9 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh
         PatientExtractView GenerateExtracts(Guid id);
 
         IEnumerable<T>  GenerateBatchExtracts<T, TId>(int page,int batchSize) where T : Entity<TId>;
+        IEnumerable<T>  GenerateSmartBatchExtracts<T, TId>(int page,int batchSize) where T : Entity<TId>;
         IEnumerable<T>  GenerateBatchExtracts<T>(int page,int batchSize) where T :ClientExtract;
+        IEnumerable<T>  GenerateSmartBatchExtracts<T>(int page,int batchSize) where T :ClientExtract;
 
         IEnumerable<T> GenerateDiffBatchExtracts<T>(int page, int batchSize, string docket, string extract)
             where T : ClientExtract;
