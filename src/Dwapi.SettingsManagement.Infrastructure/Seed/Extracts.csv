@@ -6901,3 +6901,8 @@ from kenyaemr_etl.etl_patient_demographics d
 														join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id
 						join kenyaemr_etl.etl_default_facility_info i;"|TempPrepCareTerminationExtract|0|PrepCareTerminationExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
+2F8A4A81-FEFB-49BF-AB07-C9F529F6EA13|Client Registry|CRS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|CRS|1|ClientRegistry|1.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+3F6C522C-BA8C-46FA-8151-CDBA393C392D|Client Registry|CRS|A6221858-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistry|1.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+8B29B02B-B508-42EF-8FBE-48E1DB23DD6D|Client Registry|CRS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|CRS|1|ClientRegistry|1.00|A6221982-0E86-11E8-BA89-0ED5F89F718B
+
+
