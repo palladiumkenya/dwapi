@@ -207,6 +207,8 @@ namespace Dwapi
         public static IHubContext<ExtractActivity> HubContext;
         public static IHubContext<CbsActivity> CbsHubContext;
         public static IHubContext<CbsSendActivity> CbsSendHubContext;
+        public static IHubContext<CrsActivity> CrsHubContext;
+        public static IHubContext<CrsSendActivity> CrsSendHubContext;
         public static IHubContext<HtsSendActivity> HtsSendHubContext;
         public static IHubContext<HtsActivity> HtsHubContext;
         public static IHubContext<MgsSendActivity> MgsSendHubContext;
@@ -912,10 +914,12 @@ namespace Dwapi
                 {
                     routes.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}");
                     routes.MapHub<CbsActivity>($"/{nameof(CbsActivity).ToLower()}");
+                    routes.MapHub<CrsActivity>($"/{nameof(CrsActivity).ToLower()}");
                     routes.MapHub<HtsActivity>($"/{nameof(HtsActivity).ToLower()}");
                     routes.MapHub<MgsActivity>($"/{nameof(MgsActivity).ToLower()}");
                     routes.MapHub<DwhSendActivity>($"/{nameof(DwhSendActivity).ToLower()}");
                     routes.MapHub<CbsSendActivity>($"/{nameof(CbsSendActivity).ToLower()}");
+                    routes.MapHub<CrsSendActivity>($"/{nameof(CrsSendActivity).ToLower()}");
                     routes.MapHub<HtsSendActivity>($"/{nameof(HtsSendActivity).ToLower()}");
                     routes.MapHub<MgsSendActivity>($"/{nameof(MgsSendActivity).ToLower()}");
                     routes.MapHub<MnchActivity>($"/{nameof(MnchActivity).ToLower()}");
@@ -1013,5 +1017,13 @@ namespace Dwapi
                 StartupErrors.Add($"{error} {e}");
             }
         }
+    }
+
+    public class CrsSendActivity : Hub
+    {
+    }
+
+    public class CrsActivity : Hub
+    {
     }
 }

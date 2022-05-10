@@ -1,12 +1,10 @@
 using System;
 using Dwapi.Contracts.Crs;
-using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 
-namespace Dwapi.ExtractsManagement.Core.Model.Source.Crs
+namespace Dwapi.ExtractsManagement.Core.Model.Destination.Crs
 {
-    public class TempClientRegistryExtract : TempExtract,IClientRegistry
+    public class ClientRegistryExtract : CrsClientExtract,IClientRegistry
     {
-        public string sxdmPKValueDoB;
         public string CCCNumber { get; set; }
         public string NationalId { get; set; }
         public string Passport { get; set; }
@@ -45,9 +43,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Crs
         public int? PatientPK { get; set; }
         public string SiteCode { get; set; }
         public int? FacilityID { get; set; }
-        public string Emr { get; set;}
-        public string Project { get; set;}
         public string LastRegimen { get; set; }
         public string LastRegimenLine { get; set; }
+        public string sxdmPKValueDoB { get; set; }
     }
 }
