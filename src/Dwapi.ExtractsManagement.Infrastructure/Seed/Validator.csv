@@ -125,7 +125,6 @@ aa19523d-f81d-4ccb-8d26-98dd054fed5e|TempPatientAdverseEventExtracts|AdverseEven
 7266ee49-7a96-11eb-9439-0242ac130002|TempCovidExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 7266ee50-7a96-11eb-9439-0242ac130002|TempDefaulterTracingExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 7266ee51-7a96-11eb-9439-0242ac130002|TempDefaulterTracingExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
-
 7266ee60-7a96-11eb-9439-0242ac130002|TempPatientPrepExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
 7266ee61-7a96-11eb-9439-0242ac130002|TempPatientPrepExtracts|SiteCode|Required|SiteCode IS NULL OR SiteCode = 0|SiteCode Required
 7266ee62-7a96-11eb-9439-0242ac130002|TempPrepBehaviourRiskExtracts|PatientPK|Required|PatientPK IS NULL|PatientPK Required
