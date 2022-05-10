@@ -39,14 +39,7 @@ namespace Dwapi.Contracts.Crs
         DateTime? DateOfLastEncounter { get; set;}
         DateTime? DateOfLastViralLoad { get; set;}
         DateTime? NextAppointmentDate { get; set;}
-        int? PatientPK { get; set;}
-        string SiteCode { get; set;}
-        int? FacilityID { get; set;}
-        string Emr { get; set;}
-        string Project { get; set;}
         string LastRegimen { get; set;}
         string LastRegimenLine { get; set;}
-
-
     }
 }

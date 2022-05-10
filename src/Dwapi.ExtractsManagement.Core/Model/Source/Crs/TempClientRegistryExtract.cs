@@ -42,11 +42,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Crs
         public DateTime? DateOfLastEncounter { get; set; }
         public DateTime? DateOfLastViralLoad { get; set; }
         public DateTime? NextAppointmentDate { get; set; }
-        public int? PatientPK { get; set; }
-        public string SiteCode { get; set; }
-        public int? FacilityID { get; set; }
-        public string Emr { get; set;}
-        public string Project { get; set;}
         public string LastRegimen { get; set; }
         public string LastRegimenLine { get; set; }
     }

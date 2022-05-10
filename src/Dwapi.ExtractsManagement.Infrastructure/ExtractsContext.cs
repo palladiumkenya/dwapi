@@ -185,12 +185,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempOvcExtractErrorSummary> TempOvcExtractErrorSummaries{ get; set; }
         public DbSet<TempOtzExtractError> TempOtzExtractError { get; set; }
         public DbSet<TempOtzExtractErrorSummary> TempOtzExtractErrorSummary { get; set; }
-
+/*
         public DbSet<TempCovidExtractError> TempCovidExtractError { get; set; }
         public DbSet<TempCovidExtractErrorSummary> TempCovidExtractErrorSummary { get; set; }
         public DbSet<TempDefaulterTracingExtractError> TempDefaulterTracingExtractError { get; set; }
         public DbSet<TempDefaulterTracingExtractErrorSummary> TempDefaulterTracingExtractErrorSummary { get; set; }
-
+*/
         #region Mnch
         public virtual DbSet<TempPatientMnchExtract> TempPatientMnchExtracts { get; set; }
         public virtual DbSet<TempMnchEnrolmentExtract> TempMnchEnrolmentExtracts { get; set; }
@@ -215,7 +215,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<CwcVisitExtract> CwcVisitExtracts { get; set; }
         public virtual DbSet<HeiExtract> HeiExtracts { get; set; }
         public virtual DbSet<MnchLabExtract> MnchLabExtracts { get; set; }
-
+/*
         public virtual DbSet<TempPatientMnchExtractError> TempPatientMnchExtractError { get; set; }
         public virtual DbSet<TempMnchEnrolmentExtractError> TempMnchEnrolmentExtractError { get; set; }
         public virtual DbSet<TempMnchArtExtractError> TempMnchArtExtractError { get; set; }
@@ -239,7 +239,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<TempCwcVisitExtractErrorSummary> TempCwcVisitExtractErrorSummary { get; set; }
         public virtual DbSet<TempHeiExtractErrorSummary> TempHeiExtractErrorSummary { get; set; }
         public virtual DbSet<TempMnchLabExtractErrorSummary> TempMnchLabExtractErrorSummary { get; set; }
-
+*/
         #endregion
 
         #region Prep
@@ -258,7 +258,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<PrepLabExtract> PrepLabExtracts { get; set; }
         public DbSet<PrepPharmacyExtract> PrepPharmacyExtracts { get; set; }
         public DbSet<PrepVisitExtract> PrepVisitExtracts { get; set; }
-
+/*
         public DbSet<TempPatientPrepExtractError> TempPatientPrepExtractError { get; set; }
         public DbSet<TempPrepAdverseEventExtractError> TempPrepAdverseEventExtractError { get; set; }
         public DbSet<TempPrepBehaviourRiskExtractError> TempPrepBehaviourRiskExtractError { get; set; }
@@ -274,16 +274,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempPrepLabExtractErrorSummary> TempPrepLabExtractErrorSummary { get; set; }
         public DbSet<TempPrepPharmacyExtractErrorSummary> TempPrepPharmacyExtractErrorSummary { get; set; }
         public DbSet<TempPrepVisitExtractErrorSummary> TempPrepVisitExtractErrorSummary { get; set; }
-
+*/
         #endregion
 
         public DbSet<ClientRegistryExtract> ClientRegistryExtracts{ get; set; }
         
         public DbSet<TempClientRegistryExtract> TempClientRegistryExtracts { get; set; }
-        public DbSet<TempClientRegistryExtractError> TempClientRegistryExtractError { get; set; }
-        public DbSet<TempClientRegistryExtractErrorSummary> TempClientRegistryExtractErrorSummary { get; set; }
-        public object ClientRegistryExtract { get; set; }
-
+       
+        // public DbSet<TempClientRegistryExtractError> TempClientRegistryExtractError { get; set; }
+        // public DbSet<TempClientRegistryExtractErrorSummary> TempClientRegistryExtractErrorSummary { get; set; }
+        //
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {

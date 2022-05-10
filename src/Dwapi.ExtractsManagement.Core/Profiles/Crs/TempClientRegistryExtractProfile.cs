@@ -50,7 +50,6 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Crs
                 .ForMember(x => x.NextAppointmentDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.NextAppointmentDate))))
                 .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempClientRegistryExtract.PatientPK))))
                 .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.SiteCode))))
-                .ForMember(x => x.FacilityID, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempClientRegistryExtract.FacilityID))))
                 .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.Emr))))
                 .ForMember(x => x.Project, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.Project))))
                 .ForMember(x => x.LastRegimen, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.LastRegimen))))
