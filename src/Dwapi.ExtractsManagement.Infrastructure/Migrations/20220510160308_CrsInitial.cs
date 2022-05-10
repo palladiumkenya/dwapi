@@ -125,7 +125,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_TempClientRegistryExtracts", x => x.Id);
                 });
+            if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
+            {
+                migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 0;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.TempClientRegistryExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql($@"alter table {nameof(ExtractsContext.ClientRegistryExtracts)} convert to character set utf8 collate utf8_unicode_ci;");
+                migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 1;");
+            }
         }
+        
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
