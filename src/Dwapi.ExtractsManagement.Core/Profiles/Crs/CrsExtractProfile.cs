@@ -8,9 +8,9 @@ using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.ExtractsManagement.Core.Profiles.Crs
 {
-    public class TempClientRegistryExtractProfile : Profile
+    public class CrsExtractProfile : Profile
     {
-        public TempClientRegistryExtractProfile()
+        public CrsExtractProfile()
         {
             CreateMap<IDataRecord, TempClientRegistryExtract>()
                 .ForMember(x => x.CCCNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.CCCNumber))))
@@ -49,14 +49,15 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Crs
                 .ForMember(x => x.DateOfLastViralLoad, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.DateOfLastViralLoad))))
                 .ForMember(x => x.NextAppointmentDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.NextAppointmentDate))))
                 .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempClientRegistryExtract.PatientPK))))
-                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.SiteCode))))
-                .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.Emr))))
-                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.Project))))
-                .ForMember(x => x.LastRegimen, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.LastRegimen))))
-                .ForMember(x => x.LastRegimenLine, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.LastRegimenLine))))
+                .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempClientRegistryExtract.FacilityId))))
 
-                .ForMember(x => x.sxdmPKValueDoB, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.sxdmPKValueDoB))));
+                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempClientRegistryExtract.SiteCode))))
+                .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.Emr))))
+                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.Project))))
+                .ForMember(x => x.LastRegimen, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.LastRegimen))))
+                .ForMember(x => x.LastRegimenLine, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.LastRegimenLine))));
 
+  
             CreateMap<TempClientRegistryExtract, ClientRegistryExtract>();
         }
     }

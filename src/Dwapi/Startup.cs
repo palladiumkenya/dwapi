@@ -840,6 +840,7 @@ namespace Dwapi
             services.AddScoped<ICrsSearchService, CrsSearchService>();
 
             services.AddScoped<IClientRegistryExtractRepository, ClientRegistryExtractRepository>();
+            services.AddScoped<ITempClientRegistryExtractRepository, TempClientRegistryExtractRepository>();
 
             var container = new Container();
             container.Populate(services);

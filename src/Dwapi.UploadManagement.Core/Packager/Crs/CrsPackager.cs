@@ -8,6 +8,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Packager.Crs;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Crs;
 using Dwapi.UploadManagement.Core.Model;
+using Dwapi.UploadManagement.Core.Model.Crs;
 using Dwapi.UploadManagement.Core.Model.Crs.Dtos;
 using Dwapi.UploadManagement.Core.Profiles;
 
@@ -51,11 +52,10 @@ namespace Dwapi.UploadManagement.Core.Packager.Crs
             return manifests;
         }
 
-        public IEnumerable<ClientRegistryExtractDto> GenerateDtoCrs()
+        public IEnumerable<ClientRegistryExtractView> GenerateCrs()
         {
-            var mapper = UploadMapper.Instance;
             var crss = _crsExtractReader.ReadAll().ToList();
-            return mapper.Map<List<ClientRegistryExtractDto>>(crss);
+            return crss;
         }
     }
 }

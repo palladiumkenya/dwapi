@@ -27,18 +27,18 @@ namespace Dwapi.Controller
         private readonly IHubContext<CrsActivity> _hubContext;
         private readonly IHubContext<CrsSendActivity> _hubSendContext;
         private readonly IClientRegistryExtractRepository _clientRegistryExtractRepository;
-        private readonly ICrsSendService _cbsSendService;
+        private readonly ICrsSendService _crsSendService;
         private readonly ICrsSearchService _crsSearchService;
         private readonly string _version;
 
         public CrsController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<CrsActivity> hubContext, IClientRegistryExtractRepository clientRegistryExtractRepository,
-            ICrsSendService cbsSendService, IHubContext<CrsSendActivity> hubSendContext, ICrsSearchService crsSearchService)
+            ICrsSendService crsSendService, IHubContext<CrsSendActivity> hubSendContext, ICrsSearchService crsSearchService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _clientRegistryExtractRepository = clientRegistryExtractRepository;
-            _cbsSendService = cbsSendService;
+            _crsSendService = crsSendService;
             _crsSearchService = crsSearchService;
             Startup.CrsSendHubContext= _hubSendContext = hubSendContext;
             Startup.CrsHubContext = _hubContext = hubContext;
@@ -50,7 +50,6 @@ namespace Dwapi.Controller
         [HttpPost("extract")]
         public async Task<IActionResult> Load([FromBody] ExtractClientRegistryExtract request)
         {
-            if (!ModelState.IsValid) return BadRequest();
 
             string version = GetType().Assembly.GetName().Version.ToString();
 
@@ -142,7 +141,7 @@ namespace Dwapi.Controller
         {
             try
             {
-                var eventExtract = _clientRegistryExtractRepository.GetView().ToList().OrderBy(x => x.sxdmPKValueDoB);
+                var eventExtract = _clientRegistryExtractRepository.GetAll().ToList();
                 return Ok(eventExtract);
             }
             catch (Exception e)
@@ -168,7 +167,7 @@ namespace Dwapi.Controller
 
             try
             {
-                await _cbsSendService.SendManifestAsync(packageDTO,_version);
+                await _crsSendService.SendManifestAsync(packageDTO,_version);
                 return Ok();
             }
             catch (Exception e)
@@ -188,8 +187,8 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-                await _cbsSendService.SendCrsAsync(packageDTO);
-                await _cbsSendService.NotifyPostSending(packageDTO, _version);
+                await _crsSendService.SendCrsAsync(packageDTO);
+                await _crsSendService.NotifyPostSending(packageDTO, _version);
                 return Ok();
             }
             catch (Exception e)

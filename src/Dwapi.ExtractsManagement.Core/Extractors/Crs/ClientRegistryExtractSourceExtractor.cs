@@ -54,9 +54,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Crs
                     // AutoMapper profiles
                     var extractRecord = mapper.Map<IDataRecord, TempClientRegistryExtract>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
-
-                    if(!string.IsNullOrWhiteSpace(extractRecord.sxdmPKValueDoB))
-                        list.Add(extractRecord);
+                    list.Add(extractRecord);
 
                     if (count == batch)
                     {

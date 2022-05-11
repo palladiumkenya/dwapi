@@ -39,7 +39,7 @@ namespace Dwapi.UploadManagement.Core.Services.Crs
             _packager = packager;
             _mediator = mediator;
             _reader = reader;
-            _endPoint = "api/crs/";
+            _endPoint = "api/Crs/";
         }
 
         public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,string version)
@@ -49,7 +49,7 @@ namespace Dwapi.UploadManagement.Core.Services.Crs
 
         public Task<List<SendCrsResponse>> SendCrsAsync(SendManifestPackageDTO sendTo)
         {
-            return SendCrsAsync(sendTo, CrsMessageBag.Create(_packager.GenerateDtoCrs().ToList()));
+            return SendCrsAsync(sendTo, CrsMessageBag.Create(_packager.GenerateCrs().ToList()));
         }
 
         public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage,string version)
@@ -102,7 +102,7 @@ namespace Dwapi.UploadManagement.Core.Services.Crs
                 try
                 {
                     var msg = JsonConvert.SerializeObject(message);
-                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}mpi"), message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}ClientRegistry"), message);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsJsonAsync<SendCrsResponse>();

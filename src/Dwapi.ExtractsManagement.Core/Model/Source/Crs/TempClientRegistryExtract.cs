@@ -6,7 +6,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Crs
 {
     public class TempClientRegistryExtract : TempExtract,IClientRegistry
     {
-        public string sxdmPKValueDoB;
+       
         public string CCCNumber { get; set; } 
         public string NationalId { get; set; }
         public string Passport { get; set; }

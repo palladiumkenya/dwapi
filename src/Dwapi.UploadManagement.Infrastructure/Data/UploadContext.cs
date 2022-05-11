@@ -77,6 +77,8 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<PrepLabExtractView> ClientPrepLabExtracts   { get; set; }
         public virtual DbSet<PrepPharmacyExtractView> ClientPrepPharmacyExtracts   { get; set; }
         public virtual DbSet<PrepVisitExtractView> ClientPrepVisitExtracts   { get; set; }
+        
+        public virtual DbSet<ClientRegistryExtractView> ClientRegistryExtracts   { get; set; }
 
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {

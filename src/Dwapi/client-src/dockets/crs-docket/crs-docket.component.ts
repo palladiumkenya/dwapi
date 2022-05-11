@@ -167,7 +167,7 @@ export class CrsDocketComponent implements OnInit, OnDestroy {
                         }
 
                         if (this.emrSystem.extracts) {
-                            this.extracts = this.emrSystem.extracts.filter(x => x.docketId === 'Crs');
+                            this.extracts = this.emrSystem.extracts.filter(x => x.docketId === 'CRS');
 
                             this.extract = this.extracts[0];
                             this.dbProtocol = this.emrSystem.databaseProtocols.find(x => x.id === this.extract.databaseProtocolId);
@@ -203,7 +203,7 @@ export class CrsDocketComponent implements OnInit, OnDestroy {
 
     public loadRegisrty(): void {
         this.messages = [];
-        this.loadRegistry$ = this._registryConfigService.get('Crs').subscribe(
+        this.loadRegistry$ = this._registryConfigService.get('CRS').subscribe(
             p => {
                 this.centralRegistry = p;
             },
