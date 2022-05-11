@@ -41,5 +41,6 @@ namespace Dwapi.Contracts.Crs
         DateTime? NextAppointmentDate { get; set;}
         string LastRegimen { get; set;}
         string LastRegimenLine { get; set;}
+        string CurrentOnART { get; set;}
     }
 }

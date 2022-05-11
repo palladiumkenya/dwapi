@@ -55,35 +55,42 @@
         <p-tabPanel header="Client Registry Extract Records">
             <p-toolbar>
                     <div class="ui-toolbar-group-left">
-                            <button type="button" pButton icon="ui-icon-cloud-download" iconPos="left" label="Export All" (click)="persons.exportCSV()" class="blue-btn"></button>
+                            <button type="button" pButton icon="ui-icon-cloud-download" style="display:none" iconPos="left" label="Export All" (click)="persons.exportCSV()" class="blue-btn"></button>
                     </div>
             </p-toolbar>
             <p-dataTable [value]="allExtractDetails" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
                 [loading]="loading" loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true"
                 [paginator]="true" [rows]="25" [totalRecords]="recordCount" exportFilename="DwapiMpiAll" #persons>
-                <p-column field="serial" header="Serial" [filter]="true"></p-column>
-                <p-column field="firstName_Normalized" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
-                <p-column field="middleName_Normalized" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-                <p-column field="lastName_Normalized" header="Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-                <p-column field="patientPhoneNumber" header="Phone"></p-column>
-                <p-column field="gender" header="Gender" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
-                <p-column field="dob" header="Birth Date" sortable="true">
+<!--                <p-column field="serial" header="Serial" [filter]="true"></p-column>-->
+                <p-column field="firstName" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
+                <p-column field="middleName" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+                <p-column field="lastName" header="Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
+                <p-column field="maritalStatus" header="Marital Status"></p-column>
+                <p-column field="sex" header="Sex" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
+                <p-column field="currentOnART" header="Current On ART"></p-column>
+                <p-column field="dateOfBirth" header="Date Of Birth" sortable="true">
                     <ng-template let-col let-detail="rowData" pTemplate="body">
-                        {{detail.dob | date: 'dd MMM yyyy'}}
+                        {{detail.dateOfBirth | date: 'dd MMM yyyy'}}
                     </ng-template>
                 </p-column>
-                <p-column field="jaroWinklerScore" header="JaroWinklerScore" sortable="true"></p-column>
-                <p-column field="sxdmPKValueDoB" header="sxdmPKValueDoB" sortable="true"></p-column>
-                <p-column field="contactAddress" header="Contact Address" sortable="true" hidden = "true"></p-column>
-                <p-column field="contactName" header="Contact Name" sortable="true" hidden = "true"></p-column>
-                <p-column field="contactPhoneNumber" header="Contact Phone Number" sortable="true" hidden = "true"></p-column>
-                <p-column field="contactRelation" header="Contact Relation" sortable="true" hidden = "true"></p-column>
-                <p-column field="dateExtracted" header="Date Extracted" sortable="true" hidden = "true"></p-column>
-                <p-column field="national_ID" header="National Id" sortable="true" hidden = "true"></p-column>
-                <p-column field="startARTDate" header="Start ART Date" sortable="true" hidden = "true"></p-column>
-                <p-column field="startARTRegimenCode" header="Start ART Regimen Code" sortable="true" hidden = "true"></p-column>
+                <p-column field="phoneNumber" header="Phone Number" sortable="true" hidden = "true"></p-column>
+                <p-column field="nationalID" header="National Id" sortable="true" hidden = "true"></p-column>
                 <p-column field="county" header="County" sortable="true" hidden = "true"></p-column>
                 <p-column field="subCounty" header="Sub County" sortable="true" hidden = "true"></p-column>
+                <p-column field="location" header="Location" sortable="true" hidden = "true"></p-column>
+                <p-column field="village" header="Village" sortable="true" hidden = "true"></p-column>
+                <p-column field="landmark" header="Landmark" sortable="true" hidden = "true"></p-column>
+                <p-column field="facilityName" header="FacilityName" sortable="true" hidden = "true"></p-column>
+                <p-column field="nameOfNextOfKin" header="Name Of Next Of Kin" sortable="true" hidden = "true"></p-column>
+                <p-column field="NextOfKinRelationship" header="Next Of Kin Relationship" sortable="true" hidden = "true"></p-column>
+                <p-column field="dateOfInitiation" header="Date Of Initiation" sortable="true" hidden = "true"></p-column>
+                <p-column field="treatmentOutcome" header="TreatmentOutcome" sortable="true" hidden = "true"></p-column>
+                <p-column field="dateOfLastEncounter" header="Date Of Last Encounter" sortable="true" hidden = "true"></p-column>
+                <p-column field="dateOfLastViralLoad" header="Date Of Last Viral Load" sortable="true" hidden = "true"></p-column>
+                <p-column field="nextAppointmentDate" header="Next Appointment Date" sortable="true" hidden = "true"></p-column>
+                <p-column field="lastRegimen" header="Last Regimen" sortable="true" hidden = "true"></p-column>
+                <p-column field="lastRegimenLine" header="Last Regimen Line" sortable="true" hidden = "true"></p-column>
+
             </p-dataTable>
         </p-tabPanel>
 

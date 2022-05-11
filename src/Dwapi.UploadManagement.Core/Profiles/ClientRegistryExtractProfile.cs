@@ -54,7 +54,8 @@ namespace Dwapi.UploadManagement.Core.Profiles
                 .ForMember(d => d.Project, o => o.UseValue(string.Empty))
                 .ForMember(d => d.LastRegimen, o => o.UseValue(string.Empty))
                 .ForMember(d => d.LastRegimenLine, o => o.UseValue(string.Empty))
-                
+                .ForMember(d => d.CurrentOnART, o => o.UseValue(string.Empty))
+
                 
                 ;
         }
