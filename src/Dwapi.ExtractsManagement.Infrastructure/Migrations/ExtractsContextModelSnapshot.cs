@@ -146,6 +146,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("County");
 
+                    b.Property<string>("CurrentOnART");
+
                     b.Property<DateTime?>("DateExtracted");
 
                     b.Property<DateTime?>("DateOfBirth");
@@ -235,8 +237,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Village");
 
                     b.Property<string>("Ward");
-
-                    b.Property<string>("sxdmPKValueDoB");
 
                     b.HasKey("Id");
 
@@ -4142,6 +4142,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<bool>("CheckError");
 
                     b.Property<string>("County");
+
+                    b.Property<string>("CurrentOnART");
 
                     b.Property<DateTime>("DateExtracted");
 

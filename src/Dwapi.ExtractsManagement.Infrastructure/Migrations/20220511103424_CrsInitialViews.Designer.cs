@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20220510160308_CrsInitial")]
-    partial class CrsInitial
+    [Migration("20220511103424_CrsInitialViews")]
+    partial class CrsInitialViews
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -148,6 +148,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("County");
 
+                    b.Property<string>("CurrentOnART");
+
                     b.Property<DateTime?>("DateExtracted");
 
                     b.Property<DateTime?>("DateOfBirth");
@@ -237,8 +239,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Village");
 
                     b.Property<string>("Ward");
-
-                    b.Property<string>("sxdmPKValueDoB");
 
                     b.HasKey("Id");
 
@@ -4144,6 +4144,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<bool>("CheckError");
 
                     b.Property<string>("County");
+
+                    b.Property<string>("CurrentOnART");
 
                     b.Property<DateTime>("DateExtracted");
 

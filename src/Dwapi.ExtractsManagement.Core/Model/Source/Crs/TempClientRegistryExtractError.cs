@@ -46,5 +46,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Crs
 
         public string LastRegimen { get; set; }
         public string LastRegimenLine { get; set; }
+        public string CurrentOnART { get; set; }
     }
 }

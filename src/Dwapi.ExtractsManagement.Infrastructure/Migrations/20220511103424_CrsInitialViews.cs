@@ -54,7 +54,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 								vTempClientRegistryExtractError.SubCounty,
 								vTempClientRegistryExtractError.TreatmentOutcome,
 								vTempClientRegistryExtractError.Village,
-								vTempClientRegistryExtractError.Ward						
+								vTempClientRegistryExtractError.Ward,
+								vTempClientRegistryExtractError.CurrentOnART						
 
 
 				FROM            vTempClientRegistryExtractError INNER JOIN
@@ -63,7 +64,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 ");
 
         }
-
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
