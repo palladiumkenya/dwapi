@@ -125,8 +125,8 @@ FROM
 											0 AS FacilityId,d.unique_patient_no as PatientID,
 											d.patient_id as PatientPK,
 											pkv.PKV as Pkv,
-											(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-											(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
+											i.siteCode as SiteCode,
+                                            i.facilityName as FacilityName,
 											case d.gender when 'M' then 'Male' when 'F' then 'Female' end  as Gender,
 											d.dob as DOB,
 											CAST(min(hiv.visit_date) as Date) as RegistrationDate,
@@ -245,7 +245,7 @@ FROM
 													from kenyaemr_etl.etl_patient_program
 													group by Patient_Id,program
 													) as prg on prg.patient_id = d.patient_id
-											left join kenyaemr_etl.etl_kp_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP'
+				left join kenyaemr_etl.etl_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP' join kenyaemr_etl.etl_default_facility_info i
 				where unique_patient_no is not null
 				group by d.patient_id
 				order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
