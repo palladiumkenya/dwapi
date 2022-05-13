@@ -19,8 +19,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Crs
                 .ForMember(x => x.HudumaNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.HudumaNumber))))
                 .ForMember(x => x.BirthCertificateNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.BirthCertificateNumber))))
                 .ForMember(x => x.AlienIdNo, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.AlienIdNo))))
-                .ForMember(x => x.MaritalStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.DrivingLicenseNumber))))
-                .ForMember(x => x.DrivingLicenseNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.PatientClinicNumber))))
+                .ForMember(x => x.DrivingLicenseNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.DrivingLicenseNumber))))
+                .ForMember(x => x.PatientClinicNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.PatientClinicNumber))))
+
                 .ForMember(x => x.FirstName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.FirstName))))
                 .ForMember(x => x.MiddleName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.MiddleName))))
                 .ForMember(x => x.LastName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.LastName))))

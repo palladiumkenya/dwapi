@@ -60,36 +60,59 @@
             </p-toolbar>
             <p-dataTable [value]="allExtractDetails" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
                 [loading]="loading" loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true"
-                [paginator]="true" [rows]="25" [totalRecords]="recordCount" exportFilename="DwapiMpiAll" #persons>
-<!--                <p-column field="serial" header="Serial" [filter]="true"></p-column>-->
-                <p-column field="firstName" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
-                <p-column field="middleName" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-                <p-column field="lastName" header="Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-                <p-column field="maritalStatus" header="Marital Status"></p-column>
-                <p-column field="sex" header="Sex" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
-                <p-column field="currentOnART" header="Current On ART"></p-column>
-                <p-column field="dateOfBirth" header="Date Of Birth" sortable="true">
+                [paginator]="true" [rows]="25" [totalRecords]="recordCount" scrollWidth="800" exportFilename="DwapiCrsAll" #persons>
+                <p-column field="cccNumber" header="CCC Number"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="firstName" header="First Name" sortable="true" [style]="{'width':'100px'}" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
+                <p-column field="middleName" header="Middle Name" sortable="true" [style]="{'width':'100px'}" [filter]="true" filterMatchMode="contains"></p-column>
+                <p-column field="lastName" header="Last Name" sortable="true" [style]="{'width':'100px'}" [filter]="true" filterMatchMode="contains"></p-column>
+                <p-column field="passport" header="Passport"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="hudumaNumber" header="HudumaNumber"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="birthCertificateNumber" header="BirthCertificateNumber" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="alienIdNo" header="AlienIdNo" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="drivingLicenseNumber" header="DrivingLicenseNumber" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="patientClinicNumber" header="PatientClinicNumber" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="highestLevelOfEducation" header="HighestLevelOfEducation" sortable="true" [style]="{'width':'100px'}" ></p-column>
+
+                <p-column field="maritalStatus" header="Marital Status" [style]="{'width':'100px'}"></p-column>
+                <p-column field="sex" header="Sex" [filter]="true" sortable="true" [style]="{'width':'100px'}" filterMatchMode="contains"></p-column>
+                <p-column field="occupation" header="Occupation" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="currentOnART" header="Current On ART" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="dateOfBirth" header="Date Of Birth" sortable="true" [style]="{'width':'100px'}">
                     <ng-template let-col let-detail="rowData" pTemplate="body">
                         {{detail.dateOfBirth | date: 'dd MMM yyyy'}}
                     </ng-template>
                 </p-column>
-                <p-column field="phoneNumber" header="Phone Number" sortable="true" hidden = "true"></p-column>
-                <p-column field="nationalID" header="National Id" sortable="true" hidden = "true"></p-column>
-                <p-column field="county" header="County" sortable="true" hidden = "true"></p-column>
-                <p-column field="subCounty" header="Sub County" sortable="true" hidden = "true"></p-column>
-                <p-column field="location" header="Location" sortable="true" hidden = "true"></p-column>
-                <p-column field="village" header="Village" sortable="true" hidden = "true"></p-column>
-                <p-column field="landmark" header="Landmark" sortable="true" hidden = "true"></p-column>
-                <p-column field="facilityName" header="FacilityName" sortable="true" hidden = "true"></p-column>
-                <p-column field="nameOfNextOfKin" header="Name Of Next Of Kin" sortable="true" hidden = "true"></p-column>
-                <p-column field="NextOfKinRelationship" header="Next Of Kin Relationship" sortable="true" hidden = "true"></p-column>
-                <p-column field="dateOfInitiation" header="Date Of Initiation" sortable="true" hidden = "true"></p-column>
-                <p-column field="treatmentOutcome" header="TreatmentOutcome" sortable="true" hidden = "true"></p-column>
-                <p-column field="dateOfLastEncounter" header="Date Of Last Encounter" sortable="true" hidden = "true"></p-column>
-                <p-column field="dateOfLastViralLoad" header="Date Of Last Viral Load" sortable="true" hidden = "true"></p-column>
-                <p-column field="nextAppointmentDate" header="Next Appointment Date" sortable="true" hidden = "true"></p-column>
-                <p-column field="lastRegimen" header="Last Regimen" sortable="true" hidden = "true"></p-column>
-                <p-column field="lastRegimenLine" header="Last Regimen Line" sortable="true" hidden = "true"></p-column>
+                <p-column field="phoneNumber" header="Phone Number"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="alternativePhoneNumber" header="Alternative Phone Number" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="spousePhoneNumber" header="SpousePhoneNumber" sortable="true" sortable="true" [style]="{'width':'100px'}"></p-column>
+                <p-column field="nationalId" header="National Id"  [style]="{'width':'100px'}" sortable="true" ></p-column>
+
+                <p-column field="county" header="County" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="subCounty" header="Sub County" [style]="{'width':'100px'}"   ></p-column>
+                <p-column field="ward" header="Ward" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="location" header="Location"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="village" header="Village"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="landmark" header="Landmark"  [style]="{'width':'100px'}" ></p-column>
+
+                <p-column field="facilityName" header="FacilityName"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="mflCode" header="MFLCode" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="nameOfNextOfKin" header="Name Of Next Of Kin"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="NextOfKinRelationship" header="Next Of Kin Relationship" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="nextOfKinTelNo" header="NextOfKinTelNo" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="dateOfInitiation" header="Date Of Initiation" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="treatmentOutcome" header="TreatmentOutcome" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="dateOfLastEncounter" header="Date Of Last Encounter" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="dateOfLastViralLoad" header="Date Of Last Viral Load" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="nextAppointmentDate" header="Next Appointment Date" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="lastRegimen" header="Last Regimen" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="lastRegimenLine" header="Last Regimen Line" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="patientPK" header="PatientPK"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="siteCode" header="SiteCode"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="facilityID" header="FacilityID"  sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="emr" header="Emr"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="project" header="Project"  [style]="{'width':'100px'}" ></p-column>
+
+
 
             </p-dataTable>
         </p-tabPanel>
