@@ -60,15 +60,24 @@
             </p-toolbar>
             <p-dataTable [value]="allExtractDetails" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
                 [loading]="loading" loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true"
-                [paginator]="true" [rows]="25" [totalRecords]="recordCount" exportFilename="DwapiMpiAll" #persons>
-<!--                <p-column field="serial" header="Serial" [filter]="true"></p-column>-->
-                <p-column field="firstName" header="First Name" sortable="true" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
-                <p-column field="middleName" header="Middle Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-                <p-column field="lastName" header="Last Name" sortable="true" [filter]="true" filterMatchMode="contains"></p-column>
-                <p-column field="maritalStatus" header="Marital Status"></p-column>
-                <p-column field="sex" header="Sex" [filter]="true" sortable="true" filterMatchMode="contains"></p-column>
-                <p-column field="currentOnART" header="Current On ART"></p-column>
-                <p-column field="dateOfBirth" header="Date Of Birth" sortable="true">
+                [paginator]="true" [rows]="25" [totalRecords]="recordCount" scrollWidth="800" exportFilename="DwapiCrsAll" #persons>
+                <p-column field="cccNumber" header="CCC Number"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="firstName" header="First Name" sortable="true" [style]="{'width':'100px'}" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
+                <p-column field="middleName" header="Middle Name" sortable="true" [style]="{'width':'100px'}" [filter]="true" filterMatchMode="contains"></p-column>
+                <p-column field="lastName" header="Last Name" sortable="true" [style]="{'width':'100px'}" [filter]="true" filterMatchMode="contains"></p-column>
+                <p-column field="passport" header="Passport"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="hudumaNumber" header="HudumaNumber"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="birthCertificateNumber" header="BirthCertificateNumber" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="alienIdNo" header="AlienIdNo" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="drivingLicenseNumber" header="DrivingLicenseNumber" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="patientClinicNumber" header="PatientClinicNumber" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="highestLevelOfEducation" header="HighestLevelOfEducation" sortable="true" [style]="{'width':'100px'}" ></p-column>
+
+                <p-column field="maritalStatus" header="Marital Status" [style]="{'width':'100px'}"></p-column>
+                <p-column field="sex" header="Sex" [filter]="true" sortable="true" [style]="{'width':'100px'}" filterMatchMode="contains"></p-column>
+                <p-column field="occupation" header="Occupation" sortable="true" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="currentOnART" header="Current On ART" [style]="{'width':'100px'}" ></p-column>
+                <p-column field="dateOfBirth" header="Date Of Birth" sortable="true" [style]="{'width':'100px'}">
                     <ng-template let-col let-detail="rowData" pTemplate="body">
                         {{detail.dateOfBirth | date: 'dd MMM yyyy'}}
                     </ng-template>
