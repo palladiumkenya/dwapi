@@ -4,7 +4,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     public partial class CrsInitialViews : Migration
     {
-         protected override void Up(MigrationBuilder migrationBuilder)
+        protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"create view vTempClientRegistryExtractError as SELECT * FROM TempClientRegistryExtracts WHERE (CheckError = 1)");
 
@@ -55,7 +55,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 								vTempClientRegistryExtractError.TreatmentOutcome,
 								vTempClientRegistryExtractError.Village,
 								vTempClientRegistryExtractError.Ward,
-								vTempClientRegistryExtractError.CurrentOnART						
+								vTempClientRegistryExtractError.CurrentOnART,
+								vTempClientRegistryExtractError.DateOfHIVdiagnosis,
+								vTempClientRegistryExtractError.LastViralLoadResult						
 
 
 				FROM            vTempClientRegistryExtractError INNER JOIN

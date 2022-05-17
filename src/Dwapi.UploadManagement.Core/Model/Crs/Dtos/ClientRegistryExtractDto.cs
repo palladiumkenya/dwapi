@@ -58,5 +58,7 @@ namespace Dwapi.UploadManagement.Core.Model.Crs.Dtos
         public string LastRegimen { get; set; }
         public string LastRegimenLine { get; set; }
         public string CurrentOnART { get; set; }
+        public DateTime? DateOfHIVdiagnosis { get; set; }
+        public string LastViralLoadResult { get; set; }
     }
 }

@@ -42,5 +42,7 @@ namespace Dwapi.Contracts.Crs
         string LastRegimen { get; set;}
         string LastRegimenLine { get; set;}
         string CurrentOnART { get; set;}
+        DateTime? DateOfHIVdiagnosis { get; set;}
+        string LastViralLoadResult { get; set;}
     }
 }

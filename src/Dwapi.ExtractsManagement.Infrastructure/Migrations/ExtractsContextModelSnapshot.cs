@@ -152,6 +152,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DateOfBirth");
 
+                    b.Property<DateTime?>("DateOfHIVdiagnosis");
+
                     b.Property<DateTime?>("DateOfInitiation");
 
                     b.Property<DateTime?>("DateOfLastEncounter");
@@ -183,6 +185,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("LastRegimen");
 
                     b.Property<string>("LastRegimenLine");
+
+                    b.Property<string>("LastViralLoadResult");
 
                     b.Property<string>("Location");
 
@@ -4149,6 +4153,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DateOfBirth");
 
+                    b.Property<DateTime?>("DateOfHIVdiagnosis");
+
                     b.Property<DateTime?>("DateOfInitiation");
 
                     b.Property<DateTime?>("DateOfLastEncounter");
@@ -4178,6 +4184,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("LastRegimen");
 
                     b.Property<string>("LastRegimenLine");
+
+                    b.Property<string>("LastViralLoadResult");
 
                     b.Property<string>("Location");
 

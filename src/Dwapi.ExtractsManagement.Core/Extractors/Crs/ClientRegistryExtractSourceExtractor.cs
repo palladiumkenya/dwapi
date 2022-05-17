@@ -36,8 +36,8 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Crs
             var mapper = dbProtocol.SupportsDifferential ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
             int batch = 500;
 
-            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(ClientRegistryExtract), "extracting...")));
-            //DomainEvents.Dispatch(new CbsStatusNotification(extract.Id,ExtractStatus.Loading));
+            DomainEvents.Dispatch(new CrsNotification(new ExtractProgress(nameof(ClientRegistryExtract), "extracting...")));
+            //DomainEvents.Dispatch(new CrsStatusNotification(extract.Id,ExtractStatus.Loading));
 
             var list = new List<TempClientRegistryExtract>();
 
@@ -63,7 +63,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Crs
 
                         try
                         {
-                            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(ClientRegistryExtract), "extracting...",totalCount,count,0,0,0)));
+                            DomainEvents.Dispatch(new CrsNotification(new ExtractProgress(nameof(ClientRegistryExtract), "extracting...",totalCount,count,0,0,0)));
                         }
                         catch (Exception e)
                         {
@@ -89,9 +89,9 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Crs
             try
             {
 
-                DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(ClientRegistryExtract), "extracted", totalCount, 0, 0, 0, 0)));
-                DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
-                DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Loaded,totalCount));
+                DomainEvents.Dispatch(new CrsNotification(new ExtractProgress(nameof(ClientRegistryExtract), "extracted", totalCount, 0, 0, 0, 0)));
+                DomainEvents.Dispatch(new CrsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
+                DomainEvents.Dispatch(new CrsStatusNotification(extract.Id, ExtractStatus.Loaded,totalCount));
             }
             catch (Exception e)
             {

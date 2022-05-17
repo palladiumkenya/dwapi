@@ -40,7 +40,7 @@ namespace Dwapi.UploadManagement.Core.Services.Crs
             }
             catch (Exception e)
             {
-                Log.Error(e, $"Search MPI Error");
+                Log.Error(e, $"Search CRS Error");
                 throw;
             }
 

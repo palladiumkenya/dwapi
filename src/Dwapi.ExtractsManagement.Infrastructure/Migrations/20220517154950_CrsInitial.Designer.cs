@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20220511103424_CrsInitialViews")]
-    partial class CrsInitialViews
+    [Migration("20220517154950_CrsInitial")]
+    partial class CrsInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -154,6 +154,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DateOfBirth");
 
+                    b.Property<DateTime?>("DateOfHIVdiagnosis");
+
                     b.Property<DateTime?>("DateOfInitiation");
 
                     b.Property<DateTime?>("DateOfLastEncounter");
@@ -185,6 +187,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("LastRegimen");
 
                     b.Property<string>("LastRegimenLine");
+
+                    b.Property<string>("LastViralLoadResult");
 
                     b.Property<string>("Location");
 
@@ -4151,6 +4155,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DateOfBirth");
 
+                    b.Property<DateTime?>("DateOfHIVdiagnosis");
+
                     b.Property<DateTime?>("DateOfInitiation");
 
                     b.Property<DateTime?>("DateOfLastEncounter");
@@ -4180,6 +4186,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("LastRegimen");
 
                     b.Property<string>("LastRegimenLine");
+
+                    b.Property<string>("LastViralLoadResult");
 
                     b.Property<string>("Location");
 

@@ -55,7 +55,7 @@ namespace Dwapi.UploadManagement.Core.Services.Crs
         public async Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo, ManifestMessageBag manifestMessage,string version)
         {
             var responses=new List<SendManifestResponse>();
-            await _mediator.Publish(new HandshakeStart("MPISendStart", version, manifestMessage.Session));
+            await _mediator.Publish(new HandshakeStart("CRSSendStart", version, manifestMessage.Session));
             var client = Client ?? new HttpClient();
 
             foreach (var message in manifestMessage.Messages)
@@ -135,7 +135,7 @@ namespace Dwapi.UploadManagement.Core.Services.Crs
 
         public async Task NotifyPostSending(SendManifestPackageDTO sendTo,string version)
         {
-            var notificationend = new HandshakeEnd("MPISendEnd", version);
+            var notificationend = new HandshakeEnd("CRSSendEnd", version);
             await _mediator.Publish(notificationend);
             var client = Client ?? new HttpClient();
             try

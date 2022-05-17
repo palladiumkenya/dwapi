@@ -62,6 +62,19 @@
                 [loading]="loading" loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true"
                 [paginator]="true" [rows]="25" [totalRecords]="recordCount" scrollWidth="800" exportFilename="DwapiCrsAll" #persons>
                 <p-column field="cccNumber" header="CCC Number"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="dateOfInitiation" header="Date Of Initiation" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="treatmentOutcome" header="TreatmentOutcome" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="dateOfLastEncounter" header="Date Of Last Encounter" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="dateOfLastViralLoad" header="Date Of Last Viral Load" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="nextAppointmentDate" header="Next Appointment Date" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="dateOfHIVdiagnosis" header="Date HIV diagnosis Confirmed"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="lastViralLoadResult" header="LastViralLoadResult"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="lastRegimen" header="Last Regimen" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="lastRegimenLine" header="Last Regimen Line" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="patientPK" header="PatientPK"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="siteCode" header="SiteCode"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="facilityID" header="FacilityID"  sortable="true" [style]="{'width':'100px'}" ></p-column>
+
                 <p-column field="firstName" header="First Name" sortable="true" [style]="{'width':'100px'}" [filter]="true" filterMatchMode="contains" filterMatchMode="contains"></p-column>
                 <p-column field="middleName" header="Middle Name" sortable="true" [style]="{'width':'100px'}" [filter]="true" filterMatchMode="contains"></p-column>
                 <p-column field="lastName" header="Last Name" sortable="true" [style]="{'width':'100px'}" [filter]="true" filterMatchMode="contains"></p-column>
@@ -99,16 +112,7 @@
                 <p-column field="nameOfNextOfKin" header="Name Of Next Of Kin"  [style]="{'width':'100px'}"></p-column>
                 <p-column field="NextOfKinRelationship" header="Next Of Kin Relationship" sortable="true"  [style]="{'width':'100px'}"></p-column>
                 <p-column field="nextOfKinTelNo" header="NextOfKinTelNo" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="dateOfInitiation" header="Date Of Initiation" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="treatmentOutcome" header="TreatmentOutcome" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="dateOfLastEncounter" header="Date Of Last Encounter" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="dateOfLastViralLoad" header="Date Of Last Viral Load" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="nextAppointmentDate" header="Next Appointment Date" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="lastRegimen" header="Last Regimen" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="lastRegimenLine" header="Last Regimen Line" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="patientPK" header="PatientPK"  [style]="{'width':'100px'}" ></p-column>
-                <p-column field="siteCode" header="SiteCode"  [style]="{'width':'100px'}" ></p-column>
-                <p-column field="facilityID" header="FacilityID"  sortable="true" [style]="{'width':'100px'}" ></p-column>
+
                 <p-column field="emr" header="Emr"  [style]="{'width':'100px'}" ></p-column>
                 <p-column field="project" header="Project"  [style]="{'width':'100px'}" ></p-column>
 

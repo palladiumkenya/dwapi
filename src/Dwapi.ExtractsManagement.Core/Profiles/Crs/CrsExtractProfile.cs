@@ -57,7 +57,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Crs
                 .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.Project))))
                 .ForMember(x => x.LastRegimen, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.LastRegimen))))
                 .ForMember(x => x.LastRegimenLine, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.LastRegimenLine))))
-                .ForMember(x => x.CurrentOnART, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.CurrentOnART))));
+                .ForMember(x => x.CurrentOnART, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.CurrentOnART))))
+                .ForMember(x => x.DateOfHIVdiagnosis, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempClientRegistryExtract.DateOfHIVdiagnosis))))
+                .ForMember(x => x.LastViralLoadResult, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempClientRegistryExtract.LastViralLoadResult))));
+
 
   
             CreateMap<TempClientRegistryExtract, ClientRegistryExtract>();
