@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20220517155303_CrsInitialViews")]
-    partial class CrsInitialViews
+    [Migration("20220518084425_CrsHIVConfirmedVLResult")]
+    partial class CrsHIVConfirmedVLResult
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

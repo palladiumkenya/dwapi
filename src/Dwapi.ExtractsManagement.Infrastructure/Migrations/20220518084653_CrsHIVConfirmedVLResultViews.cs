@@ -2,7 +2,7 @@
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
-    public partial class CrsInitialViews : Migration
+    public partial class CrsHIVConfirmedVLResultViews : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -66,6 +66,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 ");
 
         }
+
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {

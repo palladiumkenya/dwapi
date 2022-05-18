@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
-    public partial class CrsInitial : Migration
+    public partial class CrsHIVConfirmedVLResult : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
