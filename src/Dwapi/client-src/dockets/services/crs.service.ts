@@ -9,6 +9,7 @@ import {ClientRegistryExtract} from '../models/client-registry-extract';
 import {SendResponse} from '../../settings/model/send-response';
 import {SendPackage} from '../../settings/model/send-package';
 import {CentralRegistry} from '../../settings/model/central-registry';
+import {TotalClients} from "../models/totalClients";
 
 @Injectable()
 export class CrsService {
@@ -44,6 +45,12 @@ export class CrsService {
         return this._http.get<number>(this._url + '/allcount')
             .catch(this.handleError);
     }
+
+    public getCrsExtractSummery(): Observable<TotalClients> {
+        return this._http.get<TotalClients>(this._url + '/crssummary')
+            .catch(this.handleError);
+    }
+
     public getAllDetails(): Observable<ClientRegistryExtract[]> {
         return this._http.get<ClientRegistryExtract[]>(this._url + '/all')
             .catch(this.handleError);

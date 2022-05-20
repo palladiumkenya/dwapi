@@ -18,6 +18,7 @@ import {SendResponse} from '../../settings/model/send-response';
 import {SendEvent} from '../../settings/model/send-event';
 import {environment} from '../../environments/environment';
 import {EmrMetrics} from '../../settings/model/emr-metrics';
+import {TotalClients} from "../models/totalClients";
 
 @Component({
     selector: 'liveapp-crs-docket',
@@ -39,6 +40,7 @@ export class CrsDocketComponent implements OnInit, OnDestroy {
     public getCount$: Subscription;
     public getall$: Subscription;
     public getallCount$: Subscription;
+    public getCrsExtractSummery$: Subscription;
     public loadRegistry$: Subscription;
     public sendManifest$: Subscription;
     public send$: Subscription;
@@ -71,6 +73,7 @@ export class CrsDocketComponent implements OnInit, OnDestroy {
     public sendingManifest: boolean = false;
     public recordCount = 0;
     public allrecordCount = 0;
+    public totalClients: TotalClients;
     private sdk: string[] = [];
     public colorMappings: any[] = [];
     rowStyleMap: { [key: string]: string };
@@ -280,6 +283,7 @@ export class CrsDocketComponent implements OnInit, OnDestroy {
 
                 }
             );
+
         this.getStatus$ = this.CrsService.getStatus(this.extract.id)
             .subscribe(
                 p => {
@@ -409,6 +413,20 @@ export class CrsDocketComponent implements OnInit, OnDestroy {
                     this.colorMappings = this.sdk.map((sd, idx) => ({sxdmPKValueDoB: sd, color: this.isEven(idx) ? 'white' : 'pink'}));
                 }
             );
+
+        this.getCrsExtractSummery$ = this.CrsService.getCrsExtractSummery()
+            .subscribe(
+                p => {
+                    this.totalClients = p;
+                },
+                e => {
+                    this.messages = [];
+                    this.messages.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
+                },
+                () => {
+
+                }
+            );
     }
 
     lookupRowStyleClass(rowData: ClientRegistryExtract) {
@@ -435,6 +453,9 @@ export class CrsDocketComponent implements OnInit, OnDestroy {
         }
         if (this.getallCount$) {
             this.getallCount$.unsubscribe();
+        }
+        if (this.getCrsExtractSummery$) {
+            this.getCrsExtractSummery$.unsubscribe();
         }
         if (this.getall$) {
             this.getall$.unsubscribe();

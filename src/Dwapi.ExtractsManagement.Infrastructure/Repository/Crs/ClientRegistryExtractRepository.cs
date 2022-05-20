@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dwapi.ExtractsManagement.Core.DTOs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Crs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Crs;
 using Dwapi.SharedKernel.Infrastructure.Repository;
@@ -56,6 +57,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Crs
             var cn = GetConnection();
             cn.BulkUpdate(mpi);
             CloseConnection(cn);
+        }
+
+        public ExtractSummaryDto GetSummery()
+        {
+            var all = GetAll().ToList();
+
+            var result = new ExtractSummaryDto();
+            result.TotalExtractClients = all.Count;
+            result.TotalCurrentOnCare = all.Count(x => x.CurrentOnART.ToLower() == "yes" || x.CurrentOnART.ToLower() == "y" );
+
+            return result;
+
         }
     }
 }

@@ -100,6 +100,23 @@ namespace Dwapi.Controller
             }
         }
 
+        [HttpGet("crssummary")]
+        public IActionResult GetCrsSummery()
+        {
+            try
+            {
+                var count = _clientRegistryExtractRepository.GetSummery();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(Extract)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
         [HttpGet("all")]
         public IActionResult GetAllExtracts()
         {

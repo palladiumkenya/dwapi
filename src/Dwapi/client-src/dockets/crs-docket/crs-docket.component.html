@@ -110,7 +110,7 @@
                 <p-column field="facilityName" header="FacilityName"  [style]="{'width':'100px'}" ></p-column>
                 <p-column field="mflCode" header="MFLCode" sortable="true"  [style]="{'width':'100px'}"></p-column>
                 <p-column field="nameOfNextOfKin" header="Name Of Next Of Kin"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="NextOfKinRelationship" header="Next Of Kin Relationship" sortable="true"  [style]="{'width':'100px'}"></p-column>
+                <p-column field="nextOfKinRelationship" header="Next Of Kin Relationship" sortable="true"  [style]="{'width':'100px'}"></p-column>
                 <p-column field="nextOfKinTelNo" header="NextOfKinTelNo" sortable="true"  [style]="{'width':'100px'}"></p-column>
 
                 <p-column field="emr" header="Emr"  [style]="{'width':'100px'}" ></p-column>
@@ -119,6 +119,12 @@
 
 
             </p-dataTable>
+        </p-tabPanel>
+        <p-tabPanel header="Extract Summary">
+          <div>
+              <p>Total Clients - {{totalClients?.totalExtractClients}}</p>
+              <p>Total CurrentOnART -  {{totalClients?.totalCurrentOnCare}} </p>
+          </div>
         </p-tabPanel>
 
     </p-tabView>
