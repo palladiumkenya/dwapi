@@ -6946,12 +6946,10 @@ from kenyaemr_etl.etl_patient_demographics d
 														(case dm.Gender when 'F' then 'Female' when 'M' then 'Male' else '' end) AS Sex,
 														(case dm.marital_status when 'Never married' then 'Single'
 																																						when 'Married' then 'Married-monogamous'
-																																						when 'Divorced' then 'divorced'
-																																						when 'Widowed' then 'widowed'
+																																						
 																																						when 'Polygamous' then 'Married-polygamous'
-																																						when 'Separated' then 'separated,'
-																																						when 'Unknown' then 'unknown'
-																																						when 'Living with partner' then 'cohabiting' else '' end) AS MaritalStatus,
+																																						
+																																							when 'Living with partner' then 'Cohabiting' else dm.marital_status end) AS MaritalStatus,
 														dm.occupation                                                     AS Occupation,
 														dm.education_level                                                AS HighestLevelOfEducation,
 														dm.phone_number                                                   AS PhoneNumber,
@@ -6969,7 +6967,7 @@ from kenyaemr_etl.etl_patient_demographics d
 														(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
 														(select siteCode from kenyaemr_etl.etl_default_facility_info)     as MFLCode,
 														(select siteCode from kenyaemr_etl.etl_default_facility_info)     as SiteCode,
-														0                                                                 as FacilityId,
+														0                                                                 as FacilityID,
 														'KHMIS'                                                           as Project,
 														'KenyaEMR'                                                        as Emr,
 														hiv.date_confirmed_hiv_positive                                   as DateOfHIVdiagnosis,

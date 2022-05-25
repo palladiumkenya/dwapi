@@ -60,7 +60,7 @@
             </p-toolbar>
             <p-dataTable [value]="allExtractDetails" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true"
                 [loading]="loading" loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true"
-                [paginator]="true" [rows]="25" [totalRecords]="recordCount" scrollWidth="800" exportFilename="DwapiCrsAll" #persons>
+                [paginator]="true" [rows]="10" [totalRecords]="recordCount" scrollWidth="800"  exportFilename="DwapiCrsAll" #persons>
                 <p-column field="cccNumber" header="CCC Number"  [style]="{'width':'100px'}" ></p-column>
                 <p-column field="dateOfInitiation" header="Date Of Initiation" sortable="true"  [style]="{'width':'100px'}"></p-column>
                 <p-column field="treatmentOutcome" header="TreatmentOutcome" sortable="true"  [style]="{'width':'100px'}"></p-column>
