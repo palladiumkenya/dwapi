@@ -6967,7 +6967,7 @@ from kenyaemr_etl.etl_patient_demographics d
 														(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
 														(select siteCode from kenyaemr_etl.etl_default_facility_info)     as MFLCode,
 														(select siteCode from kenyaemr_etl.etl_default_facility_info)     as SiteCode,
-														0                                                                 as FacilityID,
+														0                                                                 as FacilityId,
 														'KHMIS'                                                           as Project,
 														'KenyaEMR'                                                        as Emr,
 														hiv.date_confirmed_hiv_positive                                   as DateOfHIVdiagnosis,
