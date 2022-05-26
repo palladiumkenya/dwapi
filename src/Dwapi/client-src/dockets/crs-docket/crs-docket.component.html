@@ -62,13 +62,43 @@
                 [loading]="loading" loadingIcon="fa-spinner fa-pulse" [reorderableColumns]="true" columnResizeMode="expand" [resizableColumns]="true"
                 [paginator]="true" [rows]="10" [totalRecords]="recordCount" scrollWidth="800"  exportFilename="DwapiCrsAll" #persons>
                 <p-column field="cccNumber" header="CCC Number"  [style]="{'width':'100px'}" ></p-column>
-                <p-column field="dateOfInitiation" header="Date Of Initiation" sortable="true"  [style]="{'width':'100px'}"></p-column>
+
+                <p-column field="dateOfInitiation" header="Date Of Initiation" sortable="true" [style]="{'width':'100px'}">
+                    <ng-template let-col let-detail="rowData" pTemplate="body">
+                        {{detail.dateOfInitiation | date: 'dd MMM yyyy'}}
+                    </ng-template>
+                </p-column>
                 <p-column field="treatmentOutcome" header="TreatmentOutcome" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="dateOfLastEncounter" header="Date Of Last Encounter" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="dateOfLastViralLoad" header="Date Of Last Viral Load" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="nextAppointmentDate" header="Next Appointment Date" sortable="true"  [style]="{'width':'100px'}"></p-column>
-                <p-column field="dateOfHIVdiagnosis" header="Date HIV diagnosis Confirmed"  [style]="{'width':'100px'}" ></p-column>
-                <p-column field="lastViralLoadResult" header="LastViralLoadResult"  [style]="{'width':'100px'}" ></p-column>
+                <p-column field="dateOfLastEncounter" header="Date Of Last Encounter" sortable="true" [style]="{'width':'100px'}">
+                    <ng-template let-col let-detail="rowData" pTemplate="body">
+                        {{detail.dateOfLastEncounter | date: 'dd MMM yyyy'}}
+                    </ng-template>
+                </p-column>
+
+                <p-column field="dateOfLastViralLoad" header="Date Of Last Viral Load" sortable="true" [style]="{'width':'100px'}">
+                    <ng-template let-col let-detail="rowData" pTemplate="body">
+                        {{detail.dateOfLastViralLoad | date: 'dd MMM yyyy'}}
+                    </ng-template>
+                </p-column>
+
+                <p-column field="nextAppointmentDate" header="Next Appointment Date" sortable="true" [style]="{'width':'100px'}">
+                    <ng-template let-col let-detail="rowData" pTemplate="body">
+                        {{detail.nextAppointmentDate | date: 'dd MMM yyyy'}}
+                    </ng-template>
+                </p-column>
+
+                <p-column field="dateOfHIVdiagnosis" header="Date HIV diagnosis Confirmed" sortable="true" [style]="{'width':'100px'}">
+                    <ng-template let-col let-detail="rowData" pTemplate="body">
+                        {{detail.dateOfHIVdiagnosis | date: 'dd MMM yyyy'}}
+                    </ng-template>
+                </p-column>
+
+                <p-column field="lastViralLoadResult" header="Last Viral Load Result" sortable="true" [style]="{'width':'100px'}">
+                    <ng-template let-col let-detail="rowData" pTemplate="body">
+                        {{detail.lastViralLoadResult | date: 'dd MMM yyyy'}}
+                    </ng-template>
+                </p-column>
+
                 <p-column field="lastRegimen" header="Last Regimen" sortable="true"  [style]="{'width':'100px'}"></p-column>
                 <p-column field="lastRegimenLine" header="Last Regimen Line" sortable="true"  [style]="{'width':'100px'}"></p-column>
                 <p-column field="patientPK" header="PatientPK"  [style]="{'width':'100px'}" ></p-column>
