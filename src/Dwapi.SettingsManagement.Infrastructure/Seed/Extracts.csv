@@ -815,7 +815,7 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
                      when 1065 then 'Yes'
                      when 1066 then 'No'
                      when 1175 then 'N/A' end)                                           as EverHadMenses,
-                null                                                                   as Breastfeeding,
+                if(d.gender = 'F',(case fup.breastfeeding when 1065 then 'Yes' when 1066 then 'No' end),'N/A')  as Breastfeeding,
                 (case menopausal when 113928 then 'Yes' end)                           as Menopausal,
                 (case prophylaxis_given
                      when 105281 then 'Cotrimoxazole'
