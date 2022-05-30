@@ -47,7 +47,7 @@ namespace Dwapi.SharedKernel.DTOs
             string occupation, string highestLevelOfEducation, string alternativePhoneNumber, string spousePhoneNumber, string nameOfNextOfKin, 
             string nextOfKinTelNo, string subCounty, string ward, string location, string village, string landmark, string facilityName, 
             string mflCode, DateTime dateOfInitiation, string treatmentOutcome, DateTime dateOfLastEncounter, DateTime dateOfLastViralLoad, 
-            DateTime nextAppointmentDate, int patientPK, string siteCode, int facilityID, string emr, string project, string lastRegimen, 
+            DateTime nextAppointmentDate, int patientPK, string siteCode, int facilityId, string emr, string project, string lastRegimen, 
             string lastRegimenLine, string lastViralLoadResult, DateTime dateOfHIVdiagnosis)
         {
             FirstName = firstName;
@@ -88,7 +88,7 @@ namespace Dwapi.SharedKernel.DTOs
             NextAppointmentDate = nextAppointmentDate;
             PatientPK = patientPK;
             SiteCode = siteCode;
-            FacilityID = facilityID;
+            FacilityId = facilityId;
             Emr = emr;
             Project = project;
             LastRegimen = lastRegimen;
@@ -144,7 +144,7 @@ namespace Dwapi.SharedKernel.DTOs
         public DateTime? NextAppointmentDate { get; set; }
         public int? PatientPK { get; set; }
         public string SiteCode { get; set; }
-        public int? FacilityID { get; set; }
+        public int? FacilityId { get; set; }
         public string Emr { get; set;}
         public string Project { get; set;}
         public string LastRegimen { get; set; }
