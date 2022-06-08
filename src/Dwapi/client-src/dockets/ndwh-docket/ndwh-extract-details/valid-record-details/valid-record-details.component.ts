@@ -916,7 +916,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'ipvScreeningOutcome', header: 'ipvScreeningOutcome'},
             {field: 'currentlyLivingWithIndexClient', header: 'currentlyLivingWithIndexClient'},
             {field: 'knowledgeOfHivStatus', header: 'knowledgeOfHivStatus'},
-            {field: 'pnsApproach', header: 'pnsApproach'}
+            {field: 'pnsApproach', header: 'pnsApproach'},
+            {field: 'contactPatientPK', header: 'ContactPatientPK'},
         ];
     }
 
