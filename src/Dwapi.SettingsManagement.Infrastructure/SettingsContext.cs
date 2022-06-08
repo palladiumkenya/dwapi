@@ -26,6 +26,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
         public DbSet<IntegrityCheckRun> IntegrityCheckRuns { get; set; }
         public DbSet<IndicatorKey> IndicatorKeys { get; set; }
 
+        public DbSet<TransportLog> TransportLogs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -40,6 +41,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
             DapperPlusManager.Entity<IntegrityCheck>().Key(x => x.Id).Table($"{nameof(IntegrityChecks)}");
             DapperPlusManager.Entity<IntegrityCheckRun>().Key(x => x.Id).Table($"{nameof(IntegrityCheckRuns)}");
             DapperPlusManager.Entity<IndicatorKey>().Key(x => x.Id).Table($"{nameof(IndicatorKeys)}");
+            DapperPlusManager.Entity<TransportLog>().Key(x => x.Id).Table($"{nameof(TransportLogs)}");
         }
 
         public override void EnsureSeeded()

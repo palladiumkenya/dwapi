@@ -33,11 +33,14 @@ namespace Dwapi.SharedKernel.DTOs
             return null != Destination && !string.IsNullOrWhiteSpace(Destination.Url);
         }
 
-        public string GetUrl(string endPoint = "")
+        public string GetUrl(string endPoint = "",string version="")
         {
             Endpoint = string.IsNullOrWhiteSpace(endPoint) ? string.Empty : endPoint.HasToStartWith("/");
             var url = $"{Destination.Url}{Endpoint}";
-            return url;
+            if(string.IsNullOrWhiteSpace(version))
+                return url;
+
+            return url.Replace("/api/", $"/api/v{version}/");
         }
 
         public EmrDto GetEmrDto()

@@ -5,6 +5,7 @@ using Dwapi.SharedKernel.Events;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace Dwapi.NotificationHandlers
 {
@@ -12,7 +13,7 @@ namespace Dwapi.NotificationHandlers
     {
         private IExtractHistoryRepository _extractHistoryRepository;
 
-        public async void Handle(ExtractActivityNotification domainEvent)
+        public async Task Handle(ExtractActivityNotification domainEvent)
         {
             _extractHistoryRepository = Startup.ServiceProvider.GetService<IExtractHistoryRepository>();
 

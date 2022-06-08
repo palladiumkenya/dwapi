@@ -6,7 +6,10 @@ namespace Dwapi.SharedKernel.Utility
     {
         public static int GetProgress(int count, int total)
         {
-            return (int) Math.Round((double) (100 * count) / total);
+            var res=(int) Math.Round((double) (100 * count) / total);
+            if (res < 0)
+                return 100;
+            return  res;
         }
     }
 }

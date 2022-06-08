@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.SharedKernel.Events;
 using Dwapi.UploadManagement.Core.Event.Mnch;
@@ -15,12 +16,13 @@ namespace Dwapi.EventHandlers.Mnch
             _service = Startup.ServiceProvider.GetService<IMnchExtractSentServcie>();
         }
 
-        public void Handle(MnchExtractSentEvent domainEvent)
+        public Task Handle(MnchExtractSentEvent domainEvent)
         {
             if (domainEvent.SentItems.Any())
             {
                 _service.UpdateSendStatus(domainEvent.SentItems.First().ExtractType, domainEvent.SentItems);
             }
+            return Task.CompletedTask;
         }
     }
 }

@@ -36,6 +36,12 @@ export class EmrDocketComponent implements OnInit, OnChanges {
     public mnchExtracts: Extract[];
     public selectedMnchExtract: Extract;
 
+    public prepExtracts: Extract[];
+    public selectedPrepExtract: Extract;
+
+    public crsExtracts: Extract[];
+    public selectedCrsExtract: Extract;
+
     public extractDialog: Extract;
     public displayDialog: boolean = false;
     public messages: Message[] = [];
@@ -62,6 +68,8 @@ export class EmrDocketComponent implements OnInit, OnChanges {
                 this.htsExtracts = this.selectedEmr.extracts.filter(x => x.docketId === 'HTS');
                 this.mgsExtracts = this.selectedEmr.extracts.filter(x => x.docketId === 'MGS');
                 this.mnchExtracts = this.selectedEmr.extracts.filter(x => x.docketId === 'MNCH');
+                this.prepExtracts = this.selectedEmr.extracts.filter(x => x.docketId === 'PREP');
+                this.crsExtracts = this.selectedEmr.extracts.filter(x => x.docketId === 'CRS');
             }
 
             if (this.selectedEmr.databaseProtocols) {

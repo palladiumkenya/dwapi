@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Dapper;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Diff;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
@@ -104,6 +105,36 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 .Where(predicate)
                 .Skip((page - 1) * pageSize).Take(pageSize)
                 .OrderBy(x => x.Id)
+                .AsNoTracking().ToList();
+        }
+
+        public IEnumerable<T> ReadSmart<T, TId>(int page, int pageSize) where T : Entity<TId>
+        {
+            var skip = (page - 1) * pageSize;
+
+            return _context.Set<T>()
+                .OrderBy(x => x.Id)
+                .Skip(skip).Take(pageSize)
+                .AsNoTracking().ToList();
+        }
+
+        public IEnumerable<T> ReadSmart<T>(int page, int pageSize) where T : ClientExtract
+        {
+            var skip = (page - 1) * pageSize;
+
+            return _context.Set<T>()
+                .OrderBy(x => x.SiteCode)
+                .ThenBy(p=>p.PatientPK)
+                .Skip(skip).Take(pageSize)
+                .AsNoTracking().ToList();
+        }
+
+        public IEnumerable<T> ReadSmart<T, TId>(int page, int pageSize, Expression<Func<T, bool>> predicate) where T : Entity<TId>
+        {
+            return _context.Set<T>()
+                .Where(predicate)
+                .OrderBy(x => x.Id)
+                .Skip((page - 1) * pageSize).Take(pageSize)
                 .AsNoTracking().ToList();
         }
 

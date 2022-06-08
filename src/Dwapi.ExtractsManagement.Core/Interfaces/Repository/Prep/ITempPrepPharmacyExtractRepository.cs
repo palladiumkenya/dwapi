@@ -1,0 +1,9 @@
+using System;
+using System.Collections.Generic;
+using Dwapi.ExtractsManagement.Core.Model.Source.Prep;
+using Dwapi.SharedKernel.Interfaces;
+
+namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Prep
+{
+    public interface ITempPrepPharmacyExtractRepository: IRepository<TempPrepPharmacyExtract, Guid>{bool BatchInsert(IEnumerable<TempPrepPharmacyExtract> extracts);}
+}

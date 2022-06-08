@@ -139,6 +139,14 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         }
 
         [Test]
+        public void should_Generate_Smart_Art_Extracts()
+        {
+          var extracts = _packager
+              .GenerateSmartBatchExtracts<PatientArtExtractView,Guid>(1,1);
+          Assert.True(extracts.Any());
+        }
+
+        [Test]
         public void should_Get_Art_PackageInfo()
         {
             var extracts = _packager.GetPackageInfo<PatientArtExtractView,Guid>(1);

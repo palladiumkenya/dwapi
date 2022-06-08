@@ -6,7 +6,7 @@
         "ng": "ng",
         "start": "ng serve",
         "vs": "ng serve --proxy-config proxy.config.json",
-        "net": "dotnet watch run",
+        "net": "sudo dotnet watch run",
         "build": "ng build --prod",
         "docker": "ng build --prod --env=qaDocker",
         "test": "ng test",

@@ -12,7 +12,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
     {
         public EmrSystemRepository(SettingsContext context) : base(context)
         {
-           
+
         }
 
         public override IEnumerable<EmrSystem> GetAll()

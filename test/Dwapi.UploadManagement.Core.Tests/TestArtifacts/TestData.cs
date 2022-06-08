@@ -299,5 +299,25 @@ namespace Dwapi.UploadManagement.Core.Tests.TestArtifacts
 
             return Json.Replace("^", "\"");
         }
+
+        public static string ManifestRes()
+        {
+          var json = @"
+{
+    ^Code^: 22222,
+    ^Name^: ^MAISHA CLINIC^,
+    ^County^: ^HOMA BAY^,
+    ^FacilityId^: ^45056195-a810-47d8-9a74-ae5700ff217a^,
+    ^SnapshotDate^: null,
+    ^SnapshotSiteCode^: null,
+    ^SnapshotVersion^: null,
+    ^SessionId^: ^00000000-0000-0000-0000-000000000003^,
+    ^ManifestId^: ^00000000-0000-0000-0000-000000000003^,
+    ^JobId^: ^92c6a6dc-4838-4b40-941b-a9606eaf0f91^
+}
+    ";
+
+          return json.Replace("^", "\"");
+        }
     }
 }
