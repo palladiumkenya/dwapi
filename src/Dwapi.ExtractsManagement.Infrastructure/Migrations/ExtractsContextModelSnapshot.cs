@@ -131,6 +131,122 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("MasterPatientIndices");
                 });
 
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Crs.ClientRegistryExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AlienIdNo");
+
+                    b.Property<string>("AlternativePhoneNumber");
+
+                    b.Property<string>("BirthCertificateNumber");
+
+                    b.Property<string>("CCCNumber");
+
+                    b.Property<string>("County");
+
+                    b.Property<string>("CurrentOnART");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("DateOfBirth");
+
+                    b.Property<DateTime?>("DateOfHIVdiagnosis");
+
+                    b.Property<DateTime?>("DateOfInitiation");
+
+                    b.Property<DateTime?>("DateOfLastEncounter");
+
+                    b.Property<DateTime?>("DateOfLastViralLoad");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("DrivingLicenseNumber");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("HighestLevelOfEducation");
+
+                    b.Property<string>("HudumaNumber");
+
+                    b.Property<string>("Landmark");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<string>("LastRegimen");
+
+                    b.Property<string>("LastRegimenLine");
+
+                    b.Property<string>("LastViralLoadResult");
+
+                    b.Property<string>("Location");
+
+                    b.Property<string>("MFLCode");
+
+                    b.Property<string>("MaritalStatus");
+
+                    b.Property<string>("MiddleName");
+
+                    b.Property<string>("NameOfNextOfKin");
+
+                    b.Property<string>("NationalId");
+
+                    b.Property<DateTime?>("NextAppointmentDate");
+
+                    b.Property<string>("NextOfKinRelationship");
+
+                    b.Property<string>("NextOfKinTelNo");
+
+                    b.Property<string>("Occupation");
+
+                    b.Property<string>("Passport");
+
+                    b.Property<string>("PatientClinicNumber");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<string>("Sex");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("SpousePhoneNumber");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("SubCounty");
+
+                    b.Property<string>("TreatmentOutcome");
+
+                    b.Property<string>("Village");
+
+                    b.Property<string>("Ward");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClientRegistryExtracts");
+                });
+
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.AllergiesChronicIllnessExtract", b =>
                 {
                     b.Property<Guid>("Id")
@@ -4012,6 +4128,114 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TempMasterPatientIndices");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Crs.TempClientRegistryExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AlienIdNo");
+
+                    b.Property<string>("AlternativePhoneNumber");
+
+                    b.Property<string>("BirthCertificateNumber");
+
+                    b.Property<string>("CCCNumber");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("County");
+
+                    b.Property<string>("CurrentOnART");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("DateOfBirth");
+
+                    b.Property<DateTime?>("DateOfHIVdiagnosis");
+
+                    b.Property<DateTime?>("DateOfInitiation");
+
+                    b.Property<DateTime?>("DateOfLastEncounter");
+
+                    b.Property<DateTime?>("DateOfLastViralLoad");
+
+                    b.Property<string>("DrivingLicenseNumber");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("HighestLevelOfEducation");
+
+                    b.Property<string>("HudumaNumber");
+
+                    b.Property<string>("Landmark");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<string>("LastRegimen");
+
+                    b.Property<string>("LastRegimenLine");
+
+                    b.Property<string>("LastViralLoadResult");
+
+                    b.Property<string>("Location");
+
+                    b.Property<string>("MFLCode");
+
+                    b.Property<string>("MaritalStatus");
+
+                    b.Property<string>("MiddleName");
+
+                    b.Property<string>("NameOfNextOfKin");
+
+                    b.Property<string>("NationalId");
+
+                    b.Property<DateTime?>("NextAppointmentDate");
+
+                    b.Property<string>("NextOfKinRelationship");
+
+                    b.Property<string>("NextOfKinTelNo");
+
+                    b.Property<string>("Occupation");
+
+                    b.Property<string>("Passport");
+
+                    b.Property<string>("PatientClinicNumber");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("Sex");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("SpousePhoneNumber");
+
+                    b.Property<string>("SubCounty");
+
+                    b.Property<string>("TreatmentOutcome");
+
+                    b.Property<string>("Village");
+
+                    b.Property<string>("Ward");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempClientRegistryExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempAllergiesChronicIllnessExtract", b =>

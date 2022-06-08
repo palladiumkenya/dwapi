@@ -125,8 +125,8 @@ FROM
 											0 AS FacilityId,d.unique_patient_no as PatientID,
 											d.patient_id as PatientPK,
 											pkv.PKV as Pkv,
-											(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-											(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
+											i.siteCode as SiteCode,
+                                            i.facilityName as FacilityName,
 											case d.gender when 'M' then 'Male' when 'F' then 'Female' end  as Gender,
 											d.dob as DOB,
 											CAST(min(hiv.visit_date) as Date) as RegistrationDate,
@@ -245,7 +245,7 @@ FROM
 													from kenyaemr_etl.etl_patient_program
 													group by Patient_Id,program
 													) as prg on prg.patient_id = d.patient_id
-											left join kenyaemr_etl.etl_kp_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP'
+				left join kenyaemr_etl.etl_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP' join kenyaemr_etl.etl_default_facility_info i
 				where unique_patient_no is not null
 				group by d.patient_id
 				order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
@@ -664,71 +664,101 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 												join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
 												join concept c on c.concept_id = l.lab_test
 												left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
-																																																		and cn2.locale='en' where d.unique_patient_no is not null;"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct
-																						'Government' AS Provider,
-																						'' AS SatelliteName,
-																						(select siteCode from kenyaemr_etl.etl_default_facility_info) as  FacilityId,
-																						d.unique_patient_no as PatientID,
-																						d.patient_id as PatientPK,
-																						(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-																						(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
-																						ph.visit_id as VisitID,
-						-- if(cn2.name is not null, cn2.name,cn.name) as Drug,
-																						case
-																								when is_arv=1 then ph.drugreg
-																								else if(cn2.name is not null, cn2.name,cn.name) END as Drug,
-																						ph.visit_date as DispenseDate,
-																						ph.duration_in_days AS Duration,
-																						ph.duration_in_days AS PeriodTaken,
-																						fup.next_appointment_date as ExpectedReturn,
-																						'KenyaEMR' as Emr,
-																						'Kenya HMIS II' as Project,
-																						CASE WHEN is_arv=1 THEN 'ARV'
-																											WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,
-																						ph.RegimenLine,
-																						CASE WHEN is_ctx=1 THEN 'CTX'
-																											WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,
-																						ph.date_created as Date_Created,
-																						ph.RegimenChangedSwitched as RegimenChangedSwitched,
-																						ph.RegimenChangeSwitchReason as RegimenChangeSwitchReason,
-																						ph.StopRegimenReason as StopRegimenReason,
-																						ph.StopRegimenDate as StopRegimenDate,
-																						GREATEST(COALESCE(ph.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, ph.date_last_modified)) as Date_Last_Modified
-						from (SELECT * FROM (
-																										( select patient_id, visit_id,visit_date,encounter_id,drug,is_arv, is_ctx,is_dapsone,drug_name as drugreg,frequency,
-																																			'' as DispenseDate,duration_in_days, duration_in_days PeriodTaken,
-																																			''ExpectedReturn, CASE WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,'' as RegimenLine,'' as regimen,
-																																			CASE WHEN is_ctx=1 THEN 'CTX'
-																																								WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,'' as previousRegimen,'' as RegimenChangedSwitched,'' as RegimenChangeSwitchReason, '' as StopRegimenReason,'' as StopRegimenDate,'' as prev_Regimen,/*'' as regimen,*/
-																																			ph.date_created, ph.date_last_modified from kenyaemr_etl.etl_pharmacy_extract ph
-																																																																																	left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
-																																																																																																																							and cn2.locale='en' where is_ctx=1 OR is_dapsone= 1
-																												order by patient_id,DispenseDate)
-																										UNION
-																										(SELECT  e.patient_id as patient_id,'' as visit_id,e.visit_date,e.encounter_id,regimen drug,1 as is_arv, 0 as is_ctx, 0 as is_dapsone, regimen_name as drugreg, '' frequency, date_started as DispenseDate,''duration,''PeriodTaken,''ExpectedReturn, 'ARV' AS TreatmentType,e.regimen_line as regimen_line,
-																																			e.regimen as regimen,'' as ProphylaxisType,
-																																			@prev_regimen previousRegimen,coalesce(@s := (if(ifnull(@prev_regimen_line,'')<>regimen_line and discontinued=1,'Switch',NULL)),(if(@prev_regimen<>regimen and discontinued=1,'Substitution',NULL))) as RegimenChangedSwitched,
-																																			(case reason_discontinued when 160559 then 'Risk of pregnancy' when 160561 then 'New drug available'
-																																																													when 160567 then 'New diagnosis of Tuberculosis'  when 160569 then 'Virological failure'
-																																																													when 159598 then 'Non-compliance with treatment or therapy' when 1754 then 'Drugs out of stock'
-																																																													when 1434 then 'Pregnancy'  when 1253 then 'Completed PMTCT'  when 843 then 'Clinical treatment failure'
-																																																													when 160566 then 'Immunological failure'
-																																																													when 5622 then 'Other'else '' end) as RegimenChangeSwitchReason,
-																																			if(regimen_stopped = 1260, (case reason_discontinued when 102 then 'Drug toxicity' end),null) as StopRegimenReason,if(regimen_stopped= 1260,date_discontinued,NULL) as StopRegimenDate,
-																																			@prev_regimen := e.regimen prev_regimen,'' as date_created, ''as date_last_modified
-																											FROM kenyaemr_etl.etl_drug_event e , (SELECT @s := 0,@prev_regimen := -1, @x :=0 ,@prev_regimen_line := -1) s
-																											ORDER BY e.patient_id,e.date_started)
-																										)A order by A.DispenseDate,A.patient_id)ph
-													join kenyaemr_etl.etl_patient_demographics d on d.patient_id=ph.patient_id
-													left outer join concept_name cn on cn.concept_id=ph.drug and cn.concept_name_type='FULLY_SPECIFIED'
-																																																		and cn.locale='en'
-													left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
-																																																			and cn.locale='en'
-													left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph.encounter_id
-																																																																												and fup.patient_id=ph.patient_id
-						where unique_patient_no is not null and (is_arv=1 OR is_ctx=1 OR is_dapsone =1 ) and drugreg is not null
-						order by ph.patient_id,ph.DispenseDate;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+					and cn2.locale='en' where d.unique_patient_no is not null;"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 'Government' AS Provider,
+                                                                                                 '' AS SatelliteName,
+                                                                                                 (select siteCode from kenyaemr_etl.etl_default_facility_info) as  FacilityId,
+                                                                                                 d.unique_patient_no as PatientID,
+                                                                                                 d.patient_id as PatientPK,
+                                                                                                 (select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+                                                                                                 (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
+                                                                                                 ph.visit_id as VisitID,
+                                                                                                 Drug,
+                                                                                                 ph.visit_date as DispenseDate,
+                                                                                                 ph.duration AS Duration,
+                                                                                                 ph.duration AS PeriodTaken,
+                                                                                                 fup.next_appointment_date as ExpectedReturn,
+                                                                                                 'KenyaEMR' as Emr,
+                                                                                                 'Kenya HMIS II' as Project,
+                                                                                                 CASE WHEN is_arv=1 THEN 'ARV'
+                                                                                                 WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,
+                                                                                                 ph.RegimenLine,
+                                                                                                 CASE WHEN is_ctx=1 THEN 'CTX'
+                                                                                                 WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,
+                                                                                                 CAST(now() as Date) AS DateExtracted,
+                                                                                                 ph.date_created,
+                                                                                                 ph.RegimenChangedSwitched as RegimenChangedSwitched,
+                                                                                                 ph.RegimenChangeSwitchReason as RegimenChangeSwitchReason,
+                                                                                                 ph.StopRegimenReason as StopRegimenReason,
+                                                                                                 ph.StopRegimenDate as StopRegimenDate,
+                                                                                                 GREATEST(COALESCE(ph.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, ph.date_last_modified)) as Date_Last_Modified
+                                                                                                 from (SELECT * FROM (
+                                                                                                 ( select patient_id, visit_id,visit_date,encounter_id,cast(cn2.name AS CHAR CHARACTER SET latin1) as drug,is_arv, is_ctx,is_dapsone,drug_name as drugreg,frequency,
+                                                                                                 '' as DispenseDate,duration_in_days as duration, '' as PeriodTaken,
+                                                                                                 '' ExpectedReturn, CASE WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,'' as RegimenLine,'' as regimen,
+                                                                                                 CASE WHEN is_ctx=1 THEN 'CTX'
+                                                                                                 WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,'' as previousRegimen,'' as RegimenChangedSwitched,'' as RegimenChangeSwitchReason, '' as StopRegimenReason,'' as StopRegimenDate,'' as prev_Regimen,
+                                                                                                 ph.date_created, ph.date_last_modified from kenyaemr_etl.etl_pharmacy_extract ph
+                                                                                                 left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
+                                                                                                 and cn2.locale='en' where is_arv=1 
+                                                                                                 order by patient_id,DispenseDate)
+                                                                                                 UNION ALL
+                                                                                                 (SELECT  e.patient_id as patient_id,'' as visit_id,e.visit_date,e.encounter_id,regimen drug,1 as is_arv, 0 as is_ctx, 0 as is_dapsone, regimen_name as drugreg, '' frequency, date_started as DispenseDate,''duration,''PeriodTaken,''ExpectedReturn, 'ARV' AS TreatmentType,e.regimen_line as regimen_line,
+                                                                                                 e.regimen as regimen,'' as ProphylaxisType,
+                                                                                                 @prev_regimen previousRegimen,coalesce(@s := (if(ifnull(@prev_regimen_line,'')<>regimen_line and discontinued=1,'Switch',NULL)),(if(@prev_regimen<>regimen and discontinued=1,'Substitution',NULL))) as RegimenChangedSwitched,
+                                                                                                 (case reason_discontinued when 160559 then 'Risk of pregnancy' when 160561 then 'New drug available'
+                                                                                                 when 160567 then 'New diagnosis of Tuberculosis'  when 160569 then 'Virological failure'
+                                                                                                 when 159598 then 'Non-compliance with treatment or therapy' when 1754 then 'Drugs out of stock'
+                                                                                                 when 1434 then 'Pregnancy'  when 1253 then 'Completed PMTCT'  when 843 then 'Clinical treatment failure'
+                                                                                                 when 160566 then 'Immunological failure'
+                                                                                                 when 102 then 'Drug toxicity'
+                                                                                                 when 5622 then 'Other'else '' end) as RegimenChangeSwitchReason,
+                                                                                                 if(regimen_stopped = 1260, (case reason_discontinued
+                                                                                                                            when 102 then 'Drug toxicity'
+                                                                                                                            when 160567 then 'New diagnosis of Tuberculosis'
+                                                                                                                            when 160569 then 'Virologic failure'
+                                                                                                                            when 159598 then 'Non-compliance with treatment or therapy'
+                                                                                                                            when 1754 then 'Medications unavailable'
+                                                                                                                            when 160016 then 'Planned Treatment interruption'
+                                                                                                                            when 1434 then 'Currently pregnant'
+                                                                                                                            when 1253 then 'Completed PMTCT'
+                                                                                                                            when 843 then 'Regimen failure'
+                                                                                                                            when 5622 then 'Other'
+                                                                                                                            when 160559 then 'Risk of pregnancy'
+                                                                                                                            when 160561 then 'New drug available'
+                                                                                                                            else '' end),'') as StopRegimenReason,
+                                                                                                                            if(discontinued = 1, date_discontinued, NULL) as StopRegimenDate,
+                                                                                                 @prev_regimen := e.regimen prev_regimen,'' as date_created, ''as date_last_modified
+                                                                                                 FROM kenyaemr_etl.etl_drug_event e , (SELECT @s := 0,@prev_regimen := -1, @x :=0 ,@prev_regimen_line := -1) s
+                                                                                                 where e.program = 'HIV'
+                                                                                                 ORDER BY e.patient_id,e.date_started)
+                                                                                                 UNION ALL
+                                                                                                 (select patient_id,visit_id,visit_date,encounter_id, drug_short_name as drug, 1 as is_arv, '' as is_ctx,
+                                                                                                 '' as is_dapsone, drug_name as drugreg, frequency,
+                                                                                                 visit_date as DispenseDate,
+                                                                                                 (case duration_units
+                                                                                                 when 'DAYS' then duration
+                                                                                                 when 'MONTHS' then duration * 30
+                                                                                                 when 'WEEKS' then duration * 7 end) as duration,
+                                                                                                 '' as PeriodTaken,'' as ExpectedReturn,
+                                                                                                 '' AS TreatmentType,'' as RegimenLine,
+                                                                                                 drug_name as regimen,'' AS ProphylaxisType,
+                                                                                                 '' as previousRegimen,'' as RegimenChangedSwitched,
+                                                                                                 '' as RegimenChangeSwitchReason,'' as StopRegimenReason,'' as StopRegimenDate,
+                                                                                                 '' as prev_Regimen,do.date_created,
+                                                                                                 do.date_last_modified
+                                                                                                 from kenyaemr_etl.etl_drug_order do
+                                                                                                 order by do.patient_id, DispenseDate)
+                                                                                                 ) A order by A.DispenseDate,A.patient_id)ph
+                                                                                                 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=ph.patient_id
+                                                                                                 left outer join concept_name cn on cn.concept_id=ph.drug and cn.concept_name_type='FULLY_SPECIFIED'
+                                                                                                 and cn.locale='en'
+                                                                                                 left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
+                                                                                                 and cn.locale='en'
+                                                                                                 left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph.encounter_id
+                                                                                                 and fup.patient_id=ph.patient_id
+                                                                                                 where unique_patient_no is not null and drugreg is not null
+                                                                                                 order by ph.patient_id,ph.DispenseDate;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct ''                                                                     AS SatelliteName,
                 0                                                                      AS FacilityId,
                 d.unique_patient_no                                                    as PatientID,
@@ -785,7 +815,7 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
                      when 1065 then 'Yes'
                      when 1066 then 'No'
                      when 1175 then 'N/A' end)                                           as EverHadMenses,
-                null                                                                   as Breastfeeding,
+                if(d.gender = 'F',(case fup.breastfeeding when 1065 then 'Yes' when 1066 then 'No' end),'N/A')  as Breastfeeding,
                 (case menopausal when 113928 then 'Yes' end)                           as Menopausal,
                 (case prophylaxis_given
                      when 105281 then 'Cotrimoxazole'
@@ -6900,4 +6930,109 @@ from kenyaemr_etl.etl_patient_demographics d
 													from kenyaemr_etl.etl_prep_discontinuation f
 														join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id
 						join kenyaemr_etl.etl_default_facility_info i;"|TempPrepCareTerminationExtract|0|PrepCareTerminationExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-
+2F8A4A81-FEFB-49BF-AB07-C9F529F6EA13|Client Registry Service|CRS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT dm.patient_id                                                     AS PatientPK,
+														dm.unique_patient_no                                              AS CCCNumber,
+														dm.national_id_no                                                 AS NationalId,
+														dm.passport_no                                                    AS Passport,
+														dm.huduma_no                                                      AS HudumaNumber,
+														dm.birth_certificate_no                                           AS BirthCertificateNumber,
+														dm.alien_no                                                       AS AlienIdNo,
+														dm.driving_license_no                                             AS DrivingLicenseNumber,
+														dm.patient_clinic_number                                          AS PatientClinicNumber,
+														dm.given_name                                                     AS FirstName,
+														dm.middle_name                                                    AS MiddleName,
+														dm.family_name                                                    AS LastName,
+														dm.DOB                                                            AS DateOfBirth,
+														(case dm.Gender when 'F' then 'Female' when 'M' then 'Male' else '' end) AS Sex,
+														(case dm.marital_status when 'Never married' then 'Single'
+																																						when 'Married' then 'Married-monogamous'
+																																						
+																																						when 'Polygamous' then 'Married-polygamous'
+																																						
+																																							when 'Living with partner' then 'Cohabiting' else dm.marital_status end) AS MaritalStatus,
+														dm.occupation                                                     AS Occupation,
+														dm.education_level                                                AS HighestLevelOfEducation,
+														dm.phone_number                                                   AS PhoneNumber,
+														''                                                                AS AlternativePhoneNumber,
+														''                                                                AS SpousePhoneNumber,
+														dm.next_of_kin                                                    AS NameOfNextOfKin,
+														dm.next_of_kin_relationship                                       AS NextOfKinRelationship,
+														dm.next_of_kin_phone                                              AS NextOfKinTelNo,
+														pa.county                                                         AS County,
+														pa.sub_county                                                     AS SubCounty,
+														pa.ward                                                           AS Ward,
+														pa.location                                                       AS Location,
+														pa.village                                                        AS Village,
+														pa.land_mark                                                      AS Landmark,
+														(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+														(select siteCode from kenyaemr_etl.etl_default_facility_info)     as MFLCode,
+														(select siteCode from kenyaemr_etl.etl_default_facility_info)     as SiteCode,
+														0                                                                 as FacilityId,
+														'KHMIS'                                                           as Project,
+														'KenyaEMR'                                                        as Emr,
+														hiv.date_confirmed_hiv_positive                                   as DateOfHIVdiagnosis,
+														if(hiv.date_started_art_at_transferring_facility is not null, hiv.date_started_art_at_transferring_facility,
+																	reg.date_started)                                              as DateOfInitiation,
+														reg.last_regimen                                                  as LastRegimen,
+														reg.last_regimen_line                                             as LastRegimenLine,
+														disc.ExitReason                                                   AS TreatmentOutcome,
+														reg.latest_vis_date                                               AS DateOfLastEncounter,
+														lab.lastViralLoadDate                                             AS DateOfLastViralLoad,
+														lab.lastViralLoadResult                                           AS LastViralLoadResult,
+														reg.latest_tca                                                    AS NextAppointmentDate,
+														if(cc.patient_id IS NOT NULL, 'YES', 'NO')                        as CurrentOnART
+							from kenyaemr_etl.etl_hiv_enrollment hiv
+																join kenyaemr_etl.etl_patient_demographics dm on dm.patient_id = hiv.patient_id
+																left join kenyaemr_etl.etl_person_address pa on pa.patient_id = hiv.patient_id
+																left join (select d.patient_id,
+																																		coalesce(max(date(d.effective_discontinuation_date)),
+																																											max(date(d.visit_date))) as ExitDate,
+																																		(case mid(max(concat(d.visit_date, d.discontinuation_reason)), 11)
+																																							when 159492 then 'Transfer Out'
+																																							when 160034 then 'Died'
+																																							when 5240 then 'LTFU'
+																																							when 819 then 'Stopped Treatment'
+																																							else '' end)                 as ExitReason,
+																																		max(d.date_last_modified)         as date_last_modified
+																											from kenyaemr_etl.etl_patient_program_discontinuation d
+																											where d.program_name = 'HIV'
+																											group by d.patient_id) disc on disc.patient_id = dm.patient_id
+																left join (select lb.patient_id,
+																																		mid(max(concat(visit_date, lb.date_test_requested)), 11) as lastViralLoadDate,
+																																		if(mid(max(concat(visit_date, lab_test)), 11) = 856,
+																																					mid(max(concat(visit_date, test_result)), 11), if(
+																																																					mid(max(concat(visit_date, lab_test)), 11) = 1305 and
+																																																					mid(max(concat(visit_date, test_result)), 11) = 1302,
+																																																					'LDL', ''))                           as lastViralLoadResult
+																											from kenyaemr_etl.etl_laboratory_extract lb
+																											where lb.lab_test in (1305, 856)
+																											group by lb.patient_id) lab on lab.patient_id = dm.patient_id
+																left join (select e.patient_id,
+																																		e.regimen,
+																																		e.regimen_line,
+																																		e.alternative_regimen,
+																																		max(fup.next_appointment_date) as latest_tca,
+																																		last_art_date,
+																																		last_regimen,
+																																		last_regimen_line,
+																																		max(fup.visit_date)            as latest_vis_date,
+																																		e.date_started
+																											from (select e.patient_id,
+																																								min(e.date_started)                                  as date_started,
+																																								max(e.date_started)                                  as last_art_date,
+																																								mid(min(concat(e.date_started, e.regimen_name)), 11) as regimen,
+																																								mid(min(concat(e.date_started, e.regimen_line)), 11) as regimen_line,
+																																								mid(max(concat(e.date_started, e.regimen_name)), 11) as last_regimen,
+																																								mid(max(concat(e.date_started, e.regimen_line)), 11) as last_regimen_line,
+																																								max(if(discontinued, 1, 0))                          as alternative_regimen
+																																	from kenyaemr_etl.etl_drug_event e
+																																	group by e.patient_id) e
+																																				left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id = e.patient_id
+																											group by e.patient_id) reg on reg.patient_id = hiv.patient_id
+																left join (select ca.patient_id
+																											from kenyaemr_etl.etl_current_in_care ca
+																											where ca.started_on_drugs is not null
+							) cc on cc.patient_id = dm.patient_id
+							group by hiv.patient_id;"|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+3F6C522C-BA8C-46FA-8151-CDBA393C392D|Client Registry Service|CRS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+8B29B02B-B508-42EF-8FBE-48E1DB23DD6D|Client Registry Service|CRS|A6221858-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b

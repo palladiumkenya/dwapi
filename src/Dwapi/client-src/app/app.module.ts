@@ -183,6 +183,8 @@ import {PrepClientLinkageService} from "../dockets/services/prep-client-linkage.
 import {PrepSummaryService} from "../dockets/services/prep-summary.service";
 import {PrepClientService} from "../dockets/services/prep-client.service";
 import {PrepSenderService} from "../dockets/services/prep-sender.service";
+import {CrsService} from "../dockets/services/crs.service";
+import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
 
 @NgModule({
     imports: [
@@ -316,6 +318,7 @@ import {PrepSenderService} from "../dockets/services/prep-sender.service";
         PrepExtractDetailsComponent,
         PrepInvalidComponent,
         PrepValidComponent,
+        CrsDocketComponent
 ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
@@ -328,7 +331,9 @@ import {PrepSenderService} from "../dockets/services/prep-sender.service";
         HtsPartnerTracingService, HtsPartnerNotificationServicesService, HtsClientService, HtsClientPartnerService, HtsClientLinkageService,
         MetricsService, MgsService, MgsSenderService, MetricMigrationService, NdwhSummaryService,
         MnchService, MnchSenderService, MnchClientService, MnchClientLinkageService, MnchSummaryService,
-        PrepService, PrepSenderService, PrepClientService, PrepClientLinkageService, PrepSummaryService
+        PrepService, PrepSenderService, PrepClientService, PrepClientLinkageService, PrepSummaryService,
+        CrsService
+
     ],
     bootstrap: [AppComponent]
 })

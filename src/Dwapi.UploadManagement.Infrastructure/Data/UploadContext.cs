@@ -3,6 +3,7 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Prep;
 using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Model;
 using Dwapi.UploadManagement.Core.Model.Cbs;
+using Dwapi.UploadManagement.Core.Model.Crs;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 using Dwapi.UploadManagement.Core.Model.Hts;
 using Dwapi.UploadManagement.Core.Model.Mgs;
@@ -15,6 +16,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
 {
     public class UploadContext : BaseContext
     {
+        public virtual DbSet<ClientRegistryExtractView> ClientClientRegistryExtracts { get; set; }
         public virtual DbSet<MasterPatientIndexView> ClientMasterPatientIndices { get; set; }
         public virtual DbSet<PatientExtractView> ClientPatientExtracts { get; set; }
         public virtual DbSet<PatientArtExtractView> ClientPatientArtExtracts { get; set; }
@@ -75,6 +77,8 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<PrepLabExtractView> ClientPrepLabExtracts   { get; set; }
         public virtual DbSet<PrepPharmacyExtractView> ClientPrepPharmacyExtracts   { get; set; }
         public virtual DbSet<PrepVisitExtractView> ClientPrepVisitExtracts   { get; set; }
+        
+        public virtual DbSet<ClientRegistryExtractView> ClientRegistryExtracts   { get; set; }
 
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
@@ -83,7 +87,10 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            
+            modelBuilder.Entity<ClientRegistryExtractView>()
+                .HasKey(f => new {f.SiteCode, f.PatientPK});
+            
             modelBuilder.Entity<PatientExtractView>()
                 .HasKey(f => new {f.SiteCode, f.PatientPK});
 
