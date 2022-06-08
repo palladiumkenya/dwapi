@@ -301,7 +301,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.IPVScreeningOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempContactListingExtract.IPVScreeningOutcome))))
                 .ForMember(x => x.CurrentlyLivingWithIndexClient, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempContactListingExtract.CurrentlyLivingWithIndexClient))))
                 .ForMember(x => x.KnowledgeOfHivStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempContactListingExtract.KnowledgeOfHivStatus))))
-                .ForMember(x => x.PnsApproach, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempContactListingExtract.PnsApproach))));
+                .ForMember(x => x.PnsApproach, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempContactListingExtract.PnsApproach))))
+                .ForMember(x => x.ContactPatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempContactListingExtract.ContactPatientPK))));
+
             CreateMap<TempContactListingExtract,ContactListingExtract>();
 
 

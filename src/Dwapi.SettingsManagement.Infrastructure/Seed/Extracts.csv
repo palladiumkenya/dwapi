@@ -4801,6 +4801,7 @@ UNION
 											join kenyaemr_etl.etl_default_facility_info s
 				where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|DepressionScreeningExtract|13|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec23-7754-11eb-9439-0242ac130002|Contact Listing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_related_to as PatientPK,
+                                                            v.patient_id as ContactPatientPK,
 															s.siteCode as SiteCode,
 															de.unique_patient_no as PatientID,
 															'KenyaEMR' as Emr,'Kenya HMIS II' as Project,
