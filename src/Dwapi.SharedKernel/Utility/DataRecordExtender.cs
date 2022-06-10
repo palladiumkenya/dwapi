@@ -27,7 +27,6 @@ namespace Dwapi.SharedKernel.Utility
                     return o;
                 return null;
             }
-
             return null;
         }
 

@@ -1,0 +1,17 @@
+<div class="ui-g">
+    <div class="ui-g-12">
+        <p-tabView orientation="top" (onChange)="onChange($event)" [activeIndex]="selectedIndex">
+            <p-tabPanel [header]="item.display" *ngFor="let item of extracts; let i = index" [selected]="i == selectedIndex">
+                <p-tabView>
+                    <p-tabPanel [header]="item.display + ' Records'">
+                        <liveapp-prep-valid [extract]="i == selectedIndex?extractName:''" [preventLoad]="isLoading"></liveapp-prep-valid>
+                    </p-tabPanel>
+                    <p-tabPanel [header]="item.display + ' Validation Summary'">
+                        <liveapp-prep-invalid [extract]="i == selectedIndex?extractName:''" [preventLoad]="isLoading"></liveapp-prep-invalid>
+                    </p-tabPanel>
+                </p-tabView>
+            </p-tabPanel>
+        </p-tabView>
+        <p-messages [(value)]="errorMessage"></p-messages>
+    </div>
+</div>

@@ -1,6 +1,8 @@
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Profiles.Crs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Profiles.Mnch;
+using Dwapi.ExtractsManagement.Core.Profiles.Prep;
 
 namespace Dwapi.ExtractsManagement.Core.Profiles
 {
@@ -15,6 +17,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles
             var cfg = _config.BaseMaps();
             cfg.AddProfile<CtExtractProfile>();
             cfg.AddProfile<MnchExtractProfile>();
+            cfg.AddProfile<PrepExtractProfile>();
+            cfg.AddProfile<CrsExtractProfile>();
             _instance = new MapperConfiguration(cfg).CreateMapper();
         }
 

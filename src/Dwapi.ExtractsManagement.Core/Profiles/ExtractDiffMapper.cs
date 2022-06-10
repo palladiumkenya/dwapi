@@ -1,6 +1,8 @@
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Profiles.Crs;
 using Dwapi.ExtractsManagement.Core.Profiles.Dwh;
 using Dwapi.ExtractsManagement.Core.Profiles.Mnch;
+using Dwapi.ExtractsManagement.Core.Profiles.Prep;
 
 namespace Dwapi.ExtractsManagement.Core.Profiles
 {
@@ -15,6 +17,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles
             var cfg = _config.BaseMaps();
             cfg.AddProfile<DiffCtExtractProfile>();
             cfg.AddProfile<MnchExtractProfile>();//TODO :PMTCT DIFF
+            cfg.AddProfile<PrepExtractProfile>();//TODO :PREP DIFF
+            cfg.AddProfile<CrsExtractProfile>();//TODO :CRS DIFF
             _instance = new MapperConfiguration(cfg).CreateMapper();
         }
 

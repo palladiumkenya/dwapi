@@ -1,7 +1,9 @@
-﻿namespace Dwapi.SharedKernel.Events
+﻿using System.Threading.Tasks;
+
+namespace Dwapi.SharedKernel.Events
 {
     public interface IHandler<T> where T : IDomainEvent
     {
-        void Handle(T domainEvent);
+        Task Handle(T domainEvent);
     }
 }

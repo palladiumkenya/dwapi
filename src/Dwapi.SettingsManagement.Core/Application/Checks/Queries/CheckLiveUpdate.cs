@@ -26,9 +26,9 @@ namespace Dwapi.SettingsManagement.Core.Application.Checks.Queries
             var client = new HttpClient();
 
             try
-            {                         // TODO: set prod APP-Check link
+            {                         
                 var response =
-                    await client.GetAsync("https://auth.kenyahmis.org/dwapi/client/updates/livesync.txt");
+                    await client.GetAsync("https://data.kenyahmis.org/dwapi/client/updates/livesync.txt");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();

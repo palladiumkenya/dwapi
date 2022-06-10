@@ -1,0 +1,38 @@
+name: Run DWAPI Unit Tests
+
+on:
+  push:
+    branches: [ dev ]
+
+
+jobs:
+  build:
+    name: Run-Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 2.1.805
+      - name: Install dependencies
+        run: dotnet restore Dwapi.sln
+      - name: Build
+        run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release --no-restore
+      - name: Test
+        run: ls test/*/*.Tests.csproj | xargs -L 1 dotnet test
+      - name: Setup Angular
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - run: npm install --prefix src/Dwapi
+      - run: npm run build --prefix src/Dwapi
+
+      - name: Pub .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.201
+      - name: Publish
+        run: dotnet publish src/Dwapi/Dwapi.csproj --configuration Release -o dwapi
+      - name: Zip Folder
+        run: zip -r dwapi.zip dwapi

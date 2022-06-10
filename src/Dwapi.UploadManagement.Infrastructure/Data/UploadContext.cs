@@ -1,17 +1,22 @@
-﻿using Dwapi.SharedKernel.Infrastructure;
+﻿using Dwapi.ExtractsManagement.Core.Loader.Prep;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Prep;
+using Dwapi.SharedKernel.Infrastructure;
 using Dwapi.UploadManagement.Core.Model;
 using Dwapi.UploadManagement.Core.Model.Cbs;
+using Dwapi.UploadManagement.Core.Model.Crs;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 using Dwapi.UploadManagement.Core.Model.Hts;
 using Dwapi.UploadManagement.Core.Model.Mgs;
 using Dwapi.UploadManagement.Core.Model.Mnch;
 using Dwapi.UploadManagement.Core.Model.Mts;
+using Dwapi.UploadManagement.Core.Model.Prep;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dwapi.UploadManagement.Infrastructure.Data
 {
     public class UploadContext : BaseContext
     {
+        public virtual DbSet<ClientRegistryExtractView> ClientClientRegistryExtracts { get; set; }
         public virtual DbSet<MasterPatientIndexView> ClientMasterPatientIndices { get; set; }
         public virtual DbSet<PatientExtractView> ClientPatientExtracts { get; set; }
         public virtual DbSet<PatientArtExtractView> ClientPatientArtExtracts { get; set; }
@@ -62,16 +67,30 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<CwcVisitExtractView> ClientCwcVisitExtracts { get; set; }
         public virtual DbSet<HeiExtractView> ClientHeiExtracts { get; set; }
         public virtual DbSet<MnchLabExtractView> ClientMnchLabExtracts { get; set; }
+        public virtual DbSet<TransportLogView> TransportLogs { get; set; }
+
+
+        public virtual DbSet<PatientPrepExtractView> ClientPatientPrepExtracts { get; set; }
+        public virtual DbSet<PrepAdverseEventExtractView> ClientPrepAdverseEventExtracts   { get; set; }
+        public virtual DbSet<PrepBehaviourRiskExtractView> ClientPrepBehaviourRiskExtracts  { get; set; }
+        public virtual DbSet<PrepCareTerminationExtractView> ClientPrepCareTerminationExtracts   { get; set; }
+        public virtual DbSet<PrepLabExtractView> ClientPrepLabExtracts   { get; set; }
+        public virtual DbSet<PrepPharmacyExtractView> ClientPrepPharmacyExtracts   { get; set; }
+        public virtual DbSet<PrepVisitExtractView> ClientPrepVisitExtracts   { get; set; }
+        
+        public virtual DbSet<ClientRegistryExtractView> ClientRegistryExtracts   { get; set; }
 
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            
+            modelBuilder.Entity<ClientRegistryExtractView>()
+                .HasKey(f => new {f.SiteCode, f.PatientPK});
+            
             modelBuilder.Entity<PatientExtractView>()
                 .HasKey(f => new {f.SiteCode, f.PatientPK});
 
@@ -79,6 +98,9 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
                 .HasKey(f => f.Id);
 
             modelBuilder.Entity<PatientMnchExtractView>()
+                .HasKey(f => f.Id);
+
+            modelBuilder.Entity<PatientPrepExtractView>()
                 .HasKey(f => f.Id);
         }
     }

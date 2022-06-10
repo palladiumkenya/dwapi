@@ -15,9 +15,10 @@
         </div>
 
         <div class="ui-toolbar-group-right">
-            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send All"
+            <button pButton type="button"  [disabled]="!canSend" (click)="sendSmart()" label="Send All"
                     icon="ui-icon-cloud-upload"
-                    class="blue-btn"></button>
+                    class="blue-btn"
+                    [hidden]="hideMe"></button>
         </div>
     </p-toolbar>
 
