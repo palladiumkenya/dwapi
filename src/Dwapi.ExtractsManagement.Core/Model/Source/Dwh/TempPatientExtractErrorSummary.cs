@@ -41,6 +41,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PatientResidentWard { get; set; }
         public string PatientResidentVillage { get; set; }
         public DateTime? TransferInDate { get; set; }
+        public string NUPI { get; set; }
+       
 
         //public override void AddHeader(Row row)
         //{

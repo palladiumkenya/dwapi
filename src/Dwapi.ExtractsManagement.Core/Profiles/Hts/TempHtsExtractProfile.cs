@@ -48,7 +48,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.PopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.PopulationType))))
                 .ForMember(x => x.PatientDisabled, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.PatientDisabled))))
                 .ForMember(x => x.DisabilityType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.DisabilityType))))
-                .ForMember(x => x.PatientConsented, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.PatientConsented))));
+                .ForMember(x => x.PatientConsented, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.PatientConsented))))
+                .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.NUPI))));
             CreateMap<TempHTSClientExtract, HTSClientExtract>();
 
             // HTS Client Linkage Extract

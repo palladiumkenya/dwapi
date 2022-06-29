@@ -35,5 +35,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public string PatientDisabled { get; set; }
         public string DisabilityType { get; set; }
         public string PatientConsented { get; set; }
+        public string NUPI { get; set; }
     }
 }

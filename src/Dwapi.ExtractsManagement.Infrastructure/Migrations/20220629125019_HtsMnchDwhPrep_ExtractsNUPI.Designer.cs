@@ -4,14 +4,16 @@ using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20220629125019_HtsMnchDwhPrep_ExtractsNUPI")]
+    partial class HtsMnchDwhPrep_ExtractsNUPI
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

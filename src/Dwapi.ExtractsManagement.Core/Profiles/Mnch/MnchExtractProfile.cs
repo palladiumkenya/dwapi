@@ -32,7 +32,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.PatientResidentCounty, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.PatientResidentCounty))))
                      .ForMember(x => x.PatientResidentSubCounty, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.PatientResidentSubCounty))))
                      .ForMember(x => x.PatientResidentWard, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.PatientResidentWard))))
-                     .ForMember(x => x.InSchool, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.InSchool))));
+                     .ForMember(x => x.InSchool, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.InSchool))))
+                    .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.NUPI))));
 
 
 
