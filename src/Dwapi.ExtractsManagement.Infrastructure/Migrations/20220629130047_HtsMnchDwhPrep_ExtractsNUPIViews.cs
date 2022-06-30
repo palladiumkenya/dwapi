@@ -6,6 +6,147 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+	        migrationBuilder.Sql(@"alter view vTempPatientPrepExtractError as SELECT * FROM TempPatientPrepExtracts WHERE (CheckError = 1)");
+            migrationBuilder.Sql(@"
+						ALTER VIEW vTempPatientPrepExtractErrorSummary
+						AS
+						SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, ValidationError.RecordId,
+
+					vTempPatientPrepExtractError.PatientPK,
+								vTempPatientPrepExtractError.FacilityId,
+								vTempPatientPrepExtractError.PatientID, 
+								vTempPatientPrepExtractError.SiteCode,
+								vTempPatientPrepExtractError.Emr,
+								vTempPatientPrepExtractError.Project,
+
+								vTempPatientPrepExtractError.PrepNumber,
+								vTempPatientPrepExtractError.HtsNumber,
+								vTempPatientPrepExtractError.PrepEnrollmentDate,
+								vTempPatientPrepExtractError.Sex,
+								vTempPatientPrepExtractError.DateofBirth,
+								vTempPatientPrepExtractError.CountyofBirth,
+								vTempPatientPrepExtractError.County,
+								vTempPatientPrepExtractError.SubCounty,
+								vTempPatientPrepExtractError.Location,
+								vTempPatientPrepExtractError.LandMark,
+								vTempPatientPrepExtractError.Ward,
+								vTempPatientPrepExtractError.ClientType,
+								vTempPatientPrepExtractError.ReferralPoint,
+								vTempPatientPrepExtractError.MaritalStatus,
+								vTempPatientPrepExtractError.Inschool,
+								vTempPatientPrepExtractError.PopulationType,
+								vTempPatientPrepExtractError.KeyPopulationType,
+								vTempPatientPrepExtractError.Refferedfrom,
+								vTempPatientPrepExtractError.TransferIn,
+								vTempPatientPrepExtractError.TransferInDate,
+								vTempPatientPrepExtractError.TransferFromFacility,
+								vTempPatientPrepExtractError.DatefirstinitiatedinPrepCare,
+								vTempPatientPrepExtractError.DateStartedPrEPattransferringfacility,
+								vTempPatientPrepExtractError.ClientPreviouslyonPrep,
+								vTempPatientPrepExtractError.PrevPrepReg,
+								vTempPatientPrepExtractError.DateLastUsedPrev,
+
+								vTempPatientPrepExtractError.Date_Created,
+								vTempPatientPrepExtractError.Date_Last_Modified,
+								vTempPatientPrepExtractError.NUPI
+					 
+					FROM            vTempPatientPrepExtractError INNER JOIN
+										 ValidationError ON vTempPatientPrepExtractError.Id = ValidationError.RecordId INNER JOIN
+										 Validator ON ValidationError.ValidatorId = Validator.Id
+                ");
+            
+            
+            migrationBuilder.Sql(@"alter view vTempHTSClientExtractError as SELECT * FROM TempHTSClientExtracts WHERE (CheckError = 1)");
+            migrationBuilder.Sql(@"
+						ALTER VIEW vTempHTSClientExtractErrorSummary
+						AS
+						SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, ValidationError.RecordId,
+
+					vTempHTSClientExtractError.FacilityName,
+                              vTempHTSClientExtractError.SiteCode,
+                              vTempHTSClientExtractError.PatientPk,
+                              vTempHTSClientExtractError.HtsNumber,
+                              vTempHTSClientExtractError.Emr,
+                              vTempHTSClientExtractError.Project,
+                              vTempHTSClientExtractError.CheckError,
+                              vTempHTSClientExtractError.DateExtracted,
+                              vTempHTSClientExtractError.EncounterId,
+                              vTempHTSClientExtractError.VisitDate,
+                              vTempHTSClientExtractError.Dob,
+                              vTempHTSClientExtractError.Gender,
+                              vTempHTSClientExtractError.MaritalStatus,
+                              vTempHTSClientExtractError.KeyPop,
+                              vTempHTSClientExtractError.TestedBefore,
+                              vTempHTSClientExtractError.MonthsLastTested,
+                              vTempHTSClientExtractError.ClientTestedAs,
+                              vTempHTSClientExtractError.StrategyHTS,
+                              vTempHTSClientExtractError.TestKitName1,
+                              vTempHTSClientExtractError.TestKitLotNumber1,
+                              vTempHTSClientExtractError.TestKitExpiryDate1,
+                              vTempHTSClientExtractError.TestResultsHTS1,
+                              vTempHTSClientExtractError.TestKitName2,
+                              vTempHTSClientExtractError.TestKitLotNumber2,
+                              vTempHTSClientExtractError.TestKitExpiryDate2,
+                              vTempHTSClientExtractError.TestResultsHTS2,
+                              vTempHTSClientExtractError.FinalResultHTS,
+                              vTempHTSClientExtractError.FinalResultsGiven,
+                              vTempHTSClientExtractError.TBScreeningHTS,
+                              vTempHTSClientExtractError.ClientSelfTested,
+                              vTempHTSClientExtractError.CoupleDiscordant,
+                              vTempHTSClientExtractError.TestType,
+                              vTempHTSClientExtractError.KeyPopulationType,
+                              vTempHTSClientExtractError.PopulationType,
+                              vTempHTSClientExtractError.PatientDisabled,
+                              vTempHTSClientExtractError.DisabilityType,
+								vTempHTSClientExtractError.PatientConsented,
+								vTempHTSClientExtractError.NUPI
+                        FROM
+                                vTempHTSClientExtractError INNER JOIN
+                                ValidationError ON vTempHTSClientExtractError.Id = ValidationError.RecordId INNER JOIN
+                                Validator ON ValidationError.ValidatorId = Validator.Id
+                ");
+            
+            
+            
+            migrationBuilder.Sql(@"alter view vTempPatientMnchExtractError as SELECT * FROM TempPatientMnchExtracts WHERE (CheckError = 1)");
+            migrationBuilder.Sql(@"
+						ALTER VIEW vTempPatientMnchExtractErrorSummary
+						AS
+						SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, ValidationError.RecordId,
+
+						vTempPatientMnchExtractError.Date_Created,
+						vTempPatientMnchExtractError.Date_Last_Modified,
+						vTempPatientMnchExtractError.DateExtracted,
+						vTempPatientMnchExtractError.DOB,
+						vTempPatientMnchExtractError.EducationLevel,
+						vTempPatientMnchExtractError.Emr,
+						vTempPatientMnchExtractError.ErrorType,
+						vTempPatientMnchExtractError.FacilityId,
+						vTempPatientMnchExtractError.FacilityName,
+						vTempPatientMnchExtractError.FirstEnrollmentAtMnch,
+						vTempPatientMnchExtractError.Gender,
+
+						vTempPatientMnchExtractError.InSchool,
+						vTempPatientMnchExtractError.MaritalStatus,
+						vTempPatientMnchExtractError.Occupation,
+						vTempPatientMnchExtractError.PatientHeiID,
+						vTempPatientMnchExtractError.PatientID,
+						vTempPatientMnchExtractError.PatientMnchID,
+						vTempPatientMnchExtractError.PatientPK,
+						vTempPatientMnchExtractError.PatientResidentCounty,
+						vTempPatientMnchExtractError.PatientResidentSubCounty,
+						vTempPatientMnchExtractError.PatientResidentWard,
+						vTempPatientMnchExtractError.Pkv,
+						vTempPatientMnchExtractError.Project,
+						vTempPatientMnchExtractError.SiteCode,
+						vTempPatientMnchExtractError.NUPI
+						             
+				FROM            vTempPatientMnchExtractError INNER JOIN
+							 ValidationError ON vTempPatientMnchExtractError.Id = ValidationError.RecordId INNER JOIN
+							 Validator ON ValidationError.ValidatorId = Validator.Id
+                ");
+            
+            
               migrationBuilder.Sql(@"alter view vTempPatientExtractError as SELECT * FROM TempPatientExtracts WHERE (CheckError = 1)");
             migrationBuilder.Sql(@"
 
