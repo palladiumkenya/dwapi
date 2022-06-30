@@ -4989,7 +4989,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
        'KenyaEMR'                                                       as Emr,
        'Kenya HMIS II'                                                  as Project,
        i.FacilityName                                                   as FacilityName,
-       
+       0 as FacilityId,
        (case d.Gender when 'F' then 'Female' when 'M' then 'Male' end)  as Gender,
        d.DOB                                                            as DOB,
        coalesce(c.hei_enrolment_date, m.mch_enrolment_date)            as VisitDate,
@@ -6653,6 +6653,7 @@ from kenyaemr_etl.etl_patient_demographics d
 
 82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                  as PatientPK,
 														i.siteCode                                                    as SiteCode,
+														i.facilityName                                                as FacilityName,
 														d.unique_prep_number                                          as PrepNumber,
 														d.national_unique_patient_identifier                          as NUPI,
 

@@ -120,7 +120,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.PatientDisabled, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.PatientDisabled))))
                 .ForMember(x => x.County, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.County))))
                 .ForMember(x => x.SubCounty, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.SubCounty))))
-                .ForMember(x => x.Ward, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.Ward))));
+                .ForMember(x => x.Ward, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.Ward))))
+                .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.NUPI))));
+                
             CreateMap<TempHtsClients, HtsClients>();
 
             //hts client tests
