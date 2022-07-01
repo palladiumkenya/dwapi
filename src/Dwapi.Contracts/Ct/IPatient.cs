@@ -4,5 +4,6 @@ namespace Dwapi.Contracts.Ct
     {
         string Pkv { get; set; }
         string Occupation { get; set; }
+        string NUPI { get; set; }
     }
 }
