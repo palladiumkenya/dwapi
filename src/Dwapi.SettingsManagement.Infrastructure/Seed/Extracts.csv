@@ -7037,3 +7037,4 @@ from kenyaemr_etl.etl_patient_demographics d
 							group by hiv.patient_id;"|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3F6C522C-BA8C-46FA-8151-CDBA393C392D|Client Registry Service|CRS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 8B29B02B-B508-42EF-8FBE-48E1DB23DD6D|Client Registry Service|CRS|A6221858-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+e5e097ed-ec17-4b51-bd0c-b047a09b8b1f|Client Registry Service|CRS|a6221861-0e85-11e8-ba89-0ed5f89f718b|""|CRS|1|ClientRegistryExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B

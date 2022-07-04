@@ -6,7 +6,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
          protected override void Up(MigrationBuilder migrationBuilder)
         {
-	        migrationBuilder.Sql(@"alter view vTempContactListingExtractError as SELECT * FROM vTempContactListingExtracts WHERE (CheckError = 1)");
+	        migrationBuilder.Sql(@"alter view vTempContactListingExtractError as SELECT * FROM TempContactListingExtracts WHERE (CheckError = 1)");
             migrationBuilder.Sql(@"
 
 						ALTER VIEW vTempContactListingExtractErrorSummary
