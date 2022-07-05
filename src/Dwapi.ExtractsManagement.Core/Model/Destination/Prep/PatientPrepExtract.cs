@@ -34,6 +34,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Prep
         public string ClientPreviouslyonPrep { get; set; }
         public string PrevPrepReg { get; set; }
         public DateTime? DateLastUsedPrev { get; set; }
+        public string NUPI { get; set; }
 
 
         public virtual ICollection<PrepBehaviourRiskExtract> PrepBehaviourRiskExtracts { get; set; } =new List<PrepBehaviourRiskExtract>();

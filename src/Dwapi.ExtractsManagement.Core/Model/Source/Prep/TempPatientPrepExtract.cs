@@ -35,6 +35,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Prep
         public DateTime? DateLastUsedPrev { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
+        public string NUPI { get; set; }
     }
 
 }
