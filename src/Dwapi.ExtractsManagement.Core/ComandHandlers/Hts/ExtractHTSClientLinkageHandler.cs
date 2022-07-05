@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Hts;
@@ -14,6 +15,7 @@ using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 {
+    [Obsolete("No longer Used")]
     public class ExtractHTSClientLinkageHandler : IRequestHandler<ExtractHTSClientLinkage, bool>
     {
         private readonly IHTSClientLinkageSourceExtractor _patientAdverseEventSourceExtractor;
