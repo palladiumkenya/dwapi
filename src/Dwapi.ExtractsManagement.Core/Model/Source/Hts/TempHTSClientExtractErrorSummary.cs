@@ -31,5 +31,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public string CoupleDiscordant { get; set; }
         public string TestType { get; set; }
         public string NUPI { get; set; }
+        public string Pkv { get; set; }
     }
 }

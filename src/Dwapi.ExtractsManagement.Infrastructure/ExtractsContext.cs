@@ -173,8 +173,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempIptExtractErrorSummary> TempIptExtractErrorSummary { get; set; }
         public DbSet<TempDepressionScreeningExtractError> TempDepressionScreeningExtractError { get; set; }
         public DbSet<TempDepressionScreeningExtractErrorSummary> TempDepressionScreeningExtractErrorSummary { get; set; }
-        public DbSet<TempContactListingExtractError> TempContactListingExtractError { get; set; }
-        public DbSet<TempContactListingExtractErrorSummary> TempContactListingExtractErrorSummary { get; set; }
+        // public DbSet<TempContactListingExtractError> TempContactListingExtractError { get; set; }
+        // public DbSet<TempContactListingExtractErrorSummary> TempContactListingExtractErrorSummary { get; set; }
         public DbSet<TempGbvScreeningExtractError> TempGbvScreeningExtractError { get; set; }
         public DbSet<TempGbvScreeningExtractErrorSummary> TempGbvScreeningExtractErrorSummary { get; set; }
         public DbSet<TempEnhancedAdherenceCounsellingExtractError> TempEnhancedAdherenceCounsellingExtractError { get; set; }
@@ -186,10 +186,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempOtzExtractError> TempOtzExtractError { get; set; }
         public DbSet<TempOtzExtractErrorSummary> TempOtzExtractErrorSummary { get; set; }
 
-        public DbSet<TempCovidExtractError> TempCovidExtractError { get; set; }
-        public DbSet<TempCovidExtractErrorSummary> TempCovidExtractErrorSummary { get; set; }
-        public DbSet<TempDefaulterTracingExtractError> TempDefaulterTracingExtractError { get; set; }
-        public DbSet<TempDefaulterTracingExtractErrorSummary> TempDefaulterTracingExtractErrorSummary { get; set; }
+        // public DbSet<TempCovidExtractError> TempCovidExtractError { get; set; }
+        // public DbSet<TempCovidExtractErrorSummary> TempCovidExtractErrorSummary { get; set; }
+        // public DbSet<TempDefaulterTracingExtractError> TempDefaulterTracingExtractError { get; set; }
+        // public DbSet<TempDefaulterTracingExtractErrorSummary> TempDefaulterTracingExtractErrorSummary { get; set; }
 
         #region Mnch
         public virtual DbSet<TempPatientMnchExtract> TempPatientMnchExtracts { get; set; }
@@ -216,29 +216,29 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<HeiExtract> HeiExtracts { get; set; }
         public virtual DbSet<MnchLabExtract> MnchLabExtracts { get; set; }
 
-        public virtual DbSet<TempPatientMnchExtractError> TempPatientMnchExtractError { get; set; }
-        public virtual DbSet<TempMnchEnrolmentExtractError> TempMnchEnrolmentExtractError { get; set; }
-        public virtual DbSet<TempMnchArtExtractError> TempMnchArtExtractError { get; set; }
-        public virtual DbSet<TempAncVisitExtractError> TempAncVisitExtractError { get; set; }
-        public virtual DbSet<TempMatVisitExtractError> TempMatVisitExtractError { get; set; }
-        public virtual DbSet<TempPncVisitExtractError> TempPncVisitExtractError { get; set; }
-        public virtual DbSet<TempMotherBabyPairExtractError> TempMotherBabyPairExtractError { get; set; }
-        public virtual DbSet<TempCwcEnrolmentExtractError> TempCwcEnrolmentExtractError { get; set; }
-        public virtual DbSet<TempCwcVisitExtractError> TempCwcVisitExtractError { get; set; }
-        public virtual DbSet<TempHeiExtractError> TempHeiExtractError { get; set; }
-        public virtual DbSet<TempMnchLabExtractError> TempMnchLabExtractError { get; set; }
+        // public virtual DbSet<TempPatientMnchExtractError> TempPatientMnchExtractError { get; set; }
+        // public virtual DbSet<TempMnchEnrolmentExtractError> TempMnchEnrolmentExtractError { get; set; }
+        // public virtual DbSet<TempMnchArtExtractError> TempMnchArtExtractError { get; set; }
+        // public virtual DbSet<TempAncVisitExtractError> TempAncVisitExtractError { get; set; }
+        // public virtual DbSet<TempMatVisitExtractError> TempMatVisitExtractError { get; set; }
+        // public virtual DbSet<TempPncVisitExtractError> TempPncVisitExtractError { get; set; }
+        // public virtual DbSet<TempMotherBabyPairExtractError> TempMotherBabyPairExtractError { get; set; }
+        // public virtual DbSet<TempCwcEnrolmentExtractError> TempCwcEnrolmentExtractError { get; set; }
+        // public virtual DbSet<TempCwcVisitExtractError> TempCwcVisitExtractError { get; set; }
+        // public virtual DbSet<TempHeiExtractError> TempHeiExtractError { get; set; }
+        // public virtual DbSet<TempMnchLabExtractError> TempMnchLabExtractError { get; set; }
 
-        public virtual DbSet<TempPatientMnchExtractErrorSummary> TempPatientMnchExtractErrorSummary { get; set; }
-        public virtual DbSet<TempMnchEnrolmentExtractErrorSummary> TempMnchEnrolmentExtractErrorSummary { get; set; }
-        public virtual DbSet<TempMnchArtExtractErrorSummary> TempMnchArtExtractErrorSummary { get; set; }
-        public virtual DbSet<TempAncVisitExtractErrorSummary> TempAncVisitExtractErrorSummary { get; set; }
-        public virtual DbSet<TempMatVisitExtractErrorSummary> TempMatVisitExtractErrorSummary { get; set; }
-        public virtual DbSet<TempPncVisitExtractErrorSummary> TempPncVisitExtractErrorSummary { get; set; }
-        public virtual DbSet<TempMotherBabyPairExtractErrorSummary> TempMotherBabyPairExtractErrorSummary { get; set; }
-        public virtual DbSet<TempCwcEnrolmentExtractErrorSummary> TempCwcEnrolmentExtractErrorSummary { get; set; }
-        public virtual DbSet<TempCwcVisitExtractErrorSummary> TempCwcVisitExtractErrorSummary { get; set; }
-        public virtual DbSet<TempHeiExtractErrorSummary> TempHeiExtractErrorSummary { get; set; }
-        public virtual DbSet<TempMnchLabExtractErrorSummary> TempMnchLabExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempPatientMnchExtractErrorSummary> TempPatientMnchExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempMnchEnrolmentExtractErrorSummary> TempMnchEnrolmentExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempMnchArtExtractErrorSummary> TempMnchArtExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempAncVisitExtractErrorSummary> TempAncVisitExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempMatVisitExtractErrorSummary> TempMatVisitExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempPncVisitExtractErrorSummary> TempPncVisitExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempMotherBabyPairExtractErrorSummary> TempMotherBabyPairExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempCwcEnrolmentExtractErrorSummary> TempCwcEnrolmentExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempCwcVisitExtractErrorSummary> TempCwcVisitExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempHeiExtractErrorSummary> TempHeiExtractErrorSummary { get; set; }
+        // public virtual DbSet<TempMnchLabExtractErrorSummary> TempMnchLabExtractErrorSummary { get; set; }
 
         #endregion
 
@@ -259,21 +259,21 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<PrepPharmacyExtract> PrepPharmacyExtracts { get; set; }
         public DbSet<PrepVisitExtract> PrepVisitExtracts { get; set; }
 
-        public DbSet<TempPatientPrepExtractError> TempPatientPrepExtractError { get; set; }
-        public DbSet<TempPrepAdverseEventExtractError> TempPrepAdverseEventExtractError { get; set; }
-        public DbSet<TempPrepBehaviourRiskExtractError> TempPrepBehaviourRiskExtractError { get; set; }
-        public DbSet<TempPrepCareTerminationExtractError> TempPrepCareTerminationExtractError { get; set; }
-        public DbSet<TempPrepLabExtractError> TempPrepLabExtractError { get; set; }
-        public DbSet<TempPrepPharmacyExtractError> TempPrepPharmacyExtractError { get; set; }
-        public DbSet<TempPrepVisitExtractError> TempPrepVisitExtractError { get; set; }
+        // public DbSet<TempPatientPrepExtractError> TempPatientPrepExtractError { get; set; }
+        // public DbSet<TempPrepAdverseEventExtractError> TempPrepAdverseEventExtractError { get; set; }
+        // public DbSet<TempPrepBehaviourRiskExtractError> TempPrepBehaviourRiskExtractError { get; set; }
+        // public DbSet<TempPrepCareTerminationExtractError> TempPrepCareTerminationExtractError { get; set; }
+        // public DbSet<TempPrepLabExtractError> TempPrepLabExtractError { get; set; }
+        // public DbSet<TempPrepPharmacyExtractError> TempPrepPharmacyExtractError { get; set; }
+        // public DbSet<TempPrepVisitExtractError> TempPrepVisitExtractError { get; set; }
 
-        public DbSet<TempPatientPrepExtractErrorSummary> TempPatientPrepExtractErrorSummary { get; set; }
-        public DbSet<TempPrepAdverseEventExtractErrorSummary> TempPrepAdverseEventExtractErrorSummary { get; set; }
-        public DbSet<TempPrepBehaviourRiskExtractErrorSummary> TempPrepBehaviourRiskExtractErrorSummary { get; set; }
-        public DbSet<TempPrepCareTerminationExtractErrorSummary> TempPrepCareTerminationExtractErrorSummary { get; set; }
-        public DbSet<TempPrepLabExtractErrorSummary> TempPrepLabExtractErrorSummary { get; set; }
-        public DbSet<TempPrepPharmacyExtractErrorSummary> TempPrepPharmacyExtractErrorSummary { get; set; }
-        public DbSet<TempPrepVisitExtractErrorSummary> TempPrepVisitExtractErrorSummary { get; set; }
+        // public DbSet<TempPatientPrepExtractErrorSummary> TempPatientPrepExtractErrorSummary { get; set; }
+        // public DbSet<TempPrepAdverseEventExtractErrorSummary> TempPrepAdverseEventExtractErrorSummary { get; set; }
+        // public DbSet<TempPrepBehaviourRiskExtractErrorSummary> TempPrepBehaviourRiskExtractErrorSummary { get; set; }
+        // public DbSet<TempPrepCareTerminationExtractErrorSummary> TempPrepCareTerminationExtractErrorSummary { get; set; }
+        // public DbSet<TempPrepLabExtractErrorSummary> TempPrepLabExtractErrorSummary { get; set; }
+        // public DbSet<TempPrepPharmacyExtractErrorSummary> TempPrepPharmacyExtractErrorSummary { get; set; }
+        // public DbSet<TempPrepVisitExtractErrorSummary> TempPrepVisitExtractErrorSummary { get; set; }
 
         #endregion
 
@@ -281,8 +281,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         
         public DbSet<TempClientRegistryExtract> TempClientRegistryExtracts { get; set; }
        
-        public DbSet<TempClientRegistryExtractError> TempClientRegistryExtractError { get; set; }
-        public DbSet<TempClientRegistryExtractErrorSummary> TempClientRegistryExtractErrorSummary { get; set; }
+        // public DbSet<TempClientRegistryExtractError> TempClientRegistryExtractError { get; set; }
+        // public DbSet<TempClientRegistryExtractErrorSummary> TempClientRegistryExtractErrorSummary { get; set; }
         
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
