@@ -4957,7 +4957,17 @@ from kenyaemr_etl.etl_otz_activity a
 7c2e4f6e-8728-11eb-8dcd-0242ac130003|Patient Pharmacy|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_PHARMACY_EXTRACT"|dwhstage|0|PatientPharmacyExtract|6|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 7c2e51ee-8728-11eb-8dcd-0242ac130003|Patient Visits|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_VISIT_Extract"|dwhstage|0|PatientVisitExtract|7|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 7c2e52c0-8728-11eb-8dcd-0242ac130003|Patient Adverse Events|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_Adverse_Events"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
-
+7c2e63c0-8728-11eb-8dcd-0242ac130003|Allergies Chronic Illness|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_AllergiesChronicIllness|dwhstage|0|AllergiesChronicIllnessExtract|11.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e53c0-8728-11eb-8dcd-0242ac130003|IPT|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_TPT|dwhstage|0|IptExtract|12.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e54c0-8728-11eb-8dcd-0242ac130003|Depression Screening|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_DepressionScreening|dwhstage|0|DepressionScreeningExtract|13.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e55c0-8728-11eb-8dcd-0242ac130003|Contact Listing|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_ContactListing|dwhstage|0|ContactListingExtract|14.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e56c0-8728-11eb-8dcd-0242ac130003|GBV Screening|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_GBVScreening|dwhstage|0|GbvScreeningExtract|15.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e57c0-8728-11eb-8dcd-0242ac130003|Enhanced Adherence Counselling|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_EnAdhCounselling|dwhstage|0|EnhancedAdherenceCounsellingExtract|16.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e58c0-8728-11eb-8dcd-0242ac130003|Drug and Alcohol Screening|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_DrugAlcoholScr|dwhstage|0|DrugAlcoholScreeningExtract|17.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e59c0-8728-11eb-8dcd-0242ac130003|OVC|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_OVC|dwhstage|0|OvcExtract|18.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e60c0-8728-11eb-8dcd-0242ac130003|OTZ|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_OTZ|dwhstage|0|OtzExtract|19.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e61c0-8728-11eb-8dcd-0242ac130003|Covid|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_COVID|dwhstage|0|CovidExtract|20.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e62c0-8728-11eb-8dcd-0242ac130003|Defaulter Tracing|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_DefaulterTracing|dwhstage|0|DefaulterTracingExtract|21.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
 A926B327-D042-4459-963B-523879C47347|Hts Clients|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClient|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 0C82AA9F-C58D-4BEA-996B-00EE33286CAD|Hts Test Kits|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsTestKits|4.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 EEE41260-E92F-47CB-8AC8-E47281B8A8C4|Hts Client Linkage|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientLinkage|3.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
@@ -4980,7 +4990,8 @@ A91D30FB-40C1-4453-903D-4E687FF5E20D|Mnch Patient|MNCH|A6221861-0E85-11E8-BA89-0
 DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|Indicator|1|IndicatorExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 
 
-82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select pkv.pkv as Pkv,
+82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct * from
+(select pkv.pkv as Pkv,
                             d.patient_id                                                     as PatientPK,
                             d.national_unique_patient_identifier                            as NUPI,
                             i.siteCode                                                       as SiteCode,
@@ -4992,7 +5003,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                             0 as FacilityId,
                             (case d.Gender when 'F' then 'Female' when 'M' then 'Male' end)  as Gender,
                             d.DOB                                                            as DOB,
-                            coalesce(c.hei_encounter_id, m.mch_encounter_id)                as EncounterId,
+                            0               as EncounterId,
                             coalesce(c.hei_enrolment_date, m.mch_enrolment_date) as FirstEnrollmentAtMnch,
                             
                             d.occupation                                                     as Occupation,
@@ -5009,7 +5020,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                                               from kenyaemr_etl.etl_mch_enrollment m group by m.patient_id)m on d.patient_id = m.patient_id
                               left join (select c.patient_id, min(date(c.visit_date)) as hei_enrolment_date, mid(min(concat(date(c.visit_date),c.encounter_id)),11) as hei_encounter_id
                                          from kenyaemr_etl.etl_hei_enrollment c group by c.patient_id)c on d.patient_id = c.patient_id
-                              left join (select a.patient_id, a.county, a.sub_county, a.ward from kenyaemr_etl.etl_person_address a)a
+                              left join (select a.patient_id,max(a.county) county, max(a.sub_county) sub_county,max(a.ward) ward from kenyaemr_etl.etl_person_address a)a
                                         on d.patient_id = a.patient_id
                               left join (select e.patient_id as patient_id, e.in_school as in_school from kenyaemr_etl.etl_hiv_enrollment e)e on d.patient_id = e.patient_id
                               inner join (select x.patient_id as patient_id,
@@ -5048,7 +5059,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                                        DOB
                                                 FROM kenyaemr_etl.etl_patient_demographics)x)pkv on pkv.patient_id = d.patient_id
                               join kenyaemr_etl.etl_default_facility_info i
-                        where m.patient_id is not null or c.patient_id is not null group by EncounterId;"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+   where m.patient_id is not null or c.patient_id is not null)x"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651214-9db2-11eb-a8b3-0242ac130003|Mnch Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
        i.siteCode                                                                   as SiteCode,
        d.openmrs_id                                                                 as PatientMnchID,
@@ -7078,3 +7089,4 @@ from kenyaemr_etl.etl_patient_demographics d
 							group by hiv.patient_id;"|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3F6C522C-BA8C-46FA-8151-CDBA393C392D|Client Registry Service|CRS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 8B29B02B-B508-42EF-8FBE-48E1DB23DD6D|Client Registry Service|CRS|A6221858-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+e5e097ed-ec17-4b51-bd0c-b047a09b8b1f|Client Registry Service|CRS|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_UPI"|CRS|1|ClientRegistryExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B

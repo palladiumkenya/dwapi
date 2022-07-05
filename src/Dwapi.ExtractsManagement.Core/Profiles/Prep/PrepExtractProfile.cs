@@ -76,7 +76,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Prep
                     o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientPrepExtract.PrevPrepReg))))
                 .ForMember(x => x.DateLastUsedPrev,
                     o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientPrepExtract.DateLastUsedPrev))))
-                .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientPrepExtract.NUPI))));
+                .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientPrepExtract.NUPI))));
 
 
             CreateMap<IDataRecord, TempPrepBehaviourRiskExtract>()
