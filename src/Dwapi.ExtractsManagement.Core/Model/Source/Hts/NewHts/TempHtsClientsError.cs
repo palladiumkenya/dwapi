@@ -30,6 +30,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public virtual bool HasError { get; set; }
         public Guid Id { get; set; }
         public string NUPI { get; set; }
+        public string Pkv { get; set; }
 
     }
 }
