@@ -39,7 +39,10 @@ namespace Dwapi.Controller
         private readonly IHtsPartnerNotificationServicesExtractRepository _htsPartnerNotificationServicesExtractRepository;
         private readonly ITempHtsPartnerNotificationServicesErrorSummaryRepository _htsPartnerNotificationServicesExtractErrorSummaryRepository;
 
-       
+        private readonly ITempHtsEligibilityExtractRepository _tempHtsEligibilityExtractRepository;
+        private readonly IHtsEligibilityExtractRepository _htsEligibilityExtractRepository;
+        private readonly ITempHtsEligibilityExtractErrorSummaryRepository _htsEligibilityExtractErrorSummaryRepository;
+
 
         public HtsSummaryController(
             ITempHtsClientsExtractRepository tempHtsClientExtractRepository, IHtsClientsExtractRepository htsClientExtractRepository, ITempHtsClientsExtractErrorSummaryRepository htsClientExtractErrorSummaryRepository,
@@ -49,7 +52,10 @@ namespace Dwapi.Controller
             ITempHtsPartnerTracingExtractRepository tempHtsPartnerTracingExtractRepository, IHtsPartnerTracingExtractRepository htsPartnerTracingExtractRepository, ITempHtsPartnerTracingErrorSummaryRepository htsPartnerTracingExtractErrorSummaryRepository,
             ITempHtsClientsLinkageExtractRepository tempHtsClientLinkageExtractRepository, IHtsClientsLinkageExtractRepository htsClientLinkageExtractRepository, ITempHtsClientLinkageErrorSummaryRepository htsClientLinkageExtractErrorSummaryRepository,
             ITempHtsPartnerNotificationServicesExtractRepository tempHtsPartnerNotificationServicesExtractRepository, IHtsPartnerNotificationServicesExtractRepository htsPartnerNotificationServicesExtractRepository,
-            ITempHtsPartnerNotificationServicesErrorSummaryRepository htsPartnerNotificationServicesExtractErrorSummaryRepository)
+            ITempHtsPartnerNotificationServicesErrorSummaryRepository htsPartnerNotificationServicesExtractErrorSummaryRepository,
+            ITempHtsEligibilityExtractRepository tempHtsEligibilityExtractRepository, IHtsEligibilityExtractRepository htsEligibilityExtractRepository, ITempHtsEligibilityExtractErrorSummaryRepository htsEligibilityExtractErrorSummaryRepository
+            )
+
         {
             _tempHtsClientExtractRepository = tempHtsClientExtractRepository;
             _htsClientExtractRepository = htsClientExtractRepository;
@@ -78,8 +84,12 @@ namespace Dwapi.Controller
             _tempHtsPartnerNotificationServicesExtractRepository = tempHtsPartnerNotificationServicesExtractRepository;
             _htsPartnerNotificationServicesExtractRepository = htsPartnerNotificationServicesExtractRepository;
             _htsPartnerNotificationServicesExtractErrorSummaryRepository = htsPartnerNotificationServicesExtractErrorSummaryRepository;
+
+            _tempHtsEligibilityExtractRepository = tempHtsEligibilityExtractRepository;
+            _htsEligibilityExtractRepository = htsEligibilityExtractRepository;
+            _htsEligibilityExtractErrorSummaryRepository = htsEligibilityExtractErrorSummaryRepository;
         }
-        
+
 
         [HttpGet("clientcount")]
         public async Task<IActionResult> GetValidCount()
@@ -121,6 +131,57 @@ namespace Dwapi.Controller
             try
             {
                 var errorSummary = _htsClientExtractErrorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading Clients error summary";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("eligibilitycount")]
+        public async Task<IActionResult> GetEligibilityCount()
+        {
+            try
+            {
+                var count = await _htsEligibilityExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Clients";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("eligibility/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadEligibilityValid(int? page,int pageSize)
+        {
+            try
+            {
+                var tempEligibilityExtracts = await  _htsEligibilityExtractRepository.GetAll(page,pageSize);
+                return Ok(tempEligibilityExtracts.ToList());
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Clients";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("eligibilityvalidations")]
+        public IActionResult LoadEligibilityValidations()
+        {
+            try
+            {
+                var errorSummary = _htsEligibilityExtractErrorSummaryRepository.GetAll().ToList();
                 return Ok(errorSummary);
             }
             catch (Exception e)

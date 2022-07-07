@@ -278,12 +278,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         #endregion
 
         public DbSet<ClientRegistryExtract> ClientRegistryExtracts{ get; set; }
-        
         public DbSet<TempClientRegistryExtract> TempClientRegistryExtracts { get; set; }
        
         public DbSet<TempClientRegistryExtractError> TempClientRegistryExtractError { get; set; }
         public DbSet<TempClientRegistryExtractErrorSummary> TempClientRegistryExtractErrorSummary { get; set; }
         
+        public DbSet<HtsEligibilityExtract> HtsEligibilityExtracts{ get; set; }
+        public DbSet<TempHtsEligibilityExtract> TempHtsEligibilityExtracts { get; set; }
+       
+        public DbSet<TempHtsEligibilityExtractError> TempHtsEligibilityExtractError { get; set; }
+        public DbSet<TempHtsEligibilityExtractErrorSummary> TempHtsEligibilityExtractErrorSummary { get; set; }
+
 
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
@@ -374,6 +379,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 
             modelBuilder.Entity<HtsClients>()
                 .HasMany(c => c.HtsPartnerTracings)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
+            
+            modelBuilder.Entity<HtsClients>()
+                .HasMany(c => c.HtsEligibilityExtracts)
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
@@ -679,6 +690,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             
             DapperPlusManager.Entity<ClientRegistryExtract>().Key(x => x.Id).Table($"{nameof(ClientRegistryExtracts)}");
             DapperPlusManager.Entity<TempClientRegistryExtract>().Key(x => x.Id).Table($"{nameof(TempClientRegistryExtracts)}");
+            DapperPlusManager.Entity<HtsEligibilityExtract>().Key(x => x.Id).Table($"{nameof(HtsEligibilityExtracts)}");
+            DapperPlusManager.Entity<TempHtsEligibilityExtract>().Key(x => x.Id).Table($"{nameof(TempHtsEligibilityExtracts)}");
 
         }
 

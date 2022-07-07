@@ -227,6 +227,24 @@ namespace Dwapi.Controller
             }
         }
 
+        [HttpPost("htseligibilityscreening")]
+        public IActionResult SendHtsEligibilityExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsSendService.SendHtsEligibilityExtractsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
         // POST: api/DwhExtracts/patients
         [HttpPost("endsession")]
         public IActionResult SendEndSession([FromBody] SendManifestPackageDTO packageDto)

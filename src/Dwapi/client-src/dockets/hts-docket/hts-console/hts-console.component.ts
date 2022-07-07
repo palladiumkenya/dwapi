@@ -87,6 +87,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private extractClientTracing: ExtractProfile;
     private extractPartnerTracing: ExtractProfile;
     private extractPartnerNotificationServices: ExtractProfile;
+    // private extractEligibilityScreening: ExtractProfile;
 
     private extractProfile: ExtractProfile;
     private extractProfiles: ExtractProfile[] = [];
@@ -404,6 +405,28 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
 
+    // public sendHtsEligibilityExtracts(): void {
+    //     this.sendStage = 7;
+    //     this.sendEvent = { sentProgress: 0 };
+    //     this.sending = true;
+    //     this.errorMessage = [];
+    //     this.patientPackage = this.getHtsEligibilityExtractPackage();
+    //     this.send$ = this._htsSenderService.sendHtsEligibilityExtracts(this.patientPackage)
+    //         .subscribe(
+    //             p => {
+    //                 // this.sendResponse = p;
+    //                 this.updateEvent();
+    //             },
+    //             e => {
+    //                 this.errorMessage = [];
+    //                 this.errorMessage.push({ severity: 'error', summary: 'Error sending hts eligbility screening', detail: <any>e });
+    //             },
+    //             () => {
+    //                 // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+    //             }
+    //         );
+    // }
+
     public sendHandshake(): void {
         this.manifestPackage = this.getSendManifestPackage();
         this.send$ = this._htsSenderService.sendHandshake(this.manifestPackage)
@@ -583,6 +606,15 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             extractName: 'HtsClientTests'
         };
     }
+
+    // private getHtsEligibilityExtractPackage(): SendPackage {
+    //     //console.log(this.extracts.find(x => x.name === 'HtsClientTests'));
+    //     return {
+    //         destination: this.centralRegistry,
+    //         extractId: this.extracts.find(x => x.name === 'HtsEligibilityScreening').id,
+    //         extractName: 'HtsEligibilityScreening'
+    //     };
+    // }
     private updateExractStats(dwhProgress: any) {
         if (dwhProgress) {
             this.extracts.map(e => {
@@ -674,6 +706,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.extractProfiles.push(this.generateExtractClientsLinkage(currentEmr));
         this.extractProfiles.push(this.generateExtractPartnerTracing(currentEmr));
         this.extractProfiles.push(this.generateExtractClientTracing(currentEmr));
+        // this.extractProfiles.push(this.generateExtractHtsEligibilityScreening(currentEmr));
+
 
         this.extractLoadCommand = {
             extracts: this.extractProfiles
@@ -748,6 +782,15 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         };
         return this.extractClientTracing;
     }
+    // private generateExtractHtsEligibilityScreening(currentEmr: EmrSystem): ExtractProfile {
+    //     const selectedProtocal = this.extracts.find(x => x.name === 'HtsEligibilityScreening').databaseProtocolId;
+    //     this.extractEligibilityScreening = {
+    //         databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+    //         extract: this.extracts.find(x => x.name === 'HtsEligibilityScreening')
+    //     };
+    //     return this.extractEligibilityScreening;
+    // }
+
 
     /*private generateExtractClient(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientExtract').databaseProtocolId;
