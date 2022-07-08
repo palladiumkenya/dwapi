@@ -38,7 +38,7 @@ namespace Dwapi.SharedKernel.Model
             if (Name.IsSameAs("HtsClient"))
                 return "HtsClientsExtract";
             
-            if (Name.IsSameAs("HtsEligibilityScreening"))
+            if (Name.IsSameAs("HtsEligibilityExtract"))
             return "HtsEligibilityExtract";
 
             return Name;
@@ -70,7 +70,7 @@ namespace Dwapi.SharedKernel.Model
                 return "TempHtsPartnerNotificationServicesExtract";
             if (Name.IsSameAs("HtsClientLinkage"))
                 return "TempHtsClientsLinkageExtract";
-            if (Name.IsSameAs("HtsEligibilityScreening"))
+            if (Name.IsSameAs("HtsEligibilityExtract"))
                 return "TempHtsEligibilityExtract";
             return $"Temp{TableName}";
         }

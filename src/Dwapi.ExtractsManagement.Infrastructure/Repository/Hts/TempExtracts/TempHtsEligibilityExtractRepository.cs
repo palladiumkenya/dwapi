@@ -71,7 +71,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts
             int count = 0;
             using (var cn=GetNewConnection())
             {
-                var query = QueryUtil.TracingCount;
+                var query = QueryUtil.EligibilityCount;
                 count = cn.ExecuteScalar<int>(query);
             }
             return Task.FromResult(count);

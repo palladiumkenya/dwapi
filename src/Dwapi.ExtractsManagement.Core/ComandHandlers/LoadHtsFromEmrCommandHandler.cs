@@ -110,18 +110,6 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 };
                 PNSTask = _mediator.Send(command, cancellationToken);
             }
-
-            // HtsClientLinkageExtract
-            var HtsClientLinkageExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientLinkage");
-            if (null != HtsClientLinkageExtractProfile)
-            {
-                var command = new ExtractHtsClientsLinkage()
-                {
-                    Extract = HtsClientLinkageExtractProfile?.Extract,
-                    DatabaseProtocol = HtsClientLinkageExtractProfile?.DatabaseProtocol
-                };
-                ClientLinkageTask = _mediator.Send(command, cancellationToken);
-            }
             
             // HtsEligibilityExtract
             var HtsEligibilityExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsEligibilityScreening");
@@ -135,6 +123,20 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 HtsEligibilityScreeningTask = _mediator.Send(command, cancellationToken);
             }
 
+
+            // HtsClientLinkageExtract
+            var HtsClientLinkageExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientLinkage");
+            if (null != HtsClientLinkageExtractProfile)
+            {
+                var command = new ExtractHtsClientsLinkage()
+                {
+                    Extract = HtsClientLinkageExtractProfile?.Extract,
+                    DatabaseProtocol = HtsClientLinkageExtractProfile?.DatabaseProtocol
+                };
+                ClientLinkageTask = _mediator.Send(command, cancellationToken);
+            }
+            
+            
             // await all tasks
             var ts = new List<Task<bool>> { ClientTestTask, TestKitTask, ClientTracingTask, PartnerTracingTask, PNSTask, ClientLinkageTask, HtsEligibilityScreeningTask };
             var result = await Task.WhenAll(ts);

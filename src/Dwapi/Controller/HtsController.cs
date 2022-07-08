@@ -227,6 +227,8 @@ namespace Dwapi.Controller
             }
         }
 
+
+        // POST: api/DwhExtracts/patients
         [HttpPost("htseligibilityscreening")]
         public IActionResult SendHtsEligibilityExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
@@ -244,6 +246,7 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
 
         // POST: api/DwhExtracts/patients
         [HttpPost("endsession")]
