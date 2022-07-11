@@ -408,7 +408,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public sendHtsEligibilityExtracts(): void {
-        this.sendStage = 7;
+        this.sendStage = 8;
         this.sendEvent = { sentProgress: 0 };
         this.sending = true;
         this.errorMessage = [];

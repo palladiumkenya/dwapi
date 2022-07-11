@@ -41,7 +41,7 @@ migrationBuilder.Sql(@"create view vTempHtsEligibilityExtractError as SELECT * F
 					vTempHtsEligibilityExtractError.PartnerHivStatus,
 					vTempHtsEligibilityExtractError.CoupleDiscordant,
 					vTempHtsEligibilityExtractError.MultiplePartners,
-					vTempHtsEligibilityExtractError.NumberPartners,
+					vTempHtsEligibilityExtractError.NumberOfPartners,
 					vTempHtsEligibilityExtractError.AlcoholSex,
 					vTempHtsEligibilityExtractError.MoneySex,
 					vTempHtsEligibilityExtractError.CondomBurst,

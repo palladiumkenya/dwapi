@@ -382,6 +382,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
+            
+            modelBuilder.Entity<HtsClients>()
+                .HasMany(c => c.HtsEligibilityExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
 
             //            modelBuilder.Entity<HTSClientExtract>()
             //                .HasKey(f => new {f.SiteCode, f.PatientPk,f.EncounterId});
