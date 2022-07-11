@@ -3,9 +3,8 @@ using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.Commands.Hts
 {
-    public class ExtractHtsEligibilityScreening: IRequest<bool>
+    public class ExtractHtsEligibilityExtract: IRequest<bool>
     {
-        
         public DbExtract Extract { get; set; }
         public DbProtocol DatabaseProtocol { get; set; }
     }

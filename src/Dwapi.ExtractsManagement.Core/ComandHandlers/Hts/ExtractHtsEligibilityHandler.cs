@@ -16,7 +16,7 @@ using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
 { 
-    public class ExtractHtsEligibilityHandler : IRequestHandler<ExtractHtsEligibilityScreening, bool>
+    public class ExtractHtsEligibilityHandler : IRequestHandler<ExtractHtsEligibilityExtract, bool>
     {
         private readonly IHtsEligibilityExtractSourceExtractor _patientSourceExtractor;
         private readonly IHtsExtractValidator _extractValidator;
@@ -35,7 +35,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Hts
             _extractHistoryRepository = extractHistoryRepository;
         }
 
-        public async Task<bool> Handle(ExtractHtsEligibilityScreening request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(ExtractHtsEligibilityExtract request, CancellationToken cancellationToken)
         {
 
             //Extract

@@ -75,7 +75,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Hts
             //return _context.ClientLinkageExtracts.Where(x => !x.IsSent).AsNoTracking();
         }
 
-        public IEnumerable<HtsEligibilityExtractView> ReadAllHTSEligibilityExtracts()
+        public IEnumerable<HtsEligibilityExtractView> ReadAllHtsEligibilityExtracts()
         {
             return _context.Database.GetDbConnection()
                 .Query<HtsEligibilityExtractView>("Select * From HTSEligibilityExtracts")

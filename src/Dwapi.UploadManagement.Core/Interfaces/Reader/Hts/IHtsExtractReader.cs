@@ -13,7 +13,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Hts
         IEnumerable<HtsPartnerTracingExtractView> ReadAllPartnerTracing();
         IEnumerable<HtsPartnerNotificationServicesExtractView> ReadAllPartnerNotificationServices();
         IEnumerable<HtsClientsLinkageExtractView> ReadAllClientsLinkage();
-        IEnumerable<HtsEligibilityExtractView> ReadAllHTSEligibilityExtracts();
+        IEnumerable<HtsEligibilityExtractView> ReadAllHtsEligibilityExtracts();
 
         IEnumerable<Site> GetSites();
         IEnumerable<SitePatientProfile> GetSitePatientProfiles();

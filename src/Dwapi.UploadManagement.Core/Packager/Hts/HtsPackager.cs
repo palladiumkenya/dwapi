@@ -82,7 +82,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Hts
 
         public IEnumerable<HtsEligibilityExtract> GenerateHtsEligibilityExtracts()
         {
-            return _htsExtractReader.ReadAllHTSEligibilityExtracts();
+            return _htsExtractReader.ReadAllHtsEligibilityExtracts();
         }
 
         

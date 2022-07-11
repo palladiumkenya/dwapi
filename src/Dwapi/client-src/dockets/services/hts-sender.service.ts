@@ -69,10 +69,10 @@ export class HtsSenderService {
             .catch(this.handleError);
     }
 
-    // public sendHtsEligibilityExtracts(sendPackage: SendPackage): Observable<SendResponse> {
-    //     return this._http.post<boolean>(`${this._url}/htseligibilityscreening`, sendPackage)
-    //         .catch(this.handleError);
-    // }
+    public sendHtsEligibilityExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/htseligibilityextract`, sendPackage)
+            .catch(this.handleError);
+    }
 
     public sendHandshake(sendPackage: SendPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/endsession`, sendPackage)

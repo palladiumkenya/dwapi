@@ -152,12 +152,13 @@ namespace Dwapi.Controller
             }
             catch (Exception e)
             {
-                var msg = $"Error loading valid Clients";
+                var msg = $"Error loading valid Linkages";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);
             }
         }
+
 
         [HttpGet("eligibility/{page}/{pageSize}")]
         public async Task<IActionResult> LoadEligibilityValid(int? page,int pageSize)
@@ -186,12 +187,13 @@ namespace Dwapi.Controller
             }
             catch (Exception e)
             {
-                var msg = $"Error loading Clients error summary";
+                var msg = $"Error loading eligibility error summary";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);
             }
         }
+
 
         [HttpGet("linkagecount")]
         public async Task<IActionResult> GetLinkageCount()
@@ -243,6 +245,7 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
         [HttpGet("partnertracingcount")]
         public async Task<IActionResult> GetPartnerTrackingCount()
         {

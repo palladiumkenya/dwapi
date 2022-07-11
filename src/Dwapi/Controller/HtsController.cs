@@ -38,8 +38,6 @@ namespace Dwapi.Controller
         [HttpPost("extractAll")]
         public async Task<IActionResult> Load([FromBody] LoadHtsExtracts request)
         {
-            if (!ModelState.IsValid) return BadRequest();
-
             string version = GetType().Assembly.GetName().Version.ToString();
             var result = await _mediator.Send(request.LoadHtsFromEmrCommand, HttpContext.RequestAborted);
             await _mediator.Publish(new ExtractLoaded("HivTestingService", version));
@@ -229,7 +227,7 @@ namespace Dwapi.Controller
 
 
         // POST: api/DwhExtracts/patients
-        [HttpPost("htseligibilityscreening")]
+        [HttpPost("htseligibilityextract")]
         public IActionResult SendHtsEligibilityExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
             if (!packageDto.IsValid())

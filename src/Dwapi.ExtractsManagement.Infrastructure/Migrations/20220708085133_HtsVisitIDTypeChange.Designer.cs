@@ -4,14 +4,16 @@ using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20220708085133_HtsVisitIDTypeChange")]
+    partial class HtsVisitIDTypeChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2244,7 +2246,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("NewPartner");
 
-                    b.Property<string>("NumberOfPartners");
+                    b.Property<string>("NumberPartners");
 
                     b.Property<string>("PartnerHivStatus");
 
@@ -8423,7 +8425,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("NewPartner");
 
-                    b.Property<int?>("NumberOfPartners");
+                    b.Property<string>("NumberPartners");
 
                     b.Property<string>("PartnerHivStatus");
 
@@ -8455,7 +8457,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int?>("SiteCode");
 
-                    b.Property<int?>("SpecificReasonForIneligibility");
+                    b.Property<int>("SpecificReasonForIneligibility");
 
                     b.Property<string>("StartedOnART");
 
@@ -8467,7 +8469,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("VisitDate");
 
-                    b.Property<int?>("VisitID");
+                    b.Property<int>("VisitID");
 
                     b.Property<string>("WhoPerformedTest");
 

@@ -2124,13 +2124,14 @@ left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach
                             t.child_reasons_for_ineligibility                                           as ChildReasonsForIneligibility,
                             case t.eligible_for_test when 1065 then 'Yes' when 1066 then 'No' end       as EligibleForTest,
                             t.reasons_for_ineligibility,
-                            t.specific_reason_for_ineligibility                                            SpecificReasonForIneligibility,
+                            t.specific_reason_for_ineligibility                                            ReasonsForIneligibility,
+                            0 as SpecificReasonForIneligibility,
                             t.date_created                                                              as DateCreated,
                             t.date_last_modified                                                        as DateLastModified
                      FROM kenyaemr_etl.etl_hts_eligibility_screening t
                               inner join kenyaemr_etl.etl_patient_demographics demographics on t.patient_id = demographics.patient_id
                               LEFT JOIN openmrs.location_attribute SC ON SC.location_id = t.location_id AND SC.attribute_type_id = 1
-                              LEFT JOIN openmrs.location SN ON SN.location_id = t.location_id;"|DWHStage|1|HtsEligibilityScreening|8|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+                              LEFT JOIN openmrs.location SN ON SN.location_id = t.location_id;"|DWHStage|1|HtsEligibilityExtract|8|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 
 290bd21c-3089-11ea-978f-2e728ce88125|Master Patient Index|CBS|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
@@ -5079,76 +5080,77 @@ A91D30FB-40C1-4453-903D-4E687FF5E20D|Mnch Patient|MNCH|A6221861-0E85-11E8-BA89-0
 830568D9-2C97-46F4-B5FB-3AA83480BFBF|Mat Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMatVisitExtract|0|MatVisitExtract|23.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|Indicator|1|IndicatorExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 
-82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct * from
-(select pkv.pkv as Pkv,
-                            d.patient_id                                                     as PatientPK,
-                            d.national_unique_patient_identifier                            as NUPI,
-                            i.siteCode                                                       as SiteCode,
-                            d.openmrs_id                                                     as PatientMnchID,
-                            d.hei_no                                                         as PatientHeiID,
-                            'KenyaEMR'                                                       as Emr,
-                            'Kenya HMIS II'                                                  as Project,
-                            i.FacilityName                                                   as FacilityName,
-                            0 as FacilityId,
-                            (case d.Gender when 'F' then 'Female' when 'M' then 'Male' end)  as Gender,
-                            d.DOB                                                            as DOB,
-                            0               as EncounterId,
-                            coalesce(c.hei_enrolment_date, m.mch_enrolment_date) as FirstEnrollmentAtMnch,
-                            
-                            d.occupation                                                     as Occupation,
-                            d.marital_status                                                 as MaritalStatus,
-                            d.education_level                                                as EducationLevel,
-                            a.county                                                         as PatientResidentCounty,
-                            a.sub_county                                                     as PatientResidentSubCounty,
-                            a.ward                                                           as PatientResidentWard,
-                            (case e.in_school when 1 then 'Yes' when 2 then 'No' end)        as Inschool,
-                            d.date_created                                                  as Date_Created,
-                            d.date_last_modified                                            as Date_Last_Modified
-                       from kenyaemr_etl.etl_patient_demographics d
-                              left join (select m.patient_id, min(date(m.visit_date))  as mch_enrolment_date, mid(min(concat(date(m.visit_date),m.encounter_id)),11) as mch_encounter_id
-                                                              from kenyaemr_etl.etl_mch_enrollment m group by m.patient_id)m on d.patient_id = m.patient_id
-                              left join (select c.patient_id, min(date(c.visit_date)) as hei_enrolment_date, mid(min(concat(date(c.visit_date),c.encounter_id)),11) as hei_encounter_id
-                                         from kenyaemr_etl.etl_hei_enrollment c group by c.patient_id)c on d.patient_id = c.patient_id
-                              left join (select a.patient_id,max(a.county) county, max(a.sub_county) sub_county,max(a.ward) ward from kenyaemr_etl.etl_person_address a)a
-                                        on d.patient_id = a.patient_id
-                              left join (select e.patient_id as patient_id, e.in_school as in_school from kenyaemr_etl.etl_hiv_enrollment e)e on d.patient_id = e.patient_id
-                              inner join (select x.patient_id as patient_id,
-                                                 x.sxFirstName,
-                                                 x.sxLastname,
-                                                 x.sxMiddleName,
-                                                 x.dmFirstName,
-                                                 x.dmLastName,
-                                                 x.dmMiddleName,
-                                                 x.Gender,
-                                                 x.DOB,
-                                                 CASE
-                                                     WHEN locate(';', dmLastName) > 0 THEN CONCAT(
-                                                             CAST(LEFT(Gender, 1) AS CHAR CHARACTER SET utf8),
-                                                             CAST(sxFirstName AS CHAR CHARACTER SET utf8), CAST(
-                                                                     SUBSTRING(dmLastName, locate(';', dmLastName) + 1, LENGTH(dmLastName))
-                                                                 AS
-                                                                 CHAR CHARACTER SET utf8),
-                                                             CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
-                                                         )
-                                                     ELSE CONCAT(
-                                                             CAST(LEFT(Gender, 1)AS CHAR CHARACTER SET utf8),
-                                                             CAST(sxFirstName AS CHAR CHARACTER SET utf8),
-                                                             CAST(dmLastName AS CHAR CHARACTER SET utf8),
-                                                             CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
-                                                         )
-                                                     END      AS PKV
-                                          from (SELECT patient_id,
-                                                       SOUNDEX(UPPER(REPLACE(given_name, '0', 'O')))                           AS sxFirstName,
-                                                       SOUNDEX(UPPER(REPLACE(family_name, '0', 'O')))                          AS sxLastName,
-                                                       SOUNDEX(UPPER(REPLACE(middle_name, '0', 'O')))                          AS sxMiddleName,
-                                                       fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name, '0', 'O')))  AS dmFirstName,
-                                                       fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name, '0', 'O'))) AS dmLastName,
-                                                       fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name, '0', 'O'))) AS dmMiddleName,
-                                                       Gender,
-                                                       DOB
-                                                FROM kenyaemr_etl.etl_patient_demographics)x)pkv on pkv.patient_id = d.patient_id
-                              join kenyaemr_etl.etl_default_facility_info i
-   where m.patient_id is not null or c.patient_id is not null)x"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select pkv.pkv as PKV,
+                         d.patient_id                                                    as PatientPK,
+                         d.national_unique_patient_identifier                            as NUPI,
+                         i.siteCode                                                      as SiteCode,
+                         d.openmrs_id                                                    as PatientMNCHID,
+                         d.hei_no                                                        as PatientHEIID,
+                         'KenyaEMR'                                                      as Emr,
+                         'Kenya HMIS II'                                                 as Project,
+                         i.FacilityName                                                  as FacilityName,
+                          0 as FacilityId,
+                         (case d.Gender when 'F' then 'Female' when 'M' then 'Male' end) as Gender,
+                         d.DOB                                                           as DOB,
+                         coalesce(c.hei_enrolment_date, m.mch_enrolment_date)            as FirstEnrollmentAtMnch,
+                         coalesce(c.hei_encounter_id, m.mch_encounter_id)                as EncounterId,
+                         d.occupation                                                    as Occupation,
+                         d.marital_status                                                as MaritalStatus,
+                         d.education_level                                               as EducationLevel,
+                         a.county                                                        as PatientResidentCounty,
+                         a.sub_county                                                    as PatientResidentSubCounty,
+                         a.ward                                                          as PatientResidentWard,
+                         (case e.in_school when 1 then 'Yes' when 2 then 'No' end)       as Inschool,
+                         d.date_created                                                  as Date_Created,
+                         d.date_last_modified                                            as Date_Last_Modified
+                  from kenyaemr_etl.etl_patient_demographics d
+                         left join (select m.patient_id, min(date(m.visit_date)) as mch_enrolment_date,mid(min(concat(date(m.visit_date),m.encounter_id)),11) as mch_encounter_id
+                                    from kenyaemr_etl.etl_mch_enrollment m group by m.patient_id)m on d.patient_id = m.patient_id
+                         left join (select c.patient_id, min(date(c.visit_date)) as hei_enrolment_date, mid(min(concat(date(c.visit_date),c.encounter_id)),11) as hei_encounter_id
+                                    from kenyaemr_etl.etl_hei_enrollment c group by c.patient_id)c on d.patient_id = c.patient_id
+                         left join (select a.patient_id, a.county, a.sub_county, a.ward from kenyaemr_etl.etl_person_address a)a
+                           on d.patient_id = a.patient_id
+                         left join (select e.patient_id as patient_id, e.in_school as in_school from kenyaemr_etl.etl_hiv_enrollment e)e
+                           on d.patient_id = e.patient_id
+                         inner join (select x.patient_id as patient_id,
+                                            x.sxFirstName,
+                                            x.sxLastname,
+                                            x.sxMiddleName,
+                                            x.dmFirstName,
+                                            x.dmLastName,
+                                            x.dmMiddleName,
+                                            x.Gender,
+                                            x.DOB,
+                                            CASE
+                                              WHEN locate(';', dmLastName) > 0 THEN CONCAT(
+                                                                                      CAST(LEFT(Gender, 1) AS CHAR CHARACTER SET utf8),
+                                                                                      CAST(sxFirstName AS CHAR CHARACTER SET utf8), CAST(
+                                                                                                                                      SUBSTRING(dmLastName, locate(';', dmLastName) + 1, LENGTH(dmLastName))
+                                                                                                                                      AS
+                                                                                                                                      CHAR CHARACTER SET utf8),
+                                                                                      CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+                                                )
+                                              ELSE CONCAT(
+                                                     CAST(LEFT(Gender, 1)AS CHAR CHARACTER SET utf8),
+                                                     CAST(sxFirstName AS CHAR CHARACTER SET utf8),
+                                                     CAST(dmLastName AS CHAR CHARACTER SET utf8),
+                                                     CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+                                                )
+                                                                                                    END      AS PKV
+                                                                                         from (SELECT patient_id,
+                                                                                                      SOUNDEX(UPPER(REPLACE(given_name, '0', 'O')))                           AS sxFirstName,
+                                                                                                      SOUNDEX(UPPER(REPLACE(family_name, '0', 'O')))                          AS sxLastName,
+                                                                                                      SOUNDEX(UPPER(REPLACE(middle_name, '0', 'O')))                          AS sxMiddleName,
+                                                                                                      fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name, '0', 'O')))  AS dmFirstName,
+                                                                                                      fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name, '0', 'O'))) AS dmLastName,
+                                                                                                      fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name, '0', 'O'))) AS dmMiddleName,
+                                                                                                      Gender,
+                                                                                                      DOB
+                                                                                               FROM kenyaemr_etl.etl_patient_demographics)x)pkv on pkv.patient_id = d.patient_id
+                                                                             join kenyaemr_etl.etl_default_facility_info i
+                                                                      where m.patient_id is not null
+                                                                         or c.patient_id is not null
+                                                                      group by EncounterId;"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651214-9db2-11eb-a8b3-0242ac130003|Mnch Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
        i.siteCode                                                                   as SiteCode,
        d.openmrs_id                                                                 as PatientMnchID,
@@ -6752,50 +6754,52 @@ from kenyaemr_etl.etl_patient_demographics d
 		group by f.visit_id;"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                  as PatientPK,
-														i.siteCode                                                    as SiteCode,
-														i.facilityName                                                as FacilityName,
-														d.unique_prep_number                                          as PrepNumber,
-														d.national_unique_patient_identifier                          as NUPI,
+                    i.siteCode                                                    as SiteCode,
+                    i.facilityName                                                as FacilityName,
+                    d.unique_prep_number                                          as PrepNumber,
+                    d.national_unique_patient_identifier                          as NUPI,
+                    
+                    d.openmrs_id                                                  as HtsNumber,
+                    'KenyaEMR'                                                    as Emr,
+                    'HMIS'                                                        as Project,
+                    min(date(e.visit_date))                                       as PrepEnrollmentDate,
+                    case d.gender when 'M' then 'Male' when 'F' then 'Female' end as Sex,
+                    d.dob                                                         as DateOfBirth,
+                    d.birth_place                                                 as CountyOfBirth,
+                    pa.county                                                     as County,
+                    pa.sub_county                                                 as SubCounty,
+                    pa.location                                                   as Location,
+                    pa.land_mark                                                  as LandMark,
+                    pa.ward                                                       as Ward,
+                    e.patient_type                                                as ClientType,
+                    e.transfer_in_entry_point                                     as ReferralPoint,
+                    d.marital_status                                              as MaritalStatus,
+                    case e.in_school when 1 then 'Yes' when 2 then 'No' else null end as Inschool,
+                    (case e.population_type
+                    when 164928 then 'General Population'
+                    when 6096 then 'Discordant Couple'
+                    when 164929 then 'Key Population'
+                    else NULL end)                                           as PopulationType,
+                    case e.kp_type when 162277 then 'People in prison and other closed settings' when 165100 then 'Transgender' 
+                    when 105 then 'PWID' when 160578 then 'MSM' when 165084 then 'MSW' when 160579 then 'FSW' end as KeyPopulationType,
+                    e.referred_from                                               as Refferedfrom,
+                    if(e.transfer_in_date is not null, 'Yes', 'No')               as TransferIn,
+                    date(e.transfer_in_date)                                      as TransferInDate,
+                    e.transfer_from                                               as TransferFromFacility,
+                    e.date_started_prep_trf_facility                              as DatefirstinitiatedinPrepCare,
+                    e.date_started_prep_trf_facility                              as DateStartedPrEPattransferringfacility,
+                    e.previously_on_prep                                          as ClientPreviouslyonPrep,
+                    e.regimen                                                     as PrevPrepReg,
+                    e.prep_last_date                                              as DateLastUsedPrev,
+                    e.date_created 																																															as Date_Created,
+                    e.date_last_modified 																																									as Date_Last_Modified
+                    from kenyaemr_etl.etl_prep_enrolment e
+                    left join kenyaemr_etl.etl_person_address pa on e.patient_id = pa.patient_id
+                    inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
+                    inner join kenyaemr_etl.etl_prep_behaviour_risk_assessment r on e.patient_id = r.patient_id
+                    join kenyaemr_etl.etl_default_facility_info i
+group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
-														d.openmrs_id                                                  as HtsNumber,
-														'KenyaEMR'                                                    as Emr,
-														'HMIS'                                                        as Project,
-														min(date(e.visit_date))                                       as PrepEnrollmentDate,
-														case d.gender when 'M' then 'Male' when 'F' then 'Female' end as Sex,
-														d.dob                                                         as DateOfBirth,
-														d.birth_place                                                 as CountyOfBirth,
-														pa.county                                                     as County,
-														pa.sub_county                                                 as SubCounty,
-														pa.location                                                   as Location,
-														pa.land_mark                                                  as LandMark,
-														pa.ward                                                       as Ward,
-														e.patient_type                                                as ClientType,
-														e.transfer_in_entry_point                                     as ReferralPoint,
-														d.marital_status                                              as MaritalStatus,
-														e.in_school                                                   as Inschool,
-														(case e.population_type
-																			when 164928 then 'General Population'
-																			when 6096 then 'Discordant Couple'
-																			when 164929 then 'Key Population'
-																			else NULL end)                                           as PopulationType,
-														e.kp_type                                                     as KeyPopulationType,
-														e.referred_from                                               as Refferedfrom,
-														if(e.transfer_in_date is not null, 'Yes', 'No')               as TransferIn,
-														date(e.transfer_in_date)                                      as TransferInDate,
-														e.transfer_from                                               as TransferFromFacility,
-														e.date_started_prep_trf_facility                              as DatefirstinitiatedinPrepCare,
-														e.date_started_prep_trf_facility                              as DateStartedPrEPattransferringfacility,
-														e.previously_on_prep                                          as ClientPreviouslyonPrep,
-														e.regimen                                                     as PrevPrepReg,
-														e.prep_last_date                                              as DateLastUsedPrev,
-														e.date_created 																																															as Date_Created,
-														e.date_last_modified 																																									as Date_Last_Modified
-							from kenyaemr_etl.etl_prep_enrolment e
-																left join kenyaemr_etl.etl_person_address pa on e.patient_id = pa.patient_id
-																inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
-																inner join kenyaemr_etl.etl_prep_behaviour_risk_assessment r on e.patient_id = r.patient_id
-																join kenyaemr_etl.etl_default_facility_info i
-							group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651f02-9db2-11eb-a8b3-0242ac130003|Prep Behaviour Risk|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
 														i.siteCode                                                                   as SiteCode,
 														d.unique_prep_number                                                         as PrepNumber,

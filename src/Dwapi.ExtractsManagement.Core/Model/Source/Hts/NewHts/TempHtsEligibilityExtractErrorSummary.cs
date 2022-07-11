@@ -6,8 +6,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
     [Table("vTempHtsEligibilityExtractErrorSummary")]
     public class TempHtsEligibilityExtractErrorSummary: TempHTSExtractErrorSummary
     {
-        public string VisitID { get; set; }
-        public string EncounterId { get; set; }
+         public string EncounterId { get; set; }
+        public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }
         public string PopulationType { get; set; }
         public string KeyPopulation { get; set; }
@@ -28,7 +28,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public string PartnerHivStatus { get; set; }
         public string CoupleDiscordant { get; set; }
         public string MultiplePartners { get; set; }
-        public string NumberPartners { get; set; }
+        public int? NumberOfPartners { get; set; }
         public string AlcoholSex { get; set; }
         public string MoneySex { get; set; }
         public string CondomBurst { get; set; }
@@ -53,6 +53,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public string ChildReasonsForIneligibility { get; set; }
         public string EligibleForTest { get; set; }
         public string ReasonsForIneligibility { get; set; }
-        public int SpecificReasonForIneligibility { get; set; }
+        public int? SpecificReasonForIneligibility { get; set; }
     }
 }
