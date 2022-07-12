@@ -1,5 +1,4 @@
-﻿using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
-using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
+﻿using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts
 {

@@ -1,6 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { HtsClientsLinkageService } from './hts-clients-linkage.service';
 import {HtsEligibilityScreeningService} from "./hts-eligibility-screening.service";
 
 describe('HtsEligibilityScreeningService', () => {

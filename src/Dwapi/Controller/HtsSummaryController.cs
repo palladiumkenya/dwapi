@@ -142,58 +142,6 @@ namespace Dwapi.Controller
             }
         }
 
-        [HttpGet("eligibilitycount")]
-        public async Task<IActionResult> GetEligibilityCount()
-        {
-            try
-            {
-                var count = await _htsEligibilityExtractRepository.GetCount();
-                return Ok(count);
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error loading valid Linkages";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
-
-        [HttpGet("eligibility/{page}/{pageSize}")]
-        public async Task<IActionResult> LoadEligibilityValid(int? page,int pageSize)
-        {
-            try
-            {
-                var tempEligibilityExtracts = await  _htsEligibilityExtractRepository.GetAll(page,pageSize);
-                return Ok(tempEligibilityExtracts.ToList());
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error loading valid Clients";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
-        [HttpGet("eligibilityvalidations")]
-        public IActionResult LoadEligibilityValidations()
-        {
-            try
-            {
-                var errorSummary = _htsEligibilityExtractErrorSummaryRepository.GetAll().ToList();
-                return Ok(errorSummary);
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error loading eligibility error summary";
-                Log.Error(msg);
-                Log.Error($"{e}");
-                return StatusCode(500, msg);
-            }
-        }
-
 
         [HttpGet("linkagecount")]
         public async Task<IActionResult> GetLinkageCount()
@@ -500,5 +448,58 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+        [HttpGet("eligibilitycount")]
+        public async Task<IActionResult> GetEligibilityCount()
+        {
+            try
+            {
+                var count = await _htsEligibilityExtractRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Linkages";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+
+        [HttpGet("eligibility/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadEligibilityValid(int? page, int pageSize)
+        {
+            try
+            {
+                var count = await _htsEligibilityExtractRepository.GetAll(page, pageSize);
+                return Ok(count.ToList());
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid eligibility";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("eligibilityvalidations")]
+        public IActionResult LoadEligibilityValidations()
+        {
+            try
+            {
+                var errorSummary = _htsEligibilityExtractErrorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading eligibility error summary";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
     }
 }

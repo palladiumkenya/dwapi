@@ -2,14 +2,14 @@
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
-    public partial class HtsEligibilityInitialViews : Migration
+    public partial class HtsEligibilityUpdateFieldsViews : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-migrationBuilder.Sql(@"create view vTempHtsEligibilityExtractError as SELECT * FROM TempHtsEligibilityExtracts WHERE (CheckError = 1)");
+            migrationBuilder.Sql(@"alter view vTempHtsEligibilityExtractError as SELECT * FROM TempHtsEligibilityExtracts WHERE (CheckError = 1)");
 
 	        migrationBuilder.Sql(@"
-				CREATE VIEW vTempHtsEligibilityExtractErrorSummary
+				ALTER VIEW vTempHtsEligibilityExtractErrorSummary
 				AS
          		SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, ValidationError.RecordId,
  
@@ -41,7 +41,7 @@ migrationBuilder.Sql(@"create view vTempHtsEligibilityExtractError as SELECT * F
 					vTempHtsEligibilityExtractError.PartnerHivStatus,
 					vTempHtsEligibilityExtractError.CoupleDiscordant,
 					vTempHtsEligibilityExtractError.MultiplePartners,
-					vTempHtsEligibilityExtractError.NumberPartners,
+					vTempHtsEligibilityExtractError.NumberOfPartners,
 					vTempHtsEligibilityExtractError.AlcoholSex,
 					vTempHtsEligibilityExtractError.MoneySex,
 					vTempHtsEligibilityExtractError.CondomBurst,
@@ -72,6 +72,7 @@ migrationBuilder.Sql(@"create view vTempHtsEligibilityExtractError as SELECT * F
 										 ValidationError ON vTempHtsEligibilityExtractError.Id = ValidationError.RecordId INNER JOIN
 										 Validator ON ValidationError.ValidatorId = Validator.Id
             ");
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
