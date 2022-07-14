@@ -267,7 +267,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.TestedHIVBefore, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.TestedHIVBefore))))
                 .ForMember(x => x.WhoPerformedTest, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.WhoPerformedTest))))
                 .ForMember(x => x.ResultOfHIV, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ResultOfHIV))))
-                .ForMember(x => x.DateTested, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateTested ))))
+                .ForMember(x => x.DateTestedSelf, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateTestedSelf ))))
                 .ForMember(x => x.StartedOnART, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.StartedOnART))))
                 .ForMember(x => x.CCCNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.CCCNumber))))
                 .ForMember(x => x.EverHadSex, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.EverHadSex))))

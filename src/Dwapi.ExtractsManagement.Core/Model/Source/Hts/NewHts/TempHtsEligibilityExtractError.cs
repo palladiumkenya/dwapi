@@ -13,7 +13,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public virtual ICollection<TempHtsEligibilityExtractErrorSummary> TempHtsEligibilityExtractErrorSummaries { get; set; } = new List<TempHtsEligibilityExtractErrorSummary>();
 
         public Guid Id { get; set; }
-         public string EncounterId { get; set; }
+          public string EncounterId { get; set; }
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }
         public string PopulationType { get; set; }
@@ -26,7 +26,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public string TestedHIVBefore { get; set; }
         public string WhoPerformedTest { get; set; }
         public string ResultOfHIV { get; set; }
-        public DateTime? DateTested  { get; set; }
         public string StartedOnART { get; set; }
         public string CCCNumber { get; set; }
         public string EverHadSex { get; set; }
@@ -61,5 +60,18 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public string EligibleForTest { get; set; }
         public string ReasonsForIneligibility { get; set; }
         public int? SpecificReasonForIneligibility { get; set; }
+        
+        public string MothersStatus { get; set; }
+        public DateTime? DateTestedSelf { get; set; }
+        public string ResultOfHIVSelf { get; set; }
+        public DateTime? DateTestedProvider { get; set; }
+        public string EmotionalViolence { get; set; }
+        public string ScreenedTB { get; set; }
+        public string Cough	{ get; set; }
+        public string Fever	{ get; set; }
+        public string WeightLoss { get; set; }
+        public string NightSweats { get; set; }
+        public string TBStatus { get; set; }
+        public string ReferredForTesting { get; set; }
     }
 }
