@@ -55,59 +55,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 										 Validator ON ValidationError.ValidatorId = Validator.Id
                 ");
             
-            
-            migrationBuilder.Sql(@"alter view vTempHTSClientExtractError as SELECT * FROM TempHTSClientExtracts WHERE (CheckError = 1)");
-            migrationBuilder.Sql(@"
-						ALTER VIEW vTempHTSClientExtractErrorSummary
-						AS
-						SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, ValidationError.RecordId,
-
-					vTempHTSClientExtractError.FacilityName,
-                              vTempHTSClientExtractError.SiteCode,
-                              vTempHTSClientExtractError.PatientPk,
-                              vTempHTSClientExtractError.HtsNumber,
-                              vTempHTSClientExtractError.Emr,
-                              vTempHTSClientExtractError.Project,
-                              vTempHTSClientExtractError.CheckError,
-                              vTempHTSClientExtractError.DateExtracted,
-                              vTempHTSClientExtractError.EncounterId,
-                              vTempHTSClientExtractError.VisitDate,
-                              vTempHTSClientExtractError.Dob,
-                              vTempHTSClientExtractError.Gender,
-                              vTempHTSClientExtractError.MaritalStatus,
-                              vTempHTSClientExtractError.KeyPop,
-                              vTempHTSClientExtractError.TestedBefore,
-                              vTempHTSClientExtractError.MonthsLastTested,
-                              vTempHTSClientExtractError.ClientTestedAs,
-                              vTempHTSClientExtractError.StrategyHTS,
-                              vTempHTSClientExtractError.TestKitName1,
-                              vTempHTSClientExtractError.TestKitLotNumber1,
-                              vTempHTSClientExtractError.TestKitExpiryDate1,
-                              vTempHTSClientExtractError.TestResultsHTS1,
-                              vTempHTSClientExtractError.TestKitName2,
-                              vTempHTSClientExtractError.TestKitLotNumber2,
-                              vTempHTSClientExtractError.TestKitExpiryDate2,
-                              vTempHTSClientExtractError.TestResultsHTS2,
-                              vTempHTSClientExtractError.FinalResultHTS,
-                              vTempHTSClientExtractError.FinalResultsGiven,
-                              vTempHTSClientExtractError.TBScreeningHTS,
-                              vTempHTSClientExtractError.ClientSelfTested,
-                              vTempHTSClientExtractError.CoupleDiscordant,
-                              vTempHTSClientExtractError.TestType,
-                              vTempHTSClientExtractError.KeyPopulationType,
-                              vTempHTSClientExtractError.PopulationType,
-                              vTempHTSClientExtractError.PatientDisabled,
-                              vTempHTSClientExtractError.DisabilityType,
-								vTempHTSClientExtractError.PatientConsented,
-								vTempHTSClientExtractError.NUPI
-                        FROM
-                                vTempHTSClientExtractError INNER JOIN
-                                ValidationError ON vTempHTSClientExtractError.Id = ValidationError.RecordId INNER JOIN
-                                Validator ON ValidationError.ValidatorId = Validator.Id
-                ");
-            
-            
-            
             migrationBuilder.Sql(@"alter view vTempPatientMnchExtractError as SELECT * FROM TempPatientMnchExtracts WHERE (CheckError = 1)");
             migrationBuilder.Sql(@"
 						ALTER VIEW vTempPatientMnchExtractErrorSummary
@@ -154,44 +101,44 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 						AS
 						SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, ValidationError.RecordId,
 
-					vTempPatientExtractError.FacilityName 
-				        vTempPatientExtractError.Gender 
-				        vTempPatientExtractError.DOB 
-				        vTempPatientExtractError.RegistrationDate 
-				        vTempPatientExtractError.RegistrationAtCCC 
-				        vTempPatientExtractError.RegistrationATPMTCT 
-				        vTempPatientExtractError.RegistrationAtTBClinic 
-				        vTempPatientExtractError.PatientSource 
-				        vTempPatientExtractError.Region 
-				        vTempPatientExtractError.District 
-				        vTempPatientExtractError.Village 
-				        vTempPatientExtractError.ContactRelation 
-				        vTempPatientExtractError.LastVisit 
-				        vTempPatientExtractError.MaritalStatus 
-				        vTempPatientExtractError.EducationLevel 
-				        vTempPatientExtractError.DateConfirmedHIVPositive 
-				        vTempPatientExtractError.PreviousARTExposure 
-				        vTempPatientExtractError.DatePreviousARTStart 
-				        vTempPatientExtractError.StatusAtCCC 
-				        vTempPatientExtractError.StatusAtPMTCT 
-				        vTempPatientExtractError.StatusAtTBClinic 
+				        vTempPatientExtractError.PatientID,
+					    vTempPatientExtractError.FacilityName, 
+				        vTempPatientExtractError.Gender, 
+				        vTempPatientExtractError.DOB, 
+				        vTempPatientExtractError.RegistrationDate, 
+				        vTempPatientExtractError.RegistrationAtCCC, 
+				        vTempPatientExtractError.RegistrationATPMTCT, 
+				        vTempPatientExtractError.RegistrationAtTBClinic, 
+				        vTempPatientExtractError.PatientSource, 
+				        vTempPatientExtractError.Region, 
+				        vTempPatientExtractError.District, 
+				        vTempPatientExtractError.Village, 
+				        vTempPatientExtractError.ContactRelation, 
+				        vTempPatientExtractError.LastVisit, 
+				        vTempPatientExtractError.MaritalStatus, 
+				        vTempPatientExtractError.EducationLevel, 
+				        vTempPatientExtractError.DateConfirmedHIVPositive, 
+				        vTempPatientExtractError.PreviousARTExposure,
+				        vTempPatientExtractError.StatusAtCCC,
+				        vTempPatientExtractError.StatusAtPMTCT,
+				        vTempPatientExtractError.StatusAtTBClinic, 
 
-				        vTempPatientExtractError.Orphan 
-				        vTempPatientExtractError.Inschool 
-				        vTempPatientExtractError.PatientType 
-				        vTempPatientExtractError.PopulationType 
-				        vTempPatientExtractError.KeyPopulationType 
-				        vTempPatientExtractError.PatientResidentCounty 
-				        vTempPatientExtractError.PatientResidentSubCounty 
-				        vTempPatientExtractError.PatientResidentLocation 
-				        vTempPatientExtractError.PatientResidentSubLocation 
-				        vTempPatientExtractError.PatientResidentWard 
-				        vTempPatientExtractError.PatientResidentVillage 
-				        vTempPatientExtractError.TransferInDate 
-				        vTempPatientExtractError.Date_Created 
-				        vTempPatientExtractError.Date_Last_Modified 
-				        vTempPatientExtractError.Pkv 
-				        vTempPatientExtractError.Occupation 
+				        vTempPatientExtractError.Orphan, 
+				        vTempPatientExtractError.Inschool, 
+				        vTempPatientExtractError.PatientType, 
+				        vTempPatientExtractError.PopulationType, 
+				        vTempPatientExtractError.KeyPopulationType, 
+				        vTempPatientExtractError.PatientResidentCounty, 
+				        vTempPatientExtractError.PatientResidentSubCounty, 
+				        vTempPatientExtractError.PatientResidentLocation, 
+				        vTempPatientExtractError.PatientResidentSubLocation, 
+				        vTempPatientExtractError.PatientResidentWard ,
+				        vTempPatientExtractError.PatientResidentVillage, 
+				        vTempPatientExtractError.TransferInDate, 
+				        vTempPatientExtractError.Date_Created,
+				        vTempPatientExtractError.Date_Last_Modified, 
+				        vTempPatientExtractError.Pkv,
+				        vTempPatientExtractError.Occupation,
 				        vTempPatientExtractError.NUPI 
 									 
 					FROM            vTempPatientExtractError INNER JOIN
