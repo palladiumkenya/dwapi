@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
@@ -79,6 +80,12 @@ namespace Dwapi.UploadManagement.Core.Packager.Hts
             return _htsExtractReader.ReadAllClientsLinkage();
         }
 
+        public IEnumerable<HtsEligibilityExtract> GenerateHtsEligibilityExtracts()
+        {
+            return _htsExtractReader.ReadAllHtsEligibilityExtracts();
+        }
+
+        
         public IEnumerable<HtsTestKits> GenerateTestKits()
         {
             return _htsExtractReader.ReadAllTestKits();

@@ -17,6 +17,7 @@ import { HtsTestKitsService } from '../../../services/hts-test-kits.service';
 import { HtsClientTracingService } from '../../../services/hts-client-tracing.service';
 import { HtsPartnerTracingService } from '../../../services/hts-partner-tracing.service';
 import { HtsPartnerNotificationServicesService } from '../../../services/hts-partner-notification-services.service';
+import {HtsEligibilityScreeningService} from "../../../services/hts-eligibility-screening.service";
 
 
 @Component({
@@ -34,6 +35,7 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
     private htsClientTracingService: HtsClientTracingService;
     private htsPartnerTracingService: HtsPartnerTracingService;
     private htsPartnerNotificationServicesService: HtsPartnerNotificationServicesService;
+    private htsEligibilityScreeningService: HtsEligibilityScreeningService;
 
 
     public invalidExtracts: any[] = [];
@@ -45,7 +47,8 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
     constructor(clientsExtractsService: HtsClientsService, clientTestsService: HtsClientTestsService,
         clientsLinkageService: HtsClientsLinkageService, testKitsService: HtsTestKitsService,
         clientTracingService: HtsClientTracingService, patientTracingService: HtsPartnerTracingService,
-        partnerNotificationServicesService: HtsPartnerNotificationServicesService) {
+        partnerNotificationServicesService: HtsPartnerNotificationServicesService,
+                eligibilityScreeningService: HtsEligibilityScreeningService) {
         this.htsClientsService = clientsExtractsService;
         this.htsClientTestsService = clientTestsService;
         this.htsClientsLinkageService = clientsLinkageService;
@@ -53,6 +56,8 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
         this.htsClientTracingService = clientTracingService;
         this.htsPartnerTracingService = patientTracingService;
         this.htsPartnerNotificationServicesService = partnerNotificationServicesService;
+        this.htsEligibilityScreeningService = eligibilityScreeningService;
+
     }
 
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
@@ -89,6 +94,9 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
         if (this.extract === 'Hts Partner Notification Services') {
             this.getPartnerNotificationServicesExtracts();
         }
+        if (this.extract === 'Hts Eligibility Screening') {
+            this.getHtsEligibilityExtracts();
+        }
     }
 
     private getColumns(): void {
@@ -112,6 +120,9 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
         }
         if (this.extract === 'Hts Partner Notification Services') {
             this.getPartnerNotificationServicesColumns();
+        }
+        if (this.extract === 'Hts Eligibility Screening') {
+            this.getHtsEligibilityExtractsColumns();
         }
     }
 
@@ -241,6 +252,25 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
         );
     }
 
+    private getHtsEligibilityExtracts(): void {
+        this.getInvalid$ = this.htsEligibilityScreeningService.loadValidations().subscribe(
+            p => {
+                this.invalidExtracts = p;
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+            }
+        );
+    }
+
+
     private getClientsColumns(): void {
         this.cols = [
             { field: 'summary', header: 'Summary' },
@@ -293,7 +323,7 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
             { field: 'reportedStartARTDate', header: 'Reported ART Start Date' },
             { field: 'enrolledFacilityName', header: 'Enrolled Facility Name' },
             { field: 'referralDate', header: 'Referral Date' },
-            { field: 'dateEnrolled', header: 'Date Enrolled' }, 
+            { field: 'dateEnrolled', header: 'Date Enrolled' },
         ];
     }
 
@@ -323,7 +353,7 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
             { field: 'htsNumber', header: 'Hts Number' },
             { field: 'tracingType', header: 'Tracing Type' },
             { field: 'tracingDate', header: 'Tracing Date' },
-            { field: 'tracingOutcome', header: 'Tracing Outcome' },  
+            { field: 'tracingOutcome', header: 'Tracing Outcome' },
             { field: 'extract', header: 'Extract' },
             { field: 'field', header: 'Field' },
             { field: 'type', header: 'Type' }
@@ -358,7 +388,7 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
             { field: 'screenedForIpv', header: 'Screened For IPV' },
             { field: 'ipvScreeningOutcome', header: 'IPV Screening Outcome' },
             { field: 'currentlyLivingWithIndexClient', header: 'currently Living With Index Client' },
-            { field: 'pnsConsent', header: 'PNS Consent' }, 
+            { field: 'pnsConsent', header: 'PNS Consent' },
 
             { field: 'PatientPK', header: 'PatientPK' },
             { field: 'RecordId', header: 'Record Id' },
@@ -366,6 +396,22 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
             { field: 'Extract', header: 'Extract' },
             { field: 'Field', header: 'Field' },
             { field: 'Type', header: 'Type' }
+        ];
+    }
+
+    private getHtsEligibilityExtractsColumns(): void {
+        this.cols = [
+            { field: 'Summary', header: 'Summary' },
+            { field: 'patientPk', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'patientType', header: 'Patient Type' },
+            { field: 'visitID', header: 'Visit ID' },
+            { field: 'visitDate', header: 'Visit Date' },
+            { field: 'relationshipWithContact', header: 'Relationship With Contact' },
+            { field: 'isHealthWorker', header: 'Is Health Worker' },
+            { field: 'testedHIVBefore', header: 'Tested HIV Before' },
+            { field: 'partnerHivStatus', header: 'Partner Hiv Status' },
+            { field: 'sexuallyActive', header: 'Sexually Active' },
         ];
     }
 }
