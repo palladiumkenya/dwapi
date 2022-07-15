@@ -51,9 +51,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public string EligibleForTest { get; set; }
         public string ReasonsForIneligibility { get; set; }
         public int? SpecificReasonForIneligibility { get; set; }
+        public DateTime? DateTestedSelf { get; set; }
         
         public string MothersStatus { get; set; }
-        public DateTime? DateTestedSelf { get; set; }
         public string ResultOfHIVSelf { get; set; }
         public DateTime? DateTestedProvider { get; set; }
         public string EmotionalViolence { get; set; }
@@ -64,5 +64,10 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public string NightSweats { get; set; }
         public string TBStatus { get; set; }
         public string ReferredForTesting { get; set; }
+        
+        public string AssessmentOutcome { get; set; }
+        public string TypeGBV	{ get; set; }
+        public string ForcedSex { get; set; }	
+        public string ReceivedServices { get; set; }
     }
 }

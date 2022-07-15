@@ -4,14 +4,16 @@ using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20220714174516_HtsEligibilityAddedColumns")]
+    partial class HtsEligibilityAddedColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2184,8 +2186,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("AlcoholSex");
 
-                    b.Property<string>("AssessmentOutcome");
-
                     b.Property<string>("BreastfeedingMother");
 
                     b.Property<string>("CCCNumber");
@@ -2238,8 +2238,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Fever");
 
-                    b.Property<string>("ForcedSex");
-
                     b.Property<string>("HtsNumber");
 
                     b.Property<string>("IsHealthWorker");
@@ -2284,8 +2282,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("ReasonsForIneligibility");
 
-                    b.Property<string>("ReceivedServices");
-
                     b.Property<string>("ReferredForTesting");
 
                     b.Property<string>("RelationshipWithContact");
@@ -2317,8 +2313,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("TestedHIVBefore");
 
                     b.Property<string>("TraditionalProcedures");
-
-                    b.Property<string>("TypeGBV");
 
                     b.Property<string>("UnknownStatusPartner");
 
@@ -8389,8 +8383,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("AlcoholSex");
 
-                    b.Property<string>("AssessmentOutcome");
-
                     b.Property<string>("BreastfeedingMother");
 
                     b.Property<string>("CCCNumber");
@@ -8447,8 +8439,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Fever");
 
-                    b.Property<string>("ForcedSex");
-
                     b.Property<string>("HtsNumber");
 
                     b.Property<string>("IsHealthWorker");
@@ -8489,8 +8479,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("ReasonsForIneligibility");
 
-                    b.Property<string>("ReceivedServices");
-
                     b.Property<string>("ReferredForTesting");
 
                     b.Property<string>("RelationshipWithContact");
@@ -8518,8 +8506,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("TestedHIVBefore");
 
                     b.Property<string>("TraditionalProcedures");
-
-                    b.Property<string>("TypeGBV");
 
                     b.Property<string>("UnknownStatusPartner");
 

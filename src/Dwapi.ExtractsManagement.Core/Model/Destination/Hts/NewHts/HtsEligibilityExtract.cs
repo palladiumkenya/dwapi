@@ -65,6 +65,11 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
         public string NightSweats { get; set; }
         public string TBStatus { get; set; }
         public string ReferredForTesting { get; set; }
+        
+        public string AssessmentOutcome { get; set; }
+        public string TypeGBV	{ get; set; }
+        public string ForcedSex { get; set; }	
+        public string ReceivedServices { get; set; }
 
     }
 }

@@ -2052,6 +2052,22 @@ left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach
                             t.visit_id                                                                  as VisitID,
                             t.encounter_id                                                              as EncounterId,
                             t.visit_date                                                                as VisitDate,
+                            '' as TypeGBV,
+                            '' as ForcedSex,
+                            '' as ReceivedServices,
+                            '' as AssessmentOutcome,
+                            '' as MothersStatus, 
+                            '' as DateTestedSelf, 
+                            '' as ResultOfHIVSelf, 
+                            '' as DateTestedProvider, 
+                            '' as EmotionalViolence, 
+                            '' as ScreenedTB, 
+                            '' as Cough,	
+                            '' as Fever,	
+                            '' as WeightLoss, 
+                            '' as NightSweats,
+                            '' as TBStatus, 
+                            '' as ReferredForTesting,
                             case t.population_type
                                 when 164928 then 'General Population'
                                 when 164929 then 'Key Population'
@@ -2082,7 +2098,7 @@ left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach
                                  when 664 then 'Negative'
                                  when 1067 then 'Unknown'
                                  else '' end)                                                           as ResultOfHIV,
-                            t.date_tested                                                               as DateTested,
+                            t.date_tested                                                               as DateTestedSelf,
                             case t.started_on_art when 1065 then 'Yes' when 1066 then 'No' end          as StartedOnART,
                             t.upn_number                                                                as CCCNumber,
                             case t.ever_had_sex when 1 then 'Yes' when 0 then 'No' end                  as EverHadSex,
