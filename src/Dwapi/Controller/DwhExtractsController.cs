@@ -135,6 +135,7 @@ namespace Dwapi.Controller
 
                 if (!packageDto.SendMpi)
                 {
+                    packageDto.DwhPackage.DwapiVersion = _version;
                     var result = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage,_version);
                     return Ok(result);
                 }

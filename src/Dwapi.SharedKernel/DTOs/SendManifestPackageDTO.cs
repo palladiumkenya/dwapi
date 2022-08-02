@@ -17,6 +17,7 @@ namespace Dwapi.SharedKernel.DTOs
         public string EmrName { get; set; }
         public Guid EmrId { get; set; }
         public List<ExtractDto> Extracts { get; set; } = new List<ExtractDto>();
+        public string DwapiVersion { get; set; }
 
 
         public SendManifestPackageDTO()
