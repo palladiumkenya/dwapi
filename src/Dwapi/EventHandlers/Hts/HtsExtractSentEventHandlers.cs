@@ -16,6 +16,8 @@ namespace Dwapi.EventHandlers
         private readonly IHtsPartnerTracingExtractRepository _partnerTracingExtractRepository;
         private readonly IHtsTestKitsExtractRepository _testKitsExtractRepository;
         private readonly IHtsPartnerNotificationServicesExtractRepository _partnerNotificationServicesExtractRepository;
+        private readonly IHtsEligibilityExtractRepository _htsEligibilityExtractRepository;
+
 
         public HtsExtractSentEventHandlers()
         {
@@ -26,6 +28,8 @@ namespace Dwapi.EventHandlers
             _partnerTracingExtractRepository = Startup.ServiceProvider.GetService<IHtsPartnerTracingExtractRepository>();
             _testKitsExtractRepository = Startup.ServiceProvider.GetService<IHtsTestKitsExtractRepository>();
             _partnerNotificationServicesExtractRepository = Startup.ServiceProvider.GetService<IHtsPartnerNotificationServicesExtractRepository>();
+            _htsEligibilityExtractRepository = Startup.ServiceProvider.GetService<IHtsEligibilityExtractRepository>();
+
         }
 
         public Task Handle(HtsExtractSentEvent domainEvent)
@@ -46,6 +50,8 @@ namespace Dwapi.EventHandlers
                     _testKitsExtractRepository.UpdateSendStatus(domainEvent.SentItems);
                 if (domainEvent.SentItems.First().Extract == "HtsPartnerNotificationServicesExtracts")
                     _partnerNotificationServicesExtractRepository.UpdateSendStatus(domainEvent.SentItems);
+                if (domainEvent.SentItems.First().Extract == "HtsEligibilityExtracts")
+                    _htsEligibilityExtractRepository.UpdateSendStatus(domainEvent.SentItems);
             }
 
             return Task.CompletedTask;

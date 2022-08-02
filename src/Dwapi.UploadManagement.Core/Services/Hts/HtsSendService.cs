@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
@@ -457,6 +458,61 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
 
             return responses;
         }
+        
+          public Task<List<SendMpiResponse>> SendHtsEligibilityExtractsAsync(SendManifestPackageDTO sendTo)
+        {
+            return SendHtsEligibilityExtractsAsync(sendTo, HtsMessageBag.Create(_packager.GenerateHtsEligibilityExtracts().ToList()));
+        }
+
+        public async Task<List<SendMpiResponse>> SendHtsEligibilityExtractsAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag)
+        {
+            var responses = new List<SendMpiResponse>();
+
+            var client = Client ?? new HttpClient();
+            int sendCound = 0;
+            int count = 0;
+            int total = messageBag.Messages.Count;
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+
+            foreach (var message in messageBag.Messages)
+            {
+                count++;
+                try
+                {
+                    var msg = JsonConvert.SerializeObject(message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsEligibilityScreening"), message);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                        responses.Add(content);
+
+                        var sentIds = message.HTSEligibility.Select(x => x.Id).ToList();
+                        sendCound += sentIds.Count;
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadAsStringAsync();
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.HTSEligibility.Select(x => x.Id).ToList(), SendStatus.Failed, sendTo.ExtractName, error));
+                        throw new Exception(error);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, $"Send Manifest Error");
+                    throw;
+                }
+
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsEligibilityExtract), Common.GetProgress(count, total),sendCound)));
+            }
+
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsEligibilityExtract), Common.GetProgress(count, total),sendCound, true)));
+
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+
+            return responses;
+        }
+
 
         public async Task NotifyPostSending(SendManifestPackageDTO sendTo,string version)
         {

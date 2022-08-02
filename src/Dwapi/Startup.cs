@@ -507,9 +507,8 @@ namespace Dwapi
             services.AddScoped<ITempHtsTestKitsExtractRepository, TempHtsTestKitsExtractRepository>();
             services.AddScoped<ITempHtsClientTracingExtractRepository, TempHtsClientTracingExtractRepository>();
             services.AddScoped<ITempHtsPartnerTracingExtractRepository, TempHtsPartnerTracingExtractRepository>();
-            services
-                .AddScoped<ITempHtsPartnerNotificationServicesExtractRepository,
-                    TempHtsPartnerNotificationServicesExtractRepository>();
+            services.AddScoped<ITempHtsPartnerNotificationServicesExtractRepository, TempHtsPartnerNotificationServicesExtractRepository>();
+            services.AddScoped<ITempHtsEligibilityExtractRepository, TempHtsEligibilityExtractRepository>();
 
             services.AddScoped<IHtsClientsExtractRepository, HtsClientsExtractRepository>();
             services.AddScoped<IHtsClientsLinkageExtractRepository, HtsClientsLinkageExtractRepository>();
@@ -517,9 +516,9 @@ namespace Dwapi
             services.AddScoped<IHtsTestKitsExtractRepository, HtsTestKitsExtractRepository>();
             services.AddScoped<IHtsClientTracingExtractRepository, HtsClientTracingExtractRepository>();
             services.AddScoped<IHtsPartnerTracingExtractRepository, HtsPartnerTracingExtractRepository>();
-            services
-                .AddScoped<IHtsPartnerNotificationServicesExtractRepository,
-                    HtsPartnerNotificationServicesExtractRepository>();
+            services.AddScoped<IHtsPartnerNotificationServicesExtractRepository, HtsPartnerNotificationServicesExtractRepository>();
+            services.AddScoped<IHtsEligibilityExtractRepository, HtsEligibilityExtractRepository>();
+
 
             services
                 .AddScoped<ITempHTSClientExtractErrorSummaryRepository, TempHTSClientExtractErrorSummaryRepository>();
@@ -548,6 +547,9 @@ namespace Dwapi
             services
                 .AddScoped<ITempHtsPartnerNotificationServicesErrorSummaryRepository,
                     TempHtsPartnerNotificationServicesExtractErrorSummaryRepository>();
+            services
+                .AddScoped<ITempHtsEligibilityExtractErrorSummaryRepository,
+                    TempHtsEligibilityExtractErrorSummaryRepository>();
 
             //services.AddScoped<ICleanHtsExtracts, CleanHtsExtracts>();
             services.AddScoped<IClearHtsExtracts, ClearHtsExtracts>();
@@ -564,9 +566,8 @@ namespace Dwapi
             services.AddScoped<IHtsTestKitsSourceExtractor, HtsTestKitsSourceExtractor>();
             services.AddScoped<IHtsClientTracingSourceExtractor, HtsClientTracingSourceExtractor>();
             services.AddScoped<IHtsPartnerTracingSourceExtractor, HtsPartnerTracingSourceExtractor>();
-            services
-                .AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor
-                >();
+            services.AddScoped<IHtsPartnerNotificationServicesSourceExtractor, HtsPartnerNotificationServicesSourceExtractor>();
+            services.AddScoped<IHtsEligibilityExtractSourceExtractor, HtsEligibilityExtractSourceExtractor>();
 
             /*services.AddScoped<IHTSClientLoader, HTSClientLoader>();
             services.AddScoped<IHTSClientLinkageLoader, HTSClientLinkageLoader>();
@@ -579,6 +580,7 @@ namespace Dwapi
             services.AddScoped<IHtsClientTracingLoader, HtsClientTracingLoader>();
             services.AddScoped<IHtsPartnerTracingLoader, HtsPartnerTracingLoader>();
             services.AddScoped<IHtsPartnerNotificationServicesLoader, HtsPartnerNotificationServicesLoader>();
+            services.AddScoped<IHtsEligibilityExtractLoader, HtsEligibilityExtractLoader>();
 
             services.AddScoped<IHtsPackager, HtsPackager>();
             services.AddScoped<IHtsSendService, HtsSendService>();
