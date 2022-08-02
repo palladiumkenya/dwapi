@@ -21,6 +21,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Serilog;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
+
 
 namespace Dwapi.Controller
 {
@@ -35,9 +37,10 @@ namespace Dwapi.Controller
         private readonly ICbsSendService _cbsSendService;
         private readonly ICTSendService _ctSendService;
         private readonly IExtractRepository _extractRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
         private readonly string _version;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -45,6 +48,7 @@ namespace Dwapi.Controller
             _cbsSendService = cbsSendService;
             _ctSendService = ctSendService;
             _extractRepository = extractRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
             Startup.HubContext= _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
         }
@@ -64,6 +68,12 @@ namespace Dwapi.Controller
         {
             if(!request.IsValid())
                 return BadRequest();
+
+            //check stale
+            if (_indicatorExtractRepository.CheckIfStale())
+            {
+                throw new Exception("Error loading Extracts. Database is stale");
+            }
 
             string version = GetType().Assembly.GetName().Version.ToString();
 
@@ -114,12 +124,15 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid())
                 return BadRequest();
 
+
+
             string version = GetType().Assembly.GetName().Version.ToString();
 
             await _mediator.Publish(new ExtractSent("CareTreatment", version));
 
             try
             {
+
                 if (!packageDto.SendMpi)
                 {
                     var result = await _dwhSendService.SendManifestAsync(packageDto.DwhPackage,_version);

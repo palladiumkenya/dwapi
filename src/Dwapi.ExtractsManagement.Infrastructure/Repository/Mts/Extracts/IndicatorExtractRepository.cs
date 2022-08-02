@@ -24,5 +24,23 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
             ";
             return Context.Database.GetDbConnection().Query<IndicatorExtractDto>(sql).ToList();
         }
+        
+        public bool CheckIfStale()
+        {
+            var sql = $@"
+                select e.*,k.Description,k.Rank
+                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id where e.IndicatorValue='STALE'
+            ";
+            var result = Context.Database.GetDbConnection().Query(sql).ToList();
+            
+            if (result.Count >= 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
