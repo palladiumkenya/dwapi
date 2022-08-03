@@ -6,6 +6,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
          protected override void Up(MigrationBuilder migrationBuilder)
         {
+	        migrationBuilder.Sql(@"alter table TempClientRegistryExtracts convert to character set utf8 collate utf8_unicode_ci;");
+
+	        migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 1;");
+	        
             migrationBuilder.Sql(@"create view vTempClientRegistryExtractError as SELECT * FROM TempClientRegistryExtracts WHERE (CheckError = 1)");
 
             		migrationBuilder.Sql(@"
@@ -33,7 +37,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 								vTempClientRegistryExtractError.LastName,
 								vTempClientRegistryExtractError.LastRegimen,
 								vTempClientRegistryExtractError.LastRegimenLine,
-.								vTempClientRegistryExtractError.Location,
+								vTempClientRegistryExtractError.Location,
 								vTempClientRegistryExtractError.MaritalStatus,
 								vTempClientRegistryExtractError.MFLCode,
 								vTempClientRegistryExtractError.MiddleName,
