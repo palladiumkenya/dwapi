@@ -348,6 +348,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 e => {
                     this.canSend=true;
                     console.error('SEND ERROR', e);
+
                     if (e && e.ProgressEvent) {
 
                     } else {

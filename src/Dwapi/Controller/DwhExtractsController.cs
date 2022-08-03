@@ -69,12 +69,6 @@ namespace Dwapi.Controller
             if(!request.IsValid())
                 return BadRequest();
 
-            //check stale
-            if (_indicatorExtractRepository.CheckIfStale())
-            {
-                throw new Exception("Error loading Extracts. Database is stale");
-            }
-
             string version = GetType().Assembly.GetName().Version.ToString();
 
             if (!request.LoadMpi)
@@ -123,8 +117,6 @@ namespace Dwapi.Controller
         {
             if (!packageDto.IsValid())
                 return BadRequest();
-
-
 
             string version = GetType().Assembly.GetName().Version.ToString();
 
@@ -192,12 +184,19 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid())
                 return BadRequest();
 
+
             string version = GetType().Assembly.GetName().Version.ToString();
 
             await _mediator.Publish(new ExtractSent("CareTreatment", version));
 
             try
             {
+                //check stale
+                if (_indicatorExtractRepository.CheckIfStale())
+                {
+                    throw new Exception("Error loading Extracts. Database is stale");
+                }
+
                 var result = await _ctSendService.SendSmartManifestAsync(packageDto.DwhPackage, _version, "3");
                 return Ok(result);
             }
