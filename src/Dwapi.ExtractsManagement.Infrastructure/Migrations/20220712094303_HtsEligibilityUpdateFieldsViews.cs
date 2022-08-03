@@ -6,6 +6,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+	        
             migrationBuilder.Sql(@"alter view vTempHtsEligibilityExtractError as SELECT * FROM TempHtsEligibilityExtracts WHERE (CheckError = 1)");
 
 	        migrationBuilder.Sql(@"
@@ -72,6 +73,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 										 ValidationError ON vTempHtsEligibilityExtractError.Id = ValidationError.RecordId INNER JOIN
 										 Validator ON ValidationError.ValidatorId = Validator.Id
             ");
+
 
         }
 
