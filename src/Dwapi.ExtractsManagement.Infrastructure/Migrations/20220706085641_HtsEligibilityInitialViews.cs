@@ -6,11 +6,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-	        migrationBuilder.Sql(@"alter table TempHtsEligibilityExtracts convert to character set utf8 collate utf8_unicode_ci;");
-
-	        migrationBuilder.Sql(@"SET FOREIGN_KEY_CHECKS = 1;");
 	        
-migrationBuilder.Sql(@"create view vTempHtsEligibilityExtractError as SELECT * FROM TempHtsEligibilityExtracts WHERE (CheckError = 1)");
+			migrationBuilder.Sql(@"create view vTempHtsEligibilityExtractError as SELECT * FROM TempHtsEligibilityExtracts WHERE (CheckError = 1)");
 
 	        migrationBuilder.Sql(@"
 				CREATE VIEW vTempHtsEligibilityExtractErrorSummary
