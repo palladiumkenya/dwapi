@@ -6,15 +6,22 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-              migrationBuilder.Sql(@"alter view vTempHtsEligibilityExtractError as SELECT * FROM TempHtsEligibilityExtracts WHERE (CheckError = 1)");
+	      
+	        migrationBuilder.Sql(@"alter view vTempHtsEligibilityExtractError as SELECT * FROM TempHtsEligibilityExtracts WHERE (CheckError = 1)");
 
-            migrationBuilder.Sql(@"
+	        migrationBuilder.Sql(@"
 				ALTER VIEW vTempHtsEligibilityExtractErrorSummary
 				AS
          		SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated, ValidationError.RecordId,
  
-					vTempHtsEligibilityExtractError.EncounterId,
+					vTempHtsEligibilityExtractError.PatientPK,
+					vTempHtsEligibilityExtractError.SiteCode,
+					vTempHtsEligibilityExtractError.FacilityName,
+					vTempHtsEligibilityExtractError.Emr,
+					vTempHtsEligibilityExtractError.Project,
+					vTempHtsEligibilityExtractError.HtsNumber,
 					vTempHtsEligibilityExtractError.VisitID,
+					vTempHtsEligibilityExtractError.EncounterId,
 					vTempHtsEligibilityExtractError.VisitDate,
 					vTempHtsEligibilityExtractError.PopulationType,
 					vTempHtsEligibilityExtractError.KeyPopulation,
@@ -31,7 +38,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 					vTempHtsEligibilityExtractError.EverHadSex,
 					vTempHtsEligibilityExtractError.SexuallyActive,
 					vTempHtsEligibilityExtractError.NewPartner,
-					vTempHtsEligibilityExtractError.PartnerHIVStatus,
+					vTempHtsEligibilityExtractError.PartnerHivStatus,
 					vTempHtsEligibilityExtractError.CoupleDiscordant,
 					vTempHtsEligibilityExtractError.MultiplePartners,
 					vTempHtsEligibilityExtractError.NumberOfPartners,
@@ -80,7 +87,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 				FROM            vTempHtsEligibilityExtractError INNER JOIN
 										 ValidationError ON vTempHtsEligibilityExtractError.Id = ValidationError.RecordId INNER JOIN
 										 Validator ON ValidationError.ValidatorId = Validator.Id
-			");
+            ");
+
+
 
         }
 
