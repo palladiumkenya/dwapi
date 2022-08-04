@@ -192,10 +192,10 @@ namespace Dwapi.Controller
             try
             {
                 //check stale
-                if (_indicatorExtractRepository.CheckIfStale())
-                {
-                    throw new Exception("Error loading Extracts. Database is stale");
-                }
+                // if (_indicatorExtractRepository.CheckIfStale())
+                // {
+                //     throw new Exception("Error loading Extracts. Database is stale");
+                // }
 
                 var result = await _ctSendService.SendSmartManifestAsync(packageDto.DwhPackage, _version, "3");
                 return Ok(result);
