@@ -4786,20 +4786,17 @@ UNION
 UNION
 (
         select 'DB_STATE' as INDICATOR,
-               if(c.current_visits > floor(c.avg_visits / 2), 'CURRENT', 'STALE')        as INDICATORVALUE,
+               if(c.current_visits > floor((c.current_visits/c.avg_visits) / 2), 'CURRENT', 'STALE')        as INDICATORVALUE,
                               date_format(last_day(date_sub(CURRENT_DATE, interval 1 MONTH)), '%Y%b%d') as INDICATORDATE  
         from (select a.current_visits, b.avg_visits
               from (select count(hv.encounter_id) as current_visits
-                    from kenyaemr_etl.etl_patient_hiv_followup hv
-                    where hv.visit_date between DATE_SUB(LAST_DAY(NOW()), INTERVAL DAY(LAST_DAY(NOW())) - 1 DAY) and date(current_date)) a
-                       join
-                   (select floor(count(hv.encounter_id) / 3) as avg_visits
-                    from kenyaemr_etl.etl_patient_hiv_followup hv
-                    where hv.visit_date between
-                              date_sub(DATE_SUB(LAST_DAY(CURRENT_DATE), INTERVAL DAY(LAST_DAY(current_date)) - 1 DAY), interval
-                               3
-                               month) and
-                      last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) b) c
+        from kenyaemr_etl.etl_patient_hiv_followup hv
+        where hv.visit_date between DATE_SUB(LAST_DAY(NOW()), INTERVAL DAY(LAST_DAY(NOW())) - 1 DAY) and date(current_date)) a
+           join
+       (select floor(count(hv.encounter_id) / 3) as avg_visits
+        from kenyaemr_etl.etl_patient_hiv_followup hv
+        where hv.visit_date between '2022-04-01' and                               
+          last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) b) c
 )
 UNION
 (
