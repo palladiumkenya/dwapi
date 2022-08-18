@@ -3,7 +3,6 @@ using System;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
@@ -16,8 +15,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Cbs.MasterPatientIndex", b =>
                 {
@@ -1673,6 +1671,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<DateTime?>("RefillDate");
+
                     b.Property<int?>("RespiratoryRate");
 
                     b.Property<DateTime?>("SecondlineRegimenChangeDate");
@@ -2175,6 +2175,166 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasIndex("SiteCode", "PatientPk");
 
                     b.ToTable("HtsClientTracingExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsEligibilityExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AlcoholSex");
+
+                    b.Property<string>("AssessmentOutcome");
+
+                    b.Property<string>("BreastfeedingMother");
+
+                    b.Property<string>("CCCNumber");
+
+                    b.Property<string>("ChildReasonsForIneligibility");
+
+                    b.Property<string>("CondomBurst");
+
+                    b.Property<string>("ContactWithTBCase");
+
+                    b.Property<string>("Cough");
+
+                    b.Property<string>("CoupleDiscordant");
+
+                    b.Property<string>("CurrentlyHasSTI");
+
+                    b.Property<string>("CurrentlyOnPep");
+
+                    b.Property<string>("CurrentlyOnPrep");
+
+                    b.Property<DateTime?>("DateCreated");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("DateLastModified");
+
+                    b.Property<DateTime?>("DateTestedProvider");
+
+                    b.Property<DateTime?>("DateTestedSelf");
+
+                    b.Property<string>("Department");
+
+                    b.Property<string>("EligibleForTest");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("EncounterId");
+
+                    b.Property<string>("EverHadSTI");
+
+                    b.Property<string>("EverHadSex");
+
+                    b.Property<string>("EverHadTB");
+
+                    b.Property<string>("EverOnPep");
+
+                    b.Property<string>("EverOnPrep");
+
+                    b.Property<string>("ExperiencedGBV");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Fever");
+
+                    b.Property<string>("ForcedSex");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<string>("IsHealthWorker");
+
+                    b.Property<string>("KeyPopulation");
+
+                    b.Property<string>("KnownStatusPartner");
+
+                    b.Property<string>("Lethargy");
+
+                    b.Property<string>("MoneySex");
+
+                    b.Property<string>("MothersStatus");
+
+                    b.Property<string>("MultiplePartners");
+
+                    b.Property<string>("NeedleStickInjuries");
+
+                    b.Property<string>("NewPartner");
+
+                    b.Property<string>("NightSweats");
+
+                    b.Property<int?>("NumberOfPartners");
+
+                    b.Property<string>("PartnerHIVStatus");
+
+                    b.Property<int>("PatientPk");
+
+                    b.Property<string>("PatientType");
+
+                    b.Property<string>("PopulationType");
+
+                    b.Property<string>("Pregnant");
+
+                    b.Property<string>("PriorityPopulation");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<string>("ReasonsForIneligibility");
+
+                    b.Property<string>("ReceivedServices");
+
+                    b.Property<string>("ReferredForTesting");
+
+                    b.Property<string>("RelationshipWithContact");
+
+                    b.Property<string>("ResultOfHIV");
+
+                    b.Property<string>("ResultOfHIVSelf");
+
+                    b.Property<string>("ScreenedTB");
+
+                    b.Property<string>("SexuallyActive");
+
+                    b.Property<string>("SharedNeedle");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<int?>("SpecificReasonForIneligibility");
+
+                    b.Property<string>("StartedOnART");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("TBStatus");
+
+                    b.Property<string>("TestedHIVBefore");
+
+                    b.Property<string>("TraditionalProcedures");
+
+                    b.Property<string>("TypeGBV");
+
+                    b.Property<string>("UnknownStatusPartner");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.Property<string>("WeightLoss");
+
+                    b.Property<string>("WhoPerformedTest");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SiteCode", "PatientPk");
+
+                    b.ToTable("HtsEligibilityExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsPartnerNotificationServices", b =>
@@ -7425,6 +7585,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("PwP");
 
+                    b.Property<DateTime?>("RefillDate");
+
                     b.Property<int?>("RespiratoryRate");
 
                     b.Property<DateTime?>("SecondlineRegimenChangeDate");
@@ -7527,6 +7689,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("PwP");
 
+                    b.Property<DateTime?>("RefillDate");
+
                     b.Property<DateTime?>("SecondlineRegimenChangeDate");
 
                     b.Property<string>("SecondlineRegimenChangeReason");
@@ -7614,6 +7778,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("PwP");
 
                     b.Property<Guid>("RecordId");
+
+                    b.Property<DateTime?>("RefillDate");
 
                     b.Property<DateTime?>("SecondlineRegimenChangeDate");
 
@@ -8220,6 +8386,160 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("vTempHtsClientTracingExtractErrorSummary");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts.TempHtsEligibilityExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AlcoholSex");
+
+                    b.Property<string>("AssessmentOutcome");
+
+                    b.Property<string>("BreastfeedingMother");
+
+                    b.Property<string>("CCCNumber");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("ChildReasonsForIneligibility");
+
+                    b.Property<string>("CondomBurst");
+
+                    b.Property<string>("ContactWithTBCase");
+
+                    b.Property<string>("Cough");
+
+                    b.Property<string>("CoupleDiscordant");
+
+                    b.Property<string>("CurrentlyHasSTI");
+
+                    b.Property<string>("CurrentlyOnPep");
+
+                    b.Property<string>("CurrentlyOnPrep");
+
+                    b.Property<DateTime?>("DateCreated");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("DateLastModified");
+
+                    b.Property<DateTime?>("DateTestedProvider");
+
+                    b.Property<DateTime?>("DateTestedSelf");
+
+                    b.Property<string>("Department");
+
+                    b.Property<string>("EligibleForTest");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("EncounterId");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("EverHadSTI");
+
+                    b.Property<string>("EverHadSex");
+
+                    b.Property<string>("EverHadTB");
+
+                    b.Property<string>("EverOnPep");
+
+                    b.Property<string>("EverOnPrep");
+
+                    b.Property<string>("ExperiencedGBV");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Fever");
+
+                    b.Property<string>("ForcedSex");
+
+                    b.Property<string>("HtsNumber");
+
+                    b.Property<string>("IsHealthWorker");
+
+                    b.Property<string>("KeyPopulation");
+
+                    b.Property<string>("KnownStatusPartner");
+
+                    b.Property<string>("Lethargy");
+
+                    b.Property<string>("MoneySex");
+
+                    b.Property<string>("MothersStatus");
+
+                    b.Property<string>("MultiplePartners");
+
+                    b.Property<string>("NeedleStickInjuries");
+
+                    b.Property<string>("NewPartner");
+
+                    b.Property<string>("NightSweats");
+
+                    b.Property<int?>("NumberOfPartners");
+
+                    b.Property<string>("PartnerHIVStatus");
+
+                    b.Property<int?>("PatientPk");
+
+                    b.Property<string>("PatientType");
+
+                    b.Property<string>("PopulationType");
+
+                    b.Property<string>("Pregnant");
+
+                    b.Property<string>("PriorityPopulation");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("ReasonsForIneligibility");
+
+                    b.Property<string>("ReceivedServices");
+
+                    b.Property<string>("ReferredForTesting");
+
+                    b.Property<string>("RelationshipWithContact");
+
+                    b.Property<string>("ResultOfHIV");
+
+                    b.Property<string>("ResultOfHIVSelf");
+
+                    b.Property<string>("ScreenedTB");
+
+                    b.Property<string>("SexuallyActive");
+
+                    b.Property<string>("SharedNeedle");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<int?>("SpecificReasonForIneligibility");
+
+                    b.Property<string>("StartedOnART");
+
+                    b.Property<string>("TBStatus");
+
+                    b.Property<string>("TestedHIVBefore");
+
+                    b.Property<string>("TraditionalProcedures");
+
+                    b.Property<string>("TypeGBV");
+
+                    b.Property<string>("UnknownStatusPartner");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.Property<string>("WeightLoss");
+
+                    b.Property<string>("WhoPerformedTest");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempHtsEligibilityExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts.TempHtsPartnerNotificationServices", b =>
@@ -11046,6 +11366,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClients")
                         .WithMany("HtsClientTracings")
+                        .HasForeignKey("SiteCode", "PatientPk")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsEligibilityExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts.HtsClients")
+                        .WithMany("HtsEligibilityExtracts")
                         .HasForeignKey("SiteCode", "PatientPk")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

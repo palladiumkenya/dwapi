@@ -245,9 +245,80 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.DateElicited, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsPartnerNotificationServices.DateElicited))))
                 .ForMember(x => x.MaritalStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.MaritalStatus))));
             CreateMap<TempHtsPartnerNotificationServices, HtsPartnerNotificationServices>();
-        }
-    
+            
+            //hts eligibility screening
+            CreateMap<IDataRecord, TempHtsEligibilityExtract>()
+                .ForMember(x => x.PatientPk, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsEligibilityExtract.PatientPk))))
+                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsEligibilityExtract.SiteCode))))
+                .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.FacilityName))))
+                .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.Emr))))
+                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.Project))))
+                .ForMember(x => x.HtsNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.HtsNumber))))
+                .ForMember(x => x.VisitID, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsEligibilityExtract.VisitID))))
+                .ForMember(x => x.EncounterId, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.EncounterId))))
+                .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.VisitDate))))
+                .ForMember(x => x.PopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.PopulationType))))
+                .ForMember(x => x.KeyPopulation, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.KeyPopulation))))
+                .ForMember(x => x.PriorityPopulation, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.PriorityPopulation))))
+                .ForMember(x => x.Department, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.Department))))
+                .ForMember(x => x.PatientType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.PatientType))))
+                .ForMember(x => x.IsHealthWorker, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.IsHealthWorker))))
+                .ForMember(x => x.RelationshipWithContact, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.RelationshipWithContact))))
+                .ForMember(x => x.TestedHIVBefore, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.TestedHIVBefore))))
+                .ForMember(x => x.WhoPerformedTest, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.WhoPerformedTest))))
+                .ForMember(x => x.ResultOfHIV, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ResultOfHIV))))
+                .ForMember(x => x.DateTestedSelf, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateTestedSelf ))))
+                .ForMember(x => x.StartedOnART, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.StartedOnART))))
+                .ForMember(x => x.CCCNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.CCCNumber))))
+                .ForMember(x => x.EverHadSex, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.EverHadSex))))
+                .ForMember(x => x.SexuallyActive, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.SexuallyActive))))
+                .ForMember(x => x.NewPartner, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.NewPartner))))
+                .ForMember(x => x.PartnerHIVStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.PartnerHIVStatus))))
+                .ForMember(x => x.CoupleDiscordant, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.CoupleDiscordant))))
+                .ForMember(x => x.MultiplePartners, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.MultiplePartners))))
+                .ForMember(x => x.NumberOfPartners, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsEligibilityExtract.NumberOfPartners))))
+                .ForMember(x => x.AlcoholSex, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.AlcoholSex))))
+                .ForMember(x => x.MoneySex, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.MoneySex))))
+                .ForMember(x => x.CondomBurst, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.CondomBurst))))
+                .ForMember(x => x.UnknownStatusPartner, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.UnknownStatusPartner))))
+                .ForMember(x => x.KnownStatusPartner, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.KnownStatusPartner))))
+                .ForMember(x => x.Pregnant, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.Pregnant))))
+                .ForMember(x => x.BreastfeedingMother, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.BreastfeedingMother))))
+                .ForMember(x => x.ExperiencedGBV, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ExperiencedGBV))))
+                .ForMember(x => x.CurrentlyOnPrep, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.CurrentlyOnPrep))))
+                .ForMember(x => x.CurrentlyOnPep, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.CurrentlyOnPep))))
+                .ForMember(x => x.CurrentlyHasSTI, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.CurrentlyHasSTI))))
+                .ForMember(x => x.SharedNeedle, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.SharedNeedle))))
+                .ForMember(x => x.NeedleStickInjuries, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.NeedleStickInjuries))))
+                .ForMember(x => x.TraditionalProcedures, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.TraditionalProcedures))))
+                .ForMember(x => x.ChildReasonsForIneligibility, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ChildReasonsForIneligibility))))
+                .ForMember(x => x.EligibleForTest, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.EligibleForTest))))
+                .ForMember(x => x.ReasonsForIneligibility, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ReasonsForIneligibility))))
+                .ForMember(x => x.SpecificReasonForIneligibility, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsEligibilityExtract.SpecificReasonForIneligibility))))
+                
+                .ForMember(x => x.MothersStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.MothersStatus))))
+                .ForMember(x => x.ResultOfHIVSelf, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ResultOfHIVSelf))))
+                .ForMember(x => x.DateTestedProvider, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateTestedProvider))))
+                .ForMember(x => x.ScreenedTB, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ScreenedTB))))
+                .ForMember(x => x.Cough, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.Cough))))
+                .ForMember(x => x.Fever, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.Fever))))
+                .ForMember(x => x.WeightLoss, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.WeightLoss))))
+                .ForMember(x => x.NightSweats, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.NightSweats))))
+                .ForMember(x => x.Lethargy, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.Lethargy))))
+                .ForMember(x => x.TBStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.TBStatus))))
+                .ForMember(x => x.ReferredForTesting, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ReferredForTesting))))
+                .ForMember(x => x.AssessmentOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.AssessmentOutcome))))
+                .ForMember(x => x.TypeGBV, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.TypeGBV))))
+                .ForMember(x => x.ForcedSex, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ForcedSex))))
+                .ForMember(x => x.ReceivedServices, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ReceivedServices))))
+                .ForMember(x => x.DateCreated, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateCreated))))
+                .ForMember(x => x.DateLastModified, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateLastModified))))
+                .ForMember(x => x.ContactWithTBCase, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ContactWithTBCase ))))
 
+                ;
+            CreateMap<TempHtsEligibilityExtract, HtsEligibilityExtract>();
+            
+        }
 
     }
 }

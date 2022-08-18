@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
+using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Exchange;
@@ -20,6 +22,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Hts
         IEnumerable<HtsPartnerTracing> GeneratePartnerTracing();
         IEnumerable<HtsPartnerNotificationServices> GeneratePartnerNotificationServices();
         IEnumerable<HtsClientLinkage> GenerateClientLinkage();
+        IEnumerable<HtsEligibilityExtract> GenerateHtsEligibilityExtracts();
+
 
     }
 }

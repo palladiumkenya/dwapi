@@ -44,5 +44,9 @@ namespace Dwapi.UploadManagement.Core.Exchange.Hts
         {
             return new HtsMessageBag(HtsMessage.Create(patientIndices));
         }
+        public static HtsMessageBag Create(List<HtsEligibilityExtract> patientIndices)
+        {
+            return new HtsMessageBag(HtsMessage.Create(patientIndices));
+        }
     }
 }

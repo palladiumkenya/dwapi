@@ -33,7 +33,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 								vTempClientRegistryExtractError.LastName,
 								vTempClientRegistryExtractError.LastRegimen,
 								vTempClientRegistryExtractError.LastRegimenLine,
-.								vTempClientRegistryExtractError.Location,
+								vTempClientRegistryExtractError.Location,
 								vTempClientRegistryExtractError.MaritalStatus,
 								vTempClientRegistryExtractError.MFLCode,
 								vTempClientRegistryExtractError.MiddleName,

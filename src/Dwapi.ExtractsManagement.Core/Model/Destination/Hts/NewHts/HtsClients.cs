@@ -24,5 +24,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
         public virtual ICollection<HtsTestKits> HtsTestKitss { get; set; } = new List<HtsTestKits>();
         public virtual ICollection<HtsClientLinkage> HtsClientLinkages { get; set; } = new List<HtsClientLinkage>();
         public virtual ICollection<HtsPartnerNotificationServices> HtsPartnerNotificationServicess { get; set; } = new List<HtsPartnerNotificationServices>();
+        public virtual ICollection<HtsEligibilityExtract> HtsEligibilityExtracts { get; set; } = new List<HtsEligibilityExtract>();
+
+       
     }
 }
