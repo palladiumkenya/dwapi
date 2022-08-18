@@ -32,12 +32,12 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PwP { get; set; }
         public decimal? GestationAge { get; set; }
         public DateTime? NextAppointmentDate { get; set; }
-
+        
         public string StabilityAssessment { get; set; }
         public string DifferentiatedCare { get; set; }
         public string PopulationType { get; set; }
         public string KeyPopulationType { get; set; }
-
+        public DateTime? RefillDate { get; set; }
         /*public override void AddHeader(Row row)
         {
             base.AddHeader(row);
