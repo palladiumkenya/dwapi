@@ -57,7 +57,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientExtract.Date_Last_Modified))))
                 .ForMember(x => x.Pkv, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientExtract.Pkv))))
                 .ForMember(x => x.Occupation, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientExtract.Occupation))))
-                ;
+                .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientExtract.NUPI))));
+
+                
 
             CreateMap<TempPatientExtract, PatientExtract>()
                .ForMember(x => x.DatePreviousARTStart, o => o.MapFrom(s => s.PreviousARTStartDate));
@@ -272,6 +274,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.CurrentRegimen, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.CurrentRegimen))))
                 .ForMember(x => x.HCWConcern, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.HCWConcern))))
                 .ForMember(x => x.TCAReason, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.TCAReason))))
+                .ForMember(x => x.RefillDate, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientVisitExtract.RefillDate))))
+
                 .ForMember(x => x.ClinicalNotes, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.ClinicalNotes))));
 
             CreateMap<TempPatientVisitExtract, PatientVisitExtract>();

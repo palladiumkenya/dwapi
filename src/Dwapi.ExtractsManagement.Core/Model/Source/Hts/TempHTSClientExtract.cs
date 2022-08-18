@@ -2,7 +2,7 @@
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
 {
-    [Obsolete("Class is obsolete,use TempHtsClientsExtract")]
+    [Obsolete("Class is obsolete,use TempHtsClients")]
     public class TempHTSClientExtract : TempHTSExtract
     {
         public int? EncounterId { get; set; }
@@ -35,5 +35,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts
         public string PatientDisabled { get; set; }
         public string DisabilityType { get; set; }
         public string PatientConsented { get; set; }
+        public string NUPI { get; set; }
+        public string Pkv { get; set; }
     }
 }

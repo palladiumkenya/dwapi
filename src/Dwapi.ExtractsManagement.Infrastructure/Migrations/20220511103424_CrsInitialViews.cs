@@ -6,7 +6,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
     {
          protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"create view vTempClientRegistryExtractError as SELECT * FROM TempClientRegistryExtracts WHERE (CheckError = 1)");
+	        migrationBuilder.Sql(@"create view vTempClientRegistryExtractError as SELECT * FROM TempClientRegistryExtracts WHERE (CheckError = 1)");
 
             		migrationBuilder.Sql(@"
 				CREATE VIEW vTempClientRegistryExtractErrorSummary
@@ -33,7 +33,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 								vTempClientRegistryExtractError.LastName,
 								vTempClientRegistryExtractError.LastRegimen,
 								vTempClientRegistryExtractError.LastRegimenLine,
-.								vTempClientRegistryExtractError.Location,
+								vTempClientRegistryExtractError.Location,
 								vTempClientRegistryExtractError.MaritalStatus,
 								vTempClientRegistryExtractError.MFLCode,
 								vTempClientRegistryExtractError.MiddleName,

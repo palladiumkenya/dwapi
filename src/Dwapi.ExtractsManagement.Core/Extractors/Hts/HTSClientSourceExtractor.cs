@@ -19,7 +19,7 @@ using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 {
-    [Obsolete]
+    [Obsolete("No longer Used")]
     public class HTSClientSourceExtractor : IHTSClientSourceExtractor
     {
         private readonly IHTSExtractSourceReader _reader;

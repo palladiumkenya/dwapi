@@ -87,6 +87,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private extractClientTracing: ExtractProfile;
     private extractPartnerTracing: ExtractProfile;
     private extractPartnerNotificationServices: ExtractProfile;
+    private extractEligibilityScreening: ExtractProfile;
 
     private extractProfile: ExtractProfile;
     private extractProfiles: ExtractProfile[] = [];
@@ -393,10 +394,34 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 p => {
                     // this.sendResponse = p;
                     this.updateEvent();
+                    this.sendHtsEligibilityExtracts();
+
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({ severity: 'error', summary: 'Error sending client linkage', detail: <any>e });
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending eligibility', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+    public sendHtsEligibilityExtracts(): void {
+        this.sendStage = 8;
+        this.sendEvent = { sentProgress: 0 };
+        this.sending = true;
+        this.errorMessage = [];
+        this.patientPackage = this.getHtsEligibilityExtractPackage();
+        this.send$ = this._htsSenderService.sendHtsEligibilityExtracts(this.patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending hts eligibility screening', detail: <any>e });
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -583,6 +608,15 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             extractName: 'HtsClientTests'
         };
     }
+
+    private getHtsEligibilityExtractPackage(): SendPackage {
+        //console.log(this.extracts.find(x => x.name === 'HtsClientTests'));
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'HtsEligibilityExtract').id,
+            extractName: 'HtsEligibilityExtract'
+        };
+    }
     private updateExractStats(dwhProgress: any) {
         if (dwhProgress) {
             this.extracts.map(e => {
@@ -640,7 +674,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
         this._hubConnection.on('ShowHtsSendProgressDone', (extractName: string) => {
             this.extractSent.push(extractName);
-            if (this.extractSent.length === 7) {
+            if (this.extractSent.length === 8) {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
                 this.updateEvent();
@@ -674,6 +708,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.extractProfiles.push(this.generateExtractClientsLinkage(currentEmr));
         this.extractProfiles.push(this.generateExtractPartnerTracing(currentEmr));
         this.extractProfiles.push(this.generateExtractClientTracing(currentEmr));
+        this.extractProfiles.push(this.generateExtractHtsEligibilityExtract(currentEmr));
+
 
         this.extractLoadCommand = {
             extracts: this.extractProfiles
@@ -748,6 +784,15 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         };
         return this.extractClientTracing;
     }
+    private generateExtractHtsEligibilityExtract(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsEligibilityExtract').databaseProtocolId;
+        this.extractEligibilityScreening = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'HtsEligibilityExtract')
+        };
+        return this.extractEligibilityScreening;
+    }
+
 
     /*private generateExtractClient(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'HTSClientExtract').databaseProtocolId;

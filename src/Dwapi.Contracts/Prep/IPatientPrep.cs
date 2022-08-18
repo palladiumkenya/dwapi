@@ -33,5 +33,6 @@ namespace Dwapi.Contracts.Prep
     DateTime? DateLastUsedPrev { get; set; }
     DateTime? Date_Created { get; set; }
     DateTime? Date_Last_Modified { get; set; }
+    string NUPI { get; set; }
   }
 }

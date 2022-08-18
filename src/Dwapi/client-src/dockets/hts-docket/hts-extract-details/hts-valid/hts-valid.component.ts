@@ -12,6 +12,7 @@ import { HtsPartnerTracingService } from '../../../services/hts-partner-tracing.
 import { HtsPartnerNotificationServicesService } from '../../../services/hts-partner-notification-services.service';
 import { HtsTestKitsService } from '../../../services/hts-test-kits.service';
 import { HtsClientsLinkageService } from '../../../services/hts-clients-linkage.service';
+import {HtsEligibilityScreeningService} from "../../../services/hts-eligibility-screening.service";
 
 @Component({
     selector: 'liveapp-hts-valid',
@@ -28,6 +29,8 @@ export class HtsValidComponent implements OnInit, OnDestroy {
     private htsPartnerNotificationServicesService: HtsPartnerNotificationServicesService;
     private htsTestKitsService: HtsTestKitsService;
     private htsClientsLinkageService: HtsClientsLinkageService;
+    private htsEligibilityScreeningService: HtsEligibilityScreeningService;
+
 
     public validExtracts: any[] = [];
     public recordCount = 0;
@@ -43,7 +46,8 @@ export class HtsValidComponent implements OnInit, OnDestroy {
 
     constructor(htsClientsService: HtsClientsService, htsClientTestsService: HtsClientTestsService, htsClientTracingService: HtsClientTracingService,
                 htsPartnerTracingService: HtsPartnerTracingService, htsPartnerNotificationServicesService: HtsPartnerNotificationServicesService,
-                htsTestKitsService: HtsTestKitsService, htsClientLinkageService: HtsClientsLinkageService) {
+                htsTestKitsService: HtsTestKitsService, htsClientLinkageService: HtsClientsLinkageService,
+                eligibilityScreeningService: HtsEligibilityScreeningService) {
         this.htsClientsService = htsClientsService;
         this.htsClientTestsService = htsClientTestsService;
         this.htsClientTracingService = htsClientTracingService;
@@ -51,6 +55,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         this.htsPartnerNotificationServicesService = htsPartnerNotificationServicesService;
         this.htsTestKitsService = htsTestKitsService;
         this.htsClientsLinkageService = htsClientLinkageService;
+        this.htsEligibilityScreeningService = eligibilityScreeningService;
     }
 
     get extract(): string {
@@ -106,6 +111,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         if (this.extract === 'Hts Partner Notification Services') {
             this.getValidPartnerNotificationServices();
         }
+        if (this.extract === 'Hts Eligibility Screening') {
+            this.getHtsEligibilityExtracts();
+        }
     }
 
     private getColumns(): void {
@@ -129,6 +137,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         }
         if (this.extract === 'Hts Partner Notification Services') {
             this.getPartnerNotificationServicesColumns();
+        }
+        if (this.extract === 'Hts Eligibility Screening') {
+            this.getHtsEligibilityExtractsColumns();
         }
     }
 
@@ -407,6 +418,24 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         );
     }
 
+    private getHtsEligibilityExtracts(): void {
+        this.getValid$ = this.htsEligibilityScreeningService.loadValid(this.pageModel).subscribe(
+            p => {
+                this.validExtracts = p;
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+            }
+        );
+    }
+
 
     private getClientsColumns(): void {
         this.cols = [
@@ -515,6 +544,23 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'ipvScreeningOutcome', header: 'IPV Screening Outcome' },
             { field: 'currentlyLivingWithIndexClient', header: 'currently Living With Index Client' },
             { field: 'pnsConsent', header: 'PNS Consent' },
+
+        ];
+    }
+
+    private getHtsEligibilityExtractsColumns(): void {
+        this.cols = [
+            //{ field: 'Summary', header: 'Summary' },
+            { field: 'patientPk', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'patientType', header: 'Patient Type' },
+            { field: 'visitID', header: 'Visit ID' },
+            { field: 'visitDate', header: 'Visit Date' },
+            { field: 'relationshipWithContact', header: 'Relationship With Contact' },
+            { field: 'isHealthWorker', header: 'Is Health Worker' },
+            { field: 'testedHIVBefore', header: 'Tested HIV Before' },
+            { field: 'partnerHivStatus', header: 'Partner Hiv Status' },
+            { field: 'sexuallyActive', header: 'Sexually Active' },
 
         ];
     }

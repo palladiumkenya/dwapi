@@ -1,3 +1,5 @@
+using System;
+
 namespace Dwapi.Contracts.Ct
 {
     public interface IVisit
@@ -31,5 +33,6 @@ namespace Dwapi.Contracts.Ct
         string Abdomen {get;set;}
         string CNS {get;set;}
         string Genitourinary {get;set;}
+        DateTime? RefillDate { get; set; }
     }
 }

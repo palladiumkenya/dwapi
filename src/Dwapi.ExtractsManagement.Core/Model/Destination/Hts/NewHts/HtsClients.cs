@@ -15,6 +15,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
         public  string County	 { get; set; }
         public  string  SubCounty	 { get; set; }
         public  string Ward	 { get; set; }
+        public string NUPI { get; set; }
+        public string Pkv { get; set; }
 
         public virtual ICollection<HtsClientTests> HtsClientTestss { get; set; } = new List<HtsClientTests>();
         public virtual ICollection<HtsClientTracing> HtsClientTracings { get; set; } = new List<HtsClientTracing>();
@@ -22,5 +24,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
         public virtual ICollection<HtsTestKits> HtsTestKitss { get; set; } = new List<HtsTestKits>();
         public virtual ICollection<HtsClientLinkage> HtsClientLinkages { get; set; } = new List<HtsClientLinkage>();
         public virtual ICollection<HtsPartnerNotificationServices> HtsPartnerNotificationServicess { get; set; } = new List<HtsPartnerNotificationServices>();
+        public virtual ICollection<HtsEligibilityExtract> HtsEligibilityExtracts { get; set; } = new List<HtsEligibilityExtract>();
+
+       
     }
 }
