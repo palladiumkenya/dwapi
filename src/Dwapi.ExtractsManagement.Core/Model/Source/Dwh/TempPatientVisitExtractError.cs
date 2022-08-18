@@ -39,6 +39,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string DifferentiatedCare { get; set; }
         public string PopulationType { get; set; }
         public string KeyPopulationType { get; set; }
+        public DateTime? RefillDate { get; set; }
         [NotMapped]
         public virtual ICollection<TempPatientVisitExtractErrorSummary> TempPatientVisitExtractErrorSummaries { get; set; } = new List<TempPatientVisitExtractErrorSummary>();
     }
