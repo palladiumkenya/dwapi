@@ -29,8 +29,10 @@ namespace Dwapi.ExtractsManagement.Core.Services
         private readonly IOvcExtractRepository _ovcExtractRepository;
         private readonly IOtzExtractRepository _otzExtractRepository;
 
+        private readonly ICovidExtractRepository _covidExtractRepository;
+        private readonly IDefaulterTracingExtractRepository _defaulterTracingExtractRepository;
 
-        public DwhExtractSentServcie(IPatientExtractRepository patientExtractRepository, IPatientArtExtractRepository artExtractRepository, IPatientBaselinesExtractRepository baselinesExtractRepository, IPatientLaboratoryExtractRepository laboratoryExtractRepository, IPatientPharmacyExtractRepository pharmacyExtractRepository, IPatientStatusExtractRepository statusExtractRepository, IPatientVisitExtractRepository visitExtractRepository, IPatientAdverseEventExtractRepository adverseEventExtractRepository, IAllergiesChronicIllnessExtractRepository allergiesChronicIllnessExtractRepository, IIptExtractRepository iptExtractRepository, IDepressionScreeningExtractRepository depressionScreeningExtractRepository, IContactListingExtractRepository contactListingExtractRepository, IGbvScreeningExtractRepository gbvScreeningExtractRepository, IEnhancedAdherenceCounsellingExtractRepository enhancedAdherenceCounsellingExtractRepository, IDrugAlcoholScreeningExtractRepository drugAlcoholScreeningExtractRepository, IOvcExtractRepository ovcExtractRepository, IOtzExtractRepository otzExtractRepository)
+        public DwhExtractSentServcie(IPatientExtractRepository patientExtractRepository, IPatientArtExtractRepository artExtractRepository, IPatientBaselinesExtractRepository baselinesExtractRepository, IPatientLaboratoryExtractRepository laboratoryExtractRepository, IPatientPharmacyExtractRepository pharmacyExtractRepository, IPatientStatusExtractRepository statusExtractRepository, IPatientVisitExtractRepository visitExtractRepository, IPatientAdverseEventExtractRepository adverseEventExtractRepository, IAllergiesChronicIllnessExtractRepository allergiesChronicIllnessExtractRepository, IIptExtractRepository iptExtractRepository, IDepressionScreeningExtractRepository depressionScreeningExtractRepository, IContactListingExtractRepository contactListingExtractRepository, IGbvScreeningExtractRepository gbvScreeningExtractRepository, IEnhancedAdherenceCounsellingExtractRepository enhancedAdherenceCounsellingExtractRepository, IDrugAlcoholScreeningExtractRepository drugAlcoholScreeningExtractRepository, IOvcExtractRepository ovcExtractRepository, IOtzExtractRepository otzExtractRepository, ICovidExtractRepository covidExtractRepository, IDefaulterTracingExtractRepository defaulterTracingExtractRepository)
         {
             _patientExtractRepository = patientExtractRepository;
             _artExtractRepository = artExtractRepository;
@@ -50,6 +52,9 @@ namespace Dwapi.ExtractsManagement.Core.Services
             _drugAlcoholScreeningExtractRepository = drugAlcoholScreeningExtractRepository;
             _ovcExtractRepository = ovcExtractRepository;
             _otzExtractRepository = otzExtractRepository;
+
+            _covidExtractRepository = covidExtractRepository;
+            _defaulterTracingExtractRepository = defaulterTracingExtractRepository;
         }
 
         public void UpdateSendStatus(ExtractType extractType, List<SentItem> sentItems)
@@ -110,6 +115,12 @@ namespace Dwapi.ExtractsManagement.Core.Services
                         break;
                     case ExtractType.Ovc:
                         _ovcExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.Covid:
+                        _covidExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.DefaulterTracing:
+                        _defaulterTracingExtractRepository.UpdateSendStatus(sentItems);
                         break;
                 }
             }

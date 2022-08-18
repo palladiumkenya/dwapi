@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
@@ -18,7 +19,7 @@ namespace Dwapi.NotificationHandlers
             _extractRepository = Startup.ServiceProvider.GetService<IPatientExtractRepository>();
         }
 
-        public void Handle(CTStatusNotification domainEvent)
+        public Task Handle(CTStatusNotification domainEvent)
         {
             _repository.UpdateStatus(domainEvent.ExtractId, domainEvent.Status,domainEvent.Stats,domainEvent.StatusInfo,true);
 
@@ -27,6 +28,7 @@ namespace Dwapi.NotificationHandlers
                 var patientStats = _extractRepository.GetSent(domainEvent.PatientExtractId);
                 _repository.UpdateStatus(domainEvent.PatientExtractId, domainEvent.Status, patientStats, "", true);
             }
+            return Task.CompletedTask;
         }
     }
 }

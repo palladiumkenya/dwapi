@@ -143,6 +143,7 @@ import {HtsSenderService} from '../dockets/services/hts-sender.service';
 import {HtsClientService} from '../dockets/services/hts-client.service';
 import {HtsClientPartnerService} from '../dockets/services/hts-client-partner.service';
 import {HtsClientLinkageService} from '../dockets/services/hts-client-linkage.service';
+import {HtsEligibilityScreeningService} from '../dockets/services/hts-eligibility-screening.service';
 
 import {HtsClientsService} from '../dockets/services/hts-clients.service';
 import {HtsClientTestsService} from '../dockets/services/hts-client-tests.service';
@@ -173,6 +174,18 @@ import {MnchExtractDetailsComponent} from '../dockets/mnch-docket/mnch-extract-d
 import {MnchInvalidComponent} from '../dockets/mnch-docket/mnch-extract-details/mnch-invalid/mnch-invalid.component';
 import {MnchValidComponent} from '../dockets/mnch-docket/mnch-extract-details/mnch-valid/mnch-valid.component';
 import {MnchSummaryService} from "../dockets/services/mnch-summary.service";
+import {PrepDocketComponent} from "../dockets/prep-docket/prep-docket.component";
+import {PrepConsoleComponent} from "../dockets/prep-docket/prep-console/prep-console.component";
+import {PrepValidComponent} from "../dockets/prep-docket/prep-extract-details/prep-valid/prep-valid.component";
+import {PrepInvalidComponent} from "../dockets/prep-docket/prep-extract-details/prep-invalid/prep-invalid.component";
+import {PrepExtractDetailsComponent} from "../dockets/prep-docket/prep-extract-details/prep-extract-details.component";
+import {PrepService} from "../dockets/services/prep.service";
+import {PrepClientLinkageService} from "../dockets/services/prep-client-linkage.service";
+import {PrepSummaryService} from "../dockets/services/prep-summary.service";
+import {PrepClientService} from "../dockets/services/prep-client.service";
+import {PrepSenderService} from "../dockets/services/prep-sender.service";
+import {CrsService} from "../dockets/services/crs.service";
+import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
 
 @NgModule({
     imports: [
@@ -301,6 +314,12 @@ import {MnchSummaryService} from "../dockets/services/mnch-summary.service";
         MnchExtractDetailsComponent,
         MnchInvalidComponent,
         MnchValidComponent,
+        PrepDocketComponent,
+        PrepConsoleComponent,
+        PrepExtractDetailsComponent,
+        PrepInvalidComponent,
+        PrepValidComponent,
+        CrsDocketComponent
 ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
@@ -312,7 +331,10 @@ import {MnchSummaryService} from "../dockets/services/mnch-summary.service";
         HtsClientsService, HtsClientTestsService, HtsClientsLinkageService, HtsTestKitsService, HtsClientTracingService,
         HtsPartnerTracingService, HtsPartnerNotificationServicesService, HtsClientService, HtsClientPartnerService, HtsClientLinkageService,
         MetricsService, MgsService, MgsSenderService, MetricMigrationService, NdwhSummaryService,
-        MnchService, MnchSenderService, MnchClientService, MnchClientLinkageService, MnchSummaryService
+        MnchService, MnchSenderService, MnchClientService, MnchClientLinkageService, MnchSummaryService,
+        PrepService, PrepSenderService, PrepClientService, PrepClientLinkageService, PrepSummaryService,
+        CrsService, HtsEligibilityScreeningService
+
     ],
     bootstrap: [AppComponent]
 })

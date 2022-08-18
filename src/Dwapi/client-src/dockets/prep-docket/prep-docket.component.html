@@ -1,0 +1,14 @@
+<div class="card card-w-title">
+    <h1>Extracts</h1>
+
+    <p-messages [(value)]="metricMessages"></p-messages>
+    <div class="ui-g">
+        <liveapp-prep-console [emr]="emrSystem" [emrVer]="emrVersion"></liveapp-prep-console>
+    </div>
+
+</div>
+
+<div class="card card-w-title">
+    <h1>Extract Details</h1>
+    <liveapp-prep-extract-details [emr]="emrSystem" [isInitialLoad]="isInitialLoading"></liveapp-prep-extract-details>
+</div>

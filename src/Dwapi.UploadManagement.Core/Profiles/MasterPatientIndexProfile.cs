@@ -22,6 +22,8 @@ namespace Dwapi.UploadManagement.Core.Profiles
                 .ForMember(d=> d.PatientPhoneNumber,o=> o.UseValue(string.Empty))
                 .ForMember(d=> d.National_ID,o=> o.UseValue(string.Empty))
                 .ForMember(d=> d.Birth_Certificate,o=> o.UseValue(string.Empty))
+                .ForMember(d=> d.PatientAlternatePhoneNumber,o=> o.UseValue(string.Empty))
+
                 
                 ;
         }

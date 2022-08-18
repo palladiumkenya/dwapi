@@ -1,20 +1,25 @@
-﻿using Dwapi.ExtractsManagement.Core.Model;
+﻿using Dwapi.Contracts.Crs;
+using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Destination;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Crs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Prep;
 using Dwapi.ExtractsManagement.Core.Model.Diff;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
+using Dwapi.ExtractsManagement.Core.Model.Source.Crs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mnch;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mts;
+using Dwapi.ExtractsManagement.Core.Model.Source.Prep;
 using Dwapi.SharedKernel.Infrastructure;
 using LiveSeeder.Core;
 using Microsoft.EntityFrameworkCore;
@@ -91,6 +96,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<HtsTestKits> HtsTestKitsExtracts { get; set; }
         public DbSet<HtsClientLinkage> HtsClientsLinkageExtracts { get; set; }
         public DbSet<HtsPartnerNotificationServices> HtsPartnerNotificationServicesExtracts { get; set; }
+        public DbSet<HtsEligibilityExtract> HtsEligibilityExtracts { get; set; }
 
         public DbSet<TempHtsClients> TempHtsClientsExtracts { get; set; }
         public DbSet<TempHtsClientTests> TempHtsClientTestsExtracts { get; set; }
@@ -99,6 +105,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsTestKits> TempHtsTestKitsExtracts { get; set; }
         public DbSet<TempHtsClientLinkage> TempHtsClientsLinkageExtracts { get; set; }
         public DbSet<TempHtsPartnerNotificationServices> TempHtsPartnerNotificationServicesExtracts { get; set; }
+        public DbSet<TempHtsEligibilityExtract> TempHtsEligibilityExtracts { get; set; }
+        
 
 
 
@@ -110,6 +118,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsTestKitsError> TempHtsTestKitsExtractsErrors { get; set; }
         public DbSet<TempHtsClientLinkageError> TempHtsClientsLinkageExtractsErrors { get; set; }
         public DbSet<TempHtsPartnerNotificationServicesError> TempHtsPartnerNotificationServicesExtractsErrors { get; set; }
+        public DbSet<TempHtsEligibilityExtractError> TempHtsEligibilityExtractErrors { get; set; }
 
         public DbSet<TempHTSClientExtractErrorSummary> TempHtsClientExtractErrorSummaries { get; set; }
         public DbSet<TempHTSClientPartnerExtractErrorSummary> TempHtsClientPartnerExtractErrorSummaries { get; set; }
@@ -122,6 +131,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsTestKitsErrorSummary> TempHtsTestKitsExtractsErrorSummaries { get; set; }
         public DbSet<TempHtsClientLinkageErrorSummary> TempHtsClientsLinkageExtractsErrorSummaries { get; set; }
         public DbSet<TempHtsPartnerNotificationServicesErrorSummary> TempHtsPartnerNotificationServicesExtractsErrorSummaries { get; set; }
+        public DbSet<TempHtsEligibilityExtractErrorSummary> TempHtsEligibilityExtractErrorSummaries { get; set; }
 
         public DbSet<TempMetricMigrationExtract> TempMetricMigrationExtracts { get; set; }
         public DbSet<MetricMigrationExtract> MetricMigrationExtracts { get; set; }
@@ -144,6 +154,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempOvcExtract> TempOvcExtracts { get; set; }
         public DbSet<TempOtzExtract> TempOtzExtracts { get; set; }
 
+
+        public DbSet<TempCovidExtract> TempCovidExtracts { get; set; }
+        public DbSet<TempDefaulterTracingExtract> TempDefaulterTracingExtracts { get; set; }
+
         public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
         public DbSet<IptExtract> IptExtracts { get; set; }
         public DbSet<DepressionScreeningExtract> DepressionScreeningExtracts { get; set; }
@@ -153,6 +167,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<DrugAlcoholScreeningExtract> DrugAlcoholScreeningExtracts { get; set; }
         public DbSet<OvcExtract> OvcExtracts { get; set; }
         public DbSet<OtzExtract> OtzExtracts { get; set; }
+
+        public DbSet<CovidExtract> CovidExtracts { get; set; }
+        public DbSet<DefaulterTracingExtract> DefaulterTracingExtracts { get; set; }
 
 
         public DbSet<TempAllergiesChronicIllnessExtractError> TempAllergiesChronicIllnessExtractError { get; set; }
@@ -173,6 +190,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempOvcExtractErrorSummary> TempOvcExtractErrorSummaries{ get; set; }
         public DbSet<TempOtzExtractError> TempOtzExtractError { get; set; }
         public DbSet<TempOtzExtractErrorSummary> TempOtzExtractErrorSummary { get; set; }
+
+        public DbSet<TempCovidExtractError> TempCovidExtractError { get; set; }
+        public DbSet<TempCovidExtractErrorSummary> TempCovidExtractErrorSummary { get; set; }
+        public DbSet<TempDefaulterTracingExtractError> TempDefaulterTracingExtractError { get; set; }
+        public DbSet<TempDefaulterTracingExtractErrorSummary> TempDefaulterTracingExtractErrorSummary { get; set; }
 
         #region Mnch
         public virtual DbSet<TempPatientMnchExtract> TempPatientMnchExtracts { get; set; }
@@ -199,33 +221,74 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<HeiExtract> HeiExtracts { get; set; }
         public virtual DbSet<MnchLabExtract> MnchLabExtracts { get; set; }
 
-        // public virtual DbSet<TempPatientMnchExtractError> TempPatientMnchExtractError { get; set; }
-        // public virtual DbSet<TempMnchEnrolmentExtractError> TempMnchEnrolmentExtractError { get; set; }
-        // public virtual DbSet<TempMnchArtExtractError> TempMnchArtExtractError { get; set; }
-        // public virtual DbSet<TempAncVisitExtractError> TempAncVisitExtractError { get; set; }
-        // public virtual DbSet<TempMatVisitExtractError> TempMatVisitExtractError { get; set; }
-        // public virtual DbSet<TempPncVisitExtractError> TempPncVisitExtractError { get; set; }
-        // public virtual DbSet<TempMotherBabyPairExtractError> TempMotherBabyPairExtractError { get; set; }
-        // public virtual DbSet<TempCwcEnrolmentExtractError> TempCwcEnrolmentExtractError { get; set; }
-        // public virtual DbSet<TempCwcVisitExtractError> TempCwcVisitExtractError { get; set; }
-        // public virtual DbSet<TempHeiExtractError> TempHeiExtractError { get; set; }
-        // public virtual DbSet<TempMnchLabExtractError> TempMnchLabExtractError { get; set; }
-        //
-        // public virtual DbSet<TempPatientMnchExtractErrorSummary> TempPatientMnchExtractErrorSummary { get; set; }
-        // public virtual DbSet<TempMnchEnrolmentExtractErrorSummary> TempMnchEnrolmentExtractErrorSummary { get; set; }
-        // public virtual DbSet<TempMnchArtExtractErrorSummary> TempMnchArtExtractErrorSummary { get; set; }
-        // public virtual DbSet<TempAncVisitExtractErrorSummary> TempAncVisitExtractErrorSummary { get; set; }
-        // public virtual DbSet<TempMatVisitExtractErrorSummary> TempMatVisitExtractErrorSummary { get; set; }
-        // public virtual DbSet<TempPncVisitExtractErrorSummary> TempPncVisitExtractErrorSummary { get; set; }
-        // public virtual DbSet<TempMotherBabyPairExtractErrorSummary> TempMotherBabyPairExtractErrorSummary { get; set; }
-        // public virtual DbSet<TempCwcEnrolmentExtractErrorSummary> TempCwcEnrolmentExtractErrorSummary { get; set; }
-        // public virtual DbSet<TempCwcVisitExtractErrorSummary> TempCwcVisitExtractErrorSummary { get; set; }
-        // public virtual DbSet<TempHeiExtractErrorSummary> TempHeiExtractErrorSummary { get; set; }
-        // public virtual DbSet<TempMnchLabExtractErrorSummary> TempMnchLabExtractErrorSummary { get; set; }
+        public virtual DbSet<TempPatientMnchExtractError> TempPatientMnchExtractError { get; set; }
+        public virtual DbSet<TempMnchEnrolmentExtractError> TempMnchEnrolmentExtractError { get; set; }
+        public virtual DbSet<TempMnchArtExtractError> TempMnchArtExtractError { get; set; }
+        public virtual DbSet<TempAncVisitExtractError> TempAncVisitExtractError { get; set; }
+        public virtual DbSet<TempMatVisitExtractError> TempMatVisitExtractError { get; set; }
+        public virtual DbSet<TempPncVisitExtractError> TempPncVisitExtractError { get; set; }
+        public virtual DbSet<TempMotherBabyPairExtractError> TempMotherBabyPairExtractError { get; set; }
+        public virtual DbSet<TempCwcEnrolmentExtractError> TempCwcEnrolmentExtractError { get; set; }
+        public virtual DbSet<TempCwcVisitExtractError> TempCwcVisitExtractError { get; set; }
+        public virtual DbSet<TempHeiExtractError> TempHeiExtractError { get; set; }
+        public virtual DbSet<TempMnchLabExtractError> TempMnchLabExtractError { get; set; }
+        
+        public virtual DbSet<TempPatientMnchExtractErrorSummary> TempPatientMnchExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMnchEnrolmentExtractErrorSummary> TempMnchEnrolmentExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMnchArtExtractErrorSummary> TempMnchArtExtractErrorSummary { get; set; }
+        public virtual DbSet<TempAncVisitExtractErrorSummary> TempAncVisitExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMatVisitExtractErrorSummary> TempMatVisitExtractErrorSummary { get; set; }
+        public virtual DbSet<TempPncVisitExtractErrorSummary> TempPncVisitExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMotherBabyPairExtractErrorSummary> TempMotherBabyPairExtractErrorSummary { get; set; }
+        public virtual DbSet<TempCwcEnrolmentExtractErrorSummary> TempCwcEnrolmentExtractErrorSummary { get; set; }
+        public virtual DbSet<TempCwcVisitExtractErrorSummary> TempCwcVisitExtractErrorSummary { get; set; }
+        public virtual DbSet<TempHeiExtractErrorSummary> TempHeiExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMnchLabExtractErrorSummary> TempMnchLabExtractErrorSummary { get; set; }
 
         #endregion
 
+        #region Prep
+        public DbSet<TempPatientPrepExtract> TempPatientPrepExtracts { get; set; }
+        public DbSet<TempPrepAdverseEventExtract> TempPrepAdverseEventExtracts { get; set; }
+        public DbSet<TempPrepBehaviourRiskExtract> TempPrepBehaviourRiskExtracts { get; set; }
+        public DbSet<TempPrepCareTerminationExtract> TempPrepCareTerminationExtracts { get; set; }
+        public DbSet<TempPrepLabExtract> TempPrepLabExtracts { get; set; }
+        public DbSet<TempPrepPharmacyExtract> TempPrepPharmacyExtracts { get; set; }
+        public DbSet<TempPrepVisitExtract> TempPrepVisitExtracts { get; set; }
 
+        public DbSet<PatientPrepExtract> PatientPrepExtracts { get; set; }
+        public DbSet<PrepAdverseEventExtract> PrepAdverseEventExtracts { get; set; }
+        public DbSet<PrepBehaviourRiskExtract> PrepBehaviourRiskExtracts { get; set; }
+        public DbSet<PrepCareTerminationExtract> PrepCareTerminationExtracts { get; set; }
+        public DbSet<PrepLabExtract> PrepLabExtracts { get; set; }
+        public DbSet<PrepPharmacyExtract> PrepPharmacyExtracts { get; set; }
+        public DbSet<PrepVisitExtract> PrepVisitExtracts { get; set; }
+
+        public DbSet<TempPatientPrepExtractError> TempPatientPrepExtractError { get; set; }
+        public DbSet<TempPrepAdverseEventExtractError> TempPrepAdverseEventExtractError { get; set; }
+        public DbSet<TempPrepBehaviourRiskExtractError> TempPrepBehaviourRiskExtractError { get; set; }
+        public DbSet<TempPrepCareTerminationExtractError> TempPrepCareTerminationExtractError { get; set; }
+        public DbSet<TempPrepLabExtractError> TempPrepLabExtractError { get; set; }
+        public DbSet<TempPrepPharmacyExtractError> TempPrepPharmacyExtractError { get; set; }
+        public DbSet<TempPrepVisitExtractError> TempPrepVisitExtractError { get; set; }
+        
+        public DbSet<TempPatientPrepExtractErrorSummary> TempPatientPrepExtractErrorSummary { get; set; }
+        public DbSet<TempPrepAdverseEventExtractErrorSummary> TempPrepAdverseEventExtractErrorSummary { get; set; }
+        public DbSet<TempPrepBehaviourRiskExtractErrorSummary> TempPrepBehaviourRiskExtractErrorSummary { get; set; }
+        public DbSet<TempPrepCareTerminationExtractErrorSummary> TempPrepCareTerminationExtractErrorSummary { get; set; }
+        public DbSet<TempPrepLabExtractErrorSummary> TempPrepLabExtractErrorSummary { get; set; }
+        public DbSet<TempPrepPharmacyExtractErrorSummary> TempPrepPharmacyExtractErrorSummary { get; set; }
+        public DbSet<TempPrepVisitExtractErrorSummary> TempPrepVisitExtractErrorSummary { get; set; }
+
+        #endregion
+
+        public DbSet<ClientRegistryExtract> ClientRegistryExtracts{ get; set; }
+        public DbSet<TempClientRegistryExtract> TempClientRegistryExtracts { get; set; }
+       
+        public DbSet<TempClientRegistryExtractError> TempClientRegistryExtractError { get; set; }
+        public DbSet<TempClientRegistryExtractErrorSummary> TempClientRegistryExtractErrorSummary { get; set; }
+        
+        
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
 
@@ -318,6 +381,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
+            
+            modelBuilder.Entity<HtsClients>()
+                .HasMany(c => c.HtsEligibilityExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
 
             //            modelBuilder.Entity<HTSClientExtract>()
             //                .HasKey(f => new {f.SiteCode, f.PatientPk,f.EncounterId});
@@ -365,6 +434,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
             modelBuilder.Entity<PatientExtract>()
                 .HasMany(c => c.OvcExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.CovidExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.DefaulterTracingExtracts)
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
@@ -434,6 +514,47 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
+
+
+            modelBuilder.Entity<PatientPrepExtract>()
+                .HasKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientPrepExtract>()
+                .HasMany(c => c.PrepAdverseEventExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientPrepExtract>()
+                .HasMany(c => c.PrepBehaviourRiskExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientPrepExtract>()
+                .HasMany(c => c.PrepCareTerminationExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientPrepExtract>()
+                .HasMany(c => c.PrepLabExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientPrepExtract>()
+                .HasMany(c => c.PrepPharmacyExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
+            modelBuilder.Entity<PatientPrepExtract>()
+                .HasMany(c => c.PrepVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+
             DapperPlusManager.Entity<TempPatientExtract>().Key(x => x.Id).Table($"{nameof(TempPatientExtracts)}");
             DapperPlusManager.Entity<TempPatientArtExtract>().Key(x => x.Id).Table($"{nameof(TempPatientArtExtracts)}");
             DapperPlusManager.Entity<TempPatientBaselinesExtract>().Key(x => x.Id)
@@ -476,6 +597,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<HtsClientLinkage>().Key(x => x.Id).Table($"{nameof(HtsClientsLinkageExtracts)}");
             DapperPlusManager.Entity<HtsTestKits>().Key(x => x.Id).Table($"{nameof(HtsTestKitsExtracts)}");
             DapperPlusManager.Entity<HtsPartnerTracing>().Key(x => x.Id).Table($"{nameof(HtsPartnerTracingExtracts)}");
+            DapperPlusManager.Entity<HtsEligibilityExtract>().Key(x => x.Id).Table($"{nameof(HtsEligibilityExtracts)}");
 
             DapperPlusManager.Entity<TempHTSClientExtract>().Key(x => x.Id).Table($"{nameof(TempHtsClientExtracts)}");
             DapperPlusManager.Entity<TempHTSClientLinkageExtract>().Key(x => x.Id).Table($"{nameof(TempHtsClientLinkageExtracts)}");
@@ -488,6 +610,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempHtsClientLinkage>().Key(x => x.Id).Table($"{nameof(TempHtsClientsLinkageExtracts)}");
             DapperPlusManager.Entity<TempHtsTestKits>().Key(x => x.Id).Table($"{nameof(TempHtsTestKitsExtracts)}");
             DapperPlusManager.Entity<TempHtsPartnerTracing>().Key(x => x.Id).Table($"{nameof(TempHtsPartnerTracingExtracts)}");
+            DapperPlusManager.Entity<TempHtsEligibilityExtract>().Key(x => x.Id).Table($"{nameof(TempHtsEligibilityExtracts)}");
 
             DapperPlusManager.Entity<MetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(MetricMigrationExtracts)}");
             DapperPlusManager.Entity<TempMetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(TempMetricMigrationExtracts)}");
@@ -508,6 +631,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempOvcExtract>().Key(x => x.Id).Table($"{nameof(TempOvcExtracts)}");
             DapperPlusManager.Entity<TempOtzExtract>().Key(x => x.Id).Table($"{nameof(TempOtzExtracts)}");
 
+            DapperPlusManager.Entity<TempCovidExtract>().Key(x => x.Id).Table($"{nameof(TempCovidExtracts)}");
+            DapperPlusManager.Entity<TempDefaulterTracingExtract>().Key(x => x.Id).Table($"{nameof(TempDefaulterTracingExtracts)}");
+
 
             DapperPlusManager.Entity<AllergiesChronicIllnessExtract>().Key(x => x.Id).Table($"{nameof(AllergiesChronicIllnessExtracts)}");
             DapperPlusManager.Entity<IptExtract>().Key(x => x.Id).Table($"{nameof(IptExtracts)}");
@@ -518,6 +644,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<DrugAlcoholScreeningExtract>().Key(x => x.Id).Table($"{nameof(DrugAlcoholScreeningExtracts)}");
             DapperPlusManager.Entity<OvcExtract>().Key(x => x.Id).Table($"{nameof(OvcExtracts)}");
             DapperPlusManager.Entity<OtzExtract>().Key(x => x.Id).Table($"{nameof(OtzExtracts)}");
+
+            DapperPlusManager.Entity<CovidExtract>().Key(x => x.Id).Table($"{nameof(CovidExtracts)}");
+            DapperPlusManager.Entity<DefaulterTracingExtract>().Key(x => x.Id).Table($"{nameof(DefaulterTracingExtracts)}");
 
 
             DapperPlusManager.Entity<TempPatientMnchExtract>().Key(x => x.Id).Table($"{nameof(TempPatientMnchExtracts)}");
@@ -543,6 +672,26 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<CwcVisitExtract>().Key(x => x.Id).Table($"{nameof(CwcVisitExtracts)}");
             DapperPlusManager.Entity<HeiExtract>().Key(x => x.Id).Table($"{nameof(HeiExtracts)}");
             DapperPlusManager.Entity<MnchLabExtract>().Key(x => x.Id).Table($"{nameof(MnchLabExtracts)}");
+
+            DapperPlusManager.Entity<TempPatientPrepExtract>().Key(x => x.Id).Table($"{nameof(TempPatientPrepExtracts)}");
+            DapperPlusManager.Entity<TempPrepBehaviourRiskExtract>().Key(x => x.Id).Table($"{nameof(TempPrepBehaviourRiskExtracts)}");
+            DapperPlusManager.Entity<TempPrepVisitExtract>().Key(x => x.Id).Table($"{nameof(TempPrepVisitExtracts)}");
+            DapperPlusManager.Entity<TempPrepLabExtract>().Key(x => x.Id).Table($"{nameof(TempPrepLabExtracts)}");
+            DapperPlusManager.Entity<TempPrepPharmacyExtract>().Key(x => x.Id).Table($"{nameof(TempPrepPharmacyExtracts)}");
+            DapperPlusManager.Entity<TempPrepAdverseEventExtract>().Key(x => x.Id).Table($"{nameof(TempPrepAdverseEventExtracts)}");
+            DapperPlusManager.Entity<TempPrepCareTerminationExtract>().Key(x => x.Id).Table($"{nameof(TempPrepCareTerminationExtracts)}");
+
+            DapperPlusManager.Entity<PatientPrepExtract>().Key(x => x.Id).Table($"{nameof(PatientPrepExtracts)}");
+            DapperPlusManager.Entity<PrepBehaviourRiskExtract>().Key(x => x.Id).Table($"{nameof(PrepBehaviourRiskExtracts)}");
+            DapperPlusManager.Entity<PrepVisitExtract>().Key(x => x.Id).Table($"{nameof(PrepVisitExtracts)}");
+            DapperPlusManager.Entity<PrepLabExtract>().Key(x => x.Id).Table($"{nameof(PrepLabExtracts)}");
+            DapperPlusManager.Entity<PrepPharmacyExtract>().Key(x => x.Id).Table($"{nameof(PrepPharmacyExtracts)}");
+            DapperPlusManager.Entity<PrepAdverseEventExtract>().Key(x => x.Id).Table($"{nameof(PrepAdverseEventExtracts)}");
+            DapperPlusManager.Entity<PrepCareTerminationExtract>().Key(x => x.Id).Table($"{nameof(PrepCareTerminationExtracts)}");
+            
+            DapperPlusManager.Entity<ClientRegistryExtract>().Key(x => x.Id).Table($"{nameof(ClientRegistryExtracts)}");
+            DapperPlusManager.Entity<TempClientRegistryExtract>().Key(x => x.Id).Table($"{nameof(TempClientRegistryExtracts)}");
+           
         }
 
         public override void EnsureSeeded()

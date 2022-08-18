@@ -71,6 +71,15 @@ namespace Dwapi.UploadManagement.Infrastructure.Tests.Reader.Dwh
         }
 
         [Test]
+        public void should_ART_ReadAllPaged()
+        {
+            var extractViews = _reader.ReadSmart<PatientArtExtractView,Guid>(1, 2).ToList();
+            Assert.True(extractViews.Any());
+            Assert.True(extractViews.Count==2);
+            Assert.Null(extractViews.First().PatientExtractView);
+        }
+
+        [Test]
         public void should_ART_Count()
         {
             var totalRecords = _reader.GetTotalRecords<PatientArtExtractView,Guid>();

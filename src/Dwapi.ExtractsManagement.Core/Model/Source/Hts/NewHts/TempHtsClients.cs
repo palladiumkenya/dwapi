@@ -14,5 +14,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public  string County	 { get; set; }
         public  string  SubCounty	 { get; set; }
         public  string Ward	 { get; set; }
+        public string NUPI { get; set; }
+        public string Pkv { get; set; }
     }
 }

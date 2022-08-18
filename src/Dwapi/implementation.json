@@ -4,6 +4,11 @@
             "Name": "PKV",
             "Description": "Decoded PKV",
             "Key": "MAUN-ECC5-11EA"
+        },
+        "BatchSize": {
+            "Patients": 1000,
+            "Visits": 1000,
+            "Extracts": 1000
         }
     }
 }

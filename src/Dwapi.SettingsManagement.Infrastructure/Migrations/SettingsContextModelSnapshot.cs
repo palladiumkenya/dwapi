@@ -3,6 +3,7 @@ using System;
 using Dwapi.SettingsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Migrations
@@ -15,7 +16,8 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.AppMetric", b =>
                 {
@@ -271,6 +273,32 @@ namespace Dwapi.SettingsManagement.Infrastructure.Migrations
                     b.HasIndex("EmrSystemId");
 
                     b.ToTable("RestProtocols");
+                });
+
+            modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.TransportLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Docket");
+
+                    b.Property<string>("Extract");
+
+                    b.Property<Guid>("FacilityId");
+
+                    b.Property<DateTime>("JobEnd");
+
+                    b.Property<string>("JobId");
+
+                    b.Property<DateTime>("JobStart");
+
+                    b.Property<Guid>("ManifestId");
+
+                    b.Property<int>("SiteCode");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TransportLogs");
                 });
 
             modelBuilder.Entity("Dwapi.SettingsManagement.Core.Model.CentralRegistry", b =>

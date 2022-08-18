@@ -12,6 +12,7 @@ using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
+using Dwapi.UploadManagement.Core.Exchange.Dwh.Smart;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Hangfire;
@@ -70,7 +71,7 @@ namespace Dwapi.Controller
             {
                 var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
 
-                await _mediator.Publish(new ExtractLoaded("CareTreatment", version));
+                await _mediator.Publish(new ExtractLoaded("CareTreatment", version, request.EmrSetup));
 
                 return Ok(result);
             }
@@ -169,6 +170,50 @@ namespace Dwapi.Controller
             }
         }
 
+        #region Smart Endpoints
+        // POST: api/DwhExtracts/manifest
+        [HttpPost("smart/manifest")]
+        public async Task<IActionResult> SendSmartManifest([FromBody] CombinedSendManifestDto packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+
+            string version = GetType().Assembly.GetName().Version.ToString();
+
+            await _mediator.Publish(new ExtractSent("CareTreatment", version));
+
+            try
+            {
+                var result = await _ctSendService.SendSmartManifestAsync(packageDto.DwhPackage, _version, "3");
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Smart Manifest {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("smart/patients")]
+        public IActionResult SendSmartPatientExtracts([FromBody] CombinedSendManifestDto packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                QueueSmartDwh(packageDto.DwhPackage);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Smart Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+        #endregion
 
         // POST: api/DwhExtracts/patients
         [HttpPost("patients")]
@@ -195,6 +240,7 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
 
         // POST: api/DwhExtracts/patients
         [HttpPost("diffpatients")]
@@ -244,8 +290,11 @@ namespace Dwapi.Controller
             var job4 =
                 BatchJob.ContinueBatchWith(job3, x => { SendNewOtherJobProfiles(package); });
 
+            var job5 =
+                BatchJob.ContinueBatchWith(job4, x => { SendCovidJobProfiles(package); });
+
             var jobEnd =
-                BatchJob.ContinueBatchWith(job4, x => { _ctSendService.NotifyPostSending(package,_version); });
+                BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package,_version); });
         }
 
         [AutomaticRetry(Attempts = 0)]
@@ -270,10 +319,85 @@ namespace Dwapi.Controller
             var job4 =
                 BatchJob.ContinueBatchWith(job3, x => { SendDiffNewOtherJobProfiles(package); });
 
+            var job5 =
+                BatchJob.ContinueBatchWith(job4, x => { SendDiffCovidJobProfiles(package); });
+
             var jobEnd =
-                BatchJob.ContinueBatchWith(job4, x => { _ctSendService.NotifyPostSending(package, _version); });
+                BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package, _version); });
         }
 
+        #region Smart
+
+        [AutomaticRetry(Attempts = 0)]
+        private void QueueSmartDwh(SendManifestPackageDTO package)
+        {
+            var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
+
+            if (extracts.Any())
+                package.Extracts = extracts.Select(x => new ExtractDto() {Id = x.Id, Name = x.Name}).ToList();
+
+            _ctSendService.NotifyPreSending();
+
+            var job0 =
+                BatchJob.StartNew(x => { SendJobSmartPateints(package); });
+
+            var job1 =
+                BatchJob.ContinueBatchWith(job0, x => { SendJobSmartBaselines(package); });
+
+            var job2 =
+                BatchJob.ContinueBatchWith(job1, x => { SendJobSmartProfiles(package); });
+
+            var job3 =
+                BatchJob.ContinueBatchWith(job2, x => { SendNewJobSmartProfiles(package); });
+
+            var job4 =
+                BatchJob.ContinueBatchWith(job3, x => { SendNewOtherJobSmartProfiles(package); });
+
+            var job5 =
+                BatchJob.ContinueBatchWith(job4, x => { SendCovidJobSmartProfiles(package); });
+
+            var jobEnd =
+                BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package,_version); });
+        }
+        public void SendJobSmartPateints(SendManifestPackageDTO package)
+        {
+            var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new PatientMessageSourceBag()).Result;
+        }
+        public void SendJobSmartBaselines(SendManifestPackageDTO package)
+        {
+            var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new ArtMessageSourceBag()).Result;
+            var idsB=_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new BaselineMessageSourceBag()).Result;
+            var idsC= _ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new StatusMessageSourceBag()).Result;
+            var idsD=_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new AdverseEventMessageSourceBag()).Result;
+        }
+        public void SendJobSmartProfiles(SendManifestPackageDTO package)
+        {
+            var idsC= _ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Visits, new VisitMessageSourceBag()).Result;
+            var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new PharmacyMessageSourceBag()).Result;
+            var idsB=_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new LaboratoryMessageSourceBag()).Result;
+        }
+        public void SendNewJobSmartProfiles(SendManifestPackageDTO package)
+        {
+            var idsAllergiesChronicIllness =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new AllergiesChronicIllnessMessageSourceBag()).Result;
+            var idsIpt =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new IptMessageSourceBag()).Result;
+            var idsDepressionScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DepressionScreeningMessageSourceBag()).Result;
+            var idsContactListing =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new ContactListingMessageSourceBag()).Result;
+        }
+        public void SendNewOtherJobSmartProfiles(SendManifestPackageDTO package)
+        {
+            var idsGbvScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new GbvScreeningMessageSourceBag()).Result;
+            var idsEnhancedAdherenceCounselling =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new EnhancedAdherenceCounsellingMessageSourceBag()).Result;
+            var idsDrugAlcoholScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DrugAlcoholScreeningMessageSourceBag()).Result;
+            var idsOvc =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new OvcMessageSourceBag()).Result;
+            var idsOtz =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new OtzMessageSourceBag()).Result;
+        }
+        public void SendCovidJobSmartProfiles(SendManifestPackageDTO package)
+        {
+            var idsCovid =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CovidMessageSourceBag()).Result;
+            var idsDefaulterTracing =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DefaulterTracingMessageSourceBag()).Result;
+        }
+
+        #endregion
         public void SendJobBaselines(SendManifestPackageDTO package)
         {
             var idsA =_ctSendService.SendBatchExtractsAsync(package, 500, new ArtMessageBag()).Result;
@@ -281,6 +405,7 @@ namespace Dwapi.Controller
             var idsC= _ctSendService.SendBatchExtractsAsync(package, 500, new StatusMessageBag()).Result;
             var idsD=_ctSendService.SendBatchExtractsAsync(package, 500, new AdverseEventsMessageBag()).Result;
         }
+
         public void SendDiffJobBaselines(SendManifestPackageDTO package)
         {
             var idsA =_ctSendService.SendDiffBatchExtractsAsync(package, 500, new ArtMessageBag()).Result;
@@ -294,6 +419,7 @@ namespace Dwapi.Controller
             var idsB=_ctSendService.SendBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
             var idsC= _ctSendService.SendBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
         }
+
         public void SendNewJobProfiles(SendManifestPackageDTO package)
         {
             var idsAllergiesChronicIllness =_ctSendService.SendBatchExtractsAsync(package, 200, new AllergiesChronicIllnesssMessageBag()).Result;
@@ -301,6 +427,8 @@ namespace Dwapi.Controller
             var idsDepressionScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new DepressionScreeningsMessageBag()).Result;
             var idsContactListing =_ctSendService.SendBatchExtractsAsync(package, 200, new ContactListingsMessageBag()).Result;
         }
+
+
 
         public void SendNewOtherJobProfiles(SendManifestPackageDTO package)
         {
@@ -310,6 +438,15 @@ namespace Dwapi.Controller
             var idsOvc =_ctSendService.SendBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
             var idsOtz =_ctSendService.SendBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
         }
+
+
+        public void SendCovidJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsCovid =_ctSendService.SendBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
+            var idsDefaulterTracing =_ctSendService.SendBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
+        }
+
+
 
         public void SendDiffJobProfiles(SendManifestPackageDTO package)
         {
@@ -333,6 +470,12 @@ namespace Dwapi.Controller
             var idsDrugAlcoholScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DrugAlcoholScreeningsMessageBag()).Result;
             var idsOvc =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
             var idsOtz =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
+        }
+
+        public void SendDiffCovidJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsCovid =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
+            var idsDefaulterTracing =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
         }
 
         [AutomaticRetry(Attempts = 0)]

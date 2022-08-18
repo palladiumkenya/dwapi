@@ -38,8 +38,6 @@ namespace Dwapi.Controller
         [HttpPost("extractAll")]
         public async Task<IActionResult> Load([FromBody] LoadHtsExtracts request)
         {
-            if (!ModelState.IsValid) return BadRequest();
-
             string version = GetType().Assembly.GetName().Version.ToString();
             var result = await _mediator.Send(request.LoadHtsFromEmrCommand, HttpContext.RequestAborted);
             await _mediator.Publish(new ExtractLoaded("HivTestingService", version));
@@ -226,6 +224,27 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+
+        // POST: api/DwhExtracts/patients
+        [HttpPost("htseligibilityextract")]
+        public IActionResult SendHtsEligibilityExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsSendService.SendHtsEligibilityExtractsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
 
         // POST: api/DwhExtracts/patients
         [HttpPost("endsession")]

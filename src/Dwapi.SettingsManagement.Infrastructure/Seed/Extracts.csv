@@ -124,9 +124,10 @@ FROM
 											'' AS SatelliteName,
 											0 AS FacilityId,d.unique_patient_no as PatientID,
 											d.patient_id as PatientPK,
+											d.national_unique_patient_identifier as NUPI,
 											pkv.PKV as Pkv,
-											(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-											(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
+											i.siteCode as SiteCode,
+                                            i.facilityName as FacilityName,
 											case d.gender when 'M' then 'Male' when 'F' then 'Female' end  as Gender,
 											d.dob as DOB,
 											CAST(min(hiv.visit_date) as Date) as RegistrationDate,
@@ -245,7 +246,7 @@ FROM
 													from kenyaemr_etl.etl_patient_program
 													group by Patient_Id,program
 													) as prg on prg.patient_id = d.patient_id
-											left join kenyaemr_etl.etl_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP'
+				left join kenyaemr_etl.etl_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP' join kenyaemr_etl.etl_default_facility_info i
 				where unique_patient_no is not null
 				group by d.patient_id
 				order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
@@ -562,35 +563,82 @@ group by e.patient_id) p_dates on p_dates.patient_id=fup.patient_id
 left outer join kenyaemr_etl.etl_laboratory_extract l on l.patient_id=fup.patient_id and l.lab_test in (5497,730) where d.unique_patient_no is not null
 group by fup.patient_id
 order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-38742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Status|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select
-											'' AS SatelliteName,
-											0 AS FacilityId,
-											d.unique_patient_no as PatientID,
-											d.patient_id as PatientPK,
-											(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
-											(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-											'' as ExitDescription,
-											'KenyaEMR' as Emr,
-											'Kenya HMIS II' as Project,
-											max(date(disc.visit_date)) AS ExitDate,
-											mid(max(concat(visit_date,(case discontinuation_reason
-																																								when 159492 then 'Transfer Out'
-																																								when 160034 then 'Died'
-																																								when 5240 then 'LTFU'
-																																								when 819 then 'Stopped Treatment'
-																																								else '' end), '' )),20) as ExitReason,
-											if(e.latest_enrolment_date > greatest(coalesce(max(disc.effective_discontinuation_date),'0000-00-00'),coalesce(max(disc.visit_date),'0000-00-00')),e.latest_enrolment_date,null ) as ReEnrollmentDate,
-											(case mid(max(concat(date(disc.visit_date),disc.trf_out_verified)),11) when 1065 then 'Yes' when 1066 then 'No' end) as TOVerified,
-											mid(max(concat(date(disc.visit_date),disc.trf_out_verification_date)),11) as TOVerifiedDate,
-											disc.date_created as Date_Created,
-											disc.date_last_modified as Date_Last_Modified
-				from kenyaemr_etl.etl_patient_program_discontinuation disc
-											left join (select e.patient_id as patient_id, max(e.visit_date) as latest_enrolment_date, mid(max(concat(e.visit_date,e.patient_type)),11) as patient_type from kenyaemr_etl.etl_hiv_enrollment e
-																						group by e.patient_id) e on e.patient_id = disc.patient_id
-											join kenyaemr_etl.etl_patient_demographics d on d.patient_id=disc.patient_id
-				where d.unique_patient_no is not null and disc.program_name='HIV'
-				group by PatientID
-				order by disc.visit_date ASC;"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+38742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Status|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName,
+														0                                                                           AS FacilityId,
+														d.unique_patient_no                                                         as PatientID,
+														d.patient_id                                                                as PatientPK,
+														i.siteCode                                                                  as SiteCode,
+														i.FacilityName                                                              as FacilityName,
+														''                                                                          as ExitDescription,
+														'KenyaEMR'                                                                  as Emr,
+														'Kenya HMIS II'                                                             as Project,
+														max(date(disc.visit_date))                                                  AS ExitDate,
+														max(date(disc.effective_discontinuation_date))                              AS EffectiveDiscontinuationDate,
+														mid(max(concat(visit_date, (case discontinuation_reason
+																																												when 159492 then 'Transfer Out'
+																																												when 160034 then 'Died'
+																																												when 5240 then 'LTFU'
+																																												when 819 then 'Stopped Treatment'
+																																												else '' end), '')), 20)                       as ExitReason,
+														if(e.latest_enrolment_date > greatest(coalesce(max(date(disc.effective_discontinuation_date)), '0000-00-00'),
+																																																				coalesce(max(date(disc.visit_date)), '0000-00-00')), e.latest_enrolment_date,
+																	null)                                                                    as ReEnrollmentDate,
+														(case mid(max(concat(date(disc.visit_date), disc.death_reason)), 11)
+																	when 163324 then 'HIV disease resulting in TB'
+																	when 116030 then 'HIV disease resulting in cancer'
+																	when 160159 then 'HIV disease resulting in other infectious and parasitic diseases'
+																	when 160158 then 'Other HIV disease resulting in other diseases or conditions leading to death'
+																	when 133478 then 'Other natural causes not directly related to HIV'
+																	when 145439 then 'Non-communicable diseases such as Diabetes and hypertension'
+																	when 123812 then 'Non-natural causes'
+																	when 42917 then 'Unknown cause'
+																	else '' end)                                                             as ReasonForDeath,
+														(case mid(max(concat(date(disc.visit_date), disc.specific_death_cause)), 11)
+																	when 156673 then 'HIV disease resulting in mycobacterial infection'
+																	when 155010 then 'HIV disease resulting in Kaposis sarcoma'
+																	when 156667 then 'HIV disease resulting in Burkitts lymphoma'
+																	when 115195 then 'HIV disease resulting in other types of non-Hodgkin lymphoma'
+																	when 157593
+																									then 'HIV disease resulting in other malignant neoplasms of lymphoid and haematopoietic and related tissue'
+																	when 156672 then 'HIV disease resulting in multiple malignant neoplasms'
+																	when 159988 then 'HIV disease resulting in other malignant neoplasms'
+																	when 5333 then 'HIV disease resulting in other bacterial infections'
+																	when 116031 then 'HIV disease resulting in unspecified malignant neoplasms'
+																	when 123122 then 'HIV disease resulting in other viral infections'
+																	when 156669 then 'HIV disease resulting in cytomegaloviral disease'
+																	when 156668 then 'HIV disease resulting in candidiasis'
+																	when 5350 then 'HIV disease resulting in other mycoses'
+																	when 882
+																									then 'HIV disease resulting in Pneumocystis jirovecii pneumonia - HIV disease resulting in Pneumocystis carinii pneumonia'
+																	when 156671 then 'HIV disease resulting in multiple infections'
+																	when 160159 then 'HIV disease resulting in other infectious and parasitic diseases'
+																	when 171
+																									then 'HIV disease resulting in unspecified infectious or parasitic disease - HIV disease resulting in infection NOS'
+																	when 156670
+																									then 'HIV disease resulting in other specified diseases including encephalopathy or lymphoid interstitial pneumonitis or wasting syndrome and others'
+																	when 160160
+																									then 'HIV disease resulting in other conditions including acute HIV infection syndrome or persistent generalized lymphadenopathy or hematological and immunological abnormalities and others'
+																	when 161548 then 'HIV disease resulting in Unspecified HIV disease'
+																		end)                                                                    as SpecificDeathReason,
+														(case mid(max(concat(date(disc.visit_date), disc.trf_out_verified)), 11)
+																	when 1065 then 'Yes'
+																	when 1066 then 'No' end)                                                 as TOVerified,
+														mid(max(concat(date(disc.visit_date), disc.trf_out_verification_date)), 11) as TOVerifiedDate,
+														mid(max(concat(disc.visit_date, disc.date_died)), 11)                       as DeathDate,
+														disc.date_created                                                           as Date_Created,
+														disc.date_last_modified                                                     as Date_Last_Modified
+							from kenyaemr_etl.etl_patient_program_discontinuation disc
+														left join (select e.patient_id                                       as patient_id,
+																																max(e.visit_date)                                  as latest_enrolment_date,
+																																mid(max(concat(e.visit_date, e.patient_type)), 11) as patient_type
+																									from kenyaemr_etl.etl_hiv_enrollment e
+																									group by e.patient_id) e on e.patient_id = disc.patient_id
+														join kenyaemr_etl.etl_patient_demographics d on d.patient_id = disc.patient_id
+														join kenyaemr_etl.etl_default_facility_info i
+							where d.unique_patient_no is not null
+									and disc.program_name = 'HIV'
+							group by PatientID
+							order by disc.visit_date ASC;"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID, d.patient_id as PatientPK, l.encounter_id as VisitId,
 																					CAST(l.visit_date AS DATE) as OrderedByDate,CAST(l.visit_date AS DATE) as ReportedByDate,
 																				(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
@@ -617,71 +665,101 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 												join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
 												join concept c on c.concept_id = l.lab_test
 												left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
-																																																		and cn2.locale='en' where d.unique_patient_no is not null;"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct
-																						'Government' AS Provider,
-																						'' AS SatelliteName,
-																						(select siteCode from kenyaemr_etl.etl_default_facility_info) as  FacilityId,
-																						d.unique_patient_no as PatientID,
-																						d.patient_id as PatientPK,
-																						(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-																						(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
-																						ph.visit_id as VisitID,
-						-- if(cn2.name is not null, cn2.name,cn.name) as Drug,
-																						case
-																								when is_arv=1 then ph.drugreg
-																								else if(cn2.name is not null, cn2.name,cn.name) END as Drug,
-																						ph.visit_date as DispenseDate,
-																						ph.duration AS Duration,
-																						ph.duration AS PeriodTaken,
-																						fup.next_appointment_date as ExpectedReturn,
-																						'KenyaEMR' as Emr,
-																						'Kenya HMIS II' as Project,
-																						CASE WHEN is_arv=1 THEN 'ARV'
-																											WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,
-																						ph.RegimenLine,
-																						CASE WHEN is_ctx=1 THEN 'CTX'
-																											WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,
-																						ph.date_created as Date_Created,
-																						ph.RegimenChangedSwitched as RegimenChangedSwitched,
-																						ph.RegimenChangeSwitchReason as RegimenChangeSwitchReason,
-																						ph.StopRegimenReason as StopRegimenReason,
-																						ph.StopRegimenDate as StopRegimenDate,
-																						GREATEST(COALESCE(ph.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, ph.date_last_modified)) as Date_Last_Modified
-						from (SELECT * FROM (
-																										( select patient_id, visit_id,visit_date,encounter_id,drug,is_arv, is_ctx,is_dapsone,drug_name as drugreg,frequency,
-																																			'' as DispenseDate,duration, duration PeriodTaken,
-																																			''ExpectedReturn, CASE WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,'' as RegimenLine,'' as regimen,
-																																			CASE WHEN is_ctx=1 THEN 'CTX'
-																																								WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,'' as previousRegimen,'' as RegimenChangedSwitched,'' as RegimenChangeSwitchReason, '' as StopRegimenReason,'' as StopRegimenDate,'' as prev_Regimen,/*'' as regimen,*/
-																																			ph.date_created, ph.date_last_modified from kenyaemr_etl.etl_pharmacy_extract ph
-																																																																																	left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
-																																																																																																																							and cn2.locale='en' where is_ctx=1 OR is_dapsone= 1
-																												order by patient_id,DispenseDate)
-																										UNION
-																										(SELECT  e.patient_id as patient_id,'' as visit_id,e.visit_date,e.encounter_id,regimen drug,1 as is_arv, 0 as is_ctx, 0 as is_dapsone, regimen_name as drugreg, '' frequency, date_started as DispenseDate,''duration,''PeriodTaken,''ExpectedReturn, 'ARV' AS TreatmentType,e.regimen_line as regimen_line,
-																																			e.regimen as regimen,'' as ProphylaxisType,
-																																			@prev_regimen previousRegimen,coalesce(@s := (if(ifnull(@prev_regimen_line,'')<>regimen_line and discontinued=1,'Change',NULL)),(if(@prev_regimen<>regimen and discontinued=1,'Switch',NULL))) as RegimenChangedSwitched,
-																																			(case reason_discontinued when 160559 then 'Risk of pregnancy' when 160561 then 'New drug available'
-																																																													when 160567 then 'New diagnosis of Tuberculosis'  when 160569 then 'Virological failure'
-																																																													when 159598 then 'Non-compliance with treatment or therapy' when 1754 then 'Drugs out of stock'
-																																																													when 1434 then 'Pregnancy'  when 1253 then 'Completed PMTCT'  when 843 then 'Clinical treatment failure'
-																																																													when 160566 then 'Immunological failure'
-																																																													when 5622 then 'Other'else '' end) as RegimenChangeSwitchReason,
-																																			if(regimen_stopped = 1260, (case reason_discontinued when 102 then 'Drug toxicity' end),null) as StopRegimenReason,if(regimen_stopped= 1260,date_discontinued,NULL) as StopRegimenDate,
-																																			@prev_regimen := e.regimen prev_regimen,'' as date_created, ''as date_last_modified
-																											FROM kenyaemr_etl.etl_drug_event e , (SELECT @s := 0,@prev_regimen := -1, @x :=0 ,@prev_regimen_line := -1) s
-																											ORDER BY e.patient_id,e.date_started)
-																										)A order by A.DispenseDate,A.patient_id)ph
-													join kenyaemr_etl.etl_patient_demographics d on d.patient_id=ph.patient_id
-													left outer join concept_name cn on cn.concept_id=ph.drug and cn.concept_name_type='FULLY_SPECIFIED'
-																																																		and cn.locale='en'
-													left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
-																																																			and cn.locale='en'
-													left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph.encounter_id
-																																																																												and fup.patient_id=ph.patient_id
-						where unique_patient_no is not null and (is_arv=1 OR is_ctx=1 OR is_dapsone =1 ) and drugreg is not null
-						order by ph.patient_id,ph.DispenseDate;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+					and cn2.locale='en' where d.unique_patient_no is not null;"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 'Government' AS Provider,
+                                                                                                 '' AS SatelliteName,
+                                                                                                 (select siteCode from kenyaemr_etl.etl_default_facility_info) as  FacilityId,
+                                                                                                 d.unique_patient_no as PatientID,
+                                                                                                 d.patient_id as PatientPK,
+                                                                                                 (select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+                                                                                                 (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
+                                                                                                 ph.visit_id as VisitID,
+                                                                                                 Drug,
+                                                                                                 ph.visit_date as DispenseDate,
+                                                                                                 ph.duration AS Duration,
+                                                                                                 ph.duration AS PeriodTaken,
+                                                                                                 fup.next_appointment_date as ExpectedReturn,
+                                                                                                 'KenyaEMR' as Emr,
+                                                                                                 'Kenya HMIS II' as Project,
+                                                                                                 CASE WHEN is_arv=1 THEN 'ARV'
+                                                                                                 WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,
+                                                                                                 ph.RegimenLine,
+                                                                                                 CASE WHEN is_ctx=1 THEN 'CTX'
+                                                                                                 WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,
+                                                                                                 CAST(now() as Date) AS DateExtracted,
+                                                                                                 ph.date_created,
+                                                                                                 ph.RegimenChangedSwitched as RegimenChangedSwitched,
+                                                                                                 ph.RegimenChangeSwitchReason as RegimenChangeSwitchReason,
+                                                                                                 ph.StopRegimenReason as StopRegimenReason,
+                                                                                                 ph.StopRegimenDate as StopRegimenDate,
+                                                                                                 GREATEST(COALESCE(ph.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, ph.date_last_modified)) as Date_Last_Modified
+                                                                                                 from (SELECT * FROM (
+                                                                                                 ( select patient_id, visit_id,visit_date,encounter_id,cast(cn2.name AS CHAR CHARACTER SET latin1) as drug,is_arv, is_ctx,is_dapsone,drug_name as drugreg,frequency,
+                                                                                                 '' as DispenseDate,duration_in_days as duration, '' as PeriodTaken,
+                                                                                                 '' ExpectedReturn, CASE WHEN is_ctx=1 OR is_dapsone= 1 THEN 'Prophylaxis' END AS TreatmentType,'' as RegimenLine,'' as regimen,
+                                                                                                 CASE WHEN is_ctx=1 THEN 'CTX'
+                                                                                                 WHEN is_dapsone =1 THEN 'DAPSON' END AS ProphylaxisType,'' as previousRegimen,'' as RegimenChangedSwitched,'' as RegimenChangeSwitchReason, '' as StopRegimenReason,'' as StopRegimenDate,'' as prev_Regimen,
+                                                                                                 ph.date_created, ph.date_last_modified from kenyaemr_etl.etl_pharmacy_extract ph
+                                                                                                 left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
+                                                                                                 and cn2.locale='en' where is_arv=1 
+                                                                                                 order by patient_id,DispenseDate)
+                                                                                                 UNION ALL
+                                                                                                 (SELECT  e.patient_id as patient_id,'' as visit_id,e.visit_date,e.encounter_id,regimen drug,1 as is_arv, 0 as is_ctx, 0 as is_dapsone, regimen_name as drugreg, '' frequency, date_started as DispenseDate,''duration,''PeriodTaken,''ExpectedReturn, 'ARV' AS TreatmentType,e.regimen_line as regimen_line,
+                                                                                                 e.regimen as regimen,'' as ProphylaxisType,
+                                                                                                 @prev_regimen previousRegimen,coalesce(@s := (if(ifnull(@prev_regimen_line,'')<>regimen_line and discontinued=1,'Switch',NULL)),(if(@prev_regimen<>regimen and discontinued=1,'Substitution',NULL))) as RegimenChangedSwitched,
+                                                                                                 (case reason_discontinued when 160559 then 'Risk of pregnancy' when 160561 then 'New drug available'
+                                                                                                 when 160567 then 'New diagnosis of Tuberculosis'  when 160569 then 'Virological failure'
+                                                                                                 when 159598 then 'Non-compliance with treatment or therapy' when 1754 then 'Drugs out of stock'
+                                                                                                 when 1434 then 'Pregnancy'  when 1253 then 'Completed PMTCT'  when 843 then 'Clinical treatment failure'
+                                                                                                 when 160566 then 'Immunological failure'
+                                                                                                 when 102 then 'Drug toxicity'
+                                                                                                 when 5622 then 'Other'else '' end) as RegimenChangeSwitchReason,
+                                                                                                 if(regimen_stopped = 1260, (case reason_discontinued
+                                                                                                                            when 102 then 'Drug toxicity'
+                                                                                                                            when 160567 then 'New diagnosis of Tuberculosis'
+                                                                                                                            when 160569 then 'Virologic failure'
+                                                                                                                            when 159598 then 'Non-compliance with treatment or therapy'
+                                                                                                                            when 1754 then 'Medications unavailable'
+                                                                                                                            when 160016 then 'Planned Treatment interruption'
+                                                                                                                            when 1434 then 'Currently pregnant'
+                                                                                                                            when 1253 then 'Completed PMTCT'
+                                                                                                                            when 843 then 'Regimen failure'
+                                                                                                                            when 5622 then 'Other'
+                                                                                                                            when 160559 then 'Risk of pregnancy'
+                                                                                                                            when 160561 then 'New drug available'
+                                                                                                                            else '' end),'') as StopRegimenReason,
+                                                                                                                            if(discontinued = 1, date_discontinued, NULL) as StopRegimenDate,
+                                                                                                 @prev_regimen := e.regimen prev_regimen,'' as date_created, ''as date_last_modified
+                                                                                                 FROM kenyaemr_etl.etl_drug_event e , (SELECT @s := 0,@prev_regimen := -1, @x :=0 ,@prev_regimen_line := -1) s
+                                                                                                 where e.program = 'HIV'
+                                                                                                 ORDER BY e.patient_id,e.date_started)
+                                                                                                 UNION ALL
+                                                                                                 (select patient_id,visit_id,visit_date,encounter_id, drug_short_name as drug, 1 as is_arv, '' as is_ctx,
+                                                                                                 '' as is_dapsone, drug_name as drugreg, frequency,
+                                                                                                 visit_date as DispenseDate,
+                                                                                                 (case duration_units
+                                                                                                 when 'DAYS' then duration
+                                                                                                 when 'MONTHS' then duration * 30
+                                                                                                 when 'WEEKS' then duration * 7 end) as duration,
+                                                                                                 '' as PeriodTaken,'' as ExpectedReturn,
+                                                                                                 '' AS TreatmentType,'' as RegimenLine,
+                                                                                                 drug_name as regimen,'' AS ProphylaxisType,
+                                                                                                 '' as previousRegimen,'' as RegimenChangedSwitched,
+                                                                                                 '' as RegimenChangeSwitchReason,'' as StopRegimenReason,'' as StopRegimenDate,
+                                                                                                 '' as prev_Regimen,do.date_created,
+                                                                                                 do.date_last_modified
+                                                                                                 from kenyaemr_etl.etl_drug_order do
+                                                                                                 order by do.patient_id, DispenseDate)
+                                                                                                 ) A order by A.DispenseDate,A.patient_id)ph
+                                                                                                 join kenyaemr_etl.etl_patient_demographics d on d.patient_id=ph.patient_id
+                                                                                                 left outer join concept_name cn on cn.concept_id=ph.drug and cn.concept_name_type='FULLY_SPECIFIED'
+                                                                                                 and cn.locale='en'
+                                                                                                 left outer join concept_name cn2 on cn2.concept_id=ph.drug and cn2.concept_name_type='SHORT'
+                                                                                                 and cn.locale='en'
+                                                                                                 left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph.encounter_id
+                                                                                                 and fup.patient_id=ph.patient_id
+                                                                                                 where unique_patient_no is not null and drugreg is not null
+                                                                                                 order by ph.patient_id,ph.DispenseDate;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct ''                                                                     AS SatelliteName,
                 0                                                                      AS FacilityId,
                 d.unique_patient_no                                                    as PatientID,
@@ -738,7 +816,7 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
                      when 1065 then 'Yes'
                      when 1066 then 'No'
                      when 1175 then 'N/A' end)                                           as EverHadMenses,
-                null                                                                   as Breastfeeding,
+                if(d.gender = 'F',(case fup.breastfeeding when 1065 then 'Yes' when 1066 then 'No' end),'N/A')  as Breastfeeding,
                 (case menopausal when 113928 then 'Yes' end)                           as Menopausal,
                 (case prophylaxis_given
                      when 105281 then 'Cotrimoxazole'
@@ -882,6 +960,8 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
                 case
                     when fup.next_appointment_date < '1990-01-01' then null
                     else CAST(fup.next_appointment_date AS DATE) end                     AS NextAppointmentDate,
+                case when fup.refill_date < '1990-01-01' then null
+                                      else CAST(fup.refill_date AS DATE) end                   AS RefillDate,
                 'KenyaEMR'                                                             as Emr,
                 'Kenya HMIS II'                                                        as Project,
                 CAST(fup.substitution_first_line_regimen_date AS DATE)                 AS SubstitutionFirstlineRegimenDate,
@@ -925,7 +1005,7 @@ from kenyaemr_etl.etl_patient_demographics d
                     where de.discontinued is null
                     group by de.patient_id)de on fup.patient_id = de.patient_id
 where d.unique_patient_no is not null
-  and fup.visit_date > '1990-01-01'
+  and fup.visit_date > '1990-01-01' and fup.next_appointment_date is not null
   and fup.visit_id is not null;"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT	*,
 						LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
@@ -1560,6 +1640,8 @@ on h.PatientPK=p.PatientPK
 order by KeyPopulationType"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT  distinct d.patient_id as PatientPK,
+	                d.national_unique_patient_identifier                              as NUPI,
+                    pkv.PKV                                                           as Pkv,
 	(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
 (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 	'KenyaEMR' as Emr,
@@ -1578,8 +1660,42 @@ FROM
 kenyaemr_etl.etl_patient_demographics  d
 INNER JOIN
 kenyaemr_etl.etl_hts_test t ON d.patient_id=t.patient_id
-LEFT JOIN
- location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
+inner join (select x.patient_id as patient_id,
+x.sxFirstName,
+x.sxLastname,
+x.sxMiddleName,
+x.dmFirstName,
+x.dmLastName,
+x.dmMiddleName,
+x.Gender,
+x.DOB,
+CASE
+WHEN locate(';', dmLastName) > 0 THEN CONCAT(
+CAST(LEFT(Gender, 1) AS CHAR CHARACTER SET utf8),
+CAST(sxFirstName AS CHAR CHARACTER SET utf8), CAST(
+SUBSTRING(dmLastName, locate(';', dmLastName) + 1, LENGTH(dmLastName))
+AS
+CHAR CHARACTER SET utf8),
+CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+)
+ELSE CONCAT(
+CAST(LEFT(Gender, 1)AS CHAR CHARACTER SET utf8),
+CAST(sxFirstName AS CHAR CHARACTER SET utf8),
+CAST(dmLastName AS CHAR CHARACTER SET utf8),
+CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+)
+END      AS PKV
+from (SELECT patient_id,
+SOUNDEX(UPPER(REPLACE(given_name, '0', 'O')))                           AS sxFirstName,
+SOUNDEX(UPPER(REPLACE(family_name, '0', 'O')))                          AS sxLastName,
+SOUNDEX(UPPER(REPLACE(middle_name, '0', 'O')))                          AS sxMiddleName,
+fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name, '0', 'O')))  AS dmFirstName,
+fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name, '0', 'O'))) AS dmLastName,
+fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name, '0', 'O'))) AS dmMiddleName,
+Gender,
+DOB
+FROM kenyaemr_etl.etl_patient_demographics)x)pkv on pkv.patient_id = d.patient_id
+LEFT JOIN location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id=1
 LEFT JOIN
   location SN ON SN.location_id =t.encounter_location
 LEFT JOIN person_address A ON A.person_id=d.patient_id
@@ -1927,6 +2043,109 @@ left join concept_name marital ON marital.concept_id = ohpc.marital_status and m
 left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach and pnsApprocah.locale='en' and pnsApprocah.concept_name_type = 'FULLY_SPECIFIED'
  "|DWHStage|1|HtsPartnerNotificationServices|7|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
+
+
+7bb8b081-c206-49ba-aac0-48bf14fdc84e|Hts Eligibility Screening|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT t.patient_id as PatientPK,
+                            (select siteCode from kenyaemr_etl.etl_default_facility_info)               as SiteCode,
+                            (select FacilityName from kenyaemr_etl.etl_default_facility_info)           as FacilityName,
+                            'KenyaEMR'                                                                  as Emr,
+                            'Kenya HMIS II'                                                             as Project,
+                            demographics.openmrs_id                                                     as HtsNumber,
+                            t.visit_id                                                                  as VisitID,
+                            t.encounter_id                                                              as EncounterId,
+                            t.visit_date                                                                as VisitDate,
+                            '' as ForcedSex,                          
+                            case t.population_type
+                                when 164928 then 'General Population'
+                                when 164929 then 'Key Population'
+                                when 138643
+                                    then 'Priority Population' end                                      as PopulationType,
+                            t.key_population_type                                                       as KeyPopulation,
+                            t.priority_population_type                                                  as PriorityPopulation,
+                            case t.department
+                                when 160542 then 'OPD:Out-patient department'
+                                when 5485 then 'IPD:In-patient department'
+                                when 160473 then 'Emergency'
+                                when 160538 then 'PMTCT'
+                                when 159940
+                                    then 'VCT' end                                                      as Department,
+                            case t.patient_type
+                                when 164163 then 'HP:Hospital Patient'
+                                when 164953
+                                    then 'NP:Non-Hospital Patient' end                                  as PatientType,
+                            case t.is_health_worker when 1065 then 'Yes' when 1066 then 'No' end        as IsHealthWorker,
+                            t.relationship_with_contact                                                 as RelationshipWithContact,
+                            	case t.mother_hiv_status when 703 then 'Positive' when 664 then 'Negative' when 1067 then 'Unknown' end as MothersStatus,
+                            case t.tested_hiv_before when 1065 then 'Yes' when 1066 then 'No' end       as TestedHIVBefore,
+                            case t.who_performed_test
+                                when 5619 then 'HTS Provider'
+                                when 164952
+                                    then 'Self Tested' end                                              as WhoPerformedTest,
+                            (case t.test_results
+                                 when 703 then 'Positive'
+                                 when 664 then 'Negative'
+                                 when 1067 then 'Unknown'
+                                 else '' end)                                                           as ResultOfHIV,
+                            if(t.who_performed_test = 164952,t.date_tested,null)                             as DateTestedSelf,	
+                            if(t.who_performed_test = 164952,case t.test_results	
+                            when 703 then 'Positive'	
+                            when 664 then 'Negative'	
+                            when 1067 then 'Unknown'	
+                            else '' end,null)                                                           as ResultOfHIVSelf,	
+                            if(t.who_performed_test = 5619,t.date_tested, null)                             as DateTestedProvider,
+                            case t.started_on_art when 1065 then 'Yes' when 1066 then 'No' end          as StartedOnART,
+                            t.upn_number                                                                as CCCNumber,
+                            case t.ever_had_sex when 1 then 'Yes' when 0 then 'No' end                  as EverHadSex,
+                            case t.sexually_active when 1065 then 'Yes' when 1066 then 'No' end         as SexuallyActive,
+                            case t.new_partner when 1065 then 'Yes' when 1066 then 'No' end             as NewPartner,
+                            (case t.partner_hiv_status
+                                 when 703 then 'Positive'
+                                 when 664 then 'Negative'
+                                 when 1067 then 'Unknown'
+                                 else '' end)                                                           as PartnerHIVStatus,
+                            case t.couple_discordant when 1065 then 'Yes' when 1066 then 'No' end       as CoupleDiscordant,
+                            case t.multiple_partners when 1 then 'Yes' when 0 then 'No' end             as MultiplePartners,
+                            t.number_partners                                                           as NumberOfPartners,
+                            case t.alcohol_sex
+                                when 1066 then 'Not at all'
+                                when 1385 then 'Sometimes'
+                                when 165027
+                                    then 'Always' end                                                   as AlcoholSex,
+                            case t.money_sex when 1065 then 'Yes' when 1066 then 'No' end               as MoneySex,
+                            case t.condom_burst when 1065 then 'Yes' when 1066 then 'No' end            as CondomBurst,
+                            case t.unknown_status_partner when 1065 then 'Yes' when 1066 then 'No' end  as UnknownStatusPartner,
+                            case t.known_status_partner when 163289 then 'Yes' when 1066 then 'No' end  as KnownStatusPartner,
+                            case t.pregnant when 1065 then 'Yes' when 1066 then 'No' end                as Pregnant,
+                            case t.breastfeeding_mother when 1065 then 'Yes' when 1066 then 'No' end    as BreastfeedingMother,
+                            case t.experienced_gbv when 1065 then 'Yes' when 1066 then 'No' end         as ExperiencedGBV,
+                            t.type_of_gbv                                                               as TypeGBV,	
+                            t.service_received                                                          as ReceivedServices,
+                            case t.currently_on_prep when 1065 then 'Yes' when 1066 then 'No' end       as CurrentlyOnPrEP,
+                            	case t.recently_on_pep when 1 then 'Yes' when 0 then 'No' end              as CurrentlyOnPEP,
+                            case t.recently_had_sti when 1065 then 'Yes' when 1066 then 'No' end       as CurrentlyHasSTI,
+                            case t.tb_screened when 1065 then 'Yes' when 1066 then 'No' end  ScreenedTB,	
+                            case t.cough when 159799 then 'Yes' when 1066 then 'No' end as Cough,	
+                            case t.fever when 1494 then 'Yes' when 1066 then 'No' end as Fever,	
+                            case t.weight_loss when 832 then 'Yes' when 1066 then 'No' end as WeightLoss,	
+                            case t.night_sweats when 133027 then 'Yes' when 1066 then 'No' end as NightSweats,	
+                            case t.contact_with_tb_case when 124068 then 'Yes' when 1066 then 'No' end as ContactWithTBCase,	
+                            case t.lethargy when 116334 then 'Yes' when 1066 then 'No' end as Lethargy,	
+                            case t.tb_status when 1660 then 'No TB signs' when 142177 then 'Presumed TB' when 1662 then 'TB Confirmed' end as TBStatus,
+                            case t.shared_needle when 1065 then 'Yes' when 1066 then 'No' end           as SharedNeedle,
+                            case t.needle_stick_injuries when 153574 then 'Yes' when 1066 then 'No' end as NeedleStickInjuries,
+                            case t.traditional_procedures when 1065 then 'Yes' when 1066 then 'No' end  as TraditionalProcedures,
+                            t.child_reasons_for_ineligibility                                           as ChildReasonsForIneligibility,
+                            	''                                                                          as AssessmentOutcome,
+                            case t.eligible_for_test when 1065 then 'Yes' when 1066 then 'No' end       as EligibleForTest,
+                            	t.reasons_for_ineligibility as ReasonsForIneligibility,	
+                            t.specific_reason_for_ineligibility                                         as SpecificReasonForIneligibility,	
+                            case t.referred_for_testing when 1065 then 'Yes' when 1066 then 'No' end    as ReferredForTesting,
+                            t.date_created                                                              as DateCreated,
+                            t.date_last_modified                                                        as DateLastModified
+                     FROM kenyaemr_etl.etl_hts_eligibility_screening t
+                              inner join kenyaemr_etl.etl_patient_demographics demographics on t.patient_id = demographics.patient_id
+                              LEFT JOIN openmrs.location_attribute SC ON SC.location_id = t.location_id AND SC.attribute_type_id = 1
+                              LEFT JOIN openmrs.location SN ON SN.location_id = t.location_id group by t.encounter_id;"|DWHStage|1|HtsEligibilityExtract|8|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 
 290bd21c-3089-11ea-978f-2e728ce88125|Master Patient Index|CBS|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
@@ -4724,6 +4943,7 @@ UNION
 											join kenyaemr_etl.etl_default_facility_info s
 				where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|DepressionScreeningExtract|13|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec23-7754-11eb-9439-0242ac130002|Contact Listing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_related_to as PatientPK,
+                                                            v.patient_id as ContactPatientPK,
 															s.siteCode as SiteCode,
 															de.unique_patient_no as PatientID,
 															'KenyaEMR' as Emr,'Kenya HMIS II' as Project,
@@ -4842,75 +5062,109 @@ from kenyaemr_etl.etl_otz_activity a
 7c2e4f6e-8728-11eb-8dcd-0242ac130003|Patient Pharmacy|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_PHARMACY_EXTRACT"|dwhstage|0|PatientPharmacyExtract|6|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 7c2e51ee-8728-11eb-8dcd-0242ac130003|Patient Visits|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_VISIT_Extract"|dwhstage|0|PatientVisitExtract|7|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 7c2e52c0-8728-11eb-8dcd-0242ac130003|Patient Adverse Events|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_Adverse_Events"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
+7c2e63c0-8728-11eb-8dcd-0242ac130003|Allergies Chronic Illness|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_AllergiesChronicIllness|dwhstage|0|AllergiesChronicIllnessExtract|11.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e53c0-8728-11eb-8dcd-0242ac130003|IPT|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_TPT|dwhstage|0|IptExtract|12.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e54c0-8728-11eb-8dcd-0242ac130003|Depression Screening|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_DepressionScreening|dwhstage|0|DepressionScreeningExtract|13.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e55c0-8728-11eb-8dcd-0242ac130003|Contact Listing|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_ContactListing|dwhstage|0|ContactListingExtract|14.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e56c0-8728-11eb-8dcd-0242ac130003|GBV Screening|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_GBVScreening|dwhstage|0|GbvScreeningExtract|15.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e57c0-8728-11eb-8dcd-0242ac130003|Enhanced Adherence Counselling|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_EnAdhCounselling|dwhstage|0|EnhancedAdherenceCounsellingExtract|16.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e58c0-8728-11eb-8dcd-0242ac130003|Drug and Alcohol Screening|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_DrugAlcoholScr|dwhstage|0|DrugAlcoholScreeningExtract|17.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e59c0-8728-11eb-8dcd-0242ac130003|OVC|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_OVC|dwhstage|0|OvcExtract|18.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e60c0-8728-11eb-8dcd-0242ac130003|OTZ|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_OTZ|dwhstage|0|OtzExtract|19.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e61c0-8728-11eb-8dcd-0242ac130003|Covid|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_COVID|dwhstage|0|CovidExtract|20.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e62c0-8728-11eb-8dcd-0242ac130003|Defaulter Tracing|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_DefaulterTracing|dwhstage|0|DefaulterTracingExtract|21.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+A926B327-D042-4459-963B-523879C47347|Hts Clients|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClient|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+0C82AA9F-C58D-4BEA-996B-00EE33286CAD|Hts Test Kits|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsTestKits|4.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+EEE41260-E92F-47CB-8AC8-E47281B8A8C4|Hts Client Linkage|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientLinkage|3.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+A72B9001-7109-4D66-8938-9F41D1779D95|Hts Partner Notification Services|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsPartnerNotificationServices|7.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+79527CF5-6DA1-439E-B32C-49F7677E0A0F|Hts Client Tracing|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientTracing|5.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+838E36EF-812D-4953-88E6-3F1DD5EC4531|Hts Partner Tracing|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsPartnerTracing|6.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+88C4C1CF-703F-473B-8A4C-44B94A8DD17C|Hts Client Tests|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientTests|2.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+3B3894F4-04B0-4141-896D-FA9F206C0DD1|Migration|MGS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|MgsStage|1|MetricMigrationExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+4B7B10F2-FF7E-452C-A67D-76A37E16B3EB|Hei|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempHeiExtract|0|HeiExtract|28.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+F14362A9-C5EF-4BAE-91B6-67D4AA808EBC|Mnch Enrolment|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+42CFECA5-4ACF-48A1-B72B-AE0B32A09503|Pnc Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempPncVisitExtract|0|PncVisitExtract|24.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+25E0B476-C284-4BBD-81D2-1AB3DF59A094|Mnch Art|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchArtExtract|0|MnchArtExtract|21.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+69474AB7-EACB-4531-8A32-B70F34874688|Mother Baby Pair|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMotherBabyPairExtract|0|MotherBabyPairExtract|25.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+2775CDFE-A796-41DE-AACC-EDC7EE5A18D9|Anc Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempAncVisitExtract|0|AncVisitExtract|22.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+A91D30FB-40C1-4453-903D-4E687FF5E20D|Mnch Patient|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempPatientMnchExtract|1|PatientMnchExtract|19.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+84AB9AE3-6225-4937-9DBB-0B4B257AE676|Cwc Enrolment|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempCwcEnrolmentExtract|0|CwcEnrolmentExtract|26.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+2D5489D0-2721-4D03-A869-5A10700ABD19|Cwc Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempCwcVisitExtract|0|CwcVisitExtract|27.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+5FF64729-FDA7-4065-A909-E059B8DD5A1A|Mnch Labs|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchLabExtract|0|MnchLabExtract|29.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+830568D9-2C97-46F4-B5FB-3AA83480BFBF|Mat Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMatVisitExtract|0|MatVisitExtract|23.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|Indicator|1|IndicatorExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 
-
-82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct * from
-  (select pkv.pkv as Pkv,
-       d.patient_id                                                     as PatientPK,
-       i.siteCode                                                       as SiteCode,
-       d.openmrs_id                                                     as PatientMnchID,
-       d.hei_no                                                         as PatientHeiID,
-       'KenyaEMR'                                                       as Emr,
-       'Kenya HMIS II'                                                  as Project,
-       i.FacilityName                                                   as FacilityName,
-       0 as FacilityId,
-       (case d.Gender when 'F' then 'Female' when 'M' then 'Male' end)  as Gender,
-       d.DOB                                                            as DOB,
-       coalesce(c.first_hei_enrolment_date, m.first_mch_enrolment_date) as FirstEnrollmentAtMnch,
-       d.occupation                                                     as Occupation,
-       d.marital_status                                                 as MaritalStatus,
-       d.education_level                                                as EducationLevel,
-       a.county                                                         as PatientResidentCounty,
-       a.sub_county                                                     as PatientResidentSubCounty,
-       a.ward                                                           as PatientResidentWard,
-       (case e.in_school when 1 then 'Yes' when 2 then 'No' end)        as Inschool
-  from kenyaemr_etl.etl_patient_demographics d
-         left join (select m.patient_id, min(m.visit_date) as first_mch_enrolment_date
-                    from kenyaemr_etl.etl_mch_enrollment m
-                    group by m.patient_id)m on d.patient_id = m.patient_id
-         left join (select c.patient_id, min(c.visit_date) as first_hei_enrolment_date
-                    from kenyaemr_etl.etl_hei_enrollment c
-                    group by c.patient_id)c on d.patient_id = c.patient_id
-         left join (select a.patient_id,max(a.county) county, max(a.sub_county) sub_county, max(a.ward) ward from kenyaemr_etl.etl_person_address a group by patient_id)a
-                   on d.patient_id = a.patient_id
-         left join (select * from kenyaemr_etl.etl_hiv_enrollment e)e on d.patient_id = e.patient_id
-         inner join (select x.patient_id as patient_id,
-                            x.sxFirstName,
-                            x.sxLastname,
-                            x.sxMiddleName,
-                            x.dmFirstName,
-                            x.dmLastName,
-                            x.dmMiddleName,
-                            x.Gender,
-                            x.DOB,
-                            CASE
-                                WHEN locate(';', dmLastName) > 0 THEN CONCAT(
-                                        CAST(LEFT(Gender, 1) AS CHAR CHARACTER SET utf8),
-                                        CAST(sxFirstName AS CHAR CHARACTER SET utf8), CAST(
-                                                SUBSTRING(dmLastName, locate(';', dmLastName) + 1, LENGTH(dmLastName))
-                                            AS
-                                            CHAR CHARACTER SET utf8),
-                                        CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
-                                    )
-                                ELSE CONCAT(
-                                        CAST(LEFT(Gender, 1)AS CHAR CHARACTER SET utf8),
-                                        CAST(sxFirstName AS CHAR CHARACTER SET utf8),
-                                        CAST(dmLastName AS CHAR CHARACTER SET utf8),
-                                        CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
-                                    )
-                                END      AS PKV
-                     from (SELECT patient_id,
-                                  SOUNDEX(UPPER(REPLACE(given_name, '0', 'O')))                           AS sxFirstName,
-                                  SOUNDEX(UPPER(REPLACE(family_name, '0', 'O')))                          AS sxLastName,
-                                  SOUNDEX(UPPER(REPLACE(middle_name, '0', 'O')))                          AS sxMiddleName,
-                                  fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name, '0', 'O')))  AS dmFirstName,
-                                  fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name, '0', 'O'))) AS dmLastName,
-                                  fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name, '0', 'O'))) AS dmMiddleName,
-                                  Gender,
-                                  DOB
-                           FROM kenyaemr_etl.etl_patient_demographics)x)pkv on pkv.patient_id = d.patient_id
-         join kenyaemr_etl.etl_default_facility_info i
-   where m.patient_id is not null or c.patient_id is not null)x"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select pkv.pkv as PKV,
+                         d.patient_id                                                    as PatientPK,
+                         d.national_unique_patient_identifier                            as NUPI,
+                         i.siteCode                                                      as SiteCode,
+                         d.openmrs_id                                                    as PatientMNCHID,
+                         d.hei_no                                                        as PatientHEIID,
+                         'KenyaEMR'                                                      as Emr,
+                         'Kenya HMIS II'                                                 as Project,
+                         i.FacilityName                                                  as FacilityName,
+                          0 as FacilityId,
+                         (case d.Gender when 'F' then 'Female' when 'M' then 'Male' end) as Gender,
+                         d.DOB                                                           as DOB,
+                         coalesce(c.hei_enrolment_date, m.mch_enrolment_date)            as FirstEnrollmentAtMnch,
+                         coalesce(c.hei_encounter_id, m.mch_encounter_id)                as EncounterId,
+                         d.occupation                                                    as Occupation,
+                         d.marital_status                                                as MaritalStatus,
+                         d.education_level                                               as EducationLevel,
+                         a.county                                                        as PatientResidentCounty,
+                         a.sub_county                                                    as PatientResidentSubCounty,
+                         a.ward                                                          as PatientResidentWard,
+                         (case e.in_school when 1 then 'Yes' when 2 then 'No' end)       as Inschool,
+                         d.date_created                                                  as Date_Created,
+                         d.date_last_modified                                            as Date_Last_Modified
+                  from kenyaemr_etl.etl_patient_demographics d
+                         left join (select m.patient_id, min(date(m.visit_date)) as mch_enrolment_date,mid(min(concat(date(m.visit_date),m.encounter_id)),11) as mch_encounter_id
+                                    from kenyaemr_etl.etl_mch_enrollment m group by m.patient_id)m on d.patient_id = m.patient_id
+                         left join (select c.patient_id, min(date(c.visit_date)) as hei_enrolment_date, mid(min(concat(date(c.visit_date),c.encounter_id)),11) as hei_encounter_id
+                                    from kenyaemr_etl.etl_hei_enrollment c group by c.patient_id)c on d.patient_id = c.patient_id
+                         left join (select a.patient_id, a.county, a.sub_county, a.ward from kenyaemr_etl.etl_person_address a)a
+                           on d.patient_id = a.patient_id
+                         left join (select e.patient_id as patient_id, e.in_school as in_school from kenyaemr_etl.etl_hiv_enrollment e)e
+                           on d.patient_id = e.patient_id
+                         inner join (select x.patient_id as patient_id,
+                                            x.sxFirstName,
+                                            x.sxLastname,
+                                            x.sxMiddleName,
+                                            x.dmFirstName,
+                                            x.dmLastName,
+                                            x.dmMiddleName,
+                                            x.Gender,
+                                            x.DOB,
+                                            CASE
+                                              WHEN locate(';', dmLastName) > 0 THEN CONCAT(
+                                                                                      CAST(LEFT(Gender, 1) AS CHAR CHARACTER SET utf8),
+                                                                                      CAST(sxFirstName AS CHAR CHARACTER SET utf8), CAST(
+                                                                                                                                      SUBSTRING(dmLastName, locate(';', dmLastName) + 1, LENGTH(dmLastName))
+                                                                                                                                      AS
+                                                                                                                                      CHAR CHARACTER SET utf8),
+                                                                                      CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+                                                )
+                                              ELSE CONCAT(
+                                                     CAST(LEFT(Gender, 1)AS CHAR CHARACTER SET utf8),
+                                                     CAST(sxFirstName AS CHAR CHARACTER SET utf8),
+                                                     CAST(dmLastName AS CHAR CHARACTER SET utf8),
+                                                     CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+                                                )
+                                                                                                    END      AS PKV
+                                                                                         from (SELECT patient_id,
+                                                                                                      SOUNDEX(UPPER(REPLACE(given_name, '0', 'O')))                           AS sxFirstName,
+                                                                                                      SOUNDEX(UPPER(REPLACE(family_name, '0', 'O')))                          AS sxLastName,
+                                                                                                      SOUNDEX(UPPER(REPLACE(middle_name, '0', 'O')))                          AS sxMiddleName,
+                                                                                                      fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name, '0', 'O')))  AS dmFirstName,
+                                                                                                      fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name, '0', 'O'))) AS dmLastName,
+                                                                                                      fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name, '0', 'O'))) AS dmMiddleName,
+                                                                                                      Gender,
+                                                                                                      DOB
+                                                                                               FROM kenyaemr_etl.etl_patient_demographics)x)pkv on pkv.patient_id = d.patient_id
+                                                                             join kenyaemr_etl.etl_default_facility_info i
+                                                                      where m.patient_id is not null
+                                                                         or c.patient_id is not null
+                                                                      group by EncounterId;"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651214-9db2-11eb-a8b3-0242ac130003|Mnch Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
        i.siteCode                                                                   as SiteCode,
        d.openmrs_id                                                                 as PatientMnchID,
@@ -5980,3 +6234,966 @@ from kenyaemr_etl.etl_otz_activity a
 																																																																	when 1304 then 'POOR SAMPLE QUALITY' end),
 																																											l.test_result))))) as test_result
                    from kenyaemr_etl.etl_laboratory_extract l)l on d.patient_id = l.patient_id join kenyaemr_etl.etl_default_facility_info i;"|TempMnchLabExtract|0|MnchLabExtract|29|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
+
+d563f4e4-ae47-11eb-8529-0242ac130003|Allergies Chronic Illness|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT PatientPK,SiteCode,PatientID,FacilityID,Emr,Project,FacilityName,VisitID,VisitDate,ChronicIllness,ChronicOnsetDate,knownAllergies,AllergyCausativeAgent,AllergicReaction,AllergySeverity,AllergyOnsetDate,Skin,Eyes,ENT,Chest,CVS,Abdomen,CNS,Genitourinary
+				FROM ndwr.ndwr_patient_allergies_chronic_illness;"|dwhstage|0|AllergiesChronicIllnessExtract|11|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d563f58e-ae47-11eb-8529-0242ac130003|IPT|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT PatientPK,SiteCode,PatientID,FacilityID,Emr,Project,FacilityName,VisitID,VisitDate,OnTBDrugs,OnIPT,EverOnIPT,Cough,Fever,NoticeableWeightLoss,NightSweats,Lethergy,ICFActionTaken,TestResult,TBClinicalDiagnosis,ContactsInvited,EvaluatedForIPT,StartAntiTBs,
+	TBRxStartDate,TBScreening,IPTClientWorkUp,StartIPT,IndicationForIPT
+		FROM ndwr.ndwr_patient_ipt_extract;"|dwhstage|0|IptExtract|12|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d563f642-ae47-11eb-8529-0242ac130003|Depression Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT PatientPK,SiteCode,PatientID,FacilityID,Emr,Project,VisitID,VisitDate,
+    CASE
+        WHEN PHQ9_1 = 0 THEN 'Not at all'
+        WHEN PHQ9_1 = 1 THEN 'Several days'
+        WHEN PHQ9_1 = 2 THEN 'More than half'
+        WHEN PHQ9_1 = 3 THEN 'Nearly everyday'
+        ELSE NULL
+    END AS 'PHQ9-1',
+    CASE
+        WHEN PHQ9_2 = 0 THEN 'Not at all'
+        WHEN PHQ9_2 = 1 THEN 'Several days'
+        WHEN PHQ9_2 = 2 THEN 'More than half'
+        WHEN PHQ9_3 = 3 THEN 'Nearly everyday'
+        ELSE NULL
+    END AS 'PHQ9-2',
+    CASE
+        WHEN PHQ9_3 = 0 THEN 'Not at all'
+        WHEN PHQ9_3 = 1 THEN 'Several days'
+        WHEN PHQ9_3 = 2 THEN 'More than half'
+        WHEN PHQ9_3 = 3 THEN 'Nearly everyday'
+        ELSE NULL
+    END AS 'PHQ9-3',
+    CASE
+        WHEN PHQ9_4 = 0 THEN 'Not at all'
+        WHEN PHQ9_4 = 1 THEN 'Several days'
+        WHEN PHQ9_4 = 2 THEN 'More than half'
+        WHEN PHQ9_4 = 3 THEN 'Nearly everyday'
+        ELSE NULL
+    END AS 'PHQ9-4',
+    CASE
+        WHEN PHQ9_5 = 0 THEN 'Not at all'
+        WHEN PHQ9_5 = 1 THEN 'Several days'
+        WHEN PHQ9_5 = 2 THEN 'More than half'
+        WHEN PHQ9_5 = 3 THEN 'Nearly everyday'
+        ELSE NULL
+    END AS 'PHQ9-5',
+    CASE
+        WHEN PHQ9_6 = 0 THEN 'Not at all'
+        WHEN PHQ9_6 = 1 THEN 'Several days'
+        WHEN PHQ9_6 = 2 THEN 'More than half'
+        WHEN PHQ9_6 = 3 THEN 'Nearly everyday'
+        ELSE NULL
+    END AS 'PHQ9-6',
+    CASE
+        WHEN PHQ9_7 = 0 THEN 'Not at all'
+        WHEN PHQ9_7 = 1 THEN 'Several days'
+        WHEN PHQ9_7 = 2 THEN 'More than half'
+        WHEN PHQ9_7 = 3 THEN 'Nearly everyday'
+        ELSE NULL
+    END AS 'PHQ9-7',
+    CASE
+        WHEN PHQ9_8 = 0 THEN 'Not at all'
+        WHEN PHQ9_8 = 1 THEN 'Several days'
+        WHEN PHQ9_8 = 2 THEN 'More than half'
+        WHEN PHQ9_8 = 3 THEN 'Nearly everyday'
+        ELSE NULL
+    END AS 'PHQ9-8',
+    CASE
+        WHEN PHQ9_9 = 0 THEN 'Not at all'
+        WHEN PHQ9_9 = 1 THEN 'Several days'
+        WHEN PHQ9_9 = 2 THEN 'More than half'
+        WHEN PHQ9_9 = 3 THEN 'Nearly everyday'
+        ELSE NULL
+    END AS 'PHQ9-9',
+    CASE
+        WHEN PHQ9Score >= 0 AND PHQ9Score <= 4 THEN 'Depression unlikely'
+        WHEN PHQ9Score >= 5 AND PHQ9Score <= 9 THEN 'Mild depression'
+        WHEN PHQ9Score >= 10 AND PHQ9Score <= 14 THEN 'Moderate depression'
+        WHEN PHQ9Score >= 15 AND PHQ9Score <= 19 THEN 'Moderate severe depression'
+        WHEN PHQ9Score >= 20 AND PHQ9Score <= 27 THEN 'Severe depression'
+        ELSE NULL
+    END AS 'PHQ9Score',
+    PHQ9Rating AS 'PHQ9 Rating'
+FROM
+    ndwr.ndwr_patient_depression_screening;
+"|dwhstage|0|DepressionScreeningExtract|13|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d563f7dc-ae47-11eb-8529-0242ac130003|Contact Listing|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT  PatientPK,SiteCode,PatientID,FacilityName,Emr,Project,PartnerPersonID,ContactAge,
+    CASE
+        WHEN ContactSex = 1 THEN 'Male'
+        WHEN ContactSex = 2 THEN 'Female'
+        ELSE NULL
+    END AS 'ContactSex',
+    CASE
+        WHEN ContactMaritalStatus = 5555 THEN 'Married monogamous'
+        WHEN ContactMaritalStatus = 6290 THEN 'Married polygamous'
+        WHEN ContactMaritalStatus = 1058 THEN 'Divorced'
+        WHEN ContactMaritalStatus = 1059 THEN 'Widowed'
+        WHEN ContactMaritalStatus = 1057 THEN 'Single'
+        WHEN ContactMaritalStatus = 1175 THEN 'N/A (Child)'
+        ELSE NULL
+    END AS 'ContactMaritalStatus',
+    CASE
+        WHEN RelationshipWithPatient = 970 THEN 'Mother'
+        WHEN RelationshipWithPatient = 971 THEN 'Father'
+        WHEN RelationshipWithPatient = 972 THEN 'Sibling'
+        WHEN RelationshipWithPatient = 1565 THEN 'Child'
+        WHEN RelationshipWithPatient = 1669 THEN 'Sexual partner-spouse'
+        WHEN RelationshipWithPatient = 1670 THEN 'Sexual partner-other'
+        WHEN RelationshipWithPatient = 7246 THEN 'Co-wife'
+        WHEN RelationshipWithPatient = 105 THEN 'Injectable drug user'
+        ELSE NULL
+    END AS 'RelationshipWithPatient',
+    CASE
+        WHEN ScreenedForIpv = 1 THEN 'Yes'
+        WHEN ScreenedForIpv = 0 THEN 'No'
+        ELSE NULL
+    END AS 'ScreenedForIpv',
+    CASE
+        WHEN IpvScreening = 9303 THEN 'Sexual'
+        WHEN IpvScreening = 1789 THEN 'Physical'
+        WHEN IpvScreening = 7020 THEN 'Emotional'
+        WHEN IpvScreening = 1107 THEN 'No IPV'
+        WHEN IpvScreening = 1175 THEN 'N/A (Child)'
+        ELSE NULL
+    END AS 'IpvScreening',
+    CASE
+        WHEN IpvScreeningOutcome = 9303 THEN 'Sexual'
+        WHEN IpvScreeningOutcome = 1789 THEN 'Physical'
+        WHEN IpvScreeningOutcome = 7020 THEN 'Emotional'
+        WHEN IpvScreeningOutcome = 1107 THEN 'No IPV'
+        WHEN IpvScreeningOutcome = 1175 THEN 'N/A (Child)'
+        ELSE NULL
+    END AS 'IpvScreeningOutcome',
+    CASE
+        WHEN CurrentlyLivingWithIndexClient = 1 THEN 'Yes'
+        WHEN CurrentlyLivingWithIndexClient = 0 THEN 'No'
+        ELSE NULL
+    END AS 'CurrentlyLivingWithIndexClient',
+    CASE
+        WHEN KnowledgeOfHivStatus = 1 THEN 'Yes'
+        WHEN KnowledgeOfHivStatus = 0 THEN 'No'
+        ELSE NULL
+    END AS 'KnowledgeOfHivStatus',
+    CASE
+        WHEN PnsApproach = 11734 THEN 'Dual referral'
+        WHEN PnsApproach = 11733 THEN 'Provider referral'
+        WHEN PnsApproach = 9025 THEN 'Contract referral'
+        WHEN PnsApproach = 10648 THEN 'Passive referral'
+        ELSE NULL
+    END AS 'PnsApproach'
+	FROM
+    ndwr.ndwr_patient_contact_listing;"|dwhstage|0|ContactListingExtract|14|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d563f890-ae47-11eb-8529-0242ac130003|GBV Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+    PatientPK,
+    SiteCode,
+    PatientID,
+    Emr,
+    Project,
+    FacilityName,
+    PartnerPersonID,
+    VisitID,
+    VisitDate,
+    CASE
+      WHEN IPV = 1 THEN 'Yes'
+      WHEN IPV = 0 THEN 'NO'
+      ELSE NULL
+    END AS 'IPV',
+    CASE
+      WHEN PhysicalIPV = 1 THEN 'Yes'
+      WHEN PhysicalIPV = 0 THEN 'NO'
+      ELSE NULL
+    END AS 'PhysicalIPV',
+    CASE
+      WHEN EmotionalIPV = 1 THEN 'Yes'
+      WHEN EmotionalIPV = 0 THEN 'NO'
+      ELSE NULL
+    END AS 'EmotionalIPV',
+	CASE
+      WHEN SexualIPV = 1 THEN 'Yes'
+      WHEN SexualIPV = 0 THEN 'NO'
+      ELSE NULL
+    END AS 'SexualIPV',
+    CASE
+      WHEN IPVRelationship = 1 THEN 'Yes'
+      WHEN IPVRelationship = 0 THEN 'NO'
+      ELSE NULL
+    END AS 'IPVRelationship',
+    DateCreated
+	FROM
+    ndwr.ndwr_gbv_screening"|dwhstage|0|GbvScreeningExtract|15|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d563f93a-ae47-11eb-8529-0242ac130003|Enhanced Adherence Counselling|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|" SELECT PatientPK,SiteCode,PatientID,Emr,Project,FacilityName,VisitID,VisitDate,
+  SessionNumber,
+  FirstSessionDate,
+  PillCountAdherence,
+  MMAS4_1 as 'MMAS4-1',
+  MMAS4_2 as 'MMAS4-2',
+  MMAS4_3 as 'MMAS4-3',
+  MMAS4_4 as 'MMAS4_4',
+  MMSA8_1,
+  MMSA4_2,
+  MMSA4_3,
+  MMSA4_4,
+  MMSAScore,
+  EACRecievedVL,
+  EACVL,
+  EACVLConcerns,
+  EACVLThoughts,
+  EACWayForward,
+  EACCognitiveBarrier,
+  EACBehaviouralBarrier_1,
+  EACBehaviouralBarrier_2,
+  EACBehaviouralBarrier_3,
+  EACBehaviouralBarrier_4,
+  EACBehaviouralBarrier_5,
+  EACEmotionalBarriers_1,
+  EACEmotionalBarriers_2,
+  EACEconBarrier_1,
+  EACEconBarrier_2,
+  EACEconBarrier_3,
+  EACEconBarrier_4,
+  EACEconBarrier_5,
+  EACEconBarrier_6,
+  EACEconBarrier_7,
+  EACEconBarrier_8,
+  EACReviewImprovement,
+  EACReviewMissedDoses,
+  EACReviewStrategy,
+  EACReferral,
+  EACReferralApp,
+  EACReferralExperience,
+  EACHomevisit,
+  EACAdherencePlan,
+  EACFollowupDate,
+  FROM
+  ndwr.ndwr_patient_eac;"|dwhstage|0|EnhancedAdherenceCounsellingExtract|16|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d563faac-ae47-11eb-8529-0242ac130003|Drug and Alcohol Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"   SELECT PatientPK,
+    SiteCode,PatientID,
+    Emr,
+    Project,
+    FacilityName,
+    VisitID,
+    VisitDate,
+    DrinkAlcohol,
+    Smoking,
+    DrugUse
+    FROM
+    ndwr.ndwr_drug_alcohol_screening;"|dwhstage|0|DrugAlcoholScreeningExtract|17|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d563fb6a-ae47-11eb-8529-0242ac130003|OVC|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT PatientPK,SiteCode,PatientID,
+    Emr,
+    Project,
+    FacilityName,
+    VisitID,
+    VisitDate,
+    OVCEnrollmentDate,
+    RelationshiptoClient,
+    EnrolledinCPIMS,
+    CPIMSUniqueidentifier,
+    PartnerOfferingOVCServices,
+    OVCExitReason,
+    ExitDate
+    FROM
+    ndwr.ndwr_ovc_patient_visits;"|dwhstage|0|OvcExtract|18|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d563fc28-ae47-11eb-8529-0242ac130003|OTZ|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"  SELECT PatientPK,SiteCode,PatientID,
+    Emr,
+    Project,
+    FacilityName,
+    VisitID,
+    VisitDate,
+    OTZEnrollmentDate,
+    TransferInStatus,
+    Modulespreviouslycovered,
+    Modulescompletedtoday,
+    SupportGroupInvolvement,
+    Remarks,
+    TransitionattritionReason,
+    OutcomeDate
+    FROM
+    ndwr.ndwr_otz_patient_visits;"|dwhstage|0|OtzExtract|19|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d568fc28-ae47-11eb-8529-0242ac130003|Covid|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+										PatientPK,
+										SiteCode,
+										PatientID,
+										Emr,
+										Project,
+										FacilityName,
+										FacilityId,
+										VisitID,
+										Covid19AssessmentDate,
+										ReceivedCOVID19Vaccine,
+										DateGivenFirstDose,
+										FirstDoseVaccineAdministered,
+										DateGivenSecondDose,
+										SecondDoseVaccineAdministered,
+										VaccinationStatus,
+										VaccineVerification,
+										VaccineVerificationSecondDose,
+										BoosterGiven,
+										BoosterDose,
+										BoosterDoseDate,
+										Sequence,
+										COVID19TestResult,
+										BoosterDoseVerified,
+										COVID19TestDate,
+										PatientStatus,
+										AdmissionStatus,
+										AdmissionUnit,
+										MissedAppointmentDueToCOVID19,
+										COVID19PositiveSinceLasVisit,
+										COVID19TestDateSinceLastVisit,
+										PatientStatusSinceLastVisit,
+										AdmissionStatusSinceLastVisit,
+										AdmissionStartDate,
+										AdmissionEndDate,
+										AdmissionUnitSinceLastVisit,
+										SupplementalOxygenReceived,
+										PatientVentilated,
+										EverCOVID19Positive,
+										TracingFinalOutcome,
+										CauseOfDeath
+						FROM
+										ndwr.ndwr_covid_extract;"|dwhstage|0|CovidExtract|20|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d569fc28-ae47-11eb-8529-0242ac130003|Defaulter Tracing|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT
+								PatientPK,
+								SiteCode,
+								PatientID,
+								Emr,
+								Project,
+								FacilityName,
+								FacilityId,
+								VisitID,
+								VisitDate,
+								EncounterId,
+								TracingType,
+								TracingOutcome,
+								AttemptNumber,
+								IsFinalTrace,
+								TrueStatus,
+								CauseOfDeath,
+								Comments,
+								BookingDate
+				FROM
+								ndwr.ndwr_defaulter_tracing_extract;"|dwhstage|0|DefaulterTracingExtract|21|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+d5640010-ae47-11eb-8529-0242ac130003|Indicators|MTS|A6221857-0E85-11E8-BA89-0ED5F89F718B||Indicator|1|IndicatorExtract|1|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+A7F13D1F-8E82-4414-BB56-BB40A10F01F3|Hei|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempHeiExtract|0|HeiExtract|28.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+C37BE5B9-C518-477D-BDA6-C7FAD68262D2|Mnch Enrolment|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+5621AE05-2A66-49EF-829F-B0A2A071941D|Pnc Visit|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempPncVisitExtract|0|PncVisitExtract|24.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+027D9EE7-C222-4F9C-ACC5-1DD5B183CC28|Mnch Art|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchArtExtract|0|MnchArtExtract|21.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+1EB37D09-F1AC-4F51-ABCF-94019EBA072B|Mother Baby Pair|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMotherBabyPairExtract|0|MotherBabyPairExtract|25.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+9A427425-B1F3-4CC2-9233-705E00792497|Anc Visit|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempAncVisitExtract|0|AncVisitExtract|22.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+DCAE23B5-8B52-4196-AB29-61C3CDFD6A6B|Mnch Patient|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempPatientMnchExtract|1|PatientMnchExtract|19.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+3EF83C9E-3A73-4ABE-8981-A838F89B4ABC|Cwc Enrolment|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempCwcEnrolmentExtract|0|CwcEnrolmentExtract|26.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+792C41D4-20D4-4844-93E7-3698C9E2FFA4|Cwc Visit|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempCwcVisitExtract|0|CwcVisitExtract|27.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+65BC8BA3-25A4-44D4-B902-1AA2CD4B9AFE|Mnch Labs|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchLabExtract|0|MnchLabExtract|29.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+07A92DAB-E1D0-4550-9B71-5CF7F63A28BD|Mat Visit|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMatVisitExtract|0|MatVisitExtract|23.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+46D92EC7-97F2-41E4-9FF2-44FE92AB13CB|Hts Clients|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClient|1.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+1E0DD61C-4E31-4707-B808-E9FC0649651D|Hts Test Kits|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsTestKits|4.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+43F8E14C-5481-43A3-B76E-82FFFA9DFC5B|Hts Client Linkage|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientLinkage|3.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+3E51A4D6-5DD6-4B8E-97EA-4D1D40F50DC4|Hts Partner Notification Services|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsPartnerNotificationServices|7.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+E2EFAE43-2B09-41A6-83B5-A2E5CF5EDDF7|Hts Client Tracing|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientTracing|5.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+C2294906-D283-4E43-818D-E047047BD6BF|Hts Partner Tracing|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsPartnerTracing|6.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+5F402C12-6846-4087-9C9B-7D5CF15B7B2D|Hts Client Tests|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientTests|2.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+3BF8ACD9-8E99-430A-AE5C-535B46877C7A|Master Patient Index|CBS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|MPI|1|MasterPatientIndex|1.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+5823F29C-D01E-4479-897B-720343FDD876|Migration|MGS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|MgsStage|1|MetricMigrationExtract|1.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+
+399E96EE-3C82-400D-B5EF-8C320F865B81|Master Patient Index|CBS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|MPI|1|MasterPatientIndex|1.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+CD478F6B-22FA-4262-AC8A-C8DF680F4381|Hts Clients|HTS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|1|HtsClient|1.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+2A5E6765-CE9E-4BF8-B64A-089230FBD09F|Hts Test Kits|HTS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|1|HtsTestKits|4.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+D75B29CB-8745-4DF7-9A39-C33FC95F9F0F|Hts Client Linkage|HTS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|1|HtsClientLinkage|3.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+A0D0C17E-2315-46AE-AAA9-B33572A3BEA1|Hts Partner Notification Services|HTS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|1|HtsPartnerNotificationServices|7.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+B0B42B32-D0B6-48D8-B5C8-A5E085DD391A|Hts Client Tracing|HTS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|1|HtsClientTracing|5.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+C523F23D-3806-4C4D-8A27-75DC813DA0F3|Hts Partner Tracing|HTS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|1|HtsPartnerTracing|6.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+9CB06077-AFB2-4072-BA6E-76D8E6003CC3|Hts Client Tests|HTS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|DWHStage|1|HtsClientTests|2.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+CDE7E836-57A7-4F2F-8A5A-F9B66FB2C9A0|Migration|MGS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|MgsStage|1|MetricMigrationExtract|1.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+16DB7A26-9D2E-4DB9-9E4E-C58B6239E032|Hei|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempHeiExtract|0|HeiExtract|28.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+7C60F063-6CA1-4560-A34A-A7F3A3E64896|Mnch Enrolment|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+4469549E-BD31-4C99-8FE0-CA9BE614E6EF|Pnc Visit|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempPncVisitExtract|0|PncVisitExtract|24.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+405B749C-5E73-4D36-8698-BD5334F1AC26|Mnch Art|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempMnchArtExtract|0|MnchArtExtract|21.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+6F825B4F-4179-42D4-B32D-F473162A266B|Mother Baby Pair|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempMotherBabyPairExtract|0|MotherBabyPairExtract|25.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+C4076AFF-98BB-4EA7-B4CD-01F845C9C611|Anc Visit|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempAncVisitExtract|0|AncVisitExtract|22.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+ED45ABA8-F5C2-4EA6-85EC-836CFBA4211E|Mnch Patient|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempPatientMnchExtract|1|PatientMnchExtract|19.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+F8D4B2D3-9A4D-4B2A-BE45-5B4A3492B0F9|Cwc Enrolment|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempCwcEnrolmentExtract|0|CwcEnrolmentExtract|26.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+D15D7235-C4C4-4219-8364-C585BA708B81|Cwc Visit|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempCwcVisitExtract|0|CwcVisitExtract|27.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+1CD97F9F-8659-4444-8DC8-4FBA08B88E0B|Mnch Labs|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempMnchLabExtract|0|MnchLabExtract|29.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+846DE4FD-A8D9-46F3-9902-01C1657923AD|Mat Visit|MNCH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|TempMatVisitExtract|0|MatVisitExtract|23.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+497E84D7-5819-47BA-9117-50108935E718|Indicators|MTS|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|Indicator|1|IndicatorExtract|1.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+2328A891-F0CF-436C-A68E-69DFFD0AF7BC|Allergies Chronic Illness|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|AllergiesChronicIllnessExtract|11.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+9A7686D9-4F29-40B6-B8D1-98B9EE5FDA70|IPT|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|IptExtract|12.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+3384309B-C4DF-4DFE-A013-21366CB3FDBB|Depression Screening|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|DepressionScreeningExtract|13.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+D1743670-8125-4904-AE02-0D62093C72B2|Contact Listing|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|ContactListingExtract|14.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+8A7F44AF-9A28-48F6-966B-0214E6E54000|GBV Screening|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|GbvScreeningExtract|15.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+84E023EB-4DA9-45DC-B2A0-76DBAB0A6B44|Enhanced Adherence Counselling|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|EnhancedAdherenceCounsellingExtract|16.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+EB6036E5-DC82-4E00-B639-2922F40B2AF7|Drug and Alcohol Screening|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|DrugAlcoholScreeningExtract|17.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+77E3567C-35B6-412D-9232-95CE921C0ABE|OVC|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|OvcExtract|18.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+3F4F860A-6FB3-4B82-B78A-3C435932285C|OTZ|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|OtzExtract|19.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+583AB3B7-7CE4-4A7B-A99A-89DEBF5AD54C|Patient Adverse Events|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientAdverseEventExtract|8.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+82F6CED2-234D-40CF-8B5C-7A6E074A8A0B|Patient Status|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientStatusExtract|4.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+FC60FEB6-6DA6-48FE-ACC0-E9F148AD64F6|ART Patients|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientArtExtract|2.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+698FC2EA-1333-4D97-9521-E6AA73609BC4|All Patients|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|1|PatientExtract|1.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+E3EDC78A-A0DF-4C35-98C6-AA83B6679781|Patient Baselines|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientBaselineExtract|3.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+C2A18340-03D0-41FD-B2C5-7507D9653BDF|Patient Labs|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientLabExtract|5.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+9FC67989-2E8D-49FC-82D0-C15BB1789565|Patient Pharmacy|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientPharmacyExtract|6.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+A4498816-5690-43CB-A15E-DA02DB82262D|Patient Visit|NDWH|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|dwhstage|0|PatientVisitExtract|7.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0ed5f89f718b|""|PSmartStage|1|pSmart|1.00|a6221982-0e86-11e8-ba89-0ed5f89f718b
+
+
+2bbeec30-7754-11eb-9439-0242ac130002|Covid|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                  PatientPK,
+       i.siteCode                                                                    SiteCode,
+       d.unique_patient_no                                                           PatientID,
+       'KenyaEMR'                                                                    Emr,
+       'Kenya HMIS II'                                                               Project,
+       i.facilityName                                                                FacilityName,
+       0 as                                                                          FacilityId,
+       a.visit_id                                                                    VisitID,
+       a.visit_date                                                                  Covid19AssessmentDate,
+       if(a.final_vaccination_status in (166192, 5585), 'Yes', 'No')               as ReceivedCOVID19Vaccine,
+       a.first_dose_date                                                          as DateGivenFirstDose,
+       (case a.first_vaccine_type
+            when 166156 then 'Astrazeneca'
+            when 166355 then 'Johnson and Johnson'
+            when 166154 then 'Moderna'
+            when 166155 then 'Pfizer'
+            when 166157 then 'Sputnik'
+            when 166379 then 'Sinopharm'
+            when 1067 then 'Unknown'
+            when 5622
+                then 'Other' end)                                               as FirstDoseVaccineAdministered,
+       a.second_dose_date                                                         as DateGivenSecondDose,
+       (case a.second_vaccine_type
+            when 166156 then 'Astrazeneca'
+            when 166355 then 'Johnson and Johnson'
+            when 166154 then 'Moderna'
+            when 166155 then 'Pfizer'
+            when 166157 then 'Sputnik'
+            when 166379 then 'Sinopharm'
+            when 1067 then 'Unknown'
+            when 5622
+                then 'Other' end)                                               as SecondDoseVaccineAdministered,
+       (case a.final_vaccination_status
+            when 166192 then 'Partially Vaccinated'
+            when 5585 then 'Fully Vaccinated'
+            else 'Not Vaccinated' end)                                              as VaccinationStatus,
+       (case a.first_vaccination_verified when 164134 then 'Yes' else 'No' end)   as VaccineVerification,
+       (case a.second_vaccination_verified when 164134 then 'Yes' else 'No' end)  as VaccineVerificationSecondDose,
+       (case a.ever_received_booster
+            when 1065 then 'Yes'
+            when 1066 then 'No' end)                                                as BoosterGiven,
+       (case a.booster_vaccine_taken
+            when 166156 then 'Astrazeneca'
+            when 166355 then 'Johnson and Johnson'
+            when 166154 then 'Moderna'
+            when 166155 then 'Pfizer'
+            when 166157 then 'Sputnik'
+            when 166379 then 'Sinopharm'
+            when 1067 then 'Unknown'
+            when 5622 then 'Other(Specify)' end)                                  as BoosterDose,
+       a.date_taken_booster_vaccine                                               as BoosterDoseDate,
+       a.booster_sequence                                                         as Sequence,
+       (case a.ever_tested_covid_19_positive
+            when 703 then 'Yes'
+            when 664 then 'No'
+            when 1067 then 'Unknown' end)                                         as EverCOVID19Positive,
+       (case a.ever_tested_covid_19_positive
+            when 703 then 'Yes'
+            when 664 then 'No'
+            when 1067 then 'Unknown' end)                                         as COVID19TestResult,
+       (case booster_dose_verified when 164134 then 'Yes' end)                    as BoosterDoseVerified,
+       a.date_tested_positive                                                     as COVID19TestDate,
+       (case a.symptomatic
+            when 1068 then 'Symptomatic'
+            when 165912 then 'Asymptomatic' END)                                            as PatientStatus,
+       (case a.hospital_admission
+            when 1065 then 'Yes'
+            when 1066 then 'No' end)                                              as AdmissionStatus,
+       a.admission_unit                                                           as AdmissionUnit,
+       ''                                                                         as MissedAppointmentDueToCOVID19,
+       ''                                                                         as COVID19PositiveSinceLasVisit,
+       ''                                                                         as COVID19TestDateSinceLastVisit,
+       ''                                                                         as PatientStatusSinceLastVisit,
+       ''                                                                         as AdmissionStatusSinceLastVisit,
+       ''                                                                         as AdmissionStartDate,
+       ''                                                                         as AdmissionEndDate,
+       ''                                                                         as AdmissionUnitSinceLastVisit,
+       (case a.on_oxygen_supplement when 1065 then 'Yes' when 1066 then 'No' end) as SupplementalOxygenReceived,
+       (case a.on_ventillator when 1065 then 'Yes' when 1066 then 'No' end)       as PatientVentilated,
+       a.date_created                                                             as Date_Created,
+       a.date_last_modified                                                       as Date_Last_Modified,
+       '' as TracingFinalOutcome,
+       '' as CauseOfDeath
+from kenyaemr_etl.etl_patient_demographics d
+         join kenyaemr_etl.etl_covid19_assessment a on d.patient_id = a.patient_id
+         join kenyaemr_etl.etl_default_facility_info i
+									group by a.visit_id;"|dwhstage|0|CovidExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec31-7754-11eb-9439-0242ac130002|Defaulter Tracing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                              PatientPK,
+       i.siteCode                                                                SiteCode,
+									d.unique_patient_no                                                       PatientID,
+									'KenyaEMR'                                                                Emr,
+									'Kenya HMIS II'                                                           Project,
+									i.facilityName                                                            FacilityName,
+									0 as                                                                          FacilityId,
+									f.visit_id                                                                VisitID,
+									f.visit_date                                                              VisitDate,
+									f.encounter_id                                                         as EncounterId,
+									(case f.tracing_type
+														when 1650 then 'Client Called'
+														when 164965 then 'Physical Tracing'
+														when 161642 then 'Treatment supporter' end)                         as TracingType,
+									(case f.tracing_outcome
+														when 1267 then 'Contact'
+														when 1118 then 'No contact' end)                                    as TracingOutcome,
+									f.attempt_number                                                       as AttemptNumber,
+									(case f.is_final_trace when 1267 then 'Yes' when 163339 then 'No' end) as IsFinalTrace,
+									(case f.tracing_outcome
+														when 165610 then 'COVID19 Positive'
+														when 160432 then 'Dead'
+														when 1693 then 'Receiving ART from another clinic/Transferred'
+														when 160037 then 'Still in care at CCC'
+														when 5240 then 'Lost to follow up'
+														when 164435 then 'Stopped treatment' end)                           as TrueStatus,
+									(case f.cause_of_death
+														when 165609 then 'Infection due to COVID-19'
+														when 162574 then 'Death related to HIV infection'
+														when 116030 then 'Cancer'
+														when 164500 then 'TB'
+														when 151522 then 'Other infectious and parasitic diseases'
+														when 133481 then 'Natural cause'
+														when 1603 then 'Unnatural Cause'
+														when 5622 then 'Unknown cause' end)                                 as CauseOfDeath,
+									f.comments                                                             as Comments,
+									date(f.booking_date)                                                   as BookingDate,
+									f.date_created                                                         as Date_Created,
+									f.date_last_modified                                                   as Date_Last_Modified
+		from kenyaemr_etl.etl_patient_demographics d
+											join kenyaemr_etl.etl_ccc_defaulter_tracing f on d.patient_id = f.patient_id
+											join kenyaemr_etl.etl_default_facility_info i
+		group by f.visit_id;"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
+82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                  as PatientPK,
+                    i.siteCode                                                    as SiteCode,
+                    i.facilityName                                                as FacilityName,
+                    d.unique_prep_number                                          as PrepNumber,
+                    d.national_unique_patient_identifier                          as NUPI,
+                    
+                    d.openmrs_id                                                  as HtsNumber,
+                    'KenyaEMR'                                                    as Emr,
+                    'HMIS'                                                        as Project,
+                    min(date(e.visit_date))                                       as PrepEnrollmentDate,
+                    case d.gender when 'M' then 'Male' when 'F' then 'Female' end as Sex,
+                    d.dob                                                         as DateOfBirth,
+                    d.birth_place                                                 as CountyOfBirth,
+                    pa.county                                                     as County,
+                    pa.sub_county                                                 as SubCounty,
+                    pa.location                                                   as Location,
+                    pa.land_mark                                                  as LandMark,
+                    pa.ward                                                       as Ward,
+                    e.patient_type                                                as ClientType,
+                    e.transfer_in_entry_point                                     as ReferralPoint,
+                    d.marital_status                                              as MaritalStatus,
+                    case e.in_school when 1 then 'Yes' when 2 then 'No' else null end as Inschool,
+                    (case e.population_type
+                    when 164928 then 'General Population'
+                    when 6096 then 'Discordant Couple'
+                    when 164929 then 'Key Population'
+                    else NULL end)                                           as PopulationType,
+                    case e.kp_type when 162277 then 'People in prison and other closed settings' when 165100 then 'Transgender' 
+                    when 105 then 'PWID' when 160578 then 'MSM' when 165084 then 'MSW' when 160579 then 'FSW' end as KeyPopulationType,
+                    e.referred_from                                               as Refferedfrom,
+                    if(e.transfer_in_date is not null, 'Yes', 'No')               as TransferIn,
+                    date(e.transfer_in_date)                                      as TransferInDate,
+                    e.transfer_from                                               as TransferFromFacility,
+                    e.date_started_prep_trf_facility                              as DatefirstinitiatedinPrepCare,
+                    e.date_started_prep_trf_facility                              as DateStartedPrEPattransferringfacility,
+                    e.previously_on_prep                                          as ClientPreviouslyonPrep,
+                    e.regimen                                                     as PrevPrepReg,
+                    e.prep_last_date                                              as DateLastUsedPrev,
+                    e.date_created 																																															as Date_Created,
+                    e.date_last_modified 																																									as Date_Last_Modified
+                    from kenyaemr_etl.etl_prep_enrolment e
+                    left join kenyaemr_etl.etl_person_address pa on e.patient_id = pa.patient_id
+                    inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
+                    inner join kenyaemr_etl.etl_prep_behaviour_risk_assessment r on e.patient_id = r.patient_id
+                    join kenyaemr_etl.etl_default_facility_info i
+group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
+82651f02-9db2-11eb-a8b3-0242ac130003|Prep Behaviour Risk|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
+														i.siteCode                                                                   as SiteCode,
+														d.unique_prep_number                                                         as PrepNumber,
+														d.openmrs_id                                                                 as HtsNumber,
+														'KenyaEMR'                                                                   as Emr,
+														'HMIS'                                                                       as Project,
+														h.visit_date                                                                 as VisitDate,
+														h.visit_id                                                                   as VisitId,
+														h.sexual_partner_hiv_status                                                  as SexPartnerHIVStatus,
+														h.sexual_partner_on_art                                                      as IsHIVPositivePartnerCurrentonART,
+														(case h.high_risk_partner when 'High risk partner' then 'Yes' else 'No' end) as IsPartnerHighRisk,
+														h.risk                                                                       as PartnerARTRisk,
+														concat_ws(',', case sex_with_multiple_partners when 'Yes' then 'Has Sex with more than one partner' end,
+																								case ipv_gbv when 'Yes' then 'Ongoing IPVor/and GBV' end,
+																								case transactional_sex when 'Yes' then 'Transactional sex' end,
+																								case recent_sti_infected when 'Yes' then 'Recent STI in the last 6 months' end,
+																								case recurrent_pep_use when 'Yes' then 'Recurrent use of PEP' end,
+																								case recurrent_sex_under_influence
+																												when 'Yes' then 'Recurrent sex under influence of alcohol/recreational drugs'
+																												end,
+																								case inconsistent_no_condom_use when 'Yes' then 'Inconsistent or no condom use' end,
+																								case sharing_drug_needles
+																												when 'Yes' then 'IDU with shared needles and/or syringes'
+																												end, other_reason_specify)                                     as ClientAssessments,
+														h.assessment_outcome                                                         as ClientRisk,
+														h.willing_to_take_prep                                                       as ClientWillingToTakePrEP,
+														h.reason_not_willing                                                         as PrEPDeclineReason,
+														h.risk_edu_offered                                                           as RiskReductionEducationOffered,
+														h.referral_for_prevention_services                                           as ReferralToOtherPrevServices,
+														date(h.time_partner_hiv_positive_known)                                      as FirstEstablishPartnerStatus,
+														h.partner_enrolled_ccc                                                       as PartnerEnrolledToCCC,
+														h.partner_ccc_number                                                         as HIVPartnerCCCNumber,
+														h.partner_art_start_date                                                     as HIVPartnerARTStartDate,
+														h.HIV_serodiscordant_duration_months                                         as MonthsKnownHIVSeroDiscordant,
+														h.recent_unprotected_sex_with_positive_partner                               as SexWithoutCondom,
+														h.children_with_hiv_positive_partner                                         as NumberofchildrenWithPartner,
+														h.date_created 																																																														as Date_Created,
+														h.date_last_modified 																																																								as Date_Last_Modified
+							from kenyaemr_etl.etl_prep_behaviour_risk_assessment h
+																inner join kenyaemr_etl.etl_prep_enrolment e on h.patient_id = e.patient_id
+																inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
+																join kenyaemr_etl.etl_default_facility_info i;"|TempPrepBehaviourRiskExtract|0|PrepBehaviourRiskExtract|31|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+8265201a-9db2-11eb-a8b3-0242ac130003|Prep Visit|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                              as PatientPK,
+																		i.siteCode                                                as SiteCode,
+																		d.unique_prep_number                                      as PrepNumber,
+																		d.openmrs_id                                              as HtsNumber,
+																		f.encounter_id                                            as EncounterId,
+																		'KenyaEMR'                                                as Emr,
+																		'HMIS'                                                    as Project,
+																		f.visit_date                                              as VisitDate,
+																		f.visit_id                                                as VisitID,
+																		concat_ws('/', t.systolic_pressure, t.diastolic_pressure) as BloodPressure,
+																		t.temperature                                             as Temperature,
+																		t.weight                                                  as Weight,
+																		t.height                                                  as Height,
+																		f.sti_screened                                            as STIScreening,
+																		concat_ws(',', f.genital_ulcer_disease,
+																												f.vaginal_discharge,
+																												f.cervical_discharge,
+																												f.pid,
+																												f.urethral_discharge,
+																												f.anal_discharge,
+																												f.other_sti_symptoms)                           as STISymptoms,
+																		f.sti_treated                                             as STITreated,
+																		f.vmmc_status                                             as Circumcised,
+																		f.vmmc_referred                                           as VMMCReferral,
+																		f.lmp                                                     as LMP,
+																		f.menopausal_status                                       as MenopausalStatus,
+																		f.pregnant                                                as PregnantAtThisVisit,
+																		f.edd                                                     as EDD,
+																		f.wanted_pregnancy                                        as PlanningToGetPregnant,
+																		f.planned_pregnancy                                       as PregnancyPlanned,
+																		f.ended_pregnancy                                         as PregnancyEnded,
+																		f.outcome_date                                            as PregnancyEndDate,
+																		f.pregnancy_outcome                                       as PregnancyOutcome,
+																		f.defects                                                 as BirthDefects,
+																		f.breastfeeding                                           as BreastFeeding,
+																		f.fp_status                                               as FamilyPlanningStatus,
+																		f.fp_method                                               as FPMethods,
+																		f.adherence_counselled                                    as AdherenceDone,
+																		f.adherence_outcome                                       as AdherenceOutcome,
+																		f.prep_contraindications                                  as ContraindicationsPrep,
+																		f.treatment_plan                                          as PrepTreatmentPlan,
+																		f.prescribed_PrEP                                         as PrepPrescribed,
+																		f.regimen_prescribed                                      as RegimenPrescribed,
+																		f.months_prescribed_regimen                               as MonthsPrescribed,
+																		f.condoms_issued                                          as CondomsIssued,
+																		f.appointment_given                                       as Tobegivennextappointment,
+																		f.reason_no_appointment                                   as Reasonfornotgivingnextappointment,
+																		f.appointment_date                                        as NextAppointment,
+																		f.clinical_notes                                          as ClinicalNotes,
+																		'' as AdherenceReasons,
+																		'' as BMI,
+																		'' as HepatitisBPositiveResult,
+																		'' as HepatitisCPositiveResult,
+																		'' as SymptomsAcuteHIV,
+																		case f.hepatitisB_vaccinated when 1065 then 'Yes' when 1066 then 'No' end as VaccinationForHepBStarted,
+																		case f.hepatitisB_treated when 1065 then 'Yes' when 1066 then 'No' when 1788 then 'Referred' end as TreatedForHepB,
+																		case f.hepatitisC_vaccinated when 1065 then 'Yes' when 1066 then 'No'  end as VaccinationForHepCStarted,
+																		case f.hepatitisC_treated when 1065 then 'Yes' when 1066 then 'No' when 1788 then 'Referred' end as TreatedForHepC,
+																		f.date_created 																																											as Date_Created,
+																		f.date_last_modified 																																					as Date_Last_Modified
+											from kenyaemr_etl.etl_prep_followup f
+																				left join kenyaemr_etl.etl_patient_triage t on f.patient_id = t.patient_id and f.visit_date = t.visit_date
+																				inner join kenyaemr_etl.etl_prep_enrolment e on f.patient_id = e.patient_id
+																				inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
+																				join kenyaemr_etl.etl_default_facility_info i;"|TempPrepVisitExtract|0|PrepVisitExtract|32|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+8265213c-9db2-11eb-a8b3-0242ac130003|Prep Labs|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId,
+																								d.unique_prep_number as PrepNumber, d.patient_id as PatientPK,
+																								 d.openmrs_id as HtsNumber,l.encounter_id as VisitID,
+																									CAST(l.visit_date AS DATE) as OrderedByDate,CAST(l.visit_date AS DATE) as TestResultDate,
+																									i.siteCode as SiteCode,
+																									i.facilityName as FacilityName,
+																									cn.name as TestName,
+																									l.date_test_requested as SampleDate,
+																									(case l.order_reason when 843 then 'Confirmation of treatment failure (repeat VL)'
+																										when 1434 then 'Pregnancy' when 162080 then 'Baseline VL (for infants diagnosed through EID)'
+																										when 1259 then 'Single Drug Substitution' when 159882 then 'Breastfeeding'
+																										when 163523 then 'Clinical failure' when 161236 then 'Routine'
+																										when 160032 then 'Confirmation of persistent low level Viremia (PLLV)' end) as Reason,
+																									case
+																									when c.datatype_id=2 then cn2.name
+																									else
+																											l.test_result
+																									end as TestResult,
+																									NULL as EnrollmentTest,'' as SampleType,
+																									'KenyaEMR' as Emr,
+																									'Kenya HMIS II' as Project,
+																									l.date_created as Date_Created,
+																									GREATEST(COALESCE(l.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, l.date_last_modified)) as Date_Last_Modified
+									from kenyaemr_etl.etl_laboratory_extract l
+											join kenyaemr_etl.etl_patient_demographics d on d.patient_id=l.patient_id
+											join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
+											join concept c on c.concept_id = l.lab_test
+											join kenyaemr_etl.etl_default_facility_info i
+											join (select p.patient_id from kenyaemr_etl.etl_prep_enrolment p)p on l.patient_id = p.patient_id
+											left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
+                                      and cn2.locale='en' where p.patient_id is not null;"|TempPrepLabExtract|0|PrepLabExtract|33|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82652272-9db2-11eb-a8b3-0242ac130003|Prep Pharmacy|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                as PatientPK,
+																								i.siteCode                  as SiteCode,
+																								d.unique_prep_number        as PrepNumber,
+																								d.openmrs_id                as HtsNumber,
+																								0                           as FacilityID,
+																								'KenyaEMR'                  as Emr,
+																								'HMIS'                      as Project,
+																								f.visit_id                  as VisitID,
+																								f.regimen_prescribed        as RegimenPrescribed,
+																								f.visit_date                as DispenseDate,
+																								f.months_prescribed_regimen as Duration,
+																								f.date_created              as Date_Created,
+																								f.date_last_modified        as Date_Last_Modified
+																	from kenyaemr_etl.etl_prep_followup f
+																										join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id
+																										join kenyaemr_etl.etl_default_facility_info i
+																	where f.prescribed_PrEP = 'Yes';"|TempPrepPharmacyExtract|0|PrepPharmacyExtract|34|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82652358-9db2-11eb-a8b3-0242ac130003|Prep Adverse Events|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                 as PatientPK,
+														s.siteCode                                                   as SiteCode,
+														de.unique_prep_number                                         as PrepNumber,
+														0                                                            AS FacilityId,
+														'KenyaEMR'                                                   as Emr,
+														'Kenya HMIS II'                                              as Project,
+														s.FacilityName                                               as FacilityName,
+														a.visit_date                                                 as VisitDate,
+														group_concat(case a.cause
+																															when 70056 then 'Abicavir'
+																															when 162298 then 'ACE inhibitors'
+																															when 70878 then 'Allopurinol'
+																															when 155060 then 'Aminoglycosides'
+																															when 162299 then 'ARBs (angiotensin II receptor blockers)'
+																															when 103727 then 'Aspirin'
+																															when 71647 then 'Atazanavir'
+																															when 72822 then 'Carbamazepine'
+																															when 162301 then 'Cephalosporins'
+																															when 73300 then 'Chloroquine'
+																															when 73667 then 'Codeine'
+																															when 74807 then 'Didanosine'
+																															when 75523 then 'Efavirenz'
+																															when 162302 then 'Erythromycins'
+																															when
+																																			75948 then 'Ethambutol'
+																															when 77164 then 'Griseofulvin'
+																															when 162305 then 'Heparins'
+																															when 77675 then 'Hydralazine'
+																															when 78280 then 'Isoniazid'
+																															when 794 then 'Lopinavir/ritonavir'
+																															when 80106 then 'Morphine'
+																															when 80586 then 'Nevirapine'
+																															when 80696 then 'Nitrofurans'
+																															when 162306 then 'Non-steroidal anti-inflammatory drugs'
+																															when 81723 then 'Penicillamine'
+																															when 81724 then 'Penicillin'
+																															when 81959 then 'Phenolphthaleins'
+																															when 82023 then 'Phenytoin'
+																															when
+																																			82559 then 'Procainamide'
+																															when 82900 then 'Pyrazinamide'
+																															when 83018 then 'Quinidine'
+																															when 767 then 'Rifampin'
+																															when 162307 then 'Statins'
+																															when 84309 then 'Stavudine'
+																															when 162170 then 'Sulfonamides'
+																															when 84795 then 'Tenofovir'
+																															when 84893 then 'Tetracycline'
+																															when 86663 then 'Zidovudine'
+																															when 5622 then 'Other' end SEPARATOR '|')   as AdverseEventCause,
+														group_concat(case a.adverse_event
+																															when 1067 then 'Unknown'
+																															when 121629 then 'Anaemia'
+																															when 148888 then 'Anaphylaxis'
+																															when 148787 then 'Angioedema'
+																															when 120148 then 'Arrhythmia'
+																															when 108 then 'Bronchospasm'
+																															when 143264 then 'Cough'
+																															when 142412 then 'Diarrhea'
+																															when 118773 then 'Dystonia'
+																															when 140238 then 'Fever'
+																															when 140039 then 'Flushing'
+																															when 139581 then 'GI upset'
+																															when 139084 then 'Headache'
+																															when 159098 then 'Hepatotoxicity'
+																															when 111061 then 'Hives'
+																															when 117399 then 'Hypertension'
+																															when 879 then 'Itching'
+																															when 121677 then 'Mental status change'
+																															when 159347 then 'Musculoskeletal pain'
+																															when 121 then 'Myalgia'
+																															when 512 then 'Rash'
+																															when 5622 then 'Other' end SEPARATOR '|')   as AdverseEvent,
+														group_concat(case a.severity
+																															when 1498 then 'Mild'
+																															when 1499 then 'Moderate'
+																															when 1500 then 'Severe'
+																															when 162819 then 'Fatal'
+																															when 1067 then 'Unknown' end SEPARATOR '|') as Severity,
+														group_concat(a.start_date SEPARATOR '|')                     as AdverseEventStartDate,
+														''                                                           as AdverseEventEndDate,
+														group_concat(case a.action_taken
+																															when 1257 then 'CONTINUE REGIMEN'
+																															when 1259 then 'SWITCHED REGIMEN'
+																															when 981 then 'CHANGED DOSE'
+																															when 1258 then 'SUBSTITUTED DRUG'
+																															when 1107 then 'NONE'
+																															when 1260 then 'STOP'
+																															when 5622 then 'Other' end SEPARATOR '|')   as AdverseEventActionTaken,
+														''                                                           as AdverseEventClinicalOutcome,
+														''                                                           as AdverseEventIsPregnant,
+														''                                                           as AdverseEventRegimen,
+														a.date_created                                               as Date_Created,
+														a.date_last_modified                                         as Date_Last_Modified
+							from kenyaemr_etl.etl_adverse_events a
+																left join (select pe.patient_id, max(pe.visit_date) as prep_latest_enrolment_date
+																											from kenyaemr_etl.etl_prep_enrolment pe
+																											group by pe.patient_id) pe on a.patient_id = pe.patient_id
+																left join kenyaemr_etl.etl_prep_followup p on a.encounter_id = p.encounter_id
+																left join (select d.patient_id as         PrEP_disc_patient,
+																																		max(date(d.visit_date)) PrEP_Outcome_date
+																											from kenyaemr_etl.etl_prep_discontinuation d
+																											group by d.patient_id) pd on pd.PrEP_disc_patient = a.patient_id
+																inner join kenyaemr_etl.etl_patient_demographics de on a.patient_id = de.patient_id
+																join kenyaemr_etl.etl_default_facility_info s
+							where a.form in ('prep-initial','prep-consultation')
+									and (pd.PrEP_disc_patient is null or pd.PrEP_Outcome_date < pe.prep_latest_enrolment_date)
+							group by a.patient_id,a.visit_date;"|TempPrepAdverseEventExtract|0|PrepAdverseEventExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82652470-9db2-11eb-a8b3-0242ac130003|Prep Care Termination|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id as PatientPK,
+								i.siteCode as SiteCode,
+								d.unique_prep_number as PrepNumber,
+								d.openmrs_id as HtsNumber,
+								'KenyaEMR' as Emr, 'HMIS' as Project,
+																	f.visit_date as ExitDate,
+																	f.discontinue_reason as ExitReason,
+																	CAST(f.last_prep_dose_date AS DATE) as DateOfLastPrepDose,
+																				f.date_created as DateCreated,
+																				f.date_last_modified as DateModified
+													from kenyaemr_etl.etl_prep_discontinuation f
+														join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id
+						join kenyaemr_etl.etl_default_facility_info i;"|TempPrepCareTerminationExtract|0|PrepCareTerminationExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2F8A4A81-FEFB-49BF-AB07-C9F529F6EA13|Client Registry Service|CRS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT dm.patient_id                                                     AS PatientPK,
+														dm.unique_patient_no                                              AS CCCNumber,
+														dm.national_id_no                                                 AS NationalId,
+														dm.passport_no                                                    AS Passport,
+														dm.huduma_no                                                      AS HudumaNumber,
+														dm.birth_certificate_no                                           AS BirthCertificateNumber,
+														dm.alien_no                                                       AS AlienIdNo,
+														dm.driving_license_no                                             AS DrivingLicenseNumber,
+														dm.patient_clinic_number                                          AS PatientClinicNumber,
+														dm.given_name                                                     AS FirstName,
+														dm.middle_name                                                    AS MiddleName,
+														dm.family_name                                                    AS LastName,
+														dm.DOB                                                            AS DateOfBirth,
+														(case dm.Gender when 'F' then 'Female' when 'M' then 'Male' else '' end) AS Sex,
+														(case dm.marital_status when 'Never married' then 'Single'
+																																						when 'Married' then 'Married-monogamous'
+																																						
+																																						when 'Polygamous' then 'Married-polygamous'
+																																						
+																																							when 'Living with partner' then 'Cohabiting' else dm.marital_status end) AS MaritalStatus,
+														dm.occupation                                                     AS Occupation,
+														dm.education_level                                                AS HighestLevelOfEducation,
+														dm.phone_number                                                   AS PhoneNumber,
+														''                                                                AS AlternativePhoneNumber,
+														''                                                                AS SpousePhoneNumber,
+														dm.next_of_kin                                                    AS NameOfNextOfKin,
+														dm.next_of_kin_relationship                                       AS NextOfKinRelationship,
+														dm.next_of_kin_phone                                              AS NextOfKinTelNo,
+														pa.county                                                         AS County,
+														pa.sub_county                                                     AS SubCounty,
+														pa.ward                                                           AS Ward,
+														pa.location                                                       AS Location,
+														pa.village                                                        AS Village,
+														pa.land_mark                                                      AS Landmark,
+														(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+														(select siteCode from kenyaemr_etl.etl_default_facility_info)     as MFLCode,
+														(select siteCode from kenyaemr_etl.etl_default_facility_info)     as SiteCode,
+														0                                                                 as FacilityId,
+														'KHMIS'                                                           as Project,
+														'KenyaEMR'                                                        as Emr,
+														hiv.date_confirmed_hiv_positive                                   as DateOfHIVdiagnosis,
+														if(hiv.date_started_art_at_transferring_facility is not null, hiv.date_started_art_at_transferring_facility,
+																	reg.date_started)                                              as DateOfInitiation,
+														reg.last_regimen                                                  as LastRegimen,
+														reg.last_regimen_line                                             as LastRegimenLine,
+														disc.ExitReason                                                   AS TreatmentOutcome,
+														reg.latest_vis_date                                               AS DateOfLastEncounter,
+														lab.lastViralLoadDate                                             AS DateOfLastViralLoad,
+														lab.lastViralLoadResult                                           AS LastViralLoadResult,
+														reg.latest_tca                                                    AS NextAppointmentDate,
+														if(cc.patient_id IS NOT NULL, 'YES', 'NO')                        as CurrentOnART
+							from kenyaemr_etl.etl_hiv_enrollment hiv
+																join kenyaemr_etl.etl_patient_demographics dm on dm.patient_id = hiv.patient_id
+																left join kenyaemr_etl.etl_person_address pa on pa.patient_id = hiv.patient_id
+																left join (select d.patient_id,
+																																		coalesce(max(date(d.effective_discontinuation_date)),
+																																											max(date(d.visit_date))) as ExitDate,
+																																		(case mid(max(concat(d.visit_date, d.discontinuation_reason)), 11)
+																																							when 159492 then 'Transfer Out'
+																																							when 160034 then 'Died'
+																																							when 5240 then 'LTFU'
+																																							when 819 then 'Stopped Treatment'
+																																							else '' end)                 as ExitReason,
+																																		max(d.date_last_modified)         as date_last_modified
+																											from kenyaemr_etl.etl_patient_program_discontinuation d
+																											where d.program_name = 'HIV'
+																											group by d.patient_id) disc on disc.patient_id = dm.patient_id
+																left join (select lb.patient_id,
+																																		mid(max(concat(visit_date, lb.date_test_requested)), 11) as lastViralLoadDate,
+																																		if(mid(max(concat(visit_date, lab_test)), 11) = 856,
+																																					mid(max(concat(visit_date, test_result)), 11), if(
+																																																					mid(max(concat(visit_date, lab_test)), 11) = 1305 and
+																																																					mid(max(concat(visit_date, test_result)), 11) = 1302,
+																																																					'LDL', ''))                           as lastViralLoadResult
+																											from kenyaemr_etl.etl_laboratory_extract lb
+																											where lb.lab_test in (1305, 856)
+																											group by lb.patient_id) lab on lab.patient_id = dm.patient_id
+																left join (select e.patient_id,
+																																		e.regimen,
+																																		e.regimen_line,
+																																		e.alternative_regimen,
+																																		max(fup.next_appointment_date) as latest_tca,
+																																		last_art_date,
+																																		last_regimen,
+																																		last_regimen_line,
+																																		max(fup.visit_date)            as latest_vis_date,
+																																		e.date_started
+																											from (select e.patient_id,
+																																								min(e.date_started)                                  as date_started,
+																																								max(e.date_started)                                  as last_art_date,
+																																								mid(min(concat(e.date_started, e.regimen_name)), 11) as regimen,
+																																								mid(min(concat(e.date_started, e.regimen_line)), 11) as regimen_line,
+																																								mid(max(concat(e.date_started, e.regimen_name)), 11) as last_regimen,
+																																								mid(max(concat(e.date_started, e.regimen_line)), 11) as last_regimen_line,
+																																								max(if(discontinued, 1, 0))                          as alternative_regimen
+																																	from kenyaemr_etl.etl_drug_event e
+																																	group by e.patient_id) e
+																																				left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id = e.patient_id
+																											group by e.patient_id) reg on reg.patient_id = hiv.patient_id
+																left join (select ca.patient_id
+																											from kenyaemr_etl.etl_current_in_care ca
+																											where ca.started_on_drugs is not null
+							) cc on cc.patient_id = dm.patient_id
+							group by hiv.patient_id;"|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+3F6C522C-BA8C-46FA-8151-CDBA393C392D|Client Registry Service|CRS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+8B29B02B-B508-42EF-8FBE-48E1DB23DD6D|Client Registry Service|CRS|A6221858-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+e5e097ed-ec17-4b51-bd0c-b047a09b8b1f|Client Registry Service|CRS|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_UPI"|CRS|1|ClientRegistryExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B

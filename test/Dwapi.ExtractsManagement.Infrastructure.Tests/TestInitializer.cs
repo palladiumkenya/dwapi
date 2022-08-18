@@ -16,11 +16,13 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mnch;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Prep;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Cbs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch;
+using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Prep;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Reader.Hts;
@@ -42,11 +44,15 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.Validations;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Prep.Extracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Prep.TempExtracts;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Prep.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Cbs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Dwh;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Hts;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Mgs;
 using Dwapi.ExtractsManagement.Infrastructure.Validators.Mnch;
+using Dwapi.ExtractsManagement.Infrastructure.Validators.Prep;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
@@ -76,12 +82,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
         public static string MySqlConnectionString;
         public static string EmrConnectionString;
         public static string EmrDiffConnectionString;
+        public static string EmrConnectionLiveString;
+        public static string EmrDiffConnectionLiveString;
         public static string ConnectionString;
         public static string DiffConnectionString;
+        public static string ConnectionLiveString;
+        public static string DiffConnectionLiveString;
         public static DatabaseProtocol Protocol;
         public static List<Extract> Extracts;
         public static ServiceCollection AllServices;
-
+        public static bool LiveDb = true;
         [OneTimeSetUp]
         public void Setup()
         {
@@ -105,17 +115,30 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             EmrDiffConnectionString = GenerateConnection(config, "emrDiffConnection", false);
             ConnectionString = GenerateConnection(config, "dwapiConnection", true);
             DiffConnectionString = GenerateConnection(config, "dwapiDiffConnection", true);
+
+            EmrConnectionLiveString = GenerateConnection(config, "emrConnectionLive", false);
+            EmrDiffConnectionLiveString = GenerateConnection(config, "emrDiffConnectionLive", false);
+            ConnectionLiveString = GenerateConnection(config, "dwapiConnectionLive", true);
+            DiffConnectionLiveString = GenerateConnection(config, "dwapiDiffConnectionLive", true);
+
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
 
-            var connection = new SqliteConnection(ConnectionString);
-            connection.Open();
+            SqliteConnection connection = null;
+
+            if (!LiveDb)
+            {
+                connection = new SqliteConnection(ConnectionString);
+                connection.Open();
+            }
 
             var services = new ServiceCollection();
 
             #region Setttings.Infrastructure
-
-            services.AddDbContext<SettingsContext>(x => x.UseSqlite(connection));
+            if(!LiveDb)
+                services.AddDbContext<SettingsContext>(x => x.UseSqlite(connection));
+            else
+                services.AddDbContext<SettingsContext>(x => x.UseSqlServer(ConnectionLiveString));
 
             services.AddTransient<IAppDatabaseManager, AppDatabaseManager>();
             services.AddTransient<IDatabaseManager, DatabaseManager>();
@@ -129,8 +152,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services.AddTransient<IRestProtocolRepository, RestProtocolRepository>();
 
             #endregion
-
-            services.AddDbContext<ExtractsContext>(x => x.UseSqlite(connection));
+            if(!LiveDb)
+                services.AddDbContext<ExtractsContext>(x => x.UseSqlite(connection));
+            else
+                services.AddDbContext<ExtractsContext>(x => x.UseSqlServer(ConnectionLiveString));
 
             #region Readers
 
@@ -392,6 +417,47 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             #endregion
 
             #endregion
+
+            #region PREP
+
+            #region Extracts
+
+            services.AddTransient<IPatientPrepExtractRepository, PatientPrepExtractRepository>();
+            services.AddTransient<IPrepAdverseEventExtractRepository, PrepAdverseEventExtractRepository>();
+            services.AddTransient<IPrepCareTerminationExtractRepository, PrepCareTerminationExtractRepository>();
+            services.AddTransient<IPrepBehaviourRiskExtractRepository, PrepBehaviourRiskExtractRepository>();
+            services.AddTransient<IPrepLabExtractRepository, PrepLabExtractRepository>();
+            services.AddTransient<IPrepPharmacyExtractRepository, PrepPharmacyExtractRepository>();
+            services.AddTransient<IPrepVisitExtractRepository, PrepVisitExtractRepository>();
+
+
+            #endregion
+
+            #region TempExtracts
+
+            services.AddTransient<ITempPatientPrepExtractRepository, TempPatientPrepExtractRepository>();
+            services.AddTransient<ITempPrepAdverseEventExtractRepository, TempPrepAdverseEventExtractRepository>();
+            services.AddTransient<ITempPrepBehaviourRiskExtractRepository, TempPrepBehaviourRiskExtractRepository>();
+            services.AddTransient<ITempPrepCareTerminationExtractRepository, TempPrepCareTerminationExtractRepository>();
+            services.AddTransient<ITempPrepLabExtractRepository, TempPrepLabExtractRepository>();
+            services.AddTransient<ITempPrepPharmacyExtractRepository, TempPrepPharmacyExtractRepository>();
+            services.AddTransient<ITempPrepVisitExtractRepository, TempPrepVisitExtractRepository>();
+
+            #endregion
+
+            #region Validations
+
+            services.AddTransient<ITempPatientPrepExtractErrorSummaryRepository, TempPatientPrepExtractErrorSummaryRepository>();
+            services.AddTransient<ITempPrepAdverseEventExtractErrorSummaryRepository,TempPrepAdverseEventExtractErrorSummaryRepository >();
+            services.AddTransient<ITempPrepBehaviourRiskExtractErrorSummaryRepository,TempPrepBehaviourRiskExtractErrorSummaryRepository >();
+            services.AddTransient<ITempPrepCareTerminationExtractErrorSummaryRepository,TempPrepCareTerminationExtractErrorSummaryRepository >();
+            services.AddTransient<ITempPrepLabExtractErrorSummaryRepository, TempPrepLabExtractErrorSummaryRepository>();
+            services.AddTransient<ITempPrepPharmacyExtractErrorSummaryRepository,TempPrepPharmacyExtractErrorSummaryRepository >();
+            services.AddTransient<ITempPrepVisitExtractErrorSummaryRepository, TempPrepVisitExtractErrorSummaryRepository>();
+
+            #endregion
+
+            #endregion
             #region Validators
 
             services.AddTransient<IMasterPatientIndexValidator, MasterPatientIndexValidator>();
@@ -399,6 +465,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             services.AddTransient<IHtsExtractValidator, HtsExtractValidator>();
             services.AddScoped<IMetricExtractValidator, MetricExtractValidator>();
             services.AddScoped<IMnchExtractValidator, MnchExtractValidator>();
+            services.AddScoped<IPrepExtractValidator, PrepExtractValidator>();
             #endregion
 
             AllServices = services;
@@ -418,11 +485,23 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
             AllServices.RemoveService(typeof(DbContextOptions<SettingsContext>));
             AllServices.RemoveService(typeof(DbContextOptions<ExtractsContext>));
 
-            var diffConnection = new SqliteConnection(DiffConnectionString);
-            diffConnection.Open();
+            SqliteConnection diffConnection=null;
+            if (!LiveDb)
+            {
+               diffConnection = new SqliteConnection(DiffConnectionString);
+               diffConnection.Open();
+            }
 
-            AllServices.AddDbContext<SettingsContext>(x => x.UseSqlite(diffConnection));
-            AllServices.AddDbContext<ExtractsContext>(x => x.UseSqlite(diffConnection));
+            if (!LiveDb)
+            {
+                AllServices.AddDbContext<SettingsContext>(x => x.UseSqlite(diffConnection));
+                AllServices.AddDbContext<ExtractsContext>(x => x.UseSqlite(diffConnection));
+            }
+            else
+            {
+                AllServices.AddDbContext<SettingsContext>(x => x.UseSqlServer(DiffConnectionLiveString));
+                AllServices.AddDbContext<ExtractsContext>(x => x.UseSqlServer(DiffConnectionLiveString));
+            }
 
             ServiceProvider = AllServices.BuildServiceProvider();
 
@@ -469,13 +548,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
 
         private static void CreateDb(BaseContext context, bool seed = false)
         {
-            try
+            if (!LiveDb)
             {
-                var databaseCreator = (RelationalDatabaseCreator) context.Database.GetService<IDatabaseCreator>();
-                databaseCreator.CreateTables();
-                if (context is ExtractsContext)
+                try
                 {
-                    context.Database.ExecuteSqlCommand(@"
+                    var databaseCreator = (RelationalDatabaseCreator)context.Database.GetService<IDatabaseCreator>();
+                    databaseCreator.CreateTables();
+                    if (context is ExtractsContext)
+                    {
+                        context.Database.ExecuteSqlCommand(@"
                         CREATE VIEW vMasterPatientIndicesJaro
                         AS
                         SELECT 
@@ -483,11 +564,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                         FROM   
 	                        [MasterPatientIndices]
                         ");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Debug("Tables already Exist");
                 }
             }
-            catch (Exception e)
+            else
             {
-                Log.Debug("Tables already Exist");
+                context.Database.Migrate();
+                context.EnsureSeeded();
             }
 
             if (seed)
@@ -520,7 +607,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
         private void RemoveTestsFilesDbs()
         {
             string[] keyFiles =
-                {"dwapi.db", "dwapidiff.db", "emr.db", "emrdiff.db"};
+                {"dwapi.db", "dwapidiff.db", "emr.db", "emrdiff.db","ct.sqlite"};
             string[] keyDirs = {@"TestArtifacts/Database".ToOsStyle()};
 
             foreach (var keyDir in keyDirs)

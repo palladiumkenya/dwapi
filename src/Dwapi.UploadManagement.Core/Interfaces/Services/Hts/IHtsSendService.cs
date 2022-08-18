@@ -30,6 +30,10 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Hts
 
         Task<List<SendMpiResponse>> SendClientsLinkagesAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> SendClientsLinkagesAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
+        
+        Task<List<SendMpiResponse>> SendHtsEligibilityExtractsAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> SendHtsEligibilityExtractsAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
+
 
         //Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo);
         //Task<List<SendMpiResponse>> SendClientPartnersAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
