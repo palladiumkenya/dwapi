@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:2.1 AS base
-ENV DOTNET_RUNNING_IN_CONTAINER=true
+ENV DWAPI_RUNNING_IN_CONTAINER=true
 WORKDIR /app
 EXPOSE 5757 5753
 
