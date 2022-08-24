@@ -83,6 +83,6 @@ namespace Dwapi.Controller
             }
         }
 
-        private bool InDocker { get { return Environment.GetEnvironmentVariable("DWAPI_RUNNING_IN_CONTAINER") == "true";} }
+        private bool InDocker { get { return Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";} }
     }
 }
