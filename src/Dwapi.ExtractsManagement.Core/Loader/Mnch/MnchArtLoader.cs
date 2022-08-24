@@ -86,7 +86,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(MnchArtExtract), 11936));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(MnchArtExtract), 12602));
 
                 return count;
             }

@@ -4,6 +4,7 @@ using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -23,21 +24,41 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IPatientVisitLoader _patientVisitLoader;
         private readonly IClearDwhExtracts _clearDwhExtracts;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
 
-        public ExtractPatientVisitHandler(IPatientVisitSourceExtractor patientVisitSourceExtractor, IExtractValidator extractValidator, IPatientVisitLoader patientVisitLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractPatientVisitHandler(IPatientVisitSourceExtractor patientVisitSourceExtractor, IExtractValidator extractValidator, IPatientVisitLoader patientVisitLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository)
         {
             _patientVisitSourceExtractor = patientVisitSourceExtractor;
             _extractValidator = extractValidator;
             _patientVisitLoader = patientVisitLoader;
             _clearDwhExtracts = clearDwhExtracts;
             _extractHistoryRepository = extractHistoryRepository;
+            _diffLogRepository = diffLogRepository;
         }
 
         public async Task<bool> Handle(ExtractPatientVisit request, CancellationToken cancellationToken)
         {
-            //Extract
-            int found = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            // Get current site and docket dates,
+            int found;
+            var difflog = _diffLogRepository.GetLog("NDWH", "PatientVisitExtract");
 
+            if (request.DatabaseProtocol.SupportsDifferential)
+            {
+                if(null==difflog)
+                    found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+                else
+                    found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+            }
+            else
+            {
+                found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+            }
+            
+            
+            
+            
+            //Extract
+           
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientVisitExtract), $"{nameof(TempPatientVisitExtract)}s");
 
