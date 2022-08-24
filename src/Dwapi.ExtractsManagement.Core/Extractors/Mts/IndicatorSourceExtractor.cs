@@ -104,5 +104,74 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Mts
 
             return totalCount;
         }
+
+        public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol, DateTime? maxCreated, DateTime? maxModified, int siteCode)
+        {
+                      var mapper = dbProtocol.SupportsDifferential ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
+            int batch = 500;
+
+            // DomainEvents.Dispatch(new MgsNotification(new ExtractProgress(nameof(IndicatorExtract), "extracting...")));
+            //DomainEvents.Dispatch(new CbsStatusNotification(extract.Id,ExtractStatus.Loading));
+
+            var list = new List<TempIndicatorExtract>();
+
+            int count = 0;
+            int totalCount = 0;
+
+            using (var rdr = await _reader.ExecuteReader(dbProtocol, extract, maxCreated, maxModified, siteCode))
+            {
+                while (rdr.Read())
+                {
+                    totalCount++;
+                    count++;
+                    // AutoMapper profiles
+                    var extractRecord = mapper.Map<IDataRecord, TempIndicatorExtract>(rdr);
+                    extractRecord.Id = LiveGuid.NewGuid();
+                    list.Add(extractRecord);
+
+                    if (count == batch)
+                    {
+                        // TODO: batch and save
+                        _extractRepository.CreateBatch(list);
+
+                        try
+                        {
+                            // DomainEvents.Dispatch(new  MgsNotification(new ExtractProgress(nameof(IndicatorExtract), "extracting...",totalCount,count,0,0,0)));
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(e,"Notification error");
+
+                        }
+                        count = 0;
+                        list =new List<TempIndicatorExtract>();
+                    }
+
+                    // TODO: Notify progress...
+
+
+                }
+
+                if (count > 0)
+                {
+                    _extractRepository.CreateBatch(list);
+                }
+                _extractRepository.CloseConnection();
+            }
+
+            try
+            {
+
+                // DomainEvents.Dispatch(new MgsNotification(new ExtractProgress(nameof(IndicatorExtract), "extracted", totalCount, 0, 0, 0, 0)));
+                // DomainEvents.Dispatch(new MgsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
+                // DomainEvents.Dispatch(new MgsStatusNotification(extract.Id, ExtractStatus.Loaded,totalCount));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Notification error");
+            }
+
+            return totalCount;
+        }
     }
 }

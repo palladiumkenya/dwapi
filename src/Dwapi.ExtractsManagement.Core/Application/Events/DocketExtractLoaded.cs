@@ -11,10 +11,12 @@ namespace Dwapi.ExtractsManagement.Core.Application.Events
     {
         public string Docket { get;  }
         public string Extract { get;  }
-        public DocketExtractLoaded(string docket, string extract)
+        public int SiteCode { get;  }
+        public DocketExtractLoaded(string docket, string extract, int siteCode)
         {
             Docket = docket;
             Extract = extract;
+            SiteCode = siteCode;
         }
     }
 
@@ -29,9 +31,9 @@ namespace Dwapi.ExtractsManagement.Core.Application.Events
 
         public Task Handle(DocketExtractLoaded notification, CancellationToken cancellationToken)
         {
-            var generatedDates = _repository.GenerateDiff(notification.Docket, $"{notification.Extract}s");
+            var generatedDates = _repository.GenerateDiff(notification.Docket, $"{notification.Extract}s", notification.SiteCode);
 
-            var diffLog = _repository.InitLog(notification.Docket, notification.Extract);
+            var diffLog = _repository.InitLog(notification.Docket, notification.Extract, notification.SiteCode);
 
             if (null != diffLog)
             {

@@ -4142,6 +4142,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("MaxModified");
 
+                    b.Property<int>("SiteCode");
+
                     b.HasKey("Id");
 
                     b.ToTable("DiffLogs");

@@ -24,15 +24,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
                 && x.Extract.ToLower() == extract.ToLower());
         }
 
-        public DiffLog InitLog(string docket, string extract)
+        public DiffLog InitLog(string docket, string extract, int siteCode)
         {
             var diffLog = Get(x =>
                 x.Docket.ToLower() == docket.ToLower() &&
-                x.Extract.ToLower() == extract.ToLower());
+                x.Extract.ToLower() == extract.ToLower() &&
+                x.SiteCode == siteCode);
 
             if (null == diffLog)
             {
-                diffLog = DiffLog.Create(docket, extract);
+                diffLog = DiffLog.Create(docket, extract, siteCode);
                 Create(diffLog);
                 SaveChanges();
             }
@@ -45,9 +46,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
             Context.Database.GetDbConnection().BulkMerge(diffLog);
         }
 
-        public DiffLog GenerateDiff(string docket,string extract)
+        public DiffLog GenerateDiff(string docket,string extract, int siteCode)
         {
-            var diffLog = DiffLog.Create(docket, extract);
+            var diffLog = DiffLog.Create(docket, extract, siteCode);
 
             var sql =
                 $"SELECT MAX({nameof(PatientExtract.Date_Created)}) {nameof(PatientExtract.Date_Created)},MAX({nameof(PatientExtract.Date_Last_Modified)}) {nameof(PatientExtract.Date_Last_Modified)} FROM {extract}";

@@ -101,5 +101,76 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Crs
 
             return totalCount;
         }
+
+        public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol, DateTime? maxCreated, DateTime? maxModified, int siteCode)
+        {
+            var mapper = dbProtocol.SupportsDifferential ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
+            int batch = 500;
+
+            DomainEvents.Dispatch(new CrsNotification(new ExtractProgress(nameof(ClientRegistryExtract), "extracting...")));
+            //DomainEvents.Dispatch(new CrsStatusNotification(extract.Id,ExtractStatus.Loading));
+
+            var list = new List<TempClientRegistryExtract>();
+
+            int count = 0;
+            int totalCount = 0;
+
+            using (var rdr = await _reader.ExecuteReader(dbProtocol, extract, maxCreated, maxModified, siteCode))
+            {
+
+                while (rdr.Read())
+                {
+                    totalCount++;
+                    count++;
+                    // AutoMapper profiles
+                    var extractRecord = mapper.Map<IDataRecord, TempClientRegistryExtract>(rdr);
+                    extractRecord.Id = LiveGuid.NewGuid();
+                    list.Add(extractRecord);
+
+                    if (count == batch)
+                    {
+                        // TODO: batch and save
+                        _extractRepository.BatchInsert(list);
+
+                        try
+                        {
+                            DomainEvents.Dispatch(new CrsNotification(new ExtractProgress(nameof(ClientRegistryExtract), "extracting...",totalCount,count,0,0,0)));
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(e,"Notification error");
+
+                        }
+                        count = 0;
+                        list =new List<TempClientRegistryExtract>();
+                    }
+
+                    // TODO: Notify progress...
+
+
+                }
+
+                if (count > 0)
+                {
+                    _extractRepository.BatchInsert(list);
+                }
+                _extractRepository.CloseConnection();
+            }
+
+            try
+            {
+
+                DomainEvents.Dispatch(new CrsNotification(new ExtractProgress(nameof(ClientRegistryExtract), "extracted", totalCount, 0, 0, 0, 0)));
+                DomainEvents.Dispatch(new CrsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
+                DomainEvents.Dispatch(new CrsStatusNotification(extract.Id, ExtractStatus.Loaded,totalCount));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Notification error");
+
+            }
+
+            return totalCount;
+        }
     }
 }

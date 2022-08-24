@@ -103,6 +103,11 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
             return totalCount;
         }
 
+        public Task<int> Extract(DbExtract extract, DbProtocol dbProtocol, DateTime? maxCreated, DateTime? maxModified, int siteCode)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<int> ReadExtract(DbExtract extract, DbProtocol dbProtocol)
         {
             throw new NotImplementedException();

@@ -17,6 +17,8 @@ namespace Dwapi.SharedKernel.Model
         [NotMapped] public string MainName => GetMainName();
         [NotMapped] public string TableName => GetName();
         [NotMapped] public string TempTableName => GetTempName();
+        
+        
 
         private string GetName()
         {
@@ -75,6 +77,11 @@ namespace Dwapi.SharedKernel.Model
         public string GetCountSQL()
         {
             return $@"select count(*) from ({ExtractSql.ToLower()})xt".ToLower();
+        }
+        
+        public string GetDiffSQL(DateTime? maxCreated, DateTime? maxModified, int siteCode)
+        {
+            return $@"select * from ({ExtractSql.ToLower()})xt where xt.Date_Created > {maxCreated} or xt.Date_Modified > {maxModified} and xt.SiteCode={siteCode}".ToLower();
         }
 
         public void SetupDiffSql(DbProtocol dbProtocol)
