@@ -21,7 +21,7 @@ namespace Dwapi.SettingsManagement.Core.Tests.Application.Checks
         }
 
         [Test]
-        public void should_Get_Metrics()
+        public void should_Get_Live_Version()
         {
             var query = new CheckLiveUpdate("2.x.0.3");
 
