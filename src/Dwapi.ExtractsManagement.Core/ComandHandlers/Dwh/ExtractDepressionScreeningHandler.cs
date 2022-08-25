@@ -4,6 +4,7 @@ using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -23,20 +24,36 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IDepressionScreeningLoader _DepressionScreeningLoader;
         private readonly IClearDwhExtracts _clearDwhExtracts;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
 
-        public ExtractDepressionScreeningHandler(IDepressionScreeningSourceExtractor DepressionScreeningSourceExtractor, IExtractValidator extractValidator, IDepressionScreeningLoader DepressionScreeningLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractDepressionScreeningHandler(IDepressionScreeningSourceExtractor DepressionScreeningSourceExtractor, IExtractValidator extractValidator, IDepressionScreeningLoader DepressionScreeningLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository)
         {
             _DepressionScreeningSourceExtractor = DepressionScreeningSourceExtractor;
             _extractValidator = extractValidator;
             _DepressionScreeningLoader = DepressionScreeningLoader;
             _clearDwhExtracts = clearDwhExtracts;
             _extractHistoryRepository = extractHistoryRepository;
+            _diffLogRepository = diffLogRepository;
         }
 
         public async Task<bool> Handle(ExtractDepressionScreening request, CancellationToken cancellationToken)
         {
+            // Get current site and docket dates,
+            int found;
+            var difflog = _diffLogRepository.GetLog("NDWH", "DepressionScreeningExtract");
+
+            if (request.DatabaseProtocol.SupportsDifferential)
+            {
+                if(null==difflog)
+                    found  = await _DepressionScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+                else
+                    found  = await _DepressionScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+            }
+            else
+            {
+                found  = await _DepressionScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+            }
             //Extract
-            int found = await _DepressionScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(DepressionScreeningExtract), $"{nameof(TempDepressionScreeningExtract)}s");

@@ -249,7 +249,7 @@ FROM
 				left join kenyaemr_etl.etl_contact c on c.client_id = d.patient_id and prg.status='Active' and prg.program='KP' join kenyaemr_etl.etl_default_facility_info i
 				where unique_patient_no is not null
 				group by d.patient_id
-				order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+				order by d.patient_id"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select ''                                                                                  AS SatelliteName,
        0                                                                                   AS FacilityId,
        d.DOB,
@@ -489,7 +489,7 @@ from kenyaemr_etl.etl_hiv_enrollment hiv
 where d.unique_patient_no is not null
 group by d.patient_id
 having min(hiv.visit_date) is not null
-   and StartARTDate is not null;"|dwhstage|0|PatientArtExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+   and StartARTDate is not null"|dwhstage|0|PatientArtExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3C742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Baselines|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
 (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
@@ -536,16 +536,16 @@ NULL as bWHODate,
  CAST(left(max(concat(l.visit_date,l.test_result)),10) AS DATE) as lastcd4date,
  mid(max(if(l.visit_date>p_dates.six_month_date and l.visit_date<p_dates.twelve_month_date ,concat(l.visit_date,test_result),null)),11) as m6Cd4,
  CAST(left(max(if(l.visit_date>=p_dates.six_month_date and l.visit_date<p_dates.twelve_month_date ,concat(l.visit_date,test_result),null)),10) AS DATE) as m6Cd4Date,
- mid(max(if(l.visit_date>=p_dates.twelve_month_date,concat(l.visit_date,test_result),null)),11) as m6Cd4,
- CAST(left(max(if(l.visit_date>p_dates.twelve_month_date,concat(l.visit_date,test_result),null)),10) AS DATE) as m6Cd4Date,
+ -- mid(max(if(l.visit_date>=p_dates.twelve_month_date,concat(l.visit_date,test_result),null)),11) as m6Cd4,
+ -- CAST(left(max(if(l.visit_date>p_dates.twelve_month_date,concat(l.visit_date,test_result),null)),10) AS DATE) as m6Cd4Date,
  '' as eWAB, NULL as eWABDate,'' as bWAB, NULL as bWABDAte,
  'KenyaEMR' as Emr,
  'Kenya HMIS II' as Project,
  '' AS LastWaB,NULL AS LastWABDate,
  '' as m12CD4,
 NULL as m12CD4Date,
-'' AS m6CD4,
-NULL m6CD4Date,
+-- '' AS m6CD4,
+-- NULL m6CD4Date,
 fup.date_created,
 GREATEST(
   COALESCE(fup.date_last_modified, d.date_last_modified, p_dates.date_last_modified),
@@ -638,7 +638,7 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 							where d.unique_patient_no is not null
 									and disc.program_name = 'HIV'
 							group by PatientID
-							order by disc.visit_date ASC;"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+							order by disc.visit_date ASC"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID, d.patient_id as PatientPK, l.encounter_id as VisitId,
 																					CAST(l.visit_date AS DATE) as OrderedByDate,CAST(l.visit_date AS DATE) as ReportedByDate,
 																				(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
@@ -665,7 +665,7 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
 												join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
 												join concept c on c.concept_id = l.lab_test
 												left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
-					and cn2.locale='en' where d.unique_patient_no is not null;"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+					and cn2.locale='en' where d.unique_patient_no is not null"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 'Government' AS Provider,
                                                                                                  '' AS SatelliteName,
                                                                                                  (select siteCode from kenyaemr_etl.etl_default_facility_info) as  FacilityId,
@@ -759,7 +759,7 @@ order by m6cd4date desc"|dwhstage|0|PatientBaselineExtract|3|a6221aa4-0e85-11e8-
                                                                                                  left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph.encounter_id
                                                                                                  and fup.patient_id=ph.patient_id
                                                                                                  where unique_patient_no is not null and drugreg is not null
-                                                                                                 order by ph.patient_id,ph.DispenseDate;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                                                                                                 order by ph.patient_id,ph.DispenseDate"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct ''                                                                     AS SatelliteName,
                 0                                                                      AS FacilityId,
                 d.unique_patient_no                                                    as PatientID,
@@ -1006,7 +1006,7 @@ from kenyaemr_etl.etl_patient_demographics d
                     group by de.patient_id)de on fup.patient_id = de.patient_id
 where d.unique_patient_no is not null
   and fup.visit_date > '1990-01-01' and fup.next_appointment_date is not null
-  and fup.visit_id is not null;"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+  and fup.visit_id is not null"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT	*,
 						LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
 						LEFT([Gender],1)+
@@ -1386,7 +1386,7 @@ from kenyaemr_etl.etl_adverse_events a
        left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
                   where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
        join kenyaemr_etl.etl_default_facility_info s
-where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date group by a.patient_id,a.encounter_id;"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date group by a.patient_id,a.encounter_id"|dwhstage|0|PatientAdverseEventExtract|8|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 953cd910-23bb-11e9-ab14-d663bd873d93|Patient Status|NDWH|a6221857-0e85-11e8-ba89-0ed5f89f718b|"SELECT patientid,
        patientpk,
        sitecode,
@@ -1825,7 +1825,7 @@ LEFT JOIN patient_identifier id ON (id.patient_id = a.patient_id or id.patient_i
 from patient_identifier_type
 where name='OpenMRS ID')
 LEFT JOIN kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =a.patient_id
-where a.patient_id in (select patient_id from kenyaemr_etl.etl_hts_test);"|DWHStage|1|HtsClientLinkage|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+where a.patient_id in (select patient_id from kenyaemr_etl.etl_hts_test)"|DWHStage|1|HtsClientLinkage|3|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578b5a2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct p.PatientPK,
 SiteCode,
@@ -2145,7 +2145,7 @@ left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach
                      FROM kenyaemr_etl.etl_hts_eligibility_screening t
                               inner join kenyaemr_etl.etl_patient_demographics demographics on t.patient_id = demographics.patient_id
                               LEFT JOIN openmrs.location_attribute SC ON SC.location_id = t.location_id AND SC.attribute_type_id = 1
-                              LEFT JOIN openmrs.location SN ON SN.location_id = t.location_id group by t.encounter_id;"|DWHStage|1|HtsEligibilityExtract|8|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+                              LEFT JOIN openmrs.location SN ON SN.location_id = t.location_id group by t.encounter_id"|DWHStage|1|HtsEligibilityExtract|8|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 
 290bd21c-3089-11ea-978f-2e728ce88125|Master Patient Index|CBS|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
@@ -2855,7 +2855,7 @@ FROM adv
     LEFT OUTER JOIN obs o ON o.person_id = e.patient_id AND o.voided=0
         AND o.concept_id IN (1353,6687,6367,6688,1615,1054,1368,6740,1461,6746,6739,1255,1592,6506,1571,5629,7771,1174,7967,6500,8001,6501,6688,7968,7766,6517)
     INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
-    GROUP BY e.patient_id;"|DWHStage|1|PatientExtract|1|BB254606-38F8-409F-8E36-AB6601139DEA
+    GROUP BY e.patient_id"|DWHStage|1|PatientExtract|1|BB254606-38F8-409F-8E36-AB6601139DEA
 C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         p.person_id AS PatientPK,
         MAX(pi.identifier) AS PatientID,
@@ -2962,7 +2962,7 @@ C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0
     LEFT OUTER JOIN obs o ON e.patient_id = o.person_id
         AND o.voided=0 AND o.concept_id IN (1353,1571,1655,1461,6739)
     INNER JOIN concept_name cn ON cn.concept_id=o.value_coded
-    GROUP BY p.person_id;"|DWHStage|0|PatientArtExtract|2|BB254606-38F8-409F-8E36-AB6601139DEA
+    GROUP BY p.person_id"|DWHStage|0|PatientArtExtract|2|BB254606-38F8-409F-8E36-AB6601139DEA
 64C5D42A-C3ED-457A-951A-FDB22F14B6B7|Patient Pharmacy|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         e.patient_id AS PatientPK,
         MIN(pi.identifier) AS PatientID,
@@ -3030,7 +3030,7 @@ C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0
         GROUP BY 1
     ) AS lt ON lt.person_id = e.patient_id
     WHERE DATE(v.date_started) >= '2011-01-01'
-    GROUP BY e.patient_id;"|DWHStage|0|PatientPharmacyExtract|3|BB254606-38F8-409F-8E36-AB6601139DEA
+    GROUP BY e.patient_id"|DWHStage|0|PatientPharmacyExtract|3|BB254606-38F8-409F-8E36-AB6601139DEA
 1CD45F9F-BC5D-4F85-B2CD-1581CBF1A01E|Patient Labs|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         e.patient_id AS PatientPk,
         MIN(pi.identifier) AS PatientID,
@@ -3068,7 +3068,7 @@ C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0
     ) ot ON e.encounter_id = ot.encounter_id
     WHERE DATE(v.date_started) >= '2011-01-01'
     GROUP BY  e.patient_id, e.encounter_id
-    HAVING TestName IS NOT NULL AND TestResult IS NOT NULL;"|DWHStage|0|PatientLabExtract|4|BB254606-38F8-409F-8E36-AB6601139DEA
+    HAVING TestName IS NOT NULL AND TestResult IS NOT NULL"|DWHStage|0|PatientLabExtract|4|BB254606-38F8-409F-8E36-AB6601139DEA
 362DC8AD-9FF8-4622-994B-53761AF6AAE9|Patient Status|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         e.patient_id AS PatientPK,
         MIN(IF(pi.identifier_type=9,pi.identifier,NULL)) AS PatientID,
@@ -3096,7 +3096,7 @@ C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0
         WHERE e.encounter_type IN (1,2,3,4,21,22,42,6)
         GROUP BY 1
     ) s ON e.patient_id = s.patient_id
-    GROUP BY e.patient_id;"|DWHStage|0|PatientStatusExtract|5|BB254606-38F8-409F-8E36-AB6601139DEA
+    GROUP BY e.patient_id"|DWHStage|0|PatientStatusExtract|5|BB254606-38F8-409F-8E36-AB6601139DEA
 127CA0C5-86D8-46BA-98E1-57F224D99C23|Patient Baselines|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         e.patient_id AS PatientPk,
         MIN(pi.identifier) AS PatientID,
@@ -3155,7 +3155,7 @@ C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0
     LEFT OUTER JOIN concept_name cn ON cn.concept_id=o.value_coded
     INNER JOIN location l ON l.location_id = e.location_id
     LEFT OUTER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
-    GROUP BY e.patient_id;"|DWHStage|0|PatientBaselineExtract|6|BB254606-38F8-409F-8E36-AB6601139DEA
+    GROUP BY e.patient_id"|DWHStage|0|PatientBaselineExtract|6|BB254606-38F8-409F-8E36-AB6601139DEA
 90A68C9F-72AD-48C4-B0EB-35AB9DC6F07D|Patient Visits|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         p.patient_id AS PatientPk,
         MIN(pi.identifier) AS PatientID,
@@ -3215,7 +3215,7 @@ C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0
             AND ol.value_datetime IS NOT NULL
         GROUP BY 1
     ) AS lt ON p.patient_id = lt.person_id
-    GROUP BY p.patient_id, v.visit_id, e.encounter_id;"|DWHStage|0|PatientVisitExtract|7|BB254606-38F8-409F-8E36-AB6601139DEA
+    GROUP BY p.patient_id, v.visit_id, e.encounter_id"|DWHStage|0|PatientVisitExtract|7|BB254606-38F8-409F-8E36-AB6601139DEA
 5A7F8B7F-59E4-4364-8AA0-F7A94A4E6483|Patient Adverse Events|NDWH|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         p.patient_id AS PatientPk,
         MIN(pi.identifier) AS PatientID,
@@ -3240,7 +3240,7 @@ C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0
     LEFT OUTER JOIN location_attribute la ON l.location_id = la.location_id AND la.attribute_type_id = 1
     GROUP BY p.patient_id, v.visit_id
     HAVING AdverseEvent IS NOT NULL
-    ORDER BY p.patient_id, v.visit_id;"|DWHStage|0|PatientAdverseEventExtract|8|BB254606-38F8-409F-8E36-AB6601139DEA
+    ORDER BY p.patient_id, v.visit_id"|DWHStage|0|PatientAdverseEventExtract|8|BB254606-38F8-409F-8E36-AB6601139DEA
 72D51B17-EB57-49F8-88FE-F79FD2299B7B|Hts Clients|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         pt.patient_id AS PatientPK,
         la.`value_reference` AS SiteCode,
@@ -3267,7 +3267,7 @@ C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0
     LEFT OUTER JOIN obs o ON o.person_id = pt.patient_id AND o.voided=0 AND o.concept_id IN (1054,7766,7771,7923)
     LEFT OUTER JOIN concept_name cn ON cn.concept_id = o.value_coded
     GROUP BY pt.patient_id
-    HAVING DOB IS NOT NULL AND Gender IS NOT NULL;"|DWHStage|1|HtsClient|1|A6221989-0E85-11E8-BA89-0ED5F89F718B
+    HAVING DOB IS NOT NULL AND Gender IS NOT NULL"|DWHStage|1|HtsClient|1|A6221989-0E85-11E8-BA89-0ED5F89F718B
 64748A19-0A4C-4065-BF0E-3E963F0F4133|Hts Test Kits|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         ct.FacilityName,
         ct.SiteCode,
@@ -3387,7 +3387,7 @@ C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0
          GROUP BY e.encounter_id	-- , o.obs_group_id
     ) t ON ct.EncounterId = t.encounter_id
     GROUP BY pt.patient_id
-    HAVING TestKitName1 IS NOT NULL OR TestKitName2 IS NOT NULL;"|DWHStage|0|HtsTestKits|2|A6221989-0E85-11E8-BA89-0ED5F89F718B
+    HAVING TestKitName1 IS NOT NULL OR TestKitName2 IS NOT NULL"|DWHStage|0|HtsTestKits|2|A6221989-0E85-11E8-BA89-0ED5F89F718B
 4CF5649A-E085-4661-A982-A53B6F320F0B|Hts Client Linkage|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         hc.PatientPK,
         hc.SiteCode,
@@ -3425,7 +3425,7 @@ C7EF8319-50B3-4D1D-9DCD-386E61EA8AFE|ART Patients|NDWH|A6221859-0E85-11E8-BA89-0
     LEFT JOIN encounter e ON pt.patient_id = e.patient_id AND e.encounter_type IN (44,45,46,47,48,49,53)
     LEFT OUTER JOIN obs o ON o.person_id = pt.patient_id AND o.voided=0 AND o.concept_id IN (8157,8156,6742,6455)
     GROUP BY pt.patient_id
-    HAVING DatePrefferedToBeEnrolled IS NOT NULL;"|DWHStage|0|HtsClientLinkage|3|A6221989-0E85-11E8-BA89-0ED5F89F718B
+    HAVING DatePrefferedToBeEnrolled IS NOT NULL"|DWHStage|0|HtsClientLinkage|3|A6221989-0E85-11E8-BA89-0ED5F89F718B
 D3AB4970-0E03-443F-A3B5-F453692DBECE|Hts Client Tracing|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         hc.FacilityName,
         hc.SiteCode,
@@ -3457,7 +3457,7 @@ D3AB4970-0E03-443F-A3B5-F453692DBECE|Hts Client Tracing|HTS|A6221859-0E85-11E8-B
     LEFT JOIN encounter e ON pt.patient_id = e.patient_id AND e.encounter_type IN (44,45,46,47,48,49,53)
     LEFT OUTER JOIN obs o ON o.person_id = e.patient_id AND o.concept_id IN (7563,7824)
     GROUP BY pt.patient_id
-    HAVING TracingType IS NOT NULL;"|DWHStage|0|HtsClientTracing|4|A6221989-0E85-11E8-BA89-0ED5F89F718B
+    HAVING TracingType IS NOT NULL"|DWHStage|0|HtsClientTracing|4|A6221989-0E85-11E8-BA89-0ED5F89F718B
 6620D2F7-B365-4C5B-83D6-C95DAFC5DD47|Hts Partner Notification Services|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         hc.FacilityName,
         hc.SiteCode,
@@ -3502,7 +3502,7 @@ D3AB4970-0E03-443F-A3B5-F453692DBECE|Hts Client Tracing|HTS|A6221859-0E85-11E8-B
         HAVING DOB IS NOT NULL AND Gender IS NOT NULL
     ) hc ON pt.patient_id = hc.PatientPK
     GROUP BY pt.patient_id
-    HAVING PartnerPatientPk IS NOT NULL;"|DWHStage|0|HtsPartnerNotificationServices|5|A6221989-0E85-11E8-BA89-0ED5F89F718B
+    HAVING PartnerPatientPk IS NOT NULL"|DWHStage|0|HtsPartnerNotificationServices|5|A6221989-0E85-11E8-BA89-0ED5F89F718B
 E454753B-2C01-4C4D-AEE1-06B9E44FF26D|Hts Partner Tracing|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         hc.FacilityName,
         hc.SiteCode,
@@ -3534,7 +3534,7 @@ E454753B-2C01-4C4D-AEE1-06B9E44FF26D|Hts Partner Tracing|HTS|A6221859-0E85-11E8-
         HAVING DOB IS NOT NULL AND Gender IS NOT NULL
     ) hc ON pt.patient_id = hc.PatientPK
     GROUP BY pt.patient_id
-    HAVING PartnerPersonID IS NOT NULL;"|DWHStage|0|HtsPartnerTracing|6|A6221989-0E85-11E8-BA89-0ED5F89F718B
+    HAVING PartnerPersonID IS NOT NULL"|DWHStage|0|HtsPartnerTracing|6|A6221989-0E85-11E8-BA89-0ED5F89F718B
 2C71EB3C-B4E3-4CE8-BDAE-6265A312C3C1|Hts Client Tests|HTS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"SELECT
         hc.FacilityName,
         hc.SiteCode,
@@ -3614,7 +3614,7 @@ E454753B-2C01-4C4D-AEE1-06B9E44FF26D|Hts Partner Tracing|HTS|A6221859-0E85-11E8-
     ) t ON e.encounter_id = t.encounter_id
     LEFT OUTER JOIN obs o ON o.person_id = pt.patient_id AND o.voided=0 AND o.concept_id IN (7136,7658,8138,8174,8145,8155,7936,7937,6096,8168,7791)
     INNER JOIN concept_name cn ON cn.concept_id = o.value_coded
-    GROUP BY pt.patient_id, TestType;"|DWHStage|0|HtsClientTests|7|A6221989-0E85-11E8-BA89-0ED5F89F718B
+    GROUP BY pt.patient_id, TestType"|DWHStage|0|HtsClientTests|7|A6221989-0E85-11E8-BA89-0ED5F89F718B
 BAB42EA7-E672-4C1B-A1B3-F2160DE40845|Master Patient Index|CBS|A6221859-0E85-11E8-BA89-0ED5F89F718B|"select null"|MPI|1|MasterPatientIndex|1|A6221989-0E85-11E8-BA89-0ED5F89F718B
 
 b629ab26-3055-11ea-978f-2e728ce98131|Migration|MGS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT ID as MetricId,Dataset,Metric,MetricValue,Stage,SiteCode,Emr,FacilityName,'KenyaHMIS' as Project,CreateDate FROM DWAPI_Migration_Metrics"|MgsStage|1|MetricMigrationExtract|1|a6221983-0e85-11e8-ba89-0ed5f89f718b
@@ -3739,7 +3739,7 @@ left join
 ) as prg on prg.patient_id = d.patient_id
 where unique_patient_no is not null
 group by d.patient_id
-order by d.patient_id;"|dwhstage|1|PatientExtract|1|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
+order by d.patient_id"|dwhstage|1|PatientExtract|1|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
 
 ec3d7e12-bb10-11ea-b3de-0242ac130004|ART Patients|NDWH|a6221860-0e85-11e8-ba89-0ed5f89f718b|" select '' AS SatelliteName, 0 AS FacilityId, d.DOB,
        d.Gender, '' AS Provider,
@@ -3818,7 +3818,7 @@ from kenyaemr_etl.etl_hiv_enrollment hiv
                                             and cn.locale='en'
 where d.unique_patient_no is not null
 group by d.patient_id
-having min(hiv.visit_date) is not null and reg.art_start_date is not null;"|dwhstage|0|PatientArtExtract|2|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
+having min(hiv.visit_date) is not null and reg.art_start_date is not null"|dwhstage|0|PatientArtExtract|2|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
 
 ec3d7e13-bb10-11ea-b3de-0242ac130004|Patient Baselines|NDWH|a6221860-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
 d.patient_id as PatientPK,
@@ -3918,7 +3918,7 @@ left outer join concept_name cn on cn.concept_id=disc.discontinuation_reason  an
 and cn.locale='en'
 where d.unique_patient_no is not null
 group by PatientID
-order by disc.visit_date ASC;"|dwhstage|0|PatientStatusExtract|4|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
+order by disc.visit_date ASC"|dwhstage|0|PatientStatusExtract|4|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
 
 ec3d7e15-bb10-11ea-b3de-0242ac130004|Patient Labs|NDWH|a6221860-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as patientID, d.patient_id as patientPK, l.encounter_id as visitID,
 CAST(l.visit_date AS DATE) as orderedByDate,CAST(l.visit_date AS DATE) as reportedByDate, null as reason, (select value_reference from location_attribute
@@ -4000,7 +4000,7 @@ and cn.locale='en'
 left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.encounter_id=ph.encounter_id
 and fup.patient_id=ph.patient_id
 where unique_patient_no is not null and (is_arv=1 OR is_ctx=1 OR is_dapsone =1 ) and drugreg is not null
-order by ph.patient_id,ph.visit_date;"|dwhstage|0|PatientPharmacyExtract|6|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
+order by ph.patient_id,ph.visit_date"|dwhstage|0|PatientPharmacyExtract|6|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
 
 ec3d7e17-bb10-11ea-b3de-0242ac130004|Patient Visit|NDWH|a6221860-0e85-11e8-ba89-0ed5f89f718b|"select distinct
 '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
@@ -4445,7 +4445,7 @@ LEFT JOIN patient_identifier id ON (id.patient_id = a.patient_id or id.patient_i
 from patient_identifier_type
 where name='OpenMRS ID')
 LEFT JOIN kenyaemr_etl.etl_hiv_enrollment EN ON EN.patient_id =a.patient_id
-where a.patient_id in (select patient_id from kenyaemr_etl.etl_hts_test);"|DWHStage|1|HtsClientLinkage|3|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
+where a.patient_id in (select patient_id from kenyaemr_etl.etl_hts_test)"|DWHStage|1|HtsClientLinkage|3|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
 ec3d7e33-bb10-11ea-b3de-0242ac130004|Hts Test Kits|HTS|a6221860-0e85-11e8-ba89-0ed5f89f718b|"SELECT
     t.patient_id AS PatientPK,
 	SC.value_reference AS SiteCode,
@@ -4886,7 +4886,7 @@ UNION
 																																																					left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
 																																																																where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
 																																																					join kenyaemr_etl.etl_default_facility_info s
-				where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date group by v.visit_id;"|dwhstage|0|AllergiesChronicIllnessExtract|11|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+				where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date group by v.visit_id"|dwhstage|0|AllergiesChronicIllnessExtract|11|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec21-7754-11eb-9439-0242ac130002|IPT|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select coalesce(v.patient_id,s.patient_id) as PatientPK,site.siteCode as SiteCode,de.unique_patient_no as PatientID,0 AS FacilityId,'KenyaEMR' as Emr,'Kenya HMIS II' as Project,site.FacilityName as FacilityName,coalesce(v.visit_date,s.visit_date) as VisitDate,
 															coalesce(v.visit_id,s.visit_id) as VisitID,
 															case v.on_anti_tb_drugs when 1065 then 'Yes' when 1066 then 'No' end as OnTBDrugs,case v.on_ipt when 1065 then 'Yes' when 1066 then 'No' end as OnIPT, case v.ever_on_ipt when 1065 then 'Yes' when 1066 then 'No' end as EverOnIPT,
@@ -4924,7 +4924,7 @@ UNION
 																										where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
 															join kenyaemr_etl.etl_default_facility_info site
 								where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date and de.unique_patient_no is not null
-								group by v.encounter_id;"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+								group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec22-7754-11eb-9439-0242ac130002|Depression Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
 											s.siteCode as SiteCode,
 											de.unique_patient_no as PatientID,
@@ -4941,7 +4941,7 @@ UNION
 											left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
 																						where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
 											join kenyaemr_etl.etl_default_facility_info s
-				where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|DepressionScreeningExtract|13|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+				where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|DepressionScreeningExtract|13|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec23-7754-11eb-9439-0242ac130002|Contact Listing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_related_to as PatientPK,
                                                             v.patient_id as ContactPatientPK,
 															s.siteCode as SiteCode,
@@ -4963,7 +4963,7 @@ UNION
 															left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
 																										where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
 															join kenyaemr_etl.etl_default_facility_info s
-								where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|ContactListingExtract|14|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+								where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|ContactListingExtract|14|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec24-7754-11eb-9439-0242ac130002|GBV Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,s.siteCode as SiteCode,0 AS FacilityId,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'Kenya HMIS II' as Project,s.FacilityName as FacilityName,
        v.visit_id as VisitID,v.visit_date as VisitDate,
        (case v.ipv when 1065 then 'Yes' when 1066 then 'No' end) as IPV,
@@ -4978,7 +4978,7 @@ UNION
        left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
                   where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
        join kenyaemr_etl.etl_default_facility_info s
-where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|GbvScreeningExtract|15|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|GbvScreeningExtract|15|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec25-7754-11eb-9439-0242ac130002|Enhanced Adherence Counselling|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
        s.siteCode as SiteCode,
        de.unique_patient_no as PatientID,
@@ -5003,7 +5003,7 @@ where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhst
        left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
                   where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
        join kenyaemr_etl.etl_default_facility_info s
-where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|EnhancedAdherenceCounsellingExtract|16|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|EnhancedAdherenceCounsellingExtract|16|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec26-7754-11eb-9439-0242ac130002|Drug and Alcohol Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
        s.siteCode as SiteCode,
        de.unique_patient_no as PatientID,
@@ -5022,7 +5022,7 @@ where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhst
        left join (select d.patient_id as disc_patient,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date from kenyaemr_etl.etl_patient_program_discontinuation d
                   where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
        join kenyaemr_etl.etl_default_facility_info s
-where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date;"|dwhstage|0|DrugAlcoholScreeningExtract|17|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|DrugAlcoholScreeningExtract|17|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec27-7754-11eb-9439-0242ac130002|OVC|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,0 AS FacilityId,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'Kenya HMIS II' as Project,s.FacilityName as FacilityName,
        v.encounter_id as VisitID,v.visit_date as VisitDate,v.visit_date as OVCEnrollmentDate,coalesce(v.relationship_to_client,r.b_is_to_a) as RelationshipToClient,
        de.CPIMS_unique_identifier as CPIMSUniqueIdentifier,v.partner_offering_ovc as PartnerOfferingOVCServices,v.client_enrolled_cpims as EnrolledinCPIMS,
@@ -5035,7 +5035,7 @@ from kenyaemr_etl.etl_ovc_enrolment v
        left join (select d.patient_id,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date,(case mid(max(concat(date(d.visit_date),d.discontinuation_reason)),11) when 160036 then 'Transfer out to a PEPFAR supported facility' when 159492 then 'Transfer out to a non PEPFAR supported facility'
                                                                                                                                                                                                    when 165219 then 'Exit without graduation' when 1267 then 'Graduated out of OVC' when 160034 then 'Died' end ) as attrition_reason from kenyaemr_etl.etl_patient_program_discontinuation d
                   where program_name='OVC' group by d.patient_id)d on d.patient_id = v.patient_id
-       join kenyaemr_etl.etl_default_facility_info s;"|dwhstage|0|OvcExtract|18|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+       join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OvcExtract|18|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id as PatientPK,0 AS FacilityId,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'Kenya HMIS II' as Project,s.FacilityName as FacilityName,
        a.visit_id as VisitID,a.visit_date as VisitDate,e.OTZEnrollmentDate,e.TransferInStatus, e.ModulesPreviouslyCovered
     ,concat_ws(',',NULLIF(if(a.orientation='Yes','OTZ Orientation',null),''),NULLIF(if(a.participation='Yes','OTZ Participation',''),''),NULLIF(if(a.making_decision_future='Yes','OTZ Making decisions for the future',''),'')
@@ -5052,7 +5052,7 @@ from kenyaemr_etl.etl_otz_activity a
        left join (select d.patient_id,coalesce(max(date(d.effective_discontinuation_date)),date(d.visit_date)) Outcome_date,(case mid(max(concat(date(d.visit_date),d.discontinuation_reason)),11) when 5240 then 'LTFU' when 159492 then 'Transfer Out'
                                                                                                                                                                                                    when 160034 then 'Died' when 159836 then 'Opt out of OTZ' when 165363 then 'Transition to Adult Care' end ) as attrition_reason from kenyaemr_etl.etl_patient_program_discontinuation d
                   where program_name='OTZ' group by d.patient_id)d on d.patient_id = a.patient_id
-       join kenyaemr_etl.etl_default_facility_info s;"|dwhstage|0|OtzExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+       join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OtzExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 7c2e4a14-8728-11eb-8dcd-0242ac130003|All Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_Extract"|dwhstage|1|PatientExtract|1|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 7c2e4c44-8728-11eb-8dcd-0242ac130003|ART Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_ART_EXTRACT"|dwhstage|0|PatientArtExtract|2|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
@@ -5164,7 +5164,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                                                              join kenyaemr_etl.etl_default_facility_info i
                                                                       where m.patient_id is not null
                                                                          or c.patient_id is not null
-                                                                      group by EncounterId;"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                                                                      group by EncounterId"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651214-9db2-11eb-a8b3-0242ac130003|Mnch Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
        i.siteCode                                                                   as SiteCode,
        d.openmrs_id                                                                 as PatientMnchID,
@@ -5259,7 +5259,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                   group by c.visit_date)c on d.patient_id = c.patient_id
        join kenyaemr_etl.etl_default_facility_info i
 			where m.patient_id is not null
-   or c.patient_id is not null;"|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+   or c.patient_id is not null"|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651386-9db2-11eb-a8b3-0242ac130003|Mnch Art|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                        as PatientPK,
 													i.siteCode                                                                          as SiteCode,
 													d.openmrs_id                                                                        as PatientMnchID,
@@ -5317,7 +5317,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
 													join kenyaemr_etl.etl_default_facility_info i
 						where m.patient_id is not null
 									or c.patient_id is not null
-						group by d.patient_id;"|TempMnchArtExtract|0|MnchArtExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+						group by d.patient_id"|TempMnchArtExtract|0|MnchArtExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651494-9db2-11eb-a8b3-0242ac130003|Anc Visit|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                             PatientPK,
 												i.siteCode                                                                               SiteCode,
 												d.openmrs_id                                                                             PatientMnchID,
@@ -5516,7 +5516,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
 												join kenyaemr_etl.etl_mch_enrollment e on d.patient_id = e.patient_id
 												join kenyaemr_etl.etl_default_facility_info i
 					where a.visit_id is not null
-					group by a.visit_id;"|TempAncVisitExtract|0|AncVisitExtract|22|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+					group by a.visit_id"|TempAncVisitExtract|0|AncVisitExtract|22|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 826515fc-9db2-11eb-a8b3-0242ac130003|Mat Visit|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                      PatientPK,
 									i.siteCode                                                                        SiteCode,
 									d.openmrs_id                                                                      PatientMnchID,
@@ -5632,7 +5632,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
 									join kenyaemr_etl.etl_mchs_discharge c on d.patient_id = c.patient_id
 									join kenyaemr_etl.etl_mch_enrollment e on d.patient_id = e.patient_id
 									join kenyaemr_etl.etl_default_facility_info i
-		where l.visit_id is not null group by l.visit_id;"|TempMatVisitExtract|0|MatVisitExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+		where l.visit_id is not null group by l.visit_id"|TempMatVisitExtract|0|MatVisitExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651750-9db2-11eb-a8b3-0242ac130003|Pnc Visit|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                       PatientPK,
 										i.siteCode                                                                         SiteCode,
 										d.openmrs_id                                                                       PatientMnchID,
@@ -5800,7 +5800,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
 																						from kenyaemr_etl.etl_mch_enrollment e
 																						group by e.patient_id) e on d.patient_id = e.patient_id
 										inner join kenyaemr_etl.etl_default_facility_info i
-				group by p.visit_id;"|TempPncVisitExtract|0|PncVisitExtract|24|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+				group by p.visit_id"|TempPncVisitExtract|0|PncVisitExtract|24|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651886-9db2-11eb-a8b3-0242ac130003|Mother Baby Pair|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select p.baby_patient_id   as BabyPatientPK,
 												p.mother_patient_id as MotherPatientPK,
 												p.mother_patient_id as PatientPK,
@@ -5830,7 +5830,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
 																																																				on c.patient_id = d.patient_id
 																																											group by c.patient_id)c on m.ccc_no = c.mother_ccc_no)p
 														on d.unique_patient_no = p.ccc_no
-												join kenyaemr_etl.etl_default_facility_info i;"|TempMotherBabyPairExtract|0|MotherBabyPairExtract|25|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+												join kenyaemr_etl.etl_default_facility_info i"|TempMotherBabyPairExtract|0|MotherBabyPairExtract|25|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 826519c6-9db2-11eb-a8b3-0242ac130003|Cwc Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id              as PatientPK,
 											d.openmrs_id              as PatientMNCH_ID,
 											i.siteCode                as SiteCode,
@@ -5964,7 +5964,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
 																																			Gender,
 																																			DOB
 																												FROM kenyaemr_etl.etl_patient_demographics)x)pkv on pkv.patient_id = e.parent_pid
-											join kenyaemr_etl.etl_default_facility_info i;"|TempCwcEnrolmentExtract|0|CwcEnrolmentExtract|26|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+											join kenyaemr_etl.etl_default_facility_info i"|TempCwcEnrolmentExtract|0|CwcEnrolmentExtract|26|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651ade-9db2-11eb-a8b3-0242ac130003|Cwc Visit|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id           as PatientPK,
 											i.siteCode             as SiteCode,
 											'KenyaEMR'             as Emr,
@@ -6071,7 +6071,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
 																							from kenyaemr_etl.etl_hei_follow_up_visit v
 																														left join kenyaemr_etl.etl_patient_triage t on v.visit_id = t.visit_id)v
 													on d.patient_id = v.patient_id
-											join kenyaemr_etl.etl_default_facility_info i;"|TempCwcVisitExtract|0|CwcVisitExtract|27|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+											join kenyaemr_etl.etl_default_facility_info i"|TempCwcVisitExtract|0|CwcVisitExtract|27|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651c00-9db2-11eb-a8b3-0242ac130003|Hei|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                 as PatientPK,
 											i.siteCode                   as SiteCode,
 											'KenyaEMR'                   as Emr,
@@ -6167,7 +6167,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
 																						from kenyaemr_etl.etl_laboratory_extract x
 																						where x.lab_test in (1305, 856)
 																						group by x.patient_id) baseline on d.patient_id = baseline.patient_id
-											join kenyaemr_etl.etl_default_facility_info i where d.hei_no is not null;"|TempHeiExtract|0|HeiExtract|28|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+											join kenyaemr_etl.etl_default_facility_info i where d.hei_no is not null"|TempHeiExtract|0|HeiExtract|28|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651cfa-9db2-11eb-a8b3-0242ac130003|Mnch Labs|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id    as PatientPK,
 									i.siteCode      as SiteCode,
 									d.openmrs_id    as PatientMNCH_ID,
@@ -6233,14 +6233,14 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
 																																																																	when 1302 then 'LDL'
 																																																																	when 1304 then 'POOR SAMPLE QUALITY' end),
 																																											l.test_result))))) as test_result
-                   from kenyaemr_etl.etl_laboratory_extract l)l on d.patient_id = l.patient_id join kenyaemr_etl.etl_default_facility_info i;"|TempMnchLabExtract|0|MnchLabExtract|29|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                   from kenyaemr_etl.etl_laboratory_extract l)l on d.patient_id = l.patient_id join kenyaemr_etl.etl_default_facility_info i"|TempMnchLabExtract|0|MnchLabExtract|29|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 
 d563f4e4-ae47-11eb-8529-0242ac130003|Allergies Chronic Illness|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT PatientPK,SiteCode,PatientID,FacilityID,Emr,Project,FacilityName,VisitID,VisitDate,ChronicIllness,ChronicOnsetDate,knownAllergies,AllergyCausativeAgent,AllergicReaction,AllergySeverity,AllergyOnsetDate,Skin,Eyes,ENT,Chest,CVS,Abdomen,CNS,Genitourinary
-				FROM ndwr.ndwr_patient_allergies_chronic_illness;"|dwhstage|0|AllergiesChronicIllnessExtract|11|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+				FROM ndwr.ndwr_patient_allergies_chronic_illness"|dwhstage|0|AllergiesChronicIllnessExtract|11|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d563f58e-ae47-11eb-8529-0242ac130003|IPT|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT PatientPK,SiteCode,PatientID,FacilityID,Emr,Project,FacilityName,VisitID,VisitDate,OnTBDrugs,OnIPT,EverOnIPT,Cough,Fever,NoticeableWeightLoss,NightSweats,Lethergy,ICFActionTaken,TestResult,TBClinicalDiagnosis,ContactsInvited,EvaluatedForIPT,StartAntiTBs,
 	TBRxStartDate,TBScreening,IPTClientWorkUp,StartIPT,IndicationForIPT
-		FROM ndwr.ndwr_patient_ipt_extract;"|dwhstage|0|IptExtract|12|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+		FROM ndwr.ndwr_patient_ipt_extract"|dwhstage|0|IptExtract|12|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d563f642-ae47-11eb-8529-0242ac130003|Depression Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT PatientPK,SiteCode,PatientID,FacilityID,Emr,Project,VisitID,VisitDate,
     CASE
         WHEN PHQ9_1 = 0 THEN 'Not at all'
@@ -6382,7 +6382,7 @@ d563f7dc-ae47-11eb-8529-0242ac130003|Contact Listing|NDWH|A6221857-0E85-11E8-BA8
         ELSE NULL
     END AS 'PnsApproach'
 	FROM
-    ndwr.ndwr_patient_contact_listing;"|dwhstage|0|ContactListingExtract|14|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+    ndwr.ndwr_patient_contact_listing"|dwhstage|0|ContactListingExtract|14|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d563f890-ae47-11eb-8529-0242ac130003|GBV Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT
     PatientPK,
     SiteCode,
@@ -6465,7 +6465,7 @@ d563f93a-ae47-11eb-8529-0242ac130003|Enhanced Adherence Counselling|NDWH|A622185
   EACAdherencePlan,
   EACFollowupDate,
   FROM
-  ndwr.ndwr_patient_eac;"|dwhstage|0|EnhancedAdherenceCounsellingExtract|16|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+  ndwr.ndwr_patient_eac"|dwhstage|0|EnhancedAdherenceCounsellingExtract|16|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d563faac-ae47-11eb-8529-0242ac130003|Drug and Alcohol Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"   SELECT PatientPK,
     SiteCode,PatientID,
     Emr,
@@ -6477,7 +6477,7 @@ d563faac-ae47-11eb-8529-0242ac130003|Drug and Alcohol Screening|NDWH|A6221857-0E
     Smoking,
     DrugUse
     FROM
-    ndwr.ndwr_drug_alcohol_screening;"|dwhstage|0|DrugAlcoholScreeningExtract|17|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+    ndwr.ndwr_drug_alcohol_screening"|dwhstage|0|DrugAlcoholScreeningExtract|17|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d563fb6a-ae47-11eb-8529-0242ac130003|OVC|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT PatientPK,SiteCode,PatientID,
     Emr,
     Project,
@@ -6492,7 +6492,7 @@ d563fb6a-ae47-11eb-8529-0242ac130003|OVC|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F71
     OVCExitReason,
     ExitDate
     FROM
-    ndwr.ndwr_ovc_patient_visits;"|dwhstage|0|OvcExtract|18|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+    ndwr.ndwr_ovc_patient_visits"|dwhstage|0|OvcExtract|18|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d563fc28-ae47-11eb-8529-0242ac130003|OTZ|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"  SELECT PatientPK,SiteCode,PatientID,
     Emr,
     Project,
@@ -6508,7 +6508,7 @@ d563fc28-ae47-11eb-8529-0242ac130003|OTZ|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F71
     TransitionattritionReason,
     OutcomeDate
     FROM
-    ndwr.ndwr_otz_patient_visits;"|dwhstage|0|OtzExtract|19|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+    ndwr.ndwr_otz_patient_visits"|dwhstage|0|OtzExtract|19|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d568fc28-ae47-11eb-8529-0242ac130003|Covid|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT
 										PatientPK,
 										SiteCode,
@@ -6551,7 +6551,7 @@ d568fc28-ae47-11eb-8529-0242ac130003|Covid|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F
 										TracingFinalOutcome,
 										CauseOfDeath
 						FROM
-										ndwr.ndwr_covid_extract;"|dwhstage|0|CovidExtract|20|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+										ndwr.ndwr_covid_extract"|dwhstage|0|CovidExtract|20|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d569fc28-ae47-11eb-8529-0242ac130003|Defaulter Tracing|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|"SELECT
 								PatientPK,
 								SiteCode,
@@ -6572,7 +6572,7 @@ d569fc28-ae47-11eb-8529-0242ac130003|Defaulter Tracing|NDWH|A6221857-0E85-11E8-B
 								Comments,
 								BookingDate
 				FROM
-								ndwr.ndwr_defaulter_tracing_extract;"|dwhstage|0|DefaulterTracingExtract|21|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+								ndwr.ndwr_defaulter_tracing_extract"|dwhstage|0|DefaulterTracingExtract|21|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d5640010-ae47-11eb-8529-0242ac130003|Indicators|MTS|A6221857-0E85-11E8-BA89-0ED5F89F718B||Indicator|1|IndicatorExtract|1|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 A7F13D1F-8E82-4414-BB56-BB40A10F01F3|Hei|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempHeiExtract|0|HeiExtract|28.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 C37BE5B9-C518-477D-BDA6-C7FAD68262D2|Mnch Enrolment|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
@@ -6722,7 +6722,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
 from kenyaemr_etl.etl_patient_demographics d
          join kenyaemr_etl.etl_covid19_assessment a on d.patient_id = a.patient_id
          join kenyaemr_etl.etl_default_facility_info i
-									group by a.visit_id;"|dwhstage|0|CovidExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+									group by a.visit_id"|dwhstage|0|CovidExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec31-7754-11eb-9439-0242ac130002|Defaulter Tracing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                              PatientPK,
        i.siteCode                                                                SiteCode,
 									d.unique_patient_no                                                       PatientID,
@@ -6765,7 +6765,7 @@ from kenyaemr_etl.etl_patient_demographics d
 		from kenyaemr_etl.etl_patient_demographics d
 											join kenyaemr_etl.etl_ccc_defaulter_tracing f on d.patient_id = f.patient_id
 											join kenyaemr_etl.etl_default_facility_info i
-		group by f.visit_id;"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+		group by f.visit_id"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                  as PatientPK,
                     i.siteCode                                                    as SiteCode,
@@ -6812,7 +6812,7 @@ from kenyaemr_etl.etl_patient_demographics d
                     inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
                     inner join kenyaemr_etl.etl_prep_behaviour_risk_assessment r on e.patient_id = r.patient_id
                     join kenyaemr_etl.etl_default_facility_info i
-group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+group by e.patient_id"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 82651f02-9db2-11eb-a8b3-0242ac130003|Prep Behaviour Risk|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
 														i.siteCode                                                                   as SiteCode,
@@ -6855,7 +6855,7 @@ group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-
 							from kenyaemr_etl.etl_prep_behaviour_risk_assessment h
 																inner join kenyaemr_etl.etl_prep_enrolment e on h.patient_id = e.patient_id
 																inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
-																join kenyaemr_etl.etl_default_facility_info i;"|TempPrepBehaviourRiskExtract|0|PrepBehaviourRiskExtract|31|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+																join kenyaemr_etl.etl_default_facility_info i"|TempPrepBehaviourRiskExtract|0|PrepBehaviourRiskExtract|31|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 8265201a-9db2-11eb-a8b3-0242ac130003|Prep Visit|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                              as PatientPK,
 																		i.siteCode                                                as SiteCode,
 																		d.unique_prep_number                                      as PrepNumber,
@@ -6920,7 +6920,7 @@ group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-
 																				left join kenyaemr_etl.etl_patient_triage t on f.patient_id = t.patient_id and f.visit_date = t.visit_date
 																				inner join kenyaemr_etl.etl_prep_enrolment e on f.patient_id = e.patient_id
 																				inner join kenyaemr_etl.etl_patient_demographics d on e.patient_id = d.patient_id
-																				join kenyaemr_etl.etl_default_facility_info i;"|TempPrepVisitExtract|0|PrepVisitExtract|32|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+																				join kenyaemr_etl.etl_default_facility_info i"|TempPrepVisitExtract|0|PrepVisitExtract|32|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 8265213c-9db2-11eb-a8b3-0242ac130003|Prep Labs|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId,
 																								d.unique_prep_number as PrepNumber, d.patient_id as PatientPK,
 																								 d.openmrs_id as HtsNumber,l.encounter_id as VisitID,
@@ -6951,7 +6951,7 @@ group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-
 											join kenyaemr_etl.etl_default_facility_info i
 											join (select p.patient_id from kenyaemr_etl.etl_prep_enrolment p)p on l.patient_id = p.patient_id
 											left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
-                                      and cn2.locale='en' where p.patient_id is not null;"|TempPrepLabExtract|0|PrepLabExtract|33|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                                      and cn2.locale='en' where p.patient_id is not null"|TempPrepLabExtract|0|PrepLabExtract|33|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82652272-9db2-11eb-a8b3-0242ac130003|Prep Pharmacy|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                as PatientPK,
 																								i.siteCode                  as SiteCode,
 																								d.unique_prep_number        as PrepNumber,
@@ -6968,7 +6968,7 @@ group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-
 																	from kenyaemr_etl.etl_prep_followup f
 																										join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id
 																										join kenyaemr_etl.etl_default_facility_info i
-																	where f.prescribed_PrEP = 'Yes';"|TempPrepPharmacyExtract|0|PrepPharmacyExtract|34|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+																	where f.prescribed_PrEP = 'Yes'"|TempPrepPharmacyExtract|0|PrepPharmacyExtract|34|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82652358-9db2-11eb-a8b3-0242ac130003|Prep Adverse Events|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                 as PatientPK,
 														s.siteCode                                                   as SiteCode,
 														de.unique_prep_number                                         as PrepNumber,
@@ -7076,7 +7076,7 @@ group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-
 																join kenyaemr_etl.etl_default_facility_info s
 							where a.form in ('prep-initial','prep-consultation')
 									and (pd.PrEP_disc_patient is null or pd.PrEP_Outcome_date < pe.prep_latest_enrolment_date)
-							group by a.patient_id,a.visit_date;"|TempPrepAdverseEventExtract|0|PrepAdverseEventExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+							group by a.patient_id,a.visit_date"|TempPrepAdverseEventExtract|0|PrepAdverseEventExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82652470-9db2-11eb-a8b3-0242ac130003|Prep Care Termination|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id as PatientPK,
 								i.siteCode as SiteCode,
 								d.unique_prep_number as PrepNumber,
@@ -7089,7 +7089,7 @@ group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-
 																				f.date_last_modified as DateModified
 													from kenyaemr_etl.etl_prep_discontinuation f
 														join kenyaemr_etl.etl_patient_demographics d on d.patient_id = f.patient_id
-						join kenyaemr_etl.etl_default_facility_info i;"|TempPrepCareTerminationExtract|0|PrepCareTerminationExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+						join kenyaemr_etl.etl_default_facility_info i"|TempPrepCareTerminationExtract|0|PrepCareTerminationExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2F8A4A81-FEFB-49BF-AB07-C9F529F6EA13|Client Registry Service|CRS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT dm.patient_id                                                     AS PatientPK,
 														dm.unique_patient_no                                              AS CCCNumber,
 														dm.national_id_no                                                 AS NationalId,
@@ -7193,7 +7193,7 @@ group by e.patient_id;"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-
 																											from kenyaemr_etl.etl_current_in_care ca
 																											where ca.started_on_drugs is not null
 							) cc on cc.patient_id = dm.patient_id
-							group by hiv.patient_id;"|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+							group by hiv.patient_id"|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3F6C522C-BA8C-46FA-8151-CDBA393C392D|Client Registry Service|CRS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 8B29B02B-B508-42EF-8FBE-48E1DB23DD6D|Client Registry Service|CRS|A6221858-0E85-11E8-BA89-0ED5F89F718B|""|CRS|1|ClientRegistryExtract|1.00|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 e5e097ed-ec17-4b51-bd0c-b047a09b8b1f|Client Registry Service|CRS|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_UPI"|CRS|1|ClientRegistryExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B

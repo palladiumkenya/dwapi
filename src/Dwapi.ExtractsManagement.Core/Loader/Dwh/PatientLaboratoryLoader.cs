@@ -88,7 +88,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
 
 
-                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(PatientLaboratoryExtract), 12602));
+                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(PatientLaboratoryExtract), 11936));
 
                 return count;
 

@@ -84,6 +84,8 @@ namespace Dwapi.Controller
             return Ok(dwhExtractsTask);
         }
 
+
+
         // GET: api/DwhExtracts/status/id
         [HttpGet("status/{id}")]
         public IActionResult GetStatus(Guid id)
