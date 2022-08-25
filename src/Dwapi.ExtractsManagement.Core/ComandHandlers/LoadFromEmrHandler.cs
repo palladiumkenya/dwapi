@@ -20,7 +20,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
         public async Task<bool> Handle(LoadFromEmrCommand request, CancellationToken cancellationToken)
         {
             var extractIds = request.Extracts.Select(x => x.Extract.Id).ToList();
-
+           
             await _mediator.Send(new ClearAllExtracts(extractIds), cancellationToken);
 
 
@@ -66,7 +66,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var patientArtCommand = new ExtractPatientArt()
                 {
                     Extract = patientArtProfile?.Extract,
-                    DatabaseProtocol = patientArtProfile?.DatabaseProtocol
+                    DatabaseProtocol = patientArtProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts1.Add(_mediator.Send(patientArtCommand, cancellationToken));
             }
@@ -79,7 +80,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var patientBaselinesCommand = new ExtractPatientBaselines()
                 {
                     Extract = patientBaselinesProfile?.Extract,
-                    DatabaseProtocol = patientBaselinesProfile?.DatabaseProtocol
+                    DatabaseProtocol = patientBaselinesProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts1.Add( _mediator.Send(patientBaselinesCommand, cancellationToken));
             }
@@ -91,7 +93,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var patientLaboratoryCommand = new ExtractPatientLaboratory()
                 {
                     Extract = patientLaboratoryProfile?.Extract,
-                    DatabaseProtocol = patientLaboratoryProfile?.DatabaseProtocol
+                    DatabaseProtocol = patientLaboratoryProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts1.Add( _mediator.Send(patientLaboratoryCommand, cancellationToken));
             }
@@ -104,7 +107,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var patientPharmacyCommand = new ExtractPatientPharmacy()
                 {
                     Extract = patientPharmacyProfile?.Extract,
-                    DatabaseProtocol = patientPharmacyProfile?.DatabaseProtocol
+                    DatabaseProtocol = patientPharmacyProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts2.Add(_mediator.Send(patientPharmacyCommand, cancellationToken));
             }
@@ -116,7 +120,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var patientStatusCommand = new ExtractPatientStatus()
                 {
                     Extract = patientStatusProfile?.Extract,
-                    DatabaseProtocol = patientStatusProfile?.DatabaseProtocol
+                    DatabaseProtocol = patientStatusProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts2.Add( _mediator.Send(patientStatusCommand, cancellationToken));
             }
@@ -128,7 +133,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var patientVisitCommand = new ExtractPatientVisit()
                 {
                     Extract = patientVisitProfile?.Extract,
-                    DatabaseProtocol = patientVisitProfile?.DatabaseProtocol
+                    DatabaseProtocol = patientVisitProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts2.Add(_mediator.Send(patientVisitCommand, cancellationToken));
             }
@@ -141,7 +147,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var patientAdverseEventCommand = new ExtractPatientAdverseEvent()
                 {
                     Extract = patientAdverseEventProfile?.Extract,
-                    DatabaseProtocol = patientAdverseEventProfile?.DatabaseProtocol
+                    DatabaseProtocol = patientAdverseEventProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts3.Add( _mediator.Send(patientAdverseEventCommand, cancellationToken));
             }
@@ -155,7 +162,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var allergiesChronicIllnessCommand = new ExtractAllergiesChronicIllness()
                 {
                     Extract = allergiesChronicIllnessProfile?.Extract,
-                    DatabaseProtocol = allergiesChronicIllnessProfile?.DatabaseProtocol
+                    DatabaseProtocol = allergiesChronicIllnessProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts3.Add(_mediator.Send(allergiesChronicIllnessCommand, cancellationToken));
             }
@@ -167,7 +175,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var contactListingCommand = new ExtractContactListing()
                 {
                     Extract = contactListingProfile?.Extract,
-                    DatabaseProtocol = contactListingProfile?.DatabaseProtocol
+                    DatabaseProtocol = contactListingProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts3.Add(_mediator.Send(contactListingCommand, cancellationToken));
             }
@@ -180,7 +189,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var depressionScreeningCommand = new ExtractDepressionScreening()
                 {
                     Extract = depressionScreeningProfile?.Extract,
-                    DatabaseProtocol = depressionScreeningProfile?.DatabaseProtocol
+                    DatabaseProtocol = depressionScreeningProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts4.Add( _mediator.Send(depressionScreeningCommand, cancellationToken));
             }
@@ -193,7 +203,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var drugAlcoholScreeningCommand = new ExtractDrugAlcoholScreening()
                 {
                     Extract = drugAlcoholScreeningProfile?.Extract,
-                    DatabaseProtocol = drugAlcoholScreeningProfile?.DatabaseProtocol
+                    DatabaseProtocol = drugAlcoholScreeningProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts4.Add( _mediator.Send(drugAlcoholScreeningCommand, cancellationToken));
             }
@@ -206,7 +217,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var enhancedAdherenceCounsellingCommand = new ExtractEnhancedAdherenceCounselling()
                 {
                     Extract = enhancedAdherenceCounsellingProfile?.Extract,
-                    DatabaseProtocol = enhancedAdherenceCounsellingProfile?.DatabaseProtocol
+                    DatabaseProtocol = enhancedAdherenceCounsellingProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts4.Add(_mediator.Send(enhancedAdherenceCounsellingCommand, cancellationToken));
             }
@@ -218,7 +230,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var gbvScreeningCommand = new ExtractGbvScreening()
                 {
                     Extract = gbvScreeningProfile?.Extract,
-                    DatabaseProtocol = gbvScreeningProfile?.DatabaseProtocol
+                    DatabaseProtocol = gbvScreeningProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts5.Add( _mediator.Send(gbvScreeningCommand, cancellationToken));
             }
@@ -230,7 +243,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var iptCommand = new ExtractIpt()
                 {
                     Extract = iptProfile?.Extract,
-                    DatabaseProtocol = iptProfile?.DatabaseProtocol
+                    DatabaseProtocol = iptProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts5.Add( _mediator.Send(iptCommand, cancellationToken));
             }
@@ -243,7 +257,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var otzCommand = new ExtractOtz()
                 {
                     Extract = otzProfile?.Extract,
-                    DatabaseProtocol = otzProfile?.DatabaseProtocol
+                    DatabaseProtocol = otzProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts5.Add(_mediator.Send(otzCommand, cancellationToken));
             }
@@ -255,7 +270,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var ovcCommand = new ExtractOvc()
                 {
                     Extract = ovcProfile?.Extract,
-                    DatabaseProtocol = ovcProfile?.DatabaseProtocol
+                    DatabaseProtocol = ovcProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts6.Add( _mediator.Send(ovcCommand, cancellationToken));
             }
@@ -267,7 +283,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var covidCommand = new ExtractCovid()
                 {
                     Extract = covidProfile?.Extract,
-                    DatabaseProtocol = covidProfile?.DatabaseProtocol
+                    DatabaseProtocol = covidProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts7.Add( _mediator.Send(covidCommand, cancellationToken));
             }
@@ -279,7 +296,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 var defaulterTracingCommand = new ExtractDefaulterTracing()
                 {
                     Extract = defaulterTracingProfile?.Extract,
-                    DatabaseProtocol = defaulterTracingProfile?.DatabaseProtocol
+                    DatabaseProtocol = defaulterTracingProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
                 ts8.Add( _mediator.Send(defaulterTracingCommand, cancellationToken));
             }

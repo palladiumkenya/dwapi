@@ -40,6 +40,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         {
             // Get current site and docket dates,
             int found;
+            var loadChangesOnly = request.LoadChangesOnly;
             var difflog = _diffLogRepository.GetLog("NDWH", "PatientVisitExtract");
 
             if (request.DatabaseProtocol.SupportsDifferential)
@@ -47,7 +48,10 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
                 if(null==difflog)
                     found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
                 else
-                    found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    if (true == loadChangesOnly)
+                        found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    else
+                        found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
             }
             else
             {

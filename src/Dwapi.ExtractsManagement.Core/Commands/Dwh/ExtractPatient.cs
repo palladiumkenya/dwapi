@@ -7,6 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Commands.Dwh
     {
         public DbExtract Extract { get; set; }
         public DbProtocol DatabaseProtocol { get; set; }
+        public bool LoadChangesOnly { get; set; }
 
         public bool IsValid()
         {

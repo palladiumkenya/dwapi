@@ -42,6 +42,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             // Differential loading
             // Get current site and docket dates,
             int found;
+            var loadChangesOnly = request.LoadChangesOnly;
             var difflog = _diffLogRepository.GetLog("NDWH", "PatientAdverseEventExtract");
 
             if (request.DatabaseProtocol.SupportsDifferential)
@@ -49,7 +50,10 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
                 if(null==difflog)
                     found  = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
                 else
-                    found  = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    if (true == loadChangesOnly)
+                        found  = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    else
+                        found  = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
             }
             else
             {

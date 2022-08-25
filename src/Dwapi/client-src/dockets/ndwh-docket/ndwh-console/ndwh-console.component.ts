@@ -74,6 +74,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public sending: boolean = false;
     public sendingManifest: boolean = false;
 
+
     public errorMessage: Message[];
     public otherMessage: Message[];
     public notifications: Message[];
@@ -162,12 +163,13 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.loadingData = false;
     }
 
-    public loadFromEmr(): void {
+    public loadFromEmr(loadChangesOnly): void {
+
         this.canSend = this.canLoadFromEmr = false;
         localStorage.clear();
         this.errorMessage = [];
         this.load$ = this._ndwhExtractService
-            .extractAll(this.generateExtractsLoadCommand(this.emr))
+            .extractAll(this.generateExtractsLoadCommand(this.emr,loadChangesOnly))
             .subscribe(
                 p => {
                 },
@@ -729,9 +731,10 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         return this.loadExtractsCommand;
     }
 
-    private generateExtractsLoadCommand(currentEmr: EmrSystem): LoadExtracts {
+    private generateExtractsLoadCommand(currentEmr: EmrSystem,load: boolean): LoadExtracts {
 
         this.extractLoadCommand = {
+            loadChangesOnly:load,
             extracts: this.generateExtractProfiles(currentEmr)
         };
 

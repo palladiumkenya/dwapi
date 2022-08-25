@@ -41,6 +41,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             // differential loading
             // Get current site and docket dates,
             int found;
+            
+            var loadChangesOnly = request.LoadChangesOnly;
             var difflog = _diffLogRepository.GetLog("NDWH", "AllergiesChronicIllnessExtract");
 
             if (request.DatabaseProtocol.SupportsDifferential)
@@ -48,7 +50,10 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
                 if(null==difflog)
                     found  = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
                 else
-                    found  = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    if (true == loadChangesOnly)
+                        found  = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    else
+                        found  = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
             }
             else
             {
