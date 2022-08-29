@@ -11,5 +11,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff
         DiffLog InitLog(string docket, string extract, int siteCode);
         void SaveLog(DiffLog diffLog);
         DiffLog GenerateDiff(string docket, string extract, int siteCode);
+        // DiffLog GetIfHasBeenSentBeforeLog(string docket);
     }
 }

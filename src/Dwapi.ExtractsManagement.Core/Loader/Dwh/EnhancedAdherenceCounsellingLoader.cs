@@ -96,7 +96,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 }
 
                 await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(EnhancedAdherenceCounsellingExtract),
-                    11936));
+                    10639));
 
                 return count;
             }

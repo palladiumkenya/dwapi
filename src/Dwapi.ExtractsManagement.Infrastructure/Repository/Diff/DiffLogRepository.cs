@@ -23,6 +23,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
                 x.Docket.ToLower() == docket.ToLower()
                 && x.Extract.ToLower() == extract.ToLower());
         }
+        // public DiffLog GetIfHasBeenSentBeforeLog(string docket)
+        // {
+        //     return Get(x =>
+        //         x.Docket.ToLower() == docket.ToLower() &&
+        //         x.LastSent == null);
+        // }
 
         public DiffLog InitLog(string docket, string extract, int siteCode)
         {
