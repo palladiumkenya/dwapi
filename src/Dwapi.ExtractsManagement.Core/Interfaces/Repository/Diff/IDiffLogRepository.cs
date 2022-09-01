@@ -13,5 +13,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff
         DiffLog GenerateDiff(string docket, string extract, int siteCode);
         DiffLog GetIfHasBeenSentBeforeLog(string docket);
         void UpdateExtractsSentStatus(string docket, string extract, bool status);
+        DiffLog GetIfChangesHasBeenLoadedAlreadyLog(string docket, string extract);
+
     }
 }

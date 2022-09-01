@@ -51,6 +51,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 query.Append($" INNER JOIN PatientExtracts p ON ");
                 query.Append($" s.PatientPK = p.PatientPK AND ");
                 query.Append($" s.SiteCode = p.SiteCode ");
+                
+                var sitecode = _tempAllergiesChronicIllnessExtractRepository.GetSiteCode(query.ToString());
 
                 const int take = 1000;
                 var eCount = await  _tempAllergiesChronicIllnessExtractRepository.GetCount(query.ToString());
@@ -86,7 +88,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                             nameof(ExtractStatus.Loading),
                             found, count , 0, 0, 0)));
                 }
-                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(AllergiesChronicIllnessExtract), 10639));
+
+                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(AllergiesChronicIllnessExtract), 11851));
 
                 return count;
             }

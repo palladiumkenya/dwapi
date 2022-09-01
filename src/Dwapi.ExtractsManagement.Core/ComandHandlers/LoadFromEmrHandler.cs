@@ -1,26 +1,54 @@
-﻿using Dwapi.ExtractsManagement.Core.Commands;
+﻿using System;
+using Dwapi.ExtractsManagement.Core.Commands;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 {
     public class LoadFromEmrHandler : IRequestHandler<LoadFromEmrCommand, bool>
     {
         private IMediator _mediator;
+        private readonly IDiffLogRepository _diffLogRepository;
 
-        public LoadFromEmrHandler(IMediator mediator)
+        public LoadFromEmrHandler(IMediator mediator, IDiffLogRepository diffLogRepository)
         {
             _mediator = mediator;
+            _diffLogRepository = diffLogRepository;
         }
 
         public async Task<bool> Handle(LoadFromEmrCommand request, CancellationToken cancellationToken)
         {
             var extractIds = request.Extracts.Select(x => x.Extract.Id).ToList();
-           
+            if (true == request.LoadChangesOnly)
+            {
+                var difflog = _diffLogRepository.GetIfChangesHasBeenLoadedAlreadyLog("NDWH", "PatientExtract");
+                
+                try
+                {
+                    if (null != difflog)
+                    {
+                        // throw error
+                        throw new Exception(" Send Changes Loaded first before attempting to load again.");
+                    }
+                }
+                catch (Exception e)
+                {
+                    // Log.Error("Error loading changes again");
+                    // throw;
+                    var msg = $"Error loading changes again - {e.Message}";
+                    Log.Error(e, msg);
+                    throw;
+                }
+            }
+            
+            // clear all extracts
             await _mediator.Send(new ClearAllExtracts(extractIds), cancellationToken);
 
 

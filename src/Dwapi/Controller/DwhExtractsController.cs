@@ -60,30 +60,38 @@ namespace Dwapi.Controller
         }
 
         [HttpPost("extractAll")]
-        public async Task<IActionResult> Load([FromBody]LoadExtracts request)
+        public async Task<IActionResult> Load([FromBody] LoadExtracts request)
         {
-            if(!request.IsValid())
+            if (!request.IsValid())
                 return BadRequest();
 
             string version = GetType().Assembly.GetName().Version.ToString();
             // update LoadChangesOnly to value passed from loadFromEmr() command
 
-
-            if (!request.LoadMpi)
+            try
             {
-                var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
+                if (!request.LoadMpi)
+                {
+                    var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
 
-                await _mediator.Publish(new ExtractLoaded("CareTreatment", version, request.EmrSetup));
+                    await _mediator.Publish(new ExtractLoaded("CareTreatment", version, request.EmrSetup));
 
-                return Ok(result);
+                    return Ok(result);
+                }
+
+                var dwhExtractsTask =
+                    Task.Run(() => _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted));
+                var mpiExtractsTask = Task.Run(() => _mediator.Send(request.ExtractMpi, HttpContext.RequestAborted));
+                var extractTasks = new List<Task<bool>> {mpiExtractsTask, dwhExtractsTask};
+                // wait for both tasks but doesn't throw an error for mpi load
+                var result1 = await Task.WhenAll(extractTasks);
+                return Ok(dwhExtractsTask);
+            } catch (Exception e)
+            {
+                var msg = $"Error Loading Extracts --> {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
             }
-
-            var dwhExtractsTask = Task.Run(() => _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted));
-            var mpiExtractsTask = Task.Run(() => _mediator.Send(request.ExtractMpi, HttpContext.RequestAborted));
-            var extractTasks = new List<Task<bool>> { mpiExtractsTask, dwhExtractsTask};
-            // wait for both tasks but doesn't throw an error for mpi load
-            var result1 = await Task.WhenAll(extractTasks);
-            return Ok(dwhExtractsTask);
         }
 
 
