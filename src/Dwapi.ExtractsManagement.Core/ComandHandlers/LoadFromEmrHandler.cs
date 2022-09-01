@@ -29,20 +29,25 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             if (true == request.LoadChangesOnly)
             {
                 var difflog = _diffLogRepository.GetIfChangesHasBeenLoadedAlreadyLog("NDWH", "PatientExtract");
-                
+                var difflogLastSent = _diffLogRepository.GetIfHasBeenSentBeforeLog("NDWH","PatientExtract");
+
                 try
                 {
                     if (null != difflog)
                     {
                         // throw error
-                        throw new Exception(" Send Changes Loaded first before attempting to load again.");
+                        throw new Exception("Send Changes Loaded first before attempting to load again.");
+                    }
+                    if (null != difflogLastSent)
+                    {
+                        // throw error
+                        throw new Exception("Loading changes from EMR and sending is not allowed without sending the complete records first. " +
+                                            "Please Send Extracts then attempt to load changes");
                     }
                 }
                 catch (Exception e)
                 {
-                    // Log.Error("Error loading changes again");
-                    // throw;
-                    var msg = $"Error loading changes again - {e.Message}";
+                    var msg = $"Error loading changes - {e.Message}";
                     Log.Error(e, msg);
                     throw;
                 }

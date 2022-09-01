@@ -64,30 +64,11 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         public Task<List<SendDhwManifestResponse>> SendSmartManifestAsync(SendManifestPackageDTO sendTo,string version,string apiVersion="")
         {
-            var difflog = _diffLogRepository.GetIfHasBeenSentBeforeLog("NDWH");
-            try{
-                if (null != difflog)
-                    {
-                        // throw error
-                        throw new Exception(" ---> Loading changes from EMR and sending is not allowed without sending the complete records first. " +
-                                            "Please Load All from EMR and send then attempt to send changes");
-                }
-            }
-            catch (Exception e)
-            {
-                // Log.Error("Error loading changes again");
-                // throw;
-                var msg = $"Error loading changes again - {e.Message}";
-                Log.Error(e, msg);
-                throw;
-            }
             var response = SendSmartManifestAsync(sendTo,
                 DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()), version,
                 apiVersion);
             return response;
-            // return SendSmartManifestAsync(sendTo,
-            //     DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()), version,
-            //     apiVersion);
+            
         }
 
         public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,

@@ -197,6 +197,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         severity: 'success',
                         summary: 'load was successful '
                     });
+
+                    this.notifications.push({
+                        severity: 'success',
+                        summary: 'load was successful '
+                    });
+
                     this.updateEvent();
                     this.loadMet();
                 }
