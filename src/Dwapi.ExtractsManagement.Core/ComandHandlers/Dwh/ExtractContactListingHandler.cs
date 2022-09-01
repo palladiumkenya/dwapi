@@ -44,22 +44,32 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             
             var loadChangesOnly = request.LoadChangesOnly;
             var difflog = _diffLogRepository.GetLog("NDWH", "ContactListingExtract");
-
+            var changesLoadedStatus= false;
+            
             if (request.DatabaseProtocol.SupportsDifferential)
             {
                 if(null==difflog)
                     found  = await _ContactListingSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
                 else
                     if (true == loadChangesOnly)
-                        found  = await _ContactListingSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    {
+                        changesLoadedStatus = true;
+                        found = await _ContactListingSourceExtractor.Extract(request.Extract,
+                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                    }
                     else
+                    {
                         found  = await _ContactListingSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+                    }
             }
             else
             {
                 found  = await _ContactListingSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
             }
-            //Extract
+            //update status
+            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "ContactListingExtract", changesLoadedStatus);
+
             
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(ContactListingExtract), $"{nameof(TempContactListingExtract)}s");

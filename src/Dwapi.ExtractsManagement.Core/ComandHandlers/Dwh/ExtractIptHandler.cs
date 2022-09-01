@@ -43,22 +43,31 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             int found;
             var loadChangesOnly = request.LoadChangesOnly;
             var difflog = _diffLogRepository.GetLog("NDWH", "IptExtract");
-
+            var changesLoadedStatus = false;
             if (request.DatabaseProtocol.SupportsDifferential)
             {
                 if(null==difflog)
                     found  = await _IptSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
                 else
                     if (true == loadChangesOnly)
-                        found  = await _IptSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    {
+                        changesLoadedStatus = true;
+                        found = await _IptSourceExtractor.Extract(request.Extract,
+                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                    }
                     else
+                    {
                         found  = await _IptSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+                    }
             }
             else
             {
                 found  = await _IptSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
             }
-            //Extract
+            //update changes
+            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "IptExtract", changesLoadedStatus);
+
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(IptExtract), $"{nameof(TempIptExtract)}s");

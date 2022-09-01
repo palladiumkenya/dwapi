@@ -43,6 +43,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             int found;
             var loadChangesOnly = request.LoadChangesOnly;
             var difflog = _diffLogRepository.GetLog("NDWH", "GbvScreeningExtract");
+            var changesLoadedStatus= false;
 
             if (request.DatabaseProtocol.SupportsDifferential)
             {
@@ -50,15 +51,25 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
                     found  = await _GbvScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
                 else
                     if (true == loadChangesOnly)
-                        found  = await _GbvScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    {
+                        changesLoadedStatus = true;
+                        found = await _GbvScreeningSourceExtractor.Extract(request.Extract,
+                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                    }
                     else
+                    {
                         found  = await _GbvScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+                    }
+                
             }
             else
             {
                 found  = await _GbvScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
             }
-            //Extract
+            //update status
+            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "GbvScreeningExtract", changesLoadedStatus);
+
             
 
             //Validate

@@ -43,6 +43,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             int found;
             var loadChangesOnly = request.LoadChangesOnly;
             var difflog = _diffLogRepository.GetLog("NDWH", "PatientStatusExtract");
+            var changesLoadedStatus= false;
 
             if (request.DatabaseProtocol.SupportsDifferential)
             {
@@ -50,15 +51,24 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
                     found  = await _patientStatusSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
                 else
                     if (true == loadChangesOnly)
-                        found  = await _patientStatusSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    {
+                        changesLoadedStatus = true;
+                        found = await _patientStatusSourceExtractor.Extract(request.Extract,
+                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                    }
                     else
+                    {
                         found  = await _patientStatusSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+                    }
             }
             else
             {
                 found  = await _patientStatusSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
             }
-            //Extract
+            //update status
+            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "PatientStatusExtract", changesLoadedStatus);
+
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientStatusExtract), $"{nameof(TempPatientStatusExtract)}s");

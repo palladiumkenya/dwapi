@@ -32,7 +32,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 {
                     //todo check if extracts from all emrs are loaded
                     Extract = patientProfile.Extract,
-                    DatabaseProtocol = patientProfile.DatabaseProtocol
+                    DatabaseProtocol = patientProfile.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
                 };
 
                 var result = await _mediator.Send(extractPatient, cancellationToken);

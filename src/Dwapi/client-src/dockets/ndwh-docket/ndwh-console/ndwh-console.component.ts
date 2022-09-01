@@ -78,6 +78,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public errorMessage: Message[];
     public otherMessage: Message[];
     public notifications: Message[];
+    public warningMessage: Message[];
     private _extractDbProtocol: ExtractDatabaseProtocol;
     private _extractDbProtocols: ExtractDatabaseProtocol[];
     private extractLoadCommand: LoadFromEmrCommand;
@@ -168,6 +169,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.canSend = this.canLoadFromEmr = false;
         localStorage.clear();
         this.errorMessage = [];
+        this.notifications = [];
         this.load$ = this._ndwhExtractService
             .extractAll(this.generateExtractsLoadCommand(this.emr,loadChangesOnly))
             .subscribe(
@@ -181,6 +183,13 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         summary: 'Error loading from EMR',
                         detail: <any>e
                     });
+                    this.notifications = [];
+                    this.notifications.push({
+                        severity: 'error',
+                        summary: 'Error loading from EMR',
+                        detail: <any>e
+                    });
+
                 },
                 () => {
                     this.canSend = this.canLoadFromEmr = true;

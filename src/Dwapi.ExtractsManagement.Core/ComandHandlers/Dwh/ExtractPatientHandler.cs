@@ -7,6 +7,7 @@ using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
@@ -28,8 +29,9 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IClearDwhExtracts _clearDwhExtracts;
         private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
 
-        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts, ITempPatientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts, ITempPatientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
@@ -37,13 +39,17 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             _clearDwhExtracts = clearDwhExtracts;
             _tempPatientExtractRepository = tempPatientExtractRepository;
             _extractHistoryRepository = extractHistoryRepository;
+            _diffLogRepository = diffLogRepository;
         }
 
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
         {
-
+            var loadChangesOnly = request.LoadChangesOnly;
+           
             //Extract
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "PatientExtract", loadChangesOnly);
+
 
             //Check for duplicate patients
             var patientKeys = _tempPatientExtractRepository.GetAll().Select(k => k.PatientPK);

@@ -86,7 +86,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(PrepBehaviourRiskExtract), 10639));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(PrepBehaviourRiskExtract), 11851));
 
                 return count;
             }

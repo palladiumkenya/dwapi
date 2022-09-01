@@ -23,12 +23,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
                 x.Docket.ToLower() == docket.ToLower()
                 && x.Extract.ToLower() == extract.ToLower());
         }
-        // public DiffLog GetIfHasBeenSentBeforeLog(string docket)
-        // {
-        //     return Get(x =>
-        //         x.Docket.ToLower() == docket.ToLower() &&
-        //         x.LastSent == null);
-        // }
+        public DiffLog GetIfHasBeenSentBeforeLog(string docket)
+        {
+            return Get(x =>
+                x.Docket.ToLower() == docket.ToLower() &&
+                x.LastSent == null && x.ChangesLoaded==true);
+        }
 
         public DiffLog InitLog(string docket, string extract, int siteCode)
         {
@@ -45,6 +45,21 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
             }
 
             return diffLog;
+        }
+        
+        public void UpdateExtractsSentStatus(string docket, string extract, bool status)
+        {
+            var diffLog = Get(x =>
+                x.Docket.ToLower() == docket.ToLower() &&
+                x.Extract.ToLower() == extract.ToLower() );
+
+            if (null != diffLog)
+            {
+                diffLog.ChangesLoaded = status;
+                diffLog.ExtractsSent = false;
+                SaveChanges();
+                Context.Database.GetDbConnection().BulkMerge(diffLog);
+            }
         }
 
         public void SaveLog(DiffLog diffLog)

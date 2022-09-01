@@ -15,6 +15,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Diff
         public DateTime? MaxModified { get; set; }
         public DateTime? LastSent { get; set; }
         public int SiteCode { get; set; }
+        public bool ChangesLoaded { get; set; }
+        public bool ExtractsSent { get; set; }
         public DiffLog()
         {
 
@@ -44,6 +46,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Diff
             LastSent = DateTime.Now;
             LastCreated = MaxCreated;
             LastModified = MaxModified;
+            ExtractsSent = true;
         }
 
         public bool CanUseDiff()

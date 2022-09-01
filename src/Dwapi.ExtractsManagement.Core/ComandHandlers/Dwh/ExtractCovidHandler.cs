@@ -43,6 +43,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             
             var loadChangesOnly = request.LoadChangesOnly;
             var difflog = _diffLogRepository.GetLog("NDWH", "CovidExtract");
+            var changesLoadedStatus= false;
 
             if (request.DatabaseProtocol.SupportsDifferential)
             {
@@ -50,15 +51,24 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
                     found  = await _CovidSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
                 else
                     if (true == loadChangesOnly)
-                        found  = await _CovidSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                    {
+                        changesLoadedStatus = true;
+                        found = await _CovidSourceExtractor.Extract(request.Extract,
+                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                    }
                     else
+                    {
                         found  = await _CovidSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+                    }
             }
             else
             {
                 found  = await _CovidSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
             }
-            //Extract
+            //update status
+            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "CovidExtract", changesLoadedStatus);
+
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(CovidExtract), $"{nameof(TempCovidExtract)}s");

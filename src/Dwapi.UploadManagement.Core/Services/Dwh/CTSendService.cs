@@ -64,22 +64,22 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         public Task<List<SendDhwManifestResponse>> SendSmartManifestAsync(SendManifestPackageDTO sendTo,string version,string apiVersion="")
         {
-            // var difflog = _diffLogRepository.GetIfHasBeenSentBeforeLog("NDWH");
-            // if (null == difflog)
-            // {
-            //     // throw error
-            //     throw new Exception(" ---> When loading for the first time, please send those extracts. " +
-            //                         "Loading changes from EMR and sending is not allowed without sending the complete records first. " +
-            //                         "Please Load All from EMR and send");
-            // }
-            //
-            // var response = SendSmartManifestAsync(sendTo,
-            //     DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()), version,
-            //     apiVersion);
-            // return response;
-            return SendSmartManifestAsync(sendTo,
+            var difflog = _diffLogRepository.GetIfHasBeenSentBeforeLog("NDWH");
+            if (null != difflog)
+            {
+                // throw error
+                throw new Exception(" ---> When loading for the first time, please send those extracts. " +
+                                    "Loading changes from EMR and sending is not allowed without sending the complete records first. " +
+                                    "Please Load All from EMR and send");
+            }
+            
+            var response = SendSmartManifestAsync(sendTo,
                 DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()), version,
                 apiVersion);
+            return response;
+            // return SendSmartManifestAsync(sendTo,
+            //     DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()), version,
+            //     apiVersion);
         }
 
         public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,
