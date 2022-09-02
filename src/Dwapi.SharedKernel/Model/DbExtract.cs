@@ -81,7 +81,7 @@ namespace Dwapi.SharedKernel.Model
         
         public string GetDiffSQL(DateTime? maxCreated, DateTime? maxModified, int siteCode)
         {
-            return $@"select * from ({ExtractSql.ToLower()})xt where xt.Date_Created > '{maxCreated:u}' or xt.Date_Last_Modified > '{maxModified:u}' and xt.SiteCode={siteCode}".ToLower();
+            return $@"select * from ({ExtractSql.ToLower()})xt where (xt.Date_Created > '{maxCreated:u}' or xt.Date_Last_Modified > '{maxModified:u}') and xt.SiteCode={siteCode}".ToLower();
         }
 
         public void SetupDiffSql(DbProtocol dbProtocol)

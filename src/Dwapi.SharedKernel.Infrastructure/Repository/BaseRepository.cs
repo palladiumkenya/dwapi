@@ -334,9 +334,9 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             return mapping.TableName;
         }
 
-        public List<T> GetSiteCode(string sql)
+        public Task<int> GetSiteCode(string sql)
         {
-            return DbSet.AsNoTracking().FromSql(sql).ToList();
+            return DbSet.AsNoTracking().Select(x => x.Id).CountAsync();
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             //Extract
             int found = await _patientSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "PatientExtract", loadChangesOnly);
-
+            // int getsitecode = _extractHistoryRepository.GetSiteCode(request.Extract.MainName);
 
             //Check for duplicate patients
             var patientKeys = _tempPatientExtractRepository.GetAll().Select(k => k.PatientPK);

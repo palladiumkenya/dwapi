@@ -22,5 +22,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
         int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract,bool checkDb=true);
         int ProcessRejected(Guid extractId,int rejectedCount,DbExtract extract,bool checkDb=true);
         int ProcessExcluded(Guid extractId,int rejectedCount,int excludedCount);
+        int GetSiteCode(string tempTableName);
     }
 }
