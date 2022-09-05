@@ -36,6 +36,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
                 x.Docket.ToLower() == docket.ToLower() && x.Extract.ToLower() == extract.ToLower() &&
                 x.ExtractsSent == false && x.ChangesLoaded==true);
         }
+        
+        public DiffLog GetIfLoadedAllLog(string docket, string extract)
+        {
+            return Get(x =>
+                x.Docket.ToLower() == docket.ToLower() && x.Extract.ToLower() == extract.ToLower() &&
+                x.ExtractsSent == false && x.ChangesLoaded==false);
+        }
 
         public DiffLog InitLog(string docket, string extract, int siteCode)
         {

@@ -14,6 +14,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff
         DiffLog GetIfHasBeenSentBeforeLog(string docket, string extract);
         void UpdateExtractsSentStatus(string docket, string extract, bool status);
         DiffLog GetIfChangesHasBeenLoadedAlreadyLog(string docket, string extract);
+        DiffLog GetIfLoadedAllLog(string docket, string extract);
 
     }
 }
