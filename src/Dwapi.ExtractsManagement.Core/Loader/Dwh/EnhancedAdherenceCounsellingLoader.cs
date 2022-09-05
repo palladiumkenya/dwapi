@@ -62,6 +62,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 var eCount = await _tempEnhancedAdherenceCounsellingExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempEnhancedAdherenceCounsellingExtractRepository.PageCount(take, eCount);
 
+                int extractssitecode = (int) _tempEnhancedAdherenceCounsellingExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+
                 int page = 1;
                 while (page <= pageCount)
                 {
@@ -96,7 +98,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 }
 
                 await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(EnhancedAdherenceCounsellingExtract),
-                    13812));
+                    extractssitecode));
 
                 return count;
             }

@@ -42,7 +42,7 @@ namespace Dwapi.SharedKernel.Interfaces
        int PageCount(int batchSize, long totalRecords);
        Task<IEnumerable<T>> ReadAll( string sql, int pageNumber, int pageSize);
        string GetTableName();
-       Task<int> GetSiteCode(string sql);
+       T GetSiteCode(string sql);
 
     }
 }

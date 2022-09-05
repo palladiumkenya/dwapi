@@ -54,6 +54,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                 const int take = 1000;
                 var eCount = await  _tempCwcEnrolmentExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempCwcEnrolmentExtractRepository.PageCount(take, eCount);
+                
+                int extractssitecode = (int) _tempCwcEnrolmentExtractRepository.GetSiteCode(query.ToString()).SiteCode;
 
                 int page = 1;
                 while (page <= pageCount)
@@ -86,7 +88,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(CwcEnrolmentExtract), 13812));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(CwcEnrolmentExtract), extractssitecode));
 
                 return count;
             }

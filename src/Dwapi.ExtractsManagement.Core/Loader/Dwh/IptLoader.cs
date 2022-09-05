@@ -56,6 +56,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 var eCount = await  _tempIptExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempIptExtractRepository.PageCount(take, eCount);
 
+                int extractssitecode = (int) _tempIptExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+
                 int page = 1;
                 while (page <= pageCount)
                 {
@@ -86,7 +88,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(IptExtract), 13812));
+                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(IptExtract), extractssitecode));
 
                 return count;
             }

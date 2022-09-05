@@ -46,7 +46,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
                 const int take = 500;
                 var eCount = await _tempPatientPrepExtractRepository.GetCleanCount();
                 var pageCount = _tempPatientPrepExtractRepository.PageCount(take, eCount);
-
+                
+                int extractssitecode = _tempPatientPrepExtractRepository.GetSiteCode();
+                
                 int page = 1;
                 while (page <= pageCount)
                 {
@@ -77,7 +79,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
                             found, count, 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(PatientPrepExtract), 13812));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(PatientPrepExtract), extractssitecode));
 
                 return count;
             }

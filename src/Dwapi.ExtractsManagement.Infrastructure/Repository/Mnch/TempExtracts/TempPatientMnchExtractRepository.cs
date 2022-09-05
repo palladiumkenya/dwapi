@@ -125,7 +125,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.TempExtracts
                 .Select(x => x.Id)
                 .CountAsync();
         }
-
+        public int GetSiteCode()
+        {
+            return (int) DbSet.AsNoTracking()
+                .Where(a => a.ErrorType == 0)
+                .Select(x => x.SiteCode)
+                .ToList().FirstOrDefault();
+        }
+        
         private Task<int> GetSqlCommand(IDbConnection cn, string sql)
         {
             if (cn is SqliteConnection)

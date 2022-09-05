@@ -55,6 +55,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 var eCount = await  _tempPatientPharmacyExtractRepository.GetCount(queryBuilder.ToString());
                 var pageCount = _tempPatientPharmacyExtractRepository.PageCount(take, eCount);
 
+                int extractssitecode = (int) _tempPatientPharmacyExtractRepository.GetSiteCode(queryBuilder.ToString()).SiteCode;
+
                 int page = 1;
                 while (page <= pageCount)
                 {
@@ -86,7 +88,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                             found, count, 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(PatientPharmacyExtract), 13812));
+                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(PatientPharmacyExtract), extractssitecode));
 
                 return count;
             }

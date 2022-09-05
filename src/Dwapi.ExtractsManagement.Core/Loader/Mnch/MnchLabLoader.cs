@@ -55,6 +55,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                 var eCount = await  _tempMnchLabExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempMnchLabExtractRepository.PageCount(take, eCount);
 
+                int extractssitecode = (int) _tempMnchLabExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+
                 int page = 1;
                 while (page <= pageCount)
                 {
@@ -86,7 +88,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(MnchLabExtract), 13812));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(MnchLabExtract), extractssitecode));
 
                 return count;
             }
