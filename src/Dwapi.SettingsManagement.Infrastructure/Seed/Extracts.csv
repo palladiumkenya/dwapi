@@ -551,8 +551,8 @@ having min(hiv.visit_date) is not null
                                                                                                    'KenyaEMR' as Emr,
                                                                                                    'Kenya HMIS II' as Project,
                                                                                                    '' AS LastWaB,NULL AS LastWABDate, 
-                                                                                                  fup.date_created as date_created,	
-                                                                                                  fup.date_last_modified as date_last_modified
+                                                                                                  fup.date_created as Date_Created,	
+                                                                                                  fup.date_last_modified as Date_Last_Modified
                                                                                                   from kenyaemr_etl.etl_patient_hiv_followup fup
                                                                                                   join kenyaemr_etl.etl_patient_demographics d on d.patient_id=fup.patient_id
                                                                                                   join (select e.patient_id,date_add(date_add(min(e.visit_date),interval 3 month), interval 1 day) as enrollment_date,
