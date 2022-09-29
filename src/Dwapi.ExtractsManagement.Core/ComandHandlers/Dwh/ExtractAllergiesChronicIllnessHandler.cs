@@ -1,10 +1,12 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Indicator;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -25,8 +27,9 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IClearDwhExtracts _clearDwhExtracts;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
         private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IIndicatorsRepository _indicatorRepository;
 
-        public ExtractAllergiesChronicIllnessHandler(IAllergiesChronicIllnessSourceExtractor AllergiesChronicIllnessSourceExtractor, IExtractValidator extractValidator, IAllergiesChronicIllnessLoader AllergiesChronicIllnessLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository)
+        public ExtractAllergiesChronicIllnessHandler(IAllergiesChronicIllnessSourceExtractor AllergiesChronicIllnessSourceExtractor, IExtractValidator extractValidator, IAllergiesChronicIllnessLoader AllergiesChronicIllnessLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository, IIndicatorsRepository indicatorRepository)
         {
             _AllergiesChronicIllnessSourceExtractor = AllergiesChronicIllnessSourceExtractor;
             _extractValidator = extractValidator;
@@ -34,10 +37,18 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             _clearDwhExtracts = clearDwhExtracts;
             _extractHistoryRepository = extractHistoryRepository;
             _diffLogRepository = diffLogRepository;
+            _indicatorRepository = indicatorRepository;
         }
 
         public async Task<bool> Handle(ExtractAllergiesChronicIllness request, CancellationToken cancellationToken)
         {
+            var indicator = _indicatorRepository.GetIndicatorValue("EMR_ETL_Refresh");
+            DateTime indicatorDate = DateTime.Parse(indicator.IndicatorValue);
+            DateTime now = DateTime.Now; 
+            if ((now - indicatorDate).TotalDays > 3)
+            {
+                Console.WriteLine();
+            }
             // differential loading
             // Get current site and docket dates,
             int found;
