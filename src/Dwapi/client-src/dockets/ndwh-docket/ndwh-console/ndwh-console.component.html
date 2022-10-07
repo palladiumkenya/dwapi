@@ -1,18 +1,23 @@
 <div class="card card-w-title">
+
     <h1>Care and Treatment <span style="color: lightgray">|</span> {{emrName}} <span
         style="font-size:13px ">{{emrVersion}}</span> <span style="font-size:13px; color: red">{{minEMRVersion}}</span>  </h1>
-    <!--<p-growl [(value)]="notifications"></p-growl>-->
+    <p-growl [(value)]="notifications" showDetail="true" sticky="true" ></p-growl>
     <p-toolbar>
         <div class="ui-toolbar-group-left">
-            <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr()" label="Load from EMR"
+            <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr(false)" label="Load All from EMR"
+                    icon="ui-icon-file-download" class="green-btn"></button>
+        </div>
+        <div class="ui-toolbar-group-left">
+            <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr(true)" label="Load Changes from EMR"
                     icon="ui-icon-file-download" class="green-btn"></button>
         </div>
 
-        <div class="ui-toolbar-group-right" *ngIf="(emrName && emrName === 'KenyaEMR')">
-            <button pButton type="button" [disabled]="!canSend" (click)="sendDiff()" label="Send Changes Only"
-                    icon="ui-icon-cloud-upload"
-                    class="orange-btn"></button>
-        </div>
+<!--        <div class="ui-toolbar-group-right" *ngIf="(emrName && emrName === 'KenyaEMR')">-->
+<!--            <button pButton type="button" [disabled]="!canSend" (click)="sendDiff()" label="Send Changes Only"-->
+<!--                    icon="ui-icon-cloud-upload" -->
+<!--                    class="orange-btn"></button>-->
+<!--        </div>-->
 
         <div class="ui-toolbar-group-right">
             <button pButton type="button"  [disabled]="!canSend" (click)="sendSmart()" label="Send All"

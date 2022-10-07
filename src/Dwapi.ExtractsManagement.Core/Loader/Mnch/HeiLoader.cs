@@ -54,6 +54,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                 const int take = 1000;
                 var eCount = await  _tempHeiExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempHeiExtractRepository.PageCount(take, eCount);
+                
+                int extractssitecode = (int) _tempHeiExtractRepository.GetSiteCode(query.ToString()).SiteCode;
 
                 int page = 1;
                 while (page <= pageCount)
@@ -86,7 +88,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(HeiExtract)));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(HeiExtract), extractssitecode));
 
                 return count;
             }

@@ -8,8 +8,13 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff
     public interface IDiffLogRepository:IRepository<DiffLog,Guid>
     {
         DiffLog GetLog(string docket, string extract);
-        DiffLog InitLog(string docket, string extract);
+        DiffLog InitLog(string docket, string extract, int siteCode);
         void SaveLog(DiffLog diffLog);
-        DiffLog GenerateDiff(string docket, string extract);
+        DiffLog GenerateDiff(string docket, string extract, int siteCode);
+        DiffLog GetIfHasBeenSentBeforeLog(string docket, string extract);
+        void UpdateExtractsSentStatus(string docket, string extract, bool status);
+        DiffLog GetIfChangesHasBeenLoadedAlreadyLog(string docket, string extract);
+        DiffLog GetIfLoadedAllLog(string docket, string extract);
+
     }
 }

@@ -3,14 +3,16 @@ using System;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20220823184452_DiffLogAddedSiteCode")]
+    partial class DiffLogAddedSiteCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4128,13 +4130,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("ChangesLoaded");
-
                     b.Property<string>("Docket");
 
                     b.Property<string>("Extract");
-
-                    b.Property<bool>("ExtractsSent");
 
                     b.Property<DateTime?>("LastCreated");
 

@@ -55,6 +55,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 var eCount = await  _tempPatientAdverseEventExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempPatientAdverseEventExtractRepository.PageCount(take, eCount);
 
+                int extractssitecode = (int) _tempPatientAdverseEventExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+
                 int page = 1;
                 while (page <= pageCount)
                 {
@@ -86,7 +88,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(PatientAdverseEventExtract)));
+                await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(PatientAdverseEventExtract), extractssitecode));
 
                 return count;
             }

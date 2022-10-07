@@ -66,7 +66,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempPatientVisitExtractError> TempPatientVisitExtractError { get; set; }
         public DbSet<TempPatientVisitExtractErrorSummary> TempPatientVisitExtractErrorSummary { get; set; }
         public DbSet<TempPatientAdverseEventExtractError> TempPatientAdverseEventExtractErrors { get; set; }
-
+        
         public DbSet<TempPatientAdverseEventExtractErrorSummary> TempPatientAdverseEventExtractErrorSummaries
         {
             get;
@@ -119,11 +119,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsClientLinkageError> TempHtsClientsLinkageExtractsErrors { get; set; }
         public DbSet<TempHtsPartnerNotificationServicesError> TempHtsPartnerNotificationServicesExtractsErrors { get; set; }
         public DbSet<TempHtsEligibilityExtractError> TempHtsEligibilityExtractErrors { get; set; }
-
+        
         public DbSet<TempHTSClientExtractErrorSummary> TempHtsClientExtractErrorSummaries { get; set; }
         public DbSet<TempHTSClientPartnerExtractErrorSummary> TempHtsClientPartnerExtractErrorSummaries { get; set; }
         public DbSet<TempHTSClientLinkageExtractErrorSummary> TempHtsClientLinkageExtractErrorSummaries { get; set; }
-
+        
         public DbSet<TempHtsClientsErrorSummary> TempHtsClientsExtractsErrorSummaries { get; set; }
         public DbSet<TempHtsClientTestsErrorSummary> TempHtsClientTestsExtractsErrorSummaries { get; set; }
         public DbSet<TempHtsClientTracingErrorSummary> TempHtsClientTracingExtractsErrorSummaries { get; set; }
@@ -179,7 +179,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempDepressionScreeningExtractError> TempDepressionScreeningExtractError { get; set; }
         public DbSet<TempDepressionScreeningExtractErrorSummary> TempDepressionScreeningExtractErrorSummary { get; set; }
         public DbSet<TempContactListingExtractError> TempContactListingExtractError { get; set; }
-        public DbSet<TempContactListingExtractErrorSummary> TempContactListingExtractErrorSummary { get; set; }
+         public DbSet<TempContactListingExtractErrorSummary> TempContactListingExtractErrorSummary { get; set; }
         public DbSet<TempGbvScreeningExtractError> TempGbvScreeningExtractError { get; set; }
         public DbSet<TempGbvScreeningExtractErrorSummary> TempGbvScreeningExtractErrorSummary { get; set; }
         public DbSet<TempEnhancedAdherenceCounsellingExtractError> TempEnhancedAdherenceCounsellingExtractError { get; set; }

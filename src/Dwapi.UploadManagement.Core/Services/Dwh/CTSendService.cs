@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Application.Events;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
@@ -41,16 +42,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private readonly IMediator _mediator;
         private IEmrMetricReader _reader;
         private readonly ITransportLogRepository _transportLogRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
 
         public HttpClient Client { get; set; }
 
-        public CTSendService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository)
+        public CTSendService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository, IDiffLogRepository diffLogRepository)
         {
             _packager = packager;
             _mediator = mediator;
             _reader = reader;
             _transportLogRepository = transportLogRepository;
             _endPoint = "api/";
+            _diffLogRepository = diffLogRepository;
         }
 
         public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
@@ -61,9 +64,11 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         public Task<List<SendDhwManifestResponse>> SendSmartManifestAsync(SendManifestPackageDTO sendTo,string version,string apiVersion="")
         {
-            return SendSmartManifestAsync(sendTo,
+            var response = SendSmartManifestAsync(sendTo,
                 DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()), version,
                 apiVersion);
+            return response;
+            
         }
 
         public async Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,

@@ -55,6 +55,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
                 var eCount = await  _tempPrepAdverseEventExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempPrepAdverseEventExtractRepository.PageCount(take, eCount);
 
+                int extractssitecode = (int) _tempPrepAdverseEventExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+
                 int page = 1;
                 while (page <= pageCount)
                 {
@@ -86,7 +88,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(PrepAdverseEventExtract)));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(PrepAdverseEventExtract), extractssitecode));
 
                 return count;
             }

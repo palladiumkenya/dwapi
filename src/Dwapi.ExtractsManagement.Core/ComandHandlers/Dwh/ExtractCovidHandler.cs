@@ -4,6 +4,7 @@ using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -23,20 +24,51 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly ICovidLoader _CovidLoader;
         private readonly IClearDwhExtracts _clearDwhExtracts;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
 
-        public ExtractCovidHandler(ICovidSourceExtractor CovidSourceExtractor, IExtractValidator extractValidator, ICovidLoader CovidLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractCovidHandler(ICovidSourceExtractor CovidSourceExtractor, IExtractValidator extractValidator, ICovidLoader CovidLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository)
         {
             _CovidSourceExtractor = CovidSourceExtractor;
             _extractValidator = extractValidator;
             _CovidLoader = CovidLoader;
             _clearDwhExtracts = clearDwhExtracts;
             _extractHistoryRepository = extractHistoryRepository;
+            _diffLogRepository = diffLogRepository;
         }
 
         public async Task<bool> Handle(ExtractCovid request, CancellationToken cancellationToken)
         {
-            //Extract
-            int found = await _CovidSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            // Get current site and docket dates,
+            int found;
+            
+            var loadChangesOnly = request.LoadChangesOnly;
+            var difflog = _diffLogRepository.GetLog("NDWH", "CovidExtract");
+            var changesLoadedStatus= false;
+
+            if (request.DatabaseProtocol.SupportsDifferential)
+            {
+                if(null==difflog)
+                    found  = await _CovidSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+                else
+                    if (true == loadChangesOnly)
+                    {
+                        changesLoadedStatus = true;
+                        found = await _CovidSourceExtractor.Extract(request.Extract,
+                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                    }
+                    else
+                    {
+                        found  = await _CovidSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+                    }
+            }
+            else
+            {
+                found  = await _CovidSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+            }
+            //update status
+            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "CovidExtract", changesLoadedStatus);
+
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(CovidExtract), $"{nameof(TempCovidExtract)}s");

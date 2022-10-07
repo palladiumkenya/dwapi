@@ -48,21 +48,21 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Diff
         [Test]
         public void should_Init_Log_New()
         {
-            var diffLog = _repository.InitLog("NDWH", "PatientStatusExtract");
+            var diffLog = _repository.InitLog("NDWH", "PatientStatusExtract",99999);
             Assert.NotNull(diffLog);
         }
 
         [Test]
         public void should_Init_Log_Exisiting()
         {
-            var diffLog = _repository.InitLog("ndwh", "PatientExtract");
+            var diffLog = _repository.InitLog("ndwh", "PatientExtract", 99999);
             Assert.NotNull(diffLog);
         }
 
         [Test]
         public void should_Save_Log_New()
         {
-            var diffLog = DiffLog.Create("NDWH", "PatientVisitExtract");
+            var diffLog = DiffLog.Create("NDWH", "PatientVisitExtract", 99999);
             _repository.SaveLog(diffLog);
 
 
@@ -92,7 +92,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Diff
         [TestCase("PatientExtracts")]
         public void should_Generate_Diff(string extract)
         {
-            var diffLog = _repository.GenerateDiff("NDWH", extract);
+            var diffLog = _repository.GenerateDiff("NDWH", extract, 99999);
             Assert.NotNull(diffLog);
             Assert.False(diffLog.MaxCreated.IsNullOrEmpty());
             Assert.False(diffLog.MaxModified.IsNullOrEmpty());
