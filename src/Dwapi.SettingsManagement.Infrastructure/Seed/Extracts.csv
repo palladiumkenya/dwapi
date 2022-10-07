@@ -4985,13 +4985,14 @@ UNION
 )
 UNION
 (
-    SELECT script_name                      as 'INDICATOR_NAME',
-           stop_time                        as 'INDICATOR_VALUE',
-           DATE_FORMAT(stop_time, '%Y%b%d') as 'INDICATOR_MONTH'
+    SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
+           stop_time                        as 'INDICATORVALUE',
+           DATE_FORMAT(stop_time, '%Y%b%d') as 'INDICATORMONTH'
     FROM kenyaemr_etl.etl_script_status s
     where s.error is null
       and script_name in ('scheduled_updates','initial_population_of_tables')
-    order by INDICATOR_VALUE desc
+   
+    order by INDICATORVALUE desc
     limit 1
 )
 )x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
