@@ -127,10 +127,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.TempExtracts
         }
         public int GetSiteCode()
         {
-            return (int) DbSet.AsNoTracking()
-                .Where(a => a.ErrorType == 0)
-                .Select(x => x.SiteCode)
-                .ToList().FirstOrDefault();
+            try
+            {
+                int sitecode = (int) DbSet.AsNoTracking()
+                    .Where(a => a.ErrorType == 0)
+                    .Select(x => x.SiteCode)
+                    .ToList().FirstOrDefault();
+                return sitecode;
+            }
+            catch (Exception e)
+            {
+                return 99999;
+            }
         }
         
         private Task<int> GetSqlCommand(IDbConnection cn, string sql)
