@@ -4,10 +4,13 @@ using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.SettingsManagement.Core.DTOs;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers
@@ -16,24 +19,35 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
     {
         private IMediator _mediator;
         private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IIndicatorExtractsRepository _indicatorExtractsRepository;
 
-        public LoadFromEmrHandler(IMediator mediator, IDiffLogRepository diffLogRepository)
+        public LoadFromEmrHandler(IMediator mediator, IDiffLogRepository diffLogRepository, IIndicatorExtractsRepository indicatorExtractsRepository)
         {
             _mediator = mediator;
             _diffLogRepository = diffLogRepository;
+            _indicatorExtractsRepository = indicatorExtractsRepository;
         }
 
         public async Task<bool> Handle(LoadFromEmrCommand request, CancellationToken cancellationToken)
         {
             var extractIds = request.Extracts.Select(x => x.Extract.Id).ToList();
+            
             if (true == request.LoadChangesOnly)
             {
-                var difflog = _diffLogRepository.GetIfChangesHasBeenLoadedAlreadyLog("NDWH", "PatientExtract");
-                var difflogLastSent = _diffLogRepository.GetIfHasBeenSentBeforeLog("NDWH","PatientExtract");
-                var difflogLoadedAll = _diffLogRepository.GetIfLoadedAllLog("NDWH","PatientExtract");
-
                 try
                 {
+                    var mflcode =   _indicatorExtractsRepository.GetMflCode();
+                    if (0 == mflcode)
+                    {
+                        // throw error
+                        throw new Exception("First Time loading? Please load all first.");
+                    }
+
+                    var difflog = _diffLogRepository.GetIfChangesHasBeenLoadedAlreadyLog("NDWH", "PatientExtract",mflcode);
+                    var difflogLastSent = _diffLogRepository.GetIfHasBeenSentBeforeLog("NDWH","PatientExtract",mflcode);
+                    var difflogLoadedAll = _diffLogRepository.GetIfLoadedAllLog("NDWH","PatientExtract",mflcode);
+
+                
                     if (null != difflog)
                     {
                         // throw error

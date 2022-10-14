@@ -11,10 +11,10 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff
         DiffLog InitLog(string docket, string extract, int siteCode);
         void SaveLog(DiffLog diffLog);
         DiffLog GenerateDiff(string docket, string extract, int siteCode);
-        DiffLog GetIfHasBeenSentBeforeLog(string docket, string extract);
+        DiffLog GetIfHasBeenSentBeforeLog(string docket, string extract, int siteCode);
         void UpdateExtractsSentStatus(string docket, string extract, bool status);
-        DiffLog GetIfChangesHasBeenLoadedAlreadyLog(string docket, string extract);
-        DiffLog GetIfLoadedAllLog(string docket, string extract);
+        DiffLog GetIfChangesHasBeenLoadedAlreadyLog(string docket, string extract, int siteCode);
+        DiffLog GetIfLoadedAllLog(string docket, string extract, int siteCode);
 
     }
 }

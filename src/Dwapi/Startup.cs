@@ -110,6 +110,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Validations;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.Validations;
+using Dwapi.ExtractsManagement.Infrastructure.Repository.Indicator;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Extracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.TempExtracts;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Mgs.Validations;
@@ -403,6 +404,7 @@ namespace Dwapi
             services.AddScoped<IPsmartStageRepository, PsmartStageRepository>();
             services.AddTransient<IExtractHistoryRepository, ExtractHistoryRepository>();
             services.AddTransient<IDiffLogRepository, DiffLogRepository>();
+            services.AddTransient<IIndicatorExtractsRepository, IndicatorExtractsRepository>();
             services.AddScoped<ITempPatientExtractRepository, TempPatientExtractRepository>();
             services.AddScoped<ITempPatientArtExtractRepository, TempPatientArtExtractRepository>();
             services.AddScoped<ITempPatientBaselinesExtractRepository, TempPatientBaselinesExtractRepository>();
