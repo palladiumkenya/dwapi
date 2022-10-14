@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Dwapi.ExtractsManagement.Core.Model.Diff;
 using Dwapi.SharedKernel.Interfaces;
 using Dwapi.SharedKernel.Model;
@@ -15,6 +16,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff
         void UpdateExtractsSentStatus(string docket, string extract, bool status);
         DiffLog GetIfChangesHasBeenLoadedAlreadyLog(string docket, string extract, int siteCode);
         DiffLog GetIfLoadedAllLog(string docket, string extract, int siteCode);
+        List<DiffLog>  GetAllDocketLogs(string docket);
 
     }
 }

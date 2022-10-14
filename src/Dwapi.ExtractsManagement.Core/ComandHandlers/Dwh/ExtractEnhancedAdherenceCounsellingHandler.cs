@@ -67,7 +67,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
                 found  = await _EnhancedAdherenceCounsellingSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
             }
             //update status
-            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "AllergiesChronicIllnessExtract", changesLoadedStatus);
+            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "EnhancedAdherenceCounsellingExtract", changesLoadedStatus);
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(EnhancedAdherenceCounsellingExtract), $"{nameof(TempEnhancedAdherenceCounsellingExtract)}s");

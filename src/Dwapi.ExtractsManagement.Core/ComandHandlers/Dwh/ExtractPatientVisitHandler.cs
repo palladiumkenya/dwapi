@@ -66,7 +66,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
                 found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
             }
 
-            //Extract
+            //update status
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "PatientVisitExtract", changesLoadedStatus);
 
             //Validate

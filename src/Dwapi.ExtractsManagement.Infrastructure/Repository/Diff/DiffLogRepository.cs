@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -23,25 +25,33 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
                 x.Docket.ToLower() == docket.ToLower()
                 && x.Extract.ToLower() == extract.ToLower());
         }
-        public DiffLog GetIfHasBeenSentBeforeLog(string docket, string extract)
+        
+        public List<DiffLog> GetAllDocketLogs(string docket)
+        {
+            return GetAll(x =>
+                x.Docket.ToLower() == docket.ToLower()).ToList();
+            // return logs;
+        }
+        
+        public DiffLog GetIfHasBeenSentBeforeLog(string docket, string extract, int siteCode)
         {
             return Get(x =>
                 x.Docket.ToLower() == docket.ToLower() &&
-                x.LastSent == null && x.Extract.ToLower() == extract.ToLower());
+                x.LastSent == null && x.Extract.ToLower() == extract.ToLower() && x.SiteCode==siteCode);
         }
         
-        public DiffLog GetIfChangesHasBeenLoadedAlreadyLog(string docket, string extract)
+        public DiffLog GetIfChangesHasBeenLoadedAlreadyLog(string docket, string extract, int siteCode)
         {
             return Get(x =>
                 x.Docket.ToLower() == docket.ToLower() && x.Extract.ToLower() == extract.ToLower() &&
-                x.ExtractsSent == false && x.ChangesLoaded==true);
+                x.ExtractsSent == false && x.ChangesLoaded==true && x.SiteCode==siteCode);
         }
         
-        public DiffLog GetIfLoadedAllLog(string docket, string extract)
+        public DiffLog GetIfLoadedAllLog(string docket, string extract, int siteCode)
         {
             return Get(x =>
                 x.Docket.ToLower() == docket.ToLower() && x.Extract.ToLower() == extract.ToLower() &&
-                x.ExtractsSent == false && x.ChangesLoaded==false);
+                x.ExtractsSent == false && x.ChangesLoaded==false && x.SiteCode==siteCode);
         }
 
         public DiffLog InitLog(string docket, string extract, int siteCode)
