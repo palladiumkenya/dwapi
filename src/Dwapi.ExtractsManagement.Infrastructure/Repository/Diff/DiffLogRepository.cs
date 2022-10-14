@@ -73,16 +73,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
         
         public void UpdateExtractsSentStatus(string docket, string extract, bool status)
         {
-            var diffLog = Get(x =>
-                x.Docket.ToLower() == docket.ToLower() &&
-                x.Extract.ToLower() == extract.ToLower() );
+            var diffLog = GetAll(x =>
+                x.Docket.ToLower() == docket.ToLower()).ToList();
 
             if (null != diffLog)
             {
-                diffLog.ChangesLoaded = status;
-                diffLog.ExtractsSent = false;
-                SaveChanges();
-                Context.Database.GetDbConnection().BulkMerge(diffLog);
+                foreach (var log in diffLog)
+                {
+                    log.ChangesLoaded = status;
+                    log.ExtractsSent = false;
+                    SaveChanges();
+                    Context.Database.GetDbConnection().BulkMerge(diffLog);
+                }
             }
         }
 
