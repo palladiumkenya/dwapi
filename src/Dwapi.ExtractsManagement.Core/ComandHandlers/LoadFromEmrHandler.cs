@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
 using Dwapi.SettingsManagement.Core.DTOs;
 using Serilog;
@@ -19,13 +20,13 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
     {
         private IMediator _mediator;
         private readonly IDiffLogRepository _diffLogRepository;
-        private readonly IIndicatorExtractsRepository _indicatorExtractsRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
-        public LoadFromEmrHandler(IMediator mediator, IDiffLogRepository diffLogRepository, IIndicatorExtractsRepository indicatorExtractsRepository)
+        public LoadFromEmrHandler(IMediator mediator, IDiffLogRepository diffLogRepository, IIndicatorExtractRepository indicatorExtractRepository)
         {
             _mediator = mediator;
             _diffLogRepository = diffLogRepository;
-            _indicatorExtractsRepository = indicatorExtractsRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
         }
 
         public async Task<bool> Handle(LoadFromEmrCommand request, CancellationToken cancellationToken)
@@ -36,7 +37,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
             {
                 try
                 {
-                    var mflcode =   _indicatorExtractsRepository.GetMflCode();
+                    var mflcode =   _indicatorExtractRepository.GetMflCode();
                     if (0 == mflcode)
                     {
                         // throw error

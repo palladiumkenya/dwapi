@@ -24,5 +24,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public DateTime? Dob { get; set; }
         public DateTime? DateElicited { get; set; }
         public string MaritalStatus { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

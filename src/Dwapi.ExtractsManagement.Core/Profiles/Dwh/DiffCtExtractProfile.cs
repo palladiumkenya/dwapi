@@ -53,11 +53,11 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.PopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PopulationType))))
                 .ForMember(x => x.TransferInDate, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.TransferInDate))))
                 .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.Project))))
-                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientExtract.Date_Created))))
-                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientExtract.Date_Last_Modified))))
                 .ForMember(x => x.Pkv, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientExtract.Pkv))))
                 .ForMember(x => x.Occupation, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientExtract.Occupation))))
-                .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientExtract.NUPI))));
+                .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientExtract.NUPI))))
+                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientExtract.Date_Created))))
+                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientExtract.Date_Last_Modified))));
 
                 
 
@@ -517,7 +517,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
 .ForMember(x => x.IndicationForIPT, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempIptExtract.IndicationForIPT))))
                 .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientAdverseEventExtract.Date_Created))))
                 .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientAdverseEventExtract.Date_Last_Modified))));
-;
+
             CreateMap<TempIptExtract,IptExtract>();
 
 

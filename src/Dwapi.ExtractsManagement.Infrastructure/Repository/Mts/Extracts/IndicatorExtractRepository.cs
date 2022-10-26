@@ -24,5 +24,40 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
             ";
             return Context.Database.GetDbConnection().Query<IndicatorExtractDto>(sql).ToList();
         }
+        
+        public bool CheckIfStale()
+        {
+            var sql = $@"
+                select e.*,k.Description,k.Rank
+                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id where e.IndicatorValue='STALE'
+            ";
+            var result = Context.Database.GetDbConnection().Query(sql).ToList();
+
+            if (result.Count >= 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public int GetMflCode()
+        {
+            
+            try
+            {
+                var sql = $" select Indicator,IndicatorValue from IndicatorExtracts where Indicator='MFL_CODE' order by IndicatorDate desc limit 1 ";
+
+                var result = Context.Database.GetDbConnection().QuerySingle(sql);
+                var code = Int32.Parse(result.IndicatorValue.Substring(0, 5));
+                return code;
+
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
     }
 }

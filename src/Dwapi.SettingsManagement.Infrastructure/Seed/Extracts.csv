@@ -170,6 +170,7 @@ FROM
 													WHEN 160563 THEN 'Transfer in'
 													WHEN 164144	THEN 'New client'
 													WHEN 159833	THEN 'Re-enroll'
+													WHEN 164931 THEN 'Transit'
 													ELSE hiv.patient_type
 															END AS PatientType,
 											if (c.client_id is not null,'Key population', (select CASE
@@ -1735,7 +1736,8 @@ order by KeyPopulationType"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F
 
 8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT  distinct d.patient_id as PatientPK,
 	                d.national_unique_patient_identifier                              as NUPI,
-                    pkv.PKV                                                           as Pkv,
+                    pkv.PKV                                                           as Pkv,                  
+                    
 	(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
 (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 	'KenyaEMR' as Emr,
@@ -1744,8 +1746,10 @@ order by KeyPopulationType"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F
 	d.DOB,
 	case when d.Gender='M' then 'Male' else 'Female' end as Gender,
 	d.marital_status as MaritalStatus,
+	d.occupation as Occupation,
 	t.population_type as PopulationType,
 	t.key_population_type as KeyPopulationType,
+	t.priority_population_type as PriorityPopulationType,
 	t.disability_type as PatientDisabled,
 	A.county_district as County,
 	A.state_province as SubCounty,
@@ -1823,7 +1827,7 @@ case when Consent='1' or Consent='Yes' then 'Yes' else 'No' end as Consent from 
 on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578afbc-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
-                    t.patient_id as PatientPK,
+                    t.patient_id as PatientPK,                    
                     (select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
                     (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
                     'KenyaEMR' as Emr,
@@ -1864,6 +1868,8 @@ on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-
                     when 5622 then 'O:Other'
                     end                                                           as TestStrategy,
                     t.test_1_result                                                   as TestResult1,
+                    t.approach as Approach,
+                    t.setting as Setting,
                     t.test_2_result                                                   as TestResult2,
                     t.final_test_result                                               as FinalTestResult,
                     t.patient_given_result                                            as PatientGivenResult,
@@ -1960,7 +1966,7 @@ from tmp_HTS_LAB_register h inner join tmp_PatientMaster p
 on h.PatientPK=p.PatientPK"|DWHStage|1|HtsTestKits|4|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578b700-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Test Kits|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
-    t.patient_id AS PatientPK,
+    t.patient_id AS PatientPK,    
 	(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
 (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
 	'KenyaEMR' as Emr,
@@ -1974,8 +1980,10 @@ on h.PatientPK=p.PatientPK"|DWHStage|1|HtsTestKits|4|A6221983-0E85-11E8-BA89-0ED
 	t.test_2_kit_name as TestKitName2,
 	t.test_2_kit_lot_no as TestKitLotNumber2,
 	t.test_2_kit_expiry as TestKitExpiry2,
-	t.test_2_result as TestResult2
-
+	t.test_2_result as TestResult2,
+	t.syphillis_test_result as SyphilisResult,
+	t.date_created as Date_Created,
+    t.date_last_modified as Date_Last_Modified
 FROM
 	kenyaemr_etl.etl_hts_test t
 inner join
@@ -2209,7 +2217,7 @@ left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach
                             if(t.who_performed_test = 5619,t.date_tested, null)                             as DateTestedProvider,
                             case t.started_on_art when 1065 then 'Yes' when 1066 then 'No' end          as StartedOnART,
                             t.upn_number                                                                as CCCNumber,
-                            case t.ever_had_sex when 1 then 'Yes' when 0 then 'No' end                  as EverHadSex,
+                            case t.ever_had_sex when 1 then 'Yes' when 2 then 'No' end                  as EverHadSex,
                             case t.sexually_active when 1065 then 'Yes' when 1066 then 'No' end         as SexuallyActive,
                             case t.new_partner when 1065 then 'Yes' when 1066 then 'No' end             as NewPartner,
                             (case t.partner_hiv_status
@@ -5014,6 +5022,26 @@ UNION
    
     order by INDICATORVALUE desc
     limit 1
+)
+UNION(
+          select 'DB_STATE'                                                                as INDICATOR,
+                 if((c.current_visits) > floor(c.avg_visits/2), 'CURRENT', 'STALE')        as INDICATORVALUE,
+                 date_format(last_day(date_sub(CURRENT_DATE, interval 1 MONTH)), '%Y%b%d') as INDICATORDATE              
+          from (select a.current_visits, b.avg_visits, b.followup_enc_since_April, b.months_since_april
+                from (select count(hv.encounter_id) as current_visits
+                      from kenyaemr_etl.etl_patient_hiv_followup hv
+                      where hv.visit_date between DATE_SUB(LAST_DAY(NOW()), INTERVAL DAY(LAST_DAY(NOW())) - 1 DAY) and date(current_date)) a
+                         join
+                     (select count(hv.encounter_id) as followup_enc_since_April,
+                             timestampdiff(MONTH, '2022-04-01', last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) +
+                             1                         months_since_april,
+                             floor(count(hv.encounter_id) /
+                                   (timestampdiff(MONTH, '2022-04-01', last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) +
+                                    1))             as avg_visits,
+                             last_day(date_sub(CURRENT_DATE, interval 1 MONTH))
+                      from kenyaemr_etl.etl_patient_hiv_followup hv
+                      where hv.visit_date between '2022-04-01' and
+                                last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) b) c
 )
 )x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 

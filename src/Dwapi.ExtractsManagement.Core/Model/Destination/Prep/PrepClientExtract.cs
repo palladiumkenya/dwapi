@@ -24,6 +24,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Prep
         public string Project { get; set; }
         public virtual DateTime? Date_Created { get; set; }
         public virtual DateTime? Date_Last_Modified { get; set; }
+        
 
         [NotMapped]
         public bool IsSent => !string.IsNullOrWhiteSpace(Status) && Status.IsSameAs(nameof(SendStatus.Sent));

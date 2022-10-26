@@ -1,3 +1,4 @@
+using System;
 using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
@@ -17,5 +18,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string KnowledgeOfHivStatus { get; set; }
         public string PnsApproach { get; set; }
         public int? ContactPatientPK { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

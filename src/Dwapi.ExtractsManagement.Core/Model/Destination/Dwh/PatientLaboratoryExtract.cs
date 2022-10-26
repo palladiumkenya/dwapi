@@ -17,5 +17,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string TestResult { get; set; }
         public DateTime? DateSampleTaken { get; set; }
         public string SampleType { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }
