@@ -74,6 +74,11 @@ export class HtsSenderService {
             .catch(this.handleError);
     }
 
+    public sendHtsRiskScores(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/htsriskscores`, sendPackage)
+            .catch(this.handleError);
+    }
+
     public sendHandshake(sendPackage: SendPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/endsession`, sendPackage)
             .catch(this.handleError);

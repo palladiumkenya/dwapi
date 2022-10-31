@@ -97,6 +97,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<HtsClientLinkage> HtsClientsLinkageExtracts { get; set; }
         public DbSet<HtsPartnerNotificationServices> HtsPartnerNotificationServicesExtracts { get; set; }
         public DbSet<HtsEligibilityExtract> HtsEligibilityExtracts { get; set; }
+        public DbSet<HtsRiskScores> HtsRiskScoresExtracts { get; set; }
+
 
         public DbSet<TempHtsClients> TempHtsClientsExtracts { get; set; }
         public DbSet<TempHtsClientTests> TempHtsClientTestsExtracts { get; set; }
@@ -106,7 +108,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsClientLinkage> TempHtsClientsLinkageExtracts { get; set; }
         public DbSet<TempHtsPartnerNotificationServices> TempHtsPartnerNotificationServicesExtracts { get; set; }
         public DbSet<TempHtsEligibilityExtract> TempHtsEligibilityExtracts { get; set; }
-        
+        public DbSet<TempHtsRiskScores> TempHtsRiskScoresExtracts { get; set; }
+
 
 
 
@@ -119,6 +122,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsClientLinkageError> TempHtsClientsLinkageExtractsErrors { get; set; }
         public DbSet<TempHtsPartnerNotificationServicesError> TempHtsPartnerNotificationServicesExtractsErrors { get; set; }
         public DbSet<TempHtsEligibilityExtractError> TempHtsEligibilityExtractErrors { get; set; }
+        public DbSet<TempHtsRiskScoresError> TempHtsRiskScoresExtractsErrors { get; set; }
         
         public DbSet<TempHTSClientExtractErrorSummary> TempHtsClientExtractErrorSummaries { get; set; }
         public DbSet<TempHTSClientPartnerExtractErrorSummary> TempHtsClientPartnerExtractErrorSummaries { get; set; }
@@ -132,6 +136,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsClientLinkageErrorSummary> TempHtsClientsLinkageExtractsErrorSummaries { get; set; }
         public DbSet<TempHtsPartnerNotificationServicesErrorSummary> TempHtsPartnerNotificationServicesExtractsErrorSummaries { get; set; }
         public DbSet<TempHtsEligibilityExtractErrorSummary> TempHtsEligibilityExtractErrorSummaries { get; set; }
+        public DbSet<TempHtsRiskScoresErrorSummary> TempHtsRiskScoresExtractsErrorSummaries { get; set; }
 
         public DbSet<TempMetricMigrationExtract> TempMetricMigrationExtracts { get; set; }
         public DbSet<MetricMigrationExtract> MetricMigrationExtracts { get; set; }
@@ -387,6 +392,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
+            
+            modelBuilder.Entity<HtsClients>()
+                .HasMany(c => c.HtsRiskScores)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
 
             //            modelBuilder.Entity<HTSClientExtract>()
             //                .HasKey(f => new {f.SiteCode, f.PatientPk,f.EncounterId});
@@ -598,6 +609,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<HtsTestKits>().Key(x => x.Id).Table($"{nameof(HtsTestKitsExtracts)}");
             DapperPlusManager.Entity<HtsPartnerTracing>().Key(x => x.Id).Table($"{nameof(HtsPartnerTracingExtracts)}");
             DapperPlusManager.Entity<HtsEligibilityExtract>().Key(x => x.Id).Table($"{nameof(HtsEligibilityExtracts)}");
+            DapperPlusManager.Entity<HtsRiskScores>().Key(x => x.Id).Table($"{nameof(HtsRiskScoresExtracts)}");
 
             DapperPlusManager.Entity<TempHTSClientExtract>().Key(x => x.Id).Table($"{nameof(TempHtsClientExtracts)}");
             DapperPlusManager.Entity<TempHTSClientLinkageExtract>().Key(x => x.Id).Table($"{nameof(TempHtsClientLinkageExtracts)}");
@@ -611,6 +623,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempHtsTestKits>().Key(x => x.Id).Table($"{nameof(TempHtsTestKitsExtracts)}");
             DapperPlusManager.Entity<TempHtsPartnerTracing>().Key(x => x.Id).Table($"{nameof(TempHtsPartnerTracingExtracts)}");
             DapperPlusManager.Entity<TempHtsEligibilityExtract>().Key(x => x.Id).Table($"{nameof(TempHtsEligibilityExtracts)}");
+            DapperPlusManager.Entity<TempHtsRiskScores>().Key(x => x.Id).Table($"{nameof(TempHtsRiskScoresExtracts)}");
 
             DapperPlusManager.Entity<MetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(MetricMigrationExtracts)}");
             DapperPlusManager.Entity<TempMetricMigrationExtract>().Key(x => x.Id).Table($"{nameof(TempMetricMigrationExtracts)}");

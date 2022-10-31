@@ -18,6 +18,7 @@ import { HtsClientTracingService } from '../../../services/hts-client-tracing.se
 import { HtsPartnerTracingService } from '../../../services/hts-partner-tracing.service';
 import { HtsPartnerNotificationServicesService } from '../../../services/hts-partner-notification-services.service';
 import {HtsEligibilityScreeningService} from "../../../services/hts-eligibility-screening.service";
+import {HtsRiskScoresService} from "../../../services/hts-risk-scores.service";
 
 
 @Component({
@@ -36,6 +37,7 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
     private htsPartnerTracingService: HtsPartnerTracingService;
     private htsPartnerNotificationServicesService: HtsPartnerNotificationServicesService;
     private htsEligibilityScreeningService: HtsEligibilityScreeningService;
+    private htsRiskScoresService: HtsRiskScoresService;
 
 
     public invalidExtracts: any[] = [];
@@ -48,7 +50,7 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
         clientsLinkageService: HtsClientsLinkageService, testKitsService: HtsTestKitsService,
         clientTracingService: HtsClientTracingService, patientTracingService: HtsPartnerTracingService,
         partnerNotificationServicesService: HtsPartnerNotificationServicesService,
-                eligibilityScreeningService: HtsEligibilityScreeningService) {
+                eligibilityScreeningService: HtsEligibilityScreeningService, riskScoresService: HtsRiskScoresService) {
         this.htsClientsService = clientsExtractsService;
         this.htsClientTestsService = clientTestsService;
         this.htsClientsLinkageService = clientsLinkageService;
@@ -57,8 +59,10 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
         this.htsPartnerTracingService = patientTracingService;
         this.htsPartnerNotificationServicesService = partnerNotificationServicesService;
         this.htsEligibilityScreeningService = eligibilityScreeningService;
+        this.htsRiskScoresService = riskScoresService;
 
-    }
+
+}
 
     public ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
         this.cols = [];
@@ -97,6 +101,9 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
         if (this.extract === 'Hts Eligibility Screening') {
             this.getHtsEligibilityExtracts();
         }
+        if (this.extract === 'Hts Risk Scores') {
+            this.getHtsRiskScores();
+        }
     }
 
     private getColumns(): void {
@@ -123,6 +130,9 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
         }
         if (this.extract === 'Hts Eligibility Screening') {
             this.getHtsEligibilityExtractsColumns();
+        }
+        if (this.extract === 'Hts Risk Scores') {
+            this.getHtsRiskScoresColumns();
         }
     }
 
@@ -254,6 +264,24 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
 
     private getHtsEligibilityExtracts(): void {
         this.getInvalid$ = this.htsEligibilityScreeningService.loadValidations().subscribe(
+            p => {
+                this.invalidExtracts = p;
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+            }
+        );
+    }
+
+    private getHtsRiskScores(): void {
+        this.getInvalid$ = this.htsRiskScoresService.loadValidations().subscribe(
             p => {
                 this.invalidExtracts = p;
             },
@@ -414,4 +442,18 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
             { field: 'sexuallyActive', header: 'Sexually Active' },
         ];
     }
+
+    private getHtsRiskScoresColumns(): void {
+        this.cols = [
+            { field: 'Summary', header: 'Summary' },
+            { field: 'patientPk', header: 'PatientPK' },
+            { field: 'htsNumber', header: 'Hts Number' },
+            { field: 'patientType', header: 'Patient Type' },
+            { field: 'sourceSysUUID', header: 'Source Sys UUID' },
+            { field: 'riskScore', header: 'Risk Score' },
+            { field: 'riskFactors', header: 'Risk Factors' },
+            { field: 'description', header: 'Description' },
+            { field: 'evaluationDate', header: 'Evaluation Date' },
+        ];
+}
 }

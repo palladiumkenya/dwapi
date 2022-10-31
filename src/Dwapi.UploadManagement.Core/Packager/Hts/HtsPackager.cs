@@ -80,15 +80,19 @@ namespace Dwapi.UploadManagement.Core.Packager.Hts
             return _htsExtractReader.ReadAllClientsLinkage();
         }
 
-        public IEnumerable<HtsEligibilityExtract> GenerateHtsEligibilityExtracts()
-        {
-            return _htsExtractReader.ReadAllHtsEligibilityExtracts();
-        }
-
-        
         public IEnumerable<HtsTestKits> GenerateTestKits()
         {
             return _htsExtractReader.ReadAllTestKits();
+        }
+        
+        public IEnumerable<HtsEligibilityExtract> GenerateHtsEligibilityExtracts()
+                {
+                    return _htsExtractReader.ReadAllHtsEligibilityExtracts();
+                }
+        
+        public IEnumerable<HtsRiskScores> GenerateHtsRiskScores()
+        {
+            return _htsExtractReader.ReadAllHtsRiskScores();
         }
     }
 }

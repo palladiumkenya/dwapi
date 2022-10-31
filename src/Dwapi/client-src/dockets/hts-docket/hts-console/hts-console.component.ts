@@ -88,6 +88,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private extractPartnerTracing: ExtractProfile;
     private extractPartnerNotificationServices: ExtractProfile;
     private extractEligibilityScreening: ExtractProfile;
+    private extractRiskScores: ExtractProfile;
+
 
     private extractProfile: ExtractProfile;
     private extractProfiles: ExtractProfile[] = [];
@@ -418,10 +420,33 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 p => {
                     // this.sendResponse = p;
                     this.updateEvent();
+                    this.sendHtsRiskScores();
                 },
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({ severity: 'error', summary: 'Error sending hts eligibility screening', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+    public sendHtsRiskScores(): void {
+        this.sendStage = 9;
+        this.sendEvent = { sentProgress: 0 };
+        this.sending = true;
+        this.errorMessage = [];
+        this.patientPackage = this.getHtsRiskScoresPackage();
+        this.send$ = this._htsSenderService.sendHtsRiskScores(this.patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending hts Risk Scores', detail: <any>e });
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -617,6 +642,16 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             extractName: 'HtsEligibilityExtract'
         };
     }
+
+    private getHtsRiskScoresPackage(): SendPackage {
+        //console.log(this.extracts.find(x => x.name === 'HtsClientTests'));
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'HtsRiskScores').id,
+            extractName: 'HtsRiskScores'
+        };
+    }
+
     private updateExractStats(dwhProgress: any) {
         if (dwhProgress) {
             this.extracts.map(e => {
@@ -674,7 +709,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
         this._hubConnection.on('ShowHtsSendProgressDone', (extractName: string) => {
             this.extractSent.push(extractName);
-            if (this.extractSent.length === 8) {
+            if (this.extractSent.length === 9) {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
                 this.updateEvent();
@@ -709,6 +744,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.extractProfiles.push(this.generateExtractPartnerTracing(currentEmr));
         this.extractProfiles.push(this.generateExtractClientTracing(currentEmr));
         this.extractProfiles.push(this.generateExtractHtsEligibilityExtract(currentEmr));
+        this.extractProfiles.push(this.generateExtractHtsRiskScores(currentEmr));
+
 
 
         this.extractLoadCommand = {
@@ -791,6 +828,14 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             extract: this.extracts.find(x => x.name === 'HtsEligibilityExtract')
         };
         return this.extractEligibilityScreening;
+    }
+    private generateExtractHtsRiskScores(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'HtsRiskScores').databaseProtocolId;
+        this.extractRiskScores = {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'HtsRiskScores')
+        };
+        return this.extractRiskScores;
     }
 
 

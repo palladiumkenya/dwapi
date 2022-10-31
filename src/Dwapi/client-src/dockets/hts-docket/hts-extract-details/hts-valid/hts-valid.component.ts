@@ -13,6 +13,7 @@ import { HtsPartnerNotificationServicesService } from '../../../services/hts-par
 import { HtsTestKitsService } from '../../../services/hts-test-kits.service';
 import { HtsClientsLinkageService } from '../../../services/hts-clients-linkage.service';
 import {HtsEligibilityScreeningService} from "../../../services/hts-eligibility-screening.service";
+import {HtsRiskScoresService} from "../../../services/hts-risk-scores.service";
 
 @Component({
     selector: 'liveapp-hts-valid',
@@ -30,6 +31,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
     private htsTestKitsService: HtsTestKitsService;
     private htsClientsLinkageService: HtsClientsLinkageService;
     private htsEligibilityScreeningService: HtsEligibilityScreeningService;
+    private htsRiskScoresService: HtsRiskScoresService;
 
 
     public validExtracts: any[] = [];
@@ -47,7 +49,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
     constructor(htsClientsService: HtsClientsService, htsClientTestsService: HtsClientTestsService, htsClientTracingService: HtsClientTracingService,
                 htsPartnerTracingService: HtsPartnerTracingService, htsPartnerNotificationServicesService: HtsPartnerNotificationServicesService,
                 htsTestKitsService: HtsTestKitsService, htsClientLinkageService: HtsClientsLinkageService,
-                eligibilityScreeningService: HtsEligibilityScreeningService) {
+                eligibilityScreeningService: HtsEligibilityScreeningService, riskScoresService: HtsRiskScoresService) {
         this.htsClientsService = htsClientsService;
         this.htsClientTestsService = htsClientTestsService;
         this.htsClientTracingService = htsClientTracingService;
@@ -56,6 +58,8 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         this.htsTestKitsService = htsTestKitsService;
         this.htsClientsLinkageService = htsClientLinkageService;
         this.htsEligibilityScreeningService = eligibilityScreeningService;
+        this.htsRiskScoresService = riskScoresService;
+
     }
 
     get extract(): string {
@@ -114,6 +118,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         if (this.extract === 'Hts Eligibility Screening') {
             this.getHtsEligibilityExtracts();
         }
+        if (this.extract === 'Hts Risk Scores') {
+            this.getHtsRiskScores();
+        }
     }
 
     private getColumns(): void {
@@ -140,6 +147,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         }
         if (this.extract === 'Hts Eligibility Screening') {
             this.getHtsEligibilityExtractsColumns();
+        }
+        if (this.extract === 'Hts Risk Scores') {
+            this.getHtsRiskScoresColumns();
         }
     }
 
@@ -436,6 +446,24 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         );
     }
 
+    private getHtsRiskScores(): void {
+        this.getValid$ = this.htsRiskScoresService.loadValid(this.pageModel).subscribe(
+            p => {
+                this.validExtracts = p;
+            },
+            e => {
+                this.errorMessage = [];
+                this.errorMessage.push({
+                    severity: 'error',
+                    summary: 'Error Loading data',
+                    detail: <any>e
+                });
+            },
+            () => {
+            }
+        );
+    }
+
 
     private getClientsColumns(): void {
         this.cols = [
@@ -565,8 +593,19 @@ export class HtsValidComponent implements OnInit, OnDestroy {
         ];
     }
 
-
-
+    private getHtsRiskScoresColumns(): void {
+        this.cols = [
+            {field: 'Summary', header: 'Summary'},
+            {field: 'patientPk', header: 'PatientPK'},
+            {field: 'htsNumber', header: 'Hts Number'},
+            {field: 'patientType', header: 'Patient Type'},
+            {field: 'sourceSysUUID', header: 'Source Sys UUID'},
+            {field: 'riskScore', header: 'Risk Score'},
+            {field: 'riskFactors', header: 'Risk Factors'},
+            {field: 'description', header: 'Description'},
+            {field: 'evaluationDate', header: 'Evaluation Date'},
+        ];
+    }
 
     pageView(event: any) {
         this.pageModel = {

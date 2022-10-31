@@ -46,7 +46,10 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Hts
             Assert.True(_extractsContext.TempHtsClientTracingExtracts.Any());
             Assert.True(_extractsContext.TempHtsPartnerNotificationServicesExtracts.Any());
             Assert.True(_extractsContext.TempHtsClientsExtracts.Any());
+            Assert.True(_extractsContext.TempHtsEligibilityExtracts.Any());
+            Assert.True(_extractsContext.TempHtsRiskScoresExtracts.Any());
 
+            
             Assert.True(_extractsContext.HtsClientTestsExtracts.Any());
             Assert.True(_extractsContext.HtsTestKitsExtracts.Any());
             Assert.True(_extractsContext.HtsClientsLinkageExtracts.Any());
@@ -54,6 +57,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Hts
             Assert.True(_extractsContext.HtsClientTracingExtracts.Any());
             Assert.True(_extractsContext.HtsPartnerNotificationServicesExtracts.Any());
             Assert.True(_extractsContext.HtsClientsExtracts.Any());
+            Assert.True(_extractsContext.HtsEligibilityExtracts.Any());
+            Assert.True(_extractsContext.HtsRiskScoresExtracts.Any());
+
 
             _clearHts.Clear(extractIds).Wait();
 
@@ -64,6 +70,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Hts
             Assert.False(_extractsContext.TempHtsClientTracingExtracts.Any());
             Assert.False(_extractsContext.TempHtsPartnerNotificationServicesExtracts.Any());
             Assert.False(_extractsContext.TempHtsClientsExtracts.Any());
+            Assert.False(_extractsContext.TempHtsEligibilityExtracts.Any());
+            Assert.False(_extractsContext.TempHtsRiskScoresExtracts.Any());
+
 
             Assert.False(_extractsContext.HtsClientTestsExtracts.Any());
             Assert.False(_extractsContext.HtsTestKitsExtracts.Any());
@@ -72,6 +81,8 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Hts
             Assert.False(_extractsContext.HtsClientTracingExtracts.Any());
             Assert.False(_extractsContext.HtsPartnerNotificationServicesExtracts.Any());
             Assert.False(_extractsContext.HtsClientsExtracts.Any());
+            Assert.False(_extractsContext.TempHtsEligibilityExtracts.Any());
+            Assert.False(_extractsContext.TempHtsRiskScoresExtracts.Any());
 
             Assert.False(_extractsContext.ExtractHistory.Any(x => extractIds.Contains(x.ExtractId)));
         }

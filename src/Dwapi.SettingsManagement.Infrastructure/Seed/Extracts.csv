@@ -2270,6 +2270,24 @@ left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach
                               LEFT JOIN openmrs.location SN ON SN.location_id = t.location_id group by t.encounter_id"|DWHStage|1|HtsEligibilityExtract|8|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 
+cb0f9509-706e-4a91-9f13-b8b0849a992a|Hts Risk Scores|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT r.patient_id         as PatientPK,
+		   i.siteCode           as SiteCode,
+		   i.FacilityName       as FacilityName,
+		   'KenyaEMR'           as Emr,
+		   'Kenya HMIS III'     as Project,
+		   r.source_system_uuid as SourceSysUUID,
+		   r.risk_score         as RiskScore,
+		   r.risk_factors       as RiskFactors,
+		   r.description        as Description,
+		   r.evaluation_date    as EvaluationDate,
+		   r.date_created       as DateCreated,
+		   r.date_changed       as DateLastModified
+		FROM openmrs.kenyaemr_ml_patient_risk_score r
+		inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = r.patient_id
+		join kenyaemr_etl.etl_default_facility_info i"|DWHStage|1|HtsRiskScores|9|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+
+
 290bd21c-3089-11ea-978f-2e728ce88125|Master Patient Index|CBS|926f49b8-305d-11ea-978f-2e728ce88125|"SELECT
 *
 , LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue]

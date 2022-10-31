@@ -69,6 +69,8 @@ namespace Dwapi.SharedKernel.Model
                 return "TempHtsPartnerNotificationServicesExtract";
             if (Name.IsSameAs("HtsClientLinkage"))
                 return "TempHtsClientsLinkageExtract";
+            if (Name.IsSameAs("HtsRiskScores"))
+                return "TempHtsRiskScoresExtract";
             
             return $"Temp{TableName}";
         }

@@ -245,6 +245,26 @@ namespace Dwapi.Controller
             }
         }
 
+        // POST: api/DwhExtracts/patients
+        [HttpPost("htsriskscores")]
+        public IActionResult SendHtsRiskScores([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsSendService.SendHtsRiskScoresAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+
 
         // POST: api/DwhExtracts/patients
         [HttpPost("endsession")]

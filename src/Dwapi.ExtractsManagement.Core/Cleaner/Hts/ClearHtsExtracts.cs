@@ -40,6 +40,7 @@ namespace Dwapi.ExtractsManagement.Core.Cleaner.Hts
             DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientLinkage) + "Extracts", "clearing...")));
             DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients) + "Extracts", "clearing...")));
             DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsEligibilityExtract) + "Extracts", "clearing...")));
+            DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsRiskScores) + "Extracts", "clearing...")));
 
 
             foreach (var extractId in extractIds)

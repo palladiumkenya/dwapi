@@ -49,7 +49,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
         private async Task<bool> ExtractAll(LoadHtsFromEmrCommand request, CancellationToken cancellationToken)
         {
             Task<bool>  ClientTestTask = null, TestKitTask = null, ClientTracingTask = null, PartnerTracingTask = null, 
-                PNSTask = null, ClientLinkageTask = null, HtsEligibilityExtractTask = null;
+                PNSTask = null, ClientLinkageTask = null, HtsEligibilityExtractTask = null, HtsRiskScoresTask = null;
              
             // HtsClientTestExtract
             var HtsClientTestExtractProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsClientTests");
@@ -134,11 +134,23 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 };
                 HtsEligibilityExtractTask = _mediator.Send(command, cancellationToken);
             }
+            
+            // HtsRiskScores
+            var HtsRiskScoresProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "HtsRiskScores");
+            if (null != HtsRiskScoresProfile)
+            {
+                var command = new ExtractHtsRiskScores()
+                {
+                    Extract = HtsRiskScoresProfile?.Extract,
+                    DatabaseProtocol = HtsRiskScoresProfile?.DatabaseProtocol
+                };
+                HtsRiskScoresTask = _mediator.Send(command, cancellationToken);
+            }
 
             
             
             // await all tasks
-            var ts = new List<Task<bool>> { ClientTestTask, TestKitTask, ClientTracingTask, PartnerTracingTask, PNSTask, ClientLinkageTask, HtsEligibilityExtractTask };
+            var ts = new List<Task<bool>> { ClientTestTask, TestKitTask, ClientTracingTask, PartnerTracingTask, PNSTask, ClientLinkageTask, HtsEligibilityExtractTask, HtsRiskScoresTask };
             var result = await Task.WhenAll(ts);
 
             return result.All(x=>x);

@@ -9,6 +9,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts
         public static string PartnerTracing => QueryBuilder("TempHtsPartnerTracingExtracts");
         public static string Kits => QueryBuilder("TempHtsTestKitsExtracts");
         public static string Eligibility => QueryBuilder("TempHtsEligibilityExtracts");
+        public static string RiskScores => QueryBuilder("TempHtsRiskScoresExtracts");
+
 
         public static string LinkageCount => QueryBuilder("TempHtsClientsLinkageExtracts", true);
         public static string TestsCount => QueryBuilder("TempHtsClientTestsExtracts", true);
@@ -17,6 +19,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts
         public static string PartnerTracingCount => QueryBuilder("TempHtsPartnerTracingExtracts", true);
         public static string KitsCount => QueryBuilder("TempHtsTestKitsExtracts", true);
         public static string EligibilityCount => QueryBuilder("TempHtsEligibilityExtracts", true);
+        public static string RiskScoresCount => QueryBuilder("TempHtsRiskScoresExtracts", true);
+
 
 
         public static string QueryBuilder(string extract, bool count = false)

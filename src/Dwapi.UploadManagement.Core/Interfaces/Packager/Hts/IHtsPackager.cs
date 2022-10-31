@@ -23,6 +23,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Hts
         IEnumerable<HtsPartnerNotificationServices> GeneratePartnerNotificationServices();
         IEnumerable<HtsClientLinkage> GenerateClientLinkage();
         IEnumerable<HtsEligibilityExtract> GenerateHtsEligibilityExtracts();
+        IEnumerable<HtsRiskScores> GenerateHtsRiskScores();
+
 
 
     }

@@ -43,6 +43,10 @@ namespace Dwapi.Controller
         private readonly IHtsEligibilityExtractRepository _htsEligibilityExtractRepository;
         private readonly ITempHtsEligibilityExtractErrorSummaryRepository _htsEligibilityExtractErrorSummaryRepository;
 
+        private readonly ITempHtsRiskScoresRepository _tempHtsRiskScoresRepository;
+        private readonly IHtsRiskScoresRepository _htsRiskScoresRepository;
+        private readonly ITempHtsRiskScoresErrorSummaryRepository _htsRiskScoresErrorSummaryRepository;
+
 
         public HtsSummaryController(
             ITempHtsClientsExtractRepository tempHtsClientExtractRepository, IHtsClientsExtractRepository htsClientExtractRepository, ITempHtsClientsExtractErrorSummaryRepository htsClientExtractErrorSummaryRepository,
@@ -53,7 +57,8 @@ namespace Dwapi.Controller
             ITempHtsClientsLinkageExtractRepository tempHtsClientLinkageExtractRepository, IHtsClientsLinkageExtractRepository htsClientLinkageExtractRepository, ITempHtsClientLinkageErrorSummaryRepository htsClientLinkageExtractErrorSummaryRepository,
             ITempHtsPartnerNotificationServicesExtractRepository tempHtsPartnerNotificationServicesExtractRepository, IHtsPartnerNotificationServicesExtractRepository htsPartnerNotificationServicesExtractRepository,
             ITempHtsPartnerNotificationServicesErrorSummaryRepository htsPartnerNotificationServicesExtractErrorSummaryRepository,
-            ITempHtsEligibilityExtractRepository tempHtsEligibilityExtractRepository, IHtsEligibilityExtractRepository htsEligibilityExtractRepository, ITempHtsEligibilityExtractErrorSummaryRepository htsEligibilityExtractErrorSummaryRepository
+            ITempHtsEligibilityExtractRepository tempHtsEligibilityExtractRepository, IHtsEligibilityExtractRepository htsEligibilityExtractRepository, ITempHtsEligibilityExtractErrorSummaryRepository htsEligibilityExtractErrorSummaryRepository,
+            ITempHtsRiskScoresRepository tempHtsRiskScoresRepository, IHtsRiskScoresRepository htsRiskScoresRepository, ITempHtsRiskScoresErrorSummaryRepository htsRiskScoresErrorSummaryRepository
             )
 
         {
@@ -88,6 +93,11 @@ namespace Dwapi.Controller
             _tempHtsEligibilityExtractRepository = tempHtsEligibilityExtractRepository;
             _htsEligibilityExtractRepository = htsEligibilityExtractRepository;
             _htsEligibilityExtractErrorSummaryRepository = htsEligibilityExtractErrorSummaryRepository;
+
+            _tempHtsRiskScoresRepository = tempHtsRiskScoresRepository;
+            _htsRiskScoresRepository = htsRiskScoresRepository;
+            _htsRiskScoresErrorSummaryRepository = htsRiskScoresErrorSummaryRepository;
+
         }
 
 
@@ -500,6 +510,42 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+
+        [HttpGet("riskscores/{page}/{pageSize}")]
+        public async Task<IActionResult> LoadRiskScoresValid(int? page, int pageSize)
+        {
+            try
+            {
+                var count = await _htsRiskScoresRepository.GetAll(page, pageSize);
+                return Ok(count.ToList());
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid RiskScores";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet("riskscoresvalidations")]
+        public IActionResult LoadRiskScoresValidations()
+        {
+            try
+            {
+                var errorSummary = _htsRiskScoresErrorSummaryRepository.GetAll().ToList();
+                return Ok(errorSummary);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading RiskScores error summary";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
 
     }
 }

@@ -514,6 +514,60 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
         }
 
 
+        public Task<List<SendMpiResponse>> SendHtsRiskScoresAsync(SendManifestPackageDTO sendTo)
+        {
+            return SendHtsRiskScoresAsync(sendTo, HtsMessageBag.Create(_packager.GenerateHtsRiskScores().ToList()));
+        }
+        
+        public async Task<List<SendMpiResponse>> SendHtsRiskScoresAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag)
+        {
+            var responses = new List<SendMpiResponse>();
+
+            var client = Client ?? new HttpClient();
+            int sendCound = 0;
+            int count = 0;
+            int total = messageBag.Messages.Count;
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+
+            foreach (var message in messageBag.Messages)
+            {
+                count++;
+                try
+                {
+                    var msg = JsonConvert.SerializeObject(message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}RiskScores"), message);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                        responses.Add(content);
+
+                        var sentIds = message.RiskScores.Select(x => x.Id).ToList();
+                        sendCound += sentIds.Count;
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadAsStringAsync();
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(message.RiskScores.Select(x => x.Id).ToList(), SendStatus.Failed, sendTo.ExtractName, error));
+                        throw new Exception(error);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, $"Send Manifest Error");
+                    throw;
+                }
+
+                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsRiskScores), Common.GetProgress(count, total),sendCound)));
+            }
+
+            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsRiskScores), Common.GetProgress(count, total),sendCound, true)));
+
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+
+            return responses;
+        }
+
         public async Task NotifyPostSending(SendManifestPackageDTO sendTo,string version)
         {
             var notificationend = new HandshakeEnd("HTSSendEnd", version);

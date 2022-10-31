@@ -83,6 +83,15 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Hts
                 .Where(x => !x.IsSent);
             //return _context.ClientLinkageExtracts.Where(x => !x.IsSent).AsNoTracking();
         }
+        
+        public IEnumerable<HtsRiskScoresView> ReadAllHtsRiskScores()
+        {
+            return _context.Database.GetDbConnection()
+                .Query<HtsRiskScoresView>("Select * From HtsRiskScoresExtracts")
+                .ToList()
+                .Where(x => !x.IsSent);
+            //return _context.ClientLinkageExtracts.Where(x => !x.IsSent).AsNoTracking();
+        }
 
         public IEnumerable<Site> GetSites()
         {

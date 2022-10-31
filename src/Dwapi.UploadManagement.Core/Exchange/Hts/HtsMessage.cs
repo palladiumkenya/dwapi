@@ -15,6 +15,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Hts
         public List<HtsTestKits> TestKits { get; set; } = new List<HtsTestKits>();
         public List<HtsClientLinkage> ClientLinkage { get; set; } = new List<HtsClientLinkage>();
         public List<HtsEligibilityExtract> HTSEligibility { get; set; } = new List<HtsEligibilityExtract>();
+        public List<HtsRiskScores> RiskScores { get; set; } = new List<HtsRiskScores>();
 
         public HtsMessage()
         {
@@ -51,6 +52,10 @@ namespace Dwapi.UploadManagement.Core.Exchange.Hts
         public HtsMessage(List<HtsEligibilityExtract> htsEligibilityExtract)
         {
             HTSEligibility = htsEligibilityExtract;
+        }
+        public HtsMessage(List<HtsRiskScores> htsRiskScores)
+        {
+            RiskScores = htsRiskScores;
         }
 
         public static List<HtsMessage> Create(List<HtsClients> clients)
@@ -140,6 +145,17 @@ namespace Dwapi.UploadManagement.Core.Exchange.Hts
         {
             var list = new List<HtsMessage>();
             var chunks = htsEligibilityExtract.ToList().ChunkBy(500);
+            foreach (var chunk in chunks)
+            {
+                list.Add(new HtsMessage(chunk));
+            }
+
+            return list;
+        }
+        public static List<HtsMessage> Create(List<HtsRiskScores> htsRiskScores)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = htsRiskScores.ToList().ChunkBy(500);
             foreach (var chunk in chunks)
             {
                 list.Add(new HtsMessage(chunk));

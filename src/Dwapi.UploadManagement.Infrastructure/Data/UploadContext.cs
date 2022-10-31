@@ -35,6 +35,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<HtsPartnerNotificationServicesExtractView> PartnerNotificationServicesExtracts { get; set; }
         public virtual DbSet<HtsClientTracingExtractView> ClientTracingExtracts { get; set; }
         public virtual DbSet<HtsEligibilityExtractView> HtsEligibilityExtract { get; set; }
+        public virtual DbSet<HtsRiskScoresView> HtsRiskScores { get; set; }
 
         public virtual DbSet<MetricMigrationExtractView> MetricMigrationExtracts { get; set; }
 

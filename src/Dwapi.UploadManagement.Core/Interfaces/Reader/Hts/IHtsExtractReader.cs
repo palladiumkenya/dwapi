@@ -14,6 +14,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Hts
         IEnumerable<HtsPartnerNotificationServicesExtractView> ReadAllPartnerNotificationServices();
         IEnumerable<HtsClientsLinkageExtractView> ReadAllClientsLinkage();
         IEnumerable<HtsEligibilityExtractView> ReadAllHtsEligibilityExtracts();
+        IEnumerable<HtsRiskScoresView> ReadAllHtsRiskScores();
+
 
         IEnumerable<Site> GetSites();
         IEnumerable<SitePatientProfile> GetSitePatientProfiles();
