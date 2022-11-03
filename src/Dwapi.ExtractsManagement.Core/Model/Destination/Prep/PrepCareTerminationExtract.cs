@@ -11,5 +11,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Prep
         public DateTime? ExitDate { get; set; }
         public string ExitReason { get; set; }
         public DateTime? DateOfLastPrepDose { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

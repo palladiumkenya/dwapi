@@ -11,5 +11,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string DrinkingAlcohol { get; set; }
         public string Smoking { get; set; }
         public string DrugUse { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Dwh;
 using Dwapi.Models;
@@ -35,9 +36,11 @@ namespace Dwapi.Controller
         private readonly ICbsSendService _cbsSendService;
         private readonly ICTSendService _ctSendService;
         private readonly IExtractRepository _extractRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
+
         private readonly string _version;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -45,6 +48,7 @@ namespace Dwapi.Controller
             _cbsSendService = cbsSendService;
             _ctSendService = ctSendService;
             _extractRepository = extractRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
             Startup.HubContext= _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
         }
@@ -196,6 +200,12 @@ namespace Dwapi.Controller
 
             try
             {
+                // check stale
+                 if (_indicatorExtractRepository.CheckIfStale())
+                 {
+                     throw new Exception(" -------> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                 }
+
                 var result = await _ctSendService.SendSmartManifestAsync(packageDto.DwhPackage, _version, "3");
                 return Ok(result);
             }
