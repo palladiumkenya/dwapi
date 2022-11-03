@@ -445,7 +445,6 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
 
     private getHtsRiskScoresColumns(): void {
         this.cols = [
-            { field: 'Summary', header: 'Summary' },
             { field: 'patientPk', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
             { field: 'patientType', header: 'Patient Type' },

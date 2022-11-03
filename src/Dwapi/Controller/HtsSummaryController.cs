@@ -512,6 +512,23 @@ namespace Dwapi.Controller
         }
 
 
+        [HttpGet("riskscorescount")]
+        public async Task<IActionResult> GetRiskScoresCount()
+        {
+            try
+            {
+                var count = await _htsRiskScoresRepository.GetCount();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading valid Linkages";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
         [HttpGet("riskscores/{page}/{pageSize}")]
         public async Task<IActionResult> LoadRiskScoresValid(int? page, int pageSize)
         {

@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import {HtsRiskScoresService} from "./hts-eligibility-screening.service";
+import {HtsRiskScoresService} from "./hts-risk-scores.service";
 
 describe('HtsRiskScoresService', () => {
   beforeEach(() => {

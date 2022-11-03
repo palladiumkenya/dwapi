@@ -2275,6 +2275,7 @@ cb0f9509-706e-4a91-9f13-b8b0849a992a|Hts Risk Scores|HTS|A6221856-0E85-11E8-BA89
 		   i.FacilityName       as FacilityName,
 		   'KenyaEMR'           as Emr,
 		   'Kenya HMIS III'     as Project,
+		   d.openmrs_id         as HtsNumber,
 		   r.source_system_uuid as SourceSysUUID,
 		   r.risk_score         as RiskScore,
 		   r.risk_factors       as RiskFactors,
@@ -5043,23 +5044,25 @@ UNION
 )
 UNION(
           select 'DB_STATE'                                                                as INDICATOR,
-                 if((c.current_visits) > floor(c.avg_visits/2), 'CURRENT', 'STALE')        as INDICATORVALUE,
-                 date_format(last_day(date_sub(CURRENT_DATE, interval 1 MONTH)), '%Y%b%d') as INDICATORDATE              
+                           if(c.current_visits > floor(c.avg_visits/2), 'CURRENT', 'STALE')        as INDICATORVALUE,
+                           date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as INDICATORDATE
+                    
           from (select a.current_visits, b.avg_visits, b.followup_enc_since_April, b.months_since_april
-                from (select count(hv.encounter_id) as current_visits
-                      from kenyaemr_etl.etl_patient_hiv_followup hv
-                      where hv.visit_date between DATE_SUB(LAST_DAY(NOW()), INTERVAL DAY(LAST_DAY(NOW())) - 1 DAY) and date(current_date)) a
-                         join
-                     (select count(hv.encounter_id) as followup_enc_since_April,
-                             timestampdiff(MONTH, '2022-04-01', last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) +
-                             1                         months_since_april,
-                             floor(count(hv.encounter_id) /
-                                   (timestampdiff(MONTH, '2022-04-01', last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) +
-                                    1))             as avg_visits,
-                             last_day(date_sub(CURRENT_DATE, interval 1 MONTH))
-                      from kenyaemr_etl.etl_patient_hiv_followup hv
-                      where hv.visit_date between '2022-04-01' and
-                                last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) b) c
+              from (select count(hv.encounter_id) as current_visits
+              from kenyaemr_etl.etl_patient_hiv_followup hv
+              where hv.visit_date between  DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+              day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) and date(date(last_day(date_sub(current_date(),interval 1 MONTH)))) ) a
+              join
+              (select count(hv.encounter_id) as followup_enc_since_April,
+              timestampdiff(MONTH, '2022-04-01', last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) +
+              1                         months_since_april,
+              floor(count(hv.encounter_id) /
+              (timestampdiff(MONTH, '2022-04-01', last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) +
+              1))             as avg_visits,
+              last_day(date_sub(CURRENT_DATE, interval 1 MONTH))
+              from kenyaemr_etl.etl_patient_hiv_followup hv
+              where hv.visit_date between '2022-04-01' and
+              last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) b) c
 )
 )x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 

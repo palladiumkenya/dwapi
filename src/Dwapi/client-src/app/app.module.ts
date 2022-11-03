@@ -144,6 +144,7 @@ import {HtsClientService} from '../dockets/services/hts-client.service';
 import {HtsClientPartnerService} from '../dockets/services/hts-client-partner.service';
 import {HtsClientLinkageService} from '../dockets/services/hts-client-linkage.service';
 import {HtsEligibilityScreeningService} from '../dockets/services/hts-eligibility-screening.service';
+import {HtsRiskScoresService} from '../dockets/services/hts-risk-scores.service';
 
 import {HtsClientsService} from '../dockets/services/hts-clients.service';
 import {HtsClientTestsService} from '../dockets/services/hts-client-tests.service';
@@ -333,7 +334,7 @@ import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
         MetricsService, MgsService, MgsSenderService, MetricMigrationService, NdwhSummaryService,
         MnchService, MnchSenderService, MnchClientService, MnchClientLinkageService, MnchSummaryService,
         PrepService, PrepSenderService, PrepClientService, PrepClientLinkageService, PrepSummaryService,
-        CrsService, HtsEligibilityScreeningService
+        CrsService, HtsEligibilityScreeningService, HtsRiskScoresService
 
     ],
     bootstrap: [AppComponent]
