@@ -124,9 +124,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.NUPI))))
                 .ForMember(x => x.Pkv, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.Pkv))))
                 .ForMember(x => x.Occupation, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.Occupation))))
-                .ForMember(x => x.PriorityPopulationType, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.PriorityPopulationType))))
-                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsClients.Date_Created))))
-                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsClients.Date_Last_Modified))));
+                .ForMember(x => x.PriorityPopulationType, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.PriorityPopulationType))));
 
             CreateMap<TempHtsClients, HtsClients>();
 
@@ -156,9 +154,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.Consent, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.Consent))))
                 .ForMember(x => x.Setting, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.Setting))))
                 .ForMember(x => x.Approach, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.Approach))))
-                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsClientTests.Date_Created))))
-                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsClientTests.Date_Last_Modified))))
-                ;
+                .ForMember(x => x.HtsRiskCategory, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.HtsRiskCategory))))
+                .ForMember(x => x.HtsRiskScore, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempHtsClientTests.HtsRiskScore))));
             CreateMap<TempHtsClientTests, HtsClientTests>();
 
             //hts client linkages
@@ -177,9 +174,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.ReferralDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsClientLinkage.ReferralDate))))
                 .ForMember(x => x.DateEnrolled, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsClientLinkage.DateEnrolled))))
                 .ForMember(x => x.ReportedCCCNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientLinkage.ReportedCCCNumber))))
-                .ForMember(x => x.ReportedStartARTDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsClientLinkage.ReportedStartARTDate))))
-                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsClientLinkage.Date_Created))))
-                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsClientLinkage.Date_Last_Modified))));
+                .ForMember(x => x.ReportedStartARTDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsClientLinkage.ReportedStartARTDate))));
             CreateMap<TempHtsClientLinkage, HtsClientLinkage>();
 
             //hts test kits
@@ -199,9 +194,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.TestKitLotNumber2, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsTestKits.TestKitLotNumber2))))
                 .ForMember(x => x.TestKitExpiry2, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsTestKits.TestKitExpiry2))))
                 .ForMember(x => x.TestResult2, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsTestKits.TestResult2))))
-                .ForMember(x => x.SyphilisResult, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsTestKits.SyphilisResult))))
-                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsTestKits.Date_Created))))
-                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsTestKits.Date_Last_Modified))));
+                .ForMember(x => x.SyphilisResult, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsTestKits.SyphilisResult))));
             CreateMap<TempHtsTestKits, HtsTestKits>();
 
             //hts client trace
@@ -214,9 +207,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.HtsNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTracing.HtsNumber))))
                 .ForMember(x => x.TracingType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTracing.TracingType))))
                 .ForMember(x => x.TracingDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsClientTracing.TracingDate))))
-                .ForMember(x => x.TracingOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTracing.TracingOutcome))))
-                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsClientTracing.Date_Created))))
-                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsClientTracing.Date_Last_Modified))));
+                .ForMember(x => x.TracingOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTracing.TracingOutcome))));
             CreateMap<TempHtsClientTracing, HtsClientTracing>();
 
             //hts partner trace
@@ -231,9 +222,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerTracing.Project))))
                 .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsPartnerTracing.SiteCode))))
                 .ForMember(x => x.BookingDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsPartnerTracing.BookingDate))))
-                .ForMember(x => x.TraceOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerTracing.TraceOutcome))))
-                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsPartnerTracing.Date_Created))))
-                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsPartnerTracing.Date_Last_Modified))));
+                .ForMember(x => x.TraceOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerTracing.TraceOutcome))));
             CreateMap<TempHtsPartnerTracing, HtsPartnerTracing>();
 
             //hts client trace
@@ -261,9 +250,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.FacilityLinkedTo, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.FacilityLinkedTo))))
                 .ForMember(x => x.Dob, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsPartnerNotificationServices.Dob))))
                 .ForMember(x => x.DateElicited, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsPartnerNotificationServices.DateElicited))))
-                .ForMember(x => x.MaritalStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.MaritalStatus))))
-                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsPartnerNotificationServices.Date_Created))))
-                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempHtsPartnerNotificationServices.Date_Last_Modified))));
+                .ForMember(x => x.MaritalStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.MaritalStatus))));
             CreateMap<TempHtsPartnerNotificationServices, HtsPartnerNotificationServices>();
             
             //hts eligibility screening

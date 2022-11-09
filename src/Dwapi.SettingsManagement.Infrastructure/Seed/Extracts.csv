@@ -1881,6 +1881,8 @@ on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-
                     WHEN 2 THEN 'Repeat'
                     END                                                           AS TestType,
                     t.patient_consented                                               as Consent,
+                    t.hts_risk_category                                               as HtsRiskCategory,
+                    t.hts_risk_score                                                  as HtsRiskScore,
                     t.date_created                                                    as Date_Created,
                     t.date_last_modified                                              as Date_Last_Modified
                     FROM kenyaemr_etl.etl_hts_test t
@@ -5024,24 +5026,27 @@ UNION
     limit 1
 )
 UNION(
-          select 'DB_STATE'                                                                as INDICATOR,
-                 if((c.current_visits) > floor(c.avg_visits/2), 'CURRENT', 'STALE')        as INDICATORVALUE,
-                 date_format(last_day(date_sub(CURRENT_DATE, interval 1 MONTH)), '%Y%b%d') as INDICATORDATE              
+          select 'DB_STATE' as INDICATOR,
+          if(c.current_visits > floor(c.avg_visits/2), 'CURRENT', 'STALE') as INDICATORVALUE,
+          date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as INDICATORDATE
           from (select a.current_visits, b.avg_visits, b.followup_enc_since_April, b.months_since_april
-                from (select count(hv.encounter_id) as current_visits
-                      from kenyaemr_etl.etl_patient_hiv_followup hv
-                      where hv.visit_date between DATE_SUB(LAST_DAY(NOW()), INTERVAL DAY(LAST_DAY(NOW())) - 1 DAY) and date(current_date)) a
-                         join
-                     (select count(hv.encounter_id) as followup_enc_since_April,
-                             timestampdiff(MONTH, '2022-04-01', last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) +
-                             1                         months_since_april,
-                             floor(count(hv.encounter_id) /
-                                   (timestampdiff(MONTH, '2022-04-01', last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) +
-                                    1))             as avg_visits,
-                             last_day(date_sub(CURRENT_DATE, interval 1 MONTH))
-                      from kenyaemr_etl.etl_patient_hiv_followup hv
-                      where hv.visit_date between '2022-04-01' and
-                                last_day(date_sub(CURRENT_DATE, interval 1 MONTH))) b) c
+          from (select count(hv.encounter_id) as current_visits
+          from kenyaemr_etl.etl_patient_hiv_followup hv
+          where hv.visit_date between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+          day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) and date(date(last_day(date_sub(current_date(),interval 1 MONTH)))) ) a
+          join
+          (select count(hv.encounter_id) as followup_enc_since_April,
+          timestampdiff(MONTH, '2022-04-01', DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+          day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) )  months_since_april,
+          floor(count(hv.encounter_id) /
+          (timestampdiff(MONTH, '2022-04-01', DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+          day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) ) +
+          1)) as avg_visits,
+          last_day(date_sub(CURRENT_DATE, interval 1 MONTH))
+          from kenyaemr_etl.etl_patient_hiv_followup hv
+          where hv.visit_date between '2022-04-01' and
+          DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+          day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) ) b) c
 )
 )x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
@@ -6458,7 +6463,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
 											i.FacilityName               as FacilityName,
 											0 																																																															as FacilityId,
 											d.openmrs_id                 as PatientMnchID,
-											d.hei_no                     as PatientHEI_ID,
+											d.hei_no                     as PatientHeiId,
 											a.1st_DNA_PCR_date           as DNAPCR1Date,
 											b.2nd_DNA_PCR_date           as DNAPCR2Date,
 											c.3rd_DNA_PCR_date           as DNAPCR3Date,

@@ -428,8 +428,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                 .ForMember(x => x.BasellineVL, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.BasellineVL))))
                 .ForMember(x => x.FinalyAntibody, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.FinalyAntibody))))
                 .ForMember(x => x.HEIExitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHeiExtract.HEIExitDate))))
-                .ForMember(x => x.HEIHIVStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.HEIHIVStatus)))).ForMember(x => x.HEIExitCritearia, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.HEIExitCritearia))))
-
+                .ForMember(x => x.HEIHIVStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.HEIHIVStatus))))
+                .ForMember(x => x.HEIExitCritearia, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.HEIExitCritearia))))
+                .ForMember(x => x.PatientHeiId, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.PatientHeiId))))
                 .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientMnchExtract.Date_Created))))
                 .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientMnchExtract.Date_Last_Modified))));
 

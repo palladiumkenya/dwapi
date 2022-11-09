@@ -25,6 +25,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
             public  string   Consent	 { get; set; } 
             public  string    Setting	 { get; set; }
             public  string    Approach	 { get; set; }
+            public  string HtsRiskCategory	 { get; set; }
+            public  decimal? HtsRiskScore	 { get; set; }
             public DateTime? Date_Created { get; set; }
             public DateTime? Date_Last_Modified { get; set; }
 
