@@ -115,6 +115,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard
             throw new NotImplementedException();
         }
 
+        public bool RefreshETLtables(DbProtocol protocol)
+        {
+            throw new NotImplementedException();
+        }
+
         public IDbConnection GetConnection(DbProtocol databaseProtocol)
         {
             var connectionString = databaseProtocol.GetConnectionString();

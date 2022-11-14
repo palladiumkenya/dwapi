@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
@@ -30,8 +31,9 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly ITempPatientExtractRepository _tempPatientExtractRepository;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
         private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IDwhExtractSourceReader _reader;
 
-        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts, ITempPatientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository)
+        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts, ITempPatientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository, IDwhExtractSourceReader reader)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
@@ -40,10 +42,23 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             _tempPatientExtractRepository = tempPatientExtractRepository;
             _extractHistoryRepository = extractHistoryRepository;
             _diffLogRepository = diffLogRepository;
+            _reader = reader;
+
         }
 
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
         {
+            var refreshComplete = _reader.RefreshETLtables(request.DatabaseProtocol);
+
+            if (false == refreshComplete)
+            {
+                throw new Exception("refresh returned false. did not complete");
+            }
+            else
+            {
+                throw new Exception("refresh returned true.  completed");
+            }
+            
             var loadChangesOnly = request.LoadChangesOnly;
            
             //Extract

@@ -143,5 +143,29 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
 
             return null;
         }
+        
+        public bool RefreshETLtables(DbProtocol protocol)
+        {
+            var sourceConnection = GetConnection(protocol);
+            if (null == sourceConnection)
+                throw new Exception("Data connection not initialized");
+
+            using (sourceConnection)
+            {
+                try
+                {
+                    var sql = $@"CALL sp_scheduled_updates()";
+        
+                    sourceConnection.Execute(sql);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+            }
+            
+        }
+
     }
 }

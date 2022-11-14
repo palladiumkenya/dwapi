@@ -13,5 +13,6 @@ namespace Dwapi.SharedKernel.Interfaces
         Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract, DateTime? maxCreated, DateTime? maxModified, int siteCode);
         IDataReader ExecuteReaderSync(DbProtocol protocol, DbExtract extract);
         bool CheckDiffSupport(DbProtocol protocol);
+        bool RefreshETLtables(DbProtocol protocol);
     }
 }
