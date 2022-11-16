@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Dwh;
@@ -37,10 +38,12 @@ namespace Dwapi.Controller
         private readonly ICTSendService _ctSendService;
         private readonly IExtractRepository _extractRepository;
         private readonly IIndicatorExtractRepository _indicatorExtractRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
+
 
         private readonly string _version;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -49,6 +52,8 @@ namespace Dwapi.Controller
             _ctSendService = ctSendService;
             _extractRepository = extractRepository;
             _indicatorExtractRepository = indicatorExtractRepository;
+            _diffLogRepository = diffLogRepository;
+
             Startup.HubContext= _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
         }
@@ -203,7 +208,7 @@ namespace Dwapi.Controller
                 // check stale
                  if (_indicatorExtractRepository.CheckIfStale())
                  {
-                     throw new Exception(" -------> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                     throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
                  }
 
                 var result = await _ctSendService.SendSmartManifestAsync(packageDto.DwhPackage, _version, "3");
@@ -284,10 +289,53 @@ namespace Dwapi.Controller
             }
             catch (Exception e)
             {
-                var msg = $"Error sending Extracts {e.Message}";
+                var msg = $"Error sending diff patients Extracts {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
             }
+        }
+
+        [HttpGet("checkWhichToSend")]
+        public async Task<IActionResult> CheckWhichToSend()
+        {
+
+            string whichToSend = "";
+
+            string version = GetType().Assembly.GetName().Version.ToString();
+
+            await _mediator.Publish(new ExtractSent("CareTreatment", version));
+
+            try
+            {
+                // check stale
+                if (_indicatorExtractRepository.CheckIfStale())
+                {
+                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date. Refresh ETL tables and try again");
+                }
+
+                var mflcode =   _indicatorExtractRepository.GetMflCode();
+                var changesLoaded =
+                    _diffLogRepository.GetIfChangesHasBeenLoadedAlreadyLog("NDWH", "PatientExtract", mflcode);
+                // check changes loaded
+                if (null==changesLoaded)
+                {
+                    whichToSend = "SendAll";
+                }
+                else
+                {
+                    whichToSend = "SendChanges";
+                }
+                return Ok(whichToSend);
+
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error checking send {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+
+            }
+
         }
 
         [AutomaticRetry(Attempts = 0)]

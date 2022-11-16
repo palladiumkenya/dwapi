@@ -15,6 +15,10 @@ export class NdwhSenderService {
         this._http = http;
     }
 
+    public checkWhichToSend(): Observable<ManifestResponse> {
+        return this._http.get<boolean>(`${this._url}/checkWhichToSend`)
+            .catch(this.handleError);
+    }
 
     public sendManifest(sendPackage: CombinedPackage): Observable<ManifestResponse> {
         return this._http.post<boolean>(`${this._url}/manifest`, sendPackage)

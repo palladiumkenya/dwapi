@@ -447,6 +447,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'priorityPopulationType', header: 'Priority Population Type' },
             { field: 'occupation', header: 'Occupation' },
             { field: 'maritalStatus', header: 'Marital Status' },
+            { field: 'htsRecencyId', header: 'Hts Recency Id' },
             { field: 'populationType', header: 'Population Type' },
             { field: 'keyPopulationType', header: 'Key Population Type' },
             { field: 'county', header: 'County' },

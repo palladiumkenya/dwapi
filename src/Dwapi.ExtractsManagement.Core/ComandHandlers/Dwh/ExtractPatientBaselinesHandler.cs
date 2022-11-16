@@ -5,6 +5,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -25,9 +26,12 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IClearDwhExtracts _clearDwhExtracts;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
         private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
 
-        public ExtractPatientBaselinesHandler(IPatientBaselinesSourceExtractor patientBaselinesSourceExtractor, IExtractValidator extractValidator, IPatientBaselinesLoader patientBaselinesLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository)
+
+        public ExtractPatientBaselinesHandler(IPatientBaselinesSourceExtractor patientBaselinesSourceExtractor, IExtractValidator extractValidator, IPatientBaselinesLoader patientBaselinesLoader, 
+            IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
         {
             _patientBaselinesSourceExtractor = patientBaselinesSourceExtractor;
             _extractValidator = extractValidator;
@@ -35,6 +39,8 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             _clearDwhExtracts = clearDwhExtracts;
             _extractHistoryRepository = extractHistoryRepository;
             _diffLogRepository = diffLogRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
+
         }
 
         public async Task<bool> Handle(ExtractPatientBaselines request, CancellationToken cancellationToken)
@@ -42,8 +48,10 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             // differential loading
             // Get current site and docket dates,
             int found;
+            var mflcode =   _indicatorExtractRepository.GetMflCode();
+
             var loadChangesOnly = request.LoadChangesOnly;
-            var difflog = _diffLogRepository.GetLog("NDWH", "PatientBaselinesExtract");
+            var difflog = _diffLogRepository.GetLog("NDWH", "PatientBaselinesExtract",mflcode);
             var changesLoadedStatus= false;
 
 

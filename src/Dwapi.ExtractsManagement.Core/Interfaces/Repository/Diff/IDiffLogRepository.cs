@@ -8,7 +8,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff
 {
     public interface IDiffLogRepository:IRepository<DiffLog,Guid>
     {
-        DiffLog GetLog(string docket, string extract);
+        DiffLog GetLog(string docket, string extract, int siteCode);
         DiffLog InitLog(string docket, string extract, int siteCode);
         void SaveLog(DiffLog diffLog);
         DiffLog GenerateDiff(string docket, string extract, int siteCode);
@@ -17,6 +17,8 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff
         DiffLog GetIfChangesHasBeenLoadedAlreadyLog(string docket, string extract, int siteCode);
         DiffLog GetIfLoadedAllLog(string docket, string extract, int siteCode);
         List<DiffLog>  GetAllDocketLogs(string docket);
+        // void UpdateMaxDates(string docket, string extract, int siteCode);
+
 
     }
 }
