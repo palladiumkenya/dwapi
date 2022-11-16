@@ -5,6 +5,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -25,9 +26,11 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IClearDwhExtracts _clearDwhExtracts;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
         private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
 
-        public ExtractDefaulterTracingHandler(IDefaulterTracingSourceExtractor DefaulterTracingSourceExtractor, IExtractValidator extractValidator, IDefaulterTracingLoader DefaulterTracingLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository)
+
+        public ExtractDefaulterTracingHandler(IDefaulterTracingSourceExtractor DefaulterTracingSourceExtractor, IExtractValidator extractValidator, IDefaulterTracingLoader DefaulterTracingLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
         {
             _DefaulterTracingSourceExtractor = DefaulterTracingSourceExtractor;
             _extractValidator = extractValidator;
@@ -35,14 +38,18 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             _clearDwhExtracts = clearDwhExtracts;
             _extractHistoryRepository = extractHistoryRepository;
             _diffLogRepository = diffLogRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
+
         }
 
         public async Task<bool> Handle(ExtractDefaulterTracing request, CancellationToken cancellationToken)
         {
             // Get current site and docket dates,
             int found;
+            var mflcode =   _indicatorExtractRepository.GetMflCode();
+
             var loadChangesOnly = request.LoadChangesOnly;
-            var difflog = _diffLogRepository.GetLog("NDWH", "DefaulterTracingExtract");
+            var difflog = _diffLogRepository.GetLog("NDWH", "DefaulterTracingExtract", mflcode);
             var changesLoadedStatus= false;
             
             if (request.DatabaseProtocol.SupportsDifferential)

@@ -135,7 +135,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
                 changes = _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated).ToList();
 
             if (!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
-                changes =  _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastModified).ToList();
+                changes =  _reader.Read<T, Guid>(page, batchSize, x => x.Date_Last_Modified > diffLog.LastModified).ToList();
 
             if (!diffLog.LastModified.IsNullOrEmpty() && !diffLog.LastCreated.IsNullOrEmpty())
                 changes= _reader.Read<T, Guid>(page, batchSize,
@@ -172,7 +172,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
                 return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated);
 
             if (!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
-                return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastModified);
+                return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Last_Modified > diffLog.LastModified);
 
             return _reader.ReadMainExtract<T, Guid>(page, batchSize,
                 x => x.Date_Created > diffLog.LastCreated || x.Date_Last_Modified > diffLog.LastModified);

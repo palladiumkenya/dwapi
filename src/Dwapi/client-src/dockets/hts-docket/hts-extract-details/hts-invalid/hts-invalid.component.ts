@@ -279,6 +279,7 @@ export class HtsInvalidComponent implements OnInit, OnChanges {
             { field: 'doB', header: 'Dob' },
             { field: 'gender', header: 'Gender' },
             { field: 'maritalStatus', header: 'Marital Status' },
+            { field: 'htsRecencyId', header: 'Hts Recency Id' },
             { field: 'populationType', header: 'Population Type' },
             { field: 'keyPopulationType', header: 'Key Population Type' },
             { field: 'county', header: 'County' },

@@ -31,14 +31,20 @@ namespace Dwapi.ExtractsManagement.Core.Application.Events
 
         public Task Handle(DocketExtractLoaded notification, CancellationToken cancellationToken)
         {
-            var generatedDates = _repository.GenerateDiff(notification.Docket, $"{notification.Extract}s", notification.SiteCode);
-
-            var diffLog = _repository.InitLog(notification.Docket, notification.Extract, notification.SiteCode);
-
+            var diffLog = _repository.GetLog(notification.Docket, notification.Extract, notification.SiteCode);
+            if (null == diffLog)
+            {
+                _repository.InitLog(notification.Docket, notification.Extract, notification.SiteCode);
+            }
+            
             if (null != diffLog)
             {
+                var generatedDates = _repository.GenerateDiff(notification.Docket, $"{notification.Extract}s", notification.SiteCode);
+
                 diffLog.LogLoad(generatedDates.MaxCreated, generatedDates.MaxModified);
                 _repository.SaveLog(diffLog);
+                // _repository.UpdateMaxDates(notification.Docket, notification.Extract, notification.SiteCode);
+
             }
 
             return Task.CompletedTask;

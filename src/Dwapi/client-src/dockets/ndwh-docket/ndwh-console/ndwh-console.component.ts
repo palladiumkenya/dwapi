@@ -73,6 +73,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public cbsExtractPackage: SendPackage = null;
     public sending: boolean = false;
     public sendingManifest: boolean = false;
+    public changesLoaded: boolean = false;
+
 
 
     public errorMessage: Message[];
@@ -165,7 +167,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public loadFromEmr(loadChangesOnly): void {
-
+        this.changesLoaded = loadChangesOnly;
         this.canSend = this.canLoadFromEmr = false;
         localStorage.clear();
         this.errorMessage = [];
@@ -341,6 +343,34 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             );
     }
 
+    public checkWhichToSend(): void {
+        this.notifications = [];
+
+        this.sendManifest$ = this._ndwhSenderService.checkWhichToSend()
+            .subscribe(
+                p => {
+                    console.log('value here is',p)
+                    if (p=="SendAll"){
+                        this.sendSmart()
+                    }else if(p=="SendChanges"){
+                        this.sendDiff()
+                    }
+                },
+                e => {
+                    if (e && e.ProgressEvent) {
+
+                    } else {
+                        this.notifications = [];
+                        this.notifications.push({severity: 'error',summary: 'Error checking changes loaded', detail: <any>e});
+                    }
+                },
+                () => {
+                    this.notifications.push({severity: 'success', summary: 'Sending started'});
+                }
+            );
+    }
+
+
     public sendSmart(): void {
         this.startedSending=true;
         this.canSend=false;
@@ -364,7 +394,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     this.canSend=true;
-                    console.error('SEND ERROR', e);
+
                     if (e && e.ProgressEvent) {
 
                     } else {
