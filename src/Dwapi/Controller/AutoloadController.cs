@@ -11,32 +11,39 @@ namespace Dwapi.Controller
     [Route("api/RefreshETL")]
     public class AutoloadController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly IEmrManagerService _emrManagerService;
+        private readonly IAutoloadService _autoloadService;
         private readonly IEmrMetricsService _metricsService;
 
-        public AutoloadController(IEmrManagerService emrManagerService, IEmrMetricsService metricsService)
+        public AutoloadController(IAutoloadService autoloadService, IEmrMetricsService metricsService)
         {
-            _emrManagerService = emrManagerService;
+            _autoloadService = autoloadService;
             _metricsService = metricsService;
         }
 
-        [HttpGet]
-        public IActionResult refreshETL()
+        [HttpPost]
+        public dynamic refreshETL([FromBody] DatabaseProtocol entity)
         {
-            return Ok("hdhccncn here");
+            // return $"here there ";
 
-            // try
-            // {
-            //     var list = _emrManagerService.GetAllEmrs();
-            //     return Ok(list);
-            // }
-            // catch (Exception e)
-            // {
-            //     var msg = $"Error refreshing EMR tables";
-            //     Log.Error(msg);
-            //     Log.Error($"{e}");
-            //     return StatusCode(500, msg);
-            // }
+            try
+            {
+                var list = _autoloadService.refreshEMRETL(entity);
+                return list;
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error refreshing EMR tables {e}";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpGet]
+        public dynamic test()
+        {
+
+            return "here there";
         }
 
     }

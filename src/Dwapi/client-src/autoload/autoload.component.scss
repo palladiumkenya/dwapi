@@ -159,3 +159,10 @@ ul.form-stepper li a .form-stepper-circle {
 .form-stepper a {
     cursor: default;
 }
+
+.step-section .step-section-active {
+    display:block !important;
+}
+.step-section .step-section-inactive {
+    display:none !important;
+}

@@ -5,6 +5,9 @@ import {Observable} from 'rxjs/Observable';
 // import {EmrSystem} from '../model/emr-system';
 import {DatabaseProtocol} from '../model/database-protocol';
 import {EmrMetrics} from '../model/emr-metrics';
+import {EmrSystem} from "../model/emr-system";
+import {RestProtocol} from "../model/rest-protocol";
+
 
 @Injectable()
 export class AutoloadService {
@@ -16,7 +19,12 @@ export class AutoloadService {
         this._http = http;
     }
 
-    public refreshETL(): Observable<string> {
+    public refreshETL(databaseProtocol: DatabaseProtocol): Observable<string> {
+        return this._http.post<string>(this._url, databaseProtocol)
+            .catch(this.handleError);
+    }
+
+    public test(): Observable<string> {
         return this._http.get<string>(this._url)
             .catch(this.handleError);
     }

@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Dwapi.SharedKernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dwapi.SettingsManagement.Infrastructure.Repository
 {
     public class EmrSystemRepository: BaseRepository<EmrSystem,Guid>, IEmrSystemRepository
     {
-        public EmrSystemRepository(SettingsContext context) : base(context)
+        private readonly ISourceReader _reader;
+        public EmrSystemRepository(SettingsContext context,ISourceReader reader) : base(context)
         {
-
+            _reader = reader;
         }
 
         public override IEnumerable<EmrSystem> GetAll()
@@ -68,6 +71,17 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
                 return;
             }
             Create(entity);
+        }
+        
+        public string refreshEMRETL(DatabaseProtocol protocol)
+        {
+            
+            // var sql = $@"CALL openmrs.sp_scheduled_updates()";
+            // Context.Database.GetDbConnection().Execute(sql);
+
+            _reader.RefreshEtlTtables(protocol);
+            return "status:200";
+           
         }
     }
 }

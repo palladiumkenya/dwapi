@@ -59,10 +59,29 @@
                             </li>
                         </ul>
 
-                        <p-progressBar [value]="step" [showValue]="true" ></p-progressBar>
+<!--                        <p-progressBar [value]="step" [showValue]="true" ></p-progressBar>-->
 
-                        <!--                        <button class="button btn-navigate-form-step" type="button" step_number="2" (click)="moveNext(step+1)">Next</button>-->
+                        <div class="step-section" >
+                            <div class="{{stepOneIsActive}}">
+                                <p>Refreshing ETL tables</p>
+                                <p-progressBar [value]="barValue" [showValue]="true"></p-progressBar>
+<!--                                <button id="refreshTables" (click)="getDefaultEMR()"></button>-->
+                            </div>
+                            <div class="{{stepTwoIsActive}} ">
+                                <liveapp-ndwh-docket></liveapp-ndwh-docket>
+                            </div>
+                            <div class="{{stepThreeIsActive}}">
+                                <liveapp-hts-docket></liveapp-hts-docket>
+                            </div>
+                            <div class="{{stepFourIsActive}} ">
+                                <liveapp-mnch-docket></liveapp-mnch-docket>
+                            </div>
+                            <div class="{{stepFiveIsActive}} ">
+                                <liveapp-prep-docket></liveapp-prep-docket>
+                            </div>
+                        </div>
 
+<!--                        <button class="button btn-navigate-form-step" type="button" step_number="2" (click)="moveNext(step+1)">Next</button>-->
 
                     </div>
                 </div>

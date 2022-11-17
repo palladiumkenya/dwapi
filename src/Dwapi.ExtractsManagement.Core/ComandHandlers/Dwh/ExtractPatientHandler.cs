@@ -48,17 +48,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
 
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
         {
-            var refreshComplete = _reader.RefreshETLtables(request.DatabaseProtocol);
-
-            if (false == refreshComplete)
-            {
-                throw new Exception("refresh returned false. did not complete");
-            }
-            else
-            {
-                throw new Exception("refresh returned true.  completed");
-            }
-            
+            _reader.RefreshEtlTtables(request.DatabaseProtocol);
             var loadChangesOnly = request.LoadChangesOnly;
            
             //Extract
