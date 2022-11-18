@@ -124,6 +124,9 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public loadData(): void {
         this.canLoadFromEmr = this.canSend = false;
+        localStorage.setItem('canSendHTS', "false");
+        localStorage.setItem('htsSendingComplete', "false");
+
 
         if (this.emr) {
             this.canLoadFromEmr = true;
@@ -147,6 +150,9 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
         if (this.centralRegistry) {
             this.canSend = true;
+            localStorage.setItem('canSendHTS', "true");
+
+
         }
     }
 
@@ -171,6 +177,10 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         severity: 'success',
                         summary: 'load was successful '
                     });
+                    localStorage.setItem('htsSendingComplete', "true");
+
+                    localStorage.setItem('canSendHts', "true");
+
                     this.updateEvent();
                 }
             );

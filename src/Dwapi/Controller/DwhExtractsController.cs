@@ -206,10 +206,10 @@ namespace Dwapi.Controller
             try
             {
                 // check stale
-                 if (_indicatorExtractRepository.CheckIfStale())
-                 {
-                     throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
-                 }
+                 // if (_indicatorExtractRepository.CheckIfStale())
+                 // {
+                 //     throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                 // }
 
                 var result = await _ctSendService.SendSmartManifestAsync(packageDto.DwhPackage, _version, "3");
                 return Ok(result);

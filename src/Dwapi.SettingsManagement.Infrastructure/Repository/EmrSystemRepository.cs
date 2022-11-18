@@ -13,9 +13,8 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
     public class EmrSystemRepository: BaseRepository<EmrSystem,Guid>, IEmrSystemRepository
     {
         private readonly ISourceReader _reader;
-        public EmrSystemRepository(SettingsContext context,ISourceReader reader) : base(context)
+        public EmrSystemRepository(SettingsContext context) : base(context)
         {
-            _reader = reader;
         }
 
         public override IEnumerable<EmrSystem> GetAll()
@@ -79,7 +78,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
             // var sql = $@"CALL openmrs.sp_scheduled_updates()";
             // Context.Database.GetDbConnection().Execute(sql);
 
-            _reader.RefreshEtlTtables(protocol);
+            // _reader.RefreshEtlTtables(protocol);
             return "status:200";
            
         }

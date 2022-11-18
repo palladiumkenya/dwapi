@@ -37,7 +37,14 @@ export class AutoloadComponent implements OnInit, OnDestroy {
     public otherMessage: Message[];
     public loadingData: boolean;
     public canSend: boolean;
+    public canSendHts: boolean;
+    public canSendMnch: boolean;
+    public canSendPrep: boolean;
+
     public ctSendingComplete: boolean;
+    public htsSendingComplete: boolean;
+    public mnchSendingComplete: boolean;
+    public prepSendingComplete: boolean;
 
     public metricMessages: Message[];
     public emrVersion: string;
@@ -104,11 +111,11 @@ export class AutoloadComponent implements OnInit, OnDestroy {
 
     public refreshETLTables(): void {
         var refreshload = setInterval(() => {
-            this.barValue = this.barValue+10;
+            this.barValue = this.barValue+40;
 
             if (this.barValue >= 100){
                 clearInterval(refreshload);
-                this.moveNext(this.step+1) ;
+                this.loadCT() ;
 
             }
         }, 2000);
@@ -144,38 +151,109 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             console.log(this.canSend, typeof(this.canSend));
 
             if (this.canSend == true){
-                    let element:HTMLElement = document.getElementById('sendSmart') as HTMLElement;
-                    element.click();
-                    clearInterval(checkLoad);
+                    // let element:HTMLElement = document.getElementById('sendSmart') as HTMLElement;
+                    // element.click();
+                this.loadHTS() ;
+
+                clearInterval(checkLoad);
                 }
             }, 2000);
 
-        var checkComplete = setInterval(() => {
-            this.ctSendingComplete = JSON.parse(localStorage.getItem('ctSendingComplete'));
+        // var checkComplete = setInterval(() => {
+        //     this.ctSendingComplete = JSON.parse(localStorage.getItem('ctSendingComplete'));
+        //
+        //     console.log("ctSendingComplete",this.ctSendingComplete, typeof(this.ctSendingComplete));
+        //
+        //     if (this.ctSendingComplete == true){
+        //         this.loadHTS() ;
+        //         clearInterval(checkComplete);
+        //     }
+        // }, 2000);
 
-            console.log("ctSendingComplete",this.ctSendingComplete, typeof(this.ctSendingComplete));
+    }
 
-            if (this.ctSendingComplete == true){
-                this.moveNext(this.step+1) ;
-                clearInterval(checkComplete);
+    public loadHTS(): void {
+        this.moveNext(this.step+1) ;
+        let element:HTMLElement = document.getElementById('loadHts') as HTMLElement;
+        element.click();
+
+        var checkLoad = setInterval(() => {
+            this.canSendHts =JSON.parse(localStorage.getItem('canSendHts'));
+
+            console.log(this.canSendHts, typeof(this.canSendHts));
+
+            if (this.canSendHts == true){
+                // let element:HTMLElement = document.getElementById('sendHts') as HTMLElement;
+                // element.click();
+                this.loadMNCH();
+
+                clearInterval(checkLoad);
             }
         }, 2000);
 
-        // try {
-        //     var value = this._autoloadNdwhDocketComponent.test("here i am");
-        //     console.log(value);
-        // } catch (e) {
-        //     console.log("Something went wrong", e);
-        // }
+        // var checkComplete = setInterval(() => {
+        //     this.htsSendingComplete = JSON.parse(localStorage.getItem('htsSendingComplete'));
+        //
+        //     console.log("htsSendingComplete",this.htsSendingComplete, typeof(this.htsSendingComplete));
+        //
+        //     if (this.htsSendingComplete == true){
+        //         this.loadMNCH();
+        //         clearInterval(checkComplete);
+        //     }
+        // }, 2000);
     }
-    public loadHTS(): void {
-        this.moveNext(this.step+1) ;
-    }
+
     public loadMNCH(): void {
         this.moveNext(this.step+1) ;
+        let element:HTMLElement = document.getElementById('loadMnch') as HTMLElement;
+        element.click();
+
+        var checkLoad = setInterval(() => {
+            this.canSendMnch =JSON.parse(localStorage.getItem('canSendMnch'));
+
+            console.log(this.canSendMnch, typeof(this.canSendMnch));
+
+            if (this.canSendMnch == true){
+                // let element:HTMLElement = document.getElementById('sendMnch') as HTMLElement;
+                // element.click();
+                this.loadPREP();
+
+                clearInterval(checkLoad);
+            }
+        }, 2000);
+
+        // var checkComplete = setInterval(() => {
+        //     this.mnchSendingComplete = JSON.parse(localStorage.getItem('mnchSendingComplete'));
+        //
+        //     console.log("mnchSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
+        //
+        //     if (this.mnchSendingComplete == true){
+        //         this.loadMNCH();
+        //         clearInterval(checkComplete);
+        //     }
+        // }, 2000);
     }
+
     public loadPREP(): void {
         this.moveNext(this.step+1) ;
+        let element:HTMLElement = document.getElementById('loadPrep') as HTMLElement;
+        element.click();
+
+        var checkLoad = setInterval(() => {
+                this.canSendPrep =JSON.parse(localStorage.getItem('canSendPrep'));
+
+            console.log(this.canSendPrep, typeof(this.canSendPrep));
+
+            if (this.canSendPrep == true){
+                // let element:HTMLElement = document.getElementById('sendMnch') as HTMLElement;
+                // element.click();
+                // this.loadPREP();
+
+                clearInterval(checkLoad);
+            }
+        }, 2000);
+        localStorage.clear();
+
     }
 
     public moveNext(num): void {
