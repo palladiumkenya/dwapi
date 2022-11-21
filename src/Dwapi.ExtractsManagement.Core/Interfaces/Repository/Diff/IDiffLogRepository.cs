@@ -17,7 +17,8 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff
         DiffLog GetIfChangesHasBeenLoadedAlreadyLog(string docket, string extract, int siteCode);
         DiffLog GetIfLoadedAllLog(string docket, string extract, int siteCode);
         List<DiffLog>  GetAllDocketLogs(string docket);
-        // void UpdateMaxDates(string docket, string extract, int siteCode);
+       
+        DiffLog UpdateMaxDates(string docket, string extract, int siteCode);
 
 
     }

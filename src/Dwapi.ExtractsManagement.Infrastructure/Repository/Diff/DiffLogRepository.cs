@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Diff;
@@ -99,52 +100,55 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
             Context.Database.GetDbConnection().BulkMerge(diffLog);
             
         }
-
-        public DiffLog GenerateDiff(string docket,string extract, int siteCode)
+        
+       
+        public DiffLog GenerateDiff(string docket, string extract, int siteCode)
         {
             var sql =
-                $"SELECT MAX({nameof(PatientExtract.Date_Created)}) {nameof(PatientExtract.Date_Created)},MAX({nameof(PatientExtract.Date_Last_Modified)}) {nameof(PatientExtract.Date_Last_Modified)} FROM {extract}";
+                $"SELECT MAX({nameof(PatientExtract.Date_Created)}) {nameof(PatientExtract.Date_Created)},MAX({nameof(PatientExtract.Date_Last_Modified)}) {nameof(PatientExtract.Date_Last_Modified)} FROM {extract}s";
 
             var extractDates = Context.Database.GetDbConnection().QuerySingle(sql);
-
-            var diffLog = DiffLog.Create(docket, extract, siteCode,extractDates.Date_Created,extractDates.Date_Last_Modified);
- 
+          
+            var diffLog = DiffLog.Create(docket, extract, siteCode, extractDates.Date_Created, extractDates.Date_Last_Modified);
+            
             if (null != extractDates)
             {
 
-                diffLog.MaxCreated = extractDates.Date_Created;
-                diffLog.MaxModified = extractDates.Date_Last_Modified;
-                SaveLog(diffLog);
+                diffLog.MaxCreated = Extentions.CastDateTime(extractDates.Date_Created);
+                diffLog.MaxModified = Extentions.CastDateTime(extractDates.Date_Last_Modified);
+
             }
 
             return diffLog;
         }
+
         
+        public DiffLog UpdateMaxDates(string docket, string extract, int siteCode)
+        {
+            var diffLog = Get(x =>
+                x.Docket.ToLower() == docket.ToLower() &&
+                x.Extract.ToLower() == extract.ToLower());
+                
+            var sql =
+                $"SELECT MAX({nameof(PatientExtract.Date_Created)}) {nameof(PatientExtract.Date_Created)},MAX({nameof(PatientExtract.Date_Last_Modified)}) {nameof(PatientExtract.Date_Last_Modified)} FROM {extract}s";
+
+            var extractDates = Context.Database.GetDbConnection().QuerySingle(sql);
+
+            if (null != extractDates.Date_Created)
+            {
+                diffLog.MaxCreated = Extentions.CastDateTime(extractDates.Date_Created);
+             }   
+            
+            if (null != extractDates.Date_Last_Modified)
+            {
+                diffLog.MaxModified = Extentions.CastDateTime(extractDates.Date_Last_Modified);
+            }    
+            SaveChanges();
+            Context.Database.GetDbConnection().BulkMerge(diffLog);
+           
+
+            return diffLog;
+        }
         
-        // public void UpdateMaxDates(string docket,string extract, int siteCode)
-        // {
-        //     
-        //     var diffLog = GetAll(x =>
-        //         x.Docket.ToLower() == docket.ToLower()).ToList();
-        //
-        //     if (null != diffLog)
-        //     {
-        //         foreach (var log in diffLog)
-        //         {
-        //             
-        //             var sql =
-        //                 $"SELECT MAX({nameof(PatientExtract.Date_Created)}) {nameof(PatientExtract.Date_Created)},MAX({nameof(PatientExtract.Date_Last_Modified)}) {nameof(PatientExtract.Date_Last_Modified)} FROM {log.Extract}s";
-        //
-        //             var extractDates = Context.Database.GetDbConnection().QuerySingle(sql);
-        //
-        //             log.MaxCreated = extractDates.Date_Created;
-        //             log.MaxModified = extractDates.Date_Last_Modified;
-        //             // update (diffLog);
-        //             SaveChanges();
-        //             Context.Database.GetDbConnection().BulkMerge(log);
-        //             
-        //         }
-        //     }
-        // }
     }
 }
