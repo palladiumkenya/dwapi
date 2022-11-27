@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using AutoMapper.Data;
+using Dwapi.Controller;
 using Dwapi.Custom;
 using Dwapi.ExtractsManagement.Core.Cleaner.Cbs;
 using Dwapi.ExtractsManagement.Core.Cleaner.Crs;
@@ -236,6 +237,7 @@ namespace Dwapi
         public static AppFeature AppFeature;
         private IHostingEnvironment CurrrentEnv;
         public static List<string> StartupErrors = new List<string>();
+        public static IAutoloadController _AutoloadController;
 
         public Startup(IHostingEnvironment env)
         {
@@ -450,6 +452,8 @@ namespace Dwapi
             services.AddScoped<IEmrManagerService, EmrManagerService>();
             services.AddScoped<IExtractManagerService, ExtractManagerService>();
             services.AddScoped<IAutoloadService, AutoloadService>();
+            services.AddScoped<IAutoloadController, AutoloadController>();
+
 
             services.AddScoped<IPsmartExtractService, PsmartExtractService>();
             services.AddScoped<IExtractStatusService, ExtractStatusService>();
@@ -852,7 +856,7 @@ namespace Dwapi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, IAutoloadController autoloadController)
         {
             Stopwatch stopWatch = Stopwatch.StartNew();
 
@@ -1011,7 +1015,7 @@ namespace Dwapi
                                          | |  | \ \ /\ / / _` | '_ \| |
                                          | |__| |\ V  V / (_| | |_) | |
                                          |_____/  \_/\_/ \__,_| .__/|_|
-                                                              | |
+                                                              | |3.0.0.0
                                                               |_|
 ");
             Log.Debug(
@@ -1031,6 +1035,9 @@ namespace Dwapi
             {
                 Log.Debug($"Dwapi started in {stopWatch.ElapsedMilliseconds} ms");
             }
+
+            _AutoloadController = autoloadController;
+            _AutoloadController.LoadExtracts();
         }
 
         public static void EnsureMigrationOfContext<T>(IServiceProvider app) where T : BaseContext
@@ -1052,7 +1059,10 @@ namespace Dwapi
                 StartupErrors.Add($"{error} {e}");
             }
         }
+
+
     }
+
 
     public class CrsSendActivity : Hub
     {

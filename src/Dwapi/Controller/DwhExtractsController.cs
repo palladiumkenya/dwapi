@@ -76,6 +76,7 @@ namespace Dwapi.Controller
 
             string version = GetType().Assembly.GetName().Version.ToString();
             // update LoadChangesOnly to value passed from loadFromEmr() command
+            Console.WriteLine("load request----------->"+ request.LoadFromEmrCommand);
 
             try
             {
