@@ -135,6 +135,7 @@ using Dwapi.Hubs.Hts;
 using Dwapi.Hubs.Mgs;
 using Dwapi.Hubs.Mnch;
 using Dwapi.Hubs.Prep;
+using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
@@ -211,10 +212,15 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Serilog;
 using StructureMap;
 using Swashbuckle.AspNetCore.Swagger;
 using Z.Dapper.Plus;
+using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json.Linq;
+
 
 namespace Dwapi
 {
@@ -238,6 +244,10 @@ namespace Dwapi
         private IHostingEnvironment CurrrentEnv;
         public static List<string> StartupErrors = new List<string>();
         public static IAutoloadController _AutoloadController;
+        public static DwhExtractsController _dwhExtractsController;
+        private static readonly HttpClient client = new HttpClient();
+
+
 
         public Startup(IHostingEnvironment env)
         {
@@ -453,6 +463,7 @@ namespace Dwapi
             services.AddScoped<IExtractManagerService, ExtractManagerService>();
             services.AddScoped<IAutoloadService, AutoloadService>();
             services.AddScoped<IAutoloadController, AutoloadController>();
+            services.AddScoped<DwhExtractsController, DwhExtractsController>();
 
 
             services.AddScoped<IPsmartExtractService, PsmartExtractService>();
@@ -856,7 +867,7 @@ namespace Dwapi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, IAutoloadController autoloadController)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, IAutoloadController autoloadController, DwhExtractsController dwhExtractsController)
         {
             Stopwatch stopWatch = Stopwatch.StartNew();
 
@@ -1036,8 +1047,22 @@ namespace Dwapi
                 Log.Debug($"Dwapi started in {stopWatch.ElapsedMilliseconds} ms");
             }
 
-            _AutoloadController = autoloadController;
-            _AutoloadController.LoadExtracts();
+            // _AutoloadController = autoloadController;
+            // _AutoloadController.LoadExtracts();
+            _dwhExtractsController = dwhExtractsController;
+            JObject extracts;
+            using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/AutoloadLoadExtracts.json"))
+            {
+                string json = r.ReadToEnd();
+                extracts = JsonConvert.DeserializeObject<JObject>(json);
+
+                // List<LoadExtracts> items = JsonConvert.DeserializeObject<List<LoadExtracts>>(json);
+            }
+            var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("http://localhost:5757/api/DwhExtracts/extractAll", content);
+
+            // var result1 = await _dwhExtractsController.LoadAll().PostAsync(extracts);
         }
 
         public static void EnsureMigrationOfContext<T>(IServiceProvider app) where T : BaseContext

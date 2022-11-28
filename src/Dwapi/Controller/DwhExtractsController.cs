@@ -69,7 +69,7 @@ namespace Dwapi.Controller
         }
 
         [HttpPost("extractAll")]
-        public async Task<IActionResult> Load([FromBody] LoadExtracts request)
+        public async Task<IActionResult> LoadAll([FromBody] LoadExtracts request)
         {
             if (!request.IsValid())
                 return BadRequest();
