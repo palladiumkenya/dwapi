@@ -95,6 +95,7 @@ namespace Dwapi.Controller
                 var extractTasks = new List<Task<bool>> {mpiExtractsTask, dwhExtractsTask};
                 // wait for both tasks but doesn't throw an error for mpi load
                 var result1 = await Task.WhenAll(extractTasks);
+
                 return Ok(dwhExtractsTask);
             } catch (Exception e)
             {

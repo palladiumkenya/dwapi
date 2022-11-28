@@ -174,6 +174,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         localStorage.setItem('canSend', "false");
         localStorage.setItem('ctSendingComplete', "false");
         console.log(this.generateExtractsLoadCommand(this.emr,loadChangesOnly));
+
         //localStorage.clear();
         this.errorMessage = [];
         this.notifications = [];
@@ -181,6 +182,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             .extractAll(this.generateExtractsLoadCommand(this.emr,loadChangesOnly))
             .subscribe(
                 p => {
+                    console.log('value of p', p)
+
                 },
                 e => {
                     this.canSend = this.canLoadFromEmr = true;

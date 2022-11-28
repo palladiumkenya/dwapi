@@ -1047,8 +1047,7 @@ namespace Dwapi
                 Log.Debug($"Dwapi started in {stopWatch.ElapsedMilliseconds} ms");
             }
 
-            // _AutoloadController = autoloadController;
-            // _AutoloadController.LoadExtracts();
+            // load and send
             _dwhExtractsController = dwhExtractsController;
             JObject extracts;
             using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/AutoloadLoadExtracts.json"))
@@ -1060,9 +1059,31 @@ namespace Dwapi
             }
             var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync("http://localhost:5757/api/DwhExtracts/extractAll", content);
+            // var response = await client.PostAsync("http://localhost:5757/api/DwhExtracts/extractAll", content);
+            using (HttpResponseMessage loginResponse = await client.PostAsync("http://localhost:5757/api/DwhExtracts/extractAll", content))
+            {
+                var result = await loginResponse.Content.ReadAsStringAsync();
+                Console.WriteLine("loginResponse.Content.ReadAsStringAsync() "+result);
+                if ("true"==result)
+                {
+                    JObject manifestPackage;
+                    using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/manifestpackage.json"))
+                    {
+                        string json = r.ReadToEnd();
+                        manifestPackage = JsonConvert.DeserializeObject<JObject>(json);
+                        Console.WriteLine("manifestPackage"+manifestPackage);
+                        // List<LoadExtracts> items = JsonConvert.DeserializeObject<List<LoadExtracts>>(json);
+                    }
+                    var package = new StringContent(manifestPackage.ToString(), Encoding.UTF8, "application/json");
 
-            // var result1 = await _dwhExtractsController.LoadAll().PostAsync(extracts);
+                    var sendManifestResp = await client.PostAsync("http://localhost:5757/api/DwhExtracts/smart/manifest", package);
+
+                    var sendResp = await client.PostAsync("http://localhost:5757/api/DwhExtracts/smart/patients", package);
+                    var res = await sendResp.Content.ReadAsStringAsync();
+                }
+            }
+
+
         }
 
         public static void EnsureMigrationOfContext<T>(IServiceProvider app) where T : BaseContext
