@@ -198,7 +198,9 @@ export class MnchInvalidComponent implements OnInit, OnChanges {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
+            {field: 'facilityName', header: 'Facility Name'},
+            {field: 'patientHeiId', header: 'Patient Hei Id'}
+
         ]
     }
 

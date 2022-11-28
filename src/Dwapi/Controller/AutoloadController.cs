@@ -1,6 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
@@ -22,13 +24,15 @@ using Hangfire.States;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Dwapi.Controller
 {
     [Produces("application/json")]
-    [Route("api/DwhExtracts")]
-    public class DwhExtractsController : Microsoft.AspNetCore.Mvc.Controller
+    [Route("api/AutoloadExtracts")]
+    public class AutoloadController : Microsoft.AspNetCore.Mvc.Controller, IAutoloadController
     {
         private readonly IMediator _mediator;
         private readonly IExtractStatusService _extractStatusService;
@@ -43,7 +47,10 @@ namespace Dwapi.Controller
 
         private readonly string _version;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository)
+        public AutoloadController(IMediator mediator, IExtractStatusService extractStatusService,
+            IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService, ICbsSendService cbsSendService,
+            ICTSendService ctSendService, IExtractRepository extractRepository,
+            IIndicatorExtractRepository indicatorExtractRepository, IDiffLogRepository diffLogRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -54,59 +61,85 @@ namespace Dwapi.Controller
             _indicatorExtractRepository = indicatorExtractRepository;
             _diffLogRepository = diffLogRepository;
 
-            Startup.HubContext= _hubContext = hubContext;
+            Startup.HubContext = _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
+
         }
 
         [HttpPost("extract")]
-        public async Task<IActionResult> Load([FromBody]ExtractPatient request)
+        public async Task<IActionResult> Load([FromBody] ExtractPatient request)
         {
-            if(!request.IsValid())
+            if (!request.IsValid())
                 return BadRequest();
 
             var result = await _mediator.Send(request, HttpContext.RequestAborted);
             return Ok(result);
         }
 
-        [HttpPost("extractAll")]
-        public async Task<IActionResult> Load([FromBody] LoadExtracts request)
-        {
-            if (!request.IsValid())
-                return BadRequest();
 
+        public  void test()
+        {
+            Console.WriteLine("load test----------->");
+
+        }
+
+        public async Task LoadExtracts()
+        {
+            LoadExtracts extracts;
+            using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/AutoloadLoadExtracts.json"))
+            {
+                string json = r.ReadToEnd();
+                extracts = JsonConvert.DeserializeObject<LoadExtracts>(json);
+
+                // List<LoadExtracts> items = JsonConvert.DeserializeObject<List<LoadExtracts>>(json);
+            }
+
+            CancellationToken RequestAborted;
+
+            using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/httpaborted.json"))
+            {
+                string RequestAbortedjson = r.ReadToEnd();
+                RequestAborted = JsonConvert.DeserializeObject<CancellationToken>(RequestAbortedjson);
+
+                // List<LoadExtracts> items = JsonConvert.DeserializeObject<List<LoadExtracts>>(json);
+            }
+
+            Console.WriteLine("load mpi----------->"+ RequestAborted);
             string version = GetType().Assembly.GetName().Version.ToString();
             // update LoadChangesOnly to value passed from loadFromEmr() command
-            Console.WriteLine("load request----------->"+ request.LoadFromEmrCommand);
+            // Console.WriteLine("RequestAborted mpi----------->"+ HttpContext.RequestAborted);
 
             try
             {
-                if (!request.LoadMpi)
-                {
-                    var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
+                    if (!extracts.LoadMpi)
+                    {
+                        await _mediator.Send(extracts.LoadFromEmrCommand, RequestAborted);
 
-                    await _mediator.Publish(new ExtractLoaded("CareTreatment", version, request.EmrSetup));
+                        await _mediator.Publish(new ExtractLoaded("CareTreatment", version, extracts.EmrSetup));
 
-                    return Ok(result);
-                }
+                        // return Ok(result);
+                    }
 
-                var dwhExtractsTask =
-                    Task.Run(() => _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted));
-                var mpiExtractsTask = Task.Run(() => _mediator.Send(request.ExtractMpi, HttpContext.RequestAborted));
-                var extractTasks = new List<Task<bool>> {mpiExtractsTask, dwhExtractsTask};
-                // wait for both tasks but doesn't throw an error for mpi load
-                var result1 = await Task.WhenAll(extractTasks);
-                return Ok(dwhExtractsTask);
-            } catch (Exception e)
+                    var dwhExtractsTask =
+                        Task.Run(() => _mediator.Send(extracts.LoadFromEmrCommand, RequestAborted));
+                    var mpiExtractsTask = Task.Run(() => _mediator.Send(extracts.ExtractMpi, RequestAborted));
+                    var extractTasks = new List<Task<bool>> {mpiExtractsTask, dwhExtractsTask};
+                    // wait for both tasks but doesn't throw an error for mpi load
+                    var result1 = await Task.WhenAll(extractTasks);
+                // return Ok();
+            }
+            catch (Exception e)
             {
-                var msg = $"Error Loading Extracts --> {e.Message}";
-                Log.Error(e, msg);
-                return StatusCode(500, msg);
+                //     var msg = $"Error Loading Extracts --> {e.Message}";
+                //     Log.Error(e, msg);
+                Console.WriteLine("Error thrown is ---------->"+e);
             }
         }
 
 
 
-        // GET: api/DwhExtracts/status/id
+
+    // GET: api/DwhExtracts/status/id
         [HttpGet("status/{id}")]
         public IActionResult GetStatus(Guid id)
         {

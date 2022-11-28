@@ -108,6 +108,8 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public loadData(): void {
         this.canLoadFromEmr = this.canSend = false;
+        localStorage.setItem('canSendMnch', "false");
+
 
         if (this.emr) {
             this.canLoadFromEmr = true;
@@ -131,6 +133,8 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
         if (this.centralRegistry) {
             this.canSend = true;
+            localStorage.setItem('canSendMnch', "true");
+
         }
     }
 
@@ -156,6 +160,8 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         severity: 'success',
                         summary: 'load was successful '
                     });
+                    localStorage.setItem('canSendMnch', "true");
+
                     this.updateEvent();
                 }
             );

@@ -110,6 +110,8 @@ import {CbsDocketComponent} from '../dockets/cbs-docket/cbs-docket.component';
 import {NdwhExtractDetailsComponent} from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
 import {NdwhPatientsExtractService} from '../dockets/services/ndwh-patients-extract.service';
 import {DbProtocolComponent} from '../settings/db-protocol/db-protocol.component';
+import {AutoloadService} from '../settings/services/autoload.service';
+
 // tslint:disable-next-line:max-line-length
 import {ValidRecordDetailsComponent} from
         '../dockets/ndwh-docket/ndwh-extract-details/valid-record-details/valid-record-details.component';
@@ -186,6 +188,7 @@ import {PrepClientService} from "../dockets/services/prep-client.service";
 import {PrepSenderService} from "../dockets/services/prep-sender.service";
 import {CrsService} from "../dockets/services/crs.service";
 import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
+import {AutoloadComponent} from "../autoload/autoload.component";
 
 @NgModule({
     imports: [
@@ -319,7 +322,8 @@ import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
         PrepExtractDetailsComponent,
         PrepInvalidComponent,
         PrepValidComponent,
-        CrsDocketComponent
+        CrsDocketComponent,
+        AutoloadComponent
 ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
@@ -333,7 +337,7 @@ import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
         MetricsService, MgsService, MgsSenderService, MetricMigrationService, NdwhSummaryService,
         MnchService, MnchSenderService, MnchClientService, MnchClientLinkageService, MnchSummaryService,
         PrepService, PrepSenderService, PrepClientService, PrepClientLinkageService, PrepSummaryService,
-        CrsService, HtsEligibilityScreeningService
+        CrsService, HtsEligibilityScreeningService,AutoloadService
 
     ],
     bootstrap: [AppComponent]

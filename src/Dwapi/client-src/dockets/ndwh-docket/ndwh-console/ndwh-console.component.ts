@@ -137,7 +137,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadData(): void {
         this.loadingData = true;
         this.canLoadFromEmr = this.canSend = false;
-
+        localStorage.setItem('canSend', "false");
         if (this.emr) {
             this.canLoadFromEmr = true;
             this.loadingData = true;
@@ -162,6 +162,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.centralRegistry) {
             this.canSend = true;
+            localStorage.setItem('canSend', "true");
+
         }
         this.loadingData = false;
     }
@@ -169,7 +171,10 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadFromEmr(loadChangesOnly): void {
         this.changesLoaded = loadChangesOnly;
         this.canSend = this.canLoadFromEmr = false;
-        localStorage.clear();
+        localStorage.setItem('canSend', "false");
+        localStorage.setItem('ctSendingComplete', "false");
+        console.log(this.generateExtractsLoadCommand(this.emr,loadChangesOnly));
+        //localStorage.clear();
         this.errorMessage = [];
         this.notifications = [];
         this.load$ = this._ndwhExtractService
@@ -179,6 +184,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     this.canSend = this.canLoadFromEmr = true;
+                    localStorage.setItem('canSend', "true");
+
                     this.errorMessage = [];
                     this.errorMessage.push({
                         severity: 'error',
@@ -195,6 +202,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 () => {
                     this.canSend = this.canLoadFromEmr = true;
+                    localStorage.setItem('canSend', "true");
+
                     this.errorMessage.push({
                         severity: 'success',
                         summary: 'load was successful '
@@ -262,6 +271,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                             this.canSend = (extract.extractEvent.queued > 0);
                             if (this.startedSending) {
                                 this.canSend = false;
+                                localStorage.setItem('canSend', "false");
+                                localStorage.setItem('ctSendingComplete', "true");
+
                             }
                         }
                     },
@@ -297,12 +309,16 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.isLoadingMet=false;
                     if(this.canSend) {
                         this.canSend = true;
+                        localStorage.setItem('canSend', "true");
+
                     }
                 },
                 () => {
                     this.isLoadingMet=false;
                     if(this.canSend) {
                         this.canSend = true;
+                        localStorage.setItem('canSend', "true");
+
                     }
                 }
             );
@@ -311,7 +327,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public send(): void {
         this.startedSending=true;
-        localStorage.clear();
+        //localStorage.clear();
         this.sendingManifest = true;
         this.errorMessage = [];
         this.notifications = [];
@@ -374,13 +390,15 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public sendSmart(): void {
         this.startedSending=true;
         this.canSend=false;
+        localStorage.setItem('canSend', "false");
+
         if(this.emr.emrSetup==EmrSetup.MultiFacility) {
             this.smartMode = false;
             this.send();
             return;
         }
         this.smartMode=true;
-        localStorage.clear();
+        //localStorage.clear();
         this.sendingManifest = true;
         this.errorMessage = [];
         this.notifications = [];
@@ -394,6 +412,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     this.canSend=true;
+                    localStorage.setItem('canSend', "true");
 
                     if (e && e.ProgressEvent) {
 
@@ -412,6 +431,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.sendingManifest = false;
                     this.updateEvent();
                     this.canSend=true;
+                    localStorage.setItem('canSend', "true");
+
                     this.startedSending=false;
                 }
             );
@@ -420,7 +441,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public sendDiff(): void {
         this.startedSending=true;
         this.canSend=false;
-        localStorage.clear();
+        localStorage.setItem('canSend', "false");
+
+        //localStorage.clear();
         this.sendingManifest = true;
         this.errorMessage = [];
         this.notifications = [];
@@ -698,7 +721,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
         this._hubConnection.on('ShowDwhSendMessage', (message: any) => {
             if (message === 'Sending started...') {
-                localStorage.clear();
+                //localStorage.clear();
             }
             if (message.error) {
                 this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: message.message});
