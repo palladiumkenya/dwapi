@@ -4,6 +4,8 @@ using Dwapi.ExtractsManagement.Core.Commands.Prep;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Prep;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Prep;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Prep;
@@ -23,19 +25,40 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Prep
         private readonly IPrepExtractValidator _extractValidator;
         private readonly IPrepVisitLoader _prepVisitLoader;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
-        public ExtractPrepVisitHandler(IPrepVisitSourceExtractor prepVisitSourceExtractor, IPrepExtractValidator extractValidator, IPrepVisitLoader prepVisitLoader, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractPrepVisitHandler(IPrepVisitSourceExtractor prepVisitSourceExtractor, IPrepExtractValidator extractValidator, IPrepVisitLoader prepVisitLoader, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
         {
             _prepVisitSourceExtractor = prepVisitSourceExtractor;
             _extractValidator = extractValidator;
             _prepVisitLoader = prepVisitLoader;
             _extractHistoryRepository = extractHistoryRepository;
+            _diffLogRepository = diffLogRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
         }
 
         public async Task<bool> Handle(ExtractPrepVisit request, CancellationToken cancellationToken)
         {
+            int found;
+            var mflcode =   _indicatorExtractRepository.GetMflCode();
+
+            var loadChangesOnly = true;
+            var difflog = _diffLogRepository.GetLog("PREP", "PrepVisitExtract", mflcode);
+            var changesLoadedStatus= false;
+            
             //Extract
-            int found = await _prepVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            if (null == difflog)
+            {
+                found = await _prepVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            }
+            else
+            {
+                found  = await _prepVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+            }
+            //update status
+            _diffLogRepository.UpdateExtractsSentStatus("PREP", "PrepVisitExtract", changesLoadedStatus);
+            
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(PrepVisitExtract), $"{nameof(TempPrepVisitExtract)}s");

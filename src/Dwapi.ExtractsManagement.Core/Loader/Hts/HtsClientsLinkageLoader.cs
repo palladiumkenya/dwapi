@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
@@ -13,6 +14,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using MediatR;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Hts
@@ -21,13 +23,17 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
     {
         private readonly IHtsClientsLinkageExtractRepository _clientsLinkageExtractRepository;
         private readonly ITempHtsClientsLinkageExtractRepository _tempHtsClientsLinkageExtractRepository;
+        private readonly IMediator _mediator;
+
         private int Found { get; set; }
         private Guid ExtractId { get; set; }
 
-        public HtsClientsLinkageLoader(IHtsClientsLinkageExtractRepository clientsLinkageExtractRepository, ITempHtsClientsLinkageExtractRepository tempHtsClientsLinkageExtractRepository)
+        public HtsClientsLinkageLoader(IHtsClientsLinkageExtractRepository clientsLinkageExtractRepository, ITempHtsClientsLinkageExtractRepository tempHtsClientsLinkageExtractRepository, IMediator mediator)
         {
             _clientsLinkageExtractRepository = clientsLinkageExtractRepository;
             _tempHtsClientsLinkageExtractRepository = tempHtsClientsLinkageExtractRepository;
+            _mediator = mediator;
+
         }
 
         public async Task<int> Load(bool diffSupport)
@@ -66,6 +72,10 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     page++;
                 }
                 DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientLinkage), "Loading...", Found, 0, 0, 0, 0)));
+               
+                // int extractssitecode = (int) _clientsLinkageExtractRepository.GetSiteCode(QueryUtil.Linkage).SiteCode;
+                // await _mediator.Publish(new DocketExtractLoaded("HTS", nameof(HtsClientLinkage), extractssitecode));
+
                 return count;
             }
             catch (Exception e)

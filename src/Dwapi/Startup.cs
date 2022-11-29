@@ -218,6 +218,7 @@ using StructureMap;
 using Swashbuckle.AspNetCore.Swagger;
 using Z.Dapper.Plus;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Text;
 using Newtonsoft.Json.Linq;
 
@@ -1047,6 +1048,7 @@ namespace Dwapi
                 Log.Debug($"Dwapi started in {stopWatch.ElapsedMilliseconds} ms");
             }
 
+
             // load and send
             _dwhExtractsController = dwhExtractsController;
             JObject extracts;
@@ -1062,27 +1064,40 @@ namespace Dwapi
             // var response = await client.PostAsync("http://localhost:5757/api/DwhExtracts/extractAll", content);
             using (HttpResponseMessage loginResponse = await client.PostAsync("http://localhost:5757/api/DwhExtracts/extractAll", content))
             {
-                var result = await loginResponse.Content.ReadAsStringAsync();
-                Console.WriteLine("loginResponse.Content.ReadAsStringAsync() "+result);
-                if ("true"==result)
-                {
-                    JObject manifestPackage;
-                    using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/manifestpackage.json"))
+                try {
+                    Ping myPing = new Ping();
+                    String host = "google.com";
+                    byte[] buffer = new byte[32];
+                    int timeout = 1000;
+                    PingOptions pingOptions = new PingOptions();
+                    PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
+                    Console.WriteLine("ping here success"+reply.Status);
+
+                    // after pinging send extracts
+                    var result = await loginResponse.Content.ReadAsStringAsync();
+                    Console.WriteLine("loginResponse.Content.ReadAsStringAsync() "+result);
+                    if ("true"==result)
                     {
-                        string json = r.ReadToEnd();
-                        manifestPackage = JsonConvert.DeserializeObject<JObject>(json);
-                        Console.WriteLine("manifestPackage"+manifestPackage);
-                        // List<LoadExtracts> items = JsonConvert.DeserializeObject<List<LoadExtracts>>(json);
+                        JObject manifestPackage;
+                        using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/manifestpackage.json"))
+                        {
+                            string json = r.ReadToEnd();
+                            manifestPackage = JsonConvert.DeserializeObject<JObject>(json);
+                            Console.WriteLine("manifestPackage"+manifestPackage);
+                            // List<LoadExtracts> items = JsonConvert.DeserializeObject<List<LoadExtracts>>(json);
+                        }
+                        var package = new StringContent(manifestPackage.ToString(), Encoding.UTF8, "application/json");
+
+                        var sendManifestResp = await client.PostAsync("http://localhost:5757/api/DwhExtracts/smart/manifest", package);
+
+                        var sendResp = await client.PostAsync("http://localhost:5757/api/DwhExtracts/smart/patients", package);
+                        var res = await sendResp.Content.ReadAsStringAsync();
                     }
-                    var package = new StringContent(manifestPackage.ToString(), Encoding.UTF8, "application/json");
-
-                    var sendManifestResp = await client.PostAsync("http://localhost:5757/api/DwhExtracts/smart/manifest", package);
-
-                    var sendResp = await client.PostAsync("http://localhost:5757/api/DwhExtracts/smart/patients", package);
-                    var res = await sendResp.Content.ReadAsStringAsync();
+                }
+                catch (Exception) {
+                    Console.WriteLine("ping here"+false);
                 }
             }
-
 
         }
 

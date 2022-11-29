@@ -69,7 +69,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
 
             if (null == diffLog)
             {
-                diffLog = DiffLog.Create(docket, extract, siteCode,extractDates.Date_Created,extractDates.Date_Last_Modified);
+                if (null != extractDates)
+                {
+                    diffLog = DiffLog.Create(docket, extract, siteCode, extractDates.Date_Created,
+                        extractDates.Date_Last_Modified);
+                }
+                else
+                {
+                    diffLog = DiffLog.Create(docket, extract, siteCode, null,null);
+                }
                 // Create(diffLog);
                 SaveChanges();
                 Context.Database.GetDbConnection().BulkMerge(diffLog);

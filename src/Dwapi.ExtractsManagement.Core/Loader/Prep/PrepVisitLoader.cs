@@ -88,7 +88,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(PrepVisitExtract), extractssitecode));
+                await _mediator.Publish(new DocketExtractLoaded("PREP", nameof(PrepVisitExtract), extractssitecode));
 
                 return count;
             }

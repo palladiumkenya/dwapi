@@ -4,6 +4,8 @@ using Dwapi.ExtractsManagement.Core.Commands.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch;
@@ -23,20 +25,40 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
         private readonly IMnchExtractValidator _extractValidator;
         private readonly IMnchLabLoader _mnchLabLoader;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
-        public ExtractMnchLabHandler(IMnchLabSourceExtractor mnchLabSourceExtractor, IMnchExtractValidator extractValidator, IMnchLabLoader mnchLabLoader, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractMnchLabHandler(IMnchLabSourceExtractor mnchLabSourceExtractor, IMnchExtractValidator extractValidator, IMnchLabLoader mnchLabLoader, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
         {
             _mnchLabSourceExtractor = mnchLabSourceExtractor;
             _extractValidator = extractValidator;
             _mnchLabLoader = mnchLabLoader;
             _extractHistoryRepository = extractHistoryRepository;
+            _diffLogRepository = diffLogRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
         }
 
         public async Task<bool> Handle(ExtractMnchLab request, CancellationToken cancellationToken)
         {
-            //Extract
-            int found = await _mnchLabSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            int found;
+            var mflcode =   _indicatorExtractRepository.GetMflCode();
 
+            var loadChangesOnly = true;
+            var difflog = _diffLogRepository.GetLog("MNCH", "MnchLabExtract", mflcode);
+            var changesLoadedStatus= false;
+            
+            //Extract
+            if (null == difflog)
+            {
+                found = await _mnchLabSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            }
+            else
+            {
+                found  = await _mnchLabSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+            }
+            //update status
+            _diffLogRepository.UpdateExtractsSentStatus("MNCH", "MnchLabExtract", changesLoadedStatus);
+            
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(MnchLabExtract), $"{nameof(TempMnchLabExtract)}s");
 

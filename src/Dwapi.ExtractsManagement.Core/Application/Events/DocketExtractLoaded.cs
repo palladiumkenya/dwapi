@@ -45,11 +45,11 @@ namespace Dwapi.ExtractsManagement.Core.Application.Events
             {
                 var siteCode = _indicatorExtractRepository.GetMflCode();
 
-                var diffLogs = _repository.GetAllDocketLogs("NDWH");
+                var diffLogs = _repository.GetAllDocketLogs(notification.Docket);
 
                 foreach (var log in diffLogs)
                 {
-                    _repository.UpdateMaxDates("NDWH", log.Extract, siteCode);
+                    _repository.UpdateMaxDates(notification.Docket, log.Extract, siteCode);
                 }
             }
 

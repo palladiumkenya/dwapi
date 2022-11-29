@@ -4,6 +4,8 @@ using Dwapi.ExtractsManagement.Core.Commands.Prep;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Prep;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Prep;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Prep;
@@ -23,20 +25,40 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Prep
         private readonly IPrepExtractValidator _extractValidator;
         private readonly IPrepBehaviourRiskLoader _PrepBehaviourRiskLoader;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
-        public ExtractPrepBehaviourRiskHandler(IPrepBehaviourRiskSourceExtractor PrepBehaviourRiskSourceExtractor, IPrepExtractValidator extractValidator, IPrepBehaviourRiskLoader PrepBehaviourRiskLoader, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractPrepBehaviourRiskHandler(IPrepBehaviourRiskSourceExtractor PrepBehaviourRiskSourceExtractor, IPrepExtractValidator extractValidator, IPrepBehaviourRiskLoader PrepBehaviourRiskLoader, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
         {
             _PrepBehaviourRiskSourceExtractor = PrepBehaviourRiskSourceExtractor;
             _extractValidator = extractValidator;
             _PrepBehaviourRiskLoader = PrepBehaviourRiskLoader;
             _extractHistoryRepository = extractHistoryRepository;
+            _diffLogRepository = diffLogRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
         }
 
         public async Task<bool> Handle(ExtractPrepBehaviourRisk request, CancellationToken cancellationToken)
         {
-            //Extract
-            int found = await _PrepBehaviourRiskSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            int found;
+            var mflcode =   _indicatorExtractRepository.GetMflCode();
 
+            var loadChangesOnly = true;
+            var difflog = _diffLogRepository.GetLog("PREP", "PrepBehaviourRiskExtract", mflcode);
+            var changesLoadedStatus= false;
+            
+            //Extract
+            if (null == difflog)
+            {
+                found = await _PrepBehaviourRiskSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            }
+            else
+            {
+                found  = await _PrepBehaviourRiskSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+            }
+            //update status
+            _diffLogRepository.UpdateExtractsSentStatus("PREP", "PrepBehaviourRiskExtract", changesLoadedStatus);
+            
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(PrepBehaviourRiskExtract), $"{nameof(TempPrepBehaviourRiskExtract)}s");
 

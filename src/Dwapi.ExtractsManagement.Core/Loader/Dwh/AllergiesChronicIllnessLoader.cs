@@ -56,7 +56,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 var eCount = await  _tempAllergiesChronicIllnessExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempAllergiesChronicIllnessExtractRepository.PageCount(take, eCount);
 
-                    int extractssitecode = (int) _tempAllergiesChronicIllnessExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+                int extractssitecode = (int) _tempAllergiesChronicIllnessExtractRepository.GetSiteCode(query.ToString()).SiteCode;
                
                 int page = 1;
                 while (page <= pageCount)
