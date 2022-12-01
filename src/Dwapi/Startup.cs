@@ -220,6 +220,8 @@ using Z.Dapper.Plus;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
 
@@ -246,6 +248,8 @@ namespace Dwapi
         public static List<string> StartupErrors = new List<string>();
         public static IAutoloadController _AutoloadController;
         public static DwhExtractsController _dwhExtractsController;
+        public static MnchController _mnchController;
+
         private static readonly HttpClient client = new HttpClient();
 
 
@@ -465,6 +469,8 @@ namespace Dwapi
             services.AddScoped<IAutoloadService, AutoloadService>();
             services.AddScoped<IAutoloadController, AutoloadController>();
             services.AddScoped<DwhExtractsController, DwhExtractsController>();
+            services.AddScoped<MnchController, MnchController>();
+
 
 
             services.AddScoped<IPsmartExtractService, PsmartExtractService>();
@@ -868,7 +874,7 @@ namespace Dwapi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, IAutoloadController autoloadController, DwhExtractsController dwhExtractsController)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, IAutoloadController autoloadController, DwhExtractsController dwhExtractsController, MnchController mnchController)
         {
             Stopwatch stopWatch = Stopwatch.StartNew();
 
@@ -1051,54 +1057,105 @@ namespace Dwapi
 
             // load and send
             _dwhExtractsController = dwhExtractsController;
-            JObject extracts;
-            using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/AutoloadLoadExtracts.json"))
+            ctExtractsLoad();
+            // Console.WriteLine("ctRes--->"+ctRes.Result);
+
+        }
+
+        public async Task<bool> ctExtractsLoad()
+        {
+            try
             {
-                string json = r.ReadToEnd();
-                extracts = JsonConvert.DeserializeObject<JObject>(json);
+                JObject extracts;
+                using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/AutoloadLoadExtracts.json"))
+                {
+                    string json = r.ReadToEnd();
+                    extracts = JsonConvert.DeserializeObject<JObject>(json);
+                }
+                var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
 
-                // List<LoadExtracts> items = JsonConvert.DeserializeObject<List<LoadExtracts>>(json);
+                var res = await client.PostAsync("http://localhost:5757/api/DwhExtracts/extractAll", content);
+                return true;
             }
-            var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
-
-            // var response = await client.PostAsync("http://localhost:5757/api/DwhExtracts/extractAll", content);
-            using (HttpResponseMessage loginResponse = await client.PostAsync("http://localhost:5757/api/DwhExtracts/extractAll", content))
+            catch (Exception e)
             {
-                try {
-                    Ping myPing = new Ping();
-                    String host = "google.com";
-                    byte[] buffer = new byte[32];
-                    int timeout = 1000;
-                    PingOptions pingOptions = new PingOptions();
-                    PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
-                    Console.WriteLine("ping here success"+reply.Status);
-
-                    // after pinging send extracts
-                    var result = await loginResponse.Content.ReadAsStringAsync();
-                    Console.WriteLine("loginResponse.Content.ReadAsStringAsync() "+result);
-                    if ("true"==result)
-                    {
-                        JObject manifestPackage;
-                        using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/manifestpackage.json"))
-                        {
-                            string json = r.ReadToEnd();
-                            manifestPackage = JsonConvert.DeserializeObject<JObject>(json);
-                            Console.WriteLine("manifestPackage"+manifestPackage);
-                            // List<LoadExtracts> items = JsonConvert.DeserializeObject<List<LoadExtracts>>(json);
-                        }
-                        var package = new StringContent(manifestPackage.ToString(), Encoding.UTF8, "application/json");
-
-                        var sendManifestResp = await client.PostAsync("http://localhost:5757/api/DwhExtracts/smart/manifest", package);
-
-                        var sendResp = await client.PostAsync("http://localhost:5757/api/DwhExtracts/smart/patients", package);
-                        var res = await sendResp.Content.ReadAsStringAsync();
-                    }
-                }
-                catch (Exception) {
-                    Console.WriteLine("ping here"+false);
-                }
+                var msg = $"Error loading {nameof(e)}(s)";
+                Console.WriteLine(msg);
+                return false;
             }
+        }
 
+
+        public async Task<bool> mnchExtractsLoad()
+        {
+            try
+            {
+                JObject extracts;
+                    using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/MnchAutomateLoad.json"))
+                {
+                    string json = r.ReadToEnd();
+                    extracts = JsonConvert.DeserializeObject<JObject>(json);
+                }
+                var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
+
+                var res = await client.PostAsync("http://localhost:5757/api/Mnch/extractAll", content);
+                Console.WriteLine(res);
+                return true;
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(e)}(s)";
+                Console.WriteLine(msg);
+                return false;
+            }
+        }
+
+        public async Task<bool> prepExtractsLoad()
+        {
+            try
+            {
+                JObject extracts;
+                using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/PrepAutomateLoad.json"))
+                {
+                    string json = r.ReadToEnd();
+                    extracts = JsonConvert.DeserializeObject<JObject>(json);
+                }
+                var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
+
+                var res = await client.PostAsync("http://localhost:5757/api/Prep/extractAll", content);
+                Console.WriteLine(res);
+                return true;
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(e)}(s)";
+                Console.WriteLine(msg);
+                return false;
+            }
+        }
+
+        public async Task<bool> htsExtractsLoad()
+        {
+            try
+            {
+                JObject extracts;
+                using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/HtsAutomateLoad.json"))
+                {
+                    string json = r.ReadToEnd();
+                    extracts = JsonConvert.DeserializeObject<JObject>(json);
+                }
+                var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
+
+                var res = await client.PostAsync("http://localhost:5757/api/Hts/extractAll", content);
+                Console.WriteLine(res);
+                return true;
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(e)}(s)";
+                Console.WriteLine(msg);
+                return false;
+            }
         }
 
         public static void EnsureMigrationOfContext<T>(IServiceProvider app) where T : BaseContext

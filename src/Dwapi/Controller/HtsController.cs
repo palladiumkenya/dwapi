@@ -36,7 +36,7 @@ namespace Dwapi.Controller
         }
 
         [HttpPost("extractAll")]
-        public async Task<IActionResult> Load([FromBody] LoadHtsExtracts request)
+        public async Task<IActionResult> LoadAll([FromBody] LoadHtsExtracts request)
         {
             string version = GetType().Assembly.GetName().Version.ToString();
             var result = await _mediator.Send(request.LoadHtsFromEmrCommand, HttpContext.RequestAborted);

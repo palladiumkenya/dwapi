@@ -57,7 +57,7 @@ namespace Dwapi.Controller
         }
 
         [HttpPost("extractAll")]
-        public async Task<IActionResult> Load([FromBody] LoadPrepExtracts request)
+        public async Task<IActionResult> LoadAll([FromBody] LoadPrepExtracts request)
         {
             if (!request.IsValid())
                 return BadRequest();
