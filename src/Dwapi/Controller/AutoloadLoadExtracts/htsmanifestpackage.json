@@ -1,0 +1,14 @@
+{
+    "destination": {
+        "subscriberId": "DWAPI",
+        "name": "HTS Registry",
+        "url": "http://localhost:7777",
+        "authToken": "1983aeda-1a96-30e9-adc0-fa7ae01bbebc",
+        "docketId": "HTS",
+        "id": "a6224bc6-0e85-11e8-ba89-0ed5f89f718b"
+    },
+    "extractId": "8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4",
+    "emrSetup": 0,
+    "emrId": "a6221856-0e85-11e8-ba89-0ed5f89f718b",
+    "emrName": "KenyaEMR"
+}

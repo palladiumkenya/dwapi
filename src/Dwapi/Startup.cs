@@ -1062,7 +1062,7 @@ namespace Dwapi
 
         }
 
-        public async Task<bool> ctExtractsLoad()
+        public async void ctExtractsLoad()
         {
             try
             {
@@ -1075,18 +1075,18 @@ namespace Dwapi
                 var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
 
                 var res = await client.PostAsync("http://localhost:5757/api/DwhExtracts/extractAll", content);
-                return true;
+                mnchExtractsLoad();
             }
             catch (Exception e)
             {
                 var msg = $"Error loading {nameof(e)}(s)";
                 Console.WriteLine(msg);
-                return false;
+
             }
         }
 
 
-        public async Task<bool> mnchExtractsLoad()
+        public async void mnchExtractsLoad()
         {
             try
             {
@@ -1099,18 +1099,16 @@ namespace Dwapi
                 var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
 
                 var res = await client.PostAsync("http://localhost:5757/api/Mnch/extractAll", content);
-                Console.WriteLine(res);
-                return true;
+                prepExtractsLoad();
             }
             catch (Exception e)
             {
                 var msg = $"Error loading {nameof(e)}(s)";
                 Console.WriteLine(msg);
-                return false;
             }
         }
 
-        public async Task<bool> prepExtractsLoad()
+        public async void prepExtractsLoad()
         {
             try
             {
@@ -1123,18 +1121,16 @@ namespace Dwapi
                 var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
 
                 var res = await client.PostAsync("http://localhost:5757/api/Prep/extractAll", content);
-                Console.WriteLine(res);
-                return true;
+                htsExtractsLoad();
             }
             catch (Exception e)
             {
                 var msg = $"Error loading {nameof(e)}(s)";
                 Console.WriteLine(msg);
-                return false;
             }
         }
 
-        public async Task<bool> htsExtractsLoad()
+        public async void htsExtractsLoad()
         {
             try
             {
@@ -1147,14 +1143,93 @@ namespace Dwapi
                 var content = new StringContent(extracts.ToString(), Encoding.UTF8, "application/json");
 
                 var res = await client.PostAsync("http://localhost:5757/api/Hts/extractAll", content);
-                Console.WriteLine(res);
-                return true;
+                checkNetwork();
+
             }
             catch (Exception e)
             {
                 var msg = $"Error loading {nameof(e)}(s)";
                 Console.WriteLine(msg);
-                return false;
+            }
+        }
+
+        public async void checkNetwork()
+        {
+            try
+            {
+                Ping myPing = new Ping();
+                String host = "google.com";
+                byte[] buffer = new byte[32];
+                int timeout = 1000;
+                PingOptions pingOptions = new PingOptions();
+                PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
+                Console.WriteLine("ping here success" + reply.Status);
+
+                // after pinging send extracts
+                prepSendExtracts();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("ping here" + false);
+            }
+        }
+
+        public async void ctSendExtracts()
+        {
+            try
+            {
+                JObject manifestPackage;
+                using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/manifestpackage.json"))
+                {
+                    string json = r.ReadToEnd();
+                    manifestPackage = JsonConvert.DeserializeObject<JObject>(json);
+                    Console.WriteLine("manifestPackage" + manifestPackage);
+                    // List<LoadExtracts> items = JsonConvert.DeserializeObject<List<LoadExtracts>>(json);
+                }
+
+                var package = new StringContent(manifestPackage.ToString(), Encoding.UTF8, "application/json");
+
+                var sendManifestResp =
+                    await client.PostAsync("http://localhost:5757/api/DwhExtracts/smart/manifest", package);
+
+                var sendResp =
+                    await client.PostAsync("http://localhost:5757/api/DwhExtracts/smart/patients", package);
+                var res = await sendResp.Content.ReadAsStringAsync();
+                prepSendExtracts();
+;            }
+            catch (Exception)
+            {
+                Console.WriteLine("ping here" + false);
+            }
+        }
+
+
+        public async void prepSendExtracts()
+        {
+            try
+            {
+                JObject manifestPackage;
+                using (StreamReader r = new StreamReader("./Controller/AutoloadLoadExtracts/prepmanifestpackage.json"))
+                {
+                    string json = r.ReadToEnd();
+                    manifestPackage = JsonConvert.DeserializeObject<JObject>(json);
+                    Console.WriteLine("manifestPackage" + manifestPackage);
+                    // List<LoadExtracts> items = JsonConvert.DeserializeObject<List<LoadExtracts>>(json);
+                }
+
+                var package = new StringContent(manifestPackage.ToString(), Encoding.UTF8, "application/json");
+
+                var sendManifestResp =
+                    await client.PostAsync("http://localhost:5757/api/Prep/manifest", package);
+
+                var sendResp =
+                    await client.PostAsync("http://localhost:5757/api/Prep/PatientPreps", package);
+                var res = await sendResp.Content.ReadAsStringAsync();
+
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("ping here" + false);
             }
         }
 

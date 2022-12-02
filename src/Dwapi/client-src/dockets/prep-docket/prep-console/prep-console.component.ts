@@ -221,6 +221,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.notifications = [];
         this.canSendPatients = false;
         const manifestPackage = this.getSendManifestPackage();
+
         this.sendManifest$ = this._prepSenderService.sendManifest(manifestPackage)
             .subscribe(
                 p => {
@@ -247,6 +248,8 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getPatientPrepExtractPackage();
+        console.log('prep send',patientPackage)
+
         this.send$ = this._prepSenderService.sendPatientPrepExtracts(patientPackage)
             .subscribe(
                 p => {

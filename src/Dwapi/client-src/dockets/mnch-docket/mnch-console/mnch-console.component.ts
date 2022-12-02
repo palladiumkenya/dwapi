@@ -219,6 +219,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.notifications = [];
         this.canSendPatients = false;
         const manifestPackage = this.getSendManifestPackage();
+
         this.sendManifest$ = this._mnchSenderService.sendManifest(manifestPackage)
             .subscribe(
                 p => {
@@ -243,6 +244,8 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getPatientMnchExtractPackage();
+        console.log('mnch',patientPackage)
+
         this.send$ = this._mnchSenderService.sendPatientMnchExtracts(patientPackage)
             .subscribe(
                 p => {
