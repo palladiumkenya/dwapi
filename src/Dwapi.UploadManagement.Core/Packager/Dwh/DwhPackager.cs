@@ -117,6 +117,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         public IEnumerable<T> GenerateDiffBatchExtracts<T>(int page, int batchSize, string docket, string extract)
             where T : ClientExtract
         {
+            return GenerateBatchExtracts<T, Guid>(page, batchSize);
             var changes = new List<T>();
             var finalChanges = new List<T>();
 

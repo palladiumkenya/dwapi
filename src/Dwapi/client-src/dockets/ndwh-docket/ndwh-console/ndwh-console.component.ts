@@ -63,6 +63,11 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public canLoadFromEmr: boolean;
     public canSend: boolean;
+    public canSendDiff: boolean = null;
+    // public canSendDiff: string;
+    // public canSendAll: string;
+
+
     public canSendMpi: boolean;
     public canSendPatients: boolean = false;
     public manifestPackage: CombinedPackage;
@@ -132,6 +137,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.loadRegisrty();
         this.liveOnInit();
         this.loadData();
+        this.checkWhichToSend();
     }
 
     public loadData(): void {
@@ -168,6 +174,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public loadFromEmr(loadChangesOnly): void {
         this.changesLoaded = loadChangesOnly;
+        // sessionStorage.setItem("canSendDiff",loadChangesOnly.toString());
+        // this.canSendDiff = (sessionStorage.getItem("canSendDiff")) =="true";
+
         this.canSend = this.canLoadFromEmr = false;
         localStorage.clear();
         this.errorMessage = [];
@@ -204,6 +213,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         severity: 'success',
                         summary: 'load was successful '
                     });
+
+                    this.checkWhichToSend();
 
                     this.updateEvent();
                     this.loadMet();
@@ -343,31 +354,27 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             );
     }
 
-    public checkWhichToSend(): void {
-        this.notifications = [];
+    public checkWhichToSend(): boolean {
 
         this.sendManifest$ = this._ndwhSenderService.checkWhichToSend()
             .subscribe(
                 p => {
                     console.log('value here is',p)
                     if (p=="SendAll"){
-                        this.sendSmart()
+                        this.canSendDiff = false;
                     }else if(p=="SendChanges"){
-                        this.sendDiff()
+                        this.canSendDiff = true;
                     }
+                    console.log('value send',this.canSendDiff)
+
                 },
                 e => {
-                    if (e && e.ProgressEvent) {
 
-                    } else {
-                        this.notifications = [];
-                        this.notifications.push({severity: 'error',summary: 'Error checking changes loaded', detail: <any>e});
-                    }
                 },
                 () => {
-                    this.notifications.push({severity: 'success', summary: 'Sending started'});
                 }
             );
+        return this.canSendDiff;
     }
 
 

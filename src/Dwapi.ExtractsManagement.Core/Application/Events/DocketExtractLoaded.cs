@@ -44,9 +44,9 @@ namespace Dwapi.ExtractsManagement.Core.Application.Events
             if (null != diffLog)
             {
                 var siteCode = _indicatorExtractRepository.GetMflCode();
-
+            
                 var diffLogs = _repository.GetAllDocketLogs("NDWH");
-
+            
                 foreach (var log in diffLogs)
                 {
                     _repository.UpdateMaxDates("NDWH", log.Extract, siteCode);
