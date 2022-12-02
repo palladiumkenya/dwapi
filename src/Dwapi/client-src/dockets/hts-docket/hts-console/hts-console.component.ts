@@ -158,7 +158,6 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public loadFromEmr(): void {
         this.errorMessage = [];
-        console.log('hts',this.generateExtractLoadCommand(this.emr))
 
         this.load$ = this._htsService
             .extractAll(this.generateExtractLoadCommand(this.emr))
@@ -263,6 +262,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.sending = true;
         this.errorMessage = [];
         this.patientPackage = this.getClientsExtractPackage();
+        console.log('hts send',this.patientPackage)
+
         this.send$ = this._htsSenderService.sendClientsExtracts(this.patientPackage)
             .subscribe(
                 p => {
