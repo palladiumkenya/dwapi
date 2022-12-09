@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
@@ -41,7 +42,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Diff
         [Test]
         public void should_Get_Log()
         {
-            var diffLog = _repository.GetLog("ndwh", "PatientExtract");
+            var diffLog = _repository.GetLog("ndwh", "PatientExtract", 99999);
             Assert.NotNull(diffLog);
         }
 
@@ -62,7 +63,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.Repository.Diff
         [Test]
         public void should_Save_Log_New()
         {
-            var diffLog = DiffLog.Create("NDWH", "PatientVisitExtract", 99999);
+            var diffLog = DiffLog.Create("NDWH", "PatientVisitExtract", 99999, DateTime.Now, DateTime.Now );
             _repository.SaveLog(diffLog);
 
 

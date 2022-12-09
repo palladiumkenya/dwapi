@@ -63,6 +63,11 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public canLoadFromEmr: boolean;
     public canSend: boolean;
+    public canSendDiff: boolean = null;
+    // public canSendDiff: string;
+    // public canSendAll: string;
+
+
     public canSendMpi: boolean;
     public canSendPatients: boolean = false;
     public manifestPackage: CombinedPackage;
@@ -73,6 +78,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public cbsExtractPackage: SendPackage = null;
     public sending: boolean = false;
     public sendingManifest: boolean = false;
+    public changesLoaded: boolean = false;
+
 
 
     public errorMessage: Message[];
@@ -130,6 +137,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.loadRegisrty();
         this.liveOnInit();
         this.loadData();
+        this.checkWhichToSend();
     }
 
     public loadData(): void {
@@ -165,6 +173,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public loadFromEmr(loadChangesOnly): void {
+        this.changesLoaded = loadChangesOnly;
+        // sessionStorage.setItem("canSendDiff",loadChangesOnly.toString());
+        // this.canSendDiff = (sessionStorage.getItem("canSendDiff")) =="true";
 
         this.canSend = this.canLoadFromEmr = false;
         localStorage.clear();
@@ -202,6 +213,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         severity: 'success',
                         summary: 'load was successful '
                     });
+
+                    this.checkWhichToSend();
 
                     this.updateEvent();
                     this.loadMet();
@@ -341,6 +354,30 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             );
     }
 
+    public checkWhichToSend(): boolean {
+
+        this.sendManifest$ = this._ndwhSenderService.checkWhichToSend()
+            .subscribe(
+                p => {
+                    console.log('value here is',p)
+                    if (p=="SendAll"){
+                        this.canSendDiff = false;
+                    }else if(p=="SendChanges"){
+                        this.canSendDiff = true;
+                    }
+                    console.log('value send',this.canSendDiff)
+
+                },
+                e => {
+
+                },
+                () => {
+                }
+            );
+        return this.canSendDiff;
+    }
+
+
     public sendSmart(): void {
         this.startedSending=true;
         this.canSend=false;
@@ -364,7 +401,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     this.canSend=true;
-                    console.error('SEND ERROR', e);
+
                     if (e && e.ProgressEvent) {
 
                     } else {

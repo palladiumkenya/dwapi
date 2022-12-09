@@ -21,16 +21,19 @@ namespace Dwapi.ExtractsManagement.Core.Model.Diff
         {
 
         }
-        public DiffLog(string docket, string extract, int siteCode)
+        public DiffLog(string docket, string extract, int siteCode, DateTime? maxCreated, DateTime? maxModified)
         {
             Docket = docket;
             Extract = extract;
             SiteCode = siteCode;
+            MaxCreated = maxCreated;
+            MaxModified = maxModified;
+
         }
 
-        public static DiffLog Create(string docket, string extract, int siteCode)
+        public static DiffLog Create(string docket, string extract, int siteCode, DateTime? maxCreated, DateTime? maxModified)
         {
-            return new DiffLog(docket, extract, siteCode);
+            return new DiffLog(docket, extract, siteCode, maxCreated, maxModified);
         }
 
         public void LogLoad(DateTime? maxCreated, DateTime? maxModified)

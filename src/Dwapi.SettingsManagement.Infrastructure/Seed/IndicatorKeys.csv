@@ -1,6 +1,6 @@
 Id,Description,Rank
 HTS_TESTED,Individuals who received a HIV test. Computation : Count of all individuals who received HIV Testing Services (HTS) and received their test results in a given month,10
-HTS_TESTED_POS,Individuals who tested positive during a HIV test. Computation: Count of all individuals with a positive in a given month,11
+HTS_TST_POS,Individuals who tested positive during a HIV test. Computation: Count of all individuals with a positive in a given month,11
 HTS_LINKED,Individuals who tested positive and have been enrolled to care Computation: Count of all individuals. Computation: Count of all individuals with a linkage record in the EMR in a given month ,12
 HTS_INDEX,Individuals who were identified and tested using Index Testing Services (PNS or contact tracing) and received their results. Computation: Count of all individuals identified and tested using Index Testing Services in a given month,13
 HTS_INDEX_POS,Individuals who tested positive using Index Testing Services (PNS or contact tracing) and received their results . Computation: Count of individuals who tested positive using Index Testing Services in a given month,14
@@ -15,4 +15,4 @@ RETENTION_ON_ART_VL_1000_12_MONTHS,Individuals who are suppressed 12 months afte
 LAST_ENCOUNTER_CREATE_DATE,Last EMR Encounter Create date,40
 EMR_ETL_Refresh,Last EMR ETL Refresh date,41
 MFL_CODE,Sites Found in the Database,42
-DB_STATE,Stale Database status,43
+DB_STATE,Stale Database status. Database with previous month's visits being less that 50% of average visits from April 2022 are considered stale,43

@@ -124,7 +124,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.NUPI))))
                 .ForMember(x => x.Pkv, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.Pkv))))
                 .ForMember(x => x.Occupation, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.Occupation))))
-                .ForMember(x => x.PriorityPopulationType, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.PriorityPopulationType))));
+                .ForMember(x => x.PriorityPopulationType, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.PriorityPopulationType))))
+                .ForMember(x => x.HtsRecencyId, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.HtsRecencyId))))
+                ;
 
             CreateMap<TempHtsClients, HtsClients>();
 

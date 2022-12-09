@@ -641,33 +641,93 @@ having min(hiv.visit_date) is not null
 									and disc.program_name = 'HIV'
 							group by PatientID
 							order by disc.visit_date ASC"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID, d.patient_id as PatientPK, l.encounter_id as VisitId,
-																					CAST(l.visit_date AS DATE) as OrderedByDate,CAST(l.visit_date AS DATE) as ReportedByDate,
-																				(select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-																				(select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
-																					cn.name as TestName,
-																					l.date_test_requested as DateSampleTaken,
-																					(case l.order_reason when 843 then 'Confirmation of treatment failure (repeat VL)'
-																																										when 1434 then 'Pregnancy' when 162080 then 'Baseline VL (for infants diagnosed through EID)'
-																																										when 1259 then 'Single Drug Substitution' when 159882 then 'Breastfeeding'
-																																										when 163523 then 'Clinical failure' when 161236 then 'Routine'
-																																										when 160032 then 'Confirmation of persistent low level Viremia (PLLV)' end) as Reason,
-																					case
-																							when c.datatype_id=2 then cn2.name
-																							else
-																									l.test_result
-																									end as TestResult,
-																					NULL as EnrollmentTest,'' as SampleType,
-																					'KenyaEMR' as Emr,
-																					'Kenya HMIS II' as Project,
-																					l.date_created as Date_Created,
-																					GREATEST(COALESCE(l.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, l.date_last_modified)) as Date_Last_Modified
-					from kenyaemr_etl.etl_laboratory_extract l
-												join kenyaemr_etl.etl_patient_demographics d on d.patient_id=l.patient_id
-												join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
-												join concept c on c.concept_id = l.lab_test
-												left outer join concept_name cn2 on cn2.concept_id=l.test_result and cn2.concept_name_type='FULLY_SPECIFIED'
-					and cn2.locale='en' where d.unique_patient_no is not null"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId,
+                             d.unique_patient_no as PatientID, d.patient_id as PatientPK, l.encounter_id as VisitId,
+                             coalesce(DATE(l.date_test_requested), DATE(l.visit_date)) as OrderedByDate,
+                             DATE(l.date_test_result_received) as ReportedByDate,
+                             i.siteCode as SiteCode,
+                             i.facilityName as FacilityName,
+                             (case lab_test
+                             when 5497 then 'CD4 Count'
+                             when 730 then 'CD4 Percent'
+                             when 654 then 'ALT'
+                             when 790 then 'Serum creatinine (umol/L)'
+                             when 856 then 'HIV Viral Load'
+                             when 1305 then 'HIV Viral Load'
+                             when 21 then 'Hemoglobin (HGB)'
+                             when 1029 then 'VDRL Titre'
+                             when 1031 then 'Treponema Pallidum Hemagglutination Assay'
+                             when 1619 then 'Rapid Plasma Reagin'
+                             when 1032 then 'Treponema Pallidum Hemagglutination Assay, Qualitative'
+                             else '' end)                                                                as TestName,
+                             date(l.visit_date)                                                               as DateSampleTaken,
+                             (case l.order_reason
+                             when 843 then 'Confirmation of treatment failure (repeat VL)'
+                             when 1434 then 'Pregnancy'
+                             when 162080 then 'Baseline VL (for infants diagnosed through EID)'
+                             when 1259 then 'Single Drug Substitution'
+                             when 159882 then 'Breastfeeding'
+                             when 163523 then 'Clinical failure'
+                             when 161236 then 'Routine'
+                             when 160032 then 'Confirmation of persistent low level Viremia (PLLV)' end) as Reason,
+                             if(lab_test = 299, (case test_result
+                             when 1228 then 'REACTIVE'
+                             when 1229 then 'NON-REACTIVE'
+                             when 1304 then 'POOR SAMPLE QUALITY' end),
+                             if(lab_test = 1030, (case test_result
+                             when 1138 then 'INDETERMINATE'
+                             when 664 then 'NEGATIVE'
+                             when 703 then 'POSITIVE'
+                             when 1304 then 'POOR SAMPLE QUALITY' end),
+                             if(lab_test = 302, (case test_result
+                             when 1115 then 'Normal'
+                             when 1116 then 'Abnormal'
+                             when 1067 then 'Unknown' end),
+                             if(lab_test = 32, (case test_result
+                             when 664 then 'NEGATIVE'
+                             when 703 then 'POSITIVE'
+                             when 1138 then 'INDETERMINATE' end),
+                             if(lab_test = 1305, (case test_result
+                             when 1306 then 'BEYOND DETECTABLE LIMIT'
+                             when 1301 then 'DETECTED'
+                             when 1302 then 'LDL'
+                             when 1304 then 'POOR SAMPLE QUALITY' end),
+                             if(lab_test = 1029,
+                             (case test_result when 664 then 'Negative' when 703 then 'Positive' end),
+                             if(lab_test = 1031, (case test_result
+                             when 1311 then '<1:2'
+                             when 1312 then '01:02'
+                             when 1313 then '1:4'
+                             when 1314 then '01:08'
+                             when 1315 then '01:16'
+                             when 1316 then '01:32'
+                             when 1317 then '>1:32'
+                             when 1304 then 'Poor Sample Quality'
+                             when 163621 then '1:64'
+                             when 163622 then '1:128'
+                             when 163623 then '1:256'
+                             when 163624 then '>1:572' end),
+                             if(lab_test = 1032, (case test_result
+                             when 703 then 'Positive'
+                             when 664 then 'Negative'
+                             when 1300 then 'Equivocal'
+                             when 1304 then 'Poor Sample Quality' end),
+                             if(lab_test = 1619, (case test_result
+                             when 703 then 'Positive'
+                             when 664 then 'Negative'
+                             when 1067 then 'Unknown' end),
+                             test_result)))))))))                                  as TestResult,
+                             NULL                                                                             as EnrollmentTest,
+                             o.sample_type                                                                    as SampleType,
+                             'KenyaEMR'                                                                       as Emr,
+                             'Kenya HMIS II'                                                                  as Project,
+                             l.date_created                                                                   as Date_Created,
+                             l.date_last_modified                                                             as Date_Last_Modified
+                             from kenyaemr_etl.etl_laboratory_extract l
+                             left join openmrs.kenyaemr_order_entry_lab_manifest_order o on l.order_id = o.order_id
+                             join kenyaemr_etl.etl_patient_demographics d on d.patient_id = l.patient_id
+                             join kenyaemr_etl.etl_default_facility_info i
+                             where d.unique_patient_no is not null"|dwhstage|0|PatientLabExtract|5|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3F742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Pharmacy|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select 'Government'                                                 AS Provider,
                         ''                                                           AS SatelliteName,
                         0                                                            as FacilityId,
@@ -842,266 +902,268 @@ having min(hiv.visit_date) is not null
                  where unique_patient_no is not null
                    and drugreg is not null"|dwhstage|0|PatientPharmacyExtract|6|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 40742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Visit|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select ''                                                                     AS SatelliteName,
-                       0                                                                      AS FacilityId,
-                       d.unique_patient_no                                                    as PatientID,
-                       d.patient_id                                                           as PatientPK,
-                       i.facilityName                                                         as FacilityName,
-                       i.siteCode                                                             as SiteCode,
-                       fup.visit_id                                                           as VisitId,
-                       case
-                           when fup.visit_date < '1990-01-01' then null
-                           else CAST(fup.visit_date AS DATE) end                                AS VisitDate,
-                       'Out Patient'                                                          as Service,
-                       (case fup.visit_scheduled
-                            when 1 then 'Scheduled'
-                            when 2 then 'Unscheduled'
-                            else '' end)                                                        as VisitType,
-                       (case fup.person_present
-                            when 978 then 'Self'
-                            when 161642 then 'Treatment supporter'
-                            when 159802 then 'Refill visit documentation'
-                            when 5622 then 'Other' end)                                         as VisitBy,
-                       case fup.who_stage
-                           when 1220 then 'WHO I'
-                           when 1221 then 'WHO II'
-                           when 1222 then 'WHO III'
-                           when 1223 then 'WHO IV'
-                           when 1204 then 'WHO I'
-                           when 1205 then 'WHO II'
-                           when 1206 then 'WHO III'
-                           when 1207 then 'WHO IV'
-                           else ''
-                           end                                                                as WHOStage,
-                       null                                                                   as WABStage,
-                       case fup.pregnancy_status
-                           when 1065 then 'Yes'
-                           when 1066 then 'No'
-                           end                                                                as Pregnant,
-                       CAST(fup.last_menstrual_period AS DATE)                                as LMP,
-                       CAST(fup.expected_delivery_date AS DATE)                               as EDD,
-                       t.height                                                             as Height,
-                       t.weight                                                             as Weight,
-                       concat(t.systolic_pressure, '/', t.diastolic_pressure)             as BP,
-                       t.temperature                                                        as Temp,
-                       t.pulse_rate                                                         as PulseRate,
-                       t.respiratory_rate                                                   as RespiratoryRate,
-                       t.oxygen_saturation                                                  as OxygenSaturation,
-                       t.muac                                                               as Muac,
-                       (case t.nutritional_status
-                            when 1115 then 'Normal'
-                            when 163302 then 'Severe acute malnutrition'
-                            when 163303 then 'Moderate acute malnutrition'
-                            when 114413 then 'Overweight/Obese'
-                            else '' end)                                                        as NutritionalStatus,
-                       (case fup.ever_had_menses
-                            when 1065 then 'Yes'
-                            when 1066 then 'No'
-                            when 1175 then 'N/A' end)                                           as EverHadMenses,
-                       if(d.gender = 'F',(case fup.breastfeeding when 1065 then 'Yes' when 1066 then 'No' end),'N/A')  as Breastfeeding,
-                       (case menopausal when 113928 then 'Yes' end)                           as Menopausal,
-                       (case prophylaxis_given
-                            when 105281 then 'Cotrimoxazole'
-                            when 74250 then 'Dapsone'
-                            when 1107 then 'None' end)                                          as ProphylaxisUsed,
-                       (case fup.ctx_adherence
-                            when 159405 then 'Good'
-                            when 163794 then 'Fair'
-                            when 159407 then 'Bad'
-                            else '' end)                                                        as CTXAdherence,
-                       de.regimen                                                             as CurrentRegimen,
-                       (case fup.reason_not_using_family_planning
-                            when 160572 then 'Thinks cant get pregnant'
-                            when 160573 then 'Not sexually active now'
-                            when 5622 then 'Other'
-                            else '' end)                                                        as NoFPReason,
-                       'ART|CTX'                                                              as AdherenceCategory,
-                       concat(
-                               IF(fup.arv_adherence = 159405, 'Good',
-                                  IF(fup.arv_adherence = 159406, 'Fair', IF(fup.arv_adherence = 159407, 'Poor', ''))),
-                               IF(fup.arv_adherence in (159405, 159406, 159407), '|', ''),
-                               IF(fup.ctx_adherence = 159405, 'Good',
-                                  IF(fup.ctx_adherence = 159406, 'Fair', IF(fup.ctx_adherence = 159407, 'Poor', '')))
-                           )                                                                  AS Adherence,
-                       (case next_appointment_reason
-                            when 160523 then 'Follow up'
-                            when 1283 then 'Lab tests'
-                            when 159382 then 'Counseling'
-                            when 160521 then 'Pharmacy Refill'
-                            when 5622 then 'Other'
-                            else '' end)                                                        as TCAReason,
-                       fup.clinical_notes                                                     as ClinicalNotes,
-                       ''                                                                     as OI,
-                       NULL                                                                   as OIDate,
-                       fup.general_examination                                                as GeneralExamination,
-                       (case fup.system_examination
-                            when 1115 then 'Normal'
-                            when 1116 then 'Abnormal' end)                                      as SystemExamination,
-                       (case fup.skin_findings
-                            when 150555 then 'Abscess'
-                            when 125201 then 'Swelling/Growth'
-                            when 135591 then 'Hair Loss'
-                            when 136455 then 'Itching'
-                            when 507 then 'Kaposi Sarcoma'
-                            when 1249 then 'Skin eruptions/Rashes'
-                            when 5244 then 'Oral sores' end)                                    as Skin,
-                       (case fup.eyes_findings
-                            when 123074 then 'Visual Disturbance'
-                            when 140940 then 'Excessive tearing'
-                            when 131040 then 'Eye pain'
-                            when 127777 then 'Eye redness'
-                            when 140827 then 'Light sensitive'
-                            when 139100 then 'Itchy eyes' end)                                  as Eyes,
-                       (case fup.ent_findings
-                            when 148517 then 'Apnea'
-                            when 139075 then 'Hearing disorder'
-                            when 119558 then 'Dental caries'
-                            when 118536 then 'Erythema'
-                            when 106 then 'Frequent colds'
-                            when 147230 then 'Gingival bleeding'
-                            when 135841 then 'Hairy cell leukoplakia'
-                            when 117698
-                                then 'Hearing loss'
-                            when 138554 then 'Hoarseness'
-                            when 507 then 'Kaposi Sarcoma'
-                            when 152228 then 'Masses'
-                            when 128055 then 'Nasal discharge'
-                            when 133499 then 'Nosebleed'
-                            when 160285 then 'Pain'
-                            when 110099 then 'Post nasal discharge'
-                            when 126423 then 'Sinus problems'
-                            when 126318 then 'Snoring'
-                            when 158843 then 'Sore throat'
-                            when 5244 then 'Oral sores'
-                            when 5334 then 'Thrush'
-                            when 123588 then 'Tinnitus'
-                            when 124601 then 'Toothache'
-                            when 123919 then 'Ulcers'
-                            when 111525 then 'Vertigo' end)                                     as ENT,
-                       (case fup.chest_findings
-                            when 146893 then 'Bronchial breathing'
-                            when 127640 then 'Crackles'
-                            when 145712 then 'Dullness'
-                            when 164440 then 'Reduced breathing'
-                            when 127639 then 'Respiratory distress'
-                            when 5209 then 'Wheezing' end)                                      as Chest,
-                       (case fup.cvs_findings
-                            when 140147 then 'Elevated blood pressure'
-                            when 136522 then 'Irregular heartbeat'
-                            when 562 then 'Cardiac murmur'
-                            when 130560 then 'Cardiac rub' end)                                 as CVS,
-                       (case fup.abdomen_findings
-                            when 150915 then 'Abdominal distension'
-                            when 5008 then 'Hepatomegaly'
-                            when 5103 then 'Abdominal mass'
-                            when 5009 then 'Splenomegaly'
-                            when 5105 then 'Abdominal tenderness' end)                          as Abdomen,
-                       (case fup.cns_findings
-                            when 118872 then 'Altered sensations'
-                            when 1836 then 'Bulging fontenelle'
-                            when 150817 then 'Abnormal reflexes'
-                            when 120345 then 'Confusion'
-                            when 157498 then 'Limb weakness'
-                            when 112721 then 'Stiff neck'
-                            when 136282 then 'Kernicterus' end)                                 as CNS,
-                       (case fup.genitourinary_findings
-                            when 147241 then 'Bleeding'
-                            when 154311 then 'Rectal discharge'
-                            when 123529 then 'Urethral discharge'
-                            when 123396 then 'Vaginal discharge'
-                            when 124087 then 'Ulceration' end)                                  as Genitourinary,
-                       case ifnull(fup.family_planning_status, '')
-                           when 695 then 'Currently using FP'
-                           when 160652 then 'Not using FP'
-                           when 1360 then 'Wants FP'
-                           else ''
-                           end                                                                as FamilyPlanningMethod,
-                       concat_ws('|',
-                                 nullif(case fup.substance_abuse_screening
-                                            when 1065 then 'Screened for substance abuse'
-                                            else ''
-                                            end, ''),
-                                 nullif(case fup.condom_provided
-                                            when 1065 then 'Condoms'
-                                            else ''
-                                            end, ''),
-                                 nullif(case fup.pwp_disclosure
-                                            when 1065 then 'Disclosure'
-                                            else ''
-                                            end, ''),
-                                 nullif(case fup.pwp_partner_tested
-                                            when 1065 then 'Partner Testing'
-                                            else ''
-                                            end, ''),
-                                 nullif(case fup.screened_for_sti
-                                            when 1065 then 'Screened for STI'
-                                            else ''
-                                            end, ''))as                                          PwP,
-                       if(fup.last_menstrual_period is not null,
-                          timestampdiff(week, fup.last_menstrual_period, fup.visit_date), '') as GestationAge,
-                       case
-                           when fup.next_appointment_date < '1990-01-01' then null
-                           else CAST(fup.next_appointment_date AS DATE) end                     AS NextAppointmentDate,
-                       case when fup.refill_date < '1990-01-01' then null
-                                             else CAST(fup.refill_date AS DATE) end                   AS RefillDate,
-                       'KenyaEMR'                                                             as Emr,
-                       'Kenya HMIS II'                                                        as Project,
-                       CAST(fup.substitution_first_line_regimen_date AS DATE)                 AS SubstitutionFirstlineRegimenDate,
-                       fup.substitution_first_line_regimen_reason                             AS SubstitutionFirstlineRegimenReason,
-                       CAST(fup.substitution_second_line_regimen_date AS DATE)                AS SubstitutionSecondlineRegimenDate,
-                       fup.substitution_second_line_regimen_reason                            AS SubstitutionSecondlineRegimenReason,
-                       CAST(fup.second_line_regimen_change_date AS DATE)                      AS SecondlineRegimenChangeDate,
-                       fup.second_line_regimen_change_reason                                  AS SecondlineRegimenChangeReason,
-                       CASE fup.stability
-                           WHEN 1 THEN 'Stable'
-                           WHEN 2 THEN 'Not Stable' END                                         as StabilityAssessment,
-                       (case fup.differentiated_care
-                            when 164942 then 'Standard Care'
-                            when 164943 then 'Fast Track'
-                            when 164944 then 'Community ART Distribution - HCW Led'
-                            when 164945 then 'Community ART Distribution - Peer Led'
-                            when 164946 then 'Facility ART Distribution Group'
-                            else '' end)                                                        as DifferentiatedCare,
-                       (case population_type
-                            when 164928 then 'General Population'
-                            when 164929 then 'Key Population'
-                            else '' end)                                                        as PopulationType,
-                       case fup.key_population_type
-                           WHEN 105 THEN 'PWID'
-                           WHEN 160578 THEN 'MSM'
-                           WHEN 160579 THEN 'FSW'
-                           when 165084 then 'MSW'
-                           when 165085 then 'PWUD'
-                           when 165100 then 'Transgender'
-                           WHEN 1175 THEN 'N/A'
-                           ELSE null END                                                        as KeyPopulationType,
-                       ''                                                                     as HCWConcern,
-                       fup.date_created                                                       as Date_Created,
-                       GREATEST(COALESCE(d.date_last_modified, fup.date_last_modified),
-                                COALESCE(fup.date_last_modified, d.date_last_modified))       as Date_Last_Modified
-       from kenyaemr_etl.etl_patient_demographics d
-                join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id = d.patient_id
-                join kenyaemr_etl.etl_default_facility_info i
-                    left join (select t.patient_id,	
-      t.visit_date,	
-      t.weight,	
-      t.height,	
-      t.systolic_pressure,	
-      t.diastolic_pressure,	
-      t.temperature,	
-      t.pulse_rate,	
-      t.respiratory_rate,	
-      t.oxygen_saturation,	
-      t.muac,	
-      t.nutritional_status	
-      from kenyaemr_etl.etl_patient_triage t) t	
-      on fup.patient_id = t.patient_id and date(fup.visit_date) = date(t.visit_date)
-                left join (select de.patient_id, mid(max(concat(de.visit_date, de.regimen)), 11) as regimen
-                           from kenyaemr_etl.etl_drug_event de
-                           where de.discontinued is null
-                           group by de.patient_id)de on fup.patient_id = de.patient_id
-       where d.unique_patient_no is not null
-         and fup.visit_date > '1990-01-01' and fup.next_appointment_date is not null
-         and fup.visit_id is not null"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                 0                                                                      AS FacilityId,
+                 d.unique_patient_no                                                    as PatientID,
+                 d.patient_id                                                           as PatientPK,
+                 i.facilityName                                                         as FacilityName,
+                 i.siteCode                                                             as SiteCode,
+                 fup.visit_id                                                           as VisitId,
+                 case
+                     when fup.visit_date < '1990-01-01' then null
+                     else CAST(fup.visit_date AS DATE) end                                AS VisitDate,
+                 'Out Patient'                                                          as Service,
+                 (case fup.visit_scheduled
+                      when 1 then 'Scheduled'
+                      when 2 then 'Unscheduled'
+                      else '' end)                                                        as VisitType,
+                 (case fup.person_present
+                      when 978 then 'Self'
+                      when 161642 then 'Treatment supporter'
+                      when 159802 then 'Refill visit documentation'
+                      when 5622 then 'Other' end)                                         as VisitBy,
+                 case fup.who_stage
+                     when 1220 then 'WHO I'
+                     when 1221 then 'WHO II'
+                     when 1222 then 'WHO III'
+                     when 1223 then 'WHO IV'
+                     when 1204 then 'WHO I'
+                     when 1205 then 'WHO II'
+                     when 1206 then 'WHO III'
+                     when 1207 then 'WHO IV'
+                     else ''
+                     end                                                                as WHOStage,
+                 null                                                                   as WABStage,
+                 case fup.pregnancy_status
+                     when 1065 then 'Yes'
+                     when 1066 then 'No'
+                     end                                                                as Pregnant,
+                 CAST(fup.last_menstrual_period AS DATE)                                as LMP,
+                 CAST(fup.expected_delivery_date AS DATE)                               as EDD,
+                 t.height                                                             as Height,
+                 t.weight                                                             as Weight,
+                 concat(t.systolic_pressure, '/', t.diastolic_pressure)             as BP,
+                 t.temperature                                                        as Temp,
+                 t.pulse_rate                                                         as PulseRate,
+                 t.respiratory_rate                                                   as RespiratoryRate,
+                 t.oxygen_saturation                                                  as OxygenSaturation,
+                 t.muac                                                               as Muac,
+                 (case t.nutritional_status
+                      when 1115 then 'Normal'
+                      when 163302 then 'Severe acute malnutrition'
+                      when 163303 then 'Moderate acute malnutrition'
+                      when 114413 then 'Overweight/Obese'
+                      else '' end)                                                        as NutritionalStatus,
+                 (case fup.ever_had_menses
+                      when 1065 then 'Yes'
+                      when 1066 then 'No'
+                      when 1175 then 'N/A' end)                                           as EverHadMenses,
+                 if(d.gender = 'F',(case fup.breastfeeding when 1065 then 'Yes' when 1066 then 'No' end),'N/A')  as Breastfeeding,
+                 (case menopausal when 113928 then 'Yes' end)                           as Menopausal,
+                 (case prophylaxis_given
+                      when 105281 then 'Cotrimoxazole'
+                      when 74250 then 'Dapsone'
+                      when 1107 then 'None' end)                                          as ProphylaxisUsed,
+                 (case fup.ctx_adherence
+                      when 159405 then 'Good'
+                      when 163794 then 'Fair'
+                      when 159407 then 'Bad'
+                      else '' end)                                                        as CTXAdherence,
+                 de.regimen                                                             as CurrentRegimen,
+                 (case fup.reason_not_using_family_planning
+                      when 160572 then 'Thinks cant get pregnant'
+                      when 160573 then 'Not sexually active now'
+                      when 5622 then 'Other'
+                      else '' end)                                                        as NoFPReason,
+                 'ART|CTX'                                                              as AdherenceCategory,
+                 concat(
+                         IF(fup.arv_adherence = 159405, 'Good',
+                            IF(fup.arv_adherence = 159406, 'Fair', IF(fup.arv_adherence = 159407, 'Poor', ''))),
+                         IF(fup.arv_adherence in (159405, 159406, 159407), '|', ''),
+                         IF(fup.ctx_adherence = 159405, 'Good',
+                            IF(fup.ctx_adherence = 159406, 'Fair', IF(fup.ctx_adherence = 159407, 'Poor', '')))
+                     )                                                                  AS Adherence,
+                 (case next_appointment_reason
+                      when 160523 then 'Follow up'
+                      when 1283 then 'Lab tests'
+                      when 159382 then 'Counseling'
+                      when 160521 then 'Pharmacy Refill'
+                      when 5622 then 'Other'
+                      else '' end)                                                        as TCAReason,
+                 fup.clinical_notes                                                     as ClinicalNotes,
+                 ''                                                                     as OI,
+                 NULL                                                                   as OIDate,
+                 fup.general_examination                                                as GeneralExamination,
+                 (case fup.system_examination
+                      when 1115 then 'Normal'
+                      when 1116 then 'Abnormal' end)                                      as SystemExamination,
+                 (case fup.skin_findings
+                      when 150555 then 'Abscess'
+                      when 125201 then 'Swelling/Growth'
+                      when 135591 then 'Hair Loss'
+                      when 136455 then 'Itching'
+                      when 507 then 'Kaposi Sarcoma'
+                      when 1249 then 'Skin eruptions/Rashes'
+                      when 5244 then 'Oral sores' end)                                    as Skin,
+                 (case fup.eyes_findings
+                      when 123074 then 'Visual Disturbance'
+                      when 140940 then 'Excessive tearing'
+                      when 131040 then 'Eye pain'
+                      when 127777 then 'Eye redness'
+                      when 140827 then 'Light sensitive'
+                      when 139100 then 'Itchy eyes' end)                                  as Eyes,
+                 (case fup.ent_findings
+                      when 148517 then 'Apnea'
+                      when 139075 then 'Hearing disorder'
+                      when 119558 then 'Dental caries'
+                      when 118536 then 'Erythema'
+                      when 106 then 'Frequent colds'
+                      when 147230 then 'Gingival bleeding'
+                      when 135841 then 'Hairy cell leukoplakia'
+                      when 117698
+                          then 'Hearing loss'
+                      when 138554 then 'Hoarseness'
+                      when 507 then 'Kaposi Sarcoma'
+                      when 152228 then 'Masses'
+                      when 128055 then 'Nasal discharge'
+                      when 133499 then 'Nosebleed'
+                      when 160285 then 'Pain'
+                      when 110099 then 'Post nasal discharge'
+                      when 126423 then 'Sinus problems'
+                      when 126318 then 'Snoring'
+                      when 158843 then 'Sore throat'
+                      when 5244 then 'Oral sores'
+                      when 5334 then 'Thrush'
+                      when 123588 then 'Tinnitus'
+                      when 124601 then 'Toothache'
+                      when 123919 then 'Ulcers'
+                      when 111525 then 'Vertigo' end)                                     as ENT,
+                 (case fup.chest_findings
+                      when 146893 then 'Bronchial breathing'
+                      when 127640 then 'Crackles'
+                      when 145712 then 'Dullness'
+                      when 164440 then 'Reduced breathing'
+                      when 127639 then 'Respiratory distress'
+                      when 5209 then 'Wheezing' end)                                      as Chest,
+                 (case fup.cvs_findings
+                      when 140147 then 'Elevated blood pressure'
+                      when 136522 then 'Irregular heartbeat'
+                      when 562 then 'Cardiac murmur'
+                      when 130560 then 'Cardiac rub' end)                                 as CVS,
+                 (case fup.abdomen_findings
+                      when 150915 then 'Abdominal distension'
+                      when 5008 then 'Hepatomegaly'
+                      when 5103 then 'Abdominal mass'
+                      when 5009 then 'Splenomegaly'
+                      when 5105 then 'Abdominal tenderness' end)                          as Abdomen,
+                 (case fup.cns_findings
+                      when 118872 then 'Altered sensations'
+                      when 1836 then 'Bulging fontenelle'
+                      when 150817 then 'Abnormal reflexes'
+                      when 120345 then 'Confusion'
+                      when 157498 then 'Limb weakness'
+                      when 112721 then 'Stiff neck'
+                      when 136282 then 'Kernicterus' end)                                 as CNS,
+                 (case fup.genitourinary_findings
+                      when 147241 then 'Bleeding'
+                      when 154311 then 'Rectal discharge'
+                      when 123529 then 'Urethral discharge'
+                      when 123396 then 'Vaginal discharge'
+                      when 124087 then 'Ulceration' end)                                  as Genitourinary,
+                 case ifnull(fup.family_planning_status, '')
+                     when 695 then 'Currently using FP'
+                     when 160652 then 'Not using FP'
+                     when 1360 then 'Wants FP'
+                     else ''
+                     end                                                                as FamilyPlanningMethod,
+                 concat_ws('|',
+                           nullif(case fup.substance_abuse_screening
+                                      when 1065 then 'Screened for substance abuse'
+                                      else ''
+                                      end, ''),
+                           nullif(case fup.condom_provided
+                                      when 1065 then 'Condoms'
+                                      else ''
+                                      end, ''),
+                           nullif(case fup.pwp_disclosure
+                                      when 1065 then 'Disclosure'
+                                      else ''
+                                      end, ''),
+                           nullif(case fup.pwp_partner_tested
+                                      when 1065 then 'Partner Testing'
+                                      else ''
+                                      end, ''),
+                           nullif(case fup.screened_for_sti
+                                      when 1065 then 'Screened for STI'
+                                      else ''
+                                      end, ''),
+nullif(case fup.cacx_screening
+when 703 then 'Screened for CaCx'
+when 664 then 'Screened for CaCx'
+end, '')) as                                          PwP,
+                 if(fup.last_menstrual_period is not null,
+                    timestampdiff(week, fup.last_menstrual_period, fup.visit_date), '') as GestationAge,
+                 case
+                     when fup.next_appointment_date < '1990-01-01' then null
+                     else CAST(fup.next_appointment_date AS DATE) end                     AS NextAppointmentDate,
+                 case when fup.refill_date < '1990-01-01' then null
+                                       else CAST(fup.refill_date AS DATE) end                   AS RefillDate,
+                 'KenyaEMR'                                                             as Emr,
+                 'Kenya HMIS II'                                                        as Project,
+                 CAST(fup.substitution_first_line_regimen_date AS DATE)                 AS SubstitutionFirstlineRegimenDate,
+                 fup.substitution_first_line_regimen_reason                             AS SubstitutionFirstlineRegimenReason,
+                 CAST(fup.substitution_second_line_regimen_date AS DATE)                AS SubstitutionSecondlineRegimenDate,
+                 fup.substitution_second_line_regimen_reason                            AS SubstitutionSecondlineRegimenReason,
+                 CAST(fup.second_line_regimen_change_date AS DATE)                      AS SecondlineRegimenChangeDate,
+                 fup.second_line_regimen_change_reason                                  AS SecondlineRegimenChangeReason,
+                 CASE fup.stability
+                     WHEN 1 THEN 'Stable'
+                     WHEN 2 THEN 'Not Stable' END                                         as StabilityAssessment,
+                 (case fup.differentiated_care
+                      when 164942 then 'Standard Care'
+                      when 164943 then 'Fast Track'
+                      when 164944 then 'Community ART Distribution - HCW Led'
+                      when 164945 then 'Community ART Distribution - Peer Led'
+                      when 164946 then 'Facility ART Distribution Group'
+                      else '' end)                                                        as DifferentiatedCare,
+                 (case population_type
+                      when 164928 then 'General Population'
+                      when 164929 then 'Key Population'
+                      else '' end)                                                        as PopulationType,
+                 case fup.key_population_type
+                     WHEN 105 THEN 'PWID'
+                     WHEN 160578 THEN 'MSM'
+                     WHEN 160579 THEN 'FSW'
+                     when 165084 then 'MSW'
+                     when 165085 then 'PWUD'
+                     when 165100 then 'Transgender'
+                     WHEN 1175 THEN 'N/A' END                                                        as KeyPopulationType,
+                 ''                                                                     as HCWConcern,
+                 fup.date_created                                                       as Date_Created,
+                 fup.date_last_modified                                                 as Date_Last_Modified
+ from kenyaemr_etl.etl_patient_demographics d
+          join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id = d.patient_id
+          join kenyaemr_etl.etl_default_facility_info i
+              left join (select t.patient_id,	
+t.visit_date,	
+t.weight,	
+t.height,	
+t.systolic_pressure,	
+t.diastolic_pressure,	
+t.temperature,	
+t.pulse_rate,	
+t.respiratory_rate,	
+t.oxygen_saturation,	
+t.muac,	
+t.nutritional_status	
+from kenyaemr_etl.etl_patient_triage t) t	
+on fup.patient_id = t.patient_id and date(fup.visit_date) = date(t.visit_date)
+          left join (select de.patient_id, mid(max(concat(de.visit_date, de.regimen)), 11) as regimen
+                     from kenyaemr_etl.etl_drug_event de
+                     where de.discontinued is null
+                     group by de.patient_id)de on fup.patient_id = de.patient_id
+ where d.unique_patient_no is not null
+   and fup.visit_date > '1990-01-01' and fup.next_appointment_date is not null
+   and fup.visit_id is not null"|dwhstage|0|PatientVisitExtract|7|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 48742EB0-5856-E811-8E16-9CB6D0DA773C|Master Patient Index|CBS|a62216ee-0e85-11e8-ba89-0ed5f89f718b|"SELECT DISTINCT	*,
 						LEFT([Gender],1)+[sxFirstName]+[sxLastName]+LTRIM(RTRIM(STR(YEAR(X.DOB)))) AS [sxPKValue],
 						LEFT([Gender],1)+
@@ -1743,6 +1805,7 @@ order by KeyPopulationType"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F
 	'KenyaEMR' as Emr,
 	'Kenya HMIS II' AS Project,
 	id.identifier AS HtsNumber,
+	d.hts_recency_id as HtsRecencyId,
 	d.DOB,
 	case when d.Gender='M' then 'Male' else 'Female' end as Gender,
 	d.marital_status as MaritalStatus,
@@ -4910,7 +4973,7 @@ UNION
                     group by hts.patient_id) hts
                        INNER JOIN
                    (select patient_id, id
-                    from kenyaemr_hiv_testing_patient_contact c
+                    from openmrs.kenyaemr_hiv_testing_patient_contact c
                     where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
                       and c.patient_id is not NULL
                       and c.voided = 0
@@ -4987,7 +5050,7 @@ UNION
                     group by hts.patient_id) hts
                        INNER JOIN
                    (select patient_id, id
-                    from kenyaemr_hiv_testing_patient_contact c
+                    from openmrs.kenyaemr_hiv_testing_patient_contact c
                     where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
                       and c.patient_id is not NULL
                       and c.voided = 0

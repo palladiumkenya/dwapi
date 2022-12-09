@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
+using Dapper.Contrib.Extensions;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Diff;
@@ -19,11 +20,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
         {
         }
 
-        public DiffLog GetLog(string docket, string extract)
+        public DiffLog GetLog(string docket, string extract, int siteCode)
         {
             return Get(x =>
                 x.Docket.ToLower() == docket.ToLower()
-                && x.Extract.ToLower() == extract.ToLower());
+                && x.Extract.ToLower() == extract.ToLower() && x.SiteCode==siteCode);
         }
         
         public List<DiffLog> GetAllDocketLogs(string docket)
@@ -56,6 +57,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
 
         public DiffLog InitLog(string docket, string extract, int siteCode)
         {
+            var sql =
+                $"SELECT MAX({nameof(PatientExtract.Date_Created)}) {nameof(PatientExtract.Date_Created)},MAX({nameof(PatientExtract.Date_Last_Modified)}) {nameof(PatientExtract.Date_Last_Modified)} FROM {extract}s";
+
+            var extractDates = Context.Database.GetDbConnection().QuerySingle(sql);
+
             var diffLog = Get(x =>
                 x.Docket.ToLower() == docket.ToLower() &&
                 x.Extract.ToLower() == extract.ToLower() &&
@@ -63,9 +69,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
 
             if (null == diffLog)
             {
-                diffLog = DiffLog.Create(docket, extract, siteCode);
-                Create(diffLog);
+                diffLog = DiffLog.Create(docket, extract, siteCode,extractDates.Date_Created,extractDates.Date_Last_Modified);
+                // Create(diffLog);
                 SaveChanges();
+                Context.Database.GetDbConnection().BulkMerge(diffLog);
             }
 
             return diffLog;
@@ -91,17 +98,19 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
         public void SaveLog(DiffLog diffLog)
         {
             Context.Database.GetDbConnection().BulkMerge(diffLog);
+            
         }
-
-        public DiffLog GenerateDiff(string docket,string extract, int siteCode)
+        
+       
+        public DiffLog GenerateDiff(string docket, string extract, int siteCode)
         {
-            var diffLog = DiffLog.Create(docket, extract, siteCode);
-
             var sql =
-                $"SELECT MAX({nameof(PatientExtract.Date_Created)}) {nameof(PatientExtract.Date_Created)},MAX({nameof(PatientExtract.Date_Last_Modified)}) {nameof(PatientExtract.Date_Last_Modified)} FROM {extract}";
+                $"SELECT MAX({nameof(PatientExtract.Date_Created)}) {nameof(PatientExtract.Date_Created)},MAX({nameof(PatientExtract.Date_Last_Modified)}) {nameof(PatientExtract.Date_Last_Modified)} FROM {extract}s";
 
             var extractDates = Context.Database.GetDbConnection().QuerySingle(sql);
-
+          
+            var diffLog = DiffLog.Create(docket, extract, siteCode, extractDates.Date_Created, extractDates.Date_Last_Modified);
+            
             if (null != extractDates)
             {
 
@@ -112,5 +121,34 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Diff
 
             return diffLog;
         }
+
+        
+        public DiffLog UpdateMaxDates(string docket, string extract, int siteCode)
+        {
+            var diffLog = Get(x =>
+                x.Docket.ToLower() == docket.ToLower() &&
+                x.Extract.ToLower() == extract.ToLower());
+                
+            var sql =
+                $"SELECT MAX({nameof(PatientExtract.Date_Created)}) {nameof(PatientExtract.Date_Created)},MAX({nameof(PatientExtract.Date_Last_Modified)}) {nameof(PatientExtract.Date_Last_Modified)} FROM {extract}s";
+
+            var extractDates = Context.Database.GetDbConnection().QuerySingle(sql);
+
+            if (null != extractDates.Date_Created)
+            {
+                diffLog.MaxCreated = Extentions.CastDateTime(extractDates.Date_Created);
+             }   
+            
+            if (null != extractDates.Date_Last_Modified)
+            {
+                diffLog.MaxModified = Extentions.CastDateTime(extractDates.Date_Last_Modified);
+            }    
+            SaveChanges();
+            Context.Database.GetDbConnection().BulkMerge(diffLog);
+           
+
+            return diffLog;
+        }
+        
     }
 }
