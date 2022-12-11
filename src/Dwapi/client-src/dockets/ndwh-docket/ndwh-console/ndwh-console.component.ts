@@ -359,13 +359,11 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.sendManifest$ = this._ndwhSenderService.checkWhichToSend()
             .subscribe(
                 p => {
-                    console.log('value here is',p)
                     if (p=="SendAll"){
                         this.canSendDiff = false;
                     }else if(p=="SendChanges"){
                         this.canSendDiff = true;
                     }
-                    console.log('value send',this.canSendDiff)
 
                 },
                 e => {
