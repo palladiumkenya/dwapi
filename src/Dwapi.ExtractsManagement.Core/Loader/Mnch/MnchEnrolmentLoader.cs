@@ -55,7 +55,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                 var eCount = await  _tempMnchEnrolmentExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempMnchEnrolmentExtractRepository.PageCount(take, eCount);
 
-                int extractssitecode = (int) _tempMnchEnrolmentExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+                int extractssitecode = 0;
 
                 int page = 1;
                 while (page <= pageCount)
@@ -68,6 +68,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempMnchEnrolmentExtract>, List<MnchEnrolmentExtract>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();

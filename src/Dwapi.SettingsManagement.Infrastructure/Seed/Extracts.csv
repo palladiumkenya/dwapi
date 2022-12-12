@@ -4853,7 +4853,7 @@ UNION
 )
 UNION
 (
-        select 'HTS_TST_POS'                                                               AS 'INDICATOR',
+        select 'HTS_TESTED_POS'                                                               AS 'INDICATOR',
                count(distinct t.patient_id)                                                as 'INDICATOR_VALUE',
                date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'
         from kenyaemr_etl.etl_hts_test t

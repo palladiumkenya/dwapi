@@ -56,8 +56,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 var eCount = await  _tempAllergiesChronicIllnessExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempAllergiesChronicIllnessExtractRepository.PageCount(take, eCount);
 
-                    int extractssitecode = (int) _tempAllergiesChronicIllnessExtractRepository.GetSiteCode(query.ToString()).SiteCode;
-               
+                    // int extractssitecode = (int) _tempAllergiesChronicIllnessExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+                int extractssitecode = 0;
+                
                 int page = 1;
                 while (page <= pageCount)
                 {
@@ -69,6 +70,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempAllergiesChronicIllnessExtract>, List<AllergiesChronicIllnessExtract>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
@@ -88,7 +91,6 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                             nameof(ExtractStatus.Loading),
                             found, count , 0, 0, 0)));
                 }
-
                 await _mediator.Publish(new DocketExtractLoaded("NDWH", nameof(AllergiesChronicIllnessExtract), extractssitecode));
 
                 return count;
