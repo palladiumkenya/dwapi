@@ -29,18 +29,20 @@ namespace Dwapi.Controller
         private readonly IPrepSendService _prepSendService;
         private readonly ICbsSendService _cbsSendService;
         private readonly ICTSendService _ctSendService;
+        private readonly IPrepExportService _prepExportService;
         private readonly IExtractRepository _extractRepository;
         private readonly string _version;
 
         public PrepController(IMediator mediator, IExtractStatusService extractStatusService,
             IHubContext<PrepActivity> hubContext, IPrepSendService prepSendService, ICbsSendService cbsSendService,
-            ICTSendService ctSendService, IExtractRepository extractRepository)
+            ICTSendService ctSendService, IExtractRepository extractRepository, IPrepExportService prepExportService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _prepSendService = prepSendService;
             _cbsSendService = cbsSendService;
             _ctSendService = ctSendService;
+            _prepExportService = prepExportService;
             _extractRepository = extractRepository;
             Startup.PrepHubContext = _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
@@ -116,6 +118,32 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+        [HttpPost("manifestExport")]
+        public async Task<IActionResult> exportManifest([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+
+            string version = GetType().Assembly.GetName().Version.ToString();
+
+            await _mediator.Publish(new ExtractSent("PrepService", version));
+
+
+            try
+            {
+                var result = await _prepExportService.ExportManifestAsync(packageDto, version);
+                return Ok(result);
+
+
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting  Manifest {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
 
         [HttpPost("PatientPreps")]
         public IActionResult SendPatientPrepsExtracts([FromBody] SendManifestPackageDTO packageDto)
@@ -124,6 +152,22 @@ namespace Dwapi.Controller
             try
             {
                 _prepSendService.SendPatientPrepsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+        [HttpPost("exportpatientpreps")]
+        public IActionResult ExportPatientPrepsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _prepExportService.ExportPatientPrepsAsync(packageDto);
                 return Ok();
             }
             catch (Exception e)
@@ -151,6 +195,23 @@ namespace Dwapi.Controller
             }
         }
 
+        [HttpPost("exportPrepAdverseEvents")]
+        public IActionResult ExportPrepEnrolmentsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _prepExportService.ExportPrepAdverseEventsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
 
         [HttpPost("PrepBehaviourRisks")]
         public IActionResult SendAncVisitsExtracts([FromBody] SendManifestPackageDTO packageDto)
@@ -159,6 +220,22 @@ namespace Dwapi.Controller
             try
             {
                 _prepSendService.SendPrepBehaviourRisksAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+        [HttpPost("exportPrepBehaviourRisks")]
+        public IActionResult ExportAncVisitsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _prepExportService.ExportPrepBehaviourRisksAsync(packageDto);
                 return Ok();
             }
             catch (Exception e)
@@ -185,7 +262,22 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
-
+        [HttpPost("exportPrepCareTerminations")]
+        public IActionResult ExportMatVisitsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _prepExportService.ExportPrepCareTerminationsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
         [HttpPost("PrepLabs")]
         public IActionResult SendPrepLabsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
@@ -202,7 +294,22 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
-
+        [HttpPost("exportpreplabs")]
+        public IActionResult ExportPrepLabsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _prepExportService.ExportPrepLabsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
         [HttpPost("PrepPharmacys")]
         public IActionResult SendPrepArtsExtracts([FromBody] SendManifestPackageDTO packageDto)
         {
@@ -215,6 +322,22 @@ namespace Dwapi.Controller
             catch (Exception e)
             {
                 var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+        [HttpPost("exportpreppharmacys")]
+        public IActionResult ExportPrepArtsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _prepExportService.ExportPrepPharmacysAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
             }
@@ -236,7 +359,22 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
-
+        [HttpPost("exportprepvisits")]
+        public IActionResult ExportPncVisitsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _prepExportService.ExportPrepVisitsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
         // POST: api/DwhExtracts/patients
         [HttpPost("endsession")]
         public IActionResult SendEndSession([FromBody] SendManifestPackageDTO packageDto)

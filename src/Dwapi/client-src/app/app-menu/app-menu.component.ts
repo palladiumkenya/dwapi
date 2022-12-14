@@ -48,7 +48,10 @@ export class AppMenuComponent implements OnInit {
                     {label: 'PrEP Services', icon: 'crop_square', routerLink: ['/prep']},
                     {label: 'Client Registry Services', icon: 'credit_card', routerLink: ['/crs']}
                 ]
-            }
+            },
+            { label: 'Exports', icon: 'folder', routerLink: ['/exports'] },
+            { label: 'Upload', icon: 'folder', routerLink: ['/upload'] }
+
         ];
     }
 }

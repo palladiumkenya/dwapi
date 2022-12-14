@@ -15,7 +15,8 @@ import {ExtractProfile} from '../model/extract-profile';
 import {HubConnection, HubConnectionBuilder, LogLevel} from '@aspnet/signalr';
 import {EmrConfigService} from '../../../settings/services/emr-config.service';
 import {ExtractEvent} from '../../../settings/model/extract-event';
-import {SendEvent} from '../../../settings/model/send-event';
+import { SendEvent } from '../../../settings/model/send-event';
+import { ExportEvent } from '../../../settings/model/export-event';
 import {LoadExtracts} from '../../../settings/model/load-extracts';
 import {CombinedPackage} from '../../../settings/model/combined-package';
 import {CbsService} from '../../services/cbs.service';
@@ -59,10 +60,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public currentCbsExtract: Extract;
     private extractEvent: ExtractEvent;
     public sendEvent: SendEvent = {};
+    public exportEvent: ExportEvent = {};
     public recordCount: number;
 
     public canLoadFromEmr: boolean;
     public canSend: boolean;
+    public canExport: boolean;
     public canSendDiff: boolean = null;
     // public canSendDiff: string;
     // public canSendAll: string;
@@ -79,6 +82,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public sending: boolean = false;
     public sendingManifest: boolean = false;
     public changesLoaded: boolean = false;
+    public exporting: boolean = false;
+    public exportingManifest: boolean = false;
 
 
 
@@ -143,7 +148,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadData(): void {
         this.loadingData = true;
         this.canLoadFromEmr = this.canSend = false;
-
+        this.canLoadFromEmr = this.canExport = false;
         if (this.emr) {
             this.canLoadFromEmr = true;
             this.loadingData = true;
@@ -168,6 +173,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.centralRegistry) {
             this.canSend = true;
+            this.canExport = true;
         }
         this.loadingData = false;
     }
@@ -176,7 +182,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.changesLoaded = loadChangesOnly;
         // sessionStorage.setItem("canSendDiff",loadChangesOnly.toString());
         // this.canSendDiff = (sessionStorage.getItem("canSendDiff")) =="true";
-
+        this.canExport = this.canLoadFromEmr = false;
         this.canSend = this.canLoadFromEmr = false;
         localStorage.clear();
         this.errorMessage = [];
@@ -188,6 +194,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     this.canSend = this.canLoadFromEmr = true;
+                    this.canExport = this.canLoadFromEmr = true;
                     this.errorMessage = [];
                     this.errorMessage.push({
                         severity: 'error',
@@ -204,6 +211,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 () => {
                     this.canSend = this.canLoadFromEmr = true;
+                    this.canExport = this.canLoadFromEmr = true;
                     this.errorMessage.push({
                         severity: 'success',
                         summary: 'load was successful '
@@ -273,6 +281,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                             this.canSend = (extract.extractEvent.queued > 0);
                             if (this.startedSending) {
                                 this.canSend = false;
+                                this.canExport = false;
                             }
                         }
                     },
@@ -353,17 +362,52 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 }
             );
     }
+    public export(): void {
+        this.startedSending = true;
+        localStorage.clear();
+        this.exportingManifest = true;
+        this.errorMessage = [];
+        this.notifications = [];
+        this.canSendPatients = false;
+        this.manifestPackage = this.getSendManifestPackage();
+        this.sendManifest$ = this._ndwhSenderService.exportManifest(this.manifestPackage)
+            .subscribe(
+                p => {
+                    this.canSendPatients = true;
+                    this.manifestResponse = p;
+                },
+                e => {
+                    this.startedSending = false;
+                    console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
+
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({ severity: 'error', summary: 'Error sending ', detail: <any>e });
+                    }
+                },
+                () => {
+                    this.startedSending = false;
+                    this.notifications.push({ severity: 'success', summary: 'Manifest sent' });
+                    this.exportExtracts();
+                    this.exportingManifest = false;
+                    this.updateEvent();
+                }
+            );
+    }
 
     public checkWhichToSend(): boolean {
 
         this.sendManifest$ = this._ndwhSenderService.checkWhichToSend()
             .subscribe(
                 p => {
+                    console.log('value here is',p)
                     if (p=="SendAll"){
                         this.canSendDiff = false;
                     }else if(p=="SendChanges"){
                         this.canSendDiff = true;
                     }
+                    console.log('value send',this.canSendDiff)
 
                 },
                 e => {
@@ -418,6 +462,48 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.updateEvent();
                     this.canSend=true;
                     this.startedSending=false;
+                }
+            );
+    }
+    public smartexport(): void {
+        this.startedSending = true;
+        this.canExport = false;
+        if (this.emr.emrSetup == EmrSetup.MultiFacility) {
+            this.smartMode = false;
+            this.export();
+            return;
+        }
+        this.smartMode = true;
+        localStorage.clear();
+        this.exportingManifest = true;
+        this.errorMessage = [];
+        this.notifications = [];
+        this.canSendPatients = false;
+        this.manifestPackage = this.getSendManifestPackage();
+        this.sendManifest$ = this._ndwhSenderService.exportSmartManifest(this.manifestPackage)
+            .subscribe(
+                p => {
+                    this.canSendPatients = true;
+                    this.manifestResponse = p;
+                },
+                e => {
+                    this.canExport = true;
+                    console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
+
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({ severity: 'error', summary: 'Error sending ', detail: <any>e });
+                    }
+                    this.startedSending = false;
+                },
+                () => {
+                    this.notifications.push({ severity: 'success', summary: 'Manifest sent' });
+                    this.exportSmartExtracts();
+                    this.exportingManifest = false;
+                    this.updateEvent();
+                    this.canExport = true;
+                    this.startedSending = false;
                 }
             );
     }
@@ -488,6 +574,36 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 }
             );
     }
+    public exportExtracts(): void {
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        this.extractPackage = this.getExtractsPackage();
+        if (this.manifestResponse) {
+            this.extractPackage.jobId = this.manifestResponse.jobId;
+        }
+        this.send$ = this._ndwhSenderService.exportPatientCTExtracts(this.extractPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                },
+                e => {
+                    this.notifications = [];
+                    console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
+
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({ severity: 'error', summary: 'Error sending ', detail: <any>e });
+                    }
+                },
+                () => {
+                    this.notifications = [];
+                    this.errorMessage.push({ severity: 'success', summary: 'Exporting Extracts Completed ' });
+                    this.updateEvent();
+                }
+            );
+    }
 
     public sendSmartExtracts(): void {
         this.sendEvent = {sentProgress: 0};
@@ -515,6 +631,36 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 () => {
                     this.notifications = [];
                     this.errorMessage.push({severity: 'success', summary: 'Sending Extracts Completed '});
+                    this.updateEvent();
+                }
+            );
+    }
+    public exportSmartExtracts(): void {
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        this.extractPackage = this.getExtractsPackage();
+        if (this.manifestResponse) {
+            this.extractPackage.jobId = this.manifestResponse.jobId;
+        }
+        this.send$ = this._ndwhSenderService.exportSmartPatientExtracts(this.extractPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                },
+                e => {
+                    this.notifications = [];
+                    console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
+
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({ severity: 'error', summary: 'Error sending ', detail: <any>e });
+                    }
+                },
+                () => {
+                    this.notifications = [];
+                    this.errorMessage.push({ severity: 'success', summary: 'export Extracts Completed ' });
                     this.updateEvent();
                 }
             );

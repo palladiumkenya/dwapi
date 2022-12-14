@@ -489,6 +489,7 @@ namespace Dwapi
             services.AddScoped<IDwhPackager, DwhPackager>();
             services.AddScoped<IDwhSendService, DwhSendService>();
             services.AddScoped<ICTSendService, CTSendService>();
+            services.AddScoped<ICTExportService, CTExportService>();
             services.AddScoped<IDwhExtractSentServcie, DwhExtractSentServcie>();
             services.AddScoped<IMnchExtractSentServcie, MnchExtractSentServcie>();
             services.AddScoped<IPrepExtractSentServcie, PrepExtractSentServcie>();
@@ -584,6 +585,7 @@ namespace Dwapi
 
             services.AddScoped<IHtsPackager, HtsPackager>();
             services.AddScoped<IHtsSendService, HtsSendService>();
+            services.AddScoped<IHtsExportService, HtsExportService>();
             services.AddScoped<IHtsExtractValidator, HtsExtractValidator>();
             services.AddScoped<IHtsSendService, HtsSendService>();
             services.AddScoped<IHtsExtractReader, HtsExtractReader>();
@@ -805,6 +807,7 @@ namespace Dwapi
             services.AddScoped<IMnchExtractReader, MnchExtractReader>();
             services.AddScoped<IMnchPackager, MnchPackager>();
             services.AddScoped<IMnchSendService, MnchSendService>();
+            services.AddScoped<IMnchExportService, MnchExportService>();
 
 
             services.AddScoped<IPrepExtractSourceReader, PrepExtractSourceReader>();
@@ -830,6 +833,7 @@ namespace Dwapi
             services.AddScoped<IPrepExtractReader, PrepExtractReader>();
             services.AddScoped<IPrepPackager, PrepPackager>();
             services.AddScoped<IPrepSendService, PrepSendService>();
+            services.AddScoped<IPrepExportService, PrepExportService>();
 
             services.AddScoped<IClientRegistryExtractReader, ClientRegistryExtractReader>();
             services.AddScoped<IClientRegistryExtractSourceExtractor, ClientRegistryExtractSourceExtractor>();

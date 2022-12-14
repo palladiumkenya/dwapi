@@ -9,7 +9,8 @@ import {Subscription} from 'rxjs/Subscription';
 import {Extract} from '../../../settings/model/extract';
 import {DwhExtract} from '../../../settings/model/dwh-extract';
 import {ExtractEvent} from '../../../settings/model/extract-event';
-import {SendEvent} from '../../../settings/model/send-event';
+import { SendEvent } from '../../../settings/model/send-event';
+import { ExportEvent } from '../../../settings/model/export-event';
 import {SendPackage} from '../../../settings/model/send-package';
 import {ExtractDatabaseProtocol} from '../../../settings/model/extract-protocol';
 import {ExtractProfile} from '../../ndwh-docket/model/extract-profile';
@@ -54,17 +55,21 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private dwhExtracts: DwhExtract[] = [];
     private extractEvent: ExtractEvent;
     public sendEvent: SendEvent = {};
+    public exportEvent: ExportEvent = {};
     public sendEventPartners: SendEvent = {};
     public sendEventLinkage: SendEvent = {};
     public recordCount: number;
 
     public canLoadFromEmr: boolean;
     public canSend: boolean;
+    public canExport: boolean;
     public canSendPatients: boolean = false;
     public manifestPackage: SendPackage;
     public patientPackage: SendPackage;
     public sending: boolean = false;
     public sendingManifest: boolean = false;
+    public exporting: boolean = false;
+    public exportingManifest: boolean = false;
 
     public errorMessage: Message[];
     public otherMessage: Message[];
@@ -235,6 +240,34 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
+    public export(): void {
+        this.exportingManifest = true;
+        localStorage.setItem('dwapi.prep.send', '0');
+        this.exportEvent = { exportProgress: 0 };
+        this.canSend = false;
+        this.errorMessage = [];
+        this.notifications = [];
+        this.canSendPatients = false;
+        this.manifestPackage = this.getSendManifestPackage();
+        this.sendManifest$ = this._prepSenderService.exportManifest(this.manifestPackage)
+            .subscribe(
+                p => {
+                    this.canSendPatients = true;
+                    this.exportingManifest = false;
+                    this.updateEvent();
+                    this.exportPatientPrepExtract();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting ', detail: <any>e });
+                    this.canExport = true;
+                },
+                () => {
+                    //  this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+                    this.notifications.push({ severity: 'success', summary: 'Manifest exported' });
+                }
+            );
+    }
 
     public sendPatientPrepExtract(): void {
         //this.sendEvent = {sentProgress: 0};
@@ -252,6 +285,28 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending client', detail: <any>e});
                     this.canSend=true;
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+    public exportPatientPrepExtract(): void {
+        //this.sendEvent = {sentProgress: 0};
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPatientPrepExtractPackage();
+        this.send$ = this._prepSenderService.exportPatientPrepExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportPrepAdverseEventExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error Exporting client', detail: <any>e });
+                    this.canExport = true;
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -281,7 +336,28 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
-
+    public exportPrepAdverseEventExtracts(): void {
+        this.sendStage = 8;
+        //this.sendEvent = {sentProgress: 0};
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPrepAdverseEventExtractPackage();
+        this.send$ = this._prepSenderService.exportPrepAdverseEventExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportPrepBehaviourRiskExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting partner notification service', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
 
 
     public sendPrepBehaviourRiskExtracts(): void {
@@ -306,6 +382,28 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
+    public exportPrepBehaviourRiskExtracts(): void {
+        this.sendStage = 6;
+        //this.sendEvent = {sentProgress: 0};
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPrepBehaviourRiskExtractPackage();
+        this.send$ = this._prepSenderService.exportPrepBehaviourRiskExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportCareTerminationExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting partner notification service', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
 
     public sendCareTerminationExtracts(): void {
         this.sendStage = 10;
@@ -323,6 +421,28 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+    public exportCareTerminationExtracts(): void {
+        this.sendStage = 10;
+        //this.sendEvent = {sentProgress: 0};
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getCareTerminationExtractPackage();
+        this.send$ = this._prepSenderService.exportPrepCareTerminationExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportPrepPharmacyExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting partner notification service', detail: <any>e });
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -353,7 +473,28 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
 
-
+    public exportPrepPharmacyExtracts(): void {
+        this.sendStage = 7;
+        //this.sendEvent = {sentProgress: 0};
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPrepPharmacyExtractPackage();
+        this.send$ = this._prepSenderService.exportPrepPharmacyExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportPrepLabExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending partner notification service', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
 
     public sendPrepLabExtracts(): void {
         this.sendStage = 9;
@@ -377,7 +518,28 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
-
+    public exportPrepLabExtracts(): void {
+        this.sendStage = 9;
+        //this.sendEvent = {sentProgress: 0};
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPrepLabExtractPackage();
+        this.send$ = this._prepSenderService.exportPrepLabExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportPrepVisitExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error sending partner notification service', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
 
 
     public sendPrepVisitExtracts(): void {
@@ -401,7 +563,27 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
-
+    public exportPrepVisitExtracts(): void {
+        this.sendStage = 11;
+        //this.sendEvent = {sentProgress: 0};
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPrepVisitExtractPackage();
+        this.send$ = this._prepSenderService.exportPrepVisitExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting client linkage', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
     public sendHandshake(): void {
         this.manifestPackage = this.getSendManifestPackage();
         this.send$ = this._prepSenderService.sendHandshake(this.manifestPackage)

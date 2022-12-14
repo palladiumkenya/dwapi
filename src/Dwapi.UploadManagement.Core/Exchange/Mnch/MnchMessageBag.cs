@@ -69,5 +69,52 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         {
             return new MnchMessageBag(MnchMessage.Create(extracts));
         }
+
+        //BoardRoomUploads
+        public static MnchMessageBag CreateEx(List<PatientMnchExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+        public static MnchMessageBag CreateEx(List<MnchEnrolmentExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+        public static MnchMessageBag CreateEx(List<MnchArtExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+        public static MnchMessageBag CreateEx(List<AncVisitExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+        public static MnchMessageBag CreateEx(List<MatVisitExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+        public static MnchMessageBag CreateEx(List<PncVisitExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+        public static MnchMessageBag CreateEx(List<MotherBabyPairExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+        public static MnchMessageBag CreateEx(List<CwcEnrolmentExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+        public static MnchMessageBag CreateEx(List<CwcVisitExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+        public static MnchMessageBag CreateEx(List<HeiExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+
+        public static MnchMessageBag CreateEx(List<MnchLabExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
     }
 }

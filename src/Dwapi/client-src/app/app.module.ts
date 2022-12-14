@@ -185,7 +185,13 @@ import {PrepSummaryService} from "../dockets/services/prep-summary.service";
 import {PrepClientService} from "../dockets/services/prep-client.service";
 import {PrepSenderService} from "../dockets/services/prep-sender.service";
 import {CrsService} from "../dockets/services/crs.service";
-import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
+import { CrsDocketComponent } from "../dockets/crs-docket/crs-docket.component";
+import { exportComponent } from "../exports/file-exports.component";
+import { UploadComponent } from "../upload/file-upload.component";
+import { DownloadComponent } from '../download/download.component';
+import { UploadService } from '../dockets/services/upload-service';
+import { DndDirective } from "../upload/upload.directive";
+
 
 @NgModule({
     imports: [
@@ -319,6 +325,10 @@ import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
         PrepExtractDetailsComponent,
         PrepInvalidComponent,
         PrepValidComponent,
+        DownloadComponent,
+        exportComponent,
+        UploadComponent,
+        DndDirective,
         CrsDocketComponent
 ],
     providers: [

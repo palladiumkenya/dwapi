@@ -135,5 +135,64 @@ namespace Dwapi.UploadManagement.Core.Exchange.Prep
             return list;
         }
 
+        //BoardRoom Uploads
+        public static List<PrepMessage> CreateEx(List<PatientPrepExtract> extracts)
+        {
+            var list = new List<PrepMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new PrepMessage(chunks));
+
+            return list;
+        }
+        public static List<PrepMessage> CreateEx(List<PrepAdverseEventExtract> extracts)
+        {
+            var list = new List<PrepMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new PrepMessage(chunks));
+
+            return list;
+
+        }
+        public static List<PrepMessage> CreateEx(List<PrepBehaviourRiskExtract> extracts)
+        {
+            var list = new List<PrepMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new PrepMessage(chunks));
+
+            return list;
+        }
+        public static List<PrepMessage> CreateEx(List<PrepCareTerminationExtract> extracts)
+        {
+            var list = new List<PrepMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new PrepMessage(chunks));
+
+            return list;
+        }
+        public static List<PrepMessage> CreateEx(List<PrepLabExtract> extracts)
+        {
+            var list = new List<PrepMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new PrepMessage(chunks));
+
+            return list;
+        }
+        public static List<PrepMessage> CreateEx(List<PrepPharmacyExtract> extracts)
+        {
+            var list = new List<PrepMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new PrepMessage(chunks));
+
+            return list;
+        }
+        public static List<PrepMessage> CreateEx(List<PrepVisitExtract> extracts)
+        {
+            var list = new List<PrepMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new PrepMessage(chunks));
+
+            return list;
+        }
+
     }
 }

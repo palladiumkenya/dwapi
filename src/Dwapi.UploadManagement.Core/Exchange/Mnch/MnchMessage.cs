@@ -213,5 +213,89 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
             return list;
         }
 
+        //BoardRoomUploads
+        public static List<MnchMessage> CreateEx(List<PatientMnchExtract> extracts)
+        {
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+        }
+        public static List<MnchMessage> CreateEx(List<MnchEnrolmentExtract> extracts)
+        {
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+
+        }
+        public static List<MnchMessage> CreateEx(List<MnchArtExtract> extracts)
+        {
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+        }
+        public static List<MnchMessage> CreateEx(List<AncVisitExtract> extracts)
+        {
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+        }
+        public static List<MnchMessage> CreateEx(List<MatVisitExtract> extracts)
+        {
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+        }
+        public static List<MnchMessage> CreateEx(List<PncVisitExtract> extracts)
+        {
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+        }
+        public static List<MnchMessage> CreateEx(List<MotherBabyPairExtract> extracts)
+        {
+
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+        }
+        public static List<MnchMessage> CreateEx(List<CwcEnrolmentExtract> extracts)
+        {
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+        }
+        public static List<MnchMessage> CreateEx(List<CwcVisitExtract> extracts)
+        {
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+        }
+        public static List<MnchMessage> CreateEx(List<HeiExtract> extracts)
+        {
+
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+        }
+
+        public static List<MnchMessage> CreateEx(List<MnchLabExtract> extracts)
+        {
+
+            var list = new List<MnchMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new MnchMessage(chunks));
+            return list;
+        }
+
     }
 }

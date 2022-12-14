@@ -9,7 +9,8 @@ import {Subscription} from 'rxjs/Subscription';
 import {Extract} from '../../../settings/model/extract';
 import {DwhExtract} from '../../../settings/model/dwh-extract';
 import {ExtractEvent} from '../../../settings/model/extract-event';
-import {SendEvent} from '../../../settings/model/send-event';
+import { SendEvent } from '../../../settings/model/send-event';
+import { ExportEvent } from '../../../settings/model/export-event';
 import {SendPackage} from '../../../settings/model/send-package';
 import {ExtractDatabaseProtocol} from '../../../settings/model/extract-protocol';
 import {ExtractProfile} from '../../ndwh-docket/model/extract-profile';
@@ -54,17 +55,21 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private dwhExtracts: DwhExtract[] = [];
     private extractEvent: ExtractEvent;
     public sendEvent: SendEvent = {};
+    public exportEvent: ExportEvent = {};
     public sendEventPartners: SendEvent = {};
     public sendEventLinkage: SendEvent = {};
     public recordCount: number;
 
     public canLoadFromEmr: boolean;
     public canSend: boolean;
+    public canExport: boolean;
     public canSendPatients: boolean = false;
     public manifestPackage: SendPackage;
     public patientPackage: SendPackage;
     public sending: boolean = false;
     public sendingManifest: boolean = false;
+    public exporting: boolean = false;
+    public exportingManifest: boolean = false;
 
     public errorMessage: Message[];
     public otherMessage: Message[];
@@ -231,6 +236,33 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
+    public export(): void {
+        localStorage.setItem('dwapi.mnch.send', '0');
+        this.exportingManifest = true;
+        this.exportEvent = { exportProgress: 0 };
+        this.errorMessage = [];
+        this.notifications = [];
+        this.canSendPatients = false;
+        this.manifestPackage = this.getSendManifestPackage();
+        this.sendManifest$ = this._mnchSenderService.exportManifest(this.manifestPackage)
+            .subscribe(
+                p => {
+                    this.canSendPatients = true;
+                    this.exportingManifest = false;
+                    this.updateEvent();
+                    this.exportPatientPrepExtract();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting ', detail: <any>e });
+                    this.canExport = true;
+                },
+                () => {
+                    //  this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+                    this.notifications.push({ severity: 'success', summary: 'Manifest exported' });
+                }
+            );
+    }
 
     public sendPatientMnchExtract(): void {
         this.sendEvent = {sentProgress: 0};
@@ -247,6 +279,27 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending client', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+    public exportPatientPrepExtract(): void {
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPatientMnchExtractPackage();
+        this.send$ = this._mnchSenderService.exportPatientMnchExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportAncVisitExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting client', detail: <any>e });
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -276,6 +329,29 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
+    public exportAncVisitExtracts(): void {
+        this.sendStage = 2;
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getAncVisitExtractPackage();
+        this.send$ = this._mnchSenderService.exportAncVisitExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportCwcEnrolmentExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting Anc Visits', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
 
     public sendCwcEnrolmentExtracts(): void {
         this.sendStage = 3;
@@ -293,6 +369,28 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending test kits', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+    public exportCwcEnrolmentExtracts(): void {
+        this.sendStage = 3;
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getCwcEnrolmentExtractPackage();
+        this.send$ = this._mnchSenderService.exportCwcEnrolmentExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportCwcVisitExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting CwcEnrolmentExtracts', detail: <any>e });
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -322,6 +420,28 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
+    public exportCwcVisitExtracts(): void {
+        this.sendStage = 4;
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getCwcVisitExtractPackage();
+        this.send$ = this._mnchSenderService.exportCwcVisitExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportHeiExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting CwcVisitsExtract', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
 
     public sendHeiExtracts(): void {
         this.sendStage = 5;
@@ -339,6 +459,28 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending partner tracing', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+    public exportHeiExtracts(): void {
+        this.sendStage = 5;
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getHeiExtractPackage();
+        this.send$ = this._mnchSenderService.exportHeiExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportMatVisitExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting HeiExtractsacing', detail: <any>e });
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -368,6 +510,28 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
+    public exportMatVisitExtracts(): void {
+        this.sendStage = 6;
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getMatVisitExtractPackage();
+        this.send$ = this._mnchSenderService.exportMatVisitExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportMnchArtExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting MatVisitExtract', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
 
     public sendMnchArtExtracts(): void {
         this.sendStage = 7;
@@ -385,6 +549,28 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+    public exportMnchArtExtracts(): void {
+        this.sendStage = 7;
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getMnchArtExtractPackage();
+        this.send$ = this._mnchSenderService.exportMnchArtExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportMnchEnrolmentExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting MnchArtExtracts', detail: <any>e });
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -414,6 +600,28 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
+    public exportMnchEnrolmentExtracts(): void {
+        this.sendStage = 8;
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getMnchEnrolmentExtractPackage();
+        this.send$ = this._mnchSenderService.exportMnchEnrolmentExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportMnchLabExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting MnchEnrolmentExtracts', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
 
     public sendMnchLabExtracts(): void {
         this.sendStage = 9;
@@ -431,6 +639,28 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending partner notification service', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+    public exportMnchLabExtracts(): void {
+        this.sendStage = 9;
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getMnchLabExtractPackage();
+        this.send$ = this._mnchSenderService.exportMnchLabExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportMotherBabyPairExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting MnchLabExtracts', detail: <any>e });
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -460,6 +690,28 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
+    public exportMotherBabyPairExtracts(): void {
+        this.sendStage = 10;
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getMotherBabyPairExtractPackage();
+        this.send$ = this._mnchSenderService.exportMotherBabyPairExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                    this.exportPncVisitExtracts();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting MotherBabyPairExtracts', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
 
     public sendPncVisitExtracts(): void {
         this.sendStage = 11;
@@ -476,6 +728,27 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending client linkage', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+    public exportPncVisitExtracts(): void {
+        this.sendStage = 11;
+        this.exportEvent = { exportProgress: 0 };
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPncVisitExtractPackage();
+        this.send$ = this._mnchSenderService.exportPncVisitExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting PncVisitExtracts', detail: <any>e });
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});

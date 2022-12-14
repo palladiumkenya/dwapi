@@ -1,10 +1,55 @@
 .ui-progressbar-value {
     background-color: orange !important;
 }
+
 .ui-progressbar {
     background-color: gainsboro !important;
 }
 
 .ui-progressbar-indeterminate {
     background-color: gainsboro !important;
+}
+
+.button {
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 30px;
+}
+
+
+.download {
+    background-color: rgb(184, 12, 12);
+    width: 100px;
+    height: 30px;
+}
+
+.button.disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.container {
+    display: flex;
+}
+
+.upload {
+    background-color: #4CAF50;
+    float: left;
+    height: 40px;
+    width: 200px;
+    margin: 10px;
+}
+
+
+
+
+label.error {
+    font-size: 20pt;
+    color: red;
+    text-transform: uppercase;
 }
