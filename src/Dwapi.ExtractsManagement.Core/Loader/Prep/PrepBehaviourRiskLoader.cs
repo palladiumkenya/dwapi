@@ -55,7 +55,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
                 var eCount = await  _tempPrepBehaviourRiskExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempPrepBehaviourRiskExtractRepository.PageCount(take, eCount);
 
-                int extractssitecode = (int) _tempPrepBehaviourRiskExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+                int extractssitecode = 0;
 
                 int page = 1;
                 while (page <= pageCount)
@@ -68,6 +68,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
 
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempPrepBehaviourRiskExtract>, List<PrepBehaviourRiskExtract>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
