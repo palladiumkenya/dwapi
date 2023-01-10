@@ -70,7 +70,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             }
             else
             {
-                found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
             }
 
             //update status
