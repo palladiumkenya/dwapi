@@ -488,20 +488,20 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     this.canExport = true;
-                    console.error('SEND ERROR', e);
+                    console.error('EXPORT ERROR', e);
                     if (e && e.ProgressEvent) {
 
                     } else {
                         this.errorMessage = [];
-                        this.errorMessage.push({ severity: 'error', summary: 'Error sending ', detail: <any>e });
+                        this.errorMessage.push({ severity: 'error', summary: 'Error exporting ', detail: <any>e });
                     }
                     this.startedSending = false;
                 },
                 () => {
-                    this.notifications.push({ severity: 'success', summary: 'Manifest sent' });
+                    this.notifications.push({ severity: 'success', summary: 'Manifest exported' });
                     this.exportSmartExtracts();
                     this.exportingManifest = false;
-                    this.updateEvent();
+                    //this.updateEvent();
                     this.canExport = true;
                     this.startedSending = false;
                 }
@@ -650,18 +650,18 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     this.notifications = [];
-                    console.error('SEND ERROR', e);
+                    console.error('EXPORT ERROR', e);
                     if (e && e.ProgressEvent) {
 
                     } else {
                         this.errorMessage = [];
-                        this.errorMessage.push({ severity: 'error', summary: 'Error sending ', detail: <any>e });
+                        this.errorMessage.push({ severity: 'error', summary: 'Error exporting ', detail: <any>e });
                     }
                 },
                 () => {
                     this.notifications = [];
-                    this.errorMessage.push({ severity: 'success', summary: 'export Extracts Completed ' });
-                    this.updateEvent();
+                    this.errorMessage.push({ severity: 'success', summary: 'Exporting Extracts Completed ' });
+                   // this.updateEvent();
                 }
             );
     }
@@ -846,6 +846,21 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             }
             this.canLoadFromEmr = this.canSend = !this.sending;
         });
+        this._hubConnection.on('ShowDwhExportProgress', (dwhProgress: any) => {
+            const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);
+            this.exportEvent = {
+                exportProgress: progress
+            };
+            this.updateExractStats(dwhProgress);
+            if (progress !== 100) {
+                this.exporting = true;
+            } else {
+                this.exporting = false;
+                this.updateEvent();
+            }
+            this.canLoadFromEmr = this.canExport = !this.exporting;
+        });
+
 
         this._hubConnection.on('ShowDwhSendMessage', (message: any) => {
             if (message === 'Sending started...') {
@@ -857,6 +872,18 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 this.errorMessage.push({severity: 'success', summary: message.message});
             }
         });
+
+        this._hubConnection.on('ShowDwhExportMessage', (message: any) => {
+            if (message === 'Exporting started...') {
+                localStorage.clear();
+            }
+            if (message.error) {
+                this.errorMessage.push({ severity: 'error', summary: 'Error exporting ', detail: message.message });
+            } else {
+                this.errorMessage.push({ severity: 'success', summary: message.message });
+            }
+        });
+
     }
 
 
