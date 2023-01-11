@@ -71,7 +71,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             }
             else
             {
-                found  = await _DrugAlcoholScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                found  = await _DrugAlcoholScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
             }
             // update status
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "DrugAlcoholScreeningExtract", changesLoadedStatus);
