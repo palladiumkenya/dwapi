@@ -147,7 +147,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
       
         public void NotifyPreSending()
         {
-            DomainEvents.Dispatch(new DwhMessageNotification(false, $"Sending started..."));
+            DomainEvents.Dispatch(new DwExporthMessageNotification(false, $"Exporting started..."));
 
         }
 
@@ -294,7 +294,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             int total = packageInfo.PageCount;
             int overall = 0;
 
-            DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Exporting));
+           DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Exporting));
             long recordCount = 0;
 
             if (messageBag.ExtractName == "PatientArtExtract")
@@ -359,6 +359,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         bool allowSend = true;
                         while (allowSend)
                         {
+                            
                             //for(int i = 0; i < extracts.Count; i++)
                             //{
                             //  IMessageSourceBag mg=  Convert.ToInt64(message.Extracts[i].PatientID);
@@ -377,22 +378,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts");
 
                                 string path = folderName + "\\" + messageBag.ExtractName + ".dump" + ".json";
-                                //if (File.Exists(path))
-                                //{
-                                //    File.AppendAllText(path, msg);                                   
-                                //    allowSend = false;
-                                //}
-                                //else
-                                //{
+                               
                                 await File.WriteAllTextAsync(path, msg);
                                 allowSend = false;
-
-                                //}
+                                var sentIds = messageBag.SendIds;
+                                sendCound += sentIds.Count;
+                                DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
+                                   messageBag.ExtractType));
+                                var tlog = TransportLog.GenerateExtract("NDWH", messageBag.ExtractName, jobId);
+                                _transportLogRepository.CreateLatest(tlog);
 
                                 startPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT");
                                 string zipPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + ".zip");
-
-
 
                                 DirectoryInfo di = new DirectoryInfo(startPath);
 
@@ -424,20 +421,16 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 if (!Directory.Exists(folderName))
                                     Directory.CreateDirectory(folderName);
 
-
                                 string path = folderName + "\\" + messageBag.ExtractName + ".dump" + ".json";
 
-                                //if (File.Exists(path))
-                                //{
-                                //    File.AppendAllText(path, msg);                                  
-                                //    allowSend = false;
-                                //}
-                                //else
-                                //{
                                 await File.WriteAllTextAsync(path, msg);
                                 allowSend = false;
 
-                                //}
+                                var sentIds = messageBag.SendIds;
+                                sendCound += sentIds.Count;                            
+
+                                var tlog = TransportLog.GenerateExtract("NDWH", messageBag.ExtractName, jobId);
+                                _transportLogRepository.CreateLatest(tlog);
                             }
                         }
 
@@ -450,22 +443,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                     DomainEvents.Dispatch(new CTExportNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
 
-                }
-
-                //if (messageBag.ExtractName == "DefaulterTracingExtract")
-                //{
-                //    DirectoryInfo di = new DirectoryInfo(startPath);
-
-                //    foreach (FileInfo file in di.GetFiles())
-                //    {
-                //        file.Delete();
-                //    }
-                //    foreach (DirectoryInfo dir in di.GetDirectories())
-                //    {
-                //        dir.Delete(true);
-                //    }
-                //    //File.Delete(startPath);
-                //}
+                }           
 
 
                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
@@ -496,7 +474,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             int maxRetries = 4;
             int retries = 0;
             var notificationend = new HandshakeEnd("CTSendEnd", version);
-            DomainEvents.Dispatch(new DwhMessageNotification(false, $"Sending completed"));
+            DomainEvents.Dispatch(new DwExporthMessageNotification(false, $"Exporting completed"));
             await _mediator.Publish(new HandshakeEnd("CTSendEnd", version));
 
             Thread.Sleep(3000);
