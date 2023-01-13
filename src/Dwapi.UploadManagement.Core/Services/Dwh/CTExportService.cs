@@ -327,9 +327,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 else
                 {
                     var mainExtract = _transportLogRepository.GetMainExtract();
-                    jobId = mainExtract.JobId;
-                    manifestId = mainExtract.ManifestId;
-                    facilityId = mainExtract.FacilityId;
+                    if (null == mainExtract)
+                    {
+                        jobId = manifest.JobId;
+                        manifestId = manifest.ManifestId;
+                        facilityId = manifest.FacilityId;
+                    }
+                    else
+                    {
+                        jobId = mainExtract.JobId;
+                        manifestId = mainExtract.ManifestId;
+                        facilityId = mainExtract.FacilityId;
+                    }
                 }
 
 
