@@ -564,7 +564,7 @@ namespace Dwapi.Controller
             if (extracts.Any())
                 package.Extracts = extracts.Select(x => new ExtractDto() { Id = x.Id, Name = x.Name }).ToList();
 
-            _ctSendService.NotifyPreSending();
+            _ctExportService.NotifyPreSending();
 
             var job0 =
                 BatchJob.StartNew(x => { ExportJobSmartPatients(package); });
@@ -585,7 +585,7 @@ namespace Dwapi.Controller
                 BatchJob.ContinueBatchWith(job4, x => { ExportCovidJobSmartProfiles(package); });
 
             var jobEnd =
-                BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package, _version); });
+                BatchJob.ContinueBatchWith(job5, x => { _ctExportService.NotifyPostSending(package, _version); });
         }
 
         public void SendJobSmartPateints(SendManifestPackageDTO package)

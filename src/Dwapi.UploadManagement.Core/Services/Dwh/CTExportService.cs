@@ -291,7 +291,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             var packageInfo = _packager.GetPackageInfo<T>(batchSize);
             int sendCound = 0;
             int count = 0;
-            int total = packageInfo.PageCount;
+            int total = count;
             int overall = 0;
 
            DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Exporting));
@@ -359,15 +359,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         bool allowSend = true;
                         while (allowSend)
                         {
-                            
-                            //for(int i = 0; i < extracts.Count; i++)
-                            //{
-                            //  IMessageSourceBag mg=  Convert.ToInt64(message.Extracts[i].PatientID);
-                            //}
-                            //foreach (var extract in message.Extracts)
-                            //    Convert.ToInt64(message.Extracts[i].PatientID);
-
-
+                       
                             if (message.ExtractName == "DefaulterTracingExtract")
                             {
 
@@ -381,10 +373,13 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                
                                 await File.WriteAllTextAsync(path, msg);
                                 allowSend = false;
+
                                 var sentIds = messageBag.SendIds;
                                 sendCound += sentIds.Count;
-                                DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
+
+                                DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Exported,
                                    messageBag.ExtractType));
+
                                 var tlog = TransportLog.GenerateExtract("NDWH", messageBag.ExtractName, jobId);
                                 _transportLogRepository.CreateLatest(tlog);
 
@@ -427,7 +422,10 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 allowSend = false;
 
                                 var sentIds = messageBag.SendIds;
-                                sendCound += sentIds.Count;                            
+                                sendCound += sentIds.Count;
+
+                                DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Exported,
+                                   messageBag.ExtractType));
 
                                 var tlog = TransportLog.GenerateExtract("NDWH", messageBag.ExtractName, jobId);
                                 _transportLogRepository.CreateLatest(tlog);
