@@ -29,7 +29,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
         {
             var sql = $@"
                 select e.*,k.Description,k.Rank
-                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id where e.IndicatorValue='STALE'
+                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id where e.IndicatorValue='OUTDATED'
             ";
             var result = Context.Database.GetDbConnection().Query(sql).ToList();
 
