@@ -28,7 +28,7 @@ namespace Dwapi.SettingsManagement.Core.Application.Checks.Queries
             try
             {                         
                 var response =
-                    await client.GetAsync("https://auth.kenyahmis.org/dwapi/client/updates/livesync.txt");
+                    await client.GetAsync("https://data.kenyahmis.org:444/dwapi/client/updates/livesync.txt");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
