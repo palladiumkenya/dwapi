@@ -117,6 +117,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         public IEnumerable<T> GenerateDiffBatchExtracts<T>(int page, int batchSize, string docket, string extract)
             where T : ClientExtract
         {
+            return GenerateBatchExtracts<T, Guid>(page, batchSize);
             var changes = new List<T>();
             var finalChanges = new List<T>();
 
@@ -135,7 +136,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
                 changes = _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated).ToList();
 
             if (!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
-                changes =  _reader.Read<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastModified).ToList();
+                changes =  _reader.Read<T, Guid>(page, batchSize, x => x.Date_Last_Modified > diffLog.LastModified).ToList();
 
             if (!diffLog.LastModified.IsNullOrEmpty() && !diffLog.LastCreated.IsNullOrEmpty())
                 changes= _reader.Read<T, Guid>(page, batchSize,
@@ -157,6 +158,8 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         public IEnumerable<T> GenerateDiffBatchMainExtracts<T>(int page, int batchSize, string docket, string extract)
             where T : ClientExtract
         {
+            // return _reader.ReadMainExtract<T, Guid>(page, batchSize);
+
             var allDifflogs = _diffLogReader.ReadAll().ToList();
 
             var diffLog = allDifflogs.FirstOrDefault(x =>
@@ -172,7 +175,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
                 return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastCreated);
 
             if (!diffLog.LastModified.IsNullOrEmpty() && diffLog.LastCreated.IsNullOrEmpty())
-                return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Created > diffLog.LastModified);
+                return _reader.ReadMainExtract<T, Guid>(page, batchSize, x => x.Date_Last_Modified > diffLog.LastModified);
 
             return _reader.ReadMainExtract<T, Guid>(page, batchSize,
                 x => x.Date_Created > diffLog.LastCreated || x.Date_Last_Modified > diffLog.LastModified);

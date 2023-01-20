@@ -100,6 +100,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard
             throw new NotImplementedException();
         }
 
+        public Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract, DateTime? maxCreated, DateTime? maxModified, int siteCode)
+        {
+            throw new NotImplementedException();
+        }
+
         public IDataReader ExecuteReaderSync(DbProtocol protocol, DbExtract extract)
         {
             throw new NotImplementedException();

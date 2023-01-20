@@ -54,5 +54,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Prep
         public string TreatedForHepC { get; set; }
         public DateTime? NextAppointment { get; set; }
         public string ClinicalNotes { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

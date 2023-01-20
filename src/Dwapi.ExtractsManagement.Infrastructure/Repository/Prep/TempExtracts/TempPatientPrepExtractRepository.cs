@@ -117,6 +117,20 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Prep.TempExtracts
                 .Select(x => x.Id)
                 .CountAsync();
         }
+        public int GetSiteCode()
+        {
+            try
+            {
+                return (int) DbSet.AsNoTracking()
+                    .Where(a => a.ErrorType == 0)
+                    .Select(x => x.SiteCode)
+                    .ToList().FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                return 99999;
+            }
+        }
 
         private Task<int> GetSqlCommand(IDbConnection cn, string sql)
         {

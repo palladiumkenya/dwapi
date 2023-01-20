@@ -47,6 +47,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                 var eCount = await _tempPatientMnchExtractRepository.GetCleanCount();
                 var pageCount = _tempPatientMnchExtractRepository.PageCount(take, eCount);
 
+                int extractssitecode = 0;
+
                 int page = 1;
                 while (page <= pageCount)
                 {
@@ -57,6 +59,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                     count += batch.Count;
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempPatientMnchExtract>, List<PatientMnchExtract>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
@@ -77,7 +81,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                             found, count, 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(PatientMnchExtract)));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(PatientMnchExtract), extractssitecode));
 
                 return count;
             }

@@ -19,5 +19,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string PHQ9_9 { get; set; }
         public string PHQ_9_rating { get; set; }
         public int? DepressionAssesmentScore { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -41,6 +42,61 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
             int count = 0;
             int loaded = 0;
             using (var rdr = await _reader.ExecuteReader(dbProtocol, extract))
+            {
+                while (rdr.Read())
+                {
+                    count++;
+                    loaded++;
+                    // AutoMapper profiles
+                    var extractRecord =   mapper.Map<IDataRecord, TempPatientLaboratoryExtract>(rdr);
+                    extractRecord.Id = LiveGuid.NewGuid();
+                    list.Add(extractRecord);
+
+                    if (count == batch)
+                    {
+                        _extractRepository.BatchInsert(list);
+
+                        count = 0;
+
+
+                        DomainEvents.Dispatch(
+                            new ExtractActivityNotification(extract.Id, new DwhProgress(
+                                nameof(PatientLaboratoryExtract),
+                                nameof(ExtractStatus.Finding),
+                                loaded, 0, 0, 0, 0)));
+                        list = new List<TempPatientLaboratoryExtract>();
+                    }
+                }
+
+                if (count > 0)
+                {
+                    // save remaining list;
+                    _extractRepository.BatchInsert(list);
+                }
+                _extractRepository.CloseConnection();
+            }
+
+            // TODO: Notify Completed;
+            DomainEvents.Dispatch(
+                new ExtractActivityNotification(extract.Id, new DwhProgress(
+                    nameof(PatientLaboratoryExtract),
+                    nameof(ExtractStatus.Found),
+                    loaded, 0, 0, 0, 0)));
+
+            return loaded;
+        }
+
+        public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol, DateTime? maxCreated, DateTime? maxModified, int siteCode)
+        {
+            var mapper = dbProtocol.SupportsDifferential ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
+
+            int batch = 5000;
+
+            var list = new List<TempPatientLaboratoryExtract>();
+
+            int count = 0;
+            int loaded = 0;
+            using (var rdr = await _reader.ExecuteReader(dbProtocol, extract, maxCreated, maxModified, siteCode))
             {
                 while (rdr.Read())
                 {

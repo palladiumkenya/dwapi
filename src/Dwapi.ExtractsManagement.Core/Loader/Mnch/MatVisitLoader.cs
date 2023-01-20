@@ -54,6 +54,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                 const int take = 1000;
                 var eCount = await  _tempMatVisitExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempMatVisitExtractRepository.PageCount(take, eCount);
+                
+                int extractssitecode = 0;
 
                 int page = 1;
                 while (page <= pageCount)
@@ -66,6 +68,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempMatVisitExtract>, List<MatVisitExtract>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
@@ -86,7 +90,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(MatVisitExtract)));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(MatVisitExtract), extractssitecode));
 
                 return count;
             }

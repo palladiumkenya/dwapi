@@ -63,6 +63,11 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public canLoadFromEmr: boolean;
     public canSend: boolean;
+    public canSendDiff: boolean = null;
+    // public canSendDiff: string;
+    // public canSendAll: string;
+
+
     public canSendMpi: boolean;
     public canSendPatients: boolean = false;
     public manifestPackage: CombinedPackage;
@@ -73,10 +78,14 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public cbsExtractPackage: SendPackage = null;
     public sending: boolean = false;
     public sendingManifest: boolean = false;
+    public changesLoaded: boolean = false;
+
+
 
     public errorMessage: Message[];
     public otherMessage: Message[];
     public notifications: Message[];
+    public warningMessage: Message[];
     private _extractDbProtocol: ExtractDatabaseProtocol;
     private _extractDbProtocols: ExtractDatabaseProtocol[];
     private extractLoadCommand: LoadFromEmrCommand;
@@ -128,6 +137,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.loadRegisrty();
         this.liveOnInit();
         this.loadData();
+        this.checkWhichToSend();
     }
 
     public loadData(): void {
@@ -162,12 +172,17 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.loadingData = false;
     }
 
-    public loadFromEmr(): void {
+    public loadFromEmr(loadChangesOnly): void {
+        this.changesLoaded = loadChangesOnly;
+        // sessionStorage.setItem("canSendDiff",loadChangesOnly.toString());
+        // this.canSendDiff = (sessionStorage.getItem("canSendDiff")) =="true";
+
         this.canSend = this.canLoadFromEmr = false;
         localStorage.clear();
         this.errorMessage = [];
+        this.notifications = [];
         this.load$ = this._ndwhExtractService
-            .extractAll(this.generateExtractsLoadCommand(this.emr))
+            .extractAll(this.generateExtractsLoadCommand(this.emr,loadChangesOnly))
             .subscribe(
                 p => {
                 },
@@ -179,6 +194,13 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         summary: 'Error loading from EMR',
                         detail: <any>e
                     });
+                    this.notifications = [];
+                    this.notifications.push({
+                        severity: 'error',
+                        summary: 'Error loading from EMR',
+                        detail: <any>e
+                    });
+
                 },
                 () => {
                     this.canSend = this.canLoadFromEmr = true;
@@ -186,6 +208,14 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         severity: 'success',
                         summary: 'load was successful '
                     });
+
+                    this.notifications.push({
+                        severity: 'success',
+                        summary: 'load was successful '
+                    });
+
+                    this.checkWhichToSend();
+
                     this.updateEvent();
                     this.loadMet();
                 }
@@ -324,6 +354,28 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             );
     }
 
+    public checkWhichToSend(): boolean {
+
+        this.sendManifest$ = this._ndwhSenderService.checkWhichToSend()
+            .subscribe(
+                p => {
+                    if (p=="SendAll"){
+                        this.canSendDiff = false;
+                    }else if(p=="SendChanges"){
+                        this.canSendDiff = true;
+                    }
+
+                },
+                e => {
+
+                },
+                () => {
+                }
+            );
+        return this.canSendDiff;
+    }
+
+
     public sendSmart(): void {
         this.startedSending=true;
         this.canSend=false;
@@ -347,12 +399,15 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     this.canSend=true;
-                    console.error('SEND ERROR', e);
+
                     if (e && e.ProgressEvent) {
 
                     } else {
                         this.errorMessage = [];
                         this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                        this.notifications = [];
+                        this.notifications.push({severity: 'error',summary: 'Error loading from EMR',detail: <any>e
+                        });
                     }
                     this.startedSending=false;
                 },
@@ -390,6 +445,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     } else {
                         this.errorMessage = [];
                         this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                        this.notifications = [];
+                        this.notifications.push({severity: 'error',summary: 'Error loading from EMR',detail: <any>e});
                     }
                 },
                 () => {
@@ -729,9 +786,10 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         return this.loadExtractsCommand;
     }
 
-    private generateExtractsLoadCommand(currentEmr: EmrSystem): LoadExtracts {
+    private generateExtractsLoadCommand(currentEmr: EmrSystem,load: boolean): LoadExtracts {
 
         this.extractLoadCommand = {
+            loadChangesOnly:load,
             extracts: this.generateExtractProfiles(currentEmr)
         };
 

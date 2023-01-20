@@ -29,12 +29,15 @@ namespace Dwapi.ExtractsManagement.Core.Application.Events
 
         public Task Handle(DocketExtractSent notification, CancellationToken cancellationToken)
         {
-            var diffLog = _repository.GetLog(notification.Docket, notification.Extract);
-
+           
+            var diffLog = _repository.GetAllDocketLogs(notification.Docket);
             if (null != diffLog)
             {
-                diffLog.LogSent();
-                _repository.SaveLog(diffLog);
+                foreach (var log in diffLog)
+                {
+                    log.LogSent();
+                    _repository.SaveLog(log);
+                }
             }
 
             return Task.CompletedTask;

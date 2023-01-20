@@ -13,5 +13,6 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Prep
         bool BatchInsert(IEnumerable<TempPatientPrepExtract> extracts);
         Task<int> Clear();
         Task<int> GetCleanCount();
+        int GetSiteCode();
     }
 }

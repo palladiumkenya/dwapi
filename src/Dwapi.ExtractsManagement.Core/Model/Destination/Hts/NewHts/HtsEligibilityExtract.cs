@@ -68,10 +68,11 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
         public string TypeGBV	{ get; set; }
         public string ForcedSex { get; set; }	
         public string ReceivedServices { get; set; }
+        public string ContactWithTBCase { get; set; }
         
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
-        public string ContactWithTBCase { get; set; }
+        
 
     }
 }

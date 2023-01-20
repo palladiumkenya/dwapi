@@ -15,3 +15,4 @@ RETENTION_ON_ART_VL_1000_12_MONTHS,Individuals who are suppressed 12 months afte
 LAST_ENCOUNTER_CREATE_DATE,Last EMR Encounter Create date,40
 EMR_ETL_Refresh,Last EMR ETL Refresh date,41
 MFL_CODE,Sites Found in the Database,42
+DB_STATE,Stale Database status. Database with previous month's visits being less that 50% of average visits from April 2022 are considered stale,43

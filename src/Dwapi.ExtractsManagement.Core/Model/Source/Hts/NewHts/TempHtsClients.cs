@@ -16,5 +16,10 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public  string Ward	 { get; set; }
         public string NUPI { get; set; }
         public string Pkv { get; set; }
+        public string Occupation { get; set; }
+        public string PriorityPopulationType { get; set; }
+        public string HtsRecencyId { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

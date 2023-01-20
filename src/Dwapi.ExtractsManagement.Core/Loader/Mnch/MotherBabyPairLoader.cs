@@ -55,6 +55,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                 var eCount = await  _tempMotherBabyPairExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempMotherBabyPairExtractRepository.PageCount(take, eCount);
 
+                int extractssitecode = 0;
+
                 int page = 1;
                 while (page <= pageCount)
                 {
@@ -66,6 +68,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempMotherBabyPairExtract>, List<MotherBabyPairExtract>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
@@ -86,7 +90,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                             found, count , 0, 0, 0)));
                 }
 
-                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(MotherBabyPairExtract)));
+                await _mediator.Publish(new DocketExtractLoaded("MNCH", nameof(MotherBabyPairExtract), extractssitecode));
 
                 return count;
             }

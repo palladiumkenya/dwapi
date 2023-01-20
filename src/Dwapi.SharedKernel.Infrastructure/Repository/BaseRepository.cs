@@ -333,5 +333,13 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
             var mapping = Context.Model.FindEntityType(typeof(T)).Relational();
             return mapping.TableName;
         }
+
+        public T GetSiteCode(string sql)
+        {
+            return  DbSet.AsNoTracking()
+                .FromSql(sql)
+                .ToList().FirstOrDefault();;
+            // return DbSet.AsNoTracking().Select(x => x.Id).CountAsync();
+        }
     }
 }

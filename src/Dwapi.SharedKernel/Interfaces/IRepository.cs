@@ -9,7 +9,7 @@ using X.PagedList;
 
 namespace Dwapi.SharedKernel.Interfaces
 {
-    public interface IRepository<T, in TId> where T : Entity<TId>
+    public interface IRepository<T, TId> where T : Entity<TId>
     {
         T Get(TId id);
         T Get(Expression<Func<T, bool>> predicate);
@@ -42,5 +42,7 @@ namespace Dwapi.SharedKernel.Interfaces
        int PageCount(int batchSize, long totalRecords);
        Task<IEnumerable<T>> ReadAll( string sql, int pageNumber, int pageSize);
        string GetTableName();
+       T GetSiteCode(string sql);
+
     }
 }

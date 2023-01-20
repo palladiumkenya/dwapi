@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Dwh;
 using Dwapi.Models;
@@ -35,9 +37,13 @@ namespace Dwapi.Controller
         private readonly ICbsSendService _cbsSendService;
         private readonly ICTSendService _ctSendService;
         private readonly IExtractRepository _extractRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
+
+
         private readonly string _version;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -45,6 +51,9 @@ namespace Dwapi.Controller
             _cbsSendService = cbsSendService;
             _ctSendService = ctSendService;
             _extractRepository = extractRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
+            _diffLogRepository = diffLogRepository;
+
             Startup.HubContext= _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
         }
@@ -60,29 +69,41 @@ namespace Dwapi.Controller
         }
 
         [HttpPost("extractAll")]
-        public async Task<IActionResult> Load([FromBody]LoadExtracts request)
+        public async Task<IActionResult> Load([FromBody] LoadExtracts request)
         {
-            if(!request.IsValid())
+            if (!request.IsValid())
                 return BadRequest();
 
             string version = GetType().Assembly.GetName().Version.ToString();
+            // update LoadChangesOnly to value passed from loadFromEmr() command
 
-            if (!request.LoadMpi)
+            try
             {
-                var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
+                if (!request.LoadMpi)
+                {
+                    var result = await _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted);
 
-                await _mediator.Publish(new ExtractLoaded("CareTreatment", version, request.EmrSetup));
+                    await _mediator.Publish(new ExtractLoaded("CareTreatment", version, request.EmrSetup));
 
-                return Ok(result);
+                    return Ok(result);
+                }
+
+                var dwhExtractsTask =
+                    Task.Run(() => _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted));
+                var mpiExtractsTask = Task.Run(() => _mediator.Send(request.ExtractMpi, HttpContext.RequestAborted));
+                var extractTasks = new List<Task<bool>> {mpiExtractsTask, dwhExtractsTask};
+                // wait for both tasks but doesn't throw an error for mpi load
+                var result1 = await Task.WhenAll(extractTasks);
+                return Ok(dwhExtractsTask);
+            } catch (Exception e)
+            {
+                var msg = $"Error Loading Extracts --> {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
             }
-
-            var dwhExtractsTask = Task.Run(() => _mediator.Send(request.LoadFromEmrCommand, HttpContext.RequestAborted));
-            var mpiExtractsTask = Task.Run(() => _mediator.Send(request.ExtractMpi, HttpContext.RequestAborted));
-            var extractTasks = new List<Task<bool>> { mpiExtractsTask, dwhExtractsTask};
-            // wait for both tasks but doesn't throw an error for mpi load
-            var result1 = await Task.WhenAll(extractTasks);
-            return Ok(dwhExtractsTask);
         }
+
+
 
         // GET: api/DwhExtracts/status/id
         [HttpGet("status/{id}")]
@@ -145,13 +166,18 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid())
                 return BadRequest();
 
-
             string version = GetType().Assembly.GetName().Version.ToString();
 
             await _mediator.Publish(new ExtractSent("CareTreatment", version));
 
             try
             {
+                // check stale
+                if (_indicatorExtractRepository.CheckIfStale())
+                {
+                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                }
+
                 if (!packageDto.SendMpi)
                 {
                     var result = await _dwhSendService.SendDiffManifestAsync(packageDto.DwhPackage,_version);
@@ -184,6 +210,12 @@ namespace Dwapi.Controller
 
             try
             {
+                // check stale
+                 if (_indicatorExtractRepository.CheckIfStale())
+                 {
+                     throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                 }
+
                 var result = await _ctSendService.SendSmartManifestAsync(packageDto.DwhPackage, _version, "3");
                 return Ok(result);
             }
@@ -262,10 +294,48 @@ namespace Dwapi.Controller
             }
             catch (Exception e)
             {
-                var msg = $"Error sending Extracts {e.Message}";
+                var msg = $"Error sending diff patients Extracts {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
             }
+        }
+
+        [HttpGet("checkWhichToSend")]
+        public async Task<IActionResult> CheckWhichToSend()
+        {
+
+            string whichToSend = "";
+
+            string version = GetType().Assembly.GetName().Version.ToString();
+
+            await _mediator.Publish(new ExtractSent("CareTreatment", version));
+
+            try
+            {
+
+                var mflcode =   _indicatorExtractRepository.GetMflCode();
+                var changesLoaded =
+                    _diffLogRepository.GetIfChangesHasBeenLoadedAlreadyLog("NDWH", "PatientExtract", mflcode);
+                // check changes loaded
+                if (null==changesLoaded)
+                {
+                    whichToSend = "SendAll";
+                }
+                else
+                {
+                    whichToSend = "SendChanges";
+                }
+                return Ok(whichToSend);
+
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error checking send {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+
+            }
+
         }
 
         [AutomaticRetry(Attempts = 0)]

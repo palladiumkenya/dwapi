@@ -4,6 +4,8 @@ using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -23,20 +25,56 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IOvcLoader _OvcLoader;
         private readonly IClearDwhExtracts _clearDwhExtracts;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
-        public ExtractOvcHandler(IOvcSourceExtractor OvcSourceExtractor, IExtractValidator extractValidator, IOvcLoader OvcLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository)
+        
+
+        public ExtractOvcHandler(IOvcSourceExtractor OvcSourceExtractor, IExtractValidator extractValidator, IOvcLoader OvcLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
         {
             _OvcSourceExtractor = OvcSourceExtractor;
             _extractValidator = extractValidator;
             _OvcLoader = OvcLoader;
             _clearDwhExtracts = clearDwhExtracts;
             _extractHistoryRepository = extractHistoryRepository;
+            _diffLogRepository = diffLogRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
+
         }
 
         public async Task<bool> Handle(ExtractOvc request, CancellationToken cancellationToken)
         {
+            // Differential loading
+            // Get current site and docket dates,
+            int found;
+            var mflcode =   _indicatorExtractRepository.GetMflCode();
+
+            var loadChangesOnly = request.LoadChangesOnly;
+            var difflog = _diffLogRepository.GetLog("NDWH", "OvcExtract",mflcode);
+            var changesLoadedStatus= false;
+            
+            if (request.DatabaseProtocol.SupportsDifferential)
+            {
+                if(null==difflog)
+                    found  = await _OvcSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+                else
+                    if (true == loadChangesOnly)
+                    {
+                        changesLoadedStatus = true;
+                        found = await _OvcSourceExtractor.Extract(request.Extract,
+                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                    }
+                    else
+                    {
+                        found  = await _OvcSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+                    }
+            }
+            else
+            {
+                found  = await _OvcSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            }
             //Extract
-            int found = await _OvcSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "OvcExtract", changesLoadedStatus);
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(OvcExtract), $"{nameof(TempOvcExtract)}s");
