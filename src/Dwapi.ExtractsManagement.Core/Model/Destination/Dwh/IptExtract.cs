@@ -27,5 +27,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string IPTClientWorkUp { get; set; }
         public string StartIPT { get; set; }
         public string IndicationForIPT { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

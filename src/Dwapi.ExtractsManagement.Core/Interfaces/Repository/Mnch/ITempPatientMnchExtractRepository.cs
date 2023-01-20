@@ -12,6 +12,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mnch
                 bool BatchInsert(IEnumerable<TempPatientMnchExtract> extracts);
                 Task<int> Clear();
                 Task<int> GetCleanCount();
+                int GetSiteCode();
         }
 }
 

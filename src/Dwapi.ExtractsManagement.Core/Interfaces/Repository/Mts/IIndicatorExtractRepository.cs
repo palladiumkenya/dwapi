@@ -9,5 +9,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts
     public interface IIndicatorExtractRepository : IRepository<IndicatorExtract, Guid>
     {
         IEnumerable<IndicatorExtractDto> Load();
+        Boolean CheckIfStale();
+        int GetMflCode();
     }
 }

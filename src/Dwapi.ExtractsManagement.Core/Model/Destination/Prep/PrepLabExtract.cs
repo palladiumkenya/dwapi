@@ -14,5 +14,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Prep
         public DateTime? SampleDate { get; set; }
         public DateTime? TestResultDate { get; set; }
         public string Reason { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

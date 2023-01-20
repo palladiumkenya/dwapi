@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
 {
@@ -14,5 +15,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public string TestKitLotNumber2 { get; set; }
         public string TestKitExpiry2 { get; set; }
         public string TestResult2 { get; set; }
+        public  string SyphilisResult { get; set; } 
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

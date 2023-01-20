@@ -42,6 +42,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string Pkv { get; set; }
         public string Occupation { get; set; }
         public string NUPI { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
         public virtual ICollection<PatientArtExtract> PatientArtExtracts { get; set; } = new List<PatientArtExtract>();
         public virtual ICollection<PatientBaselinesExtract> PatientBaselinesExtracts { get; set; } = new List<PatientBaselinesExtract>();
         public virtual ICollection<PatientLaboratoryExtract> PatientLaboratoryExtracts { get; set; } = new List<PatientLaboratoryExtract>();

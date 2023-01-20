@@ -50,8 +50,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests.TestArtifacts
         {
           return new List<DiffLog>()
           {
-            DiffLog.Create("NDWH", "PatientExtract"),
-            DiffLog.Create("NDWH", "PatientArtExtract")
+            DiffLog.Create("NDWH", "PatientExtract",99999,DateTime.Now,DateTime.Now),
+            DiffLog.Create("NDWH", "PatientArtExtract",99999,DateTime.Now,DateTime.Now)
           };
         }
 

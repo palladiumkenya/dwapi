@@ -27,5 +27,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Prep
         public string MonthsknownHIVSerodiscordant { get; set; }
         public string SexWithoutCondom { get; set; }
         public string NumberofchildrenWithPartner { get; set; }
+        public DateTime? Date_Created { get; set; }
+        public DateTime? Date_Last_Modified { get; set; }
     }
 }

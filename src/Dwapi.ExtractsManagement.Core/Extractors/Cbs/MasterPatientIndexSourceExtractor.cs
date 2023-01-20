@@ -104,5 +104,78 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Cbs
 
             return totalCount;
         }
+
+        public async Task<int> Extract(DbExtract extract, DbProtocol dbProtocol, DateTime? maxCreated, DateTime? maxModified, int siteCode)
+        {
+            var mapper = dbProtocol.SupportsDifferential ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
+            int batch = 500;
+
+            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracting...")));
+            //DomainEvents.Dispatch(new CbsStatusNotification(extract.Id,ExtractStatus.Loading));
+
+            var list = new List<TempMasterPatientIndex>();
+
+            int count = 0;
+            int totalCount = 0;
+
+            using (var rdr = await _reader.ExecuteReader(dbProtocol, extract, maxCreated, maxModified, siteCode))
+            {
+
+                while (rdr.Read())
+                {
+                    totalCount++;
+                    count++;
+                    // AutoMapper profiles
+                    var extractRecord = mapper.Map<IDataRecord, TempMasterPatientIndex>(rdr);
+                    extractRecord.Id = LiveGuid.NewGuid();
+
+                    if(!string.IsNullOrWhiteSpace(extractRecord.sxdmPKValueDoB))
+                        list.Add(extractRecord);
+
+                    if (count == batch)
+                    {
+                        // TODO: batch and save
+                        _extractRepository.BatchInsert(list);
+
+                        try
+                        {
+                            DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracting...",totalCount,count,0,0,0)));
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(e,"Notification error");
+
+                        }
+                        count = 0;
+                        list =new List<TempMasterPatientIndex>();
+                    }
+
+                    // TODO: Notify progress...
+
+
+                }
+
+                if (count > 0)
+                {
+                    _extractRepository.BatchInsert(list);
+                }
+                _extractRepository.CloseConnection();
+            }
+
+            try
+            {
+
+                DomainEvents.Dispatch(new CbsNotification(new ExtractProgress(nameof(MasterPatientIndex), "extracted", totalCount, 0, 0, 0, 0)));
+                DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
+                DomainEvents.Dispatch(new CbsStatusNotification(extract.Id, ExtractStatus.Loaded,totalCount));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Notification error");
+
+            }
+
+            return totalCount;
+        }
     }
 }

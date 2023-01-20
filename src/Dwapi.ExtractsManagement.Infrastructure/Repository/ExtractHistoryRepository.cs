@@ -100,6 +100,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
             var history = new ExtractHistory(ExtractStatus.Idle,extractId);
             CreateBatch(new List<ExtractHistory> {history});
         }
+        
+        public int GetSiteCode(string tempTableName)
+        {
+            var sql = $@"
+                    select SiteCode
+                    from {tempTableName}s a LIMIT 1";
+
+            int sitecode = ExecQuery<int>(sql);
+            return sitecode;
+        }
 
         //public int ProcessExcluded(Guid extractId,int rejectedCount,DbExtract extract)
         //{

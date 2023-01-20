@@ -41,6 +41,27 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
             return sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection);
         }
 
+        public Task<IDataReader> ExecuteReader(DbProtocol protocol, DbExtract extract, DateTime? maxCreated, DateTime? maxModified, int siteCode)
+        {
+            var sourceConnection = GetConnection(protocol);
+            if (null == sourceConnection)
+                throw new Exception("Data connection not initialized");
+
+            if (null == extract)
+                throw new Exception("Extract settings not configured");
+
+            if (sourceConnection.State != ConnectionState.Open)
+                sourceConnection.Open();
+
+            Connection = sourceConnection;
+            var commandDefinition = new CommandDefinition(extract.GetDiffSQL(maxCreated, maxModified, siteCode), null, null, 3600);
+
+            if (sourceConnection is SqliteConnection)
+                return Task.FromResult<IDataReader>(sourceConnection.ExecuteReader(commandDefinition));
+
+            return sourceConnection.ExecuteReaderAsync(commandDefinition, CommandBehavior.CloseConnection);
+        }
+
         public IDataReader ExecuteReaderSync(DbProtocol protocol, DbExtract extract)
         {
             var sourceConnection = GetConnection(protocol);
