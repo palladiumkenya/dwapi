@@ -74,6 +74,30 @@
             </button>
 
         </div>
+        <div class="ui-g" *ngIf="sending">
+            <div class="ui-g-12">
+                 Sending C&T Extracts, please wait ...
+                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+            </div>
+        </div>
+        <!--<div class="ui-g" *ngIf="sending">
+            <div class="ui-g-12">
+                Sending HTS Extracts, please wait ...
+                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+            </div>
+        </div>
+        <div class="ui-g" *ngIf="sending">
+            <div class="ui-g-12">
+                 Sending MNCH Extracts, please wait ...
+                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+            </div>
+        </div>
+        <div class="ui-g" *ngIf="sending">
+            <div class="ui-g-12">
+                Sending PrEP Extracts, please wait ...
+                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+            </div>
+        </div>-->
     </div>
 </div>
 

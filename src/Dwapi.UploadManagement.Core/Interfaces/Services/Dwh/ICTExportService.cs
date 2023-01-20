@@ -8,6 +8,8 @@ using Dwapi.SharedKernel.Exchange;
 using Dwapi.SharedKernel.Model;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Exchange;
+using Microsoft.AspNetCore.Http;
+
 namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
 {
     public interface ICTExportService
@@ -39,6 +41,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
              int batchSize,
              IMessageSourceBag<T> messageBag)
              where T : ClientExtract;
+
+        Task<List<SendCTResponse>> SendFileManifest(IFormFile file, string apiVersion = "");
 
 
         Task NotifyPostSending(SendManifestPackageDTO sendTo, string version);

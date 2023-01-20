@@ -41,7 +41,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Exchange.Ct
                 .ToList();
         }
 
-
         public void Generate(List<T> extracts, Guid manifestId,Guid facilityId, string jobId)
         {
             Extracts = extracts;

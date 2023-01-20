@@ -359,6 +359,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     var extracts = _packager.GenerateSmartBatchExtracts<T>(page, packageInfo.PageSize).ToList();
                     recordCount = recordCount + extracts.Count;
                     messageBag.Generate(extracts, manifestId, facilityId,jobId);
+                    //messageBag = messageBag.Generate(extracts);
                     var message = messageBag;
 
                     Log.Debug(

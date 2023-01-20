@@ -33,6 +33,8 @@ using Dwapi.UploadManagement.Core.Exchange.Crs;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using AutoMapper;
 using Dwapi.Models;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
+using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
 
 namespace Dwapi.Controller
 {
@@ -51,18 +53,20 @@ namespace Dwapi.Controller
         private readonly string _endPoint;
         public HttpClient Client { get; set; }
         private IHostingEnvironment _hostingEnvironment;
+        private readonly ICTExportService _ctExportService;
 
 
 
         public UploadController(IMediator mediator, IExtractStatusService extractStatusService, 
             IHubContext<CrsActivity> hubContext, IClientRegistryExtractRepository clientRegistryExtractRepository, 
-            ICrsSendService crsSendService, IHubContext<CrsSendActivity> hubSendContext, ICrsSearchService crsSearchService,IHostingEnvironment hostingEnvironment)
+            ICrsSendService crsSendService, IHubContext<CrsSendActivity> hubSendContext, ICrsSearchService crsSearchService,IHostingEnvironment hostingEnvironment, ICTExportService ctExportService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _clientRegistryExtractRepository = clientRegistryExtractRepository;
             _crsSendService = crsSendService;           
             _crsSearchService = crsSearchService;
+            _ctExportService = ctExportService;
             _hostingEnvironment = hostingEnvironment;           
             _endPoint = "http://localhost:10707/api/Crs/sendF";
             Startup.CrsSendHubContext = _hubSendContext = hubSendContext;
@@ -89,11 +93,7 @@ namespace Dwapi.Controller
                 {
                     string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     String partToExtract = fileName.Split('-', '.')[1];
-                    //string fullPath = Path.Combine(newPath, fileName);
-                    //using (var stream = new FileStream(fullPath, FileMode.Create))
-                    //{
-                    //    await file.CopyToAsync(stream);
-                    //}
+                    
                     if (partToExtract != null)
                     {
                         if (partToExtract == "Crs")
@@ -180,55 +180,27 @@ namespace Dwapi.Controller
                         }
                         if (partToExtract == "CT")
                         {
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/patients";
-                            var client = new HttpClient
+                           
+                            
+                            try
                             {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/patients")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(file.OpenReadStream())
+                                string fullPath = Path.Combine(newPath, fileName);
+                                using (var stream = new FileStream(fullPath, FileMode.Create))
                                 {
-                                    Headers =
-                                        {
-                                            ContentLength = file.Length,
-                                            ContentType = new MediaTypeHeaderValue(file.ContentType)
-                                        }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-                                    var url1 = "http://localhost:21751/api/file";
-                                    var client1 = new HttpClient
-                                    {
-                                        BaseAddress = new Uri("http://localhost:21751/api/file")
-                                    };
-                                    client1.DefaultRequestHeaders.Accept.Clear();
-                                    client1.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                                    client1.Timeout = TimeSpan.FromMinutes(59);
-                                    using (var content1 = new MultipartFormDataContent())
-                                    {
-                                        content1.Add(new StreamContent(file.OpenReadStream())
-                                        {
-                                            Headers =
-                                        {
-                                            ContentLength = file.Length,
-                                            ContentType = new MediaTypeHeaderValue(file.ContentType)
-                                        }
-                                        }, "File", fileName);
-
-                                        var response1 = await client1.PostAsync(url1, content1);
-
-                                    }
+                                    await file.CopyToAsync(stream);
                                 }
 
-
+                                var result = _ctExportService.SendFileManifest(file, "3");
+                                
+                                return Ok(result);
                             }
+                            catch (Exception e)
+                            {
+                                var msg = $"Error sending Smart Manifest {e.Message}";
+                                Log.Error(e, msg);
+                                return StatusCode(500, msg);
+                            }
+
                         }
 
                     }
