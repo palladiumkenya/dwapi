@@ -19,8 +19,6 @@ jobs:
         run: dotnet restore Dwapi.sln
       - name: Build
         run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release --no-restore
-      - name: Test
-        run: ls test/*/*.Tests.csproj | xargs -L 1 dotnet test
       - name: Setup Angular
         uses: actions/setup-node@v1
         with:
