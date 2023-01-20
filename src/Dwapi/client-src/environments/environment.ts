@@ -7,7 +7,7 @@ export const environment = {
     production: false,
     port: '5757',
     emrs: [
-        {name: 'KenyaEMR', version: '18.4.1'},
+        {name: 'KenyaEMR', version: '18.4.2'},
         {name: 'IQCare', version: '2.2.1'}
     ]
 };

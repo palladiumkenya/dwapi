@@ -445,6 +445,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     } else {
                         this.errorMessage = [];
                         this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                        this.notifications = [];
+                        this.notifications.push({severity: 'error',summary: 'Error loading from EMR',detail: <any>e});
                     }
                 },
                 () => {
