@@ -13,6 +13,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
     {
         public SettingsContext(DbContextOptions<SettingsContext> options) : base(options)
         {
+            this.Database.SetCommandTimeout(0);
         }
         public DbSet<CentralRegistry> CentralRegistries { get; set; }
         public DbSet<EmrSystem> EmrSystems { get; set; }
