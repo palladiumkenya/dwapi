@@ -271,18 +271,21 @@ namespace Dwapi.Controller
         public IActionResult Files()
         {
             var result = new List<string>();
-
-            var uploads = Path.Combine(_hostingEnvironment.ContentRootPath, "exports");
+            var uploads =  "exports";
+            string extension = ".zip";
             if (Directory.Exists(uploads))
             {
-                var provider = _hostingEnvironment.ContentRootFileProvider;
+                
                 foreach (string fileName in Directory.GetFiles(uploads))
                 {
+                    if (Path.GetExtension(fileName) == extension)
+                    {
+                        var fileInfo = Path.GetFileName(fileName);
 
+                        result.Add(fileInfo);
+                    }
 
-                    var fileInfo = Path.GetFileName(fileName);
-
-                    result.Add(fileInfo);
+                    
                 }
             }
             return Ok(result);

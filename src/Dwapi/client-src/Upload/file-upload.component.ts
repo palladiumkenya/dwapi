@@ -102,6 +102,7 @@ export class UploadComponent implements OnInit {
 
         this._hubConnection.on("ReceiveProgress", (progress: number) => {
             this.progresss = progress;
+            this.progressSubject.next(progress);
         });
 
        

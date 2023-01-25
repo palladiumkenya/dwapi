@@ -147,13 +147,16 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 {
                     
                     var start = DateTime.Now;
+
                     var msg = JsonConvert.SerializeObject(message.Manifest);
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                     var Base64Manifest = Convert.ToBase64String(plainTextBytes);
-                    string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-CT");
-                    Directory.CreateDirectory(folderName);
-                    File.WriteAllText(folderName + "\\" + "manifest.dump" + ".json", Base64Manifest);
+                    string projectPath = "exports";
+                    string foldername = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-CT").HasToEndsWith(@"\");
+
+                    Directory.CreateDirectory(foldername);
+                    string fileName = foldername + "manifest.dump.json";
+                    File.WriteAllText(fileName.ToOsStyle(), Base64Manifest);
 
                    
                 }
@@ -177,6 +180,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         }
 
+        
         public async Task<List<SendCTResponse>> ExportBatchExtractsAsync<T>(
             SendManifestPackageDTO sendTo,
             int batchSize,
@@ -318,7 +322,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             int sendCound = 0;
             int count = 0;
             int total = count;
-            int overall = 0;
+            
 
            DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Exporting));
             long recordCount = 0;
@@ -348,10 +352,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                     try
                     {
-                        int retryCount = 0;
-                        bool allowSend = true;
-                        while (allowSend)
-                        {
                        
                             if (message.ExtractName == "DefaulterTracingExtract")
                             {
@@ -359,20 +359,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var msg = JsonConvert.SerializeObject(message);
                                 var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                                 var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                                string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                                string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts");
-
-                                string path = folderName + "\\" + messageBag.ExtractName + ".dump" + ".json";
+                                string projectPath = ("exports");
+                                string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts").HasToEndsWith(@"\");
+                                string fileName = folderName + messageBag.ExtractName + ".dump" + ".json";                              
                                
-                                await File.WriteAllTextAsync(path, msg);
-                                allowSend = false;
+                                await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
+                               
 
                                 var sentIds = messageBag.SendIds;
                                 sendCound += sentIds.Count;
 
                                 DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Exported,
                                    messageBag.ExtractType));
-
                                
 
                                 startPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT");
@@ -386,7 +384,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     {
                                         byte[] bytes = Encoding.UTF8.GetBytes(await File.ReadAllTextAsync(extractsfile.FullName));
                                         string base64 = Convert.ToBase64String(bytes);
-                                        await File.WriteAllTextAsync(extractsfile.FullName, base64);
+                                        await File.WriteAllTextAsync(extractsfile.FullName.ToOsStyle(), base64);
                                     }
 
                                 }
@@ -402,17 +400,14 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var msg = JsonConvert.SerializeObject(message);
                                 var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                                 var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                                string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                                string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts");
-
+                                string projectPath = "exports";
+                                string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts").HasToEndsWith(@"\");
+                                string fileName = folderName+ messageBag.ExtractName + ".dump" + ".json";
                                 if (!Directory.Exists(folderName))
-                                    Directory.CreateDirectory(folderName);
+                                    Directory.CreateDirectory(folderName);                                
 
-                                string path = folderName + "\\" + messageBag.ExtractName + ".dump" + ".json";
-
-                                await File.WriteAllTextAsync(path, msg);
-                                allowSend = false;
-
+                                await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
+                               
                                 var sentIds = messageBag.SendIds;
                                 sendCound += sentIds.Count;
 
@@ -420,7 +415,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                    messageBag.ExtractType));
 
                             }
-                        }
+                        
 
                     }
                     catch (Exception e)
@@ -495,844 +490,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         //BoardRoom Uploads
 
-        public async Task<List<SendCTResponse>> SendFileManifest(IFormFile file)
-        {
-            var responses = new List<SendCTResponse>();
-            string folderName = "Upload";
-            string tempfolderName = "Temp";
-            string webRootPath = _hostingEnvironment.ContentRootPath;
-            string newPath = Path.Combine(webRootPath, folderName);
-            string tempPath = Path.Combine(webRootPath, tempfolderName);
-            
-            string text;            
-            int count = 0;
-            string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-            string fullPath = Path.Combine(newPath, fileName);
-            String partToExtract = fileName.Split('.')[0];
-            string tempFullPath = Path.Combine(tempPath, partToExtract);
-            try
-            {
-
-
-                using (ZipArchive archive = ZipFile.OpenRead(fullPath))
-                {
-                   
-                        for (int i = 0; i < archive.Entries.Count; i++)
-                       {
-                        if (archive.Entries[i].Name == "manifest.dump.json")
-                        {
-                            int retryCount = 0;
-                            bool allowSend = true;
-
-                            //allowSend = false;
-                            //var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                            //responses.Add(res);
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath,true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/manifest";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/manifest")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-                                                    
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-                                    allowSend = false;
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);                                    
-                                }
-                            }
-                        }
-                        break;
-
-
-                    }
-                    for (int i = 1; i < archive.Entries.Count; i++)
-                    {
-                        if (archive.Entries[i].Name == "PatientExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/patients";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/patients")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-                                    
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                                else
-                                {
-                                        var error = await response.Content.ReadAsStringAsync();
-                                       
-                                        throw new Exception(error);
-                                    
-                                }
-                            }
-                        }
-                       
-                    }
-                    for (int i = 1; i < archive.Entries.Count; i++)
-                    {
-
-                        if (archive.Entries[i].Name == "AllergiesChronicIllnessExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/allergiesChronic";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/allergiesChronic")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-
-                        }
-                        else if (archive.Entries[i].Name == "ContactListingExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/contactlisting";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/contactlisting")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-                        }
-                        else if (archive.Entries[i].Name == "CovidExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/covid";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/covid")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-                        }
-                        else if (archive.Entries[i].Name == "DefaulterTracingExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/defaulttracer";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/defaulttracer")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-                        }
-                        else if (archive.Entries[i].Name == "DepressionScreeningExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/depressionscreening";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/depressionscreening")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-
-                        }
-                        else if (archive.Entries[i].Name == "DrugAlcoholScreeningExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/drugalcoholscreening";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/drugalcoholscreening")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-                        }
-                        else if (archive.Entries[i].Name == "EnhancedAdherenceCounsellingExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/enhancedadherence";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/enhancedadherence")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-                        }
-                        else if (archive.Entries[i].Name == "GbvScreeningExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/gbvscreening";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/gbvscreening")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-                        }
-                        else if (archive.Entries[i].Name == "IptExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/ipt";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/ipt")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-
-                        }
-                        else if (archive.Entries[i].Name == "OtzExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/otz";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/otz")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-                        }
-                        else if (archive.Entries[i].Name == "OvcExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/ovc";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/ovc")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-
-                        }
-                        else if (archive.Entries[i].Name == "PatientAdverseEventExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/patientadverse";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/patientadverse")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-
-                        }
-                        else if (archive.Entries[i].Name == "PatientArtExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/patientart";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/patientart")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-
-                        }
-                        else if (archive.Entries[i].Name == "PatientBaselineExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/patientbaseline";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/patientbaseline")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-
-                        }
-                        else if (archive.Entries[i].Name == "PatientLabExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/patientlab";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/patientlab")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-
-                        }
-
-                        else if (archive.Entries[i].Name == "PatientPharmacyExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/patientpharmacy";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/patientpharmacy")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-
-                        }
-                        else if (archive.Entries[i].Name == "PatientStatusExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/patientstatus";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/patientstatus")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                    Headers =
-                                                {
-                                                    ContentLength = archive.Entries[i].Length
-
-                                                }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {
-
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
-                                }
-                            }
-
-                        }
-                        else if (archive.Entries[i].Name == "PatientVisitExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            if (!Directory.Exists(tempFullPath))
-                                Directory.CreateDirectory(tempFullPath);
-
-                            archive.Entries[i].ExtractToFile(destinationPath, true);
-
-                           
-                            //string result = "";
-                            var url = "http://localhost:21751/api/file/patientvisit";
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:21751/api/file/patientvisit")
-                            };
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
-                            client.Timeout = TimeSpan.FromMinutes(59);
-                            var filestream = File.OpenRead(destinationPath);
-                            using (var content = new MultipartFormDataContent())
-                            {
-                                content.Add(new StreamContent(filestream)
-                                {
-                                        Headers =
-                                                    {
-                                                        ContentLength = archive.Entries[i].Length
-
-                                                    }
-                                }, "File", fileName);
-
-                                var response = await client.PostAsync(url, content);
-                                if (response.IsSuccessStatusCode)
-                                {                                   
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);                                  
-
-
-                                    var tlog = TransportLog.GenerateExtract("NDWH", archive.Entries[i].Name, res.JobId);
-                                    _transportLogRepository.CreateLatest(tlog);
-                                }
-                               // DomainEvents.Dispatch(new CTSendNotification(new SendProgress(archive.Entries[i].Name, IMessageSourceBag<PatientVisitExtract>.GetProgress(count, total), recordCount)));
-                            }
-                        }
-                    }
-
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e, $"Send Extracts Error");
-                throw;
-            }
-
-            return responses;
-        }
+       
        
 
         public async Task<List<SendCTResponse>> SendFileManifest(IFormFile file, string apiVersion = "")
@@ -1371,7 +529,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                             archive.Entries[i].ExtractToFile(destinationPath, true);
 
-                        var filestream = File.OpenRead(destinationPath);
+                            var filestream = File.OpenRead(destinationPath);
                             using (StreamReader sr = new StreamReader(filestream))
                             {
                                 try

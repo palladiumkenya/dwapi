@@ -31,6 +31,9 @@ Bached sending and await to 50 at a time
     <None Remove="client-src\progress-status.model.ts" />
     <None Remove="client-src\settings\model\data-metrics.ts" />
     <None Remove="client-src\settings\model\export-event.ts" />
+    <None Update="exports\.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="kenyahmis.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
