@@ -291,7 +291,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
-
+            this.Database.SetCommandTimeout(0);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

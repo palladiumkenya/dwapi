@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
@@ -43,10 +44,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private IEmrMetricReader _reader;
         private readonly ITransportLogRepository _transportLogRepository;
         private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
+
 
         public HttpClient Client { get; set; }
 
-        public CTSendService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository, IDiffLogRepository diffLogRepository)
+        public CTSendService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
         {
             _packager = packager;
             _mediator = mediator;
@@ -54,6 +57,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             _transportLogRepository = transportLogRepository;
             _endPoint = "api/";
             _diffLogRepository = diffLogRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
+
         }
 
         public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
@@ -62,8 +67,10 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()));
         }
 
-        public Task<List<SendDhwManifestResponse>> SendSmartManifestAsync(SendManifestPackageDTO sendTo,string version,string apiVersion="")
+        public Task<List<SendDhwManifestResponse>> SendSmartManifestAsync(SendManifestPackageDTO sendTo, string version,
+            string apiVersion = "")
         {
+            
             var response = SendSmartManifestAsync(sendTo,
                 DwhManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()), version,
                 apiVersion);
@@ -212,7 +219,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         while (allowSend)
                         {
                             var response = await client.PostAsJsonAsync(
-                                sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
+                                    sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
                             if (response.IsSuccessStatusCode)
                             {
                                 allowSend = false;
@@ -284,6 +291,15 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             int total = packageInfo.PageCount;
             int overall = 0;
 
+            var siteCode = _indicatorExtractRepository.GetMflCode();
+            
+            var diffLogs = _diffLogRepository.GetAllDocketLogs("NDWH");
+            
+            foreach (var log in diffLogs)
+            {
+                _diffLogRepository.UpdateMaxDates("NDWH", log.Extract, siteCode);
+            }
+            
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sending));
             long recordCount = 0;
 

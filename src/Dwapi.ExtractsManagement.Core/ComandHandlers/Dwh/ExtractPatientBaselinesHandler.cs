@@ -74,7 +74,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             }
             else
             {
-                found  = await _patientBaselinesSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                found  = await _patientBaselinesSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
             }
             //Extract
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "PatientBaselinesExtract", changesLoadedStatus);

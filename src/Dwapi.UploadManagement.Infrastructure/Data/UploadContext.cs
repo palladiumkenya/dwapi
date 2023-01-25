@@ -83,6 +83,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
 
         public UploadContext(DbContextOptions<UploadContext> options) : base(options)
         {
+            this.Database.SetCommandTimeout(0);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

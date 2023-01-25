@@ -29,7 +29,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
         {
             var sql = $@"
                 select e.*,k.Description,k.Rank
-                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id where e.IndicatorValue='STALE'
+                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id where e.IndicatorValue='OUTDATED'
             ";
             var result = Context.Database.GetDbConnection().Query(sql).ToList();
 
@@ -47,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
             
             try
             {
-                var sql = $" select Indicator,IndicatorValue from IndicatorExtracts where Indicator='MFL_CODE' order by IndicatorDate desc limit 1 ";
+                var sql = $" select Indicator,IndicatorValue from IndicatorExtracts where Indicator='MFL_CODE' order by IndicatorDate desc";
 
                 var result = Context.Database.GetDbConnection().QuerySingle(sql);
                 var code = Int32.Parse(result.IndicatorValue.Substring(0, 5));

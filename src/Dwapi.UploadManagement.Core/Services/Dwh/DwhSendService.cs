@@ -24,6 +24,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
 using Dwapi.SettingsManagement.Core.Model;
 using Hangfire;
@@ -67,10 +69,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private readonly ExtractEventDTO _patientAdverseEventExtractStatus;
         private readonly IMediator _mediator;
         private readonly ITransportLogRepository _transportLogRepository;
+        private readonly IDiffLogRepository _repository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
         public HttpClient Client { get; set; }
 
-        public DwhSendService(IDwhPackager packager, IDwhExtractReader reader, IExtractStatusService extractStatusService, IEmrSystemRepository emrSystemRepository, IMediator mediator, ITransportLogRepository transportLogRepository)
+        public DwhSendService(IDwhPackager packager, IDwhExtractReader reader, IExtractStatusService extractStatusService, IEmrSystemRepository emrSystemRepository, IMediator mediator, ITransportLogRepository transportLogRepository,IDiffLogRepository repository,IIndicatorExtractRepository indicatorExtractRepository)
         {
             _packager = packager;
             _reader = reader;
@@ -79,6 +83,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             _mediator = mediator;
             _transportLogRepository = transportLogRepository;
             _endPoint = "api/";
+            _repository = repository;
+            _indicatorExtractRepository = indicatorExtractRepository;
             var defaultEmr = _emrSystemRepository.GetDefault();
             var extracts = defaultEmr.Extracts;
             _patientExtract = extracts.FirstOrDefault(x => x.Name.Equals(nameof(PatientExtract)));
@@ -112,6 +118,14 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         public Task<List<SendDhwManifestResponse>> SendDiffManifestAsync(SendManifestPackageDTO sendTo,string  version,string apiVersion="")
         {
+            var getsiteCode = _indicatorExtractRepository.GetMflCode();
+            
+            var diffLogs = _repository.GetAllDocketLogs("NDWH");
+            
+            foreach (var log in diffLogs)
+            {
+                _repository.UpdateMaxDates("NDWH", log.Extract, getsiteCode);
+            }
             return SendManifestAsync(sendTo, DwhManifestMessageBag.Create(_packager.GenerateDiffWithMetrics(sendTo.GetEmrDto()).ToList()),version,apiVersion);
         }
 

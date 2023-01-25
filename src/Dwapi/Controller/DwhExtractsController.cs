@@ -166,13 +166,18 @@ namespace Dwapi.Controller
             if (!packageDto.IsValid())
                 return BadRequest();
 
-
             string version = GetType().Assembly.GetName().Version.ToString();
 
             await _mediator.Publish(new ExtractSent("CareTreatment", version));
 
             try
             {
+                // check stale
+                if (_indicatorExtractRepository.CheckIfStale())
+                {
+                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                }
+
                 if (!packageDto.SendMpi)
                 {
                     var result = await _dwhSendService.SendDiffManifestAsync(packageDto.DwhPackage,_version);
@@ -307,11 +312,6 @@ namespace Dwapi.Controller
 
             try
             {
-                // check stale
-                if (_indicatorExtractRepository.CheckIfStale())
-                {
-                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date. Refresh ETL tables and try again");
-                }
 
                 var mflcode =   _indicatorExtractRepository.GetMflCode();
                 var changesLoaded =

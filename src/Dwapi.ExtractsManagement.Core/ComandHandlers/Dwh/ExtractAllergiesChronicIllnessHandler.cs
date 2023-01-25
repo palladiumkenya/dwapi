@@ -69,7 +69,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             }
             else
             {
-                found  = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                found  = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
             }
             //Extract
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "AllergiesChronicIllnessExtract", changesLoadedStatus);

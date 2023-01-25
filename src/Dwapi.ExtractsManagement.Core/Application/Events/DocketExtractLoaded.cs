@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using MediatR;
 
@@ -23,10 +24,13 @@ namespace Dwapi.ExtractsManagement.Core.Application.Events
     public class DocketExtractLoadedEventHandler:INotificationHandler<DocketExtractLoaded>
     {
         private readonly IDiffLogRepository _repository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
-        public DocketExtractLoadedEventHandler(IDiffLogRepository repository)
+
+        public DocketExtractLoadedEventHandler(IDiffLogRepository repository, IIndicatorExtractRepository indicatorExtractRepository)
         {
             _repository = repository;
+            _indicatorExtractRepository = indicatorExtractRepository;
         }
 
         public Task Handle(DocketExtractLoaded notification, CancellationToken cancellationToken)
@@ -36,15 +40,15 @@ namespace Dwapi.ExtractsManagement.Core.Application.Events
             {
                 _repository.InitLog(notification.Docket, notification.Extract, notification.SiteCode);
             }
-            
+
             if (null != diffLog)
             {
-                var generatedDates = _repository.GenerateDiff(notification.Docket, $"{notification.Extract}s", notification.SiteCode);
+                var siteCode = _indicatorExtractRepository.GetMflCode();
+            
+                // var diffLogs = _repository.GetAllDocketLogs("NDWH");
 
-                diffLog.LogLoad(generatedDates.MaxCreated, generatedDates.MaxModified);
-                _repository.SaveLog(diffLog);
-                // _repository.UpdateMaxDates(notification.Docket, notification.Extract, notification.SiteCode);
-
+                _repository.UpdateMaxDates("NDWH", notification.Extract, siteCode);
+                    
             }
 
             return Task.CompletedTask;

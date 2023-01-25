@@ -70,7 +70,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             }
             else
             {
-                found  = await _DepressionScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+                found  = await _DepressionScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
             }
             //update status
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "DepressionScreeningExtract", changesLoadedStatus);
