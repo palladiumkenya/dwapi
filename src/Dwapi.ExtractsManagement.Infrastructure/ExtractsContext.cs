@@ -287,8 +287,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
        
         public DbSet<TempClientRegistryExtractError> TempClientRegistryExtractError { get; set; }
         public DbSet<TempClientRegistryExtractErrorSummary> TempClientRegistryExtractErrorSummary { get; set; }
-
-
+        
+        
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
             this.Database.SetCommandTimeout(0);
@@ -691,27 +691,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             
             DapperPlusManager.Entity<ClientRegistryExtract>().Key(x => x.Id).Table($"{nameof(ClientRegistryExtracts)}");
             DapperPlusManager.Entity<TempClientRegistryExtract>().Key(x => x.Id).Table($"{nameof(TempClientRegistryExtracts)}");
-            
-            modelBuilder.Entity<PatientExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<AllergiesChronicIllnessExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<ClientExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<ContactListingExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<CovidExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<DefaulterTracingExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<DepressionScreeningExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<DrugAlcoholScreeningExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<EnhancedAdherenceCounsellingExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<GbvScreeningExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<IptExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<OtzExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<OvcExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<PatientAdverseEventExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<PatientArtExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<PatientBaselinesExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<PatientLaboratoryExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<PatientPharmacyExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<PatientStatusExtract>().HasIndex(x => x.LiveRowId);
-            modelBuilder.Entity<PatientVisitExtract>().HasIndex(x => x.LiveRowId);
            
         }
 

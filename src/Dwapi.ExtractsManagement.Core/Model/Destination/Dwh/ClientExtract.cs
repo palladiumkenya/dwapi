@@ -22,9 +22,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string Project { get; set; }
         public virtual DateTime? Date_Created { get; set; }
         public virtual DateTime? Date_Last_Modified { get; set; }
-        
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public  virtual long LiveRowId { get; set; }
 
         [NotMapped]
         public bool IsSent => !string.IsNullOrWhiteSpace(Status) && Status.IsSameAs(nameof(SendStatus.Sent));
