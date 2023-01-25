@@ -45,7 +45,7 @@ h2 {
 }
 ul.form-stepper {
     counter-reset: section;
-    margin-bottom: 3rem;
+    //margin-bottom: 3rem;
 }
 ul.form-stepper .form-stepper-circle {
     position: relative;
@@ -88,7 +88,7 @@ ul.form-stepper > li:not(:last-of-type) {
     -webkit-transition: 0.5s;
     transition: 0.5s;
 }
-.form-stepper-horizontal li:not(:last-child):after {
+.main-steps li:not(:last-child):after {
     position: relative;
     -webkit-box-flex: 1;
     -ms-flex: 1;
@@ -97,10 +97,10 @@ ul.form-stepper > li:not(:last-of-type) {
     content: "";
     top: 32%;
 }
-.form-stepper-horizontal li:after {
+ .main-steps li:after {
     background-color: #dee2e6;
 }
-.form-stepper-horizontal li.form-stepper-completed:after {
+.main-steps li.form-stepper-completed:after {
     background-color: #4da3ff;
 }
 .form-stepper-horizontal li:last-child {
@@ -117,21 +117,24 @@ ul.form-stepper li a .form-stepper-circle {
     border-radius: 50%;
 }
 .form-stepper .form-stepper-active .form-stepper-circle {
-    background-color: #4361ee !important;
+    background-color: greenyellow !important;
     color: #fff;
+}
+.form-stepper .form-stepper-active .cloud {
+    color: #4361ee;
 }
 .form-stepper .form-stepper-active .label {
     color: #4361ee !important;
 }
 .form-stepper .form-stepper-active .form-stepper-circle:hover {
-    background-color: #4361ee !important;
+    background-color: greenyellow !important;
     color: #fff !important;
 }
 .form-stepper .form-stepper-unfinished .form-stepper-circle {
     background-color: #f8f7ff;
 }
 .form-stepper .form-stepper-completed .form-stepper-circle {
-    background-color: #0e9594 !important;
+    background-color: #32cd32 !important;
     color: #fff;
 }
 .form-stepper .form-stepper-completed .label {
@@ -151,7 +154,12 @@ ul.form-stepper li a .form-stepper-circle {
     background-color: #32cd32 !important;
     color: #fff !important;
 }
-
+.form-stepper .form-stepper-active .form-stepper-icon .cloud{
+    color: #4361ee;
+}
+.form-stepper .form-stepper-completed .form-stepper-icon .cloud{
+    color: #32cd32 ;
+}
 .form-stepper .label {
     font-size: 1rem;
     margin-top: 0.5rem;
@@ -165,4 +173,16 @@ ul.form-stepper li a .form-stepper-circle {
 }
 .step-section .step-section-inactive {
     display:none !important;
+}
+
+
+.to-transmission {
+    position: relative;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    height: 100px;
+    width:10px;
+    content: "";
+    //top: 32%;
 }

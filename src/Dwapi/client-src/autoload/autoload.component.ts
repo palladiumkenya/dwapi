@@ -116,7 +116,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
 
             if (this.barValue >= 100){
                 clearInterval(refreshload);
-                // this.loadCT() ;
+                this.loadCT() ;
 
             }
         }, 2000);
@@ -154,22 +154,22 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             if (this.canSend == true){
                     // let element:HTMLElement = document.getElementById('sendSmart') as HTMLElement;
                     // element.click();
-                // this.loadHTS() ;
+                this.loadHTS() ;
 
                 clearInterval(checkLoad);
                 }
             }, 3000);
 
-        var checkComplete = setInterval(() => {
-            this.ctSendingComplete = JSON.parse(localStorage.getItem('ctSendingComplete'));
-
-            console.log("ctSendingComplete",this.ctSendingComplete, typeof(this.ctSendingComplete));
-
-            if (this.ctSendingComplete == true){
-                this.loadHTS() ;
-                clearInterval(checkComplete);
-            }
-        }, 3000);
+        // var checkComplete = setInterval(() => {
+        //     this.ctSendingComplete = JSON.parse(localStorage.getItem('ctSendingComplete'));
+        //
+        //     console.log("ctSendingComplete",this.ctSendingComplete, typeof(this.ctSendingComplete));
+        //
+        //     if (this.ctSendingComplete == true){
+        //         this.loadHTS() ;
+        //         clearInterval(checkComplete);
+        //     }
+        // }, 3000);
 
     }
 
@@ -192,16 +192,16 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             }
         }, 2000);
 
-        var checkComplete = setInterval(() => {
-            this.htsSendingComplete = JSON.parse(localStorage.getItem('htsSendingComplete'));
-
-            console.log("htsSendingComplete",this.htsSendingComplete, typeof(this.htsSendingComplete));
-
-            if (this.htsSendingComplete == true){
-                this.loadMNCH();
-                clearInterval(checkComplete);
-            }
-        }, 3000);
+        // var checkComplete = setInterval(() => {
+        //     this.htsSendingComplete = JSON.parse(localStorage.getItem('htsSendingComplete'));
+        //
+        //     console.log("htsSendingComplete",this.htsSendingComplete, typeof(this.htsSendingComplete));
+        //
+        //     if (this.htsSendingComplete == true){
+        //         this.loadMNCH();
+        //         clearInterval(checkComplete);
+        //     }
+        // }, 3000);
     }
 
     public loadMNCH(): void {
@@ -217,22 +217,22 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             if (this.canSendMnch == true){
                 // let element:HTMLElement = document.getElementById('sendMnch') as HTMLElement;
                 // element.click();
-                // this.loadPREP();
+                this.loadPREP();
 
                 clearInterval(checkLoad);
             }
         }, 2000);
 
-        var checkComplete = setInterval(() => {
-            this.mnchSendingComplete = JSON.parse(localStorage.getItem('mnchSendingComplete'));
-
-            console.log("mnchSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
-
-            if (this.mnchSendingComplete == true){
-                this.loadPREP();
-                clearInterval(checkComplete);
-            }
-        }, 3000);
+        // var checkComplete = setInterval(() => {
+        //     this.mnchSendingComplete = JSON.parse(localStorage.getItem('mnchSendingComplete'));
+        //
+        //     console.log("mnchSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
+        //
+        //     if (this.mnchSendingComplete == true){
+        //         this.loadPREP();
+        //         clearInterval(checkComplete);
+        //     }
+        // }, 3000);
     }
 
     public loadPREP(): void {
