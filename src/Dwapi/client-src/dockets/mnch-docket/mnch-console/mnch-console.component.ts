@@ -987,8 +987,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             if (this.extractSent.length === 11) {
                 this.errorMessage = [];
                 this.errorMessage.push({ severity: 'success', summary: 'exported successfully ' });
-                this.updateEvent();
-                this.sendHandshake();
+                this.updateEvent();               
                 this.exporting = false;
             } else {
                 this.updateEvent();

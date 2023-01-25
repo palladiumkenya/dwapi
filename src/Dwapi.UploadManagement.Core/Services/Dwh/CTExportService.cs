@@ -359,12 +359,14 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             if (message.ExtractName == "DefaulterTracingExtract")
                             {
 
-                                var msg = JsonConvert.SerializeObject(message);                                
+                                var msg = JsonConvert.SerializeObject(message);
+                                var plainTextBytes = Encoding.UTF8.GetBytes(msg);
+                                var Base64Extract = Convert.ToBase64String(plainTextBytes);
                                 string projectPath = ("exports");
                                 string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts").HasToEndsWith(@"\");
                                 string fileName = folderName + messageBag.ExtractName + ".dump" + ".json";
 
-                                await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
+                                await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
                                 allowExport = false;
 
 
@@ -378,18 +380,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 startPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT");
                                 string zipPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + ".zip");
 
-                                DirectoryInfo di = new DirectoryInfo(startPath);
-
-                                foreach (DirectoryInfo dir in di.GetDirectories())
-                                {
-                                    foreach (FileInfo extractsfile in dir.GetFiles("*.json"))
-                                    {
-                                        byte[] bytes = Encoding.UTF8.GetBytes(await File.ReadAllTextAsync(extractsfile.FullName));
-                                        string base64 = Convert.ToBase64String(bytes);
-                                        await File.WriteAllTextAsync(extractsfile.FullName.ToOsStyle(), base64);
-                                    }
-
-                                }
+                                
                                 if (File.Exists(zipPath))
                                     File.Delete(zipPath);
                                 ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);
@@ -400,14 +391,15 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             else
                             {
                                 var msg = JsonConvert.SerializeObject(message);
-
+                                var plainTextBytes = Encoding.UTF8.GetBytes(msg);
+                                var Base64Extract = Convert.ToBase64String(plainTextBytes);
                                 string projectPath = "exports";
                                 string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts").HasToEndsWith(@"\");
                                 string fileName = folderName + messageBag.ExtractName + ".dump" + ".json";
                                 if (!Directory.Exists(folderName))
                                     Directory.CreateDirectory(folderName);
 
-                                await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
+                                await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
                                 allowExport = false;
 
                                 var sentIds = messageBag.SendIds;

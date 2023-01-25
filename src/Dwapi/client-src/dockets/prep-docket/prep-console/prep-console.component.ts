@@ -83,7 +83,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
     public centralRegistry: CentralRegistry;
     public sendResponse: SendResponse;
     public getEmr$: Subscription;
-
+    public exportStage = 2;
     public sendStage = 2;
     extractSent = [];
 
@@ -337,7 +337,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
     public exportPrepAdverseEventExtracts(): void {
-        this.sendStage = 8;
+        this.exportStage = 8;
         //this.sendEvent = {sentProgress: 0};
         this.exporting = true;
         this.errorMessage = [];
@@ -383,7 +383,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
     public exportPrepBehaviourRiskExtracts(): void {
-        this.sendStage = 6;
+        this.exportStage = 6;
         //this.sendEvent = {sentProgress: 0};
         this.exporting = true;
         this.errorMessage = [];
@@ -428,7 +428,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
     public exportCareTerminationExtracts(): void {
-        this.sendStage = 10;
+        this.exportStage = 10;
         //this.sendEvent = {sentProgress: 0};
         this.exporting = true;
         this.errorMessage = [];
@@ -474,7 +474,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public exportPrepPharmacyExtracts(): void {
-        this.sendStage = 7;
+        this.exportStage = 7;
         //this.sendEvent = {sentProgress: 0};
         this.exporting = true;
         this.errorMessage = [];
@@ -519,7 +519,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
     public exportPrepLabExtracts(): void {
-        this.sendStage = 9;
+        this.exportStage = 9;
         //this.sendEvent = {sentProgress: 0};
         this.exporting = true;
         this.errorMessage = [];
@@ -543,7 +543,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
 
     public sendPrepVisitExtracts(): void {
-        this.sendStage = 11;
+        this.exportStage = 11;
         //this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
@@ -564,7 +564,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
     public exportPrepVisitExtracts(): void {
-        this.sendStage = 11;
+        this.exportStage = 11;
         //this.sendEvent = {sentProgress: 0};
         this.exporting = true;
         this.errorMessage = [];
@@ -750,6 +750,14 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             this.updateExractStats(dwhProgress);
             this.canLoadFromEmr = this.canSend = !this.sending;
         });
+        this._hubConnection.on('ShowPrepExportProgress', (dwhProgress: any) => {
+            const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);            
+            this.exportEvent = {
+                exportProgress: progress
+            };
+            this.updateExractStats(dwhProgress);
+            this.canLoadFromEmr = this.canSend = !this.sending;
+        });
 
         this._hubConnection.on('ShowPrepSendProgressDone', (extractName: string) => {
             this.extractSent.push(extractName);
@@ -759,6 +767,17 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 this.updateEvent();
                 this.sendHandshake();
                 this.sending = false;
+            } else {
+                this.updateEvent();
+            }
+        });
+        this._hubConnection.on('ShowPrepExportProgressDone', (extractName: string) => {
+            this.extractSent.push(extractName);
+            if (this.extractSent.length === this.extracts.length) {
+                this.errorMessage = [];
+                this.errorMessage.push({ severity: 'success', summary: 'exporting successfully ' });
+                this.updateEvent();
+                this.exporting = false;
             } else {
                 this.updateEvent();
             }

@@ -69,11 +69,11 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
 
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                     var Base64Manifest = Convert.ToBase64String(plainTextBytes);
-
-                    string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-Prep");
-                    Directory.CreateDirectory(folderName);                    // Write that JSON to txt file,  
-                    File.WriteAllText(folderName + "\\" + "manifest.dump" + ".json", Base64Manifest);
+                    string projectPath = "exports";
+                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-Prep").HasToEndsWith(@"\");
+                    Directory.CreateDirectory(folderName);    // Write that JSON to txt file,
+                    string fileName = folderName + "manifest.dump" + ".json";
+                    File.WriteAllText(fileName.ToOsStyle(), Base64Manifest);
                 }
                 catch (Exception e)
                 {
@@ -97,7 +97,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
                 if (message.PatientPrepExtracts.Count > 0)
@@ -105,33 +105,21 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                     count++;
                     try
                     {
-                        var msg = JsonConvert.SerializeObject(message);
-                        var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                        // var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PatientPrepExtracts[0].SiteCode + "-Prep" + "\\extracts");
+                        var msg = JsonConvert.SerializeObject(message);                       
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.PatientPrepExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
 
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PatientPrepExtracts.dump" + ".json";
+                        string fileName = folderName  + "PatientPrepExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.PatientPrepExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
 
                         var sentIds = message.PatientPrepExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                        
 
 
                     }
@@ -141,10 +129,10 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PatientPrepExtract), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PatientPrepExtract), Common.GetProgress(count, total), sendCound)));
             }
-            DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PatientPrepExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PatientPrepExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -159,7 +147,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
                 if (message.PrepAdverseEventExtracts.Count > 0)
@@ -168,31 +156,19 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                     try
                     {
 
-                        var msg = JsonConvert.SerializeObject(message);
-                        var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                        //var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PrepAdverseEventExtracts[0].SiteCode + "-Prep" + "\\extracts");
+                        var msg = JsonConvert.SerializeObject(message);                       
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.PrepAdverseEventExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PrepAdverseEventExtracts.dump" + ".json";
+                        string fileName = folderName + "PrepAdverseEventExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.PrepAdverseEventExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        File.WriteAllText(path, msg);
+                        File.WriteAllText(fileName.ToOsStyle(), msg);
                         var sentIds = message.PrepAdverseEventExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -200,10 +176,10 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepAdverseEventExtract), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepAdverseEventExtract), Common.GetProgress(count, total), sendCound)));
             }
-            DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepAdverseEventExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepAdverseEventExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -218,7 +194,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
 
@@ -227,31 +203,19 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                     count++;
                     try
                     {
-                        var msg = JsonConvert.SerializeObject(message);
-                        var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                        //var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PrepBehaviourRiskExtracts[0].SiteCode + "-Prep" + "\\extracts");
+                        var msg = JsonConvert.SerializeObject(message);                       
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.PrepBehaviourRiskExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PrepBehaviourRiskExtracts.dump" + ".json";
+                        string fileName = folderName  + "PrepBehaviourRiskExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.PrepBehaviourRiskExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        File.WriteAllText(path, msg);
+                        File.WriteAllText(fileName.ToOsStyle(), msg);
                         var sentIds = message.PrepBehaviourRiskExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                        
                     }
                     catch (Exception e)
                     {
@@ -259,10 +223,10 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepBehaviourRiskExtract), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepBehaviourRiskExtract), Common.GetProgress(count, total), sendCound)));
             }
-            DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepBehaviourRiskExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepBehaviourRiskExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -277,7 +241,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
 
@@ -286,31 +250,19 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                     count++;
                     try
                     {
-                        var msg = JsonConvert.SerializeObject(message);
-                        var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                        //var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PrepCareTerminationExtracts[0].SiteCode + "-Prep" + "\\extracts");
+                        var msg = JsonConvert.SerializeObject(message);                       
+                        string projectPath ="exports";
+                        string folderName = Path.Combine(projectPath, message.PrepCareTerminationExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PrepCareTerminationExtracts.dump" + ".json";
+                        string fileName = folderName  + "PrepCareTerminationExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.PrepCareTerminationExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        File.WriteAllText(path, msg);
+                        File.WriteAllText(fileName.ToOsStyle(), msg);
                         var sentIds = message.PrepCareTerminationExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        // }
+                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -318,10 +270,10 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepCareTerminationExtract), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepCareTerminationExtract), Common.GetProgress(count, total), sendCound)));
             }
-            DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepCareTerminationExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepCareTerminationExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -336,7 +288,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
                 if (message.PrepLabExtracts.Count > 0)
@@ -344,31 +296,19 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                     count++;
                     try
                     {
-                        var msg = JsonConvert.SerializeObject(message);
-                        var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                        // var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PrepLabExtracts[0].SiteCode + "-Prep" + "\\extracts");
+                        var msg = JsonConvert.SerializeObject(message);                        
+                        string projectPath ="exports";
+                        string folderName = Path.Combine(projectPath, message.PrepLabExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PrepLabExtracts.dump" + ".json";
+                        string fileName = folderName + "PrepLabExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.PrepLabExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        File.WriteAllText(path, msg);
+                        File.WriteAllText(fileName.ToOsStyle(), msg);
                         var sentIds = message.PrepLabExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -376,10 +316,10 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepLabExtract), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepLabExtract), Common.GetProgress(count, total), sendCound)));
             }
-            DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepLabExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepLabExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -394,7 +334,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
 
@@ -403,31 +343,19 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                     count++;
                     try
                     {
-                        var msg = JsonConvert.SerializeObject(message);
-                        var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                        // var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PrepPharmacyExtracts[0].SiteCode + "-Prep" + "\\extracts");
+                        var msg = JsonConvert.SerializeObject(message);                      
+                        string projectPath =  "exports";
+                        string folderName = Path.Combine(projectPath, message.PrepPharmacyExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PrepPharmacyExtracts.dump" + ".json";
+                        string fileName = folderName  + "PrepPharmacyExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.PrepPharmacyExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        File.WriteAllText(path, msg);
+                        File.WriteAllText(fileName.ToOsStyle(), msg);
                         var sentIds = message.PrepPharmacyExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -435,10 +363,10 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepPharmacyExtract), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepPharmacyExtract), Common.GetProgress(count, total), sendCound)));
             }
-            DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepPharmacyExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepPharmacyExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -455,7 +383,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
 
@@ -464,33 +392,21 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                     count++;
                     try
                     {
-                        var msg = JsonConvert.SerializeObject(message);
-                        var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                        // var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PrepVisitExtracts[0].SiteCode + "-Prep" + "\\extracts");
+                        var msg = JsonConvert.SerializeObject(message);                        
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.PrepVisitExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
                         startPath = Path.Combine(projectPath, message.PrepVisitExtracts[0].SiteCode + "-Prep");
                         zipPath = Path.Combine(projectPath, message.PrepVisitExtracts[0].SiteCode + "-Prep" + ".zip");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PrepVisitExtracts.dump" + ".json";
+                        string fileName = folderName + "PrepVisitExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.PrepVisitExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        File.WriteAllText(path, msg);
+                        File.WriteAllText(fileName.ToOsStyle(), msg);
                         var sentIds = message.PrepVisitExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                        
 
 
 
@@ -501,7 +417,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepVisitExtract), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepVisitExtract), Common.GetProgress(count, total), sendCound)));
 
 
 
@@ -516,7 +432,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                 {
                     byte[] bytes = Encoding.UTF8.GetBytes(await File.ReadAllTextAsync(extractsfile.FullName));
                     string base64 = Convert.ToBase64String(bytes);
-                    await File.WriteAllTextAsync(extractsfile.FullName, base64);
+                    await File.WriteAllTextAsync(extractsfile.FullName.ToOsStyle(), base64);
                 }
 
             }
@@ -525,8 +441,8 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);
 
 
-            DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepVisitExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepVisitExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
