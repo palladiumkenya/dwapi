@@ -8,6 +8,7 @@ import { environment } from '../environments/environment';
 import { Extract } from '../settings/model/extract';
 import { ConfirmationService, Message } from 'primeng/api';
 import { ExtractEvent } from '../settings/model/extract-event';
+import { Subject } from 'rxjs';
 
 import { CentralRegistry } from '../settings/model/central-registry';
 
@@ -22,11 +23,16 @@ export class UploadComponent implements OnInit {
     public sending: boolean = false;
     private _hubConnectionMpi: HubConnection | undefined;
     private _hubConnection: HubConnection | undefined;
-
+    public notifications: Message[];
     public extracts: Extract[] = [];
     public errorMessage: Message[];
     public currentExtract: Extract;
-    private extractEvent: ExtractEvent;
+    private extractEvent: ExtractEvent;   
+    public otherMessage: Message[];
+    private progressSubject = new Subject<number>();
+    public progress$ = this.progressSubject.asObservable();
+    progresss = 0;
+    public warningMessage: Message[];
 
     smartMode = false;
 
@@ -84,7 +90,7 @@ export class UploadComponent implements OnInit {
     private liveOnInit() {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(
-                `${window.location.protocol}//${document.location.hostname}:${environment.port}/ExtractActivity`
+                `${window.location.protocol}//${document.location.hostname}:${environment.port}/ProgressHub`
             )
             .configureLogging(LogLevel.Error)
             .build();
@@ -92,58 +98,17 @@ export class UploadComponent implements OnInit {
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
-        this._hubConnection.on('ShowProgress', (extractActivityNotification: any) => {
-            this.currentExtract = this.extracts.find(
-                x => x.id === extractActivityNotification.extractId
-            );
-            if (this.currentExtract) {
-                this.extractEvent = {
-                    lastStatus: `${extractActivityNotification.progress.status}`,
-                    found: extractActivityNotification.progress.found,
-                    loaded: extractActivityNotification.progress.loaded,
-                    rejected: extractActivityNotification.progress.rejected,
-                    queued: extractActivityNotification.progress.queued,
-                    sent: extractActivityNotification.progress.sent
-                };
-                this.currentExtract.extractEvent = {};
-                this.currentExtract.extractEvent = this.extractEvent;
-                const newWithoutPatientExtract = this.extracts.filter(
-                    x => x.id !== extractActivityNotification.extractId
-                );
-                this.extracts = [
-                    ...newWithoutPatientExtract,
-                    this.currentExtract
-                ];
-            }
+       
+
+        this._hubConnection.on("ReceiveProgress", (progress: number) => {
+            this.progresss = progress;
         });
 
-        this._hubConnection.on('ShowDwhSendProgress', (dwhProgress: any) => {
-            const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);
-            this.sendEvent = {
-                sentProgress: progress
-            };
-            this.updateExractStats(dwhProgress);
-            if (progress !== 100) {
-                this.sending = true;
-            } else {
-                this.sending = false;
-                
-            }
-            
-        });
-      
+       
+       
 
 
-        this._hubConnection.on('ShowDwhSendMessage', (message: any) => {
-            if (message === 'Sending started...') {
-                localStorage.clear();
-            }
-            if (message.error) {
-                this.errorMessage.push({ severity: 'error', summary: 'Error sending ', detail: message.message });
-            } else {
-                this.errorMessage.push({ severity: 'success', summary: message.message });
-            }
-        });
+       
 
        
 
@@ -185,24 +150,44 @@ export class UploadComponent implements OnInit {
             return;
 
         let selectedFile = this.uploader.queue.find(s => s.id == id);
-       
-        
+        this.sendEvent = { sentProgress: 0 };
+        this.sending = true;
+        this.errorMessage = [];        
         if (selectedFile) {
             const formData = new FormData();
             formData.append(selectedFile.file.name, selectedFile.file);
 
             const uploadReq = new HttpRequest('POST', `api/upload`, formData, {
                 reportProgress: true,
+                
             });
 
-            this.http.request(uploadReq).subscribe(event => {
-                if (event.type === HttpEventType.UploadProgress) {
-                    selectedFile.progress = Math.round(100 * event.loaded / event.total);
-                    this.sending = true;
+            this.http.request(uploadReq).subscribe(
+                p => {
+                    // this.sendResponse = p;
+                },            
+                e => {
+                    this.notifications = [];
+                    console.error('SEND ERROR', e);
+                    if (e && e.ProgressEvent) {
+
+                    } else {
+                        this.errorMessage = [];
+                        this.errorMessage.push({ severity: 'error', summary: 'Error sending ', detail: <any>e });
+                    }
+                    if (e.type === HttpEventType.UploadProgress) {
+                        selectedFile.progress = Math.round(100 * e.loaded / e.total);
+                    }
+                    else if (e.type === HttpEventType.Response)
+                        selectedFile.message = e.body.toString();
+                },
+                () => {
+                    this.notifications = [];
+                    this.errorMessage.push({ severity: 'success', summary: 'Sending Extracts Completed ' });
+                    this.sending = false;
                 }
-                else if (event.type === HttpEventType.Response)
-                    selectedFile.message = event.body.toString();
-            });
+            );
+
         }
     }
     //upload all selected files to server  
@@ -215,9 +200,7 @@ export class UploadComponent implements OnInit {
     }
 
     // cancel all   
-    cancelAll() {
-        //TODO  
-    }
+ 
 }
 
 

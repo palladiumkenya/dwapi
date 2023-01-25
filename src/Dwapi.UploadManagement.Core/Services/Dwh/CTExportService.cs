@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -32,6 +34,7 @@ using Dwapi.UploadManagement.Core.Exceptions;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Exchange.Dwh.Smart;
+using Dwapi.UploadManagement.Core.Hubs.BoardRoomUpload;
 using Dwapi.UploadManagement.Core.Interfaces.Exchange;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
@@ -43,6 +46,7 @@ using Humanizer;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using Serilog;
 using static System.Net.Mime.MediaTypeNames;
@@ -57,16 +61,21 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private IEmrMetricReader _reader;
         private readonly ITransportLogRepository _transportLogRepository;
         private IHostingEnvironment _hostingEnvironment;
+        private readonly IHubContext<ProgressHub> _hubContext;
+        //private readonly IHubContext<ProgressHub> _hubContext;
+        private int _totalRecords;
+        private int _recordsSaved;
 
         public HttpClient Client { get; set; }
 
-        public CTExportService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository, IHostingEnvironment hostingEnvironment)
+        public CTExportService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository, IHostingEnvironment hostingEnvironment, IHubContext<ProgressHub> hubContext)
         {
             _packager = packager;
             _mediator = mediator;
             _reader = reader;
             _transportLogRepository = transportLogRepository;
             _endPoint = "api/";
+            _hubContext = hubContext;
             _hostingEnvironment = hostingEnvironment;
         }  
 
@@ -160,6 +169,11 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         public void NotifyPreSending()
         {
             DomainEvents.Dispatch(new DwExporthMessageNotification(false, $"Exporting started..."));
+
+        }
+        public void NotifyPreSendingBoardRoom()
+        {
+            DomainEvents.Dispatch(new DwhMessageNotification(false, $"Sending started..."));
 
         }
 
@@ -1324,7 +1338,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         public async Task<List<SendCTResponse>> SendFileManifest(IFormFile file, string apiVersion = "")
         {
             var responses = new List<SendCTResponse>();
-            
+           
             string folderName = "Upload";
             string tempfolderName = "Temp";
             string webRootPath = _hostingEnvironment.ContentRootPath;
@@ -1341,14 +1355,23 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             string fullPath = Path.Combine(newPath, fileName);
             String partToExtract = fileName.Split('.')[0];
             string tempFullPath = Path.Combine(tempPath, partToExtract);
+            if (!Directory.Exists(tempFullPath))
+                Directory.CreateDirectory(tempFullPath);
             using (ZipArchive archive = ZipFile.OpenRead(fullPath))
                 {
-                    for (int i = 0; i < archive.Entries.Count; i++)
+                _totalRecords = archive.Entries.Count;
+                _recordsSaved = 0;
+                for (int i = 0; i < archive.Entries.Count; i++)
                     {
                         if (archive.Entries[i].Name == "manifest.dump.json")
                         {
                             string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                            var filestream = File.OpenRead(destinationPath);
+
+                     
+
+                            archive.Entries[i].ExtractToFile(destinationPath, true);
+
+                        var filestream = File.OpenRead(destinationPath);
                             using (StreamReader sr = new StreamReader(filestream))
                             {
                                 try
@@ -1365,8 +1388,9 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     if (response.IsSuccessStatusCode)
                                     {
 
+                                    NotifyPreSendingBoardRoom();
 
-                                        var content = await response.Content.ReadAsJsonAsync<ManifestResponse>();
+                                    var content = await response.Content.ReadAsJsonAsync<ManifestResponse>();
                                         responses.Add(new SendCTResponse());
 
                                         var tlog = TransportLog.GenerateManifest("NDWH", content.JobId,
@@ -1386,7 +1410,11 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     }                                       
                                     
                                 }
-                            catch(Exception ex) { }
+                            catch(Exception ex) {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+
+                            }
 
                                     
                                 }
@@ -1400,27 +1428,38 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 {
                     if (archive.Entries[i].Name == "PatientExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                       
+                        int count = 0;
+                        long recordCount = 0;
+                      
+
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
-                            try
-                            {
+                            try { 
                                 text = await sr.ReadToEndAsync(); // OK                         
 
                                 byte[] base64EncodedBytes = Convert.FromBase64String(text);
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 PatientMessageSourceBag messageBag = JsonConvert.DeserializeObject<PatientMessageSourceBag>(Extract);
-                                var batchSize = 2000;
-                                
-                                var packageInfo = _packager.GetPackageInfo<PatientExtractView>(batchSize);
+                                var batchSize = 2000;                               
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<PatientMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PatientExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new PatientMessageSourceBag(newList));
+                                }
+                               
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._PatientExtractView;
+
+
+
 
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
@@ -1449,17 +1488,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
+                          
+                                   
+                                    int overall = 0;
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<PatientExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
-                                    var message = messageBag;
-
-                                    count++;                                    
+                                    var message = messageBag;                                                                 
                                     try
-                                    {                                        
+                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/patient", message);
@@ -1471,8 +1511,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                                                 var sentIds = messageBag.SendIds;
                                                 sendCound += sentIds.Count;
-                                                DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
-                                                    messageBag.ExtractType));
+                                              
 
                                                 var tlog = TransportLog.GenerateExtract("NDWH", messageBag.ExtractName, res.JobId);
                                                 _transportLogRepository.CreateLatest(tlog);
@@ -1499,15 +1538,21 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                   
 
                                 }
+                                _recordsSaved++;
+                                await UpdateProgress();
 
-                                await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
-
+                            await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
                             }
-                            catch (Exception ex) { }
+                            catch (Exception e)
+                            {
+                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
 
+                           
 
                         }
                     }
@@ -1518,8 +1563,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                     if (archive.Entries[i].Name == "AllergiesChronicIllnessExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
-
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                        
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -1530,16 +1579,19 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 byte[] base64EncodedBytes = Convert.FromBase64String(text);
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 AllergiesChronicIllnessMessageSourceBag messageBag = JsonConvert.DeserializeObject<AllergiesChronicIllnessMessageSourceBag>(Extract);
-                                var batchSize = 2000;
+                                var batchSize =2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<AllergiesChronicIllnessMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<AllergiesChronicIllnessExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new AllergiesChronicIllnessMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<AllergiesChronicIllnessExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._AllergiesChronicIllnessExtractView;
 
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
@@ -1568,17 +1620,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
+                              
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<AllergiesChronicIllnessExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                    
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/allergieschronicIllness", message);
@@ -1618,21 +1671,33 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                   
 
-                                }
+                                }                              
+
+                                _recordsSaved++;
+                                await UpdateProgress();
 
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
-
                             }
-                            catch (Exception ex) { }
+                            catch (Exception e)
+                            {
+                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+
 
 
                         }
                     }
                     else if (archive.Entries[i].Name == "ContactListingExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                        
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -1644,17 +1709,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 ContactListingMessageSourceBag messageBag = JsonConvert.DeserializeObject<ContactListingMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<ContactListingMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<ContactListingExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new ContactListingMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<ContactListingExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                    messageBag.Extracts = item._ContactListingExtractView;
 
-                                string jobId = string.Empty; Guid manifestId; Guid facilityId;
+                                    string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 
                                 if (messageBag.ExtractName == nameof(PatientExtract))
@@ -1681,17 +1749,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
+                             
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<ContactListingExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                    
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/contactlisting", message);
@@ -1727,23 +1796,30 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     {
                                         Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error");
                                         throw;
-                                    }
+                                    }                                                                                                                             }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
 
-                                }
+                                _recordsSaved++;
+                                await UpdateProgress();
 
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
-
                             }
-                            catch (Exception ex) { }
-
+                            catch (Exception e)
+                            {
+                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
 
                         }
                     }
                     else if (archive.Entries[i].Name == "CovidExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                      
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -1755,15 +1831,19 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 CovidMessageSourceBag messageBag = JsonConvert.DeserializeObject<CovidMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<CovidMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<CovidExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new CovidMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<CovidExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                    messageBag.Extracts = item._CovidExtractView;
+
 
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
@@ -1792,17 +1872,17 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
-                                    count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<CovidExtractView>(page, packageInfo.PageSize).ToList();
+                                count++;
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                   
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/covid", message);
@@ -1837,22 +1917,31 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                  
 
                                 }
+                                _recordsSaved++;
+                                await UpdateProgress();
 
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
-
                             }
-                            catch (Exception ex) { }
+                            catch (Exception e)
+                            {
+                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
 
 
                         }
                     }
                     else if (archive.Entries[i].Name == "DefaulterTracingExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
-
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                      
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -1864,15 +1953,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 DefaulterTracingMessageSourceBag messageBag = JsonConvert.DeserializeObject<DefaulterTracingMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<DefaulterTracingMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<DefaulterTracingExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new DefaulterTracingMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<DefaulterTracingExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._DefaulterTracingExtractView;
+
+
 
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
@@ -1901,17 +1995,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
+                              
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<DefaulterTracingExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                   
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/defaultertracing", message);
@@ -1946,21 +2041,31 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                    
 
                                 }
 
+                                _recordsSaved++;
+                                await UpdateProgress();
+
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
-
                             }
-                            catch (Exception ex) { }
-
+                            catch (Exception e)
+                            {
+                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
 
                         }
                     }
                     else if (archive.Entries[i].Name == "DepressionScreeningExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                        
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -1972,15 +2077,19 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 DepressionScreeningMessageSourceBag messageBag = JsonConvert.DeserializeObject<DepressionScreeningMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<DepressionScreeningMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<DepressionScreeningExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new DepressionScreeningMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<DepressionScreeningExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._DepressionScreeningExtractView;
+
 
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
@@ -2009,17 +2118,17 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<DepressionScreeningExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                    
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/depressionscreening", message);
@@ -2054,22 +2163,30 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
-
                                 }
 
+                                _recordsSaved++;
+                                await UpdateProgress();
+
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
-
                             }
-                            catch (Exception ex) { }
-
+                            catch (Exception e)
+                            {
+                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
 
                         }
 
                     }
                     else if (archive.Entries[i].Name == "DrugAlcoholScreeningExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                        
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -2081,15 +2198,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 DrugAlcoholScreeningMessageSourceBag messageBag = JsonConvert.DeserializeObject<DrugAlcoholScreeningMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<DrugAlcoholScreeningMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<DrugAlcoholScreeningExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new DrugAlcoholScreeningMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<DrugAlcoholScreeningExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._DrugAlcoholScreeningExtractView
+                                        ;
+
 
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
@@ -2118,17 +2240,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
+                              
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<DrugAlcoholScreeningExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts =messageBag.Extracts;  
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                    
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/DrugAlcoholScreening", message);
@@ -2163,21 +2286,31 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                    
 
                                 }
 
+                                _recordsSaved++;
+                                await UpdateProgress();
+
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
-
                             }
-                            catch (Exception ex) { }
-
+                            catch (Exception e)
+                            {
+                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
 
                         }
                     }
                     else if (archive.Entries[i].Name == "EnhancedAdherenceCounsellingExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                      
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -2189,15 +2322,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 EnhancedAdherenceCounsellingMessageSourceBag messageBag = JsonConvert.DeserializeObject<EnhancedAdherenceCounsellingMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<EnhancedAdherenceCounsellingMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<EnhancedAdherenceCounsellingExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new EnhancedAdherenceCounsellingMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<EnhancedAdherenceCounsellingExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                 messageBag.Extracts = item._EnhancedAdherenceCounsellingExtractView;
+
+
 
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
@@ -2226,17 +2364,17 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<EnhancedAdherenceCounsellingExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                   
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/EnhancedAdherenceCounselling", message);
@@ -2271,21 +2409,30 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                  
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
-
+                            catch (Exception ex) {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                          
 
                         }
                     }
                     else if (archive.Entries[i].Name == "GbvScreeningExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                       
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -2297,17 +2444,21 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 GbvScreeningMessageSourceBag messageBag = JsonConvert.DeserializeObject<GbvScreeningMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<GbvScreeningMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<GbvScreeningExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new GbvScreeningMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<GbvScreeningExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                 messageBag.Extracts = item._GbvScreeningExtractView;
 
-                                string jobId = string.Empty; Guid manifestId; Guid facilityId;
+
+                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 
                                 if (messageBag.ExtractName == nameof(PatientExtract))
@@ -2334,10 +2485,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<GbvScreeningExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
@@ -2345,6 +2494,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     count++;
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/GbvScreening", message);
@@ -2379,21 +2530,31 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                   
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex) {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                           
 
 
                         }
                     }
                     else if (archive.Entries[i].Name == "IptExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                       
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -2405,15 +2566,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 IptMessageSourceBag messageBag = JsonConvert.DeserializeObject<IptMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<IptMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<IptExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new IptMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<IptExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._IptExtractView;
 
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
@@ -2442,17 +2606,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
+                              
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<IptExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                    
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/Ipt", message);
@@ -2487,22 +2652,31 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                   
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
-
+                            catch (Exception ex) {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                            
 
                         }
 
                     }
                     else if (archive.Entries[i].Name == "OtzExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                      
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -2514,17 +2688,21 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 OtzMessageSourceBag messageBag = JsonConvert.DeserializeObject<OtzMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<OtzMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<OtzExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new OtzMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<OtzExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                    messageBag.Extracts = item._OtzExtractView;
 
-                                string jobId = string.Empty; Guid manifestId; Guid facilityId;
+
+                                    string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 
                                 if (messageBag.ExtractName == nameof(PatientExtract))
@@ -2551,17 +2729,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
+                               
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<OtzExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                    
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/Otz", message);
@@ -2596,21 +2775,32 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                  
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                          
 
 
                         }
                     }
                     else if (archive.Entries[i].Name == "OvcExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                      
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -2622,17 +2812,21 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 OvcMessageSourceBag messageBag = JsonConvert.DeserializeObject<OvcMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<OvcMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<OvcExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new OvcMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<OvcExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._OvcExtractView;
 
-                                string jobId = string.Empty; Guid manifestId; Guid facilityId;
+
+                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 
                                 if (messageBag.ExtractName == nameof(PatientExtract))
@@ -2659,19 +2853,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<OvcExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                    
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
+                                           
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/Ovc", message);
                                             if (response.IsSuccessStatusCode)
                                             {
@@ -2704,14 +2899,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                    
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                            
 
 
                         }
@@ -2719,7 +2920,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     }
                     else if (archive.Entries[i].Name == "PatientAdverseEventExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                       
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -2731,15 +2937,19 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 AdverseEventMessageSourceBag messageBag = JsonConvert.DeserializeObject<AdverseEventMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<AdverseEventMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PatientAdverseEventView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new AdverseEventMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<PatientAdverseEventView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._PatientAdverseEventView;
+
 
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
@@ -2768,17 +2978,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
+                             
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<PatientAdverseEventView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                    
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientAdverseEvents", message);
@@ -2813,22 +3024,32 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                   
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
-
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                           
 
                         }
 
                     }
                     else if (archive.Entries[i].Name == "PatientArtExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                       
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -2840,15 +3061,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 ArtMessageSourceBag messageBag = JsonConvert.DeserializeObject<ArtMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<ArtMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PatientArtExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new ArtMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<PatientArtExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
+                                foreach (var item in list)
+                                {
+                                 messageBag.Extracts = item._PatientArtExtractView;
 
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
@@ -2877,17 +3101,17 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<PatientArtExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                   
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientArt", message);
@@ -2922,22 +3146,32 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                   
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
-
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                           
 
                         }
 
                     }
                     else if (archive.Entries[i].Name == "PatientBaselineExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                        
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -2949,16 +3183,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 BaselineMessageSourceBag messageBag = JsonConvert.DeserializeObject<BaselineMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<BaselineMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PatientBaselinesExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new BaselineMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<PatientBaselinesExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
-
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._PatientBaselinesExtractView;
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 
@@ -2985,18 +3221,17 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     manifestId = mainExtract.ManifestId;
                                     facilityId = mainExtract.FacilityId;
                                 }
-
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<PatientBaselinesExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                   
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientBaselines", message);
@@ -3031,21 +3266,32 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                   
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                           
 
 
                         }
                     }
                     else if (archive.Entries[i].Name == "PatientLabExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                       
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -3057,16 +3303,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 LaboratoryMessageSourceBag messageBag = JsonConvert.DeserializeObject<LaboratoryMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<LaboratoryMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PatientLaboratoryExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new LaboratoryMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<PatientLaboratoryExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
-
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._PatientLaboratoryExtractView;
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 
@@ -3094,17 +3342,16 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<PatientLaboratoryExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientLabs", message);
@@ -3139,14 +3386,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                    
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                            
 
 
                         }
@@ -3154,8 +3407,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                     else if (archive.Entries[i].Name == "PatientPharmacyExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
-
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                       
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -3167,16 +3424,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 PharmacyMessageSourceBag messageBag = JsonConvert.DeserializeObject<PharmacyMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<PharmacyMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PatientPharmacyExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new PharmacyMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<PatientPharmacyExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
-
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._PatientPharmacyExtractView;
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 
@@ -3204,17 +3463,17 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<PatientPharmacyExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                    
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientPharmacy", message);
@@ -3249,21 +3508,32 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                   
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                            
 
 
                         }
                     }
                     else if (archive.Entries[i].Name == "PatientStatusExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                       
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -3274,17 +3544,19 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 byte[] base64EncodedBytes = Convert.FromBase64String(text);
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 StatusMessageSourceBag messageBag = JsonConvert.DeserializeObject<StatusMessageSourceBag>(Extract);
-                                var batchSize = 2000;
+                                    var batchSize = 2000;
+                                    var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                    var list = new List<StatusMessageSourceBag>();
+                                    for (int x = 0; x < numberOfBatches; x++)
+                                    {
+                                        List<PatientStatusExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                        list.Add(new StatusMessageSourceBag(newList));
+                                    }
 
-                                var packageInfo = _packager.GetPackageInfo<PatientStatusExtractView>(batchSize);
-                                int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
-
+                                    int sendCound = 0;
+                                    foreach (var item in list)
+                                    {
+                                    messageBag.Extracts = item._PatientStatusExtractView;
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 
@@ -3312,17 +3584,17 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<PatientStatusExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                   
                                     try
                                     {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientStatus", message);
@@ -3357,14 +3629,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                    
 
                                 }
-
+                                _recordsSaved++;
+                                await UpdateProgress();
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                          
 
 
                         }
@@ -3372,7 +3650,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     }
                     else if (archive.Entries[i].Name == "PatientVisitExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                       
                         string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
                         var filestream = File.OpenRead(destinationPath);
                         using (StreamReader sr = new StreamReader(filestream))
                         {
@@ -3384,16 +3667,18 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 VisitMessageSourceBag messageBag = JsonConvert.DeserializeObject<VisitMessageSourceBag>(Extract);
                                 var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<VisitMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PatientVisitExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new VisitMessageSourceBag(newList));
+                                }
 
-                                var packageInfo = _packager.GetPackageInfo<PatientVisitExtractView>(batchSize);
                                 int sendCound = 0;
-                                int count = 0;
-                                int total = packageInfo.PageCount;
-                                int overall = 0;
-                                long recordCount = 0;
-                                int retryCount = 0;
-                                bool allowSend = true;
-
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._PatientVisitExtractView;
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 
@@ -3421,17 +3706,17 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     facilityId = mainExtract.FacilityId;
                                 }
 
-                                for (int page = 1; page <= packageInfo.PageCount; page++)
-                                {
                                     count++;
-                                    var extracts = _packager.GenerateSmartBatchExtracts<PatientVisitExtractView>(page, packageInfo.PageSize).ToList();
+                                    var extracts = messageBag.Extracts;
                                     recordCount = messageBag.Extracts.Count;
                                     messageBag.Generate(extracts, manifestId, facilityId, jobId);
                                     var message = messageBag;
 
-                                    count++;
+                                   
                                     try
-                                    {
+                                   {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
                                         while (allowSend)
                                         {
                                             var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientVisits", message);
@@ -3466,14 +3751,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         throw;
                                     }
 
-                                    DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
+                                    _recordsSaved++;
+                                    await UpdateProgress();
 
                                 }
 
                                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
 
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                           
 
 
                         }
@@ -3485,8 +3776,14 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         
             
             }
-           
-            
+
+        private async Task UpdateProgress()
+        {
+            var progress = ((double)_recordsSaved / _totalRecords)*100;            
+            await _hubContext.Clients.All.SendAsync("ReceiveProgress", progress);
+        }
+
+
 
 
 

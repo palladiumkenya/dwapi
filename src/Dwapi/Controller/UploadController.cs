@@ -35,6 +35,7 @@ using AutoMapper;
 using Dwapi.Models;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
+using Dwapi.Hubs.Dwh;
 
 namespace Dwapi.Controller
 {
@@ -43,9 +44,8 @@ namespace Dwapi.Controller
     public class UploadController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly IMediator _mediator;
-        private readonly IExtractStatusService _extractStatusService;
-        private readonly IHubContext<CrsActivity> _hubContext;
-        private readonly IHubContext<CrsSendActivity> _hubSendContext;
+        private readonly IExtractStatusService _extractStatusService;      
+        private readonly IHubContext<ExtractActivity> _hubContext;
         private readonly IClientRegistryExtractRepository _clientRegistryExtractRepository;
         private readonly ICrsSendService _crsSendService;
         private readonly ICrsSearchService _crsSearchService;
@@ -57,9 +57,9 @@ namespace Dwapi.Controller
 
 
 
-        public UploadController(IMediator mediator, IExtractStatusService extractStatusService, 
-            IHubContext<CrsActivity> hubContext, IClientRegistryExtractRepository clientRegistryExtractRepository, 
-            ICrsSendService crsSendService, IHubContext<CrsSendActivity> hubSendContext, ICrsSearchService crsSearchService,IHostingEnvironment hostingEnvironment, ICTExportService ctExportService)
+        public UploadController(IMediator mediator, IExtractStatusService extractStatusService,
+             IHubContext<ExtractActivity> hubContext, IClientRegistryExtractRepository clientRegistryExtractRepository, 
+            ICrsSendService crsSendService, ICrsSearchService crsSearchService,IHostingEnvironment hostingEnvironment, ICTExportService ctExportService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -69,8 +69,7 @@ namespace Dwapi.Controller
             _ctExportService = ctExportService;
             _hostingEnvironment = hostingEnvironment;           
             _endPoint = "http://localhost:10707/api/Crs/sendF";
-            Startup.CrsSendHubContext = _hubSendContext = hubSendContext;
-            Startup.CrsHubContext = _hubContext = hubContext;
+            Startup.HubContext = _hubContext = hubContext;
             var ver = GetType().Assembly.GetName().Version;
             _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
         }
@@ -190,13 +189,13 @@ namespace Dwapi.Controller
                                     await file.CopyToAsync(stream);
                                 }
 
-                                var result = _ctExportService.SendFileManifest(file, "3");
-                                
+                                var result = _ctExportService.SendFileManifest(file, "3").Result;
+
                                 return Ok(result);
                             }
                             catch (Exception e)
                             {
-                                var msg = $"Error sending Smart Manifest {e.Message}";
+                                var msg = $"Error sending  {e.Message}";
                                 Log.Error(e, msg);
                                 return StatusCode(500, msg);
                             }

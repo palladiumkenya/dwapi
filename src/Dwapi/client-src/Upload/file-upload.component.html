@@ -1,4 +1,6 @@
 <div class="row">
+    <p-messages [(value)]="messages"></p-messages>
+    <p-growl [(value)]="notifications"></p-growl>
     <div class="col-md-3">
         <h3>Select file</h3>
 
@@ -51,9 +53,7 @@
                         <button type="button" class="btn btn-success btn-xs" (click)="upload(item.id)" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
                             <span class="fa fa-upload"></span> Upload
                         </button>
-                        <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
-                            <span class="fa fa-ban"></span> Cancel
-                        </button>
+
 
                     </td>
                 </tr>
@@ -69,35 +69,37 @@
             <button type="button" class="btn btn-success btn-s" (click)="uploadAll()">
                 <span class="fa fa-upload"></span> Upload all
             </button>
-            <button type="button" class="btn btn-warning btn-s" (click)="cancelAll()">
-                <span class="fa-ban"></span> Cancel all
-            </button>
+
 
         </div>
+     
+        <p-messages [(value)]="errorMessage"></p-messages>
+        <p-growl [(value)]="otherMessage"></p-growl>       
         <div class="ui-g" *ngIf="sending">
             <div class="ui-g-12">
-                 Sending C&T Extracts, please wait ...
-                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+                Sending C&T Extracts, please wait ...
+                <p-progressBar  [value]="progresss"></p-progressBar>
             </div>
         </div>
+
         <!--<div class="ui-g" *ngIf="sending">
-            <div class="ui-g-12">
-                Sending HTS Extracts, please wait ...
-                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
-            </div>
+        <div class="ui-g-12">
+            Sending HTS Extracts, please wait ...
+            <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
         </div>
-        <div class="ui-g" *ngIf="sending">
-            <div class="ui-g-12">
-                 Sending MNCH Extracts, please wait ...
-                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
-            </div>
+    </div>
+    <div class="ui-g" *ngIf="sending">
+        <div class="ui-g-12">
+             Sending MNCH Extracts, please wait ...
+            <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
         </div>
-        <div class="ui-g" *ngIf="sending">
-            <div class="ui-g-12">
-                Sending PrEP Extracts, please wait ...
-                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
-            </div>
-        </div>-->
+    </div>
+    <div class="ui-g" *ngIf="sending">
+        <div class="ui-g-12">
+            Sending PrEP Extracts, please wait ...
+            <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+        </div>
+    </div>-->
     </div>
 </div>
 

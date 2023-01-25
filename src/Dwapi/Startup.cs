@@ -144,6 +144,7 @@ using Dwapi.SettingsManagement.Infrastructure.Repository;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Infrastructure;
+using Dwapi.UploadManagement.Core.Hubs.BoardRoomUpload;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Cbs;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Crs;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
@@ -963,6 +964,7 @@ namespace Dwapi
                     routes.MapHub<MnchSendActivity>($"/{nameof(MnchSendActivity).ToLower()}");
                     routes.MapHub<PrepActivity>($"/{nameof(PrepActivity).ToLower()}");
                     routes.MapHub<PrepSendActivity>($"/{nameof(PrepSendActivity).ToLower()}");
+                    routes.MapHub<ProgressHub>("/progressHub");
                 }
             );
 

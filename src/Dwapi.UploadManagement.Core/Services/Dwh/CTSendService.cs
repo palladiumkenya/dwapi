@@ -362,7 +362,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     //messageBag = messageBag.Generate(extracts);
                     var message = messageBag;
 
-                    Log.Debug(
+                   Log.Debug(
                         $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords}  Pks:[{messageBag.MinPk}-{messageBag.MaxPk}] Page:{page} of {packageInfo.PageCount}");
 
                     try
@@ -421,8 +421,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 throw;
             }
 
-            DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
-                messageBag.GetProgress(count, total), recordCount,true)));
+            DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total), recordCount,true)));
 
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
                 {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
