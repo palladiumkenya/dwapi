@@ -50,7 +50,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Automatic Load', icon: 'cloud', routerLink: ['/autoload']
+                label: 'Merged Dockets', icon: 'cloud', routerLink: ['/autoload']
             }
         ];
     }
