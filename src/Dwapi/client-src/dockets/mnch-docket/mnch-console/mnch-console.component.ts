@@ -83,7 +83,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
     public centralRegistry: CentralRegistry;
     public sendResponse: SendResponse;
     public getEmr$: Subscription;
-
+    public exportStage = 2;
     public sendStage = 2;
     extractSent = [];
 
@@ -950,8 +950,22 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             console.log(`${dwhProgress.extract}:${dwhProgress.progress}, Overall:${progress}`);
             const st = {
                 sentProgress: progress
+               
             };
             this.sendEvent = {...st};
+            this.updateExractStats(dwhProgress);
+            this.canLoadFromEmr = this.canSend = !this.sending;
+        });
+        this._hubConnection.on('ShowMnchExportProgress', (dwhProgress: any) => {
+            if (dwhProgress.extract === 'MatVisitExtract') {
+                console.log('xxx');
+            }
+            const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);
+            console.log(`${dwhProgress.extract}:${dwhProgress.progress}, Overall:${progress}`);
+            const st = {                
+                exportProgress: progress
+            };
+            this.exportEvent = { ...st };
             this.updateExractStats(dwhProgress);
             this.canLoadFromEmr = this.canSend = !this.sending;
         });
@@ -964,6 +978,18 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 this.updateEvent();
                 this.sendHandshake();
                 this.sending = false;
+            } else {
+                this.updateEvent();
+            }
+        });
+        this._hubConnection.on('ShowMnchExportProgressDone', (extractName: string) => {
+            this.extractSent.push(extractName);
+            if (this.extractSent.length === 11) {
+                this.errorMessage = [];
+                this.errorMessage.push({ severity: 'success', summary: 'exported successfully ' });
+                this.updateEvent();
+                this.sendHandshake();
+                this.exporting = false;
             } else {
                 this.updateEvent();
             }

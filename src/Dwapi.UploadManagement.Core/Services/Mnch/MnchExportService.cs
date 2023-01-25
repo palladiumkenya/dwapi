@@ -69,10 +69,11 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                     var msg = JsonConvert.SerializeObject(message);
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                     var Base64Manifest = Convert.ToBase64String(plainTextBytes);
-                    string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-Mnch");
-                    Directory.CreateDirectory(folderName);                    // Write that JSON to txt file,  
-                    File.WriteAllText(folderName + "\\" + "manifest.dump" + ".json", Base64Manifest);
+                    string projectPath = ("exports");
+                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-Mnch").HasToEndsWith(@"\");
+                    Directory.CreateDirectory(folderName);
+                    string fileName = folderName + "manifest.dump" + ".json";
+                    File.WriteAllText(fileName.ToOsStyle(), Base64Manifest);
                 }
                 catch (Exception e)
                 {
@@ -97,10 +98,9 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
-
                 if (message.PatientMnchExtracts.Count > 0)
                 {
                     count++;
@@ -109,29 +109,20 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PatientMnchExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.PatientMnchExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
 
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PatientMnchExtracts.dump" + ".json";
+                            string fileName = folderName  + "PatientMnchExtracts.dump" + ".json";
 
-                    //if (File.Exists(path))
-                    //{
-                    //    File.AppendAllText(path, Base64Extract);
-                    //    var sentIds = message.PatientMnchExtracts.Select(x => x.Id).ToList();
-                    //    sendCound += sentIds.Count;
-                    //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                            //}
-                        //else
-                        //{
-                            await File.WriteAllTextAsync(path, msg);
-                            var sentIds = message.PatientMnchExtracts.Select(x => x.Id).ToList();
+                   
+                            await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
+                            var sentIds = message.MnchEnrolmentExtracts.Select(x => x.Id).ToList();
                             sendCound += sentIds.Count;
-                            DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                            DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
 
 
                     }
@@ -141,10 +132,10 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(PatientMnchExtract), Common.GetProgress(count, total), sendCound)));
+                
             }
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(PatientMnchExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(PatientMnchExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -161,7 +152,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
                 if (message.MnchEnrolmentExtracts.Count > 0)
@@ -173,28 +164,19 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.MnchEnrolmentExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.MnchEnrolmentExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "MnchEnrolmentExtracts.dump" + ".json";
+                             string fileName = folderName  + "MnchEnrolmentExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.MnchEnrolmentExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                            await File.WriteAllTextAsync(path, msg);
+                    
+                            await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
                             var sentIds = message.MnchEnrolmentExtracts.Select(x => x.Id).ToList();
                             sendCound += sentIds.Count;
-                            DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                            DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -202,10 +184,10 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MnchEnrolmentExtract), Common.GetProgress(count, total), sendCound)));
+                
             }
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MnchEnrolmentExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(MnchEnrolmentExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -222,7 +204,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
                 if (message.MnchArtExtracts.Count > 0)
@@ -233,28 +215,17 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.MnchArtExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.MnchArtExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "MnchArtExtracts.dump" + ".json";
-
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.MnchArtExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                            await File.WriteAllTextAsync(path, msg);
+                            string fileName = folderName  + "MnchArtExtracts.dump" + ".json";                    
+                            await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
                             var sentIds = message.MnchArtExtracts.Select(x => x.Id).ToList();
                             sendCound += sentIds.Count;
-                            DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                            DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -263,10 +234,10 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
 
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MnchArtExtract), Common.GetProgress(count, total), sendCound)));
+                
             }
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MnchArtExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(MnchArtExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -283,7 +254,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
                 if (message.AncVisitExtracts.Count > 0)
@@ -294,28 +265,18 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.AncVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.AncVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "AncVisitExtracts.dump" + ".json";
+                        string fileName = folderName  + "AncVisitExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.AncVisitExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
                         var sentIds = message.AncVisitExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -323,10 +284,9 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(AncVisitExtract), Common.GetProgress(count, total), sendCound)));
             }
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(AncVisitExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(AncVisitExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -343,7 +303,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
                 if (message.MatVisitExtracts.Count > 0)
@@ -354,28 +314,18 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.MatVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.MatVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "MatVisitExtracts.dump" + ".json";
+                            string fileName = folderName  + "MatVisitExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.MatVisitExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                            await File.WriteAllTextAsync(path, msg);
+                            await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
                             var sentIds = message.MatVisitExtracts.Select(x => x.Id).ToList();
                             sendCound += sentIds.Count;
-                            DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                       // }
+                            DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -383,10 +333,9 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MatVisitExtract), Common.GetProgress(count, total), sendCound)));
             }
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MatVisitExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(MatVisitExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -405,7 +354,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int count = 0;
             string zipPath = "";
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
 
@@ -417,31 +366,20 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PncVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.PncVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
                         startPath = Path.Combine(projectPath, message.PncVisitExtracts[0].SiteCode + "-Mnch");
                         zipPath = Path.Combine(projectPath, message.PncVisitExtracts[0].SiteCode + "-Mnch" + ".zip");
 
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PncVisitExtracts.dump" + ".json";
+                        string  fileName= folderName + "PncVisitExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.PncVisitExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
                         var sentIds = message.PncVisitExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));                     
 
                         
 
@@ -452,7 +390,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(PncVisitExtract), Common.GetProgress(count, total), sendCound)));
+                
             }
 
             DirectoryInfo di = new DirectoryInfo(startPath);
@@ -471,8 +409,8 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                 File.Delete(zipPath);
             ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);
 
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(PncVisitExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(PncVisitExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -490,7 +428,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
 
@@ -502,28 +440,18 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.MotherBabyPairExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.MotherBabyPairExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "MotherBabyPairExtracts.dump" + ".json";
+                            string fileName = folderName + "MotherBabyPairExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.MotherBabyPairExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                            await File.WriteAllTextAsync(path, msg);
+                            await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
                             var sentIds = message.MotherBabyPairExtracts.Select(x => x.Id).ToList();
                             sendCound += sentIds.Count;
-                            DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                            DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                        
                     }
                     catch (Exception e)
                     {
@@ -531,10 +459,9 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MotherBabyPairExtract), Common.GetProgress(count, total), sendCound)));
             }
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MotherBabyPairExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(MotherBabyPairExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -551,7 +478,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
 
@@ -563,28 +490,18 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.CwcEnrolmentExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.CwcEnrolmentExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "CwcEnrolmentExtracts.dump" + ".json";
+                        string fileName = folderName + "CwcEnrolmentExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.CwcEnrolmentExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
                         var sentIds = message.CwcEnrolmentExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        // }
+                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -592,10 +509,10 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(CwcEnrolmentExtract), Common.GetProgress(count, total), sendCound)));
+                
             }
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(CwcEnrolmentExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(CwcEnrolmentExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -612,7 +529,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
                 if (message.CwcVisitExtracts.Count > 0)
@@ -624,28 +541,18 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.CwcVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.CwcVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "CwcVisitExtracts.dump" + ".json";
+                        string fileName = folderName + "CwcVisitExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.CwcVisitExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        // {
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
                         var sentIds = message.CwcVisitExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        // }
+                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -653,10 +560,9 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(CwcVisitExtract), Common.GetProgress(count, total), sendCound)));
             }
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(CwcVisitExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(CwcVisitExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -672,7 +578,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
                 if (message.HeiExtracts.Count > 0)
@@ -684,28 +590,18 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.HeiExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.HeiExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "HeiExtracts.dump" + ".json";
+                        string fileName = folderName  + "HeiExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.HeiExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
                         var sentIds = message.HeiExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        // }
+                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                        
                     }
                     catch (Exception e)
                     {
@@ -713,10 +609,10 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(HeiExtract), Common.GetProgress(count, total), sendCound)));
+                
             }
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(HeiExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(HeiExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
@@ -732,7 +628,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
             foreach (var message in messageBag.Messages)
             {
 
@@ -744,28 +640,18 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.MnchLabExtracts[0].SiteCode + "-Mnch" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.MnchLabExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "MnchLabExtracts.dump" + ".json";
+                        string fileName = folderName + "MnchLabExtracts.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.MnchLabExtracts.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), msg);
                         var sentIds = message.MnchLabExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        
+                       
                     }
                     catch (Exception e)
                     {
@@ -773,10 +659,10 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         throw;
                     }
                 }
-                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MnchLabExtract), Common.GetProgress(count, total), sendCound)));
+               
             }
-            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MnchLabExtract), Common.GetProgress(count, total), sendCound, true)));
-            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(MnchLabExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
 
