@@ -5,6 +5,7 @@ import {AutoloadService} from '../settings/services/autoload.service';
 import {ConfirmationService, Message} from 'primeng/api';
 import {Subscription} from 'rxjs/Subscription';
 import {ProgressBarModule} from 'primeng/progressbar';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {HttpClient} from "@angular/common/http";
 import {ProtocolConfigService} from '../settings/services/protocol-config.service';
 import {DatabaseProtocol} from "../settings/model/database-protocol";
@@ -157,7 +158,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
 
                 clearInterval(checkLoad);
                 }
-            }, 2000);
+            }, 3000);
 
         // var checkComplete = setInterval(() => {
         //     this.ctSendingComplete = JSON.parse(localStorage.getItem('ctSendingComplete'));
