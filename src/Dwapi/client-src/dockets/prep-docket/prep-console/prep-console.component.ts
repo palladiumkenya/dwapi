@@ -406,6 +406,8 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                    localStorage.setItem('htsSendingComplete', "true");
+
                 }
             );
     }

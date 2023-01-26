@@ -177,7 +177,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         severity: 'success',
                         summary: 'load was successful '
                     });
-                    localStorage.setItem('htsSendingComplete', "true");
+                    // localStorage.setItem('htsSendingComplete', "true");
 
                     localStorage.setItem('canSendHts', "true");
 
@@ -435,6 +435,8 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                    localStorage.setItem('htsSendingComplete', "true");
+
                 }
             );
     }

@@ -119,6 +119,9 @@ ul.form-stepper li a .form-stepper-circle {
 .form-stepper .form-stepper-active .form-stepper-circle {
     background-color: greenyellow !important;
     color: #fff;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+    transform: scale(1);
+    animation: pulse 2s infinite;
 }
 .form-stepper .form-stepper-active .cloud {
     color: #4361ee;
@@ -154,8 +157,11 @@ ul.form-stepper li a .form-stepper-circle {
     background-color: #32cd32 !important;
     color: #fff !important;
 }
+.form-stepper .form-stepper-waiting .form-stepper-icon .cloud{
+    color: #0e9594;
+}
 .form-stepper .form-stepper-active .form-stepper-icon .cloud{
-    color: #4361ee;
+    color: greenyellow;
 }
 .form-stepper .form-stepper-completed .form-stepper-icon .cloud{
     color: #32cd32 ;
@@ -176,13 +182,19 @@ ul.form-stepper li a .form-stepper-circle {
 }
 
 
-.to-transmission {
-    position: relative;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    height: 100px;
-    width:10px;
-    content: "";
-    //top: 32%;
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
 }
