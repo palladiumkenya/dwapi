@@ -36,6 +36,8 @@ using Dwapi.Models;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
 using Dwapi.Hubs.Dwh;
+using Dwapi.UploadManagement.Core.Services.Prep;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Prep;
 
 namespace Dwapi.Controller
 {
@@ -54,12 +56,13 @@ namespace Dwapi.Controller
         public HttpClient Client { get; set; }
         private IHostingEnvironment _hostingEnvironment;
         private readonly ICTExportService _ctExportService;
+        private readonly IPrepExportService _prepExportService;
 
 
 
         public UploadController(IMediator mediator, IExtractStatusService extractStatusService,
              IHubContext<ExtractActivity> hubContext, IClientRegistryExtractRepository clientRegistryExtractRepository, 
-            ICrsSendService crsSendService, ICrsSearchService crsSearchService,IHostingEnvironment hostingEnvironment, ICTExportService ctExportService)
+            ICrsSendService crsSendService, ICrsSearchService crsSearchService,IHostingEnvironment hostingEnvironment, ICTExportService ctExportService, IPrepExportService prepExportService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -67,6 +70,7 @@ namespace Dwapi.Controller
             _crsSendService = crsSendService;           
             _crsSearchService = crsSearchService;
             _ctExportService = ctExportService;
+            _prepExportService = prepExportService;
             _hostingEnvironment = hostingEnvironment;           
             _endPoint = "http://localhost:10707/api/Crs/sendF";
             Startup.HubContext = _hubContext = hubContext;
@@ -94,45 +98,28 @@ namespace Dwapi.Controller
                     String partToExtract = fileName.Split('-', '.')[1];
                     
                     if (partToExtract != null)
-                    {
-                        if (partToExtract == "Crs")
-                        {                          
-
-                            var client = new HttpClient
-                            {
-                                BaseAddress = new Uri("http://localhost:10707")
-                            };
-
-                            var stream = file.OpenReadStream();
-                            var request = new HttpRequestMessage(HttpMethod.Post, "file");
-                            var content = new MultipartFormDataContent
-                            {
-                                { new StreamContent(stream), "file", fileName }
-                            };
-
-                            request.Content = content;
-
-                            await client.SendAsync(request);
-                        }
+                    {                       
                         if (partToExtract == "Prep")
                         {
-                            
 
-                            var client = new HttpClient
+
+                            try
                             {
-                                BaseAddress = new Uri("http://localhost:9797")
-                            };
-
-                            var stream = file.OpenReadStream();
-                            var request = new HttpRequestMessage(HttpMethod.Post, "file");
-                            var content = new MultipartFormDataContent
+                                string fullPath = Path.Combine(newPath, fileName);
+                                using (var stream = new FileStream(fullPath, FileMode.Create))
+                                {
+                                    await file.CopyToAsync(stream);
+                                }
+                                var result = await _prepExportService.SendPrepFiles(file);
+                                return Ok(result);
+                                
+                            }
+                            catch (Exception e)
                             {
-                                { new StreamContent(stream), "file", fileName }
-                            };
-
-                            request.Content = content;
-
-                            await client.SendAsync(request);
+                                var msg = $"Error sending  {e.Message}";
+                                Log.Error(e, msg);
+                                return StatusCode(500, msg);
+                            }
 
 
                         }
@@ -189,13 +176,9 @@ namespace Dwapi.Controller
                                     await file.CopyToAsync(stream);
                                 }
 
-                                var result = _ctExportService.SendFileManifest(file, "3").Result;
+                                var result = _ctExportService.SendFileManifest(file, "3").Result;                             
 
-                               
-
-                                
-
-                                    return Ok(result);
+                                return Ok(result);
                             }
                             catch (Exception e)
                             {

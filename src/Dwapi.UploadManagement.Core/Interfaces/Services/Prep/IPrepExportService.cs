@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
+using Dwapi.UploadManagement.Core.Exchange.Dwh;
 using Dwapi.UploadManagement.Core.Exchange.Prep;
+using Microsoft.AspNetCore.Http;
 
 namespace Dwapi.UploadManagement.Core.Interfaces.Services.Prep
 {
@@ -34,6 +36,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Prep
 
         Task<List<SendMpiResponse>> ExportPrepVisitsAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> ExportPrepVisitsAsync(SendManifestPackageDTO sendTo, PrepMessageBag messageBag);
+
+        Task<List<SendMpiResponse>> SendPrepFiles(IFormFile file);
 
         Task NotifyPostSending(SendManifestPackageDTO sendTo, string version);
     }

@@ -9,6 +9,7 @@ import { Extract } from '../settings/model/extract';
 import { ConfirmationService, Message } from 'primeng/api';
 import { ExtractEvent } from '../settings/model/extract-event';
 import { Subject } from 'rxjs';
+import { Guid } from '../entities/guid';
 
 import { CentralRegistry } from '../settings/model/central-registry';
 
@@ -21,6 +22,7 @@ export class UploadComponent implements OnInit {
 
     public sendEvent: SendEvent = {};
     public sending: boolean = false;
+    public sendingPrep: boolean = false;
     private _hubConnectionMpi: HubConnection | undefined;
     private _hubConnection: HubConnection | undefined;
     public notifications: Message[];
@@ -32,8 +34,13 @@ export class UploadComponent implements OnInit {
     private progressSubject = new Subject<number>();
     public progress$ = this.progressSubject.asObservable();
     progresss = 0;
+    progressPrep = 0;
+    
     public warningMessage: Message[];
-
+    uploadSuccessCT: boolean = false;
+    uploadSuccessPrep: boolean = false;
+    uploadSuccessMnch: boolean = false;
+    uploadSuccessHts: boolean = false; 
     smartMode = false;
 
     //get progress: get overall progress
@@ -101,18 +108,28 @@ export class UploadComponent implements OnInit {
        
 
         this._hubConnection.on("ReceiveProgress", (progress: number) => {
+            this.sending = true;
             this.progresss = progress;
             this.progressSubject.next(progress);
+            if (progress == 100) {
+                this.uploadSuccessCT = true;
+                
+            }
         });
 
-       
-       
+        this._hubConnection.on("ReceiveProgressPrep", (progress: number) => {
+            this.sendingPrep = true;
+            this.progressPrep = progress;
+            
+            this.progressSubject.next(progress);
+            if (progress == 100) {                     
+                    this.uploadSuccessPrep = true;                   
+
+                }
 
 
-       
-
-       
-
+               
+        });
     }
    
 
@@ -152,7 +169,7 @@ export class UploadComponent implements OnInit {
 
         let selectedFile = this.uploader.queue.find(s => s.id == id);
         this.sendEvent = { sentProgress: 0 };
-        this.sending = true;
+        
         this.errorMessage = [];        
         if (selectedFile) {
             const formData = new FormData();
@@ -179,8 +196,9 @@ export class UploadComponent implements OnInit {
                 },
                 () => {
                     this.notifications = [];
-                    this.errorMessage.push({ severity: 'success', summary: 'Sending Extracts Completed ' });
+                    this.errorMessage.push({ severity: 'success', summary: 'Sending Extracts Completed ' });                    
                     this.sending = false;
+                    this.sendingPrep = false;
                 }
             );
 
@@ -192,6 +210,9 @@ export class UploadComponent implements OnInit {
         let remainingFiles = this.uploader.queue.filter(s => !s.isSuccess);
         for (let item of remainingFiles) {
             this.upload(item.id);
+
+
+
         }
     }
 

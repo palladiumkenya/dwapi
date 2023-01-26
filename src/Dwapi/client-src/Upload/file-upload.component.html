@@ -5,9 +5,9 @@
         <h3>Select file</h3>
 
         <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
-        <input type="file" id="file" uploader="uploader" multiple (change)="onSelectChange($event)" /><br />
+        <input type="file" id="file" uploader="uploader" multiple (change)="onSelectChange($event)" accept=".zip"/><br />
         <div id="result"></div>
-        <div class="dropzone" appDnd (filesChangeEmiter)="onFilesChange($event)" (filesInvalidEmiter)="onFileInvalids($event)" [allowed_extensions]="['zip','jpg','png','jpeg','rar','JPG']">
+        <div class="dropzone" appDnd (filesChangeEmiter)="onFilesChange($event)" (filesInvalidEmiter)="onFileInvalids($event)" [allowed_extensions]="['zip']">
             <div style="height:100px;" class="text-wrapper">
                 <div class="centered">Drop your file here!</div>
             </div>
@@ -21,8 +21,8 @@
                 <tr>
                     <th width="50%">Name</th>
                     <th ng-show="uploader.isHTML5">Size</th>
-                    <!--<th ng-show="uploader.isHTML5">Progress</th>
-                    <th>Status</th>-->
+                    <!--<th ng-show="uploader.isHTML5">Progress</th>-->
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -39,15 +39,21 @@
                         <!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
                     </td>
                     <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024 | number }} MB</td>
-                    <td ng-show="uploader.isHTML5">
+                    <!--<td ng-show="uploader.isHTML5">
                         <div class="progress" style="margin-bottom: 0;">
                             <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
                         </div>
-                    </td>
+                    </td>-->
+                                         
                     <td class="text-center">
-                        <span *ngIf="item.isSuccess"><i class="fa fa-check"></i></span>
+                        <i [ngClass]="{'fa fa-check': uploadSuccessCT}"></i>
+                        <i [ngClass]="{'fa fa-check': uploadSuccessPrep}"></i>
+                        <i [ngClass]="{'fa fa-check': uploadSuccessMnch}"></i>
+                        <i [ngClass]="{'fa fa-check': uploadSuccessHts}"></i>
+                        <!--<span *ngIf="item.isSuccess"><i class="fa fa-check"></i></span>
                         <span *ngIf="item.isCancel"><i class="fa fa-ban"></i></span>
-                        <span *ngIf="item.isError"><i class="ui-icon-remove"></i></span>
+                        <span *ngIf="item.isError"><i class="ui-icon-remove"></i></span>-->
+
                     </td>
                     <td nowrap>
                         <button type="button" class="btn btn-success btn-xs" (click)="upload(item.id)" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
@@ -72,34 +78,34 @@
 
 
         </div>
-     
+
         <p-messages [(value)]="errorMessage"></p-messages>
-        <p-growl [(value)]="otherMessage"></p-growl>       
+        <p-growl [(value)]="otherMessage"></p-growl>
         <div class="ui-g" *ngIf="sending">
             <div class="ui-g-12">
                 Sending C&T Extracts, please wait ...
-                <p-progressBar  [value]="progresss"></p-progressBar>
+                <p-progressBar [value]="progresss"></p-progressBar>
             </div>
         </div>
 
         <!--<div class="ui-g" *ngIf="sending">
-        <div class="ui-g-12">
-            Sending HTS Extracts, please wait ...
-            <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+            <div class="ui-g-12">
+                Sending HTS Extracts, please wait ...
+                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+            </div>
         </div>
-    </div>
-    <div class="ui-g" *ngIf="sending">
-        <div class="ui-g-12">
-             Sending MNCH Extracts, please wait ...
-            <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+        <div class="ui-g" *ngIf="sending">
+            <div class="ui-g-12">
+                 Sending MNCH Extracts, please wait ...
+                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+            </div>
+        </div>-->
+        <div class="ui-g" *ngIf="sendingPrep">
+            <div class="ui-g-12">
+                Sending PrEP Extracts, please wait ...
+                <p-progressBar [value]="progressPrep"></p-progressBar>
+            </div>
         </div>
-    </div>
-    <div class="ui-g" *ngIf="sending">
-        <div class="ui-g-12">
-            Sending PrEP Extracts, please wait ...
-            <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
-        </div>
-    </div>-->
     </div>
 </div>
 

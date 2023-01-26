@@ -573,7 +573,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                             }
 
-
+                            _recordsSaved++;
+                            await UpdateProgress();
                         }
                         break;
 
@@ -584,6 +585,10 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     {
                     if (archive.Entries[i].Name == "manifest.dump.json")
                         {
+
+                            DomainEvents.Dispatch(new DwhMessageNotification(false, $"Sending started..."));
+
+
                             string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
 
                      
@@ -608,7 +613,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 if (response.IsSuccessStatusCode)
                                     {
 
-                                    NotifyPreSendingBoardRoom();
+                                    
 
                                     var content = await response.Content.ReadAsJsonAsync<ManifestResponse>();
                                         responses.Add(new SendCTResponse());
@@ -630,18 +635,22 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     }                                       
                                     
                                 }
-                            catch(Exception ex) {
-                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
-                                throw;
+                                catch(Exception ex)
+                                {
+                                    Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                    throw;
 
                                  }
 
                                     
                                 }
-                              
-                            }
+                        _recordsSaved++;
+                        await UpdateProgress();
 
-                        break;
+                    }
+                    
+
+                    break;
                             
                  }
                 for (int i = 1; i < archive.Entries.Count; i++)
