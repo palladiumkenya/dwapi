@@ -77,7 +77,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             _endPoint = "api/";
             _hubContext = hubContext;
             _hostingEnvironment = hostingEnvironment;
-        }  
+        }
 
         public Task<List<SendDhwManifestResponse>> ExportManifestAsync(SendManifestPackageDTO sendTo, string version, string apiVersion = "")
         {
@@ -145,10 +145,10 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             {
                 try
                 {
-                    
-                    var start = DateTime.Now;
 
-                    var msg = JsonConvert.SerializeObject(message.Manifest);
+                    var start = DateTime.Now;
+                    
+                    var msg = JsonConvert.SerializeObject(message.Manifest);                   
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                     var Base64Manifest = Convert.ToBase64String(plainTextBytes);
                     string projectPath = "exports";
@@ -156,9 +156,16 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                     Directory.CreateDirectory(foldername);
                     string fileName = foldername + "manifest.dump.json";
-                    File.WriteAllText(fileName.ToOsStyle(), Base64Manifest);
+                    await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Manifest);
 
-                   
+                    //endpointUrl
+                    var extractsDetails = JsonConvert.SerializeObject(sendTo);
+                    var plainTextBytesdet = Encoding.UTF8.GetBytes(extractsDetails);
+                    var Base64Manifestdet = Convert.ToBase64String(plainTextBytesdet);
+                    string fName = foldername + "package.dump.json";
+                    await File.WriteAllTextAsync(fName.ToOsStyle(), Base64Manifestdet);
+
+
                 }
                 catch (Exception e)
                 {
@@ -168,7 +175,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             }
             return responses;
         }
-      
+
         public void NotifyPreSending()
         {
             DomainEvents.Dispatch(new DwExporthMessageNotification(false, $"Exporting started..."));
@@ -180,7 +187,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
         }
 
-        
+
         public async Task<List<SendCTResponse>> ExportBatchExtractsAsync<T>(
             SendManifestPackageDTO sendTo,
             int batchSize,
@@ -322,9 +329,9 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             int sendCound = 0;
             int count = 0;
             int total = count;
-            
 
-           DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Exporting));
+
+            DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Exporting));
             long recordCount = 0;
 
             if (messageBag.ExtractName == "PatientArtExtract")
@@ -336,7 +343,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             try
             {
                 string jobId = string.Empty; Guid manifestId = new Guid(); Guid facilityId = new Guid();
-       
+
 
 
                 if (packageInfo.PageCount > 0)
@@ -353,7 +360,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     try
                     {
                         int retryCount = 0;
-                        bool allowExport = true;                       
+                        bool allowExport = true;
                         while (allowExport)
                         {
                             if (message.ExtractName == "DefaulterTracingExtract")
@@ -380,7 +387,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 startPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT");
                                 string zipPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + ".zip");
 
-                                
+
                                 if (File.Exists(zipPath))
                                     File.Delete(zipPath);
                                 ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);
@@ -410,7 +417,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                             }
                         }
-                        
+
 
                     }
                     catch (Exception e)
@@ -421,7 +428,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                     DomainEvents.Dispatch(new CTExportNotification(new SendProgress(messageBag.ExtractName, messageBag.GetProgress(count, total), recordCount)));
 
-                }           
+                }
 
 
                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
@@ -445,7 +452,48 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             return responses;
         }
 
-       
+
+
+
+
+        public async Task ZipExtractsAsync<T>(SendManifestPackageDTO sendTo, IMessageSourceBag<T> messageBag) where T : ClientExtract
+        {
+
+            try
+            {
+                string jobId = string.Empty; Guid manifestId = new Guid(); Guid facilityId = new Guid();
+
+
+                var packageInfo = _packager.GetPackageInfo<T>(100);
+                if (packageInfo.PageCount > 0)
+                {
+
+                    int page = 1;
+                    
+                    var extracts = _packager.GenerateSmartBatchExtracts<T>(page, Convert.ToInt32(packageInfo.TotalRecords)).ToList();
+                  
+                    messageBag.Generate(extracts, manifestId, facilityId, jobId);
+                    var message = messageBag;
+
+                    string projectPath = ("exports");
+                    string startPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT");
+                    string zipPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + ".zip");
+
+
+                    if (File.Exists(zipPath))
+                        File.Delete(zipPath);
+                    ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);
+
+
+                }
+            }
+            catch(Exception ex) {
+                Log.Error(ex, $"Zip Extracts {ex} Error");
+                throw;
+            }
+           
+            }
+
 
         public async Task NotifyPostSending(SendManifestPackageDTO sendTo, string version)
         {

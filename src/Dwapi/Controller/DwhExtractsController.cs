@@ -583,9 +583,14 @@ namespace Dwapi.Controller
 
             var job5 =
                 BatchJob.ContinueBatchWith(job4, x => { ExportCovidJobSmartProfiles(package); });
+            //
+            var job6 =
+                BatchJob.ContinueBatchWith(job5, x => { ZipFiles(package); });
 
             var jobEnd =
-                BatchJob.ContinueBatchWith(job5, x => { _ctExportService.NotifyPostSending(package, _version); });
+                BatchJob.ContinueBatchWith(job6, x => { _ctExportService.NotifyPostSending(package, _version); });
+
+            
         }
 
         public void SendJobSmartPateints(SendManifestPackageDTO package)
@@ -667,7 +672,12 @@ namespace Dwapi.Controller
             var idsCovid = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CovidMessageSourceBag()).Result;
             var idsDefaulterTracing = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DefaulterTracingMessageSourceBag()).Result;
         }
-
+        
+        public void ZipFiles(SendManifestPackageDTO package)
+        {
+            var idsCovid = _ctExportService.ZipExtractsAsync(package, new PatientMessageSourceBag());
+           
+        }
         #endregion
         public void SendJobBaselines(SendManifestPackageDTO package)
         {

@@ -26,6 +26,9 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
         Task<List<SendDhwManifestResponse>> ExportSmartManifestAsync(SendManifestPackageDTO sendTo,
           DwhManifestMessageBag messageBag, string version, string apiVersion = "");
 
+        Task ZipExtractsAsync<T>(SendManifestPackageDTO sendTo,IMessageSourceBag<T> messageBag)
+            where T : ClientExtract;
+
 
         void NotifyPreSending();
 
