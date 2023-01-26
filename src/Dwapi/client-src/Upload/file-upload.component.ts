@@ -175,12 +175,7 @@ export class UploadComponent implements OnInit {
                     } else {
                         this.errorMessage = [];
                         this.errorMessage.push({ severity: 'error', summary: 'Error sending ', detail: <any>e });
-                    }
-                    if (e.type === HttpEventType.UploadProgress) {
-                        selectedFile.progress = Math.round(100 * e.loaded / e.total);
-                    }
-                    else if (e.type === HttpEventType.Response)
-                        selectedFile.message = e.body.toString();
+                    }                    
                 },
                 () => {
                     this.notifications = [];

@@ -516,7 +516,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         public async Task<List<SendCTResponse>> SendFileManifest(IFormFile file, string apiVersion = "")
         {
             var responses = new List<SendCTResponse>();
-           
+            SendManifestPackageDTO sendTo=null;
             string folderName = "Upload";
             string tempfolderName = "Temp";
             string webRootPath = _hostingEnvironment.ContentRootPath;
@@ -540,8 +540,49 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 _totalRecords = archive.Entries.Count;
                 _recordsSaved = 0;
                 for (int i = 0; i < archive.Entries.Count; i++)
+                {
+                    //// var response = await client.PostAsJsonAsync(
+                    // sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
+                    if (archive.Entries[i].Name == "package.dump.json")
                     {
-                        if (archive.Entries[i].Name == "manifest.dump.json")
+                        string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+
+
+
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
+
+                        var filestream = File.OpenRead(destinationPath);
+                        using (StreamReader sr = new StreamReader(filestream))
+                        {
+                            try
+                            {
+                                text = await sr.ReadToEndAsync(); // OK                         
+
+                                byte[] base64EncodedBytes = Convert.FromBase64String(text);
+                                var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
+
+                                sendTo = JsonConvert.DeserializeObject<SendManifestPackageDTO>(Extract);
+
+
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+
+                            }
+
+
+                        }
+                        break;
+
+                    }
+                    
+                }
+                    for (int i = 0; i < archive.Entries.Count; i++)
+                    {
+                    if (archive.Entries[i].Name == "manifest.dump.json")
                         {
                             string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
 
@@ -562,8 +603,9 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     DwhManifest manifest = JsonConvert.DeserializeObject<DwhManifest>(Extract);
 
                                     var start = DateTime.Now;
-                                    var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/spot", manifest);
-                                    if (response.IsSuccessStatusCode)
+                                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}spot", apiVersion), manifest);
+
+                                if (response.IsSuccessStatusCode)
                                     {
 
                                     NotifyPreSendingBoardRoom();
@@ -575,8 +617,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                             new Guid(content.ManifestId), content.Code, start, content.FacilityId);
                                         _transportLogRepository.CreateLatest(tlog);
                                         Log.Debug(new string('+', 40));
-                                        Log.Debug($"CONNECTED: {"http://localhost:21751/api/v3/spot"}");
-                                        Log.Debug(new string('_', 40));
+                                        Log.Debug($"CONNECTED:  {sendTo.Destination.Url}");
+                                    Log.Debug(new string('_', 40));
                                         Log.Debug($"RECIEVED: {content}");
                                         Log.Debug(new string('+', 40));
 
@@ -592,16 +634,16 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
                                 throw;
 
-                            }
+                                 }
 
                                     
                                 }
                               
                             }
-                    break;
-                           
+
+                        break;
                             
-                        }
+                 }
                 for (int i = 1; i < archive.Entries.Count; i++)
                 {
                     if (archive.Entries[i].Name == "PatientExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
@@ -680,7 +722,9 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/patient", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
+                                          
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -733,6 +777,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                            
 
                         }
+
+                        break;
                     }
 
                 }
@@ -812,7 +858,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/allergieschronicIllness", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -941,7 +988,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/contactlisting", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                   sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -1063,7 +1111,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/covid", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -1187,7 +1236,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/defaultertracing", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -1309,7 +1359,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/depressionscreening", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -1432,7 +1483,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/DrugAlcoholScreening", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -1555,7 +1607,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/EnhancedAdherenceCounselling", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                   sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -1676,7 +1729,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/GbvScreening", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -1798,7 +1852,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/Ipt", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -1921,7 +1976,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/Otz", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -2044,8 +2100,9 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                           
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/Ovc", message);
+
+                                            var response = await client.PostAsJsonAsync(
+                                                   sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -2170,7 +2227,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientAdverseEvents", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                   sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -2292,7 +2350,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientArt", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -2412,7 +2471,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientBaselines", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -2532,7 +2592,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientLabs", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -2654,7 +2715,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientPharmacy", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -2775,7 +2837,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientStatus", message);
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;
@@ -2897,7 +2960,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                         bool allowSend = true;
                                         while (allowSend)
                                         {
-                                            var response = await client.PostAsJsonAsync("http://localhost:21751/api/v3/PatientVisits", message);
+                                            var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
                                             if (response.IsSuccessStatusCode)
                                             {
                                                 allowSend = false;

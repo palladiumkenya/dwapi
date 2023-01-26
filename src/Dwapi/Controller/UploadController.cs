@@ -191,7 +191,11 @@ namespace Dwapi.Controller
 
                                 var result = _ctExportService.SendFileManifest(file, "3").Result;
 
-                                return Ok(result);
+                               
+
+                                
+
+                                    return Ok(result);
                             }
                             catch (Exception e)
                             {
