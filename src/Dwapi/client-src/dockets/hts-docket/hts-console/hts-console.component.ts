@@ -64,7 +64,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
     public recordCount: number;
 
     public canLoadFromEmr: boolean;
-    public canSend: boolean;
+    public canSend: boolean = true;
     public canExport: boolean;
     public canSendPatients: boolean = false;
     public manifestPackage: SendPackage;
@@ -152,6 +152,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
         if (this.centralRegistry) {
             this.canSend = true;
+            this.canExport = true;
         }
     }
 
@@ -887,6 +888,26 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 this.updateEvent();
                 this.sendHandshake();
                 this.sending = false;
+            } else {
+                this.updateEvent();
+            }
+        });
+
+        this._hubConnection.on('ShowHtsExportProgress', (dwhProgress: any) => {
+            this.exportEvent = {
+                exportProgress: dwhProgress.progress
+            };
+            this.updateExractStats(dwhProgress);
+            this.canLoadFromEmr = this.canExport = !this.exporting;
+        });
+
+        this._hubConnection.on('ShowHtsExportProgressDone', (extractName: string) => {
+            this.extractSent.push(extractName);
+            if (this.extractSent.length === 8) {
+                this.errorMessage = [];
+                this.errorMessage.push({ severity: 'success', summary: 'success exporting  ' });
+                this.updateEvent();
+                this.exporting = false;
             } else {
                 this.updateEvent();
             }

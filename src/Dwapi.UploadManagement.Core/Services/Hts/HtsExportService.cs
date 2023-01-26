@@ -67,10 +67,11 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     var msg = JsonConvert.SerializeObject(message);
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                     var Base64Manifest = Convert.ToBase64String(plainTextBytes);
-                    string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-Hts");
-                    Directory.CreateDirectory(folderName);                    // Write that JSON to txt file,  
-                    File.WriteAllText(folderName + "\\" + "manifest.dump" + ".json", Base64Manifest);
+                    string projectPath ="exports";
+                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-Hts").HasToEndsWith(@"\");
+                    Directory.CreateDirectory(folderName);                    // Write that JSON to txt file,
+                    string fileName = folderName + "manifest.dump" + ".json";
+                    File.WriteAllText(fileName.ToOsStyle(), Base64Manifest);
                 }
                 catch (Exception e)
                 {
@@ -95,7 +96,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
 
             foreach (var message in messageBag.Messages)
             {
@@ -106,32 +107,18 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     {
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                        //var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.Clients[0].SiteCode + "-Hts" + "\\extracts");
+                        var Base64Extract = Convert.ToBase64String(plainTextBytes);
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.Clients[0].SiteCode + "-Hts" + "\\extracts").HasToEndsWith(@"\");
 
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "Clients.dump" + ".json";
-
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.Clients.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        string fileName = folderName  + "Clients.dump" + ".json";                
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
                         var sentIds = message.ClientLinkage.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        // }
-
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
 
                     }
                     catch (Exception e)
@@ -141,12 +128,12 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     }
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClients), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsClients), Common.GetProgress(count, total), sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClients), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsClients), Common.GetProgress(count, total), sendCound, true)));
 
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
 
             return responses;
         }
@@ -164,7 +151,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
 
             foreach (var message in messageBag.Messages)
             {
@@ -177,29 +164,19 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.ClientLinkage[0].SiteCode + "-Hts" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.ClientLinkage[0].SiteCode + "-Hts" + "\\extracts").HasToEndsWith(@"\");
 
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "ClientLinkage.dump" + ".json";
+                        string fileName = folderName + "ClientLinkage.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.ClientLinkage.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
                         var sentIds = message.ClientLinkage.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        // }
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
 
 
                     }
@@ -210,12 +187,12 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     }
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientLinkage), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsClientLinkage), Common.GetProgress(count, total), sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientLinkage), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsClientLinkage), Common.GetProgress(count, total), sendCound, true)));
 
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
 
             return responses;
         }
@@ -233,7 +210,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
 
             foreach (var message in messageBag.Messages)
             {
@@ -246,29 +223,19 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.ClientTests[0].SiteCode + "-Hts" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.ClientTests[0].SiteCode + "-Hts" + "\\extracts").HasToEndsWith(@"\"); ;
 
 
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "ClientTests.dump" + ".json";
+                        string fileName = folderName + "ClientTests.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.ClientTests.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
                         var sentIds = message.ClientTests.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
                         //}
 
 
@@ -280,12 +247,12 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     }
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTests), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsClientTests), Common.GetProgress(count, total), sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTests), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsClientTests), Common.GetProgress(count, total), sendCound, true)));
 
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
 
             return responses;
         }
@@ -303,7 +270,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
 
             foreach (var message in messageBag.Messages)
             {
@@ -315,29 +282,19 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     {
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                        //var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.TestKits[0].SiteCode + "-Hts" + "\\extracts");
+                        var Base64Extract = Convert.ToBase64String(plainTextBytes);
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.TestKits[0].SiteCode + "-Hts" + "\\extracts").HasToEndsWith(@"\"); ;
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "TestKits.dump" + ".json";
+                        string fileName = folderName  + "TestKits.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.TestKits.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
                         var sentIds = message.TestKits.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        // }
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                        
                     }
                     catch (Exception e)
                     {
@@ -346,12 +303,12 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     }
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsTestKits), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsTestKits), Common.GetProgress(count, total), sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsTestKits), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsTestKits), Common.GetProgress(count, total), sendCound, true)));
 
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
 
             return responses;
         }
@@ -369,7 +326,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
 
             foreach (var message in messageBag.Messages)
             {
@@ -381,28 +338,18 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.ClientTracing[0].SiteCode + "-Hts" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.ClientTracing[0].SiteCode + "-Hts" + "\\extracts").HasToEndsWith(@"\"); ;
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "ClientTracing.dump" + ".json";
+                        string fileName = folderName  + "ClientTracing.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.ClientTracing.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
                         var sentIds = message.ClientTracing.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        // }
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                        
 
                     }
                     catch (Exception e)
@@ -412,12 +359,12 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     }
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTracing), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsClientTracing), Common.GetProgress(count, total), sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsClientTracing), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsClientTracing), Common.GetProgress(count, total), sendCound, true)));
 
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
 
             return responses;
         }
@@ -447,29 +394,19 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     {
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                        //var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PartnerTracing[0].SiteCode + "-Hts" + "\\extracts");
+                        var Base64Extract = Convert.ToBase64String(plainTextBytes);
+                        string projectPath ="exports";
+                        string folderName = Path.Combine(projectPath, message.PartnerTracing[0].SiteCode + "-Hts" + "\\extracts").HasToEndsWith(@"\"); ;
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PartnerTracing.dump" + ".json";
+                        string fileName = folderName + "PartnerTracing.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.PartnerTracing.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
                         var sentIds = message.PartnerTracing.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
                     }
                     catch (Exception e)
                     {
@@ -478,12 +415,12 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     }
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerTracing), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsPartnerTracing), Common.GetProgress(count, total), sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerTracing), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsPartnerTracing), Common.GetProgress(count, total), sendCound, true)));
 
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
 
             return responses;
         }
@@ -501,7 +438,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
 
             foreach (var message in messageBag.Messages)
             {
@@ -513,27 +450,17 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.PartnerNotificationServices[0].SiteCode + "-Hts" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.PartnerNotificationServices[0].SiteCode + "-Hts" + "\\extracts").HasToEndsWith(@"\"); ;
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "PartnerNotificationServices.dump" + ".json";
+                        string fileName = folderName + "PartnerNotificationServices.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.PartnerNotificationServices.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
                         var sentIds = message.PartnerNotificationServices.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
                     }
 
                     catch (Exception e)
@@ -543,12 +470,12 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     }
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerNotificationServices), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsPartnerNotificationServices), Common.GetProgress(count, total), sendCound)));
             }
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsPartnerNotificationServices), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsPartnerNotificationServices), Common.GetProgress(count, total), sendCound, true)));
 
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
 
             return responses;
         }
@@ -567,7 +494,7 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
             int sendCound = 0;
             int count = 0;
             int total = messageBag.Messages.Count;
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
 
             foreach (var message in messageBag.Messages)
             {
@@ -580,8 +507,8 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                         var msg = JsonConvert.SerializeObject(message);
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                        string projectPath = Path.Combine(_hostingEnvironment.ContentRootPath + "\\exports");
-                        string folderName = Path.Combine(projectPath, message.HTSEligibility[0].SiteCode + "-Hts" + "\\extracts");
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.HTSEligibility[0].SiteCode + "-Hts" + "\\extracts").HasToEndsWith(@"\"); ;
                         startPath = Path.Combine(projectPath, message.HTSEligibility[0].SiteCode + "-Hts");
                         zipPath = Path.Combine(projectPath, message.HTSEligibility[0].SiteCode + "-Hts" + ".zip");
 
@@ -589,23 +516,13 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
-                        string path = folderName + "\\" + "HTSEligibility.dump" + ".json";
+                        string fileName = folderName + "HTSEligibility.dump" + ".json";
 
-                        //if (File.Exists(path))
-                        //{
-                        //    File.AppendAllText(path, Base64Extract);
-                        //    var sentIds = message.HTSEligibility.Select(x => x.Id).ToList();
-                        //    sendCound += sentIds.Count;
-                        //    DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-
-                        //}
-                        //else
-                        //{
-                        await File.WriteAllTextAsync(path, msg);
+                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
                         var sentIds = message.HTSEligibility.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
-                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Sent, sendTo.ExtractName));
-                        //}
+                        DomainEvents.Dispatch(new HtsExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
 
 
                     }
@@ -616,28 +533,17 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                     }
                 }
 
-                DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsEligibilityExtract), Common.GetProgress(count, total), sendCound)));
+                DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsEligibilityExtract), Common.GetProgress(count, total), sendCound)));
             }
 
-            DirectoryInfo di = new DirectoryInfo(startPath);
-
-            foreach (DirectoryInfo dir in di.GetDirectories())
-            {
-                foreach (FileInfo extractsfile in dir.GetFiles("*.json"))
-                {
-                    byte[] bytes = Encoding.UTF8.GetBytes(await File.ReadAllTextAsync(extractsfile.FullName));
-                    string base64 = Convert.ToBase64String(bytes);
-                    await File.WriteAllTextAsync(extractsfile.FullName, base64);
-                }
-
-            }
+           
             if (File.Exists(zipPath))
                 File.Delete(zipPath);
             ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);
 
-            DomainEvents.Dispatch(new HtsSendNotification(new SendProgress(nameof(HtsEligibilityExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new HtsExportNotification(new SendProgress(nameof(HtsEligibilityExtract), Common.GetProgress(count, total), sendCound, true)));
 
-            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            DomainEvents.Dispatch(new HtsStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
 
             return responses;
         }
