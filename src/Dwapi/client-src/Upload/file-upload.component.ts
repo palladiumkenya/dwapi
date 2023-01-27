@@ -118,7 +118,9 @@ export class UploadComponent implements OnInit {
             this.progressSubject.next(progress);
             if (progress == 100) {
                 this.uploadSuccessCT = true;
-                
+                this.uploadSuccessPrep = false;
+                this.uploadSuccessHts = false;
+                this.uploadSuccessMnch = false;
             }
         });
 
@@ -128,7 +130,10 @@ export class UploadComponent implements OnInit {
             
             this.progressSubject.next(progress);
             if (progress == 100) {                     
-                    this.uploadSuccessPrep = true;                   
+                this.uploadSuccessPrep = true;
+                this.uploadSuccessCT = false;
+                this.uploadSuccessHts = false;
+                this.uploadSuccessMnch = false;
 
                 }               
         });
@@ -138,7 +143,10 @@ export class UploadComponent implements OnInit {
 
             this.progressSubject.next(progress);
             if (progress == 100) {
-                this.uploadSuccessHts= true;
+                this.uploadSuccessHts = true;
+                this.uploadSuccessCT = false;
+                this.uploadSuccessPrep = false;
+                this.uploadSuccessMnch = false;
 
             }
         });
@@ -149,6 +157,9 @@ export class UploadComponent implements OnInit {
             this.progressSubject.next(progress);
             if (progress == 100) {
                 this.uploadSuccessMnch = true;
+                this.uploadSuccessCT = false;
+                this.uploadSuccessPrep = false;
+                this.uploadSuccessHts = false;
 
             }
         });
