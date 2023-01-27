@@ -606,6 +606,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
 
                                     DwhManifest manifest = JsonConvert.DeserializeObject<DwhManifest>(Extract);
+                                    manifest.GenerateID();
 
                                     var start = DateTime.Now;
                                     var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}spot", apiVersion), manifest);

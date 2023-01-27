@@ -109,7 +109,7 @@ namespace Dwapi.Controller
                             }
                             catch (Exception e)
                             {
-                                var msg = $"Error sending  {e.Message}";
+                                var msg = "Error Sending Prep Extracts "+e.Message;
                                 Log.Error(e, msg);
                                 return StatusCode(500, msg);
                             }
@@ -131,7 +131,7 @@ namespace Dwapi.Controller
                             }
                             catch (Exception e)
                             {
-                                var msg = $"Error sending  {e.Message}";
+                                var msg = $"Error sending Hts Extracts "+e.Message;
                                 Log.Error(e, msg);
                                 return StatusCode(500, msg);
                             }
@@ -153,7 +153,7 @@ namespace Dwapi.Controller
                             }
                             catch (Exception e)
                             {
-                                var msg = $"Error sending  {e.Message}";
+                                var msg = $"Error sending Mnch Extracts  {e.Message}";
                                 Log.Error(e, msg);
                                 return StatusCode(500, msg);
                             }
@@ -177,7 +177,7 @@ namespace Dwapi.Controller
                             }
                             catch (Exception e)
                             {
-                                var msg = $"Error sending  {e.Message}";
+                                var msg = $"Error sending Care & Treatment Extracts  {e.Message}";
                                 Log.Error(e, msg);
                                 return StatusCode(500, msg);
                             }

@@ -224,12 +224,12 @@ export class UploadComponent implements OnInit {
 
                     } else {
                         this.errorMessage = [];
-                        this.errorMessage.push({ severity: 'error', summary: 'Error sending ', detail: <any>e });
+                        this.errorMessage.push({ severity: 'error', summary: 'Error sending: '+e.error, detail: <any>e.message,});
                     }                    
                 },
                 () => {
                     this.notifications = [];
-                    this.errorMessage.push({ severity: 'success', summary: 'Sending Extracts Completed ' });                    
+                    this.errorMessage.push({ severity: 'success', summary: 'Sending Extracts Completed' });                    
                     this.sending = false;
                     this.sendingPrep = false;
                     this.sendingHts = false;

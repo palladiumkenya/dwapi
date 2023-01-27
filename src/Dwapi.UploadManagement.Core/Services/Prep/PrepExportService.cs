@@ -575,6 +575,10 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
 
                                 ManifestMessage manifest = JsonConvert.DeserializeObject<ManifestMessage>(Extract);
+                                manifest.GenerateId();
+                                
+                               
+                                
   try
                                     {
                                         var msg = JsonConvert.SerializeObject(manifest);
