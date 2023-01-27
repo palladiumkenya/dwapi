@@ -602,6 +602,24 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
 
+    public ZipFiles(): void {
+        this.manifestPackage = this.getSendManifestPackage();
+        this.send$ = this._prepSenderService.zipPrepFiles(this.manifestPackage)
+            .subscribe(
+                p => {
+                   
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                   
+                },
+                () => {
+                    
+                }
+            );
+    }
+
     private getSendManifestPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
@@ -777,6 +795,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 this.errorMessage = [];
                 this.errorMessage.push({ severity: 'success', summary: 'exporting successfully ' });
                 this.updateEvent();
+                this.ZipFiles();
                 this.exporting = false;
             } else {
                 this.updateEvent();

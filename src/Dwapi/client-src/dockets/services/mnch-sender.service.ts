@@ -137,6 +137,12 @@ export class MnchSenderService {
             .catch(this.handleError);
     }
 
+
+    public zipMnchFiles(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/zipfiles`, sendPackage)
+            .catch(this.handleError);
+    }
+
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {
             return Observable.throw('no record(s) found');

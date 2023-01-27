@@ -655,6 +655,24 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
 
+    public ZipFiles(): void {
+        this.manifestPackage = this.getSendManifestPackage();
+        this.send$ = this._htsSenderService.zipHtsFiles(this.manifestPackage)
+            .subscribe(
+                p => {
+
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+
+                },
+                () => {
+
+                }
+            );
+    }
+
     /*public sendClientExtract(): void {
         this.sendEvent = {sentProgress: 0};
         this.sending = true;
@@ -907,6 +925,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 this.errorMessage = [];
                 this.errorMessage.push({ severity: 'success', summary: 'success exporting  ' });
                 this.updateEvent();
+                this.ZipFiles();
                 this.exporting = false;
             } else {
                 this.updateEvent();

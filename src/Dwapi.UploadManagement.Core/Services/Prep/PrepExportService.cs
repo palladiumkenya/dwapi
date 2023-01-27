@@ -460,13 +460,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
 
 
 
-            }
-
-
-         
-            if (File.Exists(zipPath))
-                File.Delete(zipPath);
-            ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);
+            }       
 
 
             DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepVisitExtract), Common.GetProgress(count, total), sendCound, true)));
@@ -997,7 +991,34 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
 
 
         }
-     
+
+        public Task ZipExtractsAsync(SendManifestPackageDTO sendTo, string version)
+        {
+            return ZipExtractsAsync(sendTo,
+               ManifestMessageBag.Create(_packager.GenerateWithMetrics(sendTo.GetEmrDto()).ToList()), version);
+        }
+
+        public async Task ZipExtractsAsync(SendManifestPackageDTO sendTo,ManifestMessageBag manifestMessage, string version)
+        {
+           
+            foreach (var message in manifestMessage.Messages)
+            {
+
+
+                string projectPath = ("exports");
+                string startPath = Path.Combine(projectPath, message.Manifest.SiteCode + "-Prep");
+                string zipPath = Path.Combine(projectPath, message.Manifest.SiteCode + "-Prep" + ".zip");
+
+
+                if (File.Exists(zipPath))
+                    File.Delete(zipPath);
+                ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);
+
+
+            }
+
+        }
+
 
         private async Task UpdateProgress()
         {

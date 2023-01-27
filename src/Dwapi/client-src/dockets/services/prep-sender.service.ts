@@ -56,7 +56,13 @@ export class PrepSenderService {
     public sendHandshake(sendPackage: SendPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/endsession`, sendPackage)
             .catch(this.handleError);
+    } 
+
+    public zipPrepFiles(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/zipfiles`, sendPackage)
+            .catch(this.handleError);
     }
+
     public exportManifest(sendPackage: SendPackage): Observable<boolean> {
         return this._http.post<boolean>(`${this._url}/manifestExport`, sendPackage)
             .catch(this.handleError);

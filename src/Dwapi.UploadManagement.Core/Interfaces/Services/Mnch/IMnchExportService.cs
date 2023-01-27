@@ -5,6 +5,7 @@ using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Exchange.Mnch;
+using Microsoft.AspNetCore.Http;
 
 namespace Dwapi.UploadManagement.Core.Interfaces.Services.Mnch
 {
@@ -37,6 +38,11 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Mnch
         Task<List<SendMpiResponse>> ExportHeisAsync(SendManifestPackageDTO sendTo, MnchMessageBag messageBag);
         Task<List<SendMpiResponse>> ExportMnchLabsAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> ExportMnchLabsAsync(SendManifestPackageDTO sendTo, MnchMessageBag messageBag);
+
+        Task ZipExtractsAsync(SendManifestPackageDTO sendTo, string version);
+        Task ZipExtractsAsync(SendManifestPackageDTO sendTo, ManifestMessageBag messageBag, string version);
+
+        Task<List<SendMpiResponse>> SendMnchFiles(IFormFile file);
 
         Task NotifyPostSending(SendManifestPackageDTO sendTo, string version);
     }

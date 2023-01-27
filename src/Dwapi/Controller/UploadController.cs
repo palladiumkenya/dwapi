@@ -38,6 +38,8 @@ using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
 using Dwapi.Hubs.Dwh;
 using Dwapi.UploadManagement.Core.Services.Prep;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Prep;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Hts;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Mnch;
 
 namespace Dwapi.Controller
 {
@@ -45,37 +47,28 @@ namespace Dwapi.Controller
     [Route("api/Upload")]
     public class UploadController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly IMediator _mediator;
-        private readonly IExtractStatusService _extractStatusService;      
-        private readonly IHubContext<ExtractActivity> _hubContext;
-        private readonly IClientRegistryExtractRepository _clientRegistryExtractRepository;
-        private readonly ICrsSendService _crsSendService;
-        private readonly ICrsSearchService _crsSearchService;
-        private readonly string _version;
-        private readonly string _endPoint;
+       
         public HttpClient Client { get; set; }
         private IHostingEnvironment _hostingEnvironment;
         private readonly ICTExportService _ctExportService;
         private readonly IPrepExportService _prepExportService;
+        private readonly IHtsExportService _htsExportService;
+        private readonly IMnchExportService _mnchExportService;
 
 
 
-        public UploadController(IMediator mediator, IExtractStatusService extractStatusService,
-             IHubContext<ExtractActivity> hubContext, IClientRegistryExtractRepository clientRegistryExtractRepository, 
-            ICrsSendService crsSendService, ICrsSearchService crsSearchService,IHostingEnvironment hostingEnvironment, ICTExportService ctExportService, IPrepExportService prepExportService)
+        public UploadController(IHostingEnvironment hostingEnvironment, ICTExportService ctExportService,
+           IHtsExportService htsExportService, IMnchExportService mnchExportService, IPrepExportService prepExportService)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _extractStatusService = extractStatusService;
-            _clientRegistryExtractRepository = clientRegistryExtractRepository;
-            _crsSendService = crsSendService;           
-            _crsSearchService = crsSearchService;
+           
             _ctExportService = ctExportService;
             _prepExportService = prepExportService;
             _hostingEnvironment = hostingEnvironment;           
-            _endPoint = "http://localhost:10707/api/Crs/sendF";
-            Startup.HubContext = _hubContext = hubContext;
+            _htsExportService= htsExportService;
+            _mnchExportService= mnchExportService;
+            
             var ver = GetType().Assembly.GetName().Version;
-            _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+           
         }
 
         [HttpPost]
@@ -125,43 +118,45 @@ namespace Dwapi.Controller
                         }
                         if (partToExtract == "Hts")
                         {
-                           
-
-                            var client = new HttpClient
+                            try
                             {
-                                BaseAddress = new Uri("http://localhost:7777")
-                            };
+                                string fullPath = Path.Combine(newPath, fileName);
+                                using (var stream = new FileStream(fullPath, FileMode.Create))
+                                {
+                                    await file.CopyToAsync(stream);
+                                }
+                                var result = await _htsExportService.SendHtsFiles(file);
+                                return Ok(result);
 
-                            var stream = file.OpenReadStream();
-                            var request = new HttpRequestMessage(HttpMethod.Post, "file");
-                            var content = new MultipartFormDataContent
+                            }
+                            catch (Exception e)
                             {
-                                { new StreamContent(stream), "file", fileName }
-                            };
-
-                            request.Content = content;
-
-                            await client.SendAsync(request);
+                                var msg = $"Error sending  {e.Message}";
+                                Log.Error(e, msg);
+                                return StatusCode(500, msg);
+                            }
 
                         }
                         if (partToExtract == "Mnch")
                         {
-                            
-                            var client = new HttpClient
+
+                            try
                             {
-                                BaseAddress = new Uri("http://localhost:8787")
-                            };
+                                string fullPath = Path.Combine(newPath, fileName);
+                                using (var stream = new FileStream(fullPath, FileMode.Create))
+                                {
+                                    await file.CopyToAsync(stream);
+                                }
+                                var result = await _mnchExportService.SendMnchFiles(file);
+                                return Ok(result);
 
-                            var stream = file.OpenReadStream();
-                            var request = new HttpRequestMessage(HttpMethod.Post, "file");
-                            var content = new MultipartFormDataContent
+                            }
+                            catch (Exception e)
                             {
-                                { new StreamContent(stream), "file", fileName }
-                            };
-
-                            request.Content = content;
-
-                            await client.SendAsync(request);
+                                var msg = $"Error sending  {e.Message}";
+                                Log.Error(e, msg);
+                                return StatusCode(500, msg);
+                            }
 
                         }
                         if (partToExtract == "CT")

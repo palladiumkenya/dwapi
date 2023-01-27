@@ -78,6 +78,10 @@ export class HtsSenderService {
         return this._http.post<boolean>(`${this._url}/endsession`, sendPackage)
             .catch(this.handleError);
     }
+    public zipHtsFiles(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/zipfiles`, sendPackage)
+            .catch(this.handleError);
+    }
 
     public exportManifest(sendPackage: SendPackage): Observable<boolean> {
         return this._http.post<boolean>(`${this._url}/exportmanifest`, sendPackage)

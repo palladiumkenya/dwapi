@@ -23,6 +23,8 @@ export class UploadComponent implements OnInit {
     public sendEvent: SendEvent = {};
     public sending: boolean = false;
     public sendingPrep: boolean = false;
+    public sendingMnch: boolean = false;
+    public sendingHts: boolean = false;
     private _hubConnectionMpi: HubConnection | undefined;
     private _hubConnection: HubConnection | undefined;
     public notifications: Message[];
@@ -35,6 +37,9 @@ export class UploadComponent implements OnInit {
     public progress$ = this.progressSubject.asObservable();
     progresss = 0;
     progressPrep = 0;
+    progressHts = 0;
+    progressMnch = 0;
+
     
     public warningMessage: Message[];
     uploadSuccessCT: boolean = false;
@@ -125,10 +130,27 @@ export class UploadComponent implements OnInit {
             if (progress == 100) {                     
                     this.uploadSuccessPrep = true;                   
 
-                }
+                }               
+        });
+        this._hubConnection.on("ReceiveProgressHts", (progress: number) => {
+            this.sendingHts = true;
+            this.progressHts = progress;
 
+            this.progressSubject.next(progress);
+            if (progress == 100) {
+                this.uploadSuccessHts= true;
 
-               
+            }
+        });
+        this._hubConnection.on("ReceiveProgressMnch", (progress: number) => {
+            this.sendingMnch = true;
+            this.progressMnch = progress;
+
+            this.progressSubject.next(progress);
+            if (progress == 100) {
+                this.uploadSuccessMnch = true;
+
+            }
         });
     }
    
@@ -199,6 +221,8 @@ export class UploadComponent implements OnInit {
                     this.errorMessage.push({ severity: 'success', summary: 'Sending Extracts Completed ' });                    
                     this.sending = false;
                     this.sendingPrep = false;
+                    this.sendingHts = false;
+                    this.sendingMnch = false;
                 }
             );
 

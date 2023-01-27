@@ -39,6 +39,9 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Prep
 
         Task<List<SendMpiResponse>> SendPrepFiles(IFormFile file);
 
+        Task ZipExtractsAsync(SendManifestPackageDTO sendTo, string version);
+        Task ZipExtractsAsync(SendManifestPackageDTO sendTo, ManifestMessageBag messageBag, string version);
+
         Task NotifyPostSending(SendManifestPackageDTO sendTo, string version);
     }
 }

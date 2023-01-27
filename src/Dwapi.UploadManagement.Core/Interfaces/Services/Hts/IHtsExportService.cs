@@ -5,6 +5,7 @@ using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Exchange;
 using Dwapi.UploadManagement.Core.Exchange.Cbs;
 using Dwapi.UploadManagement.Core.Exchange.Hts;
+using Microsoft.AspNetCore.Http;
 
 namespace Dwapi.UploadManagement.Core.Interfaces.Services.Hts
 {
@@ -35,7 +36,12 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Hts
         Task<List<SendMpiResponse>> ExportHtsEligibilityExtractsAsync(SendManifestPackageDTO sendTo, HtsMessageBag messageBag);
 
 
+        Task<List<SendMpiResponse>> SendHtsFiles(IFormFile file);
+
 
         Task NotifyPostSending(SendManifestPackageDTO sendTo, string version);
+
+        Task ZipExtractsAsync(SendManifestPackageDTO sendTo, string version);
+        Task ZipExtractsAsync(SendManifestPackageDTO sendTo, ManifestMessageBag messageBag, string version);
     }
 }

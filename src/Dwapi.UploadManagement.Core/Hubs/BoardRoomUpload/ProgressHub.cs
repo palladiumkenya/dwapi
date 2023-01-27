@@ -8,8 +8,12 @@ namespace Dwapi.UploadManagement.Core.Hubs.BoardRoomUpload
         public async Task SendProgress(double progress)
         {
             await Clients.All.SendAsync("ReceiveProgress", progress);
-
+            
             await Clients.All.SendAsync("ReceiveProgressPrep", progress);
+
+            await Clients.All.SendAsync("ReceiveProgressHts", progress);
+
+            await Clients.All.SendAsync("ReceiveProgressMnch", progress);
         }
     }
 }

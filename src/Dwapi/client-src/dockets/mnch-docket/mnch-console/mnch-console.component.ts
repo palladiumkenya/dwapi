@@ -774,6 +774,24 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             );
     }
 
+    public ZipFiles(): void {
+        this.manifestPackage = this.getSendManifestPackage();
+        this.send$ = this._mnchSenderService.zipMnchFiles(this.manifestPackage)
+            .subscribe(
+                p => {
+
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+
+                },
+                () => {
+
+                }
+            );
+    }
+
     private getSendManifestPackage(): SendPackage {
         return {
             destination: this.centralRegistry,
@@ -987,7 +1005,8 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             if (this.extractSent.length === 11) {
                 this.errorMessage = [];
                 this.errorMessage.push({ severity: 'success', summary: 'exported successfully ' });
-                this.updateEvent();               
+                this.updateEvent();
+                this.ZipFiles();
                 this.exporting = false;
             } else {
                 this.updateEvent();

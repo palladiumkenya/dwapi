@@ -88,18 +88,18 @@
             </div>
         </div>
 
-        <!--<div class="ui-g" *ngIf="sending">
+        <div class="ui-g" *ngIf="sendingHts">
             <div class="ui-g-12">
                 Sending HTS Extracts, please wait ...
-                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+                <p-progressBar [value]="progressHts"></p-progressBar>
             </div>
         </div>
-        <div class="ui-g" *ngIf="sending">
+        <div class="ui-g" *ngIf="sendingMnch">
             <div class="ui-g-12">
                  Sending MNCH Extracts, please wait ...
-                <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+                <p-progressBar [value]="progressMnch"></p-progressBar>
             </div>
-        </div>-->
+        </div>
         <div class="ui-g" *ngIf="sendingPrep">
             <div class="ui-g-12">
                 Sending PrEP Extracts, please wait ...

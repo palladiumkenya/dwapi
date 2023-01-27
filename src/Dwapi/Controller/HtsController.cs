@@ -409,6 +409,25 @@ namespace Dwapi.Controller
             }
         }
 
+        [HttpPost("zipfiles")]
+        public IActionResult ZipFiles([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                string version = GetType().Assembly.GetName().Version.ToString();
+                _htsExportService.ZipExtractsAsync(packageDto, version);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
 
         // POST: api/DwhExtracts/patients
         [HttpPost("endsession")]
