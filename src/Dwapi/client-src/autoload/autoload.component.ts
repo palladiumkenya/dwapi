@@ -187,20 +187,6 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             }
             }, 10000);
 
-        // var checkComplete = setInterval(() => {
-        //
-        //     this.ctSendingComplete = JSON.parse(localStorage.getItem('ctSendingComplete'));
-        //
-        //     console.log("ctSendingComplete",this.ctSendingComplete, typeof(this.ctSendingComplete));
-        //
-        //     if (this.ctSendingComplete == true){
-        //         this.loadHTS() ;
-        //         this.stepTwoIconIsActive = "form-stepper-completed step-section-inactive";
-        //
-        //         clearInterval(checkComplete);
-        //     }
-        // }, 10000);
-
     }
 
     public loadHTS(): void {
@@ -208,18 +194,23 @@ export class AutoloadComponent implements OnInit, OnDestroy {
         let htsLoadelement:HTMLElement = document.getElementById('loadHts') as HTMLElement;
         htsLoadelement.click();
 
+        //check if can send after load completes
         var checkLoad = setInterval(() => {
             this.canSendHts =JSON.parse(localStorage.getItem('canSendHts'));
 
             console.log('canSendHts',this.canSendHts, typeof(this.canSendHts));
 
             if (this.canSendHts == true){
-                let sendHtselement:HTMLElement = document.getElementById('sendHts') as HTMLElement;
-                sendHtselement.click();
-                // this.loadMNCH();
-                this.stepThreeIconIsActive = "form-stepper-active step-section-active";;
-
+                // end loop after cansendhts true
                 clearInterval(checkLoad);
+
+                this.stepThreeIconIsActive = "form-stepper-active step-section-active";
+
+                var waitForChangesButton = setTimeout(() => {
+                    let sendHtselement:HTMLElement = document.getElementById('sendHts') as HTMLElement;
+                    sendHtselement.click();
+                }, 5000);
+
 
                 //    start sending after clearing interval
                     var checkComplete = setInterval(() => {
@@ -228,28 +219,18 @@ export class AutoloadComponent implements OnInit, OnDestroy {
                         console.log("htsSendingComplete",this.htsSendingComplete, typeof(this.htsSendingComplete));
 
                         if (this.htsSendingComplete == true){
-                            this.stepThreeIconIsActive = "form-stepper-completed step-section-inactive";
-
-                            this.loadMNCH();
                             clearInterval(checkComplete);
+
+                            this.stepThreeIconIsActive = "form-stepper-completed step-section-inactive";
+                            // this.loadMNCH();
                         }
                     }, 10000);
                 //
 
             }
-        }, 2000);
+        }, 10000);
 
-        // var checkComplete = setInterval(() => {
-        //     this.htsSendingComplete = JSON.parse(localStorage.getItem('htsSendingComplete'));
-        //
-        //     console.log("htsSendingComplete",this.htsSendingComplete, typeof(this.htsSendingComplete));
-        //
-        //     if (this.htsSendingComplete == true){
-        //          this.loadMNCH();
-        //         this.stepThreeIconIsActive = "form-stepper-completed step-section-inactive";
-        //         clearInterval(checkComplete);
-        //     }
-        // }, 10000);
+
     }
 
     public loadMNCH(): void {
