@@ -435,7 +435,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
-                    localStorage.setItem('htsSendingComplete', "true");
+                    // localStorage.setItem('htsSendingComplete', "true");
 
                 }
             );
@@ -689,6 +689,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
             if (this.extractSent.length === 8) {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
+                localStorage.setItem('htsSendingComplete', "true");
                 this.updateEvent();
                 this.sendHandshake();
                 this.sending = false;

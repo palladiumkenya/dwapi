@@ -210,10 +210,11 @@ export class AutoloadComponent implements OnInit, OnDestroy {
 
                 this.stepThreeIconIsActive = "form-stepper-active step-section-active";
 
-                var waitForChangesButton = setTimeout(() => {
+                var waitForChangesButton = setInterval(() => {
+                    clearInterval(waitForChangesButton);
                     let sendHtselement:HTMLElement = document.getElementById('sendHts') as HTMLElement;
                     sendHtselement.click();
-                }, 5000);
+                }, 10000);
 
 
                 //    start sending after clearing interval
@@ -249,8 +250,11 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             console.log('canSendMnch',this.canSendMnch, typeof(this.canSendMnch));
 
             if (this.canSendMnch == true){
-                let sendMnchelement:HTMLElement = document.getElementById('sendMnch') as HTMLElement;
-                sendMnchelement.click();
+                var waitForChangesButton = setInterval(() => {
+                    let sendMnchelement:HTMLElement = document.getElementById('sendMnch') as HTMLElement;
+                    sendMnchelement.click();
+                    clearInterval(waitForChangesButton);
+                }, 5000);
                 // this.loadPREP();
                 this.stepFourIconIsActive = "form-stepper-active step-section-active";;
 
@@ -272,17 +276,6 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             }
         }, 2000);
 
-        // var checkComplete = setInterval(() => {
-        //     this.mnchSendingComplete = JSON.parse(localStorage.getItem('mnchSendingComplete'));
-        //
-        //     console.log("mnchSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
-        //
-        //     if (this.mnchSendingComplete == true){
-        //         this.loadPREP();
-        //         this.stepFourIconIsActive = "form-stepper-completed step-section-inactive";
-        //         clearInterval(checkComplete);
-        //     }
-        // }, 3000);
     }
 
     public loadPREP(): void {
@@ -296,16 +289,33 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             console.log(this.canSendPrep, typeof(this.canSendPrep));
 
             if (this.canSendPrep == true){
-                let sendPrepElement:HTMLElement = document.getElementById('sendPrep') as HTMLElement;
-                sendPrepElement.click();
+                var waitForChangesButton = setInterval(() => {
+                    let sendPrepElement:HTMLElement = document.getElementById('sendPrep') as HTMLElement;
+                    sendPrepElement.click();
+                    clearInterval(waitForChangesButton);
+                }, 5000);
                 // this.loadPREP();
                 this.stepFiveIconIsActive = "form-stepper-active step-section-active";;
 
                 clearInterval(checkLoad);
+
+                //    start sending after clearing interval
+                var checkComplete = setInterval(() => {
+                    this.mnchSendingComplete = JSON.parse(localStorage.getItem('prepSendingComplete'));
+
+                    console.log("prepSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
+
+                    if (this.prepSendingComplete == true){
+                        this.stepFiveIconIsActive = "form-stepper-completed step-section-inactive";
+                        clearInterval(checkComplete);
+                        this.loadPREP();
+                    }
+                }, 3000);
+                //
             }
         }, 2000);
         localStorage.clear();
-        this.stepFiveIconIsActive = "form-stepper-completed step-section-inactive";
+        this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
 
     }
 

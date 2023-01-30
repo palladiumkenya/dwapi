@@ -142,6 +142,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public loadData(): void {
+        console.log('sendEvent',this.sendEvent, this.sendEvent !== {} );
         this.loadingData = true;
         this.canLoadFromEmr = this.canSend = false;
         // localStorage.setItem('canSend', "false");
@@ -298,7 +299,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         });
                     },
                     () => {
-                        localStorage.setItem('ctSendingComplete', "true");
+                        // localStorage.setItem('ctSendingComplete', "true");
 
                     }
 
@@ -725,6 +726,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 this.sending = true;
             } else {
                 this.sending = false;
+                localStorage.setItem('ctSendingComplete', "true");
                 this.updateEvent();
             }
             this.canLoadFromEmr = this.canSend = !this.sending;
