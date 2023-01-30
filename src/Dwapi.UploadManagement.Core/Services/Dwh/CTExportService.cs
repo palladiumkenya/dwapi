@@ -157,7 +157,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     Directory.CreateDirectory(foldername);
                     string fileName = foldername + "manifest.dump.json";
 
-                    await File.WriteAllTextAsync(fileName, Base64Manifest);
+                    await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Manifest);
 
                     //endpointUrl
                     var extractsDetails = JsonConvert.SerializeObject(sendTo);
