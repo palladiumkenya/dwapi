@@ -114,6 +114,7 @@ Bached sending and await to 50 at a time
   </ItemGroup>
   <ItemGroup>
     <Folder Include="logs" />
+    <Folder Include="Upload\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="client-src\dockets\services\upload-service.ts" />

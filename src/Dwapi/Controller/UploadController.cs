@@ -75,12 +75,13 @@ namespace Dwapi.Controller
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
         public async Task<IActionResult> Index()
         {
+            var file = Request.Form.Files[0];
+            string folderName = "Upload";
+            string webRootPath = _hostingEnvironment.ContentRootPath;
+            string newPath = Path.Combine(webRootPath, folderName);
             try
             {
-                var file = Request.Form.Files[0];
-                string folderName = "Upload";
-                string webRootPath = _hostingEnvironment.ContentRootPath;
-                string newPath = Path.Combine(webRootPath, folderName);
+                
                 if (!Directory.Exists(newPath))
                 {
                     Directory.CreateDirectory(newPath);
@@ -186,6 +187,8 @@ namespace Dwapi.Controller
 
                     }
                 }
+               
+
                 return Json("Upload Successful.");
             }
             catch (Exception ex)
