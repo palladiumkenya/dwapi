@@ -47,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
                 var eCount = await _tempPatientPrepExtractRepository.GetCleanCount();
                 var pageCount = _tempPatientPrepExtractRepository.PageCount(take, eCount);
                 
-                int extractssitecode = _tempPatientPrepExtractRepository.GetSiteCode();
+                int extractssitecode = 0;
                 
                 int page = 1;
                 while (page <= pageCount)
@@ -59,6 +59,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
                     count += batch.Count;
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempPatientPrepExtract>, List<PatientPrepExtract>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();

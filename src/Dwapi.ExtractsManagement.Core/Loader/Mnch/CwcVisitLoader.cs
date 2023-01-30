@@ -55,7 +55,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                 var eCount = await  _tempCwcVisitExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempCwcVisitExtractRepository.PageCount(take, eCount);
                 
-                int extractssitecode = (int) _tempCwcVisitExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+                int extractssitecode = 0;
 
                 int page = 1;
                 while (page <= pageCount)
@@ -68,6 +68,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempCwcVisitExtract>, List<CwcVisitExtract>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();

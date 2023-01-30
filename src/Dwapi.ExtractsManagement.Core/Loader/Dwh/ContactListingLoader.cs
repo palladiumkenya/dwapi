@@ -56,7 +56,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
                 var eCount = await  _tempContactListingExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempContactListingExtractRepository.PageCount(take, eCount);
 
-                int extractssitecode = (int) _tempContactListingExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+                int extractssitecode = 0;
 
                 int page = 1;
                 while (page <= pageCount)
@@ -69,6 +69,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Dwh
 
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempContactListingExtract>, List<ContactListingExtract>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();

@@ -27,7 +27,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
             var migration = request.Extracts.FirstOrDefault(x => x.Name == nameof(IndicatorExtract));
 
-            if (migration != null)
+            if (migration != null && !string.IsNullOrEmpty(migration.ExtractSql))
             {
                 var extractMetric = new ExtractMts()
                 {

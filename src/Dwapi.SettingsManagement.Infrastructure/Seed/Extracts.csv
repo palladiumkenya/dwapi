@@ -4853,7 +4853,7 @@ UNION
 )
 UNION
 (
-        select 'HTS_TST_POS'                                                               AS 'INDICATOR',
+        select 'HTS_TESTED_POS'                                                               AS 'INDICATOR',
                count(distinct t.patient_id)                                                as 'INDICATOR_VALUE',
                date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'
         from kenyaemr_etl.etl_hts_test t
@@ -5090,7 +5090,7 @@ UNION
 )
 UNION(
           select 'DB_STATE' as INDICATOR,
-          if(c.current_visits > floor(c.avg_visits/2), 'CURRENT', 'STALE') as INDICATORVALUE,
+          if(c.current_visits > floor(c.avg_visits/2), 'UP_TO_DATE', 'OUTDATED') as INDICATORVALUE,
           date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as INDICATORDATE
           from (select a.current_visits, b.avg_visits, b.followup_enc_since_April, b.months_since_april
           from (select count(hv.encounter_id) as current_visits

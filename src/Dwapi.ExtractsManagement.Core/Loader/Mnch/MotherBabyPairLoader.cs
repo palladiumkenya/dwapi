@@ -55,7 +55,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
                 var eCount = await  _tempMotherBabyPairExtractRepository.GetCount(query.ToString());
                 var pageCount = _tempMotherBabyPairExtractRepository.PageCount(take, eCount);
 
-                int extractssitecode = (int) _tempMotherBabyPairExtractRepository.GetSiteCode(query.ToString()).SiteCode;
+                int extractssitecode = 0;
 
                 int page = 1;
                 while (page <= pageCount)
@@ -68,6 +68,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempMotherBabyPairExtract>, List<MotherBabyPairExtract>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
