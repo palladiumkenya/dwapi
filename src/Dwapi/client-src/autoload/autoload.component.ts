@@ -54,6 +54,8 @@ export class AutoloadComponent implements OnInit, OnDestroy {
     // private _url: string = './api/RefreshETL';
     private _http: HttpClient;
     public dbProtocol: DatabaseProtocol;
+    public autoload_status: string;
+
 
     step: number = 1;
     barValue: number = 1;
@@ -144,6 +146,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
 
 
     public loadCT(): void {
+        this.autoload_status = "Loading";
         this.moveNext(this.step+1) ;
         this.stepTwoIconIsActive = "form-stepper-waiting step-section-active";
 
@@ -159,6 +162,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             if (this.canSend == true){
                 //stop the loops if you can send now
                 clearInterval(checkLoad);
+                this.autoload_status = "Loading";
 
                 this.stepTwoIconIsActive = "form-stepper-active step-section-active";
                 var waitForChangesButton = setInterval(() => {
@@ -222,7 +226,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
                             clearInterval(checkComplete);
 
                             this.stepThreeIconIsActive = "form-stepper-completed step-section-inactive";
-                            // this.loadMNCH();
+                            this.loadMNCH();
                         }
                     }, 10000);
                 //
@@ -238,6 +242,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
         let mnchLoadlement:HTMLElement = document.getElementById('loadMnch') as HTMLElement;
         mnchLoadlement.click();
 
+        //check if can send after load completes
         var checkLoad = setInterval(() => {
             this.canSendMnch =JSON.parse(localStorage.getItem('canSendMnch'));
 

@@ -485,7 +485,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
-                    localStorage.setItem('mnchSendingComplete', "true");
+                    // localStorage.setItem('mnchSendingComplete', "true");
 
                 }
             );
@@ -696,6 +696,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             if (this.extractSent.length === 11) {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
+                localStorage.setItem('mnchSendingComplete', "true");
                 this.updateEvent();
                 this.sendHandshake();
                 this.sending = false;
