@@ -152,11 +152,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                     var Base64Manifest = Convert.ToBase64String(plainTextBytes);
                     string projectPath = "exports";
-                    string foldername = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-CT").HasToEndsWith(@"\");
+                    string foldername = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-CT").HasToEndsWith(@"\").ToOsStyle();
 
                     Directory.CreateDirectory(foldername);
                     string fileName = foldername + "manifest.dump.json";
-                    await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Manifest);
+
+                    await File.WriteAllTextAsync(fileName, Base64Manifest);
 
                     //endpointUrl
                     var extractsDetails = JsonConvert.SerializeObject(sendTo);
