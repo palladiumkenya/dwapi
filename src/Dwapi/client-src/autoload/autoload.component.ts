@@ -259,7 +259,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
                     clearInterval(waitForChangesButton);
                 }, 5000);
                 // this.loadPREP();
-                this.stepFiveIconIsActive = "form-stepper-active step-section-active";;
+                this.stepFourIconIsActive = "form-stepper-active step-section-active";;
 
                 clearInterval(checkLoad);
 
@@ -270,7 +270,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
                     console.log("prepSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
 
                     if (this.prepSendingComplete == true){
-                        this.stepFiveIconIsActive = "form-stepper-completed step-section-inactive";
+                        this.stepFourIconIsActive = "form-stepper-completed step-section-inactive";
                         clearInterval(checkComplete);
                         this.loadMNCH();
                     }
@@ -303,7 +303,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
                     clearInterval(waitForChangesButton);
                 }, 5000);
                 // this.loadPREP();
-                this.stepFourIconIsActive = "form-stepper-active step-section-active";;
+                this.stepFiveIconIsActive = "form-stepper-active step-section-active";;
 
                 clearInterval(checkLoad);
 
@@ -314,7 +314,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
                         console.log("mnchSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
 
                         if (this.mnchSendingComplete == true){
-                            this.stepFourIconIsActive = "form-stepper-completed step-section-inactive";
+                            this.stepFiveIconIsActive = "form-stepper-completed step-section-inactive";
                             clearInterval(checkComplete);
                         }
                     }, 3000);
@@ -369,12 +369,28 @@ export class AutoloadComponent implements OnInit, OnDestroy {
 
     public navigateTo(num): void {
         if (num == 2){
+            this.stepOneIsActive = "form-stepper-completed step-section-inactive";
             this.stepTwoIsActive = "form-stepper-active step-section-active";
+            this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
+            this.stepFourIsActive = "form-stepper-completed step-section-inactive";
+            this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
         }else if (num == 3){
+            this.stepOneIsActive = "form-stepper-completed step-section-inactive";
+            this.stepTwoIsActive = "form-stepper-completed step-section-inactive";
             this.stepThreeIsActive = "form-stepper-active step-section-active";
+            this.stepFourIsActive = "form-stepper-completed step-section-inactive";
+            this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
         }else if (num == 4){
+            this.stepOneIsActive = "form-stepper-completed step-section-inactive";
+            this.stepTwoIsActive = "form-stepper-completed step-section-inactive";
+            this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
             this.stepFourIsActive = "form-stepper-active step-section-active";
+            this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
         }else if (num == 5){
+            this.stepOneIsActive = "form-stepper-completed step-section-inactive";
+            this.stepTwoIsActive = "form-stepper-completed step-section-inactive";
+            this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
+            this.stepFourIsActive = "form-stepper-completed step-section-inactive";
             this.stepFiveIsActive = "form-stepper-active step-section-active";
         }
     }
@@ -396,9 +412,6 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             this.stepFourIsActive = "form-stepper-completed step-section-inactive";
             this.stepFiveIsActive = "form-stepper-active step-section-active";
             // this.loadPREP();
-        }else{
-            this.stepFourIsActive = "form-stepper-completed step-section-inactive";
-            // this.stepFiveIsActive = "form-stepper-end";
         }
     }
 
