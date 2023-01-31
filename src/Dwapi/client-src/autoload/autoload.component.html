@@ -5,14 +5,13 @@
 
         <div class="ui-g-12">
             <div class="card card-w-title">
-                <h1>Merged Dockets</h1>
-<!--                <p-progressBar [value]="value" [showValue]="true" ></p-progressBar>-->
+<!--                <h1>Merged Dockets</h1>-->
 
 
                 <div>
                     <div id="multi-step-form-container">
 
-                        <ul class="form-stepper form-stepper-horizontal text-center" style="padding-left:20px;padding-right:20px">
+                        <ul class="form-stepper form-stepper-horizontal text-center" style="padding-left:40px;padding-right:50px">
                             <!-- Step 1 -->
                             <li class="{{stepOneIconIsActive}} text-center form-stepper-list" step="1">
                                 <a class="mx-2">
@@ -75,7 +74,7 @@
                                     <span class="form-stepper-circle text-muted" (click)="navigateTo(2)">
                                         <span>2</span>
                                     </span>
-                                    <div class="label text-muted">Load C&T</div>
+                                    <div class="label text-muted">Load and Send C&T</div>
                                 </a>
                             </li>
                             <!-- Step 3 -->
@@ -84,7 +83,7 @@
                                     <span class="form-stepper-circle text-muted" (click)="navigateTo(3)">
                                         <span>3</span>
                                     </span>
-                                    <div class="label text-muted">Load HTS</div>
+                                    <div class="label text-muted">Load and Send HTS</div>
                                 </a>
                             </li>
                             <!-- Step 4 -->
@@ -93,7 +92,7 @@
                                     <span class="form-stepper-circle text-muted" (click)="navigateTo(4)">
                                         <span>4</span>
                                     </span>
-                                    <div class="label text-muted">Load MNCH</div>
+                                    <div class="label text-muted">Load and Send PREP</div>
                                 </a>
                             </li>
                             <!-- Step 5 -->
@@ -102,7 +101,7 @@
                                     <span class="form-stepper-circle text-muted" (click)="navigateTo(4)">
                                         <span>5</span>
                                     </span>
-                                    <div class="label text-muted">Load PREP</div>
+                                    <div class="label text-muted">Load and Send MNCH</div>
                                 </a>
                             </li>
                         </ul>
@@ -117,16 +116,16 @@
 <!--                                <p-progressBar [value]="barValue" [showValue]="true"></p-progressBar>-->
                             </div>
                             <div class="{{stepTwoIsActive}} ">
-                                <liveapp-ndwh-docket></liveapp-ndwh-docket>
+                                <liveapp-merged-ndwh-docket></liveapp-merged-ndwh-docket>
                             </div>
                             <div class="{{stepThreeIsActive}}">
-                                <liveapp-hts-docket></liveapp-hts-docket>
+                                <liveapp-merged-hts-docket></liveapp-merged-hts-docket>
                             </div>
                             <div class="{{stepFourIsActive}} ">
-                                <liveapp-mnch-docket></liveapp-mnch-docket>
+                                <liveapp-merged-prep-docket></liveapp-merged-prep-docket>
                             </div>
                             <div class="{{stepFiveIsActive}} ">
-                                <liveapp-prep-docket></liveapp-prep-docket>
+                                <liveapp-merged-mnch-docket></liveapp-merged-mnch-docket>
                             </div>
                         </div>
 

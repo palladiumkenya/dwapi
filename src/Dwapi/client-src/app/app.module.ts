@@ -111,7 +111,16 @@ import {CbsDocketComponent} from '../dockets/cbs-docket/cbs-docket.component';
 import {NdwhExtractDetailsComponent} from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
 import {NdwhPatientsExtractService} from '../dockets/services/ndwh-patients-extract.service';
 import {DbProtocolComponent} from '../settings/db-protocol/db-protocol.component';
+
 import {AutoloadService} from '../settings/services/autoload.service';
+import {MergedNdwhConsoleComponent} from '../autoload/ndwh-docket/ndwh-console/merged-ndwh-console.component';
+import {MergedNdwhDocketComponent} from '../autoload/ndwh-docket/ndwh-docket.component';
+import {MergedHtsConsoleComponent} from '../autoload/hts-docket/hts-console/merged-hts-console.component';
+import {MergedHtsDocketComponent} from '../autoload/hts-docket/hts-docket.component';
+import {MergedMnchConsoleComponent} from '../autoload/mnch-docket/mnch-console/merged-mnch-console.component';
+import {MergedMnchDocketComponent} from '../autoload/mnch-docket/mnch-docket.component';
+import {MergedPrepConsoleComponent} from '../autoload/prep-docket/prep-console/merged-prep-console.component';
+import {MergedPrepDocketComponent} from '../autoload/prep-docket/prep-docket.component';
 
 // tslint:disable-next-line:max-line-length
 import {ValidRecordDetailsComponent} from
@@ -325,7 +334,15 @@ import {AutoloadComponent} from "../autoload/autoload.component";
         PrepInvalidComponent,
         PrepValidComponent,
         CrsDocketComponent,
-        AutoloadComponent
+        AutoloadComponent,
+        MergedNdwhConsoleComponent,
+        MergedNdwhDocketComponent,
+        MergedHtsConsoleComponent,
+        MergedHtsDocketComponent,
+        MergedMnchConsoleComponent,
+        MergedMnchDocketComponent,
+        MergedPrepConsoleComponent,
+        MergedPrepDocketComponent
 ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
