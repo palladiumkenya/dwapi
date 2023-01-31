@@ -30,6 +30,7 @@ export class UploadComponent implements OnInit {
     public notifications: Message[];
     public extracts: Extract[] = [];
     public errorMessage: Message[];
+    public messages: Message[];
     public currentExtract: Extract;
     private extractEvent: ExtractEvent;   
     public otherMessage: Message[];
