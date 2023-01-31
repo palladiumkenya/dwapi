@@ -164,7 +164,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     var plainTextBytesdet = Encoding.UTF8.GetBytes(extractsDetails);
                     var Base64Manifestdet = Convert.ToBase64String(plainTextBytesdet);
                     string fName = foldername + "package.dump.json";
-                    await File.WriteAllTextAsync(fName.ToOsStyle(), Base64Manifestdet);
+                    await File.WriteAllTextAsync(fName, Base64Manifestdet);
 
 
                 }
@@ -364,50 +364,50 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         bool allowExport = true;
                         while (allowExport)
                         {
-                            if (message.ExtractName == "DefaulterTracingExtract")
-                            {
+                            //if (message.ExtractName == "DefaulterTracingExtract")
+                            //{
 
-                                var msg = JsonConvert.SerializeObject(message);
-                                var plainTextBytes = Encoding.UTF8.GetBytes(msg);
-                                var Base64Extract = Convert.ToBase64String(plainTextBytes);
-                                string projectPath = ("exports");
-                                string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts").HasToEndsWith(@"\");
-                                string fileName = folderName + messageBag.ExtractName + ".dump" + ".json";
+                            //    var msg = JsonConvert.SerializeObject(message);
+                            //    var plainTextBytes = Encoding.UTF8.GetBytes(msg);
+                            //    var Base64Extract = Convert.ToBase64String(plainTextBytes);
+                            //    string projectPath = ("exports");
+                            //    string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts").HasToEndsWith(@"\");
+                            //    string fileName = folderName + messageBag.ExtractName + ".dump" + ".json";
 
-                                await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
-                                allowExport = false;
-
-
-                                var sentIds = messageBag.SendIds;
-                                sendCound += sentIds.Count;
-
-                                DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Exported,
-                                   messageBag.ExtractType));
+                            //    await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                            //    allowExport = false;
 
 
-                                startPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT");
-                                string zipPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + ".zip");
+                            //    var sentIds = messageBag.SendIds;
+                            //    sendCound += sentIds.Count;
+
+                            //    DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Exported,
+                            //       messageBag.ExtractType));
 
 
-                                if (File.Exists(zipPath))
-                                    File.Delete(zipPath);
-                                ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);
+                            //    startPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT");
+                            //    string zipPath = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + ".zip");
+
+
+                            //    if (File.Exists(zipPath))
+                            //        File.Delete(zipPath);
+                            //    ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, true);
 
 
 
-                            }
-                            else
-                            {
+                            //}
+//                            //else
+                            //{
                                 var msg = JsonConvert.SerializeObject(message);
                                 var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                                 var Base64Extract = Convert.ToBase64String(plainTextBytes);
                                 string projectPath = "exports";
-                                string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts").HasToEndsWith(@"\");
+                                string folderName = Path.Combine(projectPath, message.Extracts[0].SiteCode + "-CT" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                                 string fileName = folderName + messageBag.ExtractName + ".dump" + ".json";
                                 if (!Directory.Exists(folderName))
                                     Directory.CreateDirectory(folderName);
 
-                                await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                                await File.WriteAllTextAsync(fileName, Base64Extract);
                                 allowExport = false;
 
                                 var sentIds = messageBag.SendIds;
@@ -416,7 +416,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Exported,
                                    messageBag.ExtractType));
 
-                            }
+                           // }
                         }
 
 

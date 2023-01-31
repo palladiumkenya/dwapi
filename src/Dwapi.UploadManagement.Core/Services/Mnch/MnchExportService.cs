@@ -80,17 +80,17 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                     var Base64Manifest = Convert.ToBase64String(plainTextBytes);
                     string projectPath = ("exports");
-                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-Mnch").HasToEndsWith(@"\");
+                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-Mnch").HasToEndsWith(@"\").ToOsStyle();
                     Directory.CreateDirectory(folderName);
                     string fileName = folderName + "manifest.dump" + ".json";
-                    await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Manifest);
+                    await File.WriteAllTextAsync(fileName, Base64Manifest);
 
                     //endpointUrl
                     var extractsDetails = JsonConvert.SerializeObject(sendTo);
                     var plainTextBytesdet = Encoding.UTF8.GetBytes(extractsDetails);
                     var Base64Manifestdet = Convert.ToBase64String(plainTextBytesdet);
                     string fName = folderName + "package.dump.json";
-                    await File.WriteAllTextAsync(fName.ToOsStyle(), Base64Manifestdet);
+                    await File.WriteAllTextAsync(fName, Base64Manifestdet);
                 }
                 catch (Exception e)
                 {
@@ -127,7 +127,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.PatientMnchExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.PatientMnchExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
 
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
@@ -135,7 +135,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         string fileName = folderName + "PatientMnchExtracts.dump" + ".json";
 
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.MnchEnrolmentExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -182,14 +182,14 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.MnchEnrolmentExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.MnchEnrolmentExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "MnchEnrolmentExtracts.dump" + ".json";
 
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.MnchEnrolmentExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -233,12 +233,12 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.MnchArtExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.MnchArtExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "MnchArtExtracts.dump" + ".json";
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.MnchArtExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -283,13 +283,13 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.AncVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.AncVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "AncVisitExtracts.dump" + ".json";
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.AncVisitExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -332,13 +332,13 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.MatVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.MatVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "MatVisitExtracts.dump" + ".json";
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.MatVisitExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -384,7 +384,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.PncVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.PncVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         startPath = Path.Combine(projectPath, message.PncVisitExtracts[0].SiteCode + "-Mnch");
                         zipPath = Path.Combine(projectPath, message.PncVisitExtracts[0].SiteCode + "-Mnch" + ".zip");
 
@@ -393,7 +393,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
 
                         string fileName = folderName + "PncVisitExtracts.dump" + ".json";
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.PncVisitExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -445,13 +445,13 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.MotherBabyPairExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.MotherBabyPairExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "MotherBabyPairExtracts.dump" + ".json";
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.MotherBabyPairExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -495,13 +495,13 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.CwcEnrolmentExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.CwcEnrolmentExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "CwcEnrolmentExtracts.dump" + ".json";
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.CwcEnrolmentExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -546,13 +546,13 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.CwcVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.CwcVisitExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "CwcVisitExtracts.dump" + ".json";
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.CwcVisitExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -595,13 +595,13 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.HeiExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.HeiExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "HeiExtracts.dump" + ".json";
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.HeiExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -645,13 +645,13 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.MnchLabExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.MnchLabExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "MnchLabExtracts.dump" + ".json";
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
                         var sentIds = message.MnchLabExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
 

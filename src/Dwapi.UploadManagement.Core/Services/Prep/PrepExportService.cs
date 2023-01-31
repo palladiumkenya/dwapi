@@ -88,17 +88,17 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                     var Base64Manifest = Convert.ToBase64String(plainTextBytes);
                     string projectPath = "exports";
-                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-Prep").HasToEndsWith(@"\");
+                    string folderName = Path.Combine(projectPath, Convert.ToString(message.Manifest.SiteCode) + "-Prep").HasToEndsWith(@"\").ToOsStyle();
                     Directory.CreateDirectory(folderName);    // Write that JSON to txt file,
                     string fileName = folderName + "manifest.dump" + ".json";
-                    File.WriteAllText(fileName.ToOsStyle(), Base64Manifest);
+                    File.WriteAllText(fileName, Base64Manifest);
 
                     //endpointUrl
                     var extractsDetails = JsonConvert.SerializeObject(sendTo);
                     var plainTextBytesdet = Encoding.UTF8.GetBytes(extractsDetails);
                     var Base64Manifestdet = Convert.ToBase64String(plainTextBytesdet);
                     string fName = folderName + "package.dump.json";
-                    await File.WriteAllTextAsync(fName.ToOsStyle(), Base64Manifestdet);
+                    await File.WriteAllTextAsync(fName, Base64Manifestdet);
                 }
                 catch (Exception e)
                 {
@@ -134,14 +134,14 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.PatientPrepExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.PatientPrepExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
 
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName  + "PatientPrepExtracts.dump" + ".json";
 
-                        await File.WriteAllTextAsync(fileName.ToOsStyle(), Base64Extract);
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
 
                         var sentIds = message.PatientPrepExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
@@ -187,13 +187,13 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.PrepAdverseEventExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.PrepAdverseEventExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "PrepAdverseEventExtracts.dump" + ".json";
 
-                        File.WriteAllText(fileName.ToOsStyle(), Base64Extract);
+                        File.WriteAllText(fileName, Base64Extract);
                         var sentIds = message.PrepAdverseEventExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -236,13 +236,13 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.PrepBehaviourRiskExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.PrepBehaviourRiskExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName  + "PrepBehaviourRiskExtracts.dump" + ".json";
 
-                        File.WriteAllText(fileName.ToOsStyle(), Base64Extract);
+                        File.WriteAllText(fileName, Base64Extract);
                         var sentIds = message.PrepBehaviourRiskExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -285,13 +285,13 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath ="exports";
-                        string folderName = Path.Combine(projectPath, message.PrepCareTerminationExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.PrepCareTerminationExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName  + "PrepCareTerminationExtracts.dump" + ".json";
 
-                        File.WriteAllText(fileName.ToOsStyle(), Base64Extract);
+                        File.WriteAllText(fileName, Base64Extract);
                         var sentIds = message.PrepCareTerminationExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -333,13 +333,13 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath ="exports";
-                        string folderName = Path.Combine(projectPath, message.PrepLabExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.PrepLabExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName + "PrepLabExtracts.dump" + ".json";
 
-                        File.WriteAllText(fileName.ToOsStyle(), Base64Extract);
+                        File.WriteAllText(fileName, Base64Extract);
                         var sentIds = message.PrepLabExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -382,13 +382,13 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath =  "exports";
-                        string folderName = Path.Combine(projectPath, message.PrepPharmacyExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.PrepPharmacyExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         if (!Directory.Exists(folderName))
                             Directory.CreateDirectory(folderName);
 
                         string fileName = folderName  + "PrepPharmacyExtracts.dump" + ".json";
 
-                        File.WriteAllText(fileName.ToOsStyle(), Base64Extract);
+                        File.WriteAllText(fileName, Base64Extract);
                         var sentIds = message.PrepPharmacyExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
@@ -433,7 +433,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                         var Base64Extract = Convert.ToBase64String(plainTextBytes);
                         string projectPath = "exports";
-                        string folderName = Path.Combine(projectPath, message.PrepVisitExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\");
+                        string folderName = Path.Combine(projectPath, message.PrepVisitExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
                         startPath = Path.Combine(projectPath, message.PrepVisitExtracts[0].SiteCode + "-Prep");
                         zipPath = Path.Combine(projectPath, message.PrepVisitExtracts[0].SiteCode + "-Prep" + ".zip");
                         if (!Directory.Exists(folderName))
@@ -441,7 +441,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
 
                         string fileName = folderName + "PrepVisitExtracts.dump" + ".json";
 
-                        File.WriteAllText(fileName.ToOsStyle(), Base64Extract);
+                        File.WriteAllText(fileName, Base64Extract);
                         var sentIds = message.PrepVisitExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
