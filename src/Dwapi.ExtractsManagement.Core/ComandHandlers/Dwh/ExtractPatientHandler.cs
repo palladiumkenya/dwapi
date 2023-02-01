@@ -10,6 +10,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -32,8 +33,10 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         private readonly IExtractHistoryRepository _extractHistoryRepository;
         private readonly IDiffLogRepository _diffLogRepository;
         private readonly IDwhExtractSourceReader _reader;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
-        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts, ITempPatientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository, IDwhExtractSourceReader reader)
+
+        public ExtractPatientHandler(IPatientSourceExtractor patientSourceExtractor, IExtractValidator extractValidator, IPatientLoader patientLoader, IClearDwhExtracts clearDwhExtracts, ITempPatientExtractRepository tempPatientExtractRepository, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository, IDwhExtractSourceReader reader,IIndicatorExtractRepository indicatorExtractRepository)
         {
             _patientSourceExtractor = patientSourceExtractor;
             _extractValidator = extractValidator;
@@ -43,12 +46,25 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             _extractHistoryRepository = extractHistoryRepository;
             _diffLogRepository = diffLogRepository;
             _reader = reader;
+            _indicatorExtractRepository = indicatorExtractRepository;
 
         }
 
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
         {
-            _reader.RefreshEtlTtables(request.DatabaseProtocol);
+            var indicator = _indicatorExtractRepository.GetIndicatorValue("EMR_ETL_Refresh");
+            DateTime indicatorDate = DateTime.Parse(indicator.IndicatorValue);
+            DateTime now = DateTime.Now;
+            var dates = (now - indicatorDate).TotalDays < 3;
+            Console.WriteLine("(now - indicatorDate).TotalDays < 3"+dates);
+            if ((now - indicatorDate).TotalDays < 3)
+            {
+                throw new Exception("Last ETL refresh was more than 3 days ago. Refresh first before starting the process.");
+            }
+            
+            // refresh the ETL tables
+            // _reader.RefreshEtlTtables(request.DatabaseProtocol);
+            
             var loadChangesOnly = request.LoadChangesOnly;
            
             //Extract
