@@ -265,9 +265,9 @@ export class AutoloadComponent implements OnInit, OnDestroy {
 
                 //    start sending after clearing interval
                 var checkComplete = setInterval(() => {
-                    this.mnchSendingComplete = JSON.parse(localStorage.getItem('prepSendingComplete'));
+                    this.prepSendingComplete = JSON.parse(localStorage.getItem('prepSendingComplete'));
 
-                    console.log("prepSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
+                    console.log("prepSendingComplete",this.prepSendingComplete, typeof(this.prepSendingComplete));
 
                     if (this.prepSendingComplete == true){
                         this.stepFourIconIsActive = "form-stepper-completed step-section-inactive";
@@ -314,6 +314,7 @@ export class AutoloadComponent implements OnInit, OnDestroy {
                         console.log("mnchSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
 
                         if (this.mnchSendingComplete == true){
+                            this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
                             this.stepFiveIconIsActive = "form-stepper-completed step-section-inactive";
                             clearInterval(checkComplete);
                         }
