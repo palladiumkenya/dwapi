@@ -701,6 +701,8 @@ export class MergedMnchConsoleComponent implements OnInit, OnDestroy, OnChanges 
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
                 localStorage.setItem('mnchSendingComplete', "true");
+                this.actionType = "Sent";
+
                 this.updateEvent();
                 this.sendHandshake();
                 this.sending = false;

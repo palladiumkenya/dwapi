@@ -575,7 +575,6 @@ export class MergedNdwhConsoleComponent implements OnInit, OnChanges, OnDestroy 
                 () => {
                     this.errorMessage.push({severity: 'success', summary: 'Sending Extracts '});
                     this.updateEvent();
-                    this.actionType = "Sent";
 
                 }
             );
@@ -732,6 +731,7 @@ export class MergedNdwhConsoleComponent implements OnInit, OnChanges, OnDestroy 
             } else {
                 this.sending = false;
                 localStorage.setItem('ctSendingComplete', "true");
+                this.actionType = "Sent";
                 this.updateEvent();
             }
             this.canLoadFromEmr = this.canSend = !this.sending;
