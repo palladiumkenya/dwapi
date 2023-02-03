@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dwapi.SharedKernel.Model;
@@ -14,5 +15,6 @@ namespace Dwapi.SharedKernel.Interfaces
         IDataReader ExecuteReaderSync(DbProtocol protocol, DbExtract extract);
         bool CheckDiffSupport(DbProtocol protocol);
         string RefreshEtlTtables(DbProtocol protocol);
+        DateTime? GetEtlTtablesRefreshedDate(DbProtocol protocol);
     }
 }

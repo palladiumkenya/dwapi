@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Dapper;
@@ -161,5 +163,50 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
             
         }
 
+        public DateTime? GetEtlTtablesRefreshedDate(DbProtocol protocol)
+        {
+            var sourceConnection = GetConnection(protocol);
+            if (null == sourceConnection)
+                throw new Exception("Data connection not initialized");
+        
+            using (sourceConnection)
+            {
+                var sql = $@"SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
+                                   stop_time                        as 'INDICATORVALUE',
+                                   DATE_FORMAT(stop_time, '%Y%b%d') as 'INDICATORMONTH'
+                            FROM kenyaemr_etl.etl_script_status s
+                            where s.error is null
+                              and script_name in ('scheduled_updates','initial_population_of_tables')
+                           
+                            order by INDICATORVALUE desc
+                            limit 1";
+        
+                // var getRefreshDates = sourceConnection.Execute(sql);FirstOrDefault
+                // var getRefreshDates = sourceConnection.from(sql).ToString().FirstOrDefault();
+                var etlRefresh = sourceConnection.Query(sql).FirstOrDefault();
+                var refreshDate = etlRefresh.INDICATORVALUE;
+
+                return refreshDate;
+            }
+            
+        }
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
