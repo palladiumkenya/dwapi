@@ -201,8 +201,12 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
                             this.canSend = extract.extractEvent.queued > 0;
                             if (extract.extractEvent.queued > 0){
                                 localStorage.setItem('canSendPrep', "true");
+                                this.actionType = "Sent";
+
                             }else{
                                 localStorage.setItem('canSendPrep', "false");
+                                this.actionType = "NoRecords";
+
                             }
                             console.log('get the value here',extract.extractEvent.queued > 0,JSON.parse(localStorage.getItem('canSendPrep')))
                         }
