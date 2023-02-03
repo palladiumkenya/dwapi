@@ -136,6 +136,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
         if (this.centralRegistry) {
             this.canSend = true;
+
         }
     }
 
@@ -164,6 +165,8 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         summary: 'load was successful '
                     });
                     this.canLoadFromEmr=true;
+                    localStorage.setItem('canSendPrep', "true");
+
                     this.updateEvent();
                 }
             );
@@ -215,6 +218,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public send(): void {
         this.canSend=false;
+
         localStorage.setItem('dwapi.prep.send', '0');
         this.sendEvent = {sentProgress: 0};
         this.sendingManifest = true;
@@ -234,6 +238,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                     this.canSend = true;
+
                 },
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});
@@ -285,6 +290,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                     this.errorMessage = [];
                     this.errorMessage.push({severity: 'error', summary: 'Error sending client', detail: <any>e});
                     this.canSend=true;
+
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
@@ -560,6 +566,8 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                    localStorage.setItem('htsSendingComplete', "true");
+
                 }
             );
     }
@@ -782,6 +790,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             if (this.extractSent.length === this.extracts.length) {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
+                localStorage.setItem('prepSendingComplete', "true");
                 this.updateEvent();
                 this.sendHandshake();
                 this.sending = false;

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Data;
+using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Reader;
 using Dwapi.ExtractsManagement.Core.Model.Source;
 using Dwapi.SharedKernel.Enum;
@@ -114,6 +115,22 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard
         {
             throw new NotImplementedException();
         }
+
+        public string RefreshEtlTtables(DbProtocol protocol)
+        {
+            var sourceConnection = GetConnection(protocol);
+            if (null == sourceConnection)
+                throw new Exception("Data connection not initialized");
+        
+            using (sourceConnection)
+            {
+                var sql = $@"CALL sp_scheduled_updates()";
+        
+                sourceConnection.Execute(sql);
+                return "status:200 yonder";
+            }
+        }
+        
 
         public IDbConnection GetConnection(DbProtocol databaseProtocol)
         {

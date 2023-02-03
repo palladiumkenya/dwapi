@@ -67,6 +67,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public canSend: boolean;
     public canExport: boolean;
     public canSendDiff: boolean = null;
+    public autoload_status: string;
     // public canSendDiff: string;
     // public canSendAll: string;
 
@@ -148,7 +149,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadData(): void {
         this.loadingData = true;
         this.canLoadFromEmr = this.canSend = false;
-        this.canLoadFromEmr = this.canExport = false;
+
         if (this.emr) {
             this.canLoadFromEmr = true;
             this.loadingData = true;
@@ -184,7 +185,10 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         // this.canSendDiff = (sessionStorage.getItem("canSendDiff")) =="true";
         this.canExport = this.canLoadFromEmr = false;
         this.canSend = this.canLoadFromEmr = false;
-        localStorage.clear();
+        localStorage.setItem('canSend', "false");
+        localStorage.setItem('ctSendingComplete', "false");
+
+        //localStorage.clear();
         this.errorMessage = [];
         this.notifications = [];
         this.load$ = this._ndwhExtractService
@@ -401,13 +405,11 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.sendManifest$ = this._ndwhSenderService.checkWhichToSend()
             .subscribe(
                 p => {
-                    console.log('value here is',p)
                     if (p=="SendAll"){
                         this.canSendDiff = false;
                     }else if(p=="SendChanges"){
                         this.canSendDiff = true;
                     }
-                    console.log('value send',this.canSendDiff)
 
                 },
                 e => {

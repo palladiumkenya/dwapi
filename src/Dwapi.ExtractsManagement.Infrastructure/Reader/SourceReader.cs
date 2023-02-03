@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Net;
 using System.Threading.Tasks;
 using Dapper;
 using Dwapi.SharedKernel.Enum;
@@ -143,5 +144,22 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
 
             return null;
         }
+        
+        public string RefreshEtlTtables(DbProtocol protocol)
+        {
+            var sourceConnection = GetConnection(protocol);
+            if (null == sourceConnection)
+                throw new Exception("Data connection not initialized");
+        
+            using (sourceConnection)
+            {
+                var sql = $@"CALL sp_scheduled_updates()";
+        
+                sourceConnection.Execute(sql);
+                return "status:200";
+            }
+            
+        }
+
     }
 }

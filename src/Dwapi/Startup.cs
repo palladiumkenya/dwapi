@@ -450,11 +450,13 @@ namespace Dwapi
             services.AddScoped<IRegistryManagerService, RegistryManagerService>();
             services.AddScoped<IEmrManagerService, EmrManagerService>();
             services.AddScoped<IExtractManagerService, ExtractManagerService>();
+            services.AddScoped<IAutoloadService, AutoloadService>();
 
             services.AddScoped<IPsmartExtractService, PsmartExtractService>();
             services.AddScoped<IExtractStatusService, ExtractStatusService>();
             services.AddScoped<IPsmartSourceReader, PsmartSourceReader>();
             services.AddScoped<IPsmartSendService, PsmartSendService>();
+
 
             services.AddScoped<IDwhExtractSourceReader, DwhExtractSourceReader>();
             services.AddScoped<IPatientSourceExtractor, PatientSourceExtractor>();
