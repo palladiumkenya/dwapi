@@ -575,6 +575,8 @@ export class MergedNdwhConsoleComponent implements OnInit, OnChanges, OnDestroy 
                 () => {
                     this.errorMessage.push({severity: 'success', summary: 'Sending Extracts '});
                     this.updateEvent();
+                    this.actionType = "Sent";
+
                 }
             );
     }

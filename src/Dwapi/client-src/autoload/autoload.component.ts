@@ -254,11 +254,12 @@ export class AutoloadComponent implements OnInit, OnDestroy {
 
             if (this.canSendPrep == true){
                 var waitForChangesButton = setInterval(() => {
-                    let sendPrepElement:HTMLElement = document.getElementById('sendPrep') as HTMLElement;
-                    sendPrepElement.click();
                     clearInterval(waitForChangesButton);
-                }, 5000);
-                // this.loadPREP();
+                    let sendPrepElement:HTMLElement = document.getElementById('sendPrep') as HTMLElement;
+                    if (JSON.parse(localStorage.getItem('canSendPrep')) ==false){
+                        sendPrepElement.click();
+                    }
+                }, 10000);                // this.loadPREP();
                 this.stepFourIconIsActive = "form-stepper-active step-section-active";;
 
                 clearInterval(checkLoad);
@@ -276,10 +277,12 @@ export class AutoloadComponent implements OnInit, OnDestroy {
                     }
                 }, 3000);
                 //
+            }else{
+                this.stepFourIconIsActive = "form-stepper-completed step-section-inactive";
+                this.loadMNCH();
             }
         }, 2000);
         localStorage.clear();
-        this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
 
     }
 
@@ -301,9 +304,9 @@ export class AutoloadComponent implements OnInit, OnDestroy {
                     let sendMnchelement:HTMLElement = document.getElementById('sendMnch') as HTMLElement;
                     sendMnchelement.click();
                     clearInterval(waitForChangesButton);
-                }, 5000);
-                // this.loadPREP();
-                this.stepFiveIconIsActive = "form-stepper-active step-section-active";;
+                }, 10000);
+
+                this.stepFiveIconIsActive = "form-stepper-active step-section-active";
 
                 clearInterval(checkLoad);
 
