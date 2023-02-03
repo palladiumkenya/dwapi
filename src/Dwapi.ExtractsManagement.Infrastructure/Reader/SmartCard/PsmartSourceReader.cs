@@ -127,10 +127,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard
                 var sql = $@"CALL sp_scheduled_updates()";
         
                 sourceConnection.Execute(sql);
-                return "status:200 yonder";
+                return "status:200";
             }
         }
-        
+
+        public DateTime? GetEtlTtablesRefreshedDate(DbProtocol protocol)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public IDbConnection GetConnection(DbProtocol databaseProtocol)
         {
