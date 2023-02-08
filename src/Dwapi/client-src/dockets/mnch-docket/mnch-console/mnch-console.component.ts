@@ -113,7 +113,9 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public loadData(): void {
         this.canLoadFromEmr = this.canSend = false;
+        localStorage.setItem('canSendMnch', "false");
         this.canLoadFromEmr = this.canExport = false;
+
 
         if (this.emr) {
             this.canLoadFromEmr = true;
@@ -137,6 +139,8 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
         if (this.centralRegistry) {
             this.canSend = true;
+            localStorage.setItem('canSendMnch', "true");
+
             this.canExport = true;
         }
     }
@@ -163,6 +167,8 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         severity: 'success',
                         summary: 'load was successful '
                     });
+                    localStorage.setItem('canSendMnch', "true");
+
                     this.updateEvent();
                 }
             );
@@ -735,6 +741,8 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                    // localStorage.setItem('mnchSendingComplete', "true");
+
                 }
             );
     }
@@ -997,6 +1005,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             if (this.extractSent.length === 11) {
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
+                localStorage.setItem('mnchSendingComplete', "true");
                 this.updateEvent();
                 this.sendHandshake();
                 this.sending = false;

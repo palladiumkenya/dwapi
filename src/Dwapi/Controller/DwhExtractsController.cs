@@ -176,7 +176,7 @@ namespace Dwapi.Controller
                 // check stale
                 if (_indicatorExtractRepository.CheckIfStale())
                 {
-                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date. Refresh or Recreate EMR ETL tables.");
                 }
 
                 if (!packageDto.SendMpi)
@@ -212,10 +212,10 @@ namespace Dwapi.Controller
             try
             {
                 // check stale
-                 //if (_indicatorExtractRepository.CheckIfStale())
-                 //{
-                 //    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
-                 //}
+                 // if (_indicatorExtractRepository.CheckIfStale())
+                 // {
+                 //     throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                 // }
 
                 var result = await _ctSendService.SendSmartManifestAsync(packageDto.DwhPackage, _version, "3");
                 return Ok(result);
@@ -590,7 +590,7 @@ namespace Dwapi.Controller
             var jobEnd =
                 BatchJob.ContinueBatchWith(job6, x => { _ctExportService.NotifyPostExport(package, _version); });
 
-            
+
         }
 
         public void SendJobSmartPateints(SendManifestPackageDTO package)
@@ -672,11 +672,11 @@ namespace Dwapi.Controller
             var idsCovid = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CovidMessageSourceBag()).Result;
             var idsDefaulterTracing = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DefaulterTracingMessageSourceBag()).Result;
         }
-        
+
         public void ZipFiles(SendManifestPackageDTO package)
         {
             var idsCovid = _ctExportService.ZipExtractsAsync(package, new PatientMessageSourceBag());
-           
+
         }
         #endregion
         public void SendJobBaselines(SendManifestPackageDTO package)

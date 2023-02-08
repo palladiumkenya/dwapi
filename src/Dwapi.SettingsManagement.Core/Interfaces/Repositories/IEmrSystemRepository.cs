@@ -9,5 +9,6 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Repositories
         int Count();
         EmrSystem GetDefault();
         EmrSystem GetMiddleware();
+        string refreshEMRETL(DatabaseProtocol protocol);
     }
 }

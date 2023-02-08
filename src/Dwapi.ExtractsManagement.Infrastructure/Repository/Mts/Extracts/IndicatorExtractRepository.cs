@@ -59,5 +59,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
                 return 0;
             }
         }
+        
+        public IndicatorExtract GetIndicatorValue(string name)
+        {
+            return Get(x => x.Indicator.ToLower() == name.ToLower());
+        }
+        
     }
 }

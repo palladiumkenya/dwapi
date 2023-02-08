@@ -15,6 +15,7 @@ import { CrsDocketComponent } from "../dockets/crs-docket/crs-docket.component";
 import { exportComponent } from "../exports/file-exports.component";
 import { UploadComponent } from "../upload/file-upload.component";
 
+import {AutoloadComponent} from '../autoload/autoload.component';
 
 export const routes: Routes = [
     {path: 'dashboard', component: DashboardComponent},
@@ -31,8 +32,11 @@ export const routes: Routes = [
     { path: 'crs', component: CrsDocketComponent },
     { path: 'exports', component: exportComponent },
     { path: 'upload', component: UploadComponent },
+    {path: 'crs', component: CrsDocketComponent},
+    {path: 'autoload', component: AutoloadComponent },
     {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
     {path: '**', component: DashboardComponent }
+
 ];
 
 export const AppRoutes: ModuleWithProviders = RouterModule.forRoot(routes);
