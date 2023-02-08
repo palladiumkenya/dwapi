@@ -145,7 +145,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             {
                 try
                 {
-
+                   
                     var start = DateTime.Now;
                     
                     var msg = JsonConvert.SerializeObject(message.Manifest);                   

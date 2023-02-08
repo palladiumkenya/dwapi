@@ -83,6 +83,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             {
                 try
                 {
+                    
                     var msg = JsonConvert.SerializeObject(message);
 
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
