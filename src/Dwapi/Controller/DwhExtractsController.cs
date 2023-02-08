@@ -176,7 +176,7 @@ namespace Dwapi.Controller
                 // check stale
                 if (_indicatorExtractRepository.CheckIfStale())
                 {
-                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date. Refresh or Recreate EMR ETL tables.");
                 }
 
                 if (!packageDto.SendMpi)
