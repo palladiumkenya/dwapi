@@ -49,5 +49,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
 
 
         Task NotifyPostSending(SendManifestPackageDTO sendTo, string version);
+        Task NotifyPostExport(SendManifestPackageDTO package, string version);
     }
 }

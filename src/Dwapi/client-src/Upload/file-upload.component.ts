@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http'
 import { SendEvent } from '../settings/model/send-event';
 import { Uploader } from '../entities/uploader';
@@ -40,6 +40,7 @@ export class UploadComponent implements OnInit {
     progressPrep = 0;
     progressHts = 0;
     progressMnch = 0;
+    files = [];
 
     
     public warningMessage: Message[];
@@ -66,13 +67,14 @@ export class UploadComponent implements OnInit {
     public uploader: Uploader = new Uploader();
     public centralRegistry: CentralRegistry;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private cd: ChangeDetectorRef) {
         this.message = '';
     }
 
     onFilesChange(fileList: Array<File>) {
         for (let file of fileList) {
             this.uploader.queue.push(new UploadQueue(file));
+            this.files.push(file);
         };
     }
 
@@ -94,7 +96,7 @@ export class UploadComponent implements OnInit {
         let file = files[0];
         if (file) {
             this.uploader.queue.push(new UploadQueue(file));
-            //console.log(file);  
+            this.files.push(file);
             console.log('Total Count:' + this.uploader.queue.length);
         }
 
@@ -148,6 +150,7 @@ export class UploadComponent implements OnInit {
                 this.uploadSuccessCT = false;
                 this.uploadSuccessPrep = false;
                 this.uploadSuccessMnch = false;
+               
 
             }
         });
@@ -194,6 +197,13 @@ export class UploadComponent implements OnInit {
             );
         }
     }
+
+    removeFile(id) {      
+        
+        this.uploader.queue.splice(id, 1)
+        this.cd.detectChanges();
+       
+    } 
 
 
     // upload   

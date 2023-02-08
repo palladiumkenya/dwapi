@@ -588,7 +588,7 @@ namespace Dwapi.Controller
                 BatchJob.ContinueBatchWith(job5, x => { ZipFiles(package); });
 
             var jobEnd =
-                BatchJob.ContinueBatchWith(job6, x => { _ctExportService.NotifyPostSending(package, _version); });
+                BatchJob.ContinueBatchWith(job6, x => { _ctExportService.NotifyPostExport(package, _version); });
 
             
         }

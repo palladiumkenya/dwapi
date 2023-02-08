@@ -59,7 +59,10 @@
                         <button type="button" class="btn btn-success btn-xs" (click)="upload(item.id)" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
                             <span class="fa fa-upload"></span> Upload
                         </button>
-
+                       
+                        <button type="button" class="btn btn-danger btn-xs" (click)="removeFile(item.id)" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                            <span class="fa ui-icon-trash"></span> Remove
+                        </button>
 
                     </td>
                 </tr>

@@ -113,6 +113,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public loadData(): void {
         this.canLoadFromEmr = this.canSend = false;
+        this.canLoadFromEmr = this.canExport = false;
 
         if (this.emr) {
             this.canLoadFromEmr = true;
@@ -136,6 +137,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
         if (this.centralRegistry) {
             this.canSend = true;
+            this.canExport = true;
         }
     }
 
@@ -194,6 +196,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
+                            this.canExport = extract.extractEvent.queued > 0;
                         }
                     },
                     e => {
@@ -490,7 +493,8 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public sendMatVisitExtracts(): void {
         this.sendStage = 6;
-        this.sendEvent = {sentProgress: 0};
+        this.sendEvent = { sentProgress: 0 };
+
         this.sending = true;
         this.errorMessage = [];
         const patientPackage = this.getMatVisitExtractPackage();
@@ -985,7 +989,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             };
             this.exportEvent = { ...st };
             this.updateExractStats(dwhProgress);
-            this.canLoadFromEmr = this.canSend = !this.sending;
+            this.canLoadFromEmr = this.canExport = !this.exporting;
         });
 
         this._hubConnection.on('ShowMnchSendProgressDone', (extractName: string) => {
