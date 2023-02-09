@@ -10,7 +10,7 @@
                     icon="ui-icon-file-download" class="green-btn"></button>
         </div>
         <div class="ui-toolbar-group-left">
-            <button pButton type="button" id="loadchangesfromemr" [disabled]="!canLoadFromEmr" (click)="loadFromEmr(true)" label="Load Changes from EMR"
+            <button pButton type="button"  [disabled]="!canLoadFromEmr" (click)="loadFromEmr(true)" label="Load Changes from EMR"
                     icon="ui-icon-file-download" class="green-btn"></button>
         </div>
 
@@ -27,7 +27,7 @@
         </div>
 
         <div class="" >
-            <button pButton type="button" id="sendCT"  style="float: right;" [disabled]="!canSend" [hidden]="canSendDiff" (click)="sendSmart()" label="Send All"
+            <button pButton type="button"  style="float: right;" [disabled]="!canSend" [hidden]="canSendDiff" (click)="sendSmart()" label="Send All"
                     icon="ui-icon-cloud-upload"
                     class="btn blue-btn"
                     ></button>
