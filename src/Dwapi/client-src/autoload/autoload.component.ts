@@ -445,19 +445,19 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
         }else if (num == 3){
             this.stepOneIsActive = "form-stepper-completed step-section-inactive";
-            this.stepTwoIsActive = this.ctLoadFailed ? "form-stepper-failed step-section-inactive" : "form-stepper-completed step-section-inactive";
+            this.stepTwoIsActive = this.ctLoadFailed || this.ctSendFailed ? "form-stepper-failed step-section-inactive" : "form-stepper-completed step-section-inactive";
             this.stepThreeIsActive = "form-stepper-active step-section-active";
             this.stepFourIsActive = "form-stepper-completed step-section-inactive";
             this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
         }else if (num == 4){
             this.stepOneIsActive = "form-stepper-completed step-section-inactive";
-            this.stepTwoIsActive = this.ctLoadFailed ? "form-stepper-failed step-section-inactive" : "form-stepper-completed step-section-inactive";
+            this.stepTwoIsActive = this.ctLoadFailed || this.ctSendFailed ? "form-stepper-failed step-section-inactive" : "form-stepper-completed step-section-inactive";
             this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
             this.stepFourIsActive = "form-stepper-active step-section-active";
             this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
         }else if (num == 5){
             this.stepOneIsActive = "form-stepper-completed step-section-inactive";
-            this.stepTwoIsActive = this.ctLoadFailed ? "form-stepper-failed step-section-inactive" : "form-stepper-completed step-section-inactive";
+            this.stepTwoIsActive = this.ctLoadFailed || this.ctSendFailed ? "form-stepper-failed step-section-inactive" : "form-stepper-completed step-section-inactive";
             this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
             this.stepFourIsActive = "form-stepper-completed step-section-inactive";
             this.stepFiveIsActive = "form-stepper-active step-section-active";
