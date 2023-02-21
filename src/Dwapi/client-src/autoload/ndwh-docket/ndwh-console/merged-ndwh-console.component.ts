@@ -210,6 +210,9 @@ export class MergedNdwhConsoleComponent implements OnInit, OnChanges, OnDestroy 
                         summary: 'Error loading from EMR',
                         detail: <any>e
                     });
+                    localStorage.setItem('canSend', "true");
+                    localStorage.setItem('ctLoadFailed', "true");
+
 
                 },
                 () => {
@@ -731,6 +734,8 @@ export class MergedNdwhConsoleComponent implements OnInit, OnChanges, OnDestroy 
             } else {
                 this.sending = false;
                 localStorage.setItem('ctSendingComplete', "true");
+                localStorage.setItem('ctSendFailed', "true");
+
                 this.actionType = "Sent";
                 this.updateEvent();
             }
