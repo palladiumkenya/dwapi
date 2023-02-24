@@ -83,7 +83,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
 
             foreach (var dwhManifest in manifests)
             {
-                dwhManifest.UploadMode = UploadMode.Differential;
+                dwhManifest.UploadMode = UploadMode.DifferentialLoad;
             }
 
             return manifests;

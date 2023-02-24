@@ -113,8 +113,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public loadData(): void {
         this.canLoadFromEmr = this.canSend = false;
-        localStorage.setItem('canSendMnch', "false");
-
+        this.canLoadFromEmr = this.canExport = false;
 
         if (this.emr) {
             this.canLoadFromEmr = true;
@@ -138,7 +137,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
         if (this.centralRegistry) {
             this.canSend = true;
-            localStorage.setItem('canSendMnch', "true");
+            this.canExport= true;
 
         }
     }
@@ -165,7 +164,6 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         severity: 'success',
                         summary: 'load was successful '
                     });
-                    localStorage.setItem('canSendMnch', "true");
 
                     this.updateEvent();
                 }
@@ -200,6 +198,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
+                            this.canExport = extract.extractEvent.queued > 0;
                         }
                     },
                     e => {
@@ -261,7 +260,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({ severity: 'error', summary: 'Error exporting ', detail: <any>e });
-                    this.canExport = true;
+                    // this.canExport = true;
                 },
                 () => {
                     //  this.notifications.push({severity: 'success', summary: 'Manifest sent'});
@@ -976,11 +975,13 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             console.log(`${dwhProgress.extract}:${dwhProgress.progress}, Overall:${progress}`);
             const st = {
                 sentProgress: progress
-               
+
             };
             this.sendEvent = {...st};
             this.updateExractStats(dwhProgress);
             this.canLoadFromEmr = this.canSend = !this.sending;
+            this.canLoadFromEmr = this.canExport = !this.sending;
+
         });
         this._hubConnection.on('ShowMnchExportProgress', (dwhProgress: any) => {
             if (dwhProgress.extract === 'MatVisitExtract') {
@@ -988,12 +989,14 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
             }
             const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);
             console.log(`${dwhProgress.extract}:${dwhProgress.progress}, Overall:${progress}`);
-            const st = {                
+            const st = {
                 exportProgress: progress
             };
             this.exportEvent = { ...st };
             this.updateExractStats(dwhProgress);
             this.canLoadFromEmr = this.canSend = !this.sending;
+            this.canLoadFromEmr = this.canExport = !this.sending;
+
         });
 
         this._hubConnection.on('ShowMnchSendProgressDone', (extractName: string) => {
