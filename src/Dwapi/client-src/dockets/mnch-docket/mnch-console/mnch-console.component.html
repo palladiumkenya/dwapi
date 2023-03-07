@@ -16,7 +16,7 @@
                     class="blue-btn"></button>
         </div>
         <div class="ui-toolbar-group-right">
-            <button pButton type="button" label="Export data" [disabled]="canExport" (click)="export()"
+            <button pButton type="button" label="Export data" [disabled]="!canExport" (click)="export()"
                     icon="ui-icon-file-download" class="blue-btn"></button>
         </div>
     </p-toolbar>

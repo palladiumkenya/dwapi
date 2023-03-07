@@ -65,7 +65,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public canLoadFromEmr: boolean;
     public canSend: boolean = true;
-    public canExport: boolean;
+    public canExport: boolean = true;
     public canSendPatients: boolean = false;
     public manifestPackage: SendPackage;
     public patientPackage: SendPackage;
@@ -129,6 +129,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public loadData(): void {
         this.canLoadFromEmr = this.canSend = false;
+        this.canLoadFromEmr = this.canExport = false;
 
         if (this.emr) {
             this.canLoadFromEmr = true;
@@ -210,6 +211,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
+                            this.canExport = extract.extractEvent.queued > 0;
                         }
                     },
                     e => {
@@ -269,7 +271,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({ severity: 'error', summary: 'Error exporting ', detail: <any>e });
-                    this.canExport = true;
+                    
                 },
                 () => {
                     //  this.notifications.push({severity: 'success', summary: 'Manifest sent'});

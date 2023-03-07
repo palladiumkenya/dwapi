@@ -83,6 +83,7 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             {
                 try
                 {
+                    
                     var msg = JsonConvert.SerializeObject(message);
 
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
@@ -989,6 +990,8 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
 
                 }
 
+                string version = GetType().Assembly.GetName().Version.ToString();
+                await NotifyPostSending(sendTo, version);
 
                 return responses;
 

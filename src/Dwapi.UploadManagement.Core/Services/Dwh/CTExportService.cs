@@ -145,7 +145,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             {
                 try
                 {
-
+                   
                     var start = DateTime.Now;
                     
                     var msg = JsonConvert.SerializeObject(message.Manifest);                   
@@ -496,17 +496,15 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             }
 
 
-        public async Task NotifyPostSending(SendManifestPackageDTO sendTo, string version)
+        public async Task NotifyPostExport(SendManifestPackageDTO sendTo, string version)
         {
-            
             DomainEvents.Dispatch(new DwExporthMessageNotification(false, $"Exporting completed"));
-            
+
 
             Thread.Sleep(3000);
 
-           
 
-           
+            
         }
 
         //BoardRoom Uploads
@@ -587,7 +585,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     if (archive.Entries[i].Name == "manifest.dump.json")
                         {
 
-                            DomainEvents.Dispatch(new DwhMessageNotification(false, $"Sending started..."));
+                        
 
 
                             string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
@@ -3026,10 +3024,55 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 }
 
             }
+
+            string version = GetType().Assembly.GetName().Version.ToString();
+            await NotifyPostSending(sendTo, version);
             return responses;
         
             
             }
+
+
+
+        public async Task NotifyPostSending(SendManifestPackageDTO sendTo, string version)
+        {
+
+
+            int maxRetries = 4;
+            int retries = 0;
+            var notificationend = new HandshakeEnd("CTSendEnd", version);
+            DomainEvents.Dispatch(new DwhMessageNotification(false, $"Sending completed"));
+            await _mediator.Publish(new HandshakeEnd("CTSendEnd", version));
+
+            Thread.Sleep(3000);
+
+            var client = Client ?? new HttpClient();
+
+            while (retries < maxRetries)
+            {
+                try
+                {
+                    var session = _reader.GetSession(notificationend.EndName);
+                    var response =
+                        await client.PostAsync(
+                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Handshake?session={session}"), null);
+
+                    if (!session.IsNullOrEmpty())
+                    {
+                        Log.Debug(new string('*', 50));
+                        Log.Debug("SUCCESS Sent Handshake");
+                        Log.Debug(new string('*', 50));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, $"Send Handshake Error");
+                }
+                retries++;
+
+
+            }
+        }
 
         private async Task UpdateProgress()
         {

@@ -1196,6 +1196,9 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
 
                 }
             }
+            string version = GetType().Assembly.GetName().Version.ToString();
+            await NotifyPostSending(sendTo, version);
+
             return responses;
 
 

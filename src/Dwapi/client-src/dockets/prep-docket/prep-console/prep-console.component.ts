@@ -113,6 +113,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
     public loadData(): void {
         this.canLoadFromEmr = this.canSend = false;
+        this.canLoadFromEmr = this.canExport = false;
 
         if (this.emr) {
             this.canLoadFromEmr = true;
@@ -136,7 +137,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
         if (this.centralRegistry) {
             this.canSend = true;
-
+            this.canExport = true;
         }
     }
 
@@ -200,6 +201,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
+                            this.canExport = extract.extractEvent.queued > 0;
                         }
                     },
                     e => {
