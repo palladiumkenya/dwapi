@@ -147,7 +147,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 {
                    
                     var start = DateTime.Now;
-                    
+                    message.Manifest.UploadMode = UploadMode.Boardroom;
                     var msg = JsonConvert.SerializeObject(message.Manifest);                   
                     var plainTextBytes = Encoding.UTF8.GetBytes(msg);
                     var Base64Manifest = Convert.ToBase64String(plainTextBytes);

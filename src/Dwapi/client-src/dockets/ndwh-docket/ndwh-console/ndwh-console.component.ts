@@ -149,6 +149,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public loadData(): void {
         this.loadingData = true;
         this.canLoadFromEmr = this.canSend = false;
+        this.canLoadFromEmr = this.canExport = false;
 
         if (this.emr) {
             this.canLoadFromEmr = true;
@@ -186,6 +187,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.canExport = this.canLoadFromEmr = false;
         this.canSend = this.canLoadFromEmr = false;
         localStorage.setItem('canSend', "false");
+        localStorage.setItem('canExport', "false");
         localStorage.setItem('ctSendingComplete', "false");
 
         //localStorage.clear();
