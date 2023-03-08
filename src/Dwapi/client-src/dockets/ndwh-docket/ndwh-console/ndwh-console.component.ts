@@ -653,6 +653,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
             .subscribe(
                 p => {
                     // this.sendResponse = p;
+
                 },
                 e => {
                     this.notifications = [];
