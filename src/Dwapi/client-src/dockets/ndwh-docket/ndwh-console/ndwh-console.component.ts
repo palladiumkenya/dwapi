@@ -681,7 +681,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.send$ = this._ndwhSenderService.sendDiffPatientExtracts(this.extractPackage)
             .subscribe(
                 p => {
-                    // this.sendResponse = p;
+                   
                 },
                 e => {
                     console.error('SEND ERROR', e);
