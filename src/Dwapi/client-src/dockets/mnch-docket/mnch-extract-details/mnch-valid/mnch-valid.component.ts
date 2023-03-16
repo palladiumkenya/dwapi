@@ -77,6 +77,8 @@ export class MnchValidComponent implements OnInit, OnDestroy {
         if (this.extract === 'Cwc Visit') {this.getSummaryExtracts('CwcVisit');return;}
         if (this.extract === 'Cwc Enrolment') {this.getSummaryExtracts('CwcEnrolment');return;}
         if (this.extract === 'Anc Visit') {this.getSummaryExtracts('AncVisit');return;}
+        if (this.extract === 'Mnch Immunization') {this.getSummaryExtracts('MnchImmunization');return;}
+
     }
 
     private getColumns(): void {
@@ -91,6 +93,8 @@ export class MnchValidComponent implements OnInit, OnDestroy {
         if (this.extract === 'Cwc Visit') {this.getCwcVisitExtractColumns();return;}
         if (this.extract === 'Cwc Enrolment') {this.getCwcEnrolmentExtractColumns();return;}
         if (this.extract === 'Anc Visit') {this.getPncVisitExtractColumns();return;}
+        if (this.extract === 'Mnch Immunization') {this.getMnchImmunizationExtractColumns();return;}
+
 
     }
 
@@ -254,6 +258,44 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
             {field: 'facilityName', header: 'Facility Name'}
+        ]
+    }
+
+    private getMnchImmunizationExtractColumns() {
+        this.cols = [
+            {field: 'visitDate', header: 'Visit Date'},
+            {field: 'visitID', header: 'Visit ID'},
+            {field: 'revisitThisYear', header: 'RevisitThisYear'},
+            {field: 'height', header: 'Height'},
+            {field: 'weight', header: 'Weight'},
+            {field: 'heightLength', header: 'Height Length'},
+            {field: 'pemp', header: 'Temp'},
+            {field: 'pulseRate', header: 'PulseRate'},
+            {field: 'respiratoryRate', header: 'Respiratory Rate'},
+            {field: 'oxygenSaturation', header: 'Oxygen Saturation'},
+            {field: 'muac', header: 'MUAC'},
+            {field: 'weightCategory', header: 'Weight Category'},
+            {field: 'stunted', header: 'Stunted'},
+            {field: 'infantFeeding', header: 'Infant Feeding'},
+            {field: 'medicationGiven', header: 'Medication Given'},
+            {field: 'tbAssessment', header: 'TBAssessment'},
+            {field: 'mnpsSupplementation', header: 'MNPsSupplementation'},
+            {field: 'immunization', header: 'Immunization'},
+            {field: 'immunizationGiven', header: 'Immunization Given'},
+            {field: 'dangerSigns', header: 'Danger Signs'},
+            {field: 'milestones', header: 'Milestones'},
+            {field: 'vitaminA', header: 'VitaminA'},
+            {field: 'disability', header: 'Disability'},
+            {field: 'receivedMosquitoNet', header: 'ReceivedMosquitoNet'},
+            {field: 'dewormed', header: 'Dewormed'},
+            {field: 'referredFrom', header: 'Referred From'},
+            {field: 'referredTo', header: 'Referred To'},
+            {field: 'refferred', header: 'Refferred'},
+            {field: 'referralReasons', header: 'Referral Reasons'},
+            {field: 'followUP', header: 'Follow UP'},
+            {field: 'nextAppointment', header: 'Next Appointment'},
+            {field: 'dnapcr', header: 'dnapcr'},
+            {field: 'dnapcrdate', header: 'dnapcrdate'}
         ]
     }
 

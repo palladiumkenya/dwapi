@@ -69,6 +69,11 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         {
             return new MnchMessageBag(MnchMessage.Create(extracts));
         }
+        
+        public static MnchMessageBag Create(List<MnchImmunizationExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.Create(extracts));
+        }
 
         //BoardRoomUploads
         public static MnchMessageBag CreateEx(List<PatientMnchExtract> extracts)
@@ -113,6 +118,11 @@ namespace Dwapi.UploadManagement.Core.Exchange.Mnch
         }
 
         public static MnchMessageBag CreateEx(List<MnchLabExtract> extracts)
+        {
+            return new MnchMessageBag(MnchMessage.CreateEx(extracts));
+        }
+        
+        public static MnchMessageBag CreateEx(List<MnchImmunizationExtract> extracts)
         {
             return new MnchMessageBag(MnchMessage.CreateEx(extracts));
         }
