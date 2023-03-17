@@ -92,7 +92,7 @@ export class MnchValidComponent implements OnInit, OnDestroy {
         if (this.extract === 'Hei') {this.getHeiExtractColumns();return;}
         if (this.extract === 'Cwc Visit') {this.getCwcVisitExtractColumns();return;}
         if (this.extract === 'Cwc Enrolment') {this.getCwcEnrolmentExtractColumns();return;}
-        if (this.extract === 'Anc Visit') {this.getPncVisitExtractColumns();return;}
+        if (this.extract === 'Anc Visit') {this.getAncVisitExtractColumns();return;}
         if (this.extract === 'Mnch Immunization') {this.getMnchImmunizationExtractColumns();return;}
 
 
@@ -271,6 +271,23 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
             {field: 'facilityName', header: 'Facility Name'}
+        ]
+    }
+
+    private getAncVisitExtractColumns() {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityName', header: 'Facility Name'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'emr', header: 'EMR'},
+            {field: 'project', header: 'Project'},
+            {field: 'hepatitisBScreening', header: 'HepatitisB Screening'},
+            {field: 'treatedHepatitisB', header: 'Treated HepatitisB'},
+            {field: 'presumptiveTreatmentGiven', header: 'Presumptive Treatment Given'},
+            {field: 'presumptiveTreatmentDose', header: 'Presumptive Treatment Dose'},
+            {field: 'miminumPackageOfCareReceived', header: 'Miminum Package Of Care Received'},
+            {field: 'miminumPackageOfCareServices', header: 'Miminum Package Of Care Services'}
         ]
     }
 

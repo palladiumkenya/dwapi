@@ -482,6 +482,8 @@ export class MergedMnchConsoleComponent implements OnInit, OnDestroy, OnChanges 
                 p => {
                     // this.sendResponse = p;
                     this.updateEvent();
+                    this.sendMnchImmunizationExtracts();
+
                 },
                 e => {
                     this.errorMessage = [];
@@ -495,6 +497,29 @@ export class MergedMnchConsoleComponent implements OnInit, OnDestroy, OnChanges 
             );
     }
 
+    public sendMnchImmunizationExtracts(): void {
+        this.sendStage = 12;
+        this.sendEvent = {sentProgress: 0};
+        this.sending = true;
+        this.errorMessage = [];
+        const patientPackage = this.getMnchImmunizationExtractPackage();
+        this.send$ = this._mnchSenderService.sendMnchImmunizationExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending mnchimmunization', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                    // localStorage.setItem('mnchSendingComplete', "true");
+
+                }
+            );
+    }
     public sendHandshake(): void {
         this.manifestPackage = this.getSendManifestPackage();
         this.send$ = this._mnchSenderService.sendHandshake(this.manifestPackage)
@@ -608,6 +633,14 @@ export class MergedMnchConsoleComponent implements OnInit, OnDestroy, OnChanges 
             destination: this.centralRegistry,
             extractId: this.extracts.find(x => x.name === 'PncVisitExtract').id,
             extractName: 'PncVisitExtract'
+        };
+    }
+
+    private getMnchImmunizationExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'MnchImmunizationExtract').id,
+            extractName: 'MnchImmunizationExtract'
         };
     }
 
@@ -738,6 +771,8 @@ export class MergedMnchConsoleComponent implements OnInit, OnDestroy, OnChanges 
         this.extractProfiles.push(this.generateExtractMnchLab(currentEmr));
         this.extractProfiles.push(this.generateExtractMotherBabyPair(currentEmr));
         this.extractProfiles.push(this.generateExtractPncVisit(currentEmr));
+        this.extractProfiles.push(this.generateExtractMnchImmunization(currentEmr));
+
 
         this.extractLoadCommand = {
             extracts: this.extractProfiles
@@ -834,6 +869,14 @@ export class MergedMnchConsoleComponent implements OnInit, OnDestroy, OnChanges 
         return {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'PncVisitExtract')
+        };
+    }
+
+    private generateExtractMnchImmunization(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'MnchImmunizationExtract').databaseProtocolId;
+        return {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'MnchImmunizationExtract')
         };
     }
 
