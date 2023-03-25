@@ -47,7 +47,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
             
             try
             {
-                var sql = $" select Indicator,IndicatorValue from IndicatorExtracts where Indicator='MFL_CODE' order by IndicatorDate desc";
+                var sql = $" select Indicator,IndicatorValue from IndicatorExtracts where Indicator='MFL_CODE' order by DateCreated desc";
 
                 var query = Context.Database.GetDbConnection().Query(sql);
                 var result = query.FirstOrDefault();

@@ -267,11 +267,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 											 ValidationError ON vTempCwcVisitExtractError.Id = ValidationError.RecordId INNER JOIN
 											 Validator ON ValidationError.ValidatorId = Validator.Id
 				                ");
-             
-             
-             
-             migrationBuilder.Sql(@"alter table MnchImmunizationExtracts convert to character set utf8 collate utf8_unicode_ci;");
-             migrationBuilder.Sql(@"alter table TempMnchImmunizationExtracts convert to character set utf8 collate utf8_unicode_ci;");
+
+
+             if (migrationBuilder.ActiveProvider.ToLower().Contains("MySql".ToLower()))
+             {
+	             migrationBuilder.Sql(@"alter table MnchImmunizationExtracts convert to character set utf8 collate utf8_unicode_ci;");
+	             migrationBuilder.Sql(@"alter table TempMnchImmunizationExtracts convert to character set utf8 collate utf8_unicode_ci;");
+             }
+
              migrationBuilder.Sql(@"create view vTempMnchImmunizationExtractError as SELECT * FROM TempMnchImmunizationExtracts WHERE (CheckError = 1)");
 
              migrationBuilder.Sql(@"
