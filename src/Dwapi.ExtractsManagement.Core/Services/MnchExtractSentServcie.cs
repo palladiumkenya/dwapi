@@ -21,8 +21,10 @@ namespace Dwapi.ExtractsManagement.Core.Services
         private readonly IMnchLabExtractRepository _mnchLabExtractRepository;
         private readonly IMotherBabyPairExtractRepository _motherBabyPairExtractRepository;
         private readonly IPncVisitExtractRepository _pncVisitExtractRepository;
+        private readonly IMnchImmunizationExtractRepository _mnchImmunizationExtractRepository;
 
-        public MnchExtractSentServcie(IPatientMnchExtractRepository patientMnchExtractRepository, IAncVisitExtractRepository ancVisitExtractRepository, ICwcEnrolmentExtractRepository cwcEnrolmentExtractRepository, ICwcVisitExtractRepository cwcVisitExtractRepository, IHeiExtractRepository heiExtractRepository, IMatVisitExtractRepository matVisitExtractRepository, IMnchArtExtractRepository mnchArtExtractRepository, IMnchEnrolmentExtractRepository mnchEnrolmentExtractRepository, IMnchLabExtractRepository mnchLabExtractRepository, IMotherBabyPairExtractRepository motherBabyPairExtractRepository, IPncVisitExtractRepository pncVisitExtractRepository)
+
+        public MnchExtractSentServcie(IPatientMnchExtractRepository patientMnchExtractRepository, IAncVisitExtractRepository ancVisitExtractRepository, ICwcEnrolmentExtractRepository cwcEnrolmentExtractRepository, ICwcVisitExtractRepository cwcVisitExtractRepository, IHeiExtractRepository heiExtractRepository, IMatVisitExtractRepository matVisitExtractRepository, IMnchArtExtractRepository mnchArtExtractRepository, IMnchEnrolmentExtractRepository mnchEnrolmentExtractRepository, IMnchLabExtractRepository mnchLabExtractRepository, IMotherBabyPairExtractRepository motherBabyPairExtractRepository, IPncVisitExtractRepository pncVisitExtractRepository, IMnchImmunizationExtractRepository mnchImmunizationExtractRepository)
         {
             _patientMnchExtractRepository = patientMnchExtractRepository;
             _ancVisitExtractRepository = ancVisitExtractRepository;
@@ -35,6 +37,7 @@ namespace Dwapi.ExtractsManagement.Core.Services
             _mnchLabExtractRepository = mnchLabExtractRepository;
             _motherBabyPairExtractRepository = motherBabyPairExtractRepository;
             _pncVisitExtractRepository = pncVisitExtractRepository;
+            _mnchImmunizationExtractRepository = mnchImmunizationExtractRepository;
         }
 
         public void UpdateSendStatus(ExtractType extractType, List<SentItem> sentItems)
@@ -75,6 +78,9 @@ namespace Dwapi.ExtractsManagement.Core.Services
                         break;
                     case ExtractType.PncVisit:
                         _pncVisitExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.MnchImmunization:
+                        _mnchImmunizationExtractRepository.UpdateSendStatus(sentItems);
                         break;
                 }
             }

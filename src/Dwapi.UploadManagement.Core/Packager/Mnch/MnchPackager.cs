@@ -103,6 +103,12 @@ namespace Dwapi.UploadManagement.Core.Packager.Mnch
         {
             return _mnchExtractReader.ReadAllMnchLabs();
         }
+        
+
+        public IEnumerable<MnchImmunizationExtract> GenerateMnchImmunizations()
+        {
+            return _mnchExtractReader.ReadAllMnchImmunizations();
+        }
 
     }
 }

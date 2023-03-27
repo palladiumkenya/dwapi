@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {ExtractDatabaseProtocol} from '../../settings/model/extract-protocol';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpEvent, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {ExtractPatient} from '../ndwh-docket/model/extract-patient';
 import {LoadFromEmrCommand} from '../../settings/model/load-from-emr-command';
@@ -63,6 +63,27 @@ export class CrsService {
 
     public sendCrs(sendPackage: SendPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/crs`, sendPackage)
+            .catch(this.handleError);
+    }
+
+
+    public getFiles(): Observable<string[]> {
+        return this._http.get<string[]>(this._url + '/files');
+    }
+
+    public downloadFile(file: string): Observable<HttpEvent<Blob>> {
+        return this._http.request(new HttpRequest(
+            'GET',
+            `${this._url + '/download'}?file=${file}`,
+            null,
+            {
+                reportProgress: true,
+                responseType: 'blob'
+            }));
+    }
+
+    public getExportedFiles(): Observable<string[]> {
+        return this._http.get<string[]>(this._url + '/displayFiles')
             .catch(this.handleError);
     }
 

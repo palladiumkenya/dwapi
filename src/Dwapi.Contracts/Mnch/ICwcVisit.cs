@@ -33,6 +33,9 @@ namespace Dwapi.Contracts.Mnch
         string ReferralReasons { get; set; }
         string FollowUP { get; set; }
         DateTime? NextAppointment { get; set; }
+        string RevisitThisYear { get; set; }
+        string Refferred { get; set; }
+        decimal? HeightLength { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

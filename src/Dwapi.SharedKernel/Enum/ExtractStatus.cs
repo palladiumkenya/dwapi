@@ -8,6 +8,8 @@
         Loading,Loaded,
         Validating,Validated,
         Sending,Sent,
-        Excluded,Rejected
+        Excluded,Rejected,
+        Exporting, exported,
+        Uploading, uploaded
     }
 }

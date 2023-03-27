@@ -11,5 +11,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts
         IEnumerable<IndicatorExtractDto> Load();
         Boolean CheckIfStale();
         int GetMflCode();
+        IndicatorExtract GetIndicatorValue(string name);
+
     }
 }

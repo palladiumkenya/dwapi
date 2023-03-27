@@ -9,6 +9,8 @@ namespace Dwapi.Hubs.Mnch
         public async Task ShowProgress(ExtractProgress progress)
         {
             await Clients.All.SendAsync("ShowMnchSendProgress", progress);
+
+            await Clients.All.SendAsync("ShowMnchExportProgress", progress);
         }
     }
 }

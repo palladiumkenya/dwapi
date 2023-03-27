@@ -39,11 +39,12 @@ namespace Dwapi.Controller
         private readonly IExtractRepository _extractRepository;
         private readonly IIndicatorExtractRepository _indicatorExtractRepository;
         private readonly IDiffLogRepository _diffLogRepository;
+        private readonly ICTExportService _ctExportService;
 
 
         private readonly string _version;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository, ICTExportService ctExportService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -53,7 +54,7 @@ namespace Dwapi.Controller
             _extractRepository = extractRepository;
             _indicatorExtractRepository = indicatorExtractRepository;
             _diffLogRepository = diffLogRepository;
-
+            _ctExportService = ctExportService;
             Startup.HubContext= _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
         }
@@ -175,7 +176,7 @@ namespace Dwapi.Controller
                 // check stale
                 if (_indicatorExtractRepository.CheckIfStale())
                 {
-                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date. Refresh or Recreate EMR ETL tables.");
                 }
 
                 if (!packageDto.SendMpi)
@@ -211,12 +212,35 @@ namespace Dwapi.Controller
             try
             {
                 // check stale
-                 if (_indicatorExtractRepository.CheckIfStale())
-                 {
-                     throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
-                 }
+                 // if (_indicatorExtractRepository.CheckIfStale())
+                 // {
+                 //     throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                 // }
 
                 var result = await _ctSendService.SendSmartManifestAsync(packageDto.DwhPackage, _version, "3");
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Smart Manifest {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpPost("smart/exportmanifest")]
+        public async Task<IActionResult> exportSmartManifest([FromBody] CombinedSendManifestDto packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+
+            string version = GetType().Assembly.GetName().Version.ToString();
+
+            await _mediator.Publish(new ExtractSent("CareTreatment", version));
+
+            try
+            {
+                var result = await _ctExportService.ExportSmartManifestAsync(packageDto.DwhPackage, _version, "3");
                 return Ok(result);
             }
             catch (Exception e)
@@ -245,6 +269,24 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+        [HttpPost("smart/exportpatients")]
+        public IActionResult ExportSmartPatientExtracts([FromBody] CombinedSendManifestDto packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                QueueSmartExportDwh(packageDto.DwhPackage);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Smart Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
         #endregion
 
         // POST: api/DwhExtracts/patients
@@ -268,6 +310,31 @@ namespace Dwapi.Controller
             catch (Exception e)
             {
                 var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpPost("exportpatientsCT")]
+        public IActionResult ExportPatientExtracts([FromBody] CombinedSendManifestDto packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                if (!packageDto.SendMpi)
+                {
+                    QueueExportDwh(packageDto.DwhPackage);
+                    return Ok();
+                }
+                QueueExportDwh(packageDto.DwhPackage);
+                QueueMpi(packageDto.MpiPackage);
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
             }
@@ -368,6 +435,65 @@ namespace Dwapi.Controller
         }
 
         [AutomaticRetry(Attempts = 0)]
+        private void QueueExportDwh(SendManifestPackageDTO package)
+        {
+            var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
+
+            if (extracts.Any())
+                package.Extracts = extracts.Select(x => new ExtractDto() { Id = x.Id, Name = x.Name }).ToList();
+
+            _ctSendService.NotifyPreSending();
+
+            var job1 =
+                BatchJob.StartNew(x => { ExportJobBaselines(package); });
+
+            var job2 =
+                BatchJob.ContinueBatchWith(job1, x => { ExportJobProfiles(package); });
+
+            var job3 =
+                BatchJob.ContinueBatchWith(job2, x => { ExportNewJobProfiles(package); });
+
+            var job4 =
+                BatchJob.ContinueBatchWith(job3, x => { ExportNewOtherJobProfiles(package); });
+
+            var job5 =
+                BatchJob.ContinueBatchWith(job4, x => { ExportCovidJobProfiles(package); });
+
+            var jobEnd =
+                BatchJob.ContinueBatchWith(job5, x => { _ctExportService.NotifyPostSending(package, _version); });
+        }
+
+        [HttpPost("exportmanifest")]
+        public async Task<IActionResult> exportManifest([FromBody] CombinedSendManifestDto packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+
+            string version = GetType().Assembly.GetName().Version.ToString();
+
+            await _mediator.Publish(new ExtractSent("CareTreatment", version));
+
+            try
+            {
+                if (!packageDto.SendMpi)
+                {
+                    var result = await _ctExportService.ExportManifestAsync(packageDto.DwhPackage, _version);
+                    return Ok(result);
+                }
+
+                var mpiTask = await _cbsSendService.SendManifestAsync(packageDto.MpiPackage, _version);
+                var dwhTask = await _ctExportService.ExportManifestAsync(packageDto.DwhPackage, _version);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting  Manifest {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        [AutomaticRetry(Attempts = 0)]
         private void QueueDwhDiff(SendManifestPackageDTO package)
         {
             var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
@@ -429,10 +555,53 @@ namespace Dwapi.Controller
             var jobEnd =
                 BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package,_version); });
         }
+
+        [AutomaticRetry(Attempts = 0)]
+        private void QueueSmartExportDwh(SendManifestPackageDTO package)
+        {
+            var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
+
+            if (extracts.Any())
+                package.Extracts = extracts.Select(x => new ExtractDto() { Id = x.Id, Name = x.Name }).ToList();
+
+            _ctExportService.NotifyPreSending();
+
+            var job0 =
+                BatchJob.StartNew(x => { ExportJobSmartPatients(package); });
+
+            var job1 =
+                BatchJob.ContinueBatchWith(job0, x => { ExportJobSmartBaselines(package); });
+
+            var job2 =
+                BatchJob.ContinueBatchWith(job1, x => { ExportJobSmartProfiles(package); });
+
+            var job3 =
+                BatchJob.ContinueBatchWith(job2, x => { ExportNewJobSmartProfiles(package); });
+
+            var job4 =
+                BatchJob.ContinueBatchWith(job3, x => { ExportNewOtherJobSmartProfiles(package); });
+
+            var job5 =
+                BatchJob.ContinueBatchWith(job4, x => { ExportCovidJobSmartProfiles(package); });
+            //
+            var job6 =
+                BatchJob.ContinueBatchWith(job5, x => { ZipFiles(package); });
+
+            var jobEnd =
+                BatchJob.ContinueBatchWith(job6, x => { _ctExportService.NotifyPostExport(package, _version); });
+
+
+        }
+
         public void SendJobSmartPateints(SendManifestPackageDTO package)
         {
             var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new PatientMessageSourceBag()).Result;
         }
+        public void ExportJobSmartPatients(SendManifestPackageDTO package)
+        {
+            var idsA = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new PatientMessageSourceBag()).Result;
+        }
+
         public void SendJobSmartBaselines(SendManifestPackageDTO package)
         {
             var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new ArtMessageSourceBag()).Result;
@@ -440,12 +609,27 @@ namespace Dwapi.Controller
             var idsC= _ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new StatusMessageSourceBag()).Result;
             var idsD=_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new AdverseEventMessageSourceBag()).Result;
         }
+        public void ExportJobSmartBaselines(SendManifestPackageDTO package)
+        {
+            var idsA = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new ArtMessageSourceBag()).Result;
+            var idsB = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new BaselineMessageSourceBag()).Result;
+            var idsC = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new StatusMessageSourceBag()).Result;
+            var idsD = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new AdverseEventMessageSourceBag()).Result;
+        }
+
         public void SendJobSmartProfiles(SendManifestPackageDTO package)
         {
             var idsC= _ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Visits, new VisitMessageSourceBag()).Result;
             var idsA =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new PharmacyMessageSourceBag()).Result;
             var idsB=_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new LaboratoryMessageSourceBag()).Result;
         }
+        public void ExportJobSmartProfiles(SendManifestPackageDTO package)
+        {
+            var idsC = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Visits, new VisitMessageSourceBag()).Result;
+            var idsA = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new PharmacyMessageSourceBag()).Result;
+            var idsB = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new LaboratoryMessageSourceBag()).Result;
+        }
+
         public void SendNewJobSmartProfiles(SendManifestPackageDTO package)
         {
             var idsAllergiesChronicIllness =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new AllergiesChronicIllnessMessageSourceBag()).Result;
@@ -453,6 +637,14 @@ namespace Dwapi.Controller
             var idsDepressionScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DepressionScreeningMessageSourceBag()).Result;
             var idsContactListing =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new ContactListingMessageSourceBag()).Result;
         }
+        public void ExportNewJobSmartProfiles(SendManifestPackageDTO package)
+        {
+            var idsAllergiesChronicIllness = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new AllergiesChronicIllnessMessageSourceBag()).Result;
+            var idsIpt = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new IptMessageSourceBag()).Result;
+            var idsDepressionScreening = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DepressionScreeningMessageSourceBag()).Result;
+            var idsContactListing = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new ContactListingMessageSourceBag()).Result;
+        }
+
         public void SendNewOtherJobSmartProfiles(SendManifestPackageDTO package)
         {
             var idsGbvScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new GbvScreeningMessageSourceBag()).Result;
@@ -461,12 +653,31 @@ namespace Dwapi.Controller
             var idsOvc =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new OvcMessageSourceBag()).Result;
             var idsOtz =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new OtzMessageSourceBag()).Result;
         }
+        public void ExportNewOtherJobSmartProfiles(SendManifestPackageDTO package)
+        {
+            var idsGbvScreening = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new GbvScreeningMessageSourceBag()).Result;
+            var idsEnhancedAdherenceCounselling = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new EnhancedAdherenceCounsellingMessageSourceBag()).Result;
+            var idsDrugAlcoholScreening = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DrugAlcoholScreeningMessageSourceBag()).Result;
+            var idsOvc = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new OvcMessageSourceBag()).Result;
+            var idsOtz = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new OtzMessageSourceBag()).Result;
+        }
+
         public void SendCovidJobSmartProfiles(SendManifestPackageDTO package)
         {
             var idsCovid =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CovidMessageSourceBag()).Result;
             var idsDefaulterTracing =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DefaulterTracingMessageSourceBag()).Result;
         }
+        public void ExportCovidJobSmartProfiles(SendManifestPackageDTO package)
+        {
+            var idsCovid = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CovidMessageSourceBag()).Result;
+            var idsDefaulterTracing = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DefaulterTracingMessageSourceBag()).Result;
+        }
 
+        public void ZipFiles(SendManifestPackageDTO package)
+        {
+            var idsCovid = _ctExportService.ZipExtractsAsync(package, new PatientMessageSourceBag());
+
+        }
         #endregion
         public void SendJobBaselines(SendManifestPackageDTO package)
         {
@@ -474,6 +685,13 @@ namespace Dwapi.Controller
             var idsB=_ctSendService.SendBatchExtractsAsync(package, 500, new BaselineMessageBag()).Result;
             var idsC= _ctSendService.SendBatchExtractsAsync(package, 500, new StatusMessageBag()).Result;
             var idsD=_ctSendService.SendBatchExtractsAsync(package, 500, new AdverseEventsMessageBag()).Result;
+        }
+        public void ExportJobBaselines(SendManifestPackageDTO package)
+        {
+            var idsA = _ctExportService.ExportBatchExtractsAsync(package, 500, new ArtMessageBag()).Result;
+            var idsB = _ctExportService.ExportBatchExtractsAsync(package, 500, new BaselineMessageBag()).Result;
+            var idsC = _ctExportService.ExportBatchExtractsAsync(package, 500, new StatusMessageBag()).Result;
+            var idsD = _ctExportService.ExportBatchExtractsAsync(package, 500, new AdverseEventsMessageBag()).Result;
         }
 
         public void SendDiffJobBaselines(SendManifestPackageDTO package)
@@ -489,6 +707,12 @@ namespace Dwapi.Controller
             var idsB=_ctSendService.SendBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
             var idsC= _ctSendService.SendBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
         }
+        public void ExportJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsA = _ctExportService.ExportBatchExtractsAsync(package, 500, new PharmacyMessageBag()).Result;
+            var idsB = _ctExportService.ExportBatchExtractsAsync(package, 500, new LabMessageBag()).Result;
+            var idsC = _ctExportService.ExportBatchExtractsAsync(package, 500, new VisitsMessageBag()).Result;
+        }
 
         public void SendNewJobProfiles(SendManifestPackageDTO package)
         {
@@ -496,6 +720,13 @@ namespace Dwapi.Controller
             var idsIpt =_ctSendService.SendBatchExtractsAsync(package, 200, new IptsMessageBag()).Result;
             var idsDepressionScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new DepressionScreeningsMessageBag()).Result;
             var idsContactListing =_ctSendService.SendBatchExtractsAsync(package, 200, new ContactListingsMessageBag()).Result;
+        }
+        public void ExportNewJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsAllergiesChronicIllness = _ctExportService.ExportBatchExtractsAsync(package, 200, new AllergiesChronicIllnesssMessageBag()).Result;
+            var idsIpt = _ctExportService.ExportBatchExtractsAsync(package, 200, new IptsMessageBag()).Result;
+            var idsDepressionScreening = _ctExportService.ExportBatchExtractsAsync(package, 200, new DepressionScreeningsMessageBag()).Result;
+            var idsContactListing = _ctExportService.ExportBatchExtractsAsync(package, 200, new ContactListingsMessageBag()).Result;
         }
 
 
@@ -508,12 +739,26 @@ namespace Dwapi.Controller
             var idsOvc =_ctSendService.SendBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
             var idsOtz =_ctSendService.SendBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
         }
+        public void ExportNewOtherJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsGbvScreening = _ctExportService.ExportBatchExtractsAsync(package, 200, new GbvScreeningsMessageBag()).Result;
+            var idsEnhancedAdherenceCounselling = _ctExportService.ExportBatchExtractsAsync(package, 200, new EnhancedAdherenceCounsellingsMessageBag()).Result;
+            var idsDrugAlcoholScreening = _ctExportService.ExportBatchExtractsAsync(package, 200, new DrugAlcoholScreeningsMessageBag()).Result;
+            var idsOvc = _ctExportService.ExportBatchExtractsAsync(package, 200, new OvcsMessageBag()).Result;
+            var idsOtz = _ctExportService.ExportBatchExtractsAsync(package, 200, new OtzsMessageBag()).Result;
+        }
+
 
 
         public void SendCovidJobProfiles(SendManifestPackageDTO package)
         {
             var idsCovid =_ctSendService.SendBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
             var idsDefaulterTracing =_ctSendService.SendBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
+        }
+        public void ExportCovidJobProfiles(SendManifestPackageDTO package)
+        {
+            var idsCovid = _ctExportService.ExportBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
+            var idsDefaulterTracing = _ctExportService.ExportBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
         }
 
 

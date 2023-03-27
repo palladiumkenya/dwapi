@@ -84,6 +84,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.TempExtracts
                 nameof(ExtractsContext.TempCwcVisitExtracts),
                 nameof(ExtractsContext.TempHeiExtracts),
                 nameof(ExtractsContext.TempMnchLabExtracts),
+                nameof(ExtractsContext.TempMnchImmunizationExtracts),
 
                 nameof(ExtractsContext.MnchEnrolmentExtracts),
                 nameof(ExtractsContext.MnchArtExtracts),
@@ -95,6 +96,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mnch.TempExtracts
                 nameof(ExtractsContext.CwcVisitExtracts),
                 nameof(ExtractsContext.HeiExtracts),
                 nameof(ExtractsContext.MnchLabExtracts),
+                nameof(ExtractsContext.MnchImmunizationExtracts),
+
             };
 
             var deletes = new List<string> {nameof(ExtractsContext.PatientMnchExtracts)};

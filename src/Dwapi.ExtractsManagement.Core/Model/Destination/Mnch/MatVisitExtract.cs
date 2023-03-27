@@ -57,6 +57,13 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         public string ReferredFrom { get; set; }
         public string ReferredTo { get; set; }
         public string ClinicalNotes { get; set; }
+        
+        public DateTime? LMP { get; set; }
+        public DateTime? EDD { get; set; }
+        public string MaternalDeathAudited { get; set; }
+        public string ReferralReason { get; set; }
+        public string OnARTMat { get; set; }
+        
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

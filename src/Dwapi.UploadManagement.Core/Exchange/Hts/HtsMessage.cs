@@ -147,5 +147,74 @@ namespace Dwapi.UploadManagement.Core.Exchange.Hts
 
             return list;
         }
+
+        //BoardRoom Uploads
+        public static List<HtsMessage> CreateEx(List<HtsClients> clients)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = clients.ToList();
+            list.Add(new HtsMessage(chunks));
+
+            return list;
+
+
+        }
+        public static List<HtsMessage> CreateEx(List<HtsClientTests> tests)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = tests.ToList();
+            list.Add(new HtsMessage(chunks));
+
+            return list;
+        }
+        public static List<HtsMessage> CreateEx(List<HtsTestKits> testkits)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = testkits.ToList();
+            list.Add(new HtsMessage(chunks));
+
+            return list;
+
+        }
+        public static List<HtsMessage> CreateEx(List<HtsClientTracing> cTracing)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = cTracing.ToList();
+            list.Add(new HtsMessage(chunks));
+
+            return list;
+        }
+        public static List<HtsMessage> CreateEx(List<HtsPartnerTracing> pTracing)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = pTracing.ToList();
+            list.Add(new HtsMessage(chunks));
+
+            return list;
+        }
+        public static List<HtsMessage> CreateEx(List<HtsPartnerNotificationServices> pns)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = pns.ToList();
+            list.Add(new HtsMessage(chunks));
+
+            return list;
+        }
+        public static List<HtsMessage> CreateEx(List<HtsClientLinkage> link)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = link.ToList();
+            list.Add(new HtsMessage(chunks));
+
+            return list;
+        }
+        public static List<HtsMessage> CreateEx(List<HtsEligibilityExtract> htsEligibilityExtract)
+        {
+            var list = new List<HtsMessage>();
+            var chunks = htsEligibilityExtract.ToList();
+            list.Add(new HtsMessage(chunks));
+            return list;
+
+        }
     }
 }

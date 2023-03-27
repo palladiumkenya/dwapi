@@ -1,15 +1,16 @@
 <div class="card card-w-title">
 
-    <h1>Care and Treatment <span style="color: lightgray">|</span> {{emrName}} <span
-        style="font-size:13px ">{{emrVersion}}</span> <span style="font-size:13px; color: red">{{minEMRVersion}}</span>  </h1>
-    <p-growl [(value)]="notifications" showDetail="true" sticky="true" ></p-growl>
+    <h1>
+        Care and Treatment <span style="color: lightgray">|</span> {{emrName}} <span style="font-size:13px ">{{emrVersion}}</span> <span style="font-size:13px; color: red">{{minEMRVersion}}</span>
+    </h1>
+    <p-growl [(value)]="notifications" showDetail="true" sticky="true"></p-growl>
     <p-toolbar>
         <div class="ui-toolbar-group-left">
             <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr(false)" label="Load All from EMR"
                     icon="ui-icon-file-download" class="green-btn"></button>
         </div>
         <div class="ui-toolbar-group-left">
-            <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr(true)" label="Load Changes from EMR"
+            <button pButton type="button" id="loadchangesfromemr" [disabled]="!canLoadFromEmr" (click)="loadFromEmr(true)" label="Load Changes from EMR"
                     icon="ui-icon-file-download" class="green-btn"></button>
         </div>
 
@@ -28,13 +29,16 @@
         <div class="" >
             <button pButton type="button"  style="float: right;" [disabled]="!canSend" [hidden]="canSendDiff" (click)="sendSmart()" label="Send All"
                     icon="ui-icon-cloud-upload"
-                    class="btn blue-btn"
-                    ></button>
+                    class="btn blue-btn"></button>
+        </div>
+        <div class="ui-toolbar-group-right">
+            <button pButton type="button" label="Export data" [disabled]="!canExport" (click)="smartexport()"
+                    icon="ui-icon-file-download" class="blue-btn"></button>
         </div>
     </p-toolbar>
 
     <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true" [loading]="loadingData" loadingIcon="fa-spinner fa-pulse"
-                  columnResizeMode="expand">
+                 columnResizeMode="expand">
         <p-column field="display" header="Extract"></p-column>
         <p-column field="extractEvent.lastStatus" header="Status"></p-column>
         <p-column field="extractEvent.found" header="(A) Found"></p-column>
@@ -57,6 +61,18 @@
         <div class="ui-g-12">
             Stage 2 of 2: Sending Extracts, please wait ...
             <p-progressBar showValue="true" [value]="sendEvent?.sentProgress"></p-progressBar>
+        </div>
+    </div>
+    <div class="ui-g" *ngIf="exportingManifest">
+        <div class="ui-g-12">
+            Stage 1 of 2: Exporting manifest...
+            <p-progressBar mode="indeterminate"></p-progressBar>
+        </div>
+    </div>
+    <div class="ui-g" *ngIf="exporting">
+        <div class="ui-g-12">
+            Stage 2 of 2: Exporting Extracts, please wait ...
+            <p-progressBar [value]="exportEvent?.exportProgress"></p-progressBar>
         </div>
     </div>
     <p-messages [(value)]="errorMessage"></p-messages>

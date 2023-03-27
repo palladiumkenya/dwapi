@@ -1,0 +1,19 @@
+.hideButton{
+    display:none !important;
+}
+[hidden] { display: none !important; }
+
+ .Loading div.ui-progress-spinner {
+     width: 40px !important;
+     height: 40px !important;
+ }
+.Sending{
+    color:dodgerblue;
+}
+.Loading{
+    color:orangered;
+}
+.Sent{
+    display:none;
+}
+

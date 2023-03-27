@@ -607,9 +607,58 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             }
             DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MnchLabExtract), Common.GetProgress(count,total),sendCound,true)));
             DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            return responses; }
+
+        
+        public Task<List<SendMpiResponse>> SendMnchImmunizationsAsync(SendManifestPackageDTO sendTo)
+        {
+            return SendMnchImmunizationsAsync(sendTo, MnchMessageBag.Create(_packager.GenerateMnchImmunizations().ToList()));
+        }
+
+        public async Task<List<SendMpiResponse>> SendMnchImmunizationsAsync(SendManifestPackageDTO sendTo,
+            MnchMessageBag messageBag)
+        {
+              var responses = new List<SendMpiResponse>();
+            var client = Client ?? new HttpClient();
+            int sendCound=0;
+            int count = 0;
+            int total = messageBag.Messages.Count;
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            foreach (var message in messageBag.Messages)
+            {
+                count++;
+                try
+                {
+                    var msg = JsonConvert.SerializeObject(message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MnchImmunization"), message);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                        responses.Add(content);
+                        var sentIds = message.MnchImmunizationExtracts.Select(x => x.Id).ToList();
+                        sendCound += sentIds.Count;
+                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadAsStringAsync();
+                        DomainEvents.Dispatch(new MnchExtractSentEvent(message.MnchImmunizationExtracts.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
+                        throw new Exception(error);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, $"Send Manifest Error");
+                    throw;
+                }
+                DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MnchImmunizationExtract), Common.GetProgress(count,total),sendCound)));
+            }
+            DomainEvents.Dispatch(new MnchSendNotification(new SendProgress(nameof(MnchImmunizationExtract), Common.GetProgress(count,total),sendCound,true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
             return responses;
         }
 
+        
 
         public async Task NotifyPostSending(SendManifestPackageDTO sendTo, string version)
         {

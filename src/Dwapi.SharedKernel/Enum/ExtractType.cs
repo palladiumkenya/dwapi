@@ -33,6 +33,7 @@
         MnchLab,
         MotherBabyPair,
         PncVisit,
+        MnchImmunization,
 
         PatientPrep,
         PrepAdverseEvent,

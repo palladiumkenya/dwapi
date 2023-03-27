@@ -1,0 +1,142 @@
+
+<div class="ui-g">
+    <div class="ui-g-12">
+        <p-messages ></p-messages>
+
+        <div class="ui-g-12">
+            <div class="card card-w-title">
+<!--                <h1>Merged Dockets</h1>-->
+
+
+                <div>
+                    <div id="multi-step-form-container">
+
+                        <ul class="form-stepper form-stepper-horizontal text-center" style="padding-left:40px;padding-right:50px">
+                            <!-- Step 1 -->
+                            <li class="{{stepOneIconIsActive}} text-center form-stepper-list" step="1">
+                                <a class="mx-2">
+
+                                </a>
+                            </li>
+                            <!-- Step 2 -->
+                            <li class="{{stepTwoIconIsActive}} text-center form-stepper-list" step="2">
+                                <a class="mx-2">
+                                    <span class="form-stepper-icon text-muted">
+                                        <i class="large material-icons cloud" style="font-size:50px">cloud_upload</i>
+                                    </span>
+                                    <div class="label">|</div>
+                                </a>
+                            </li>
+                            <!-- Step 3 -->
+                            <li class="{{stepThreeIconIsActive}} text-center form-stepper-list" step="3">
+                                <a class="mx-2">
+                                     <span class="form-stepper-icon text-muted">
+                                        <i class="large material-icons cloud" style="font-size:50px">cloud_upload</i>
+                                    </span>
+                                    <div class="label">|</div>
+                                </a>
+                            </li>
+                            <!-- Step 4 -->
+                            <li class="{{stepFourIconIsActive}} text-center form-stepper-list" step="4">
+                                <a class="mx-2">
+                                    <span class="form-stepper-icon text-muted">
+                                        <i class="large material-icons cloud" style="font-size:50px">cloud_upload</i>
+                                    </span>
+                                    <div class="label">|</div>
+                                </a>
+                            </li>
+                            <!-- Step 5 -->
+                            <li class="{{stepFiveIconIsActive}} text-center form-stepper-list" step="5">
+                                <a class="mx-2">
+                                    <span class="form-stepper-icon text-muted">
+                                        <i class="large material-icons cloud" style="font-size:50px">cloud_upload</i>
+                                    </span>
+                                    <div class="label">|</div>
+                                </a>
+                            </li>
+                        </ul>
+
+
+                        <!-- Form Steps / Progress Bar -->
+                        <ul class="form-stepper form-stepper-horizontal main-steps text-center mx-auto pl-0">
+                            <!-- Step 1 -->
+                            <li class="{{stepOneIsActive}} text-center form-stepper-list" step="1">
+                                <a class="mx-2">
+                                    <span class="form-stepper-circle">
+                                        <span>1</span>
+                                    </span>
+                                    <div class="label">Start</div>
+                                </a>
+                            </li>
+                            <!-- Step 2 -->
+                            <li class="{{stepTwoIsActive}} text-center form-stepper-list" step="2">
+                                <a class="mx-2">
+                                    <span class="form-stepper-circle text-muted" (click)="navigateTo(2)">
+                                        <span>2</span>
+                                    </span>
+                                    <div class="label text-muted">Load and Send C&T</div>
+                                </a>
+                            </li>
+                            <!-- Step 3 -->
+                            <li class="{{stepThreeIsActive}} text-center form-stepper-list" step="3">
+                                <a class="mx-2">
+                                    <span class="form-stepper-circle text-muted" (click)="navigateTo(3)">
+                                        <span>3</span>
+                                    </span>
+                                    <div class="label text-muted">Load and Send HTS</div>
+                                </a>
+                            </li>
+                            <!-- Step 4 -->
+                            <li class="{{stepFourIsActive}} text-center form-stepper-list" step="4">
+                                <a class="mx-2">
+                                    <span class="form-stepper-circle text-muted" (click)="navigateTo(4)">
+                                        <span>4</span>
+                                    </span>
+                                    <div class="label text-muted">Load and Send PREP</div>
+                                </a>
+                            </li>
+                            <!-- Step 5 -->
+                            <li class="{{stepFiveIsActive}} text-center form-stepper-list" step="5">
+                                <a class="mx-2">
+                                    <span class="form-stepper-circle text-muted" (click)="navigateTo(5)">
+                                        <span>5</span>
+                                    </span>
+                                    <div class="label text-muted">Load and Send MNCH</div>
+                                </a>
+                            </li>
+                        </ul>
+
+<!--                        <p-progressBar [value]="step" [showValue]="true" ></p-progressBar>-->
+
+                        <div class="step-section" >
+                            <div class="{{stepOneIsActive}}">
+<!--                                <p>Refreshing ETL tables</p>-->
+                                <button pButton type="button" (click)="loadCT()" label="Start Process Now"
+                                        icon="ui-icon-play" class="green-btn" style="margin-top:50px"></button>
+<!--                                <p-progressBar [value]="barValue" [showValue]="true"></p-progressBar>-->
+                            </div>
+                            <div class="{{stepTwoIsActive}} ">
+                                <liveapp-merged-ndwh-docket></liveapp-merged-ndwh-docket>
+                            </div>
+                            <div class="{{stepThreeIsActive}}">
+                                <liveapp-merged-hts-docket></liveapp-merged-hts-docket>
+                            </div>
+                            <div class="{{stepFourIsActive}} ">
+                                <liveapp-merged-prep-docket></liveapp-merged-prep-docket>
+                            </div>
+                            <div class="{{stepFiveIsActive}} ">
+                                <liveapp-merged-mnch-docket></liveapp-merged-mnch-docket>
+                            </div>
+                        </div>
+
+<!--                        <button class="button btn-navigate-form-step" type="button" step_number="2" (click)="moveNext(step+1)">Next</button>-->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>

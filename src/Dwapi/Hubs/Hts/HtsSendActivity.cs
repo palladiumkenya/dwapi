@@ -9,6 +9,8 @@ namespace Dwapi.Hubs.Hts
         public async Task ShowProgress(ExtractProgress progress)
         {
             await Clients.All.SendAsync("ShowHtsSendProgress", progress);
+
+            await Clients.All.SendAsync("ShowHtsExportProgress", progress);
         }
     }
 }
