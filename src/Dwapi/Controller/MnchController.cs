@@ -504,6 +504,41 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+        [HttpPost("MnchImmunization")]
+        public IActionResult SendMnchImmunizationExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchSendService.SendMnchImmunizationsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+        [HttpPost("exportmnchimmunization")]
+        public IActionResult ExportMnchImmunizationExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _mnchExportService.ExportMnchImmunizationsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+
+
 
 
         [HttpPost("zipfiles")]

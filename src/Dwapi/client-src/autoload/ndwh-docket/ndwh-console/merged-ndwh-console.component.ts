@@ -210,6 +210,9 @@ export class MergedNdwhConsoleComponent implements OnInit, OnChanges, OnDestroy 
                         summary: 'Error loading from EMR',
                         detail: <any>e
                     });
+                    localStorage.setItem('canSend', "true");
+                    localStorage.setItem('ctLoadFailed', "true");
+
 
                 },
                 () => {
@@ -575,6 +578,7 @@ export class MergedNdwhConsoleComponent implements OnInit, OnChanges, OnDestroy 
                 () => {
                     this.errorMessage.push({severity: 'success', summary: 'Sending Extracts '});
                     this.updateEvent();
+
                 }
             );
     }
@@ -730,6 +734,9 @@ export class MergedNdwhConsoleComponent implements OnInit, OnChanges, OnDestroy 
             } else {
                 this.sending = false;
                 localStorage.setItem('ctSendingComplete', "true");
+                localStorage.setItem('ctSendFailed', "true");
+
+                this.actionType = "Sent";
                 this.updateEvent();
             }
             this.canLoadFromEmr = this.canSend = !this.sending;

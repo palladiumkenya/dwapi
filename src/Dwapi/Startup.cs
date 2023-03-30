@@ -728,6 +728,7 @@ namespace Dwapi
              services.AddScoped<ITempCwcVisitExtractRepository, TempCwcVisitExtractRepository>();
              services.AddScoped<ITempHeiExtractRepository, TempHeiExtractRepository>();
              services.AddScoped<ITempMnchLabExtractRepository, TempMnchLabExtractRepository>();
+             services.AddScoped<ITempMnchImmunizationExtractRepository, TempMnchImmunizationExtractRepository>();
 
              services.AddScoped<ITempPatientMnchExtractErrorSummaryRepository, TempPatientMnchExtractErrorSummaryRepository>();
              services.AddScoped<ITempMnchEnrolmentExtractErrorSummaryRepository, TempMnchEnrolmentExtractErrorSummaryRepository>();
@@ -740,6 +741,8 @@ namespace Dwapi
              services.AddScoped<ITempCwcVisitExtractErrorSummaryRepository, TempCwcVisitExtractErrorSummaryRepository>();
              services.AddScoped<ITempHeiExtractErrorSummaryRepository, TempHeiExtractErrorSummaryRepository>();
              services.AddScoped<ITempMnchLabExtractErrorSummaryRepository, TempMnchLabExtractErrorSummaryRepository>();
+             services.AddScoped<ITempMnchImmunizationExtractErrorSummaryRepository, TempMnchImmunizationExtractErrorSummaryRepository>();
+
 
             services.AddScoped<IPatientMnchExtractRepository, PatientMnchExtractRepository>();
             services.AddScoped<IMnchEnrolmentExtractRepository, MnchEnrolmentExtractRepository>();
@@ -752,6 +755,7 @@ namespace Dwapi
             services.AddScoped<ICwcVisitExtractRepository, CwcVisitExtractRepository>();
             services.AddScoped<IHeiExtractRepository, HeiExtractRepository>();
             services.AddScoped<IMnchLabExtractRepository, MnchLabExtractRepository>();
+            services.AddScoped<IMnchImmunizationExtractRepository, MnchImmunizationExtractRepository>();
 
 
             services.AddScoped<ITempPatientPrepExtractRepository, TempPatientPrepExtractRepository>();
@@ -794,6 +798,8 @@ namespace Dwapi
             services.AddScoped<ICwcVisitSourceExtractor, CwcVisitSourceExtractor>();
             services.AddScoped<IHeiSourceExtractor, HeiSourceExtractor>();
             services.AddScoped<IMnchLabSourceExtractor, MnchLabSourceExtractor>();
+            services.AddScoped<IMnchImmunizationSourceExtractor, MnchImmunizationSourceExtractor>();
+
 
             services.AddScoped<IPatientMnchLoader, PatientMnchLoader>();
             services.AddScoped<IMnchEnrolmentLoader, MnchEnrolmentLoader>();
@@ -806,6 +812,8 @@ namespace Dwapi
             services.AddScoped<ICwcVisitLoader, CwcVisitLoader>();
             services.AddScoped<IHeiLoader, HeiLoader>();
             services.AddScoped<IMnchLabLoader, MnchLabLoader>();
+            services.AddScoped<IMnchImmunizationLoader, MnchImmunizationLoader>();
+
 
             services.AddScoped<IMnchExtractReader, MnchExtractReader>();
             services.AddScoped<IMnchPackager, MnchPackager>();

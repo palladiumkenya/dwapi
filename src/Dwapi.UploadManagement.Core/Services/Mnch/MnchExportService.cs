@@ -669,6 +669,56 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
             DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
+        
+        public Task<List<SendMpiResponse>> ExportMnchImmunizationsAsync(SendManifestPackageDTO sendTo)
+        {
+            return ExportMnchImmunizationsAsync(sendTo, MnchMessageBag.CreateEx(_packager.GenerateMnchImmunizations().ToList()));
+        }
+
+        public async Task<List<SendMpiResponse>> ExportMnchImmunizationsAsync(SendManifestPackageDTO sendTo,
+            MnchMessageBag messageBag)
+        {
+            var responses = new List<SendMpiResponse>();
+            var client = Client ?? new HttpClient();
+            int sendCound = 0;
+            int count = 0;
+            int total = messageBag.Messages.Count;
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
+            foreach (var message in messageBag.Messages)
+            {
+                if (message.MnchImmunizationExtracts.Count > 0)
+                {
+                    count++;
+                    try
+                    {
+                        var msg = JsonConvert.SerializeObject(message);
+                        var plainTextBytes = Encoding.UTF8.GetBytes(msg);
+                        var Base64Extract = Convert.ToBase64String(plainTextBytes);
+                        string projectPath = "exports";
+                        string folderName = Path.Combine(projectPath, message.MnchImmunizationExtracts[0].SiteCode + "-Mnch" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
+                        if (!Directory.Exists(folderName))
+                            Directory.CreateDirectory(folderName);
+
+                        string fileName = folderName + "MnchImmunizationExtracts.dump" + ".json";
+
+                        await File.WriteAllTextAsync(fileName, Base64Extract);
+                        var sentIds = message.MnchImmunizationExtracts.Select(x => x.Id).ToList();
+                        sendCound += sentIds.Count;
+                        DomainEvents.Dispatch(new MnchExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e, $"Error exporting MnchImmunizationExtract");
+                        throw;
+                    }
+                }
+            }
+            DomainEvents.Dispatch(new MnchExportNotification(new SendProgress(nameof(MnchImmunizationExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new MnchStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
+            return responses;
+        }
+
 
         public async Task<List<SendMpiResponse>> SendMnchFiles(IFormFile file)
         {

@@ -98,6 +98,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<HtsPartnerNotificationServices> HtsPartnerNotificationServicesExtracts { get; set; }
         public DbSet<HtsEligibilityExtract> HtsEligibilityExtracts { get; set; }
 
+
         public DbSet<TempHtsClients> TempHtsClientsExtracts { get; set; }
         public DbSet<TempHtsClientTests> TempHtsClientTestsExtracts { get; set; }
         public DbSet<TempHtsClientTracing> TempHtsClientTracingExtracts { get; set; }
@@ -106,7 +107,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempHtsClientLinkage> TempHtsClientsLinkageExtracts { get; set; }
         public DbSet<TempHtsPartnerNotificationServices> TempHtsPartnerNotificationServicesExtracts { get; set; }
         public DbSet<TempHtsEligibilityExtract> TempHtsEligibilityExtracts { get; set; }
-        
+
 
 
 
@@ -208,6 +209,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<TempCwcVisitExtract> TempCwcVisitExtracts { get; set; }
         public virtual DbSet<TempHeiExtract> TempHeiExtracts { get; set; }
         public virtual DbSet<TempMnchLabExtract> TempMnchLabExtracts { get; set; }
+        public virtual DbSet<TempMnchImmunizationExtract> TempMnchImmunizationExtracts { get; set; }
+
 
         public virtual DbSet<PatientMnchExtract> PatientMnchExtracts { get; set; }
         public virtual DbSet<MnchEnrolmentExtract> MnchEnrolmentExtracts { get; set; }
@@ -220,6 +223,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<CwcVisitExtract> CwcVisitExtracts { get; set; }
         public virtual DbSet<HeiExtract> HeiExtracts { get; set; }
         public virtual DbSet<MnchLabExtract> MnchLabExtracts { get; set; }
+        public virtual DbSet<MnchImmunizationExtract> MnchImmunizationExtracts { get; set; }
+
 
         public virtual DbSet<TempPatientMnchExtractError> TempPatientMnchExtractError { get; set; }
         public virtual DbSet<TempMnchEnrolmentExtractError> TempMnchEnrolmentExtractError { get; set; }
@@ -232,6 +237,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<TempCwcVisitExtractError> TempCwcVisitExtractError { get; set; }
         public virtual DbSet<TempHeiExtractError> TempHeiExtractError { get; set; }
         public virtual DbSet<TempMnchLabExtractError> TempMnchLabExtractError { get; set; }
+        public virtual DbSet<TempMnchImmunizationExtractError> TempMnchImmunizationExtractError { get; set; }
         
         public virtual DbSet<TempPatientMnchExtractErrorSummary> TempPatientMnchExtractErrorSummary { get; set; }
         public virtual DbSet<TempMnchEnrolmentExtractErrorSummary> TempMnchEnrolmentExtractErrorSummary { get; set; }
@@ -244,6 +250,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public virtual DbSet<TempCwcVisitExtractErrorSummary> TempCwcVisitExtractErrorSummary { get; set; }
         public virtual DbSet<TempHeiExtractErrorSummary> TempHeiExtractErrorSummary { get; set; }
         public virtual DbSet<TempMnchLabExtractErrorSummary> TempMnchLabExtractErrorSummary { get; set; }
+        public virtual DbSet<TempMnchImmunizationExtractErrorSummary> TempMnchImmunizationExtractErrorSummary { get; set; }
 
         #endregion
 
@@ -291,7 +298,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         
         public ExtractsContext(DbContextOptions<ExtractsContext> options) : base(options)
         {
-            this.Database.SetCommandTimeout(0);
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -387,6 +394,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(f => new { f.SiteCode, f.PatientPk });
+            
+          
 
             //            modelBuilder.Entity<HTSClientExtract>()
             //                .HasKey(f => new {f.SiteCode, f.PatientPk,f.EncounterId});
@@ -510,6 +519,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure
 
             modelBuilder.Entity<PatientMnchExtract>()
                 .HasMany(c => c.PncVisitExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+            
+            modelBuilder.Entity<PatientMnchExtract>()
+                .HasMany(c => c.MnchImmunizationExtracts)
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
@@ -660,6 +675,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempCwcVisitExtract>().Key(x => x.Id).Table($"{nameof(TempCwcVisitExtracts)}");
             DapperPlusManager.Entity<TempHeiExtract>().Key(x => x.Id).Table($"{nameof(TempHeiExtracts)}");
             DapperPlusManager.Entity<TempMnchLabExtract>().Key(x => x.Id).Table($"{nameof(TempMnchLabExtracts)}");
+            DapperPlusManager.Entity<TempMnchImmunizationExtract>().Key(x => x.Id).Table($"{nameof(TempMnchImmunizationExtracts)}");
+
 
             DapperPlusManager.Entity<PatientMnchExtract>().Key(x => x.Id).Table($"{nameof(PatientMnchExtracts)}");
             DapperPlusManager.Entity<MnchEnrolmentExtract>().Key(x => x.Id).Table($"{nameof(MnchEnrolmentExtracts)}");
@@ -672,6 +689,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<CwcVisitExtract>().Key(x => x.Id).Table($"{nameof(CwcVisitExtracts)}");
             DapperPlusManager.Entity<HeiExtract>().Key(x => x.Id).Table($"{nameof(HeiExtracts)}");
             DapperPlusManager.Entity<MnchLabExtract>().Key(x => x.Id).Table($"{nameof(MnchLabExtracts)}");
+            DapperPlusManager.Entity<MnchImmunizationExtract>().Key(x => x.Id).Table($"{nameof(MnchImmunizationExtracts)}");
+
 
             DapperPlusManager.Entity<TempPatientPrepExtract>().Key(x => x.Id).Table($"{nameof(TempPatientPrepExtracts)}");
             DapperPlusManager.Entity<TempPrepBehaviourRiskExtract>().Key(x => x.Id).Table($"{nameof(TempPrepBehaviourRiskExtracts)}");

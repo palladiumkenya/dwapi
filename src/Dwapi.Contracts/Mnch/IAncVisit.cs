@@ -66,6 +66,14 @@ namespace Dwapi.Contracts.Mnch
         string ReferralReasons { get; set; }
         DateTime? NextAppointmentANC { get; set; }
         string ClinicalNotes { get; set; }
+
+        string HepatitisBScreening { get; set; }
+        string TreatedHepatitisB { get; set; }
+        string PresumptiveTreatmentGiven { get; set; }
+        string PresumptiveTreatmentDose { get; set; }
+        string MiminumPackageOfCareReceived { get; set; }
+        string MiminumPackageOfCareServices { get; set; }
+        
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

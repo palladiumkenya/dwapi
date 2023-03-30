@@ -38,7 +38,7 @@ namespace Dwapi.UploadManagement.Core.Tests.Packager.Dwh
         public void should_Generate_Diff_Manifest_With_Metrics()
         {
             var manifests = _packager.GenerateDiffWithMetrics(TestInitializer.IqEmrDto).ToList();
-            Assert.False(manifests.Any(x=>x.UploadMode!=UploadMode.Differential));
+            Assert.False(manifests.Any(x=>x.UploadMode!=UploadMode.DifferentialLoad));
             Assert.True(manifests.Any());
             Assert.True(manifests.Count==1);
             var m = manifests.First();

@@ -62,6 +62,13 @@ namespace Dwapi.Contracts.Mnch
         string ReferredTo { get; set; }
         DateTime? NextAppointmentPNC { get; set; }
         string ClinicalNotes { get; set; }
+        
+        string VisitTimingMother { get; set; }
+        string VisitTimingBaby { get; set; }
+        string MotherCameForHIVTest { get; set; }
+        string InfactCameForHAART { get; set; }
+        string MotherGivenHAART { get; set; }
+        
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }
