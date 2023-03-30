@@ -78,6 +78,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
     private _extractDbProtocols: ExtractDatabaseProtocol[];
     private extractLoadCommand: LoadMnchFromEmrCommand;
     private loadExtractsCommand: LoadMnchExtracts;
+    public changesLoaded: boolean = false;
 
     private extractProfiles: ExtractProfile[] = [];
     public centralRegistry: CentralRegistry;
@@ -142,11 +143,13 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
-    public loadFromEmr(): void {
+    public loadFromEmr(loadChangesOnly): void {
+        this.changesLoaded = loadChangesOnly;
+
         this.clearDocketStore();
         this.errorMessage = [];
         this.load$ = this._mnchService
-            .extractAll(this.generateExtractLoadCommand(this.emr))
+            .extractAll(this.generateExtractLoadCommand(this.emr, loadChangesOnly))
             .subscribe(
                 p => {
                     // this.isVerfied = p;
@@ -1097,7 +1100,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
         return this._extractDbProtocols;
     }
 
-    private generateExtractLoadCommand(currentEmr: EmrSystem): LoadMnchExtracts {
+    private generateExtractLoadCommand(currentEmr: EmrSystem,load: boolean): LoadMnchExtracts {
         this.extractProfiles.push(this.generateExtractPatientMnch(currentEmr));
         this.extractProfiles.push(this.generateExtractAncVisit(currentEmr));
         this.extractProfiles.push(this.generateExtractCwcEnrollment(currentEmr));
@@ -1113,6 +1116,7 @@ export class MnchConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
 
         this.extractLoadCommand = {
+            loadChangesOnly:load,
             extracts: this.extractProfiles
         };
 

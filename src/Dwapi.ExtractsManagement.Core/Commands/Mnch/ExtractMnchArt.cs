@@ -7,5 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Commands.Mnch
     {
         public DbExtract Extract { get; set; }
         public DbProtocol DatabaseProtocol { get; set; }
+        public bool LoadChangesOnly { get; set; }
+
     }
 }

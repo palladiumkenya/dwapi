@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
@@ -13,6 +14,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using MediatR;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Hts
@@ -21,19 +23,25 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
     {
         private readonly IHtsTestKitsExtractRepository _htsTestKitsExtractRepository;
         private readonly ITempHtsTestKitsExtractRepository _tempHtsTestKitsExtractRepository;
+        private readonly IMediator _mediator;
+
         private int Found { get; set; }
         private Guid ExtractId { get; set; }
 
-        public HtsTestKitsLoader(IHtsTestKitsExtractRepository htsTestKitsExtractRepository, ITempHtsTestKitsExtractRepository tempHtsTestKitsExtractRepository)
+        public HtsTestKitsLoader(IHtsTestKitsExtractRepository htsTestKitsExtractRepository, ITempHtsTestKitsExtractRepository tempHtsTestKitsExtractRepository,IMediator mediator)
         {
             _htsTestKitsExtractRepository = htsTestKitsExtractRepository;
             _tempHtsTestKitsExtractRepository = tempHtsTestKitsExtractRepository;
+            _mediator = mediator;
+
         }
 
         public async Task<int> Load(bool diffSupport)
         {
             var mapper = diffSupport ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
             int count = 0;
+            int extractssitecode = 0;
+
             try
             {
                 const int take = 1000;
@@ -50,6 +58,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     count += batch.Count;
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempHtsTestKits>, List<HtsTestKits>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
@@ -72,6 +82,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     */
                 }
                 DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsTestKits), "Loading...", Found, 0, 0, 0, 0)));
+                
+                _mediator.Publish(new DocketExtractLoaded("HTS", "HtsTestKitsExtract", extractssitecode));
+
                 return count;
             }
             catch (Exception e)

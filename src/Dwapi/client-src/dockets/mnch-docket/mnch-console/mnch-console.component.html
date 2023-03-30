@@ -7,7 +7,11 @@
 
     <p-toolbar>
         <div class="ui-toolbar-group-left">
-            <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr()" label="Load from EMR"
+            <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr(false)" label="Load from EMR"
+                    icon="ui-icon-file-download" class="green-btn"></button>
+        </div>
+        <div class="ui-toolbar-group-left">
+            <button pButton type="button" id="loadchangesfromemr" [disabled]="!canLoadFromEmr" (click)="loadFromEmr(true)" label="Load Changes from EMR"
                     icon="ui-icon-file-download" class="green-btn"></button>
         </div>
 
@@ -15,6 +19,11 @@
             <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
                     class="blue-btn"></button>
         </div>
+<!--        <div class=""  *ngIf="(emrName && emrName === 'KenyaEMR')">-->
+<!--            <button  pButton type="button" style="float: right;" [disabled]="!canSend" [hidden]="!canSendDiff" (click)="sendDiff()" label="Send Changes Only"-->
+<!--                     icon="ui-icon-cloud-upload"-->
+<!--                     class="btn orange-btn"></button>-->
+<!--        </div>-->
         <div class="ui-toolbar-group-right">
             <button pButton type="button" label="Export data" [disabled]="!canExport" (click)="export()"
                     icon="ui-icon-file-download" class="blue-btn"></button>

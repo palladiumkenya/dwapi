@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
@@ -13,6 +15,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using MediatR;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Hts
@@ -21,19 +24,25 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
     {
         private readonly IHtsClientTracingExtractRepository _htsClientTracingExtractRepository;
         private readonly ITempHtsClientTracingExtractRepository _tempHtsClientTracingExtractRepository;
+        private readonly IMediator _mediator;
+
         private int Found { get; set; }
         private Guid ExtractId { get; set; }
 
-        public HtsClientTracingLoader(IHtsClientTracingExtractRepository htsClientTracingExtractRepository, ITempHtsClientTracingExtractRepository tempHtsClientTracingExtractRepository)
+        public HtsClientTracingLoader(IHtsClientTracingExtractRepository htsClientTracingExtractRepository, ITempHtsClientTracingExtractRepository tempHtsClientTracingExtractRepository,IMediator mediator)
         {
             _htsClientTracingExtractRepository = htsClientTracingExtractRepository;
             _tempHtsClientTracingExtractRepository = tempHtsClientTracingExtractRepository;
+            _mediator = mediator;
+
         }
 
         public async Task<int> Load(bool diffSupport)
         {
             var mapper = diffSupport ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
             int count = 0;
+            int extractssitecode = 0;
+
             try
             {
 
@@ -51,6 +60,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     count += batch.Count;
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempHtsClientTracing>, List<HtsClientTracing>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
@@ -73,6 +84,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     */
                 }
                 DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClientTracing), "Loading...", Found, 0, 0, 0, 0)));
+               
+                _mediator.Publish(new DocketExtractLoaded("HTS", "HtsClientTracingExtract", extractssitecode));
+
                 return count;
 
             }

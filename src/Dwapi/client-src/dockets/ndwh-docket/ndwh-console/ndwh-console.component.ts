@@ -182,7 +182,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
     public loadFromEmr(loadChangesOnly): void {
         this.changesLoaded = loadChangesOnly;
-        // sessionStorage.setItem("canSendDiff",loadChangesOnly.toString());
         // this.canSendDiff = (sessionStorage.getItem("canSendDiff")) =="true";
         this.canExport = this.canLoadFromEmr = false;
         this.canSend = this.canLoadFromEmr = false;

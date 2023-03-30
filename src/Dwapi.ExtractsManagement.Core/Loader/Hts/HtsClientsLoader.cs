@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
@@ -12,6 +13,7 @@ using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using MediatR;
 using Serilog;
 
 namespace Dwapi.ExtractsManagement.Core.Loader.Hts
@@ -20,13 +22,17 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
     {
         private readonly IHtsClientsExtractRepository _htsClientsExtractRepository;
         private readonly ITempHtsClientsExtractRepository _tempHtsClientsExtractRepository;
+        private readonly IMediator _mediator;
+
         private int Found { get; set; }
         private Guid ExtractId { get; set; }
 
-        public HtsClientsLoader(IHtsClientsExtractRepository htsClientsExtractRepository, ITempHtsClientsExtractRepository tempHtsClientsExtractRepository)
+        public HtsClientsLoader(IHtsClientsExtractRepository htsClientsExtractRepository, ITempHtsClientsExtractRepository tempHtsClientsExtractRepository,IMediator mediator)
         {
             _htsClientsExtractRepository = htsClientsExtractRepository;
             _tempHtsClientsExtractRepository = tempHtsClientsExtractRepository;
+            _mediator = mediator;
+
         }
 
         public async Task<int> Load(bool diffSupport)
@@ -48,6 +54,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                 var eCount = await  _tempHtsClientsExtractRepository.GetCleanCount();
                 var pageCount = _tempHtsClientsExtractRepository.PageCount(take, eCount);
                 int page = 1;
+                int extractssitecode = 0;
+
                 while (page <= pageCount)
                 {
                     var tempHtsClients =await
@@ -57,6 +65,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     count += batch.Count;
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempHtsClients>, List<HtsClients>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
@@ -80,6 +90,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                 }
 
                 DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsClients), "Loading...", Found, 0, 0, 0, 0)));
+                
+                _mediator.Publish(new DocketExtractLoaded("HTS", "HtsClientsExtract", extractssitecode));
+
                 return count;
 
             }

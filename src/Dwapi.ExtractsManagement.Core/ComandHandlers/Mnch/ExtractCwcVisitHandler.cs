@@ -4,6 +4,8 @@ using Dwapi.ExtractsManagement.Core.Commands.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Mnch;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Utilities;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators;
 using Dwapi.ExtractsManagement.Core.Interfaces.Validators.Mnch;
@@ -23,20 +25,41 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
         private readonly IMnchExtractValidator _extractValidator;
         private readonly ICwcVisitLoader _cwcVisitLoader;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
+        private readonly IDiffLogRepository _diffLogRepository;
+        private readonly IIndicatorExtractRepository _indicatorExtractRepository;
 
-        public ExtractCwcVisitHandler(ICwcVisitSourceExtractor cwcVisitSourceExtractor, IMnchExtractValidator extractValidator, ICwcVisitLoader cwcVisitLoader, IExtractHistoryRepository extractHistoryRepository)
+        public ExtractCwcVisitHandler(ICwcVisitSourceExtractor cwcVisitSourceExtractor, IMnchExtractValidator extractValidator, ICwcVisitLoader cwcVisitLoader, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
         {
             _cwcVisitSourceExtractor = cwcVisitSourceExtractor;
             _extractValidator = extractValidator;
             _cwcVisitLoader = cwcVisitLoader;
             _extractHistoryRepository = extractHistoryRepository;
+            _diffLogRepository = diffLogRepository;
+            _indicatorExtractRepository = indicatorExtractRepository;
         }
 
         public async Task<bool> Handle(ExtractCwcVisit request, CancellationToken cancellationToken)
         {
-            //Extract
-            int found = await _cwcVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            int found;
+            var mflcode =   _indicatorExtractRepository.GetMflCode();
 
+            var loadChangesOnly = true;
+            var difflog = _diffLogRepository.GetLog("MNCH", "CwcVisitExtract", mflcode);
+            var changesLoadedStatus= false;
+            
+            //Extract
+            if (null == difflog)
+            {
+                found = await _cwcVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+            }
+            else
+            {
+                found  = await _cwcVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol,difflog.MaxCreated,difflog.MaxModified,difflog.SiteCode);
+            }
+            //update status
+            _diffLogRepository.UpdateExtractsSentStatus("MNCH", "CwcVisitExtract", changesLoadedStatus);
+
+            
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(CwcVisitExtract), $"{nameof(TempCwcVisitExtract)}s");
 

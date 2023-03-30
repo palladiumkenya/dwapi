@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Hts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Hts;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
@@ -13,6 +15,7 @@ using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
+using MediatR;
 using Serilog;
 
 
@@ -22,19 +25,25 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
     {
         private readonly IHtsPartnerNotificationServicesExtractRepository _htsPartnerNotificationServicesExtractRepository;
         private readonly ITempHtsPartnerNotificationServicesExtractRepository _tempHtsPartnerNotificationServicesExtractRepository;
+        private readonly IMediator _mediator;
+
         private int Found { get; set; }
         private Guid ExtractId { get; set; }
 
-        public HtsPartnerNotificationServicesLoader(IHtsPartnerNotificationServicesExtractRepository htsPartnerNotificationServicesExtractRepository, ITempHtsPartnerNotificationServicesExtractRepository tempHtsPartnerNotificationServicesExtractRepository)
+        public HtsPartnerNotificationServicesLoader(IHtsPartnerNotificationServicesExtractRepository htsPartnerNotificationServicesExtractRepository, ITempHtsPartnerNotificationServicesExtractRepository tempHtsPartnerNotificationServicesExtractRepository,IMediator mediator)
         {
             _htsPartnerNotificationServicesExtractRepository = htsPartnerNotificationServicesExtractRepository;
             _tempHtsPartnerNotificationServicesExtractRepository = tempHtsPartnerNotificationServicesExtractRepository;
+            _mediator = mediator;
+
         }
 
         public async Task<int> Load(bool diffSupport)
         {
             var mapper = diffSupport ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
             int count = 0;
+            int extractssitecode = 0;
+
             try
             {
 
@@ -52,6 +61,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     count += batch.Count;
                     //Auto mapper
                     var extractRecords = mapper.Map<List<TempHtsPartnerNotificationServices>, List<HtsPartnerNotificationServices>>(batch);
+                    extractssitecode = extractRecords.First().SiteCode;
+
                     foreach (var record in extractRecords)
                     {
                         record.Id = LiveGuid.NewGuid();
@@ -74,6 +85,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     */
                 }
                 DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsPartnerNotificationServices), "Loading...", Found, 0, 0, 0, 0)));
+                
+                _mediator.Publish(new DocketExtractLoaded("HTS", "HtsPartnerNotificationServicesExtract", extractssitecode));
+
                 return count;
             }
             catch (Exception e)
