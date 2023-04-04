@@ -70,6 +70,8 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
     public sendingManifest: boolean = false;
     public exporting: boolean = false;
     public exportingManifest: boolean = false;
+    public changesLoaded: boolean = false;
+
 
     public errorMessage: Message[];
     public otherMessage: Message[];
@@ -141,12 +143,13 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
-    public loadFromEmr(): void {
+    public loadFromEmr(loadChangesOnly): void {
+        this.changesLoaded = loadChangesOnly;
         this.canLoadFromEmr=false;
         this.clearDocketStore();
         this.errorMessage = [];
         this.load$ = this._prepService
-            .extractAll(this.generateExtractLoadCommand(this.emr))
+            .extractAll(this.generateExtractLoadCommand(this.emr,loadChangesOnly))
             .subscribe(
                 p => {
                     // this.isVerfied = p;
@@ -617,15 +620,15 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.send$ = this._prepSenderService.zipPrepFiles(this.manifestPackage)
             .subscribe(
                 p => {
-                   
+
                     this.updateEvent();
                 },
                 e => {
                     this.errorMessage = [];
-                   
+
                 },
                 () => {
-                    
+
                 }
             );
     }
@@ -779,7 +782,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             this.canLoadFromEmr = this.canSend = !this.sending;
         });
         this._hubConnection.on('ShowPrepExportProgress', (dwhProgress: any) => {
-            const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);            
+            const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);
             this.exportEvent = {
                 exportProgress: progress
             };
@@ -828,7 +831,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         return this._extractDbProtocols;
     }
 
-    private generateExtractLoadCommand(currentEmr: EmrSystem): LoadPrepExtracts {
+    private generateExtractLoadCommand(currentEmr: EmrSystem,load: boolean): LoadPrepExtracts {
         this.extractProfiles.push(this.generateExtractPatientPrep(currentEmr));
         this.extractProfiles.push(this.generateExtractPrepAdverseEvent(currentEmr));
         this.extractProfiles.push(this.generateExtractPrepBehaviourRisk(currentEmr));
@@ -838,6 +841,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.extractProfiles.push(this.generateExtractPrepVisit(currentEmr));
 
         this.extractLoadCommand = {
+            loadChangesOnly:load,
             extracts: this.extractProfiles
         };
 

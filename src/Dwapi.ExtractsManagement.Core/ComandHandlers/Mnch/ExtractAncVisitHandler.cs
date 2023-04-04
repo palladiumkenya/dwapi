@@ -43,7 +43,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Mnch
             int found;
             var mflcode =   _indicatorExtractRepository.GetMflCode();
 
-            var loadChangesOnly = true;
+            var loadChangesOnly = request.LoadChangesOnly;
             var difflog = _diffLogRepository.GetLog("MNCH", "AncVisitExtract", mflcode);
             var changesLoadedStatus= false;
             

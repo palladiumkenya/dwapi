@@ -43,7 +43,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Prep
             int found;
             var mflcode =   _indicatorExtractRepository.GetMflCode();
 
-            var loadChangesOnly = true;
+            var loadChangesOnly = request.LoadChangesOnly;
             var difflog = _diffLogRepository.GetLog("PREP", "PrepAdverseEventExtract", mflcode);
             var changesLoadedStatus= false;
             
