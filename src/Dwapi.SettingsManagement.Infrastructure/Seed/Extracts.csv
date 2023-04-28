@@ -6089,8 +6089,8 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                     when 159914 then 2
                                     when 159915 then 3 end)                                                        NoBabiesDelivered,
                         ''                                                                             as BabyBirthNumber,
-                        l.baby_sex                                                                     as SexBaby,
-                        l.birth_weight                                                                 as BirthWeight,
+                        case l.baby_sex when 1534 then 'Male' when 1535 then 'Female' end              as SexBaby,
+                        round(l.birth_weight, 2)                                                               as BirthWeight,
                         case l.baby_condition
                                 when 151849 then 'Live birth'
                                 when 159916 then 'Fresh still birth'
@@ -6123,26 +6123,12 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                     when 664 then 'Negative'
                                     when 1118
                                         then 'Not Done' end)                                           as SyphilisTestResults,
-                        ''                                                                             as HIVStatusLastANC,
-                        if(l.final_test_result is not null, 'Yes', 'No')                               as HIVTestingDone,
-                        case l.test_1_kit_name
-                                when 164960 then 'Determine'
-                                when 164961 then 'First Response'
-                                when 165351 then 'Dual Kit' end                                              as HIVTest1,
-                        case l.test_1_result
-                                when 703 then 'Positive'
-                                when 664 then 'Negative'
-                                when 163611 then 'Invalid' end                                               as HIV1Results,
-                        case l.test_2_kit_name
-                                when 164960 then 'Determine'
-                                when 164961 then 'First Response'
-                                when 165351 then 'Dual Kit' end                                              as HIVTest2,
-                                ''                                                                           as HIV2Results,
-                        case l.final_test_result
-                        when 703 then 'Positive'
-                                   when 664 then 'Negative'
-                                   when 1138
-                                       then 'Invalid' end                                              as HIVTestFinalResult,
+                        ''                                                                             as HIVStatusLastANC,                        
+                        if(l.final_test_result is not null, 'Yes', 'No')                        as HIVTestingDone,
+                              l.test_1_kit_name                                                       as HIVTest1,
+                              l.test_1_result                                                         as HIV1Results,
+                              l.test_2_kit_name                                                       as HIVTest2,
+                              l.final_test_result                                                     as HIVTestFinalResult,
                                (case l.mother_on_haart_during_anc
                                     when 1065 then 'Yes'
                                     when 1066 then 'No'
@@ -6152,7 +6138,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                     when 1065 then 'Yes'
                                     when 1066 then 'No'
                                     when 1067 then 'N/A' end)                                             OnARTMat,
-                        if(l.baby_nvp_dispensed = 80586 or l.baby_azt_dispensed = 160123, 'Yes', 'No') as BabyGivenProphylaxis,
+                        if(l.baby_nvp_dispensed = 1 or l.baby_azt_dispensed = 1, 'Yes', 'No') as BabyGivenProphylaxis,
                         case l.prophylaxis_given
                                 when 105281 then 'Yes'
                                 when 1107 then 'No'
@@ -6172,12 +6158,14 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                         GREATEST(COALESCE(l.date_last_modified, e.date_last_modified, c.date_last_modified),
                                                             COALESCE(l.date_last_modified, e.date_last_modified,
                                                                                                 c.date_last_modified))                                       as Date_Last_Modified
-from kenyaemr_etl.etl_patient_demographics d
-                        join kenyaemr_etl.etl_mchs_delivery l on d.patient_id = l.patient_id
-                        join kenyaemr_etl.etl_mchs_discharge c on d.patient_id = c.patient_id
-                        join kenyaemr_etl.etl_mch_enrollment e on d.patient_id = e.patient_id
-                        join kenyaemr_etl.etl_default_facility_info i
-where l.visit_id is not null group by l.visit_id"|TempMatVisitExtract|0|MatVisitExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                from kenyaemr_etl.etl_patient_demographics d
+                                        join kenyaemr_etl.etl_mchs_delivery l on d.patient_id = l.patient_id
+                                        left join kenyaemr_etl.etl_mchs_discharge c on d.patient_id = c.patient_id
+                                        join kenyaemr_etl.etl_mch_enrollment e on d.patient_id = e.patient_id
+                                        left join (select v.patient_id, mid(max(concat(v.visit_date, v.anc_visit_number)), 11) as anc_visits	
+                                        from kenyaemr_etl.etl_mch_antenatal_visit v	
+                                        group by v.patient_id) v on d.patient_id = v.patient_id
+                where l.visit_id is not null group by l.visit_id"|TempMatVisitExtract|0|MatVisitExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651750-9db2-11eb-a8b3-0242ac130003|Pnc Visit|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                       PatientPK,
                         i.siteCode                                                                         SiteCode,
                         d.openmrs_id                                                                       PatientMnchID,
