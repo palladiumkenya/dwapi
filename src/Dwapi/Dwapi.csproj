@@ -4,7 +4,7 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <Version>3.1.0.0</Version>
+    <Version>3.1.0.2</Version>
     <Company>Palladium Group</Company>
     <Authors>Davidson Gikandi, Danson Koske, Mwenda Gitonga, Brian Mwasi, Teddy Brian, Mary Kilewe, Margaret Gichuhi</Authors>
     <RepositoryUrl>https://github.com/palladiumkenya/DWAPI</RepositoryUrl>
