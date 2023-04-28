@@ -5881,9 +5881,9 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                     when 1066 then 'No'
                     else 'NA' end                                                                          SyphilisTreatment,
                     case e.hiv_status
-                    when 'Positive' then 'KP'
-                    when 'Unknown' then 'Unknown'
-                    when 'Negative'
+                    when 703 then 'KP'
+                   when 1067 then 'Unknown'
+                   when 664
                     then 'Negative' end                                                            HIVStatusBeforeANC,
                     if(a.final_test_result is not null or a.test_1_result is not null or a.test_2_result is not null, 'Yes',
                     'No')                                                                                 HIVTestingDone,
@@ -6042,7 +6042,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                         l.visit_id                                                                        VisitID,
                         l.visit_date                                                                      VisitDate,
                         l.admission_number                                                                AdmissionNumber,
-                        ''                                                                                ANCVisits,
+                        l.number_of_anc_visits                                                            ANCVisits,
                         date(l.date_of_last_menstrual_period)                                             LMP,
                         date(l.estimated_date_of_delivery)                                         EDD,
                         l.date_of_delivery                                                                DateOfDelivery,
@@ -6052,11 +6052,12 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                 when 1170 then 'Normal delivery'
                                 when 1171 then 'CS'
                                 when 1172 then 'Breech'
-                                when 118159 then 'Assisted vaginal delivery' end                                ModeOfDelivery,
+                                when 118159 then 'Assisted vaginal delivery' end                           ModeOfDelivery,
                         case l.placenta_complete
-                             when 163455 then 'Yes'
-                                       when 163456
-                                           then 'No' end                                                      PlacentaComplete,
+                             when 703 then 'Yes'
+                            when 664
+                                then 'No'
+                            when 1501 then 'Baby born before arrival' end                                 PlacentaComplete,
                        (case l.uterotonic_given
                             when 81369 then 'Oxytocin'
                             when 104590 then 'Carbetocin'
@@ -6099,9 +6100,8 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                 when 1066 then 'No'
                                 when 1175 then 'N/A' end                                                     as BirthWithDeformity,
                         case l.teo_given
-                                when 84893 then 'Yes'
-                                when 1066 then 'No'
-                                when 1175 then 'N/A' end                                                     as TetracyclineGiven,
+                                when 1 then 'Yes'
+                                when 0 then 'No' end                                                    as TetracyclineGiven,
                         case l.bf_within_one_hour when 1065 then 'Yes' when 1066 then 'No' end         as InitiatedBF,
                         l.apgar_score_1min                                                             as ApgarScore1,
                         l.apgar_score_5min                                                             as ApgarScore5,
