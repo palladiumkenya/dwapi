@@ -5988,21 +5988,37 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                     when 159589 then 'Implants'
                     when 1472 then 'BTL' end)                                                        PostParturmFP,
                     a.deworming                                                                              Deworming,
-                    a.IPT_malaria                                                                            MalariaProphylaxis,
+                    case a.intermittent_presumptive_treatment_given
+                               when 1065 then 'Yes'
+                               when 1066 then 'No'
+                               when 1175 then 'Not Applicable' end   as                                      MalariaProphylaxis,
                     a.TTT                                                                                    TetanusDose,
                     a.iron_supplement                                                                        IronSupplementsGiven,
                     a.bed_nets                                                                               ReceivedMosquitoNet,
                     concat_ws('|', nullif(case a.TTT when 'Yes' then 'Tetanus Toxoid' end, ''),
-                    nullif(case a.IPT_malaria when 'Yes' then 'Malaria  Prophylaxis' end, ''),
+                    nullif(case a.intermittent_presumptive_treatment_given when 1065 then 'Malaria Prophylaxis' end, ''),
                     nullif(case a.iron_supplement when 'Yes' then 'Folate / Iron ' end, ''),
-                    nullif(case a.deworming when 'Yes' then 'Mebendazole' end, ''), nullif(case a.bed_nets
-                    when 'Yes'
-                    then 'Long-Lasting Insecticidal Net' end,
-                    '')) as PreventiveServices,
-                    ''                                                          as PresumptiveTreatmentGiven,
-                    ''                                                                      as PresumptiveTreatmentDose,
+                    nullif(case a.deworming_done_anc when 'Yes' then 'Mebendazole' end, ''), nullif(case a.counselled_on_treated_nets
+                       when 1381
+                           then 'Long-Lasting Insecticidal Net' end,
+                   '')) as PreventiveServices,
+                    (case a.intermittent_presumptive_treatment_given	
+                        when 1065 then 'Yes'	
+                        when 1066 then 'No'	
+                        when 1175	
+                        then 'Not Applicable' end)                                                          as PresumptiveTreatmentGiven,
+                    (case a.intermittent_presumptive_treatment_dose	
+                        when 1 then 'First Dose'	
+                        when 2 then 'Second Dose'	
+                        when 3 then 'Third Dose'	
+                        when 4 then 'Fourth Dose'	
+                        when 5 then 'Fifth Dose'	
+                        when 6 then 'Sixth Dose'	
+                        when 7 then 'Seventh Dose'	
+                        when 0	
+                        then 'No' end)                                                                       as PresumptiveTreatmentDose,
                     (case a.minimum_care_package when 1065 then 'Yes' when 1066 then 'No' end)                  MiminumPackageOfCareReceived,
-                    ''                                                                                      as MiminumPackageOfCareServices,
+                    a.minimum_package_of_care_services                                                       as MiminumPackageOfCareServices,
                     if(a.urine_microscopy is not null or a.urinary_albumin is not null or a.glucose_measurement is not null
                     or a.urine_ph is not null or a.urine_gravity is not null or a.urine_nitrite_test is not null
                     or a.urine_dipstick_for_blood is not null or a.urine_leukocyte_esterace_test is not null or
