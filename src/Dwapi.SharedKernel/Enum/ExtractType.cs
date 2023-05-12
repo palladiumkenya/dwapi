@@ -21,6 +21,7 @@
         Otz,
         Covid,
         DefaulterTracing,
+        CervicalCancerScreening,
 
         PatientMnch,
         AncVisit,

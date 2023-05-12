@@ -271,6 +271,32 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
 
             CreateMap<TempPatientAdverseEventExtract, PatientAdverseEventExtract>();
 
+            
+            //Patient Cervical Cancer Screening Extract
+            CreateMap<IDataRecord, TempCervicalCancerScreeningExtract>()
+                .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempCervicalCancerScreeningExtract.PatientPK))))
+                .ForMember(x => x.PatientID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.PatientID))))
+                .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempCervicalCancerScreeningExtract.FacilityId))))
+                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempCervicalCancerScreeningExtract.SiteCode))))
+                .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.Emr))))
+                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.Project))))
+                .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.FacilityName))))
+                .ForMember(x => x.VisitType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.VisitType))))
+                .ForMember(x => x.VisitID, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempCervicalCancerScreeningExtract.VisitID))))
+                .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempCervicalCancerScreeningExtract.VisitDate))))
+                .ForMember(x => x.ScreeningMethod, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.ScreeningMethod))))
+                .ForMember(x => x.TreatmentToday, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.TreatmentToday))))
+                .ForMember(x => x.ReferredOut, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.ReferredOut))))
+                .ForMember(x => x.NextAppointmentDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempCervicalCancerScreeningExtract.NextAppointmentDate))))
+                .ForMember(x => x.ScreeningType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.ScreeningType))))
+                .ForMember(x => x.PostTreatmentComplicationCause, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.PostTreatmentComplicationCause))))
+                .ForMember(x => x.OtherPostTreatmentComplication, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.OtherPostTreatmentComplication))))
+                .ForMember(x => x.ReferralReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.ReferralReason))))
+                .ForMember(x => x.ScreeningResult, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.ScreeningResult))))
+                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempCervicalCancerScreeningExtract.Date_Created))))
+                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempCervicalCancerScreeningExtract.Date_Last_Modified))));
+
+            CreateMap<TempCervicalCancerScreeningExtract, CervicalCancerScreeningExtract>();
 
             #region NewCT
 
