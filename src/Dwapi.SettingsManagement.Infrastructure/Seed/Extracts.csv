@@ -5881,9 +5881,9 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                     when 1066 then 'No'
                     else 'NA' end                                                                          SyphilisTreatment,
                     case e.hiv_status
-                    when 'Positive' then 'KP'
-                    when 'Unknown' then 'Unknown'
-                    when 'Negative'
+                    when 703 then 'KP'
+                   when 1067 then 'Unknown'
+                   when 664
                     then 'Negative' end                                                            HIVStatusBeforeANC,
                     if(a.final_test_result is not null or a.test_1_result is not null or a.test_2_result is not null, 'Yes',
                     'No')                                                                                 HIVTestingDone,
@@ -5988,21 +5988,37 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                     when 159589 then 'Implants'
                     when 1472 then 'BTL' end)                                                        PostParturmFP,
                     a.deworming                                                                              Deworming,
-                    a.IPT_malaria                                                                            MalariaProphylaxis,
+                    case a.intermittent_presumptive_treatment_given
+                               when 1065 then 'Yes'
+                               when 1066 then 'No'
+                               when 1175 then 'Not Applicable' end   as                                      MalariaProphylaxis,
                     a.TTT                                                                                    TetanusDose,
                     a.iron_supplement                                                                        IronSupplementsGiven,
                     a.bed_nets                                                                               ReceivedMosquitoNet,
                     concat_ws('|', nullif(case a.TTT when 'Yes' then 'Tetanus Toxoid' end, ''),
-                    nullif(case a.IPT_malaria when 'Yes' then 'Malaria  Prophylaxis' end, ''),
+                    nullif(case a.intermittent_presumptive_treatment_given when 1065 then 'Malaria Prophylaxis' end, ''),
                     nullif(case a.iron_supplement when 'Yes' then 'Folate / Iron ' end, ''),
-                    nullif(case a.deworming when 'Yes' then 'Mebendazole' end, ''), nullif(case a.bed_nets
-                    when 'Yes'
-                    then 'Long-Lasting Insecticidal Net' end,
-                    '')) as PreventiveServices,
-                    ''                                                          as PresumptiveTreatmentGiven,
-                    ''                                                                      as PresumptiveTreatmentDose,
+                    nullif(case a.deworming_done_anc when 'Yes' then 'Mebendazole' end, ''), nullif(case a.counselled_on_treated_nets
+                       when 1381
+                           then 'Long-Lasting Insecticidal Net' end,
+                   '')) as PreventiveServices,
+                    (case a.intermittent_presumptive_treatment_given	
+                        when 1065 then 'Yes'	
+                        when 1066 then 'No'	
+                        when 1175	
+                        then 'Not Applicable' end)                                                          as PresumptiveTreatmentGiven,
+                    (case a.intermittent_presumptive_treatment_dose	
+                        when 1 then 'First Dose'	
+                        when 2 then 'Second Dose'	
+                        when 3 then 'Third Dose'	
+                        when 4 then 'Fourth Dose'	
+                        when 5 then 'Fifth Dose'	
+                        when 6 then 'Sixth Dose'	
+                        when 7 then 'Seventh Dose'	
+                        when 0	
+                        then 'No' end)                                                                       as PresumptiveTreatmentDose,
                     (case a.minimum_care_package when 1065 then 'Yes' when 1066 then 'No' end)                  MiminumPackageOfCareReceived,
-                    ''                                                                                      as MiminumPackageOfCareServices,
+                    a.minimum_package_of_care_services                                                       as MiminumPackageOfCareServices,
                     if(a.urine_microscopy is not null or a.urinary_albumin is not null or a.glucose_measurement is not null
                     or a.urine_ph is not null or a.urine_gravity is not null or a.urine_nitrite_test is not null
                     or a.urine_dipstick_for_blood is not null or a.urine_leukocyte_esterace_test is not null or
@@ -6042,7 +6058,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                         l.visit_id                                                                        VisitID,
                         l.visit_date                                                                      VisitDate,
                         l.admission_number                                                                AdmissionNumber,
-                        ''                                                                                ANCVisits,
+                        l.number_of_anc_visits                                                            ANCVisits,
                         date(l.date_of_last_menstrual_period)                                             LMP,
                         date(l.estimated_date_of_delivery)                                         EDD,
                         l.date_of_delivery                                                                DateOfDelivery,
@@ -6052,11 +6068,12 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                 when 1170 then 'Normal delivery'
                                 when 1171 then 'CS'
                                 when 1172 then 'Breech'
-                                when 118159 then 'Assisted vaginal delivery' end                                ModeOfDelivery,
+                                when 118159 then 'Assisted vaginal delivery' end                           ModeOfDelivery,
                         case l.placenta_complete
-                             when 163455 then 'Yes'
-                                       when 163456
-                                           then 'No' end                                                      PlacentaComplete,
+                             when 703 then 'Yes'
+                            when 664
+                                then 'No'
+                            when 1501 then 'Baby born before arrival' end                                 PlacentaComplete,
                        (case l.uterotonic_given
                             when 81369 then 'Oxytocin'
                             when 104590 then 'Carbetocin'
@@ -6088,8 +6105,8 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                     when 159914 then 2
                                     when 159915 then 3 end)                                                        NoBabiesDelivered,
                         ''                                                                             as BabyBirthNumber,
-                        l.baby_sex                                                                     as SexBaby,
-                        l.birth_weight                                                                 as BirthWeight,
+                        case l.baby_sex when 1534 then 'Male' when 1535 then 'Female' end              as SexBaby,
+                        round(l.birth_weight, 2)                                                               as BirthWeight,
                         case l.baby_condition
                                 when 151849 then 'Live birth'
                                 when 159916 then 'Fresh still birth'
@@ -6099,9 +6116,8 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                 when 1066 then 'No'
                                 when 1175 then 'N/A' end                                                     as BirthWithDeformity,
                         case l.teo_given
-                                when 84893 then 'Yes'
-                                when 1066 then 'No'
-                                when 1175 then 'N/A' end                                                     as TetracyclineGiven,
+                                when 1 then 'Yes'
+                                when 0 then 'No' end                                                    as TetracyclineGiven,
                         case l.bf_within_one_hour when 1065 then 'Yes' when 1066 then 'No' end         as InitiatedBF,
                         l.apgar_score_1min                                                             as ApgarScore1,
                         l.apgar_score_5min                                                             as ApgarScore5,
@@ -6123,26 +6139,13 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                     when 664 then 'Negative'
                                     when 1118
                                         then 'Not Done' end)                                           as SyphilisTestResults,
-                        ''                                                                             as HIVStatusLastANC,
-                        if(l.final_test_result is not null, 'Yes', 'No')                               as HIVTestingDone,
-                        case l.test_1_kit_name
-                                when 164960 then 'Determine'
-                                when 164961 then 'First Response'
-                                when 165351 then 'Dual Kit' end                                              as HIVTest1,
-                        case l.test_1_result
-                                when 703 then 'Positive'
-                                when 664 then 'Negative'
-                                when 163611 then 'Invalid' end                                               as HIV1Results,
-                        case l.test_2_kit_name
-                                when 164960 then 'Determine'
-                                when 164961 then 'First Response'
-                                when 165351 then 'Dual Kit' end                                              as HIVTest2,
-                                ''                                                                           as HIV2Results,
-                        case l.final_test_result
-                        when 703 then 'Positive'
-                                   when 664 then 'Negative'
-                                   when 1138
-                                       then 'Invalid' end                                              as HIVTestFinalResult,
+                        ''                                                                             as HIVStatusLastANC,                        
+                        if(l.final_test_result is not null, 'Yes', 'No')                        as HIVTestingDone,
+                              l.test_1_kit_name                                                       as HIVTest1,
+                              l.test_1_result                                                         as HIV1Results,
+                              l.test_2_kit_name                                                       as HIVTest2,
+                                      ''                                                              as HIV2Results,
+                              l.final_test_result                                                     as HIVTestFinalResult,
                                (case l.mother_on_haart_during_anc
                                     when 1065 then 'Yes'
                                     when 1066 then 'No'
@@ -6152,7 +6155,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                     when 1065 then 'Yes'
                                     when 1066 then 'No'
                                     when 1067 then 'N/A' end)                                             OnARTMat,
-                        if(l.baby_nvp_dispensed = 80586 or l.baby_azt_dispensed = 160123, 'Yes', 'No') as BabyGivenProphylaxis,
+                        if(l.baby_nvp_dispensed = 1 or l.baby_azt_dispensed = 1, 'Yes', 'No') as BabyGivenProphylaxis,
                         case l.prophylaxis_given
                                 when 105281 then 'Yes'
                                 when 1107 then 'No'
@@ -6172,12 +6175,15 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                         GREATEST(COALESCE(l.date_last_modified, e.date_last_modified, c.date_last_modified),
                                                             COALESCE(l.date_last_modified, e.date_last_modified,
                                                                                                 c.date_last_modified))                                       as Date_Last_Modified
-from kenyaemr_etl.etl_patient_demographics d
-                        join kenyaemr_etl.etl_mchs_delivery l on d.patient_id = l.patient_id
-                        join kenyaemr_etl.etl_mchs_discharge c on d.patient_id = c.patient_id
-                        join kenyaemr_etl.etl_mch_enrollment e on d.patient_id = e.patient_id
-                        join kenyaemr_etl.etl_default_facility_info i
-where l.visit_id is not null group by l.visit_id"|TempMatVisitExtract|0|MatVisitExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                from kenyaemr_etl.etl_patient_demographics d
+                                        join kenyaemr_etl.etl_mchs_delivery l on d.patient_id = l.patient_id
+                                        left join kenyaemr_etl.etl_mchs_discharge c on d.patient_id = c.patient_id
+                                        join kenyaemr_etl.etl_mch_enrollment e on d.patient_id = e.patient_id
+                                        left join (select v.patient_id, mid(max(concat(v.visit_date, v.anc_visit_number)), 11) as anc_visits	
+                                            from kenyaemr_etl.etl_mch_antenatal_visit v	
+                                            group by v.patient_id) v on d.patient_id = v.patient_id
+                                        join kenyaemr_etl.etl_default_facility_info i
+                where l.visit_id is not null group by l.visit_id"|TempMatVisitExtract|0|MatVisitExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651750-9db2-11eb-a8b3-0242ac130003|Pnc Visit|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                       PatientPK,
                         i.siteCode                                                                         SiteCode,
                         d.openmrs_id                                                                       PatientMnchID,
@@ -6593,14 +6599,14 @@ where l.visit_id is not null group by l.visit_id"|TempMatVisitExtract|0|MatVisit
                         'KenyaEMR'             as Emr,
                         'Kenya HMIS II'        as Project,
                         i.FacilityName         as FacilityName,
-                        0 																																																															as FacilityId,
+                        0 						                            as FacilityId,
                         d.openmrs_id           as PatientMnchID,
                         v.visit_date           as VisitDate,
                         v.visit_id             as VisitID,
-                        ''    as RevisitThisYear,
+                        v.revisit_this_year    as RevisitThisYear,
                         v.height               as Height,
                         v.weight               as Weight,
-                        0       as HeightLength,
+                        v.height_length      as HeightLength,
                         v.temperature          as Temp,
                         v.pulse_rate           as PulseRate,
                         v.respiratory_rate     as RespiratoryRate,
@@ -6614,28 +6620,31 @@ where l.visit_id is not null group by l.visit_id"|TempMatVisitExtract|0|MatVisit
                         v.mnps_supplementation as MNPsSupplementation,
                         ''                     as Immunization,
                         ''                     as ImmunizationGiven,
-                        ''				      as DangerSigns,
+                        v.danger_signs	      as DangerSigns,
                         v.milestones           as Milestones,
                         v.vitaminA_given       as VitaminA,
                         v.disability           as Disability,
                         v.llin                 as ReceivedMosquitoNet,
                         v.dewormed             as Dewormed,
-                        ''			          as Refferred,
+                        v.referred			          as Refferred,
                         v.referred_from        as ReferredFrom,
                         v.referred_to          as ReferredTo,
-                        ''				      as ReferralReasons,
+                        v.referral_reason      as ReferralReasons,
                         v.follow_up            as FollowUP,
                         v.appointment_date     as NextAppointment,
                         v.dna_pcr              as dnapcr,
                         v.dna_pcr_date         as dnapcrdate
-                        from kenyaemr_etl.etl_patient_demographics d
+                from kenyaemr_etl.etl_patient_demographics d
                         inner join (select v.patient_id,
                         v.visit_date,
                         v.visit_id,
-                        '' as revisit_this_year,
+                        (case v.revisit_this_year when 1065 then 'Yes' when 1066 then 'No' end) as revisit_this_year,
                         round(t.height, 2)                                                      as height,
                         round(t.weight, 2)                                                      as weight,
-                        0                            as height_length,
+                        (case v.height_length	
+                        when 1115 then 'Normal'	
+                        when 164085 then 'Stunted'	
+                        when 164086 then 'Severe Stunded' end)                           as height_length,
                         round(t.temperature, 1)                                                 as temperature,
                         t.pulse_rate,
                         t.respiratory_rate,
@@ -6658,19 +6667,25 @@ where l.visit_id is not null group by l.visit_id"|TempMatVisitExtract|0|MatVisit
                         when 6046 then 'Mixed Feeding(MF)'
                         else 'Not Breastfeeding' end                                        as infant_feeding,
                         concat_ws('|', nullif(case v.azt_given when 'Yes' then 'AZT' when 'No' then '' end, ''),
-                        nullif(case v.nvp_given when 'Yes' then 'NVP' when 'No' then '' end, ''),
-                        nullif(case v.ctx_given when 'Yes' then 'CTX' when 'No' then '' end, ''),
-                        nullif(case v.multi_vitamin_given when 'Yes' then 'AZT' when 'No' then '' end,
+                            nullif(case v.nvp_given when 'Yes' then 'NVP' when 'No' then '' end, ''),
+                            nullif(case v.ctx_given when 'Yes' then 'CTX' when 'No' then '' end, ''),
+                            nullif(case v.multi_vitamin_given when 'Yes' then 'AZT' when 'No' then '' end,
                                                ''))                                                 as medication_given,
                         case v.tb_assessment_outcome
-                        when 1660 then 'No TB Signs'
-                        when 142177 then 'Presumed TB'
-                        when 1661 then 'TB Confirmed'
-                        when 1662 then 'TB Rx'
-                        when 1679 then 'INH'
-                        when 160737 then 'Not Done'
-                        else '' end                                                         as tb_assessment,
-                        ''												                             as danger_signs,
+                            when 1660 then 'No TB Signs'
+                            when 142177 then 'Presumed TB'
+                            when 1661 then 'TB Confirmed'
+                            when 1662 then 'TB Rx'
+                            when 1679 then 'INH'
+                            when 160737 then 'Not Done'
+                            else '' end                                                         as tb_assessment,
+                        case v.danger_signs	
+                            when 159861 then 'Unable to breastfeed'	
+                            when 1983 then 'Unable to drink'	
+                            when 164482 then 'Vomits everything'	
+                            when 138868 then 'Bloody Diarrhea'	
+                            when 460 then 'Has Oedema'	
+                            when 164483 then 'Has convulsions' end    	                             as danger_signs,
                         case v.review_of_systems_developmental
                         when 1115 then 'Normal(N)'
                         when 6022 then 'Delayed(D)'
@@ -6680,18 +6695,18 @@ where l.visit_id is not null group by l.visit_id"|TempMatVisitExtract|0|MatVisit
                         (case LLIN when 1065 then 'Yes' when 1066 then 'No' else '' end)        as llin,
                         case v.deworming_drug when 79413 then 'Yes' when 70439 then 'Yes' end as dewormed,
                         case v.counselled_on
-                        when 1914 then 'HIV'
-                        when 1380 then 'Nutrition Services' end                             as follow_up,
-                        ''																	          as referred,
+                            when 1914 then 'HIV'
+                            when 1380 then 'Nutrition Services' end                             as follow_up,
+                        (case v.referred when 1065 then 'Yes' when 1066 then 'No' end)         as referred,
                         case v.referred_from
-                        when 1537 then 'Another Health Facility'
-                        when 163488 then 'Community Unit'
-                        when 1175 then 'N/A' end                                            as referred_from,
+                            when 1537 then 'Another Health Facility'
+                            when 163488 then 'Community Unit'
+                            when 1175 then 'N/A' end                                            as referred_from,
                         case v.referred_to
                         when 1537 then 'Another Health Facility'
                         when 163488 then 'Community Unit'
                         when 1175 then 'N/A' end                                            as referred_to,
-                        ''					                                                       as referral_reason,
+                        v.referral_reason					                                  as referral_reason,
                         v.next_appointment_date                                               as appointment_date,
                         case v.dna_pcr_result
                         when 1138 then 'Indeterminate'
@@ -7445,6 +7460,33 @@ from kenyaemr_etl.etl_patient_demographics d
 											join kenyaemr_etl.etl_ccc_defaulter_tracing f on d.patient_id = f.patient_id
 											join kenyaemr_etl.etl_default_facility_info i
 		group by f.visit_id"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
+3425F2F6-B9D8-48F1-97F6-8E6E092B0C97|Cervical Cancer Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                           PatientPK,
+                     i.siteCode                             SiteCode,
+                     d.unique_patient_no                    PatientID,
+                     0                                   as FacilityId,
+                     'KenyaEMR'                             Emr,
+                     'Kenya HMIS III'                       Project,
+                     i.facilityName                         FacilityName,
+                     s.visit_id                             VisitID,
+                     s.visit_date                           VisitDate,
+                     s.visit_type                        as VisitType,
+                     s.screening_method                  as ScreeningMethod,
+                     s.treatment_method                  as TreatmentToday,
+                     s.screening_type                    as ScreeningType,
+                     s.post_treatment_complication_cause as PostTreatmentComplicationCause,
+                     s.post_treatment_complication_other as OtherPostTreatmentComplication,
+                     s.screening_result                  as ScreeningResult,
+                     s.referred_out                      as ReferredOut,
+                     s.referral_reason                   as ReferralReason,
+                     date(s.next_appointment_date)       as NextAppointmentDate,
+                     s.date_created                      as Date_Created,
+                     s.date_last_modified                as Date_Last_Modified
+              from kenyaemr_etl.etl_patient_demographics d
+                       join kenyaemr_etl.etl_cervical_cancer_screening s on d.patient_id = s.patient_id
+                       join kenyaemr_etl.etl_default_facility_info i
+              group by s.visit_id"|dwhstage|0|CervicalCancerScreeningExtract|22|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
 
 82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                  as PatientPK,
                     i.siteCode                                                    as SiteCode,

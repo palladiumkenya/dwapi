@@ -177,6 +177,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             this.getSummaryExtracts('DefaulterTracing');
             return;
         }
+        if (this.extract === 'Cervical Cancer Screening') {
+            this.getSummaryExtracts('CervicalCancerScreening');
+            return;
+        }
     }
 
     private getColumns(): void {
@@ -255,6 +259,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         }
         if (this.extract === 'Defaulter Tracing') {
             this.getDefaulterTracingColumns();
+            return;
+        }
+        if (this.extract === 'Cervical Cancer Screening') {
+            this.getCervicalCancerScreeningColumns();
             return;
         }
     }
@@ -1162,6 +1170,29 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'comments', header: 'comments'},
             {field: 'bookingDate', header: 'bookingDate'},
             {field: 'id', header: 'id'}
+        ];
+    }
+
+    private getCervicalCancerScreeningColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientID', header: 'patientID'},
+            {field: 'facilityId', header: 'facilityId'},
+            {field: 'facilityName', header: 'facilityName'},
+            {field: 'visitID', header: 'visitID'},
+            {field: 'visitDate', header: 'visitDate'},
+            {field: 'VisitType', header: 'VisitType'},
+            {field: 'screeningMethod', header: 'ScreeningMethod'},
+            {field: 'treatmentToday', header: 'TreatmentToday'},
+            {field: 'referredOut', header: 'ReferredOut'},
+            {field: 'nextAppointmentDate', header: 'NextAppointmentDate'},
+            {field: 'screeningType', header: 'ScreeningType'},
+            {field: 'screeningResult', header: 'ScreeningResult'},
+            {field: 'postTreatmentComplicationCause', header: 'PostTreatmentComplicationCause'},
+            {field: 'otherPostTreatmentComplication', header: 'OtherPostTreatmentComplication'},
+            {field: 'referralReason', header: 'ReferralReason'}
+
         ];
     }
 
