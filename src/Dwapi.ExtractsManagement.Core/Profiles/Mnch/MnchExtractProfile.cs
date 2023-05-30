@@ -107,7 +107,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.RespiratoryRate, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempAncVisitExtract.RespiratoryRate))))
                      .ForMember(x => x.OxygenSaturation, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempAncVisitExtract.OxygenSaturation))))
                      .ForMember(x => x.MUAC, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempAncVisitExtract.MUAC))))
-                     .ForMember(x => x.BP, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempAncVisitExtract.BP))))
+                     .ForMember(x => x.BP, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.BP))))
                      .ForMember(x => x.BreastExam, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.BreastExam))))
                      .ForMember(x => x.AntenatalExercises, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.AntenatalExercises))))
                      .ForMember(x => x.FGM, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.FGM))))

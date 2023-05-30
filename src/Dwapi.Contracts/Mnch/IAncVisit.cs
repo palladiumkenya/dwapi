@@ -18,7 +18,7 @@ namespace Dwapi.Contracts.Mnch
         int? RespiratoryRate { get; set; }
         decimal? OxygenSaturation { get; set; }
         int? MUAC { get; set; }
-        int? BP { get; set; }
+        string BP { get; set; }
         string BreastExam { get; set; }
         string AntenatalExercises { get; set; }
         string FGM { get; set; }
