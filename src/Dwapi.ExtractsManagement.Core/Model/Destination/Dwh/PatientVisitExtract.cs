@@ -66,6 +66,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string CNS { get; set; }
         public string Genitourinary { get; set; }
         public DateTime? RefillDate { get; set; }
+        public Decimal ZScore { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

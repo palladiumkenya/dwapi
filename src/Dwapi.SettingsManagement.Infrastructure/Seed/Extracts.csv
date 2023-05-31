@@ -939,10 +939,15 @@ having min(hiv.visit_date) is not null
                      end                                                                as Pregnant,
                  CAST(fup.last_menstrual_period AS DATE)                                as LMP,
                  CAST(fup.expected_delivery_date AS DATE)                               as EDD,
-                 t.height                                                             as Height,
-                 t.weight                                                             as Weight,
-                 concat(t.systolic_pressure, '/', t.diastolic_pressure)             as BP,
-                 t.temperature                                                        as Temp,
+                 t.height                                                               as Height,
+                 t.weight                                                               as Weight,
+                 concat(t.systolic_pressure, '/', t.diastolic_pressure)                 as BP,
+                 t.temperature                                                          as Temp,
+                 case t.z_score
+                            when 1115 then 'Normal (Median)'
+                            when 123814 then 'Mild (-1 SD)'
+                            when 123815 then 'Moderate (-2 SD)'
+                            when 164131 then 'Severe (-3 SD and -4 SD)' end           as ZScore,
                  t.pulse_rate                                                         as PulseRate,
                  t.respiratory_rate                                                   as RespiratoryRate,
                  t.oxygen_saturation                                                  as OxygenSaturation,
@@ -1096,10 +1101,10 @@ having min(hiv.visit_date) is not null
                                       when 1065 then 'Screened for STI'
                                       else ''
                                       end, ''),
-nullif(case fup.cacx_screening
-when 703 then 'Screened for CaCx'
-when 664 then 'Screened for CaCx'
-end, '')) as                                          PwP,
+                nullif(case fup.cacx_screening
+                when 703 then 'Screened for CaCx'
+                when 664 then 'Screened for CaCx'
+                end, '')) as                                          PwP,
                  if(fup.last_menstrual_period is not null,
                     timestampdiff(week, fup.last_menstrual_period, fup.visit_date), '') as GestationAge,
                  case
@@ -1144,19 +1149,20 @@ end, '')) as                                          PwP,
           join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id = d.patient_id
           join kenyaemr_etl.etl_default_facility_info i
               left join (select t.patient_id,	
-t.visit_date,	
-t.weight,	
-t.height,	
-t.systolic_pressure,	
-t.diastolic_pressure,	
-t.temperature,	
-t.pulse_rate,	
-t.respiratory_rate,	
-t.oxygen_saturation,	
-t.muac,	
-t.nutritional_status	
-from kenyaemr_etl.etl_patient_triage t) t	
-on fup.patient_id = t.patient_id and date(fup.visit_date) = date(t.visit_date)
+            t.visit_date,	
+            t.weight,	
+            t.height,	
+            t.systolic_pressure,	
+            t.diastolic_pressure,	
+            t.temperature,	
+            t.z_score,
+            t.pulse_rate,	
+            t.respiratory_rate,	
+            t.oxygen_saturation,	
+            t.muac,	
+            t.nutritional_status	
+            from kenyaemr_etl.etl_patient_triage t) t	
+            on fup.patient_id = t.patient_id and date(fup.visit_date) = date(t.visit_date)
           left join (select de.patient_id, mid(max(concat(de.visit_date, de.regimen)), 11) as regimen
                      from kenyaemr_etl.etl_drug_event de
                      where de.discontinued is null
