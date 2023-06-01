@@ -52,28 +52,20 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             var difflog = _diffLogRepository.GetLog("NDWH", "GbvScreeningExtract", mflcode);
             var changesLoadedStatus= false;
 
-            if (request.DatabaseProtocol.SupportsDifferential)
-            {
-                if(null==difflog)
-                    found  = await _GbvScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-                else
-                    if (true == loadChangesOnly)
-                    {
-                        changesLoadedStatus = true;
-                        found = await _GbvScreeningSourceExtractor.Extract(request.Extract,
-                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
-                    }
-                    else
-                    {
-                        found  = await _GbvScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-
-                    }
-                
-            }
-            else
-            {
+            if(null==difflog)
                 found  = await _GbvScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-            }
+            else
+                if (true == loadChangesOnly)
+                {
+                    changesLoadedStatus = true;
+                    found = await _GbvScreeningSourceExtractor.Extract(request.Extract,
+                        request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                }
+                else
+                {
+                    found  = await _GbvScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+                }
             //update status
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "GbvScreeningExtract", changesLoadedStatus);
 

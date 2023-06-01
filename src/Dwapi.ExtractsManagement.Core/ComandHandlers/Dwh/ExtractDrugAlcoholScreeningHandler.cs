@@ -52,27 +52,20 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             var difflog = _diffLogRepository.GetLog("NDWH", "DrugAlcoholScreeningExtract", mflcode);
             var changesLoadedStatus= false;
             
-            if (request.DatabaseProtocol.SupportsDifferential)
-            {
-                if(null==difflog)
-                    found  = await _DrugAlcoholScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-                else
-                    if (true == loadChangesOnly)
-                    {
-                        changesLoadedStatus = true;
-                        found = await _DrugAlcoholScreeningSourceExtractor.Extract(request.Extract,
-                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
-                    }
-                    else
-                    {
-                        found  = await _DrugAlcoholScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-
-                    }
-            }
-            else
-            {
+            if(null==difflog)
                 found  = await _DrugAlcoholScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-            }
+            else
+                if (true == loadChangesOnly)
+                {
+                    changesLoadedStatus = true;
+                    found = await _DrugAlcoholScreeningSourceExtractor.Extract(request.Extract,
+                        request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                }
+                else
+                {
+                    found  = await _DrugAlcoholScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+                }
             // update status
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "DrugAlcoholScreeningExtract", changesLoadedStatus);
 
