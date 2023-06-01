@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20230522061233_UpdateAncVisitsBPvariable")]
-    partial class UpdateAncVisitsBPvariable
+    [Migration("20230531195537_UpdatedMNCHandPatientVisits")]
+    partial class UpdatedMNCHandPatientVisits
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1717,6 +1717,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<decimal?>("OxygenSaturation");
 
+                    b.Property<string>("PaedsDisclosure");
+
                     b.Property<string>("PatientID");
 
                     b.Property<int>("PatientPK");
@@ -1784,6 +1786,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("WHOStage");
 
                     b.Property<decimal?>("Weight");
+
+                    b.Property<decimal>("ZScore");
 
                     b.HasKey("Id");
 
@@ -7985,6 +7989,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<decimal?>("OxygenSaturation");
 
+                    b.Property<string>("PaedsDisclosure");
+
                     b.Property<string>("PatientID");
 
                     b.Property<int?>("PatientPK");
@@ -8045,6 +8051,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<decimal?>("Weight");
 
+                    b.Property<decimal>("ZScore");
+
                     b.HasKey("Id");
 
                     b.ToTable("TempPatientVisitExtracts");
@@ -8093,6 +8101,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("OIDate");
 
+                    b.Property<string>("PaedsDisclosure");
+
                     b.Property<string>("PatientID");
 
                     b.Property<int?>("PatientPK");
@@ -8136,6 +8146,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("WHOStage");
 
                     b.Property<decimal?>("Weight");
+
+                    b.Property<decimal>("ZScore");
 
                     b.HasKey("Id");
 
@@ -8182,6 +8194,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("OI");
 
                     b.Property<DateTime?>("OIDate");
+
+                    b.Property<string>("PaedsDisclosure");
 
                     b.Property<string>("PatientID");
 
@@ -8230,6 +8244,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("WHOStage");
 
                     b.Property<decimal?>("Weight");
+
+                    b.Property<decimal>("ZScore");
 
                     b.HasKey("Id");
 

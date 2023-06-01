@@ -1715,6 +1715,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<decimal?>("OxygenSaturation");
 
+                    b.Property<string>("PaedsDisclosure");
+
                     b.Property<string>("PatientID");
 
                     b.Property<int>("PatientPK");
@@ -7985,6 +7987,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<decimal?>("OxygenSaturation");
 
+                    b.Property<string>("PaedsDisclosure");
+
                     b.Property<string>("PatientID");
 
                     b.Property<int?>("PatientPK");
@@ -8095,6 +8099,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("OIDate");
 
+                    b.Property<string>("PaedsDisclosure");
+
                     b.Property<string>("PatientID");
 
                     b.Property<int?>("PatientPK");
@@ -8186,6 +8192,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("OI");
 
                     b.Property<DateTime?>("OIDate");
+
+                    b.Property<string>("PaedsDisclosure");
 
                     b.Property<string>("PatientID");
 

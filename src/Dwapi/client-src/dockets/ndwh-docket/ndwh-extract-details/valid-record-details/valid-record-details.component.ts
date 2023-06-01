@@ -834,6 +834,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'nextAppointmentDate', header: 'NextAppointmentDate'},
             {field: 'project', header: 'Project'},
             {field: 'zScore', header: 'ZScore'},
+            {field: 'paedsDisclosure', header: 'PaedsDisclosure'},
             {field: 'visitId', header: 'Visit Id'},
             {field: 'visitDate', header: 'Visit Date'},
             {field: 'service', header: 'Service'},
