@@ -38,7 +38,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PopulationType { get; set; }
         public string KeyPopulationType { get; set; }
         public DateTime? RefillDate { get; set; }
-        public Decimal ZScore { get; set; }
+        public string ZScore { get; set; }
         public string PaedsDisclosure { get; set; }
 
         /*public override void AddHeader(Row row)
