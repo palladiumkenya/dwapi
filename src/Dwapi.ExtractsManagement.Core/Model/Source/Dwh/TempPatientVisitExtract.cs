@@ -70,6 +70,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? RefillDate { get; set; }
         public string ZScore { get; set; }
         public string PaedsDisclosure { get; set; }
+        public int? ZScoreAbsolute { get; set; }
+
 
     }
 }

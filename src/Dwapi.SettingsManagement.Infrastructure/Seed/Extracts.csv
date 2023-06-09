@@ -6453,7 +6453,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                 group by p.visit_id"|TempPncVisitExtract|0|PncVisitExtract|24|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651886-9db2-11eb-a8b3-0242ac130003|Mother Baby Pair|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select r.child  as BabyPatientPK,
 												r.mother as MotherPatientPK,
-												p.mother_patient_id as PatientPK,
+												r.mother as PatientPK,
 												i.siteCode          as SiteCode,
 												r.hei_id            as BabyPatientMncHeiID,
 												r.child_openmrs_id  as MotherPatientMncHeiID,
