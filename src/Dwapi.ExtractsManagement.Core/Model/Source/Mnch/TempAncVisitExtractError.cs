@@ -21,7 +21,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
         public int? RespiratoryRate { get; set; }
         public decimal? OxygenSaturation { get; set; }
         public int? MUAC { get; set; }
-        public int? BP { get; set; }
+        public string BP { get; set; }
         public string BreastExam { get; set; }
         public string AntenatalExercises { get; set; }
         public string FGM { get; set; }

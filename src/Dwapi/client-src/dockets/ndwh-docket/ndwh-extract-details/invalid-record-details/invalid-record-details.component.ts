@@ -611,6 +611,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'facilityName', header: 'Facility Name'},
             {field: 'service', header: 'Service'},
+            {field: 'zScore', header: 'ZScore'},
+            {field: 'paedsDisclosure', header: 'PaedsDisclosure'},
             {field: 'visitType', header: 'Visit Type'},
             {field: 'wHOStage', header: 'WHO Stage'},
             {field: 'wABStage', header: 'WAB Stage'},

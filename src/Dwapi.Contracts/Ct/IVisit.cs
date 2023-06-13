@@ -34,5 +34,8 @@ namespace Dwapi.Contracts.Ct
         string CNS {get;set;}
         string Genitourinary {get;set;}
         DateTime? RefillDate { get; set; }
+        string PaedsDisclosure { get; set; }
+        string ZScore { get; set; }
+        int? ZScoreAbsolute { get; set; }
     }
 }

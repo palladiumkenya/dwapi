@@ -3,14 +3,16 @@ using System;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20230608190739_ChangedZscoreColumnType")]
+    partial class ChangedZscoreColumnType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1787,8 +1789,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("ZScore");
 
-                    b.Property<int?>("ZScoreAbsolute");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SiteCode", "PatientPK");
@@ -3033,10 +3033,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<decimal?>("Weight");
 
                     b.Property<string>("WeightCategory");
-
-                    b.Property<string>("ZScore");
-
-                    b.Property<int?>("ZScoreAbsolute");
 
                     b.HasKey("Id");
 
@@ -8057,8 +8053,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("ZScore");
 
-                    b.Property<int?>("ZScoreAbsolute");
-
                     b.HasKey("Id");
 
                     b.ToTable("TempPatientVisitExtracts");
@@ -8154,8 +8148,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<decimal?>("Weight");
 
                     b.Property<string>("ZScore");
-
-                    b.Property<int?>("ZScoreAbsolute");
 
                     b.HasKey("Id");
 
@@ -8254,8 +8246,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<decimal?>("Weight");
 
                     b.Property<string>("ZScore");
-
-                    b.Property<int?>("ZScoreAbsolute");
 
                     b.HasKey("Id");
 
@@ -10626,10 +10616,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<decimal?>("Weight");
 
                     b.Property<string>("WeightCategory");
-
-                    b.Property<string>("ZScore");
-
-                    b.Property<int?>("ZScoreAbsolute");
 
                     b.HasKey("Id");
 
