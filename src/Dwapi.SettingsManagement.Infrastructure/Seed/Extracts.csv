@@ -5155,6 +5155,235 @@ UNION(
 )
 )x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
+B4E51C39-FC1F-473E-81E3-E927B115B76B|Indicators|MTS|1A8CE7A6-18D5-4D06-AD22-AA07005D9F9E|"select x.* from (
+(
+        select 'TX_CURR'                                                                   AS 'INDICATOR',
+               TX_CURR                                               as 'INDICATORVALUE',
+               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+        from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    select 'TX_NEW' as INDICATOR,TX_NEW as INDICATORVALUE,DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+    from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    select 'HTS_TESTED'                                                                as 'INDICATOR',
+           HTS_TESTED                                                AS INDICATOR_VALUE,
+           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+    from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+        select 'HTS_TESTED_POS'                                                               AS 'INDICATOR',
+               HTS_TESTED_POS                                                as 'INDICATOR_VALUE',
+               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+        from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    select 'HTS_LINKED'                                                                AS 'INDICATOR',
+           HTS_LINKED                                                as 'INDICATOR_VALUE',
+           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+    from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    select  'RETENTION_ON_ART_12_MONTHS' as 'INDICATOR',
+	RETENTION_ON_ART_12_MONTHS  AS INDICATOR_VALUE, DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+ from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    select  'RETENTION_ON_ART_VL_1000_12_MONTHS' as 'INDICATOR',RETENTION_ON_ART_VL_1000_12_MONTHS AS INDICATOR_VALUE,
+	DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+    from [tb_dwapi_metrics]
+		  where mflcode=12875
+
+)
+UNION
+(
+  select 'MMD' AS 'INDICATOR', 
+  MMD as 'INDICATORVALUE',DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+  from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+        select 'HTS_INDEX'                                                                 AS 'INDICATOR',
+               HTS_INDEX                                               as 'INDICATOR_VALUE',
+               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+        from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+        select 'HTS_INDEX_POS'                                                             AS 'INDICATOR',
+               HTS_INDEX_POS                                              as 'INDICATOR_VALUE',
+               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+        from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+			select 'TX_RTT' AS 'INDICATOR', TX_RTT as 'INDICATORVALUE',
+			               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+		from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+   	select 'TX_ML' AS 'INDICATOR', TX_ML as 'INDICATORVALUE',DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+		from [tb_dwapi_metrics]
+		  where mflcode=12875
+
+)
+UNION
+(
+			select 'LAST_ENCOUNTER_CREATE_DATE' AS 'INDICATOR', LAST_ENCOUNTER_CREATE_DATE as 'INDICATORVALUE',
+			DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+			from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+			select 'MFL_CODE' as 'INDICATOR',MFLCODE   as 'INDICATORVALUE', 
+			DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+			from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
+           EMR_ETL_Refresh                        as 'INDICATORVALUE',
+           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORMONTH'
+    from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+
+)x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
+DC2D71BA-E109-49B8-BACD-5FB9F0565DFE|Indicators|MTS|5C608F5D-7ACB-4A16-9703-AA07006065C6|"select x.* from (
+(
+        select 'TX_CURR'                                                                   AS 'INDICATOR',
+               TX_CURR                                               as 'INDICATORVALUE',
+               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+        from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    select 'TX_NEW' as INDICATOR,TX_NEW as INDICATORVALUE,DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+    from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    select 'HTS_TESTED'                                                                as 'INDICATOR',
+           HTS_TESTED                                                AS INDICATOR_VALUE,
+           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+    from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+        select 'HTS_TESTED_POS'                                                               AS 'INDICATOR',
+               HTS_TESTED_POS                                                as 'INDICATOR_VALUE',
+               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+        from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    select 'HTS_LINKED'                                                                AS 'INDICATOR',
+           HTS_LINKED                                                as 'INDICATOR_VALUE',
+           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+    from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    select  'RETENTION_ON_ART_12_MONTHS' as 'INDICATOR',
+	RETENTION_ON_ART_12_MONTHS  AS INDICATOR_VALUE, DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+ from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    select  'RETENTION_ON_ART_VL_1000_12_MONTHS' as 'INDICATOR',RETENTION_ON_ART_VL_1000_12_MONTHS AS INDICATOR_VALUE,
+	DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+    from [tb_dwapi_metrics]
+		  where mflcode=12875
+
+)
+UNION
+(
+  select 'MMD' AS 'INDICATOR', 
+  MMD as 'INDICATORVALUE',DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+  from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+        select 'HTS_INDEX'                                                                 AS 'INDICATOR',
+               HTS_INDEX                                               as 'INDICATOR_VALUE',
+               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+        from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+        select 'HTS_INDEX_POS'                                                             AS 'INDICATOR',
+               HTS_INDEX_POS                                              as 'INDICATOR_VALUE',
+               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+        from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+			select 'TX_RTT' AS 'INDICATOR', TX_RTT as 'INDICATORVALUE',
+			               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
+		from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+   	select 'TX_ML' AS 'INDICATOR', TX_ML as 'INDICATORVALUE',DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+		from [tb_dwapi_metrics]
+		  where mflcode=12875
+
+)
+UNION
+(
+			select 'LAST_ENCOUNTER_CREATE_DATE' AS 'INDICATOR', LAST_ENCOUNTER_CREATE_DATE as 'INDICATORVALUE',
+			DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+			from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+			select 'MFL_CODE' as 'INDICATOR',MFLCODE   as 'INDICATORVALUE', 
+			DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
+			from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+UNION
+(
+    SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
+           EMR_ETL_Refresh                        as 'INDICATORVALUE',
+           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORMONTH'
+    from [tb_dwapi_metrics]
+		  where mflcode=12875
+)
+
+)x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 2bbeec20-7754-11eb-9439-0242ac130002|Allergies Chronic Illness|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select ci.patient_id                                             as PatientPK,
                          s.siteCode                                                as SiteCode,
