@@ -4904,7 +4904,7 @@ UNION
           and date(t.visit_date) between DATE_ADD(DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY),
                                                   INTERVAL -1
                                                   MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))
-          and t.test_type = 2
+          and t.test_type = 1
           and t.patient_given_result = 'Yes'
           and t.final_test_result = 'Positive'
 )
@@ -5002,45 +5002,44 @@ UNION
         select 'HTS_INDEX'                                                                 AS 'INDICATOR',
                count(distinct a.patient_id)                                                as 'INDICATOR_VALUE',
                date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'
-               	date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'	
-               from (select hts.patient_id,	
-               hts.final_test_result,	
-               hts.visit_date,	
-               hts.test_type,	
-               pc.patient_id as contact,	
-               r.person_a,	
-               r.person_b	
-               from (select hts.patient_id, hts.final_test_result, hts.visit_date, hts.test_type	
-               from kenyaemr_etl.etl_hts_test hts	
-               where hts.test_strategy = 161557	
-               and hts.patient_given_result = 'Yes'	
-               and hts.voided = 0	
-               and hts.visit_date	
-               between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL	
-               day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY)	
-               and date(last_day(date_sub(current_date(), interval 1 MONTH)))	
-               group by hts.patient_id) hts	
-               left JOIN	
-               (select patient_id, id	
-               from openmrs.kenyaemr_hiv_testing_patient_contact c	
-               where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))	
-               and c.patient_id is not NULL	
-               and c.voided = 0	
-               group by c.patient_id) pc on hts.patient_id = pc.patient_id	
-               left join (select r.person_a, r.person_b	
-               from openmrs.relationship r	
-               inner join openmrs.relationship_type t	
-               on r.relationship = t.relationship_type_id and t.uuid in	
-               ('8d91a01c-c2cc-11de-8d13-0010c6dffd0f',	
-               '8d91a210-c2cc-11de-8d13-0010c6dffd0f',	
-               'd6895098-5d8d-11e3-94ee-b35a4132a5e3',	
-               '007b765f-6725-4ae9-afee-9966302bace4',	
-               '2ac0d501-eadc-4624-b982-563c70035d46'	
-               )) r	
-               on hts.patient_id = r.person_a or hts.patient_id = r.person_b	
-               where r.person_a is not null	
-               or pc.patient_id	
-               or r.person_b is not null is not null) a
+        from (select hts.patient_id,
+                     hts.final_test_result,
+                     hts.visit_date,
+                     hts.test_type,
+                     pc.patient_id as contact,
+                     r.person_a,
+                     r.person_b
+              from (select hts.patient_id, hts.final_test_result, hts.visit_date, hts.test_type
+                    from kenyaemr_etl.etl_hts_test hts
+                    where hts.test_strategy = 161557
+                      and hts.patient_given_result = 'Yes'
+                      and hts.voided = 0
+                      and hts.visit_date
+                        between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                         day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY)
+                        and date(last_day(date_sub(current_date(), interval 1 MONTH)))
+                    group by hts.patient_id) hts
+                       left JOIN
+                   (select patient_id, id
+                    from openmrs.kenyaemr_hiv_testing_patient_contact c
+                    where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
+                      and c.patient_id is not NULL
+                      and c.voided = 0
+                    group by c.patient_id) pc on hts.patient_id = pc.patient_id
+                       left join (select r.person_a, r.person_b
+                                  from openmrs.relationship r
+                                           inner join openmrs.relationship_type t
+                                                      on r.relationship = t.relationship_type_id and t.uuid in
+                                                                                                     ('8d91a01c-c2cc-11de-8d13-0010c6dffd0f',
+                                                                                                      '8d91a210-c2cc-11de-8d13-0010c6dffd0f',
+                                                                                                      'd6895098-5d8d-11e3-94ee-b35a4132a5e3',
+                                                                                                      '007b765f-6725-4ae9-afee-9966302bace4',
+                                                                                                      '2ac0d501-eadc-4624-b982-563c70035d46'
+                                                                                                         )) r
+                                 on hts.patient_id = r.person_a or hts.patient_id = r.person_b
+              where r.person_a is not null
+                 or pc.patient_id
+                 or r.person_b is not null is not null) a
 )
 UNION
 (
@@ -5098,46 +5097,46 @@ UNION
         select 'HTS_INDEX_POS'                                                             AS 'INDICATOR',
                count(distinct a.patient_id)                                                as 'INDICATOR_VALUE',
                date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'
-        from (select hts.patient_id,	
-        hts.final_test_result,	
-        hts.visit_date,	
-        hts.test_type,	
-        pc.patient_id as contact,	
-        r.person_a,	
-        r.person_b	
-        from (select hts.patient_id, hts.final_test_result, hts.visit_date, hts.test_type	
-        from kenyaemr_etl.etl_hts_test hts	
-        where hts.test_strategy = 161557	
-        and hts.final_test_result = 'Positive'	
-        and hts.patient_given_result = 'Yes'	
-        and hts.patient_given_result = 'Yes'	
-        and hts.voided = 0	
-        and hts.visit_date	
-        between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL	
-        day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY)	
-        and date(last_day(date_sub(current_date(), interval 1 MONTH)))	
-        group by hts.patient_id) hts	
-        left JOIN	
-        (select patient_id, id	
-        from openmrs.kenyaemr_hiv_testing_patient_contact c	
-        where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))	
-        and c.patient_id is not NULL	
-        and c.voided = 0	
-        group by c.patient_id) pc on hts.patient_id = pc.patient_id	
-        left join (select r.person_a, r.person_b	
-        from openmrs.relationship r	
-        inner join openmrs.relationship_type t	
-        on r.relationship = t.relationship_type_id and t.uuid in	
-        ('8d91a01c-c2cc-11de-8d13-0010c6dffd0f',	
-        '8d91a210-c2cc-11de-8d13-0010c6dffd0f',	
-        'd6895098-5d8d-11e3-94ee-b35a4132a5e3',	
-        '007b765f-6725-4ae9-afee-9966302bace4',	
-        '2ac0d501-eadc-4624-b982-563c70035d46'	
-        )) r	
-        on hts.patient_id = r.person_a or hts.patient_id = r.person_b	
-        where r.person_a is not null	
-        or pc.patient_id	
-        or r.person_b is not null is not null) a
+        from (select hts.patient_id,
+                     hts.final_test_result,
+                     hts.visit_date,
+                     hts.test_type,
+                     pc.patient_id as contact,
+                     r.person_a,
+                     r.person_b
+              from (select hts.patient_id, hts.final_test_result, hts.visit_date, hts.test_type
+                    from kenyaemr_etl.etl_hts_test hts
+                    where hts.test_strategy = 161557
+                      and hts.final_test_result = 'Positive'
+                      and hts.patient_given_result = 'Yes'
+                      and hts.patient_given_result = 'Yes'
+                      and hts.voided = 0
+                      and hts.visit_date
+                        between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                         day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY)
+                        and date(last_day(date_sub(current_date(), interval 1 MONTH)))
+                    group by hts.patient_id) hts
+                       left JOIN
+                   (select patient_id, id
+                    from openmrs.kenyaemr_hiv_testing_patient_contact c
+                    where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
+                      and c.patient_id is not NULL
+                      and c.voided = 0
+                    group by c.patient_id) pc on hts.patient_id = pc.patient_id
+                       left join (select r.person_a, r.person_b
+                                  from openmrs.relationship r
+                                           inner join openmrs.relationship_type t
+                                                      on r.relationship = t.relationship_type_id and t.uuid in
+                                                                                                     ('8d91a01c-c2cc-11de-8d13-0010c6dffd0f',
+                                                                                                      '8d91a210-c2cc-11de-8d13-0010c6dffd0f',
+                                                                                                      'd6895098-5d8d-11e3-94ee-b35a4132a5e3',
+                                                                                                      '007b765f-6725-4ae9-afee-9966302bace4',
+                                                                                                      '2ac0d501-eadc-4624-b982-563c70035d46'
+                                                                                                         )) r
+                                 on hts.patient_id = r.person_a or hts.patient_id = r.person_b
+              where r.person_a is not null
+                 or pc.patient_id
+                 or r.person_b is not null is not null) a
 )
 UNION
 (
@@ -5196,235 +5195,6 @@ UNION(
 )
 )x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
-B4E51C39-FC1F-473E-81E3-E927B115B76B|Indicators|MTS|1A8CE7A6-18D5-4D06-AD22-AA07005D9F9E|"select x.* from (
-(
-        select 'TX_CURR'                                                                   AS 'INDICATOR',
-               TX_CURR                                               as 'INDICATORVALUE',
-               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-        from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    select 'TX_NEW' as INDICATOR,TX_NEW as INDICATORVALUE,DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-    from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    select 'HTS_TESTED'                                                                as 'INDICATOR',
-           HTS_TESTED                                                AS INDICATOR_VALUE,
-           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-    from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-        select 'HTS_TESTED_POS'                                                               AS 'INDICATOR',
-               HTS_TESTED_POS                                                as 'INDICATOR_VALUE',
-               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-        from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    select 'HTS_LINKED'                                                                AS 'INDICATOR',
-           HTS_LINKED                                                as 'INDICATOR_VALUE',
-           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-    from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    select  'RETENTION_ON_ART_12_MONTHS' as 'INDICATOR',
-	RETENTION_ON_ART_12_MONTHS  AS INDICATOR_VALUE, DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
- from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    select  'RETENTION_ON_ART_VL_1000_12_MONTHS' as 'INDICATOR',RETENTION_ON_ART_VL_1000_12_MONTHS AS INDICATOR_VALUE,
-	DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-    from [tb_dwapi_metrics]
-		  where mflcode=12875
-
-)
-UNION
-(
-  select 'MMD' AS 'INDICATOR', 
-  MMD as 'INDICATORVALUE',DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-  from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-        select 'HTS_INDEX'                                                                 AS 'INDICATOR',
-               HTS_INDEX                                               as 'INDICATOR_VALUE',
-               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-        from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-        select 'HTS_INDEX_POS'                                                             AS 'INDICATOR',
-               HTS_INDEX_POS                                              as 'INDICATOR_VALUE',
-               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-        from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-			select 'TX_RTT' AS 'INDICATOR', TX_RTT as 'INDICATORVALUE',
-			               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-		from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-   	select 'TX_ML' AS 'INDICATOR', TX_ML as 'INDICATORVALUE',DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-		from [tb_dwapi_metrics]
-		  where mflcode=12875
-
-)
-UNION
-(
-			select 'LAST_ENCOUNTER_CREATE_DATE' AS 'INDICATOR', LAST_ENCOUNTER_CREATE_DATE as 'INDICATORVALUE',
-			DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-			from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-			select 'MFL_CODE' as 'INDICATOR',MFLCODE   as 'INDICATORVALUE', 
-			DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-			from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
-           EMR_ETL_Refresh                        as 'INDICATORVALUE',
-           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORMONTH'
-    from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-
-)x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-
-DC2D71BA-E109-49B8-BACD-5FB9F0565DFE|Indicators|MTS|5C608F5D-7ACB-4A16-9703-AA07006065C6|"select x.* from (
-(
-        select 'TX_CURR'                                                                   AS 'INDICATOR',
-               TX_CURR                                               as 'INDICATORVALUE',
-               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-        from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    select 'TX_NEW' as INDICATOR,TX_NEW as INDICATORVALUE,DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-    from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    select 'HTS_TESTED'                                                                as 'INDICATOR',
-           HTS_TESTED                                                AS INDICATOR_VALUE,
-           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-    from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-        select 'HTS_TESTED_POS'                                                               AS 'INDICATOR',
-               HTS_TESTED_POS                                                as 'INDICATOR_VALUE',
-               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-        from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    select 'HTS_LINKED'                                                                AS 'INDICATOR',
-           HTS_LINKED                                                as 'INDICATOR_VALUE',
-           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-    from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    select  'RETENTION_ON_ART_12_MONTHS' as 'INDICATOR',
-	RETENTION_ON_ART_12_MONTHS  AS INDICATOR_VALUE, DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
- from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    select  'RETENTION_ON_ART_VL_1000_12_MONTHS' as 'INDICATOR',RETENTION_ON_ART_VL_1000_12_MONTHS AS INDICATOR_VALUE,
-	DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-    from [tb_dwapi_metrics]
-		  where mflcode=12875
-
-)
-UNION
-(
-  select 'MMD' AS 'INDICATOR', 
-  MMD as 'INDICATORVALUE',DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-  from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-        select 'HTS_INDEX'                                                                 AS 'INDICATOR',
-               HTS_INDEX                                               as 'INDICATOR_VALUE',
-               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-        from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-        select 'HTS_INDEX_POS'                                                             AS 'INDICATOR',
-               HTS_INDEX_POS                                              as 'INDICATOR_VALUE',
-               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-        from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-			select 'TX_RTT' AS 'INDICATOR', TX_RTT as 'INDICATORVALUE',
-			               DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATOR_DATE'
-		from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-   	select 'TX_ML' AS 'INDICATOR', TX_ML as 'INDICATORVALUE',DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-		from [tb_dwapi_metrics]
-		  where mflcode=12875
-
-)
-UNION
-(
-			select 'LAST_ENCOUNTER_CREATE_DATE' AS 'INDICATOR', LAST_ENCOUNTER_CREATE_DATE as 'INDICATORVALUE',
-			DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-			from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-			select 'MFL_CODE' as 'INDICATOR',MFLCODE   as 'INDICATORVALUE', 
-			DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORDATE'
-			from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-UNION
-(
-    SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
-           EMR_ETL_Refresh                        as 'INDICATORVALUE',
-           DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE())-1, -1) as 'INDICATORMONTH'
-    from [tb_dwapi_metrics]
-		  where mflcode=12875
-)
-
-)x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 2bbeec20-7754-11eb-9439-0242ac130002|Allergies Chronic Illness|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select ci.patient_id                                             as PatientPK,
                          s.siteCode                                                as SiteCode,
@@ -6786,7 +6556,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
         from kenyaemr_etl.etl_patient_program_discontinuation disc
         where disc.program_name in ('MCH Child','MCH Child HEI')
         group by disc.patient_id) disc
-        on h.patient_id = disc.patient_id
+        on h.patient_id = disc.patient_id        
         group by c.patient_id) c
         on c.patient_id = r.person_b
         inner join openmrs.relationship_type t
@@ -7638,6 +7408,7 @@ d569fc28-ae47-11eb-8529-0242ac130003|Defaulter Tracing|NDWH|A6221857-0E85-11E8-B
 								BookingDate
 				FROM
 								ndwr.ndwr_defaulter_tracing_extract"|dwhstage|0|DefaulterTracingExtract|21|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+5D94B087-01DC-4C4E-8BA6-1027F974B232|Cervical Cancer Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|CervicalCancerScreeningExtract|22|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d5640010-ae47-11eb-8529-0242ac130003|Indicators|MTS|A6221857-0E85-11E8-BA89-0ED5F89F718B||Indicator|1|IndicatorExtract|1|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 A7F13D1F-8E82-4414-BB56-BB40A10F01F3|Hei|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempHeiExtract|0|HeiExtract|28.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 C37BE5B9-C518-477D-BDA6-C7FAD68262D2|Mnch Enrolment|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
@@ -7650,6 +7421,7 @@ DCAE23B5-8B52-4196-AB29-61C3CDFD6A6B|Mnch Patient|MNCH|A6221857-0E85-11E8-BA89-0
 792C41D4-20D4-4844-93E7-3698C9E2FFA4|Cwc Visit|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempCwcVisitExtract|0|CwcVisitExtract|27.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 65BC8BA3-25A4-44D4-B902-1AA2CD4B9AFE|Mnch Labs|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchLabExtract|0|MnchLabExtract|29.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 07A92DAB-E1D0-4550-9B71-5CF7F63A28BD|Mat Visit|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMatVisitExtract|0|MatVisitExtract|23.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+63837D56-4540-450A-9406-B1B8F4A44588|Mnch Immunization|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchImmunizationExtract|0|MnchImmunizationExtract|24.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 46D92EC7-97F2-41E4-9FF2-44FE92AB13CB|Hts Clients|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClient|1.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 1E0DD61C-4E31-4707-B808-E9FC0649651D|Hts Test Kits|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsTestKits|4.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 43F8E14C-5481-43A3-B76E-82FFFA9DFC5B|Hts Client Linkage|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientLinkage|3.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
@@ -7657,6 +7429,7 @@ DCAE23B5-8B52-4196-AB29-61C3CDFD6A6B|Mnch Patient|MNCH|A6221857-0E85-11E8-BA89-0
 E2EFAE43-2B09-41A6-83B5-A2E5CF5EDDF7|Hts Client Tracing|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientTracing|5.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 C2294906-D283-4E43-818D-E047047BD6BF|Hts Partner Tracing|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsPartnerTracing|6.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 5F402C12-6846-4087-9C9B-7D5CF15B7B2D|Hts Client Tests|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientTests|2.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+1BFE7DC2-8B21-4C52-843A-956CB65BE526|Hts Eligibility Screening|HTS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsEligibilityExtract|8.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 3BF8ACD9-8E99-430A-AE5C-535B46877C7A|Master Patient Index|CBS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|MPI|1|MasterPatientIndex|1.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 5823F29C-D01E-4479-897B-720343FDD876|Migration|MGS|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|MgsStage|1|MetricMigrationExtract|1.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 
