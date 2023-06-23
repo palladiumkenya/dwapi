@@ -37,6 +37,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Mnch
         Task<List<SendMpiResponse>> SendHeisAsync(SendManifestPackageDTO sendTo, MnchMessageBag messageBag);
         Task<List<SendMpiResponse>> SendMnchLabsAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> SendMnchLabsAsync(SendManifestPackageDTO sendTo, MnchMessageBag messageBag);
+        Task<List<SendMpiResponse>> SendMnchImmunizationsAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> SendMnchImmunizationsAsync(SendManifestPackageDTO sendTo, MnchMessageBag messageBag);
 
         Task NotifyPostSending(SendManifestPackageDTO sendTo, string version);
     }

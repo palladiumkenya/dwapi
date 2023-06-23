@@ -77,6 +77,8 @@ export class MnchValidComponent implements OnInit, OnDestroy {
         if (this.extract === 'Cwc Visit') {this.getSummaryExtracts('CwcVisit');return;}
         if (this.extract === 'Cwc Enrolment') {this.getSummaryExtracts('CwcEnrolment');return;}
         if (this.extract === 'Anc Visit') {this.getSummaryExtracts('AncVisit');return;}
+        if (this.extract === 'Mnch Immunization') {this.getSummaryExtracts('MnchImmunization');return;}
+
     }
 
     private getColumns(): void {
@@ -90,7 +92,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
         if (this.extract === 'Hei') {this.getHeiExtractColumns();return;}
         if (this.extract === 'Cwc Visit') {this.getCwcVisitExtractColumns();return;}
         if (this.extract === 'Cwc Enrolment') {this.getCwcEnrolmentExtractColumns();return;}
-        if (this.extract === 'Anc Visit') {this.getPncVisitExtractColumns();return;}
+        if (this.extract === 'Anc Visit') {this.getAncVisitExtractColumns();return;}
+        if (this.extract === 'Mnch Immunization') {this.getMnchImmunizationExtractColumns();return;}
+
 
     }
 
@@ -141,11 +145,16 @@ export class MnchValidComponent implements OnInit, OnDestroy {
         this.cols = [
             {field: 'patientPK', header: 'Patient PK'},
             {field: 'patientID', header: 'Patient ID'},
-            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'facilityName', header: 'Facility Name'},
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
+            {field: 'visitTimingMother', header: 'VisitTimingMother'},
+            {field: 'visitTimingBaby', header: 'VisitTimingBaby'},
+            {field: 'motherCameForHIVTest', header: 'MotherCameForHIVTest'},
+            {field: 'infactCameForHAART', header: 'InfactCameForHAART'},
+            {field: 'motherGivenHAART', header: 'MotherGivenHAART'},
+
         ]
     }
 
@@ -201,11 +210,12 @@ export class MnchValidComponent implements OnInit, OnDestroy {
         this.cols = [
             {field: 'patientPK', header: 'Patient PK'},
             {field: 'patientID', header: 'Patient ID'},
-            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'facilityName', header: 'Facility Name'},
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
+            {field: 'facilityReceivingARTCare', header: 'FacilityReceivingARTCare'},
+
         ]
     }
 
@@ -213,11 +223,14 @@ export class MnchValidComponent implements OnInit, OnDestroy {
         this.cols = [
             {field: 'patientPK', header: 'Patient PK'},
             {field: 'patientID', header: 'Patient ID'},
-            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'facilityName', header: 'Facility Name'},
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
-            {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
+            {field: 'lmp', header: 'LMP'},
+            {field: 'edd', header: 'EDD'},
+            {field: 'maternalDeathAudited', header: 'Maternal Death Audited'},
+            {field: 'referralReason', header: 'Referral Reason'},
+            {field: 'onARTMat', header: 'On ART Mat'},
         ]
     }
 
@@ -237,11 +250,15 @@ export class MnchValidComponent implements OnInit, OnDestroy {
         this.cols = [
             {field: 'patientPK', header: 'Patient PK'},
             {field: 'patientID', header: 'Patient ID'},
-            {field: 'facilityId', header: 'Facility Id'},
+            {field: 'facilityName', header: 'Facility Name'},
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
+            {field: 'revisitThisYear', header: 'RevisitThisYear'},
+            {field: 'refferred', header: 'Refferred'},
+            {field: 'heightLength', header: 'HeightLength'},
+
+
         ]
     }
 
@@ -254,6 +271,58 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
             {field: 'facilityName', header: 'Facility Name'}
+        ]
+    }
+
+    private getAncVisitExtractColumns() {
+        this.cols = [
+            {field: 'patientPK', header: 'Patient PK'},
+            {field: 'patientID', header: 'Patient ID'},
+            {field: 'facilityName', header: 'Facility Name'},
+            {field: 'siteCode', header: 'Site Code'},
+            {field: 'emr', header: 'EMR'},
+            {field: 'project', header: 'Project'},
+            {field: 'hepatitisBScreening', header: 'HepatitisB Screening'},
+            {field: 'treatedHepatitisB', header: 'Treated HepatitisB'},
+            {field: 'presumptiveTreatmentGiven', header: 'Presumptive Treatment Given'},
+            {field: 'presumptiveTreatmentDose', header: 'Presumptive Treatment Dose'},
+            {field: 'miminumPackageOfCareReceived', header: 'Miminum Package Of Care Received'},
+            {field: 'miminumPackageOfCareServices', header: 'Miminum Package Of Care Services'}
+        ]
+    }
+
+    private getMnchImmunizationExtractColumns() {
+        this.cols = [
+            {field:'facilityName',header:'FacilityName'},
+            {field:'patientMnchID',header:'PatientMnchID'},
+            {field:'bcg',header:'BCG'},
+            {field:'opVatBirth',header:'OPVatBirth'},
+            {field:'opV1',header:'OPV1'},
+            {field:'opV2',header:'OPV2'},
+            {field:'opV3',header:'OPV3'},
+            {field:'ipv',header:'IPV'},
+            {field:'dptHepBHIB1',header:'DPTHepBHIB1'},
+            {field:'dptHepBHIB2',header:'DPTHepBHIB2'},
+            {field:'dptHepBHIB3',header:'DPTHepBHIB3'},
+            {field:'pcV101',header:'PCV101'},
+            {field:'pcV102',header:'PCV102'},
+            {field:'pcV103',header:'PCV103'},
+            {field:'rotA1',header:'ROTA1'},
+            {field:'measlesReubella1',header:'MeaslesReubella1'},
+            {field:'yellowFever',header:'YellowFever'},
+            {field:'measlesReubella2',header:'MeaslesReubella2'},
+            {field:'measlesAt6Months',header:'MeaslesAt6Months'},
+            {field:'rotA2',header:'ROTA2'},
+            {field:'dateOfNextVisit',header:'DateOfNextVisit'},
+            {field:'bcgScarChecked',header:'BCGScarChecked'},
+            {field:'dateChecked',header:'DateChecked'},
+            {field:'dateBCGrepeated',header:'DateBCGrepeated'},
+            {field:'vitaminAAt6Months',header:'VitaminAAt6Months'},
+            {field:'vitaminAAt1Yr',header:'VitaminAAt1Yr'},
+            {field:'vitaminAAt18Months',header:'VitaminAAt18Months'},
+            {field:'vitaminAAt2Years',header:'VitaminAAt2Years'},
+            {field:'vitaminAAt2To5Years',header:'VitaminAAt2To5Years'},
+            {field:'fullyImmunizedChild',header:'FullyImmunizedChild'}
         ]
     }
 

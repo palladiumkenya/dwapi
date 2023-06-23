@@ -356,6 +356,19 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 };
                 ts8.Add( _mediator.Send(defaulterTracingCommand, cancellationToken));
             }
+            
+            // ExtractCervicalCancerScreening
+            var cervicalCancerScreeningProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "CervicalCancerScreeningExtract");
+            if (null != cervicalCancerScreeningProfile)
+            {
+                var cervicalCancerScreeningCommand = new ExtractCervicalCancerScreening()
+                {
+                    Extract = cervicalCancerScreeningProfile?.Extract,
+                    DatabaseProtocol = cervicalCancerScreeningProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
+                };
+                ts8.Add( _mediator.Send(cervicalCancerScreeningCommand, cancellationToken));
+            }
 
             var result1 = await Task.WhenAll(ts1);
             var result2 = await Task.WhenAll(ts2);

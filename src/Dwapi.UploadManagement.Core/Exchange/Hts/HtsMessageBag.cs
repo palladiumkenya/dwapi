@@ -48,5 +48,39 @@ namespace Dwapi.UploadManagement.Core.Exchange.Hts
         {
             return new HtsMessageBag(HtsMessage.Create(patientIndices));
         }
+
+        //BoardRoom
+        public static HtsMessageBag CreateEx(List<HtsClients> patientIndices)
+        {
+            return new HtsMessageBag(HtsMessage.CreateEx(patientIndices));
+        }
+        public static HtsMessageBag CreateEx(List<HtsClientTests> patientIndices)
+        {
+            return new HtsMessageBag(HtsMessage.CreateEx(patientIndices));
+        }
+        public static HtsMessageBag CreateEx(List<HtsTestKits> patientIndices)
+        {
+            return new HtsMessageBag(HtsMessage.CreateEx(patientIndices));
+        }
+        public static HtsMessageBag CreateEx(List<HtsClientTracing> patientIndices)
+        {
+            return new HtsMessageBag(HtsMessage.CreateEx(patientIndices));
+        }
+        public static HtsMessageBag CreateEx(List<HtsPartnerTracing> patientIndices)
+        {
+            return new HtsMessageBag(HtsMessage.CreateEx(patientIndices));
+        }
+        public static HtsMessageBag CreateEx(List<HtsPartnerNotificationServices> patientIndices)
+        {
+            return new HtsMessageBag(HtsMessage.CreateEx(patientIndices));
+        }
+        public static HtsMessageBag CreateEx(List<HtsClientLinkage> patientIndices)
+        {
+            return new HtsMessageBag(HtsMessage.CreateEx(patientIndices));
+        }
+        public static HtsMessageBag CreateEx(List<HtsEligibilityExtract> patientIndices)
+        {
+            return new HtsMessageBag(HtsMessage.CreateEx(patientIndices));
+        }
     }
 }

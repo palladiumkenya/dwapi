@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Dwapi.SharedKernel.Model;
+using Dwapi.SharedKernel.Utility;
+using System;
+using System.Collections.Generic;
 
 namespace Dwapi.SharedKernel.Exchange
 {
@@ -24,6 +27,15 @@ namespace Dwapi.SharedKernel.Exchange
             }
 
             return list;
+        }
+
+        public void GenerateId()
+        {
+            Manifest.Id = LiveGuid.NewGuid();
+
+
+            Manifest.Cargoes[0].Id=LiveGuid.NewGuid();
+            Manifest.Cargoes[0].ManifestId = Manifest.Id;
         }
     }
 }

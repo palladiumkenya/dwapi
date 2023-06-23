@@ -14,6 +14,14 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh.Smart
 
         public  override string DocketExtract => ExtractName;
         public override ExtractType ExtractType => ExtractType.Patient;
+        public List<PatientExtractView> _PatientExtractView { get; set; }
+        public PatientMessageSourceBag()
+        {
+        }
+        public PatientMessageSourceBag(List<PatientExtractView> patientExtractView)
+        {
+            _PatientExtractView = patientExtractView;
+        }
 
     }
 }

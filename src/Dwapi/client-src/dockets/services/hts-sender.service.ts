@@ -78,6 +78,48 @@ export class HtsSenderService {
         return this._http.post<boolean>(`${this._url}/endsession`, sendPackage)
             .catch(this.handleError);
     }
+    public zipHtsFiles(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/zipfiles`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportManifest(sendPackage: SendPackage): Observable<boolean> {
+        return this._http.post<boolean>(`${this._url}/exportmanifest`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportClientExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportclients`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportClientTestsExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportclienttests`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportTestKitsExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exporttestkits`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportClientTracingExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportclienttracing`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPartnerTracingExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportpartnertracing`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPartnerNotificationServicesExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportpartnernotificationservices`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportClientsLinkageExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportclientslinkage`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportHtsEligibilityExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exporthtseligibilityextract`, sendPackage)
+            .catch(this.handleError);
+    }
+
 
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {

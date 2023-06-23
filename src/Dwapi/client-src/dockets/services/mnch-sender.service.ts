@@ -73,8 +73,83 @@ export class MnchSenderService {
             .catch(this.handleError);
     }
 
+    public sendMnchImmunizationExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/mnchimmunization`, sendPackage)
+            .catch(this.handleError);
+    }
+
+
+    public exportManifest(sendPackage: SendPackage): Observable<boolean> {
+        return this._http.post<boolean>(`${this._url}/exportmanifest`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPatientMnchExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportpatientmnchs`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportAncVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportancvisits`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportCwcEnrolmentExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportcwcenrolments`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportCwcVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportcwcvisits`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportHeiExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportheis`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportMatVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportmatvisits`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportMnchArtExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportmncharts`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportMnchEnrolmentExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportmnchenrolments`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportMnchLabExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportmnchlabs`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportMotherBabyPairExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportmotherbabypairs`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportPncVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportpncvisits`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportMnchImmunizationExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportmnchimmunization`, sendPackage)
+            .catch(this.handleError);
+    }
+
     public sendHandshake(sendPackage: SendPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/endsession`, sendPackage)
+            .catch(this.handleError);
+    }
+
+
+    public zipMnchFiles(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/zipfiles`, sendPackage)
             .catch(this.handleError);
     }
 

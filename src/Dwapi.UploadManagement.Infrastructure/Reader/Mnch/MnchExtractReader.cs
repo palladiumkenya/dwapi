@@ -111,6 +111,12 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Mnch
             return _context.Database.GetDbConnection().Query<MnchLabExtractView>("Select * From MnchLabExtracts")
                 .ToList().Where(x => !x.IsSent);
         }
+        
+        public IEnumerable<MnchImmunizationExtractView> ReadAllMnchImmunizations()
+        {
+            return _context.Database.GetDbConnection().Query<MnchImmunizationExtractView>("Select * From MnchImmunizationExtracts")
+                .ToList().Where(x => !x.IsSent);
+        }
 
     }
 }

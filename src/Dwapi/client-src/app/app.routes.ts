@@ -11,7 +11,11 @@ import {HtsDocketComponent} from '../dockets/hts-docket/hts-docket.component';
 import {MgsDocketComponent} from '../dockets/mgs-docket/mgs-docket.component';
 import {MnchDocketComponent} from '../dockets/mnch-docket/mnch-docket.component';
 import {PrepDocketComponent} from "../dockets/prep-docket/prep-docket.component";
-import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
+import { CrsDocketComponent } from "../dockets/crs-docket/crs-docket.component";
+import { exportComponent } from "../exports/file-exports.component";
+import { UploadComponent } from "../upload/file-upload.component";
+
+import {AutoloadComponent} from '../autoload/autoload.component';
 
 export const routes: Routes = [
     {path: 'dashboard', component: DashboardComponent},
@@ -25,9 +29,14 @@ export const routes: Routes = [
     {path: 'mgs', component: MgsDocketComponent},
     {path: 'mnch', component: MnchDocketComponent},
     {path: 'prep', component: PrepDocketComponent},
+    { path: 'crs', component: CrsDocketComponent },
+    { path: 'exports', component: exportComponent },
+    { path: 'upload', component: UploadComponent },
     {path: 'crs', component: CrsDocketComponent},
+    {path: 'autoload', component: AutoloadComponent },
     {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
     {path: '**', component: DashboardComponent }
+
 ];
 
 export const AppRoutes: ModuleWithProviders = RouterModule.forRoot(routes);

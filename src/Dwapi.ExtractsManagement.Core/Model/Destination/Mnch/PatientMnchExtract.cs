@@ -35,5 +35,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         public virtual ICollection<CwcVisitExtract> CwcVisitExtracts { get; set; } = new List<CwcVisitExtract>();
         public virtual ICollection<HeiExtract> HeiExtracts { get; set; } = new List<HeiExtract>();
         public virtual ICollection<MnchLabExtract> MnchLabExtracts { get; set; } = new List<MnchLabExtract>();
+        public virtual ICollection<MnchImmunizationExtract> MnchImmunizationExtracts { get; set; } = new List<MnchImmunizationExtract>();
+
     }
 }

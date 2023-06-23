@@ -218,8 +218,31 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         bool allowSend = true;
                         while (allowSend)
                         {
-                            var response = await client.PostAsJsonAsync(
+                            var mflcode =   _indicatorExtractRepository.GetMflCode();
+                            if (0 == mflcode)
+                            {
+                                // throw error
+                                throw new Exception("First Time loading? Please load all first.");
+                            }
+
+                            var response = new HttpResponseMessage();
+                            
+                            var changesLoadedDifflog = _diffLogRepository.GetIfChangesHasBeenLoadedAlreadyLog("NDWH", "PatientExtract",mflcode);
+
+                            if (null != changesLoadedDifflog)
+                            {
+                                response = await client.PostAsJsonAsync(
+                                    sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
+
+                            }
+                            else
+                            {
+                                response = await client.PostAsJsonAsync(
                                     sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
+
+                            }
+                            // var response = await client.PostAsJsonAsync(
+                            //     sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
                             if (response.IsSuccessStatusCode)
                             {
                                 allowSend = false;
@@ -291,15 +314,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             int total = packageInfo.PageCount;
             int overall = 0;
 
-            var siteCode = _indicatorExtractRepository.GetMflCode();
-            
-            var diffLogs = _diffLogRepository.GetAllDocketLogs("NDWH");
-            
-            foreach (var log in diffLogs)
-            {
-                _diffLogRepository.UpdateMaxDates("NDWH", log.Extract, siteCode);
-            }
-            
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sending));
             long recordCount = 0;
 
@@ -345,9 +359,10 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     var extracts = _packager.GenerateSmartBatchExtracts<T>(page, packageInfo.PageSize).ToList();
                     recordCount = recordCount + extracts.Count;
                     messageBag.Generate(extracts, manifestId, facilityId,jobId);
+                    //messageBag = messageBag.Generate(extracts);
                     var message = messageBag;
 
-                    Log.Debug(
+                   Log.Debug(
                         $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords}  Pks:[{messageBag.MinPk}-{messageBag.MaxPk}] Page:{page} of {packageInfo.PageCount}");
 
                     try
@@ -406,8 +421,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 throw;
             }
 
-            DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
-                messageBag.GetProgress(count, total), recordCount,true)));
+            DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total), recordCount,true)));
 
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
                 {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
