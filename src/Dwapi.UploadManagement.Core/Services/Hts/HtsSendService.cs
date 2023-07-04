@@ -7,6 +7,8 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Hts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
+using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
+using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
@@ -33,14 +35,18 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
         private readonly IHtsPackager _packager;
         private readonly IMediator _mediator;
         private readonly IEmrMetricReader _reader;
+        private readonly ITransportLogRepository _transportLogRepository;
+
 
         public HttpClient Client { get; set; }
-        public HtsSendService(IHtsPackager packager, IMediator mediator, IEmrMetricReader reader)
+        public HtsSendService(IHtsPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository)
         {
             _packager = packager;
             _mediator = mediator;
             _reader = reader;
             _endPoint = "api/hts/";
+            _transportLogRepository = transportLogRepository;
+
         }
 
         public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo,string version)
@@ -59,11 +65,27 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                 try
                 {
                     var msg = JsonConvert.SerializeObject(message);
-                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}manifest"), message);
+                    var start = DateTime.Now;
+
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Manifestv2"), message);
                     if (response.IsSuccessStatusCode)
                     {
-                        var content = await response.Content.ReadAsJsonAsync<SendManifestResponse>();
-                        responses.Add(content);
+                        var contenttest = await response.Content.ReadAsJsonAsync<SendManifestResponse>();
+                        
+                        if (string.IsNullOrWhiteSpace(version))
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
+                            responses.Add(new SendManifestResponse(content));
+                        }
+                        else
+                        {
+                            var content = await response.Content.ReadAsJsonAsync<ManifestResponse>();
+                            responses.Add(new SendManifestResponse(content));
+
+                            var tlog = TransportLog.GenerateManifest("HTS", content.JobId,
+                                new Guid(content.ManifestId), content.Code,start,content.FacilityId);
+                            _transportLogRepository.CreateLatest(tlog);
+                        }
                     }
                     else
                     {

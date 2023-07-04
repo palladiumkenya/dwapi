@@ -259,7 +259,7 @@ namespace Dwapi.Controller
                 return BadRequest();
             try
             {
-                QueueSmartDwh(packageDto.DwhPackage);
+                FastQueueSmartDwh(packageDto.DwhPackage);
                 return Ok();
             }
             catch (Exception e)
@@ -810,5 +810,31 @@ namespace Dwapi.Controller
             var state = new EnqueuedState("mpi");
             client.Create(() => _cbsSendService.SendMpiAsync(package), state);
         }
+
+
+        [AutomaticRetry(Attempts = 0)]
+        private void FastQueueSmartDwh(SendManifestPackageDTO package)
+        {
+            var extracts = _extractRepository.GetAllRelated(package.ExtractId).ToList();
+
+            if (extracts.Any())
+                package.Extracts = extracts.Select(x => new ExtractDto() { Id = x.Id, Name = x.Name }).ToList();
+
+            _ctSendService.NotifyPreSending();
+
+            var id1 = BatchJob.StartNew(x => { x.Enqueue(() => SendJobSmartPateints(package)); });
+
+            var id2 = BatchJob.ContinueBatchWith(id1, x =>
+            {
+                x.Enqueue(() => SendJobSmartBaselines(package));
+                x.Enqueue(() => SendJobSmartProfiles(package));
+                x.Enqueue(() => SendNewJobSmartProfiles(package));
+                x.Enqueue(() => SendNewOtherJobSmartProfiles(package));
+                x.Enqueue(() => SendCovidJobSmartProfiles(package));
+            });
+            var jobEnd =
+                BatchJob.ContinueBatchWith(id2, x => { _ctSendService.NotifyPostSending(package, _version); });
+        }
+
     }
 }
