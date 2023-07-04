@@ -7,6 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
 {
     [Table("vTempPncVisitExtractErrorSummary")]public class TempPncVisitExtractErrorSummary:TempMnchExtractErrorSummary,IPncVisit
     {
+        public string FacilityName { get; set; }
         public string PatientMnchID { get; set; }
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }

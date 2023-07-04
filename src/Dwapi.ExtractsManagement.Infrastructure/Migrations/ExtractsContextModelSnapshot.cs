@@ -10481,6 +10481,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int?>("FacilityId");
 
+                    b.Property<string>("FacilityName");
+
                     b.Property<DateTime?>("Gestation");
 
                     b.Property<string>("HEI");
@@ -11043,6 +11045,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int?>("FacilityId");
 
+                    b.Property<string>("FacilityName");
+
                     b.Property<string>("MotherPatientMncHeiID");
 
                     b.Property<int>("MotherPatientPK");
@@ -11172,6 +11176,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int>("ErrorType");
 
                     b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
 
                     b.Property<string>("Fistula");
 
