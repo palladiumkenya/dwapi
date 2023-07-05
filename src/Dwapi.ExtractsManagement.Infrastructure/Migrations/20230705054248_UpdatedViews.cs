@@ -329,7 +329,11 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 							vTempPatientVisitExtractError.RefillDate,
 							vTempPatientVisitExtractError.PaedsDisclosure,
 							vTempPatientVisitExtractError.ZScoreAbsolute,
-							vTempPatientVisitExtractError.ZScore
+							vTempPatientVisitExtractError.ZScore,
+							vTempPatientVisitExtractError.DifferentiatedCare,
+							vTempPatientVisitExtractError.KeyPopulationType,
+							vTempPatientVisitExtractError.PopulationType,
+							vTempPatientVisitExtractError.StabilityAssessment
 
 
 				FROM            vTempPatientVisitExtractError INNER JOIN
@@ -383,10 +387,63 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 				        vTempPatientExtractError.Date_Last_Modified, 
 				        vTempPatientExtractError.Pkv,
 				        vTempPatientExtractError.Occupation,
-				        vTempPatientExtractError.NUPI 
+				        vTempPatientExtractError.NUPI ,
+						vTempPatientExtractError.PatientPK,
+						vTempPatientExtractError.SiteCode,
+						vTempPatientExtractError.FacilityId
+
 									 
 					FROM            vTempPatientExtractError INNER JOIN
 										 ValidationError ON vTempPatientExtractError.Id = ValidationError.RecordId INNER JOIN
+										 Validator ON ValidationError.ValidatorId = Validator.Id
+                ");
+            
+            migrationBuilder.Sql(@"alter view vTempMnchImmunizationExtractError as SELECT * FROM TempMnchImmunizationExtracts WHERE (CheckError = 1)");
+
+             migrationBuilder.Sql(@"
+				alter VIEW vTempMnchImmunizationExtractErrorSummary
+				AS
+				SELECT        ValidationError.Id, Validator.Extract, Validator.Field, Validator.Type, Validator.Summary, ValidationError.DateGenerated,ValidationError.RecordId,	
+						vTempMnchImmunizationExtractError.DateExtracted,
+						vTempMnchImmunizationExtractError.Emr,
+						vTempMnchImmunizationExtractError.ErrorType,
+						vTempMnchImmunizationExtractError.FacilityId,
+						vTempMnchImmunizationExtractError.FacilityName,						
+						vTempMnchImmunizationExtractError.BCG,
+						vTempMnchImmunizationExtractError.OPVatBirth,
+						vTempMnchImmunizationExtractError.OPV1,
+						vTempMnchImmunizationExtractError.OPV2,
+						vTempMnchImmunizationExtractError.OPV3,
+						vTempMnchImmunizationExtractError.IPV,
+						vTempMnchImmunizationExtractError.DPTHepBHIB1,
+						vTempMnchImmunizationExtractError.DPTHepBHIB2,
+						vTempMnchImmunizationExtractError.DPTHepBHIB3,
+						vTempMnchImmunizationExtractError.PCV101,
+						vTempMnchImmunizationExtractError.PCV102,
+						vTempMnchImmunizationExtractError.PCV103,
+						vTempMnchImmunizationExtractError.ROTA1,
+						vTempMnchImmunizationExtractError.MeaslesReubella1,
+						vTempMnchImmunizationExtractError.YellowFever,
+						vTempMnchImmunizationExtractError.MeaslesReubella2,
+						vTempMnchImmunizationExtractError.MeaslesAt6Months,
+						vTempMnchImmunizationExtractError.ROTA2,
+						vTempMnchImmunizationExtractError.DateofNextVisit,
+						vTempMnchImmunizationExtractError.BCGScarChecked,
+						vTempMnchImmunizationExtractError.DateChecked,
+						vTempMnchImmunizationExtractError.DateBCGrepeated,
+						vTempMnchImmunizationExtractError.VitaminAAt6Months,
+						vTempMnchImmunizationExtractError.VitaminAAt1Yr,
+						vTempMnchImmunizationExtractError.VitaminAAt18Months,
+						vTempMnchImmunizationExtractError.VitaminAAt2Years,
+						vTempMnchImmunizationExtractError.VitaminAAt2To5Years,
+						vTempMnchImmunizationExtractError.FullyImmunizedChild,
+						vTempMnchImmunizationExtractError.Date_Created,
+						vTempMnchImmunizationExtractError.Date_Last_Modified,
+						vTempMnchImmunizationExtractError.PatientMnchID,
+						vTempMnchImmunizationExtractError.PatientPK,
+						vTempMnchImmunizationExtractError.SiteCode
+				FROM            vTempMnchImmunizationExtractError INNER JOIN
+										 ValidationError ON vTempMnchImmunizationExtractError.Id = ValidationError.RecordId INNER JOIN
 										 Validator ON ValidationError.ValidatorId = Validator.Id
                 ");
 
