@@ -107,7 +107,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
                 nameof(ExtractsContext.TempCovidExtracts),
                 nameof(ExtractsContext.CovidExtracts),
                 nameof(ExtractsContext.TempDefaulterTracingExtracts),
-                nameof(ExtractsContext.DefaulterTracingExtracts)
+                nameof(ExtractsContext.DefaulterTracingExtracts),
+                nameof(ExtractsContext.TempCervicalCancerScreeningExtracts),
+                nameof(ExtractsContext.CervicalCancerScreeningExtracts)
             };
 
             var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };

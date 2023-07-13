@@ -107,7 +107,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.RespiratoryRate, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempAncVisitExtract.RespiratoryRate))))
                      .ForMember(x => x.OxygenSaturation, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempAncVisitExtract.OxygenSaturation))))
                      .ForMember(x => x.MUAC, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempAncVisitExtract.MUAC))))
-                     .ForMember(x => x.BP, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempAncVisitExtract.BP))))
+                     .ForMember(x => x.BP, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.BP))))
                      .ForMember(x => x.BreastExam, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.BreastExam))))
                      .ForMember(x => x.AntenatalExercises, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.AntenatalExercises))))
                      .ForMember(x => x.FGM, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.FGM))))
@@ -392,7 +392,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.NextAppointment, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempCwcVisitExtract.NextAppointment))))
                      .ForMember(x => x.RevisitThisYear, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcVisitExtract.RevisitThisYear))))
                      .ForMember(x => x.Refferred, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcVisitExtract.Refferred))))
-                     .ForMember(x => x.HeightLength, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempCwcVisitExtract.HeightLength))));
+                     .ForMember(x => x.HeightLength, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempCwcVisitExtract.HeightLength))))
+                     .ForMember(x => x.ZScore, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcVisitExtract.ZScore))))
+                     .ForMember(x => x.ZScoreAbsolute, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempCwcVisitExtract.ZScoreAbsolute))));
 
 
 

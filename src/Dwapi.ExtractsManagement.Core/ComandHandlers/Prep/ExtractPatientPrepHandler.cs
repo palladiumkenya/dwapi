@@ -46,19 +46,19 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Prep
 
             //TODO Check for duplicate patients with SITE CODE
             var patientKeys = _tempPatientPrepExtractRepository.GetAll().Select(k => k.PatientPK);
-            var distinct = new HashSet<int?>();
-            var duplicates = new HashSet<int?>();
-            foreach (var key in patientKeys)
-            {
-                if (!distinct.Add(key))
-                    duplicates.Add(key);
-            }
-
-            if (duplicates.Any())
-            {
-                var readDuplicates = string.Join(", ", duplicates.ToArray());
-                throw new DuplicatePatientPrepException($"Duplicate patient(s) with PatientPK(s) {readDuplicates} found");
-            }
+            // var distinct = new HashSet<int?>();
+            // var duplicates = new HashSet<int?>();
+            // foreach (var key in patientKeys)
+            // {
+            //     if (!distinct.Add(key))
+            //         duplicates.Add(key);
+            // }
+            //
+            // if (duplicates.Any())
+            // {
+            //     var readDuplicates = string.Join(", ", duplicates.ToArray());
+            //     throw new DuplicatePatientPrepException($"Duplicate patient(s) with PatientPK(s) {readDuplicates} found");
+            // }
 
             //Validate
             await _extractValidator.Validate(request.Extract.Id, found, nameof(PatientPrepExtract), $"{nameof(TempPatientPrepExtract)}s");

@@ -113,6 +113,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Cleaner.Dwh
             Assert.False(_extractsContext.OtzExtracts.Any());
             Assert.False(_extractsContext.TempOvcExtracts.Any());
             Assert.False(_extractsContext.OvcExtracts.Any());
+            Assert.False(_extractsContext.TempCervicalCancerScreeningExtracts.Any());
+            Assert.False(_extractsContext.CervicalCancerScreeningExtracts.Any());
+            
 
             Assert.False(_extractsContext.ExtractHistory.Any(x => extractIds.Contains(x.ExtractId)));
         }

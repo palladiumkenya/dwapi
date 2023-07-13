@@ -636,6 +636,7 @@ namespace Dwapi
             //DefaulterTracing
             services.AddScoped<ICovidExtractRepository, CovidExtractRepository>();
             services.AddScoped<IDefaulterTracingExtractRepository, DefaulterTracingExtractRepository>();
+            services.AddScoped<ICervicalCancerScreeningExtractRepository, CervicalCancerScreeningExtractRepository>();
 
             services.AddScoped<ITempAllergiesChronicIllnessExtractRepository, TempAllergiesChronicIllnessExtractRepository>();
             services.AddScoped<ITempContactListingExtractRepository, TempContactListingExtractRepository>();
@@ -650,6 +651,8 @@ namespace Dwapi
             //DefaulterTracing
             services.AddScoped<ITempDefaulterTracingExtractRepository, TempDefaulterTracingExtractRepository>();
             services.AddScoped<ITempCovidExtractRepository, TempCovidExtractRepository>();
+            services.AddScoped<ITempCervicalCancerScreeningExtractRepository, TempCervicalCancerScreeningExtractRepository>();
+
 
             services.AddScoped<ITempAllergiesChronicIllnessExtractErrorSummaryRepository, TempAllergiesChronicIllnessExtractErrorSummaryRepository>();
             services.AddScoped<ITempContactListingExtractErrorSummaryRepository, TempContactListingExtractErrorSummaryRepository>();
@@ -665,6 +668,7 @@ namespace Dwapi
             //DefaulterTracing
             services.AddScoped<ITempCovidExtractErrorSummaryRepository, TempCovidExtractErrorSummaryRepository>();
             services.AddScoped<ITempDefaulterTracingExtractErrorSummaryRepository, TempDefaulterTracingExtractErrorSummaryRepository>();
+            services.AddScoped<ITempCervicalCancerScreeningExtractErrorSummaryRepository, TempCervicalCancerScreeningExtractErrorSummaryRepository>();
 
 
             services.AddScoped<IAllergiesChronicIllnessSourceExtractor, AllergiesChronicIllnessSourceExtractor>();
@@ -680,6 +684,8 @@ namespace Dwapi
             //DefaulterTracing
             services.AddScoped<ICovidSourceExtractor, CovidSourceExtractor>();
             services.AddScoped<IDefaulterTracingSourceExtractor, DefaulterTracingSourceExtractor>();
+            services.AddScoped<ICervicalCancerScreeningSourceExtractor, CervicalCancerScreeningSourceExtractor>();
+
 
             services.AddScoped<IAllergiesChronicIllnessLoader, AllergiesChronicIllnessLoader>();
             services.AddScoped<IContactListingLoader, ContactListingLoader>();
@@ -694,6 +700,7 @@ namespace Dwapi
             //DefaulterTracing
             services.AddScoped<ICovidLoader, CovidLoader>();
             services.AddScoped<IDefaulterTracingLoader, DefaulterTracingLoader>();
+            services.AddScoped<ICervicalCancerScreeningLoader, CervicalCancerScreeningLoader>();
 
             #endregion
 

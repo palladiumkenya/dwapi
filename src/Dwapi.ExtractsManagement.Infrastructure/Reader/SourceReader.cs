@@ -57,7 +57,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
                 sourceConnection.Open();
 
             Connection = sourceConnection;
-            var commandDefinition = new CommandDefinition(extract.GetDiffSQL(maxCreated, maxModified, siteCode), null, null, 3600);
+            var commandDefinition = new CommandDefinition(extract.GetDiffSQL(maxCreated, maxModified, siteCode,protocol), null, null, 3600);
 
             if (sourceConnection is SqliteConnection)
                 return Task.FromResult<IDataReader>(sourceConnection.ExecuteReader(commandDefinition));

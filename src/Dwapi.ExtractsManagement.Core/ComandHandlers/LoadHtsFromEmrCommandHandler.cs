@@ -19,7 +19,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
 
         public async Task<bool> Handle(LoadHtsFromEmrCommand request, CancellationToken cancellationToken)
         {
-            var extractIds = request.Extracts.Select(x => x.Extract.Id).ToList();
+            var extractIds = request.Extracts.Select(x => x.Extract.Id).Distinct().ToList();
 
             await _mediator.Send(new ClearAllHTSExtracts(extractIds), cancellationToken);
             

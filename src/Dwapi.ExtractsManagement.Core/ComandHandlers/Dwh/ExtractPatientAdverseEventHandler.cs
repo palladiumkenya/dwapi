@@ -53,27 +53,20 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             var difflog = _diffLogRepository.GetLog("NDWH", "PatientAdverseEventExtract", mflcode);
             var changesLoadedStatus= false;
 
-            if (request.DatabaseProtocol.SupportsDifferential)
-            {
-                if(null==difflog)
-                    found  = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-                else
-                    if (true == loadChangesOnly)
-                    {
-                        changesLoadedStatus = true;
-                        found = await _patientAdverseEventSourceExtractor.Extract(request.Extract,
-                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
-                    }
-                    else
-                    {
-                        found  = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-
-                    }
-            }
-            else
-            {
+            if(null==difflog)
                 found  = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-            }
+            else
+                if (true == loadChangesOnly)
+                {
+                    changesLoadedStatus = true;
+                    found = await _patientAdverseEventSourceExtractor.Extract(request.Extract,
+                        request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                }
+                else
+                {
+                    found  = await _patientAdverseEventSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+                }
             //Extract
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "PatientAdverseEventExtract", changesLoadedStatus);
 

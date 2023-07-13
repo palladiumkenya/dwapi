@@ -166,8 +166,6 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                         summary: 'load was successful '
                     });
                     this.canLoadFromEmr=true;
-                    localStorage.setItem('canSendPrep', "true");
-
                     this.updateEvent();
                 }
             );
@@ -551,7 +549,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
 
 
     public sendPrepVisitExtracts(): void {
-        this.exportStage = 11;
+        this.sendStage = 11;
         //this.sendEvent = {sentProgress: 0};
         this.sending = true;
         this.errorMessage = [];
@@ -617,15 +615,15 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.send$ = this._prepSenderService.zipPrepFiles(this.manifestPackage)
             .subscribe(
                 p => {
-                   
+
                     this.updateEvent();
                 },
                 e => {
                     this.errorMessage = [];
-                   
+
                 },
                 () => {
-                    
+
                 }
             );
     }
@@ -779,7 +777,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             this.canLoadFromEmr = this.canSend = !this.sending;
         });
         this._hubConnection.on('ShowPrepExportProgress', (dwhProgress: any) => {
-            const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);            
+            const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);
             this.exportEvent = {
                 exportProgress: progress
             };
