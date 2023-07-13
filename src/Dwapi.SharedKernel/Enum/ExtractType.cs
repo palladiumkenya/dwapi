@@ -21,6 +21,7 @@
         Otz,
         Covid,
         DefaulterTracing,
+        CervicalCancerScreening,
 
         PatientMnch,
         AncVisit,
@@ -33,6 +34,7 @@
         MnchLab,
         MotherBabyPair,
         PncVisit,
+        MnchImmunization,
 
         PatientPrep,
         PrepAdverseEvent,

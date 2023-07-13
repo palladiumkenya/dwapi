@@ -14,20 +14,24 @@
                     icon="ui-icon-file-download" class="green-btn"></button>
         </div>
 
-        <!--        <div class="ui-toolbar-group-right" *ngIf="(emrName && emrName === 'KenyaEMR')">-->
-        <!--            <button pButton type="button" [disabled]="!canSend" (click)="checkWhichToSend()" label="Send All"-->
-        <!--                    icon="ui-icon-cloud-upload"-->
-        <!--                    class="blue-btn"></button>-->
-        <!--        </div>-->
+<!--        <div class="ui-toolbar-group-right" *ngIf="(emrName && emrName === 'KenyaEMR')">-->
+<!--            <button pButton type="button" [disabled]="!canSend" (click)="checkWhichToSend()" label="Send All"-->
+<!--                    icon="ui-icon-cloud-upload"-->
+<!--                    class="blue-btn"></button>-->
+<!--        </div>
 
-        <div class="" *ngIf="(emrName && emrName === 'KenyaEMR')">
-            <button pButton type="button" style="float: right;" [disabled]="!canSend" [hidden]="!canSendDiff" (click)="sendDiff()" label="Send Changes Only"
+        <div class=""  *ngIf="(emrName && emrName === 'KenyaEMR')">
+            <button  pButton type="button" style="float: right;" [disabled]="!canSend" [hidden]="!canSendDiff" (click)="sendDiff()" label="Send Changes Only"
                     icon="ui-icon-cloud-upload"
                     class="btn orange-btn"></button>
-        </div>
+        </div>-->
 
-        <div class="">
-            <button pButton type="button" id="sendCT" style="float: right;" [disabled]="!canSend" [hidden]="canSendDiff" (click)="sendSmart()" label="Send All"
+        <button  pButton type="button" style="float: right;" [disabled]="!canSend" [hidden]="!canSendDiff" (click)="sendDiff()" label="Send Changes Only"
+                 icon="ui-icon-cloud-upload"
+                 class="btn orange-btn"></button>
+
+        <div class="" >
+            <button pButton type="button"  style="float: right;" [disabled]="!canSend" [hidden]="canSendDiff" (click)="sendSmart()" label="Send All"
                     icon="ui-icon-cloud-upload"
                     class="btn blue-btn"></button>
         </div>
@@ -81,28 +85,28 @@
 
         <p-fieldset legend="KEY" [toggleable]="true">
             <span style="background-color:white "><b>*Found </b></span> => Number of records available in EMR for each
-            dataset.<br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
+            dataset.<br/>
+            ------------------------------------------------------------------------------------------------------------------------------<br/>
             <span style="background-color:lightskyblue "><b>*Loaded </b></span>=> Number of valid records loaded from
-            EMR for each dataset<br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
+            EMR for each dataset<br/>
+            ------------------------------------------------------------------------------------------------------------------------------<br/>
             <span style="background-color:tomato "><b>*Rejected </b></span>=> Records in the extract that will not be
-            sent to the <br />
-            warehouse because they belong to a patient(s) with errors. <br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
+            sent to the <br/>
+            warehouse because they belong to a patient(s) with errors. <br/>
+            ------------------------------------------------------------------------------------------------------------------------------<br/>
             <span style="background-color:lightgray"><b>*Flagged </b></span>=> Number of Unique patient records with one
-            or more issues that need to be cleaned in the source EMR.<br />
-            These issues are recorded for review in the validation summary section.<br />
+            or more issues that need to be cleaned in the source EMR.<br/>
+            These issues are recorded for review in the validation summary section.<br/>
             For better data quality, site data managers/HRIOs should clean these records before sending to the
-            datawarehouse<br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
+            datawarehouse<br/>
+            ------------------------------------------------------------------------------------------------------------------------------<br/>
             <span style="background-color:orange "><b>*Queued </b></span>=> Number of records in each dataset ready for
             sending to the data warehouse.
-            These records will include flagged records that have not been cleaned.<br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
+            These records will include flagged records that have not been cleaned.<br/>
+            ------------------------------------------------------------------------------------------------------------------------------<br/>
             <span style="background-color:lightgreen "><b>*Sent </b></span>=> Total number of records sent to the data
-            warehouse.<br />
-            ------------------------------------------------------------------------------------------------------------------------------<br />
+            warehouse.<br/>
+            ------------------------------------------------------------------------------------------------------------------------------<br/>
 
         </p-fieldset>
 

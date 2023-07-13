@@ -323,12 +323,15 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.isLoadingMet=false;
                     if(this.canSend) {
                         this.canSend = true;
+                        this.canExport = true;
                     }
                 },
                 () => {
                     this.isLoadingMet=false;
                     if(this.canSend) {
                         this.canSend = true;
+                        this.canExport = true;
+
                     }
                 }
             );
@@ -427,6 +430,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public sendSmart(): void {
         this.startedSending=true;
         this.canSend=false;
+        this.canExport = false;
+
         if(this.emr.emrSetup==EmrSetup.MultiFacility) {
             this.smartMode = false;
             this.send();
@@ -447,6 +452,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 e => {
                     this.canSend=true;
+                    this.canExport = true;
 
                     if (e && e.ProgressEvent) {
 
@@ -465,6 +471,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.sendingManifest = false;
                     this.updateEvent();
                     this.canSend=true;
+                    this.canExport = true;
                     this.startedSending=false;
                 }
             );
@@ -515,6 +522,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public sendDiff(): void {
         this.startedSending=true;
         this.canSend=false;
+        this.canExport = false;
         localStorage.clear();
         this.sendingManifest = true;
         this.errorMessage = [];
@@ -529,6 +537,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 e => {
                     this.startedSending=false;
                     this.canSend=true;
+                    this.canExport = true;
                     console.error('SEND ERROR', e);
                     if (e && e.ProgressEvent) {
 
@@ -545,6 +554,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.sendingManifest = false;
                     this.updateEvent();
                     this.canSend=true;
+                    this.canExport = true;
                     this.startedSending=false;
                 }
             );
@@ -851,6 +861,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 this.updateEvent();
             }
             this.canLoadFromEmr = this.canSend = !this.sending;
+            this.canLoadFromEmr = this.canExport = !this.sending;
         });
         this._hubConnection.on('ShowDwhExportProgress', (dwhProgress: any) => {
             const progress = this.getCurrrentProgress(dwhProgress.extract, dwhProgress.progress);

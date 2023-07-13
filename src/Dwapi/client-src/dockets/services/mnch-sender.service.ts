@@ -73,6 +73,11 @@ export class MnchSenderService {
             .catch(this.handleError);
     }
 
+    public sendMnchImmunizationExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/mnchimmunization`, sendPackage)
+            .catch(this.handleError);
+    }
+
 
     public exportManifest(sendPackage: SendPackage): Observable<boolean> {
         return this._http.post<boolean>(`${this._url}/exportmanifest`, sendPackage)
@@ -129,6 +134,11 @@ export class MnchSenderService {
 
     public exportPncVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/exportpncvisits`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportMnchImmunizationExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportmnchimmunization`, sendPackage)
             .catch(this.handleError);
     }
 

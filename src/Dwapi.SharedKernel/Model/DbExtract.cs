@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Utility;
 
 namespace Dwapi.SharedKernel.Model
@@ -79,12 +80,38 @@ namespace Dwapi.SharedKernel.Model
             return $@"select count(*) from ({ExtractSql.ToLower()})xt".ToLower();
         }
         
-        public string GetDiffSQL(DateTime? maxCreated, DateTime? maxModified, int siteCode)
-        { 
-            var dist_pksite =    $@"select distinct PatientPK, SiteCode from ({ExtractSql.ToLower()})xt where (xt.Date_Created > '{maxCreated:u}' or xt.Date_Last_Modified > '{maxModified:u}') and xt.SiteCode={siteCode}";
-            
-            var fins= $@"select * from ({ExtractSql.ToLower()}) v inner join ({dist_pksite})  as s ON s.PatientPK=v.PatientPK and s.SiteCode=v.SiteCode";
-            return fins;
+        public string GetDiffSQL(DateTime? maxCreated, DateTime? maxModified, int siteCode, DbProtocol protocol)
+        {
+            if (protocol.DatabaseType== DatabaseType.MicrosoftSQL)
+            {
+                
+                if (null == maxModified)
+                {
+                    var dist_pksite =
+                        $@"select distinct PatientPK, SiteCode from ({ExtractSql.ToLower()})xt where (xt.Date_Created > '{maxCreated:u}' ) and xt.SiteCode={siteCode}";
+                    var fins =
+                        $@"select * from ({ExtractSql.ToLower()}) v inner join ({dist_pksite})  as s ON s.PatientPK=v.PatientPK and s.SiteCode=v.SiteCode";
+                    return fins;
+                }
+                else
+                {
+                    var dist_pksite =
+                        $@"select distinct PatientPK, SiteCode from ({ExtractSql.ToLower()})xt where (xt.Date_Created > '{maxCreated:u}' or xt.Date_Last_Modified > '{maxModified:u}') and xt.SiteCode={siteCode}";
+                    var fins =
+                        $@"select * from ({ExtractSql.ToLower()}) v inner join ({dist_pksite})  as s ON s.PatientPK=v.PatientPK and s.SiteCode=v.SiteCode";
+                    return fins;
+                }
+            }
+            else
+            {
+                var dist_pksite =
+                    $@"select distinct PatientPK, SiteCode from ({ExtractSql.ToLower()})xt where (xt.Date_Created > '{maxCreated:u}' or xt.Date_Last_Modified > '{maxModified:u}') and xt.SiteCode={siteCode}";
+                var fins =
+                    $@"select * from ({ExtractSql.ToLower()}) v inner join ({dist_pksite})  as s ON s.PatientPK=v.PatientPK and s.SiteCode=v.SiteCode";
+                return fins;
+            }
+
+
             // return $@"select * from ({ExtractSql.ToLower()})xt where (xt.Date_Created > '{maxCreated:u}' or xt.Date_Last_Modified > '{maxModified:u}') and xt.SiteCode={siteCode}";
 
         }

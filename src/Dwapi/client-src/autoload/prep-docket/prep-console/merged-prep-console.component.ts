@@ -109,7 +109,6 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
 
     public loadData(): void {
         this.canLoadFromEmr = this.canSend = false;
-        localStorage.setItem('canSendPrep', "false");
 
         if (this.emr) {
             this.canLoadFromEmr = true;
@@ -200,6 +199,16 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
                         extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
+                            if (extract.extractEvent.queued > 0){
+                                localStorage.setItem('canSendPrep', "true");
+                                this.actionType = "Sent";
+
+                            }else{
+                                localStorage.setItem('canSendPrep', "false");
+                                this.actionType = "NoRecords";
+
+                            }
+                            console.log('get the value here',extract.extractEvent.queued > 0,JSON.parse(localStorage.getItem('canSendPrep')))
                         }
                     },
                     e => {
@@ -588,6 +597,8 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
                 this.errorMessage = [];
                 this.errorMessage.push({severity: 'success', summary: 'sent successfully '});
                 localStorage.setItem('prepSendingComplete', "true");
+                this.actionType = "Sent";
+
                 this.updateEvent();
                 this.sendHandshake();
                 this.sending = false;

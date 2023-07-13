@@ -14,15 +14,15 @@ namespace Dwapi.SettingsManagement.Core.Model
         {
         }
 
-        public DatabaseProtocol(DatabaseType databaseType, string host, string username, string password, string databaseName) : base(databaseType, host, username, password, databaseName)
+        public DatabaseProtocol(DatabaseType databaseType, string host, string username, string password, string databaseName,Guid emrSystemId) : base(databaseType, host, username, password, databaseName,emrSystemId)
         {
         }
 
-        public DatabaseProtocol(DatabaseType databaseType, string host, string username, string password, string databaseName, Guid emrSystemId)
-        :this(databaseType,host,username,password,databaseName)
-        {
-            EmrSystemId = emrSystemId;
-        }
+        // public DatabaseProtocol(DatabaseType databaseType, string host, string username, string password, string databaseName, Guid emrSystemId)
+        // :this(databaseType,host,username,password,databaseName, emrSystemId)
+        // {
+        //     EmrSystemId = emrSystemId;
+        // }
 
         public DatabaseProtocol(DatabaseType databaseType, string databaseName) : base(databaseType, databaseName)
         {

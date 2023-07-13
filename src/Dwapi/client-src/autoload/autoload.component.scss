@@ -157,6 +157,10 @@ ul.form-stepper li a .form-stepper-circle {
     background-color: #32cd32 !important;
     color: #fff !important;
 }
+.form-stepper .form-stepper-failed .form-stepper-circle {
+    background-color: red !important;
+    color: #fff !important;
+}
 .form-stepper .form-stepper-waiting .form-stepper-icon .cloud{
     color: #0e9594;
 }
@@ -165,6 +169,9 @@ ul.form-stepper li a .form-stepper-circle {
 }
 .form-stepper .form-stepper-completed .form-stepper-icon .cloud{
     color: #32cd32 ;
+}
+.form-stepper .form-stepper-failed .form-stepper-icon .cloud{
+    color: red ;
 }
 .form-stepper .label {
     font-size: 1rem;

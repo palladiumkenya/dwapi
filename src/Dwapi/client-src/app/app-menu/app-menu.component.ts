@@ -49,12 +49,13 @@ export class AppMenuComponent implements OnInit {
                     {label: 'Client Registry Services', icon: 'credit_card', routerLink: ['/crs']}
                 ]
             },
-            { label: 'Exports', icon: 'folder', routerLink: ['/exports'] },
-            { label: 'Upload', icon: 'folder', routerLink: ['/upload'] },
-
             {
                 label: 'Merged Dockets', icon: 'cloud', routerLink: ['/autoload']
-            }
+            },
+            { label: 'Exports', icon: 'folder', routerLink: ['/exports'] },
+            { label: 'Upload', icon: 'folder', routerLink: ['/upload'] }
+
+
         ];
     }
 }

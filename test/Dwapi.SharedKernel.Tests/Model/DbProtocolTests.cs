@@ -12,7 +12,7 @@ namespace Dwapi.SharedKernel.Tests.Model
         [SetUp]
         public void SetUp()
         {
-            _iqcaredbProtocol=new DbProtocol(DatabaseType.MicrosoftSQL,@".\koske14","sa","maun","iqcare");
+            _iqcaredbProtocol=new DbProtocol(DatabaseType.MicrosoftSQL,@".\koske14","sa","maun","iqcare", Guid.Parse(""));
         }
 
         [Test]

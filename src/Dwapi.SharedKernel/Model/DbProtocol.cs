@@ -32,17 +32,21 @@ namespace Dwapi.SharedKernel.Model
         [NotMapped] public bool DiffSupport => !string.IsNullOrWhiteSpace(GetSql());
 
         [NotMapped] public bool SupportsDifferential => DiffSupport;
+        
+        public Guid EmrSystemId { get; set; }
+
 
         public DbProtocol()
         {
         }
-        public DbProtocol(DatabaseType databaseType, string host, string username, string password, string databaseName)
+        public DbProtocol(DatabaseType databaseType, string host, string username, string password, string databaseName, Guid emrSystemId)
         {
             DatabaseType = databaseType;
             Host = host;
             Username = username;
             Password = password;
             DatabaseName = databaseName;
+            EmrSystemId = emrSystemId;
         }
         public DbProtocol(DatabaseType databaseType,  string databaseName)
         {
@@ -57,6 +61,8 @@ namespace Dwapi.SharedKernel.Model
             Username = emrSystem.Username;
             Password = emrSystem.Password;
             DatabaseName = emrSystem.DatabaseName;
+            EmrSystemId = emrSystem.EmrSystemId;
+
         }
 
         public string GetConnectionString()

@@ -179,6 +179,19 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 };
                 ts4.Add( _mediator.Send(depressionScreeningCommand, cancellationToken));
             }
+            
+            // ExtractMnchImmunizationExtract
+            var mnchImmunizationProfile =
+                request.Extracts.FirstOrDefault(x => x.Extract.Name == "MnchImmunizationExtract");
+            if (null != mnchImmunizationProfile)
+            {
+                var mnchImmunizationCommand = new ExtractMnchImmunization()
+                {
+                    Extract = mnchImmunizationProfile?.Extract,
+                    DatabaseProtocol = mnchImmunizationProfile?.DatabaseProtocol
+                };
+                ts4.Add( _mediator.Send(mnchImmunizationCommand, cancellationToken));
+            }
 
 
 

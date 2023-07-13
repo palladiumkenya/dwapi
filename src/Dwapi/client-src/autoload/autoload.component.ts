@@ -47,6 +47,9 @@ export class AutoloadComponent implements OnInit, OnDestroy {
     public mnchSendingComplete: boolean;
     public prepSendingComplete: boolean;
 
+    public ctLoadFailed: boolean;
+    public ctSendFailed: boolean;
+
     public metricMessages: Message[];
     public emrVersion: string;
     public emrMetric: EmrMetrics;
@@ -55,6 +58,8 @@ export class AutoloadComponent implements OnInit, OnDestroy {
     private _http: HttpClient;
     public dbProtocol: DatabaseProtocol;
     public autoload_status: string;
+    public unifiedProcessComplete: boolean = false;
+
 
 
     step: number = 1;
@@ -154,42 +159,59 @@ export class AutoloadComponent implements OnInit, OnDestroy {
         ctLoadelement.click();
         console.log('--> clicked loadchangesfromemr');
 
-        //check if can send after load completes
-        var checkLoad = setInterval(() => {
-            this.canSend =JSON.parse(localStorage.getItem('canSend'));
-            console.log('canSendCT', this.canSend, typeof(this.canSend));
+        //check if failed during load and skip
+        var checkLoadFailed = setInterval(() => {
+            this.ctLoadFailed =JSON.parse(localStorage.getItem('ctLoadFailed'));
 
-            if (this.canSend == true){
-                //stop the loops if you can send now
-                clearInterval(checkLoad);
-                this.autoload_status = "Loading";
-
-                this.stepTwoIconIsActive = "form-stepper-active step-section-active";
-                var waitForChangesButton = setInterval(() => {
-                    clearInterval(waitForChangesButton);
-                    let sendCTelement:HTMLElement = document.getElementById('sendCT') as HTMLElement;
-                    sendCTelement.click();
-                }, 5000);
-
-
-                    //    start sending after clearing interval
-                        var checkComplete = setInterval(() => {
-
-                            this.ctSendingComplete = JSON.parse(localStorage.getItem('ctSendingComplete'));
-
-                            console.log("ctSendingComplete",this.ctSendingComplete, typeof(this.ctSendingComplete));
-
-                            if (this.ctSendingComplete == true){
-                                // stop loops and move to next step
-                                clearInterval(checkComplete);
-                                this.stepTwoIconIsActive = "form-stepper-completed step-section-inactive";
-                                this.loadHTS() ;
-                            }
-                        }, 10000);
-                    //
-
+            if (this.ctLoadFailed == true) {
+                // this.stepTwoIsActive = "form-stepper-failed step-section-inactive";
+                this.loadHTS();
             }
-            }, 10000);
+            else {
+                //check if can send after load completes
+                var checkLoad = setInterval(() => {
+                    this.canSend = JSON.parse(localStorage.getItem('canSend'));
+                    console.log('canSendCT', this.canSend, typeof (this.canSend));
+
+                    if (this.canSend == true) {
+                        //stop the loops if you can send now
+                        clearInterval(checkLoad);
+                        this.autoload_status = "Loading";
+
+                        this.stepTwoIconIsActive = "form-stepper-active step-section-active";
+                        var waitForChangesButton = setInterval(() => {
+                            clearInterval(waitForChangesButton);
+                            let sendCTelement: HTMLElement = document.getElementById('sendCT') as HTMLElement;
+                            sendCTelement.click();
+                        }, 5000);
+
+                        var checkSendFailed = setInterval(() => {
+                            this.ctSendFailed = JSON.parse(localStorage.getItem('ctSendFailed'));
+
+                            if (this.ctSendFailed == true) {
+                                // this.stepTwoIsActive = "form-stepper-failed step-section-inactive";
+                                this.loadHTS();
+                            } else {
+                                //    start sending after clearing interval
+                                var checkComplete = setInterval(() => {
+                                    this.ctSendingComplete = JSON.parse(localStorage.getItem('ctSendingComplete'));
+                                    console.log("ctSendingComplete", this.ctSendingComplete, typeof (this.ctSendingComplete));
+                                    if (this.ctSendingComplete == true) {
+                                        // stop loops and move to next step
+                                        clearInterval(checkComplete);
+                                        this.stepTwoIconIsActive = "form-stepper-completed step-section-inactive";
+                                        this.loadHTS();
+                                    }
+                                }, 10000);
+                            }
+                        clearInterval(checkSendFailed);
+                    }, 10000);
+
+                    }
+                }, 10000);
+            }
+            clearInterval(checkLoadFailed);
+        }, 10000);
 
     }
 
@@ -250,15 +272,16 @@ export class AutoloadComponent implements OnInit, OnDestroy {
         var checkLoad = setInterval(() => {
             this.canSendPrep =JSON.parse(localStorage.getItem('canSendPrep'));
 
-            console.log(this.canSendPrep, typeof(this.canSendPrep));
+            console.log('canSendPrep-->',this.canSendPrep, typeof(this.canSendPrep));
 
             if (this.canSendPrep == true){
                 var waitForChangesButton = setInterval(() => {
-                    let sendPrepElement:HTMLElement = document.getElementById('sendPrep') as HTMLElement;
-                    sendPrepElement.click();
                     clearInterval(waitForChangesButton);
-                }, 5000);
-                // this.loadPREP();
+                    let sendPrepElement:HTMLElement = document.getElementById('sendPrep') as HTMLElement;
+                    if (JSON.parse(localStorage.getItem('canSendPrep')) ==false){
+                        sendPrepElement.click();
+                    }
+                }, 10000);                // this.loadPREP();
                 this.stepFourIconIsActive = "form-stepper-active step-section-active";;
 
                 clearInterval(checkLoad);
@@ -276,10 +299,13 @@ export class AutoloadComponent implements OnInit, OnDestroy {
                     }
                 }, 3000);
                 //
+            }else{
+                this.stepFourIconIsActive = "form-stepper-completed step-section-inactive";
+                this.loadMNCH();
+                clearInterval(checkLoad);
             }
         }, 2000);
         localStorage.clear();
-        this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
 
     }
 
@@ -290,40 +316,87 @@ export class AutoloadComponent implements OnInit, OnDestroy {
         let mnchLoadlement:HTMLElement = document.getElementById('loadMnch') as HTMLElement;
         mnchLoadlement.click();
 
-        //check if can send after load completes
         var checkLoad = setInterval(() => {
             this.canSendMnch =JSON.parse(localStorage.getItem('canSendMnch'));
-
-            console.log('canSendMnch',this.canSendMnch, typeof(this.canSendMnch));
+            console.log('canSendMnch-->',this.canSendMnch, typeof(this.canSendMnch));
 
             if (this.canSendMnch == true){
                 var waitForChangesButton = setInterval(() => {
-                    let sendMnchelement:HTMLElement = document.getElementById('sendMnch') as HTMLElement;
-                    sendMnchelement.click();
                     clearInterval(waitForChangesButton);
-                }, 5000);
-                // this.loadPREP();
+                    let sendMnchElement:HTMLElement = document.getElementById('sendMnch') as HTMLElement;
+                    sendMnchElement.click();
+                }, 10000);                // this.loadPREP();
                 this.stepFiveIconIsActive = "form-stepper-active step-section-active";;
 
                 clearInterval(checkLoad);
 
                 //    start sending after clearing interval
-                    var checkComplete = setInterval(() => {
-                        this.mnchSendingComplete = JSON.parse(localStorage.getItem('mnchSendingComplete'));
+                var checkComplete = setInterval(() => {
+                    this.mnchSendingComplete = JSON.parse(localStorage.getItem('mnchSendingComplete'));
 
-                        console.log("mnchSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
+                    console.log("mnchSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
 
-                        if (this.mnchSendingComplete == true){
-                            this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
-                            this.stepFiveIconIsActive = "form-stepper-completed step-section-inactive";
-                            clearInterval(checkComplete);
-                        }
-                    }, 3000);
+                    if (this.mnchSendingComplete == true){
+                        this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
+                        this.stepFiveIconIsActive = "form-stepper-completed step-section-inactive";
+
+                        this.unifiedProcessComplete = true;
+
+                        clearInterval(checkComplete);
+
+                    }
+                }, 3000);
                 //
+            }else{
+                this.stepFiveIconIsActive = "form-stepper-completed step-section-inactive";
+
             }
         }, 2000);
+        localStorage.clear();
 
     }
+
+    // public loadMNCH(): void {
+    //     this.moveNext(this.step+1) ;
+    //     this.stepFiveIconIsActive = "form-stepper-waiting step-section-active";
+    //
+    //     let mnchLoadlement:HTMLElement = document.getElementById('loadMnch') as HTMLElement;
+    //     mnchLoadlement.click();
+    //
+    //     //check if can send after load completes
+    //     var checkLoad = setInterval(() => {
+    //         this.canSendMnch =JSON.parse(localStorage.getItem('canSendMnch'));
+    //
+    //         console.log('canSendMnch',this.canSendMnch, typeof(this.canSendMnch));
+    //
+    //         if (this.canSendMnch == true){
+    //             var waitForChangesButton = setInterval(() => {
+    //                 let sendMnchelement:HTMLElement = document.getElementById('sendMnch') as HTMLElement;
+    //                 sendMnchelement.click();
+    //                 clearInterval(waitForChangesButton);
+    //             }, 10000);
+    //
+    //             this.stepFiveIconIsActive = "form-stepper-active step-section-active";
+    //
+    //             clearInterval(checkLoad);
+    //
+    //             //    start sending after clearing interval
+    //                 var checkComplete = setInterval(() => {
+    //                     this.mnchSendingComplete = JSON.parse(localStorage.getItem('mnchSendingComplete'));
+    //
+    //                     console.log("mnchSendingComplete",this.mnchSendingComplete, typeof(this.mnchSendingComplete));
+    //
+    //                     if (this.mnchSendingComplete == true){
+    //                         this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
+    //                         this.stepFiveIconIsActive = "form-stepper-completed step-section-inactive";
+    //                         clearInterval(checkComplete);
+    //                     }
+    //                 }, 3000);
+    //             //
+    //         }
+    //     }, 2000);
+    //
+    // }
 
     // public loadPREP(): void {
     //     this.moveNext(this.step+1) ;
@@ -369,30 +442,32 @@ export class AutoloadComponent implements OnInit, OnDestroy {
     // }
 
     public navigateTo(num): void {
-        if (num == 2){
-            this.stepOneIsActive = "form-stepper-completed step-section-inactive";
-            this.stepTwoIsActive = "form-stepper-active step-section-active";
-            this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
-            this.stepFourIsActive = "form-stepper-completed step-section-inactive";
-            this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
-        }else if (num == 3){
-            this.stepOneIsActive = "form-stepper-completed step-section-inactive";
-            this.stepTwoIsActive = "form-stepper-completed step-section-inactive";
-            this.stepThreeIsActive = "form-stepper-active step-section-active";
-            this.stepFourIsActive = "form-stepper-completed step-section-inactive";
-            this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
-        }else if (num == 4){
-            this.stepOneIsActive = "form-stepper-completed step-section-inactive";
-            this.stepTwoIsActive = "form-stepper-completed step-section-inactive";
-            this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
-            this.stepFourIsActive = "form-stepper-active step-section-active";
-            this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
-        }else if (num == 5){
-            this.stepOneIsActive = "form-stepper-completed step-section-inactive";
-            this.stepTwoIsActive = "form-stepper-completed step-section-inactive";
-            this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
-            this.stepFourIsActive = "form-stepper-completed step-section-inactive";
-            this.stepFiveIsActive = "form-stepper-active step-section-active";
+        if (this.unifiedProcessComplete == true) {
+            if (num == 2) {
+                this.stepOneIsActive = "form-stepper-completed step-section-inactive";
+                this.stepTwoIsActive = "form-stepper-active step-section-active";
+                this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
+                this.stepFourIsActive = "form-stepper-completed step-section-inactive";
+                this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
+            } else if (num == 3) {
+                this.stepOneIsActive = "form-stepper-completed step-section-inactive";
+                this.stepTwoIsActive = this.ctLoadFailed || this.ctSendFailed ? "form-stepper-failed step-section-inactive" : "form-stepper-completed step-section-inactive";
+                this.stepThreeIsActive = "form-stepper-active step-section-active";
+                this.stepFourIsActive = "form-stepper-completed step-section-inactive";
+                this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
+            } else if (num == 4) {
+                this.stepOneIsActive = "form-stepper-completed step-section-inactive";
+                this.stepTwoIsActive = this.ctLoadFailed || this.ctSendFailed ? "form-stepper-failed step-section-inactive" : "form-stepper-completed step-section-inactive";
+                this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
+                this.stepFourIsActive = "form-stepper-active step-section-active";
+                this.stepFiveIsActive = "form-stepper-completed step-section-inactive";
+            } else if (num == 5) {
+                this.stepOneIsActive = "form-stepper-completed step-section-inactive";
+                this.stepTwoIsActive = this.ctLoadFailed || this.ctSendFailed ? "form-stepper-failed step-section-inactive" : "form-stepper-completed step-section-inactive";
+                this.stepThreeIsActive = "form-stepper-completed step-section-inactive";
+                this.stepFourIsActive = "form-stepper-completed step-section-inactive";
+                this.stepFiveIsActive = "form-stepper-active step-section-active";
+            }
         }
     }
     public moveNext(num): void {
@@ -402,7 +477,11 @@ export class AutoloadComponent implements OnInit, OnDestroy {
             this.stepTwoIsActive = "form-stepper-active step-section-active";
             // this.loadCT();
         }else if (num == 3){
-            this.stepTwoIsActive = "form-stepper-completed step-section-inactive";
+            if (this.ctLoadFailed == true) {
+                this.stepTwoIsActive = "form-stepper-failed step-section-inactive";
+            }else{
+                this.stepTwoIsActive = "form-stepper-completed step-section-inactive";
+            }
             this.stepThreeIsActive = "form-stepper-active step-section-active";
             // this.loadHTS();
         }else if (num == 4){

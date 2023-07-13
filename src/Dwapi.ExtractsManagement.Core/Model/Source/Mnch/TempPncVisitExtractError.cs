@@ -65,6 +65,11 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
         public string ReferredTo { get; set; }
         public DateTime? NextAppointmentPNC { get; set; }
         public string ClinicalNotes { get; set; }
+        public string VisitTimingMother { get; set; }
+        public string VisitTimingBaby { get; set; }
+        public string MotherCameForHIVTest { get; set; }
+        public string InfactCameForHAART { get; set; }
+        public string MotherGivenHAART { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

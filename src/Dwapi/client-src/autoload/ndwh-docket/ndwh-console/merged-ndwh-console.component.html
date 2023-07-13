@@ -35,11 +35,10 @@
 <!--                    class="blue-btn"></button>-->
 <!--        </div>-->
 
-        <div class=""  *ngIf="(emrName && emrName === 'KenyaEMR')">
-            <button  pButton type="button" style="float: right;" [disabled]="!canSend" [hidden]="!canSendDiff" (click)="sendDiff()" label="Send Changes Only"
-                    icon="ui-icon-cloud-upload"
-                    class="btn orange-btn"></button>
-        </div>
+
+        <button  pButton type="button" style="float: right;" [disabled]="!canSend" [hidden]="!canSendDiff" (click)="sendDiff()" label="Send Changes Only"
+                 icon="ui-icon-cloud-upload"
+                 class="btn orange-btn"></button>
 
         <div class="" >
             <button pButton type="button" id="sendCT"  style="float: right;" [disabled]="!canSend" [hidden]="canSendDiff" (click)="sendSmart()" label="Send All"
