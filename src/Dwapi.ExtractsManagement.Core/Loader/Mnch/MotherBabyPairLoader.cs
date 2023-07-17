@@ -47,9 +47,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Mnch
 
                 StringBuilder query = new StringBuilder();
                 query.Append($" SELECT s.* FROM {nameof(TempMotherBabyPairExtract)}s s");
-                // query.Append($" INNER JOIN PatientMnchExtracts p ON ");
-                // query.Append($" s.PatientPK = p.PatientPK AND ");
-                // query.Append($" s.SiteCode = p.SiteCode ");
+                query.Append($" INNER JOIN PatientMnchExtracts p ON ");
+                query.Append($" s.PatientPK = p.PatientPK AND ");
+                query.Append($" s.SiteCode = p.SiteCode ");
 
                 const int take = 1000;
                 var eCount = await  _tempMotherBabyPairExtractRepository.GetCount(query.ToString());
