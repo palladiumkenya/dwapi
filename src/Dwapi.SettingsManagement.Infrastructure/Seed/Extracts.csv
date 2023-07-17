@@ -1942,6 +1942,10 @@ on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-
                     t.patient_consented                                               as Consent,
                     t.hts_risk_category                                               as HtsRiskCategory,
                     t.hts_risk_score                                                  as HtsRiskScore,
+                    if(coalesce(t.referral_for, t.neg_referral_for, t.neg_referral_specify) is not null and	
+                    coalesce(t.referral_for, t.neg_referral_for) != '', 'Yes', 'No')        as ReferredForServices,	
+                    concat_ws(',', NULLIF(t.referral_for, ''), NULLIF(t.neg_referral_for, '')) as ReferredServices,	
+                    t.neg_referral_specify                                                     as OtherReferredServices,
                     t.date_created                                                    as Date_Created,
                     t.date_last_modified                                              as Date_Last_Modified
                     FROM kenyaemr_etl.etl_hts_test t
@@ -2278,6 +2282,7 @@ left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach
                                 when 5622	
                                 then 'Other' end)                                                  as HTSEntryPoint,	
                                 t.hts_risk_category                                                         as HIVRiskCategory,
+                                t.hts_risk_score                                                            as HtsRiskScore,
                                  case t.department
                                      when 160542 then 'OPD:Out-patient department'
                                      when 5485 then 'IPD:In-patient department'
