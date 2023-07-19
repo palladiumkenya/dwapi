@@ -3,19 +3,23 @@ using System;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20230705054210_AddedMissingColumnsToView")]
+    partial class AddedMissingColumnsToView
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Cbs.MasterPatientIndex", b =>
                 {
@@ -2192,8 +2196,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int?>("MonthsSinceLastTest");
 
-                    b.Property<string>("OtherReferredServices");
-
                     b.Property<string>("PatientGivenResult");
 
                     b.Property<int>("PatientPk");
@@ -2203,10 +2205,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Project");
 
                     b.Property<string>("QueueId");
-
-                    b.Property<string>("ReferredForServices");
-
-                    b.Property<string>("ReferredServices");
 
                     b.Property<string>("Setting");
 
@@ -2355,8 +2353,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("HTSStrategy");
 
                     b.Property<string>("HtsNumber");
-
-                    b.Property<decimal?>("HtsRiskScore");
 
                     b.Property<string>("IsHealthWorker");
 
@@ -8635,17 +8631,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int?>("MonthsSinceLastTest");
 
-                    b.Property<string>("OtherReferredServices");
-
                     b.Property<string>("PatientGivenResult");
 
                     b.Property<int?>("PatientPk");
 
                     b.Property<string>("Project");
-
-                    b.Property<string>("ReferredForServices");
-
-                    b.Property<string>("ReferredServices");
 
                     b.Property<string>("Setting");
 
@@ -8711,17 +8701,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int?>("MonthsSinceLastTest");
 
-                    b.Property<string>("OtherReferredServices");
-
                     b.Property<string>("PatientGivenResult");
 
                     b.Property<int?>("PatientPk");
 
                     b.Property<string>("Project");
-
-                    b.Property<string>("ReferredForServices");
-
-                    b.Property<string>("ReferredServices");
 
                     b.Property<string>("Setting");
 
@@ -8787,17 +8771,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int?>("MonthsSinceLastTest");
 
-                    b.Property<string>("OtherReferredServices");
-
                     b.Property<string>("PatientGivenResult");
 
                     b.Property<int?>("PatientPK");
 
                     b.Property<Guid>("RecordId");
-
-                    b.Property<string>("ReferredForServices");
-
-                    b.Property<string>("ReferredServices");
 
                     b.Property<string>("Setting");
 
@@ -9018,8 +8996,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("HTSStrategy");
 
                     b.Property<string>("HtsNumber");
-
-                    b.Property<decimal?>("HtsRiskScore");
 
                     b.Property<string>("IsHealthWorker");
 

@@ -6,6 +6,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     [Table("vTempPatientExtractErrorSummary")]
     public class TempPatientExtractErrorSummary : TempExtractErrorSummary
     {
+        public string FacilityName { get; set; }
+
         [NotMapped]
         public string Gender { get; set; }
         [NotMapped]

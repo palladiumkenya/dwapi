@@ -7,6 +7,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
 {
     [Table("vTempMnchLabExtractErrorSummary")]public class TempMnchLabExtractErrorSummary:TempMnchExtractErrorSummary,IMnchLab
     {
+        public string FacilityName { get; set; }
+
         public string PatientMNCH_ID { get; set; }
         public string SatelliteName { get; set; }
         public int? VisitID { get; set; }

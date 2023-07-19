@@ -157,7 +157,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.Setting, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.Setting))))
                 .ForMember(x => x.Approach, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.Approach))))
                 .ForMember(x => x.HtsRiskCategory, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.HtsRiskCategory))))
-                .ForMember(x => x.HtsRiskScore, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempHtsClientTests.HtsRiskScore))));
+                .ForMember(x => x.HtsRiskScore, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempHtsClientTests.HtsRiskScore))))
+                .ForMember(x => x.ReferredForServices, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.ReferredForServices))))
+                .ForMember(x => x.ReferredServices, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.ReferredServices))))
+                .ForMember(x => x.OtherReferredServices, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.OtherReferredServices))));
             CreateMap<TempHtsClientTests, HtsClientTests>();
 
             //hts client linkages
@@ -331,7 +334,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.DateCreated, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateCreated))))
                 .ForMember(x => x.DateLastModified, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateLastModified))))
                 .ForMember(x => x.ContactWithTBCase, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ContactWithTBCase ))))
-
+                .ForMember(x => x.HtsRiskScore, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempHtsEligibilityExtract.HtsRiskScore))));
                 ;
             CreateMap<TempHtsEligibilityExtract, HtsEligibilityExtract>();
             
