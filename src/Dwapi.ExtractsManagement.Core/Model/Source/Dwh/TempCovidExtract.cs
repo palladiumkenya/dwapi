@@ -39,5 +39,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? Date_Last_Modified { get; set; }
         public string COVID19TestResult { get; set; }
         public string Sequence { get; set; }
+        public string PatientUUID { get; set; }
     }
 }

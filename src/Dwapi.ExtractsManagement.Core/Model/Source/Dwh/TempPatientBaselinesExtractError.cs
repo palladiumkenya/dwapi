@@ -29,6 +29,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? m12CD4Date { get; set; }
         public int? m6CD4 { get; set; }
         public DateTime? m6CD4Date { get; set; }
+        public string PatientUUID { get; set; }
+
         [NotMapped]
         public virtual ICollection<TempPatientBaselinesExtractErrorSummary> TempPatientBaselinesExtractErrorSummaries { get; set; } = new List<TempPatientBaselinesExtractErrorSummary>();
     }

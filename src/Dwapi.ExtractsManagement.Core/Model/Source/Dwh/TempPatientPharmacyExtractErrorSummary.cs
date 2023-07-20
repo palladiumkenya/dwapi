@@ -20,6 +20,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string RegimenLine { get; set; }
         public string PeriodTaken { get; set; }
         public string ProphylaxisType { get; set; }
+        public string PatientUUID { get; set; }
+
 
         /*public override void AddHeader(Row row)
         {
