@@ -83,6 +83,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
     }
 
     public getInvalidExtracts(): void {
+
         if (this.extract === 'All Patients') {
             this.getInvalidPatientExtracts();
             return;
@@ -168,6 +169,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
     }
 
     private getColumns(): void {
+
         if (this.extract === 'All Patients') {
             this.getPatientColumns();
             return;

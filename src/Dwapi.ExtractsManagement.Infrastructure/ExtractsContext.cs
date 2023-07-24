@@ -519,11 +519,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
-            modelBuilder.Entity<PatientMnchExtract>()
-                .HasMany(c => c.MotherBabyPairExtracts)
-                .WithOne()
-                .IsRequired()
-                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+            // modelBuilder.Entity<PatientMnchExtract>()
+            //     .HasMany(c => c.MotherBabyPairExtracts)
+            //     .WithOne()
+            //     .IsRequired()
+            //     .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
             modelBuilder.Entity<PatientMnchExtract>()
                 .HasMany(c => c.PncVisitExtracts)
