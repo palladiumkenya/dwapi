@@ -124,6 +124,7 @@ FROM
 											'' AS SatelliteName,
 											0 AS FacilityId,d.unique_patient_no as PatientID,
 											d.patient_id as PatientPK,
+											d.uuid   as PatientUUID,
 											d.national_unique_patient_identifier as NUPI,
 											pkv.PKV as Pkv,
 											i.siteCode as SiteCode,
@@ -252,6 +253,7 @@ FROM
 				group by d.patient_id
 				order by d.patient_id"|dwhstage|1|PatientExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 39742EB0-5856-E811-8E16-9CB6D0DA773C|ART Patients|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select ''                                                                                  AS SatelliteName,
+       reg.uuid   as PatientUUID,
        0                                                                                   AS FacilityId,
        d.DOB,
        d.Gender,
@@ -317,6 +319,7 @@ from kenyaemr_etl.etl_hiv_enrollment hiv
                           where d.program_name = 'HIV'
                           group by d.patient_id) disc on disc.patient_id = hiv.patient_id
          left outer join (select e.patient_id,
+                                e.uuid                                                            as uuid,
                                  min(e.date_started)                                              as art_start_date,
                                  min(e.date_started)                                              as date_started_art_this_facility,
                                  e.date_started,
@@ -340,6 +343,7 @@ from kenyaemr_etl.etl_hiv_enrollment hiv
                                  e.date_created,
                                  e.date_last_modified
                           from (select e.patient_id,
+                                        e.uuid,
                                        p.dob,
                                        p.Gender,
                                        min(e.date_started)                                             as date_started,
@@ -493,6 +497,7 @@ having min(hiv.visit_date) is not null
    and StartARTDate is not null"|dwhstage|0|PatientArtExtract|2|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3C742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Baselines|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId, d.unique_patient_no as PatientID,
                                   d.patient_id as PatientPK,
+                                  p_dates.uuid   as PatientUUID,
                                   (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
                                    mid(max(if(l.visit_date<=p_dates.enrollment_date,concat(l.visit_date,test_result),null)),11) as eCd4,
                                    DATE(left(max(if(l.visit_date <= p_dates.enrollment_date, concat(l.visit_date, test_result), null)),	
@@ -542,7 +547,7 @@ having min(hiv.visit_date) is not null
                                   fup.date_last_modified as date_last_modified
                                   from kenyaemr_etl.etl_patient_hiv_followup fup
                                   join kenyaemr_etl.etl_patient_demographics d on d.patient_id=fup.patient_id
-                                  join (select e.patient_id,date_add(date_add(min(e.visit_date),interval 3 month), interval 1 day) as enrollment_date,
+                                  join (select e.patient_id, e.uuid, date_add(date_add(min(e.visit_date),interval 3 month), interval 1 day) as enrollment_date,
                                   date_add(date_add(min(e.visit_date), interval 6 month),interval 1 day) as six_month_date,
                                   date_add(date_add(min(e.visit_date), interval 12 month),interval 1 day) as twelve_month_date,
                                   	mid(min(concat(e.visit_date, e.who_stage)), 11)                          as ewho,	
@@ -557,6 +562,7 @@ having min(hiv.visit_date) is not null
 														0                                                                           AS FacilityId,
 														d.unique_patient_no                                                         as PatientID,
 														d.patient_id                                                                as PatientPK,
+														disc.uuid                                                                   as PatientUUID,
 														i.siteCode                                                                  as SiteCode,
 														i.FacilityName                                                              as FacilityName,
 														''                                                                          as ExitDescription,
@@ -630,7 +636,7 @@ having min(hiv.visit_date) is not null
 							group by PatientID
 							order by disc.visit_date ASC"|dwhstage|0|PatientStatusExtract|4|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 3D742EB0-5856-E811-8E16-9CB6D0DA773C|Patient Labs|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select '' AS SatelliteName, 0 AS FacilityId,
-                             d.unique_patient_no as PatientID, d.patient_id as PatientPK, l.encounter_id as VisitId,
+                             d.unique_patient_no as PatientID, l.uuid   as PatientUUID, d.patient_id as PatientPK, l.encounter_id as VisitId,
                              coalesce(DATE(l.date_test_requested), DATE(l.visit_date)) as OrderedByDate,
                              DATE(l.date_test_result_received) as ReportedByDate,
                              i.siteCode as SiteCode,
@@ -721,6 +727,7 @@ having min(hiv.visit_date) is not null
                         0                                                            as FacilityId,
                         d.unique_patient_no                                          as PatientID,
                         d.patient_id                                                 as PatientPK,
+                        ph.uuid                                                      as PatientUUID,
                         i.Facilityname                                               as FacilityName,
                         i.sitecode                                                   as siteCode,
                         ph.visit_id                                                  as VisitID,
@@ -748,6 +755,7 @@ having min(hiv.visit_date) is not null
                  from (SELECT *
                        FROM (
                                 (select patient_id,
+                                        uuid,
                                         visit_id,
                                         visit_date,
                                         encounter_id,
@@ -780,6 +788,7 @@ having min(hiv.visit_date) is not null
                                  order by patient_id, DispenseDate)
                                 UNION ALL
                                 (SELECT e.patient_id                                                                        as patient_id,
+                                        e.uuid                                                                              as uuid,
                                         ''                                                                                  as visit_id,
                                         e.visit_date,
                                         e.encounter_id,
@@ -840,6 +849,7 @@ having min(hiv.visit_date) is not null
                                  ORDER BY e.patient_id, e.date_started)
                                 UNION ALL
                                 (select patient_id,
+                                        uuid,
                                         visit_id,
                                         visit_date,
                                         encounter_id,
@@ -893,6 +903,7 @@ having min(hiv.visit_date) is not null
                  0                                                                      AS FacilityId,
                  d.unique_patient_no                                                    as PatientID,
                  d.patient_id                                                           as PatientPK,
+                 fup.uuid                                                               as PatientUUID,
                  i.facilityName                                                         as FacilityName,
                  i.siteCode                                                             as SiteCode,
                  fup.visit_id                                                           as VisitId,
@@ -1515,6 +1526,7 @@ Y.Ptn_Pk = X.Ptn_Pk AND Y.Serial= X.Serial
 FROM IQC_AdverseEvents adv
      INNER JOIN tmp_PatientMaster p ON adv.PatientPK = p.PatientPK where p.RegistrationAtCCC is not null"|dwhstage|0|PatientAdverseEventExtract|8|a6221983-0e85-11e8-ba89-0ed5f89f718b
 a6226eb4-0e85-11e8-ba89-6fb398c5f449|Patient Adverse Events|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
+        a.uuid   as PatientUUID,
        s.siteCode as SiteCode,
        de.unique_patient_no as PatientID,
        0 AS FacilityId,'KenyaEMR' as Emr,'Kenya HMIS II' as Project,
@@ -5189,7 +5201,8 @@ UNION(
 )x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 
-2bbeec20-7754-11eb-9439-0242ac130002|Allergies Chronic Illness|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select ci.patient_id                                             as PatientPK,
+2bbeec20-7754-11eb-9439-0242ac130002|Allergies Chronic Illness|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select ci.patient_id   as PatientPK,
+                        ci.uuid   as PatientUUID,
                          s.siteCode                                                as SiteCode,
                          de.unique_patient_no                                      as PatientID,
                          0                                                         AS FacilityId,
@@ -5299,10 +5312,10 @@ UNION(
                          ci.date_created                                           as Date_Created,
                          max(ci.date_last_modified)                                    as Date_Last_Modified
                   from kenyaemr_etl.etl_allergy_chronic_illness ci
-                           left join (select e.patient_id, max(e.visit_date) as latest_enrolment_date
+                           left join (select e.patient_id, max(e.visit_date) as latest_enrolment_date,uuid
                                       from kenyaemr_etl.etl_hiv_enrollment e
                                       group by e.patient_id) e on ci.patient_id = e.patient_id
-                           left join (select pe.patient_id, max(pe.visit_date) as prep_latest_enrolment_date
+                           left join (select pe.patient_id, max(pe.visit_date) as prep_latest_enrolment_date,uuid
                                       from kenyaemr_etl.etl_prep_enrolment pe
                                       group by pe.patient_id) pe on ci.patient_id = pe.patient_id
                            left join kenyaemr_etl.etl_patient_hiv_followup v on ci.encounter_id = v.encounter_id
@@ -5323,6 +5336,7 @@ UNION(
                      or (pd.PrEP_disc_patient is null or pd.PrEP_Outcome_date < pe.prep_latest_enrolment_date)
                   group by ci.patient_id,ci.visit_date"|dwhstage|0|AllergiesChronicIllnessExtract|11|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec21-7754-11eb-9439-0242ac130002|IPT|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id                                                               as PatientPK,
+                                                                                           v.uuid   as PatientUUID,
                                                                                            site.siteCode                                                              as SiteCode,
                                                                                            de.unique_patient_no                                                       as PatientID,
                                                                                            0                                                                          AS FacilityId,
@@ -5434,6 +5448,7 @@ UNION(
                                                                                     where de.unique_patient_no is not null
                                                                                     group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec22-7754-11eb-9439-0242ac130002|Depression Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
+											v.uuid   as PatientUUID,
 											s.siteCode as SiteCode,
 											de.unique_patient_no as PatientID,
 											0 AS FacilityId,
@@ -5452,6 +5467,7 @@ UNION(
 				where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|DepressionScreeningExtract|13|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec23-7754-11eb-9439-0242ac130002|Contact Listing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_related_to as PatientPK,
                                                             v.patient_id as ContactPatientPK,
+                                                            v.uuid   as PatientUUID,
 															s.siteCode as SiteCode,
 															de.unique_patient_no as PatientID,
 															'KenyaEMR' as Emr,'Kenya HMIS II' as Project,
@@ -5473,6 +5489,7 @@ UNION(
 															join kenyaemr_etl.etl_default_facility_info s
 								where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|ContactListingExtract|14|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec24-7754-11eb-9439-0242ac130002|GBV Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id                                                           as PatientPK,
+                     v.uuid   as PatientUUID,
                      s.siteCode                                                             as SiteCode,
                      0                                                                      AS FacilityId,
                      de.unique_patient_no                                                   as PatientID,
@@ -5502,6 +5519,7 @@ UNION(
               where d.disc_patient is null
                  or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|GbvScreeningExtract|15|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec25-7754-11eb-9439-0242ac130002|Enhanced Adherence Counselling|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
+       v.uuid   as PatientUUID,
        s.siteCode as SiteCode,
        de.unique_patient_no as PatientID,
        'KenyaEMR' as Emr,
@@ -5527,6 +5545,7 @@ UNION(
        join kenyaemr_etl.etl_default_facility_info s
 where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|EnhancedAdherenceCounsellingExtract|16|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec26-7754-11eb-9439-0242ac130002|Drug and Alcohol Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
+       v.uuid   as PatientUUID,
        s.siteCode as SiteCode,
        de.unique_patient_no as PatientID,
        'KenyaEMR' as Emr,'Kenya HMIS II' as Project,
@@ -5545,7 +5564,8 @@ where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date"|dwhsta
                   where program_name='HIV' group by d.patient_id)d on d.disc_patient = v.patient_id
        join kenyaemr_etl.etl_default_facility_info s
 where d.disc_patient is null or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|DrugAlcoholScreeningExtract|17|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-2bbeec27-7754-11eb-9439-0242ac130002|OVC|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,0 AS FacilityId,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'Kenya HMIS II' as Project,s.FacilityName as FacilityName,
+2bbeec27-7754-11eb-9439-0242ac130002|OVC|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
+            v.uuid   as PatientUUID, 0 AS FacilityId,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'Kenya HMIS II' as Project,s.FacilityName as FacilityName,
        v.encounter_id as VisitID,v.visit_date as VisitDate,v.visit_date as OVCEnrollmentDate,coalesce(v.relationship_to_client,r.b_is_to_a) as RelationshipToClient,
        de.CPIMS_unique_identifier as CPIMSUniqueIdentifier,v.partner_offering_ovc as PartnerOfferingOVCServices,v.client_enrolled_cpims as EnrolledinCPIMS,
        concat_ws(',',NULLIF(if(v.ovc_comprehensive_program='Yes','OVC Comprehensive',''),''),
@@ -5558,7 +5578,8 @@ from kenyaemr_etl.etl_ovc_enrolment v
                                                                                                                                                                                                    when 165219 then 'Exit without graduation' when 1267 then 'Graduated out of OVC' when 160034 then 'Died' end ) as attrition_reason from kenyaemr_etl.etl_patient_program_discontinuation d
                   where program_name='OVC' group by d.patient_id)d on d.patient_id = v.patient_id
        join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OvcExtract|18|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id as PatientPK,0 AS FacilityId,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'Kenya HMIS II' as Project,s.FacilityName as FacilityName,
+2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id as PatientPK,
+                a.uuid   as PatientUUID,0 AS FacilityId,s.siteCode as SiteCode,de.unique_patient_no as PatientID,'KenyaEMR' as Emr,'Kenya HMIS II' as Project,s.FacilityName as FacilityName,
        a.visit_id as VisitID,a.visit_date as VisitDate,e.OTZEnrollmentDate,e.TransferInStatus, e.ModulesPreviouslyCovered
     ,concat_ws(',',NULLIF(if(a.orientation='Yes','OTZ Orientation',null),''),NULLIF(if(a.participation='Yes','OTZ Participation',''),''),NULLIF(if(a.making_decision_future='Yes','OTZ Making decisions for the future',''),'')
        ,NULLIF(if(a.transition_to_adult_care='Yes','OTZ Transition to Adult care',''),''),NULLIF(if(a.treatment_literacy='Yes','OTZ Treatment literacy',''),''),NULLIF(if(a.srh='Yes','OTZ SRH',''),''),NULLIF(if(a.leadership='Yes','Leadership',''),''),
@@ -6557,7 +6578,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
         t.uuid = '8d91a210-c2cc-11de-8d13-0010c6dffd0f'
         where (disc_hei is null or date(hei_enr_date) > date(hei_disc_date))
         and (disc_patient is null or date(latest_hiv_enrollment) > date(hiv_disc_date))
-        and (r.end_date is null or date(r.end_date) > date(current_date))) r
+        and (r.end_date is null or date(r.end_date) > date(current_date)) and r.voided = 0) r
         on r.child = d.patient_id
         join kenyaemr_etl.etl_default_facility_info i"|TempMotherBabyPairExtract|0|MotherBabyPairExtract|25|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 826519c6-9db2-11eb-a8b3-0242ac130003|Cwc Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id              as PatientPK,
@@ -7468,6 +7489,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
 
 
 2bbeec30-7754-11eb-9439-0242ac130002|Covid|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                  PatientPK,
+       a.uuid   as PatientUUID,
        i.siteCode                                                                    SiteCode,
        d.unique_patient_no                                                           PatientID,
        'KenyaEMR'                                                                    Emr,
@@ -7555,7 +7577,8 @@ from kenyaemr_etl.etl_patient_demographics d
          join kenyaemr_etl.etl_default_facility_info i
 									group by a.visit_id"|dwhstage|0|CovidExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec31-7754-11eb-9439-0242ac130002|Defaulter Tracing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                              PatientPK,
-       i.siteCode                                                                SiteCode,
+                                   f.uuid   as PatientUUID,
+                                   i.siteCode                                                                SiteCode,
 									d.unique_patient_no                                                       PatientID,
 									'KenyaEMR'                                                                Emr,
 									'Kenya HMIS II'                                                           Project,
@@ -7599,6 +7622,7 @@ from kenyaemr_etl.etl_patient_demographics d
 		group by f.visit_id"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 3425F2F6-B9D8-48F1-97F6-8E6E092B0C97|Cervical Cancer Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                           PatientPK,
+                     s.uuid   as PatientUUID,
                      i.siteCode                             SiteCode,
                      d.unique_patient_no                    PatientID,
                      0                                   as FacilityId,

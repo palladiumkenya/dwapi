@@ -17,6 +17,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string CurrentlyLivingWithIndexClient { get; set; }
         public string KnowledgeOfHivStatus { get; set; }
         public string PnsApproach { get; set; }
+        public string PatientUUID { get; set; }
         public int? ContactPatientPK { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }

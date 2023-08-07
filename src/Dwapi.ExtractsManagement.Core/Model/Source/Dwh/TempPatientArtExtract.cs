@@ -33,6 +33,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? Date_Last_Modified { get; set; }
         public string PreviousARTUse { get; set; }
         public string PreviousARTPurpose { get; set; }
+        public string PatientUUID { get; set; }
         public DateTime? DateLastUsed { get; set; }
     }
 }

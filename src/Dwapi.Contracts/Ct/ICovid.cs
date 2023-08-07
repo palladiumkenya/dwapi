@@ -39,5 +39,7 @@ namespace Dwapi.Contracts.Ct
 
         string COVID19TestResult { get; set; }
         string Sequence { get; set; }
+        string PatientUUID { get; set; }
+
     }
 }

@@ -43,6 +43,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string StatusAtTBClinic { get; set; }
         public string NUPI { get; set; }
         public DateTime? TransferInDate { get; set; }
+        public string PatientUUID { get; set; }
+
         [NotMapped]
         public virtual ICollection<TempPatientExtractErrorSummary> TempPatientExtractErrorSummaries { get; set; } = new List<TempPatientExtractErrorSummary>();
     

@@ -28,5 +28,7 @@ namespace Dwapi.Contracts.Ct
         string IndicationForIPT { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
+        string PatientUUID { get; set; }
+
     }
 }

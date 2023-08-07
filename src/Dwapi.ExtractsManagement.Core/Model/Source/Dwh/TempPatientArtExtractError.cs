@@ -30,6 +30,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? LastVisit { get; set; }
         public string ExitReason { get; set; }
         public DateTime? ExitDate { get; set; }
+        public string PatientUUID { get; set; }
+
         [NotMapped]
         public virtual ICollection<TempPatientArtExtractErrorSummary> TempPatientArtExtractErrorSummaries { get; set; } = new List<TempPatientArtExtractErrorSummary>();
     }
