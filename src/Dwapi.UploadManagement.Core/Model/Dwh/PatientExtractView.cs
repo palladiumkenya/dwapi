@@ -120,6 +120,7 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         [JsonIgnore]
         [NotMapped] public ICollection<DefaulterTracingExtractView> DefaulterTracingExtracts { get; set; } = new List<DefaulterTracingExtractView>();
         [NotMapped] public ICollection<CervicalCancerScreeningExtractView> CervicalCancerScreeningExtracts { get; set; } = new List<CervicalCancerScreeningExtractView>();
+        [NotMapped] public ICollection<IITRiskScoresExtractView> IITRiskScoresExtracts { get; set; } = new List<IITRiskScoresExtractView>();
 
         [JsonIgnore]
         [NotMapped] public bool HasArt => null != PatientArtExtracts && PatientArtExtracts.Any();
@@ -137,6 +138,7 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         [NotMapped] public bool HasAdverse => null != PatientAdverseEventExtracts && PatientAdverseEventExtracts.Any();
         [JsonIgnore]
         [NotMapped] public bool HasCancer => null != CervicalCancerScreeningExtracts && CervicalCancerScreeningExtracts.Any();
+        [NotMapped] public bool HasIIT => null != IITRiskScoresExtracts && IITRiskScoresExtracts.Any();
 
         public Facility GetFacility()
         {

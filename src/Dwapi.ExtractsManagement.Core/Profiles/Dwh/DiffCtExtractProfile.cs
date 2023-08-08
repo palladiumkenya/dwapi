@@ -745,7 +745,24 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCervicalCancerScreeningExtract.PatientUUID))));
             CreateMap<TempCervicalCancerScreeningExtract, CervicalCancerScreeningExtract>();
 
-            
+             //Patient IIT risk scores Extract
+            CreateMap<IDataRecord, TempIITRiskScoresExtract>()
+                .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempIITRiskScoresExtract.PatientPK))))
+                .ForMember(x => x.PatientID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIITRiskScoresExtract.PatientID))))
+                .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempIITRiskScoresExtract.FacilityId))))
+                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempIITRiskScoresExtract.SiteCode))))
+                .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIITRiskScoresExtract.Emr))))
+                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIITRiskScoresExtract.Project))))
+                .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIITRiskScoresExtract.FacilityName))))
+                .ForMember(x => x.RiskScore, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempIITRiskScoresExtract.RiskScore))))
+                .ForMember(x => x.RiskFactors, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempIITRiskScoresExtract.RiskFactors))))
+                .ForMember(x => x.RiskDescription, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempIITRiskScoresExtract.RiskDescription))))
+                .ForMember(x => x.RiskEvaluationDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempIITRiskScoresExtract.RiskEvaluationDate))))
+                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempIITRiskScoresExtract.Date_Created))))
+                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempIITRiskScoresExtract.Date_Last_Modified))))
+                .ForMember(x => x.SourceSysUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIITRiskScoresExtract.SourceSysUUID))));
+
+            CreateMap<TempIITRiskScoresExtract, IITRiskScoresExtract>();
         }
     }
 }

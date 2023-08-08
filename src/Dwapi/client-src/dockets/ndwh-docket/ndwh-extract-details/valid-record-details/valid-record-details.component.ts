@@ -181,6 +181,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             this.getSummaryExtracts('CervicalCancerScreening');
             return;
         }
+        if (this.extract === 'IIT Risk Scores') {
+            this.getSummaryExtracts('IITRiskScores');
+            return;
+        }
     }
 
     private getColumns(): void {
@@ -263,6 +267,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         }
         if (this.extract === 'Cervical Cancer Screening') {
             this.getCervicalCancerScreeningColumns();
+            return;
+        }
+        if (this.extract === 'IIT Risk Scores') {
+            this.getIITRiskScoresColumns();
             return;
         }
     }
@@ -1237,6 +1245,18 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
 
         ];
     }
+
+    private getIITRiskScoresColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientID', header: 'patientID'},
+            {field: 'facilityId', header: 'facilityId'},
+            {field: 'facilityName', header: 'facilityName'},
+
+        ];
+    }
+
 
     pageView(event: any) {
         this.pageModel = {

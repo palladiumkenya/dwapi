@@ -7647,7 +7647,23 @@ from kenyaemr_etl.etl_patient_demographics d
                        join kenyaemr_etl.etl_cervical_cancer_screening s on d.patient_id = s.patient_id
                        join kenyaemr_etl.etl_default_facility_info i
               group by s.visit_id"|dwhstage|0|CervicalCancerScreeningExtract|22|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-
+235A64F3-9EA9-4CCC-8C28-AD7EB8209F9C|IIT Risk Scores|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT r.patient_id         as PatientPK,
+                d.unique_patient_no                    PatientID,
+               i.siteCode           as SiteCode,
+               i.FacilityName       as FacilityName,
+               0                    as FacilityId,
+               'KenyaEMR'           as Emr,
+               'Kenya HMIS III'     as Project,
+               r.source_system_uuid as SourceSysUUID,
+               r.risk_score         as RiskScore,
+               r.risk_factors       as RiskFactors,
+               r.description        as RiskDescription,
+               r.evaluation_date    as RiskEvaluationDate,
+               r.date_created       as Date_Created,
+               r.date_changed       as Date_Last_Modified
+        FROM openmrs.kenyaemr_ml_patient_risk_score r
+                 inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = r.patient_id
+                 join kenyaemr_etl.etl_default_facility_info i;"|dwhstage|0|IITRiskScoresExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                  as PatientPK,
                     i.siteCode                                                    as SiteCode,
