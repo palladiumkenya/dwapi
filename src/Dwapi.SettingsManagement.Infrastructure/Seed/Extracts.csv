@@ -7668,7 +7668,7 @@ from kenyaemr_etl.etl_patient_demographics d
                r.date_changed       as Date_Last_Modified
         FROM openmrs.kenyaemr_ml_patient_risk_score r
                  inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = r.patient_id
-                 join kenyaemr_etl.etl_default_facility_info i;"|dwhstage|0|IITRiskScoresExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                 join kenyaemr_etl.etl_default_facility_info i"|dwhstage|0|IITRiskScoresExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                  as PatientPK,
                     i.siteCode                                                    as SiteCode,
