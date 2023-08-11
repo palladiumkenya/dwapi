@@ -5650,7 +5650,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                          (case d.Gender when 'F' then 'Female' when 'M' then 'Male' end) as Gender,
                          d.DOB                                                           as DOB,
                          coalesce(c.hei_enrolment_date, m.mch_enrolment_date)            as FirstEnrollmentAtMnch,
-                         coalesce(c.hei_encounter_id, m.mch_encounter_id)                as EncounterId,
+                         coalesce(c.hei_encounter_id, m.mch_encounter_id,r.fup_encounter_id)  as EncounterId,
                          d.occupation                                                    as Occupation,
                          d.marital_status                                                as MaritalStatus,
                          d.education_level                                               as EducationLevel,
@@ -5667,6 +5667,10 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                     from kenyaemr_etl.etl_hei_enrollment c group by c.patient_id)c on d.patient_id = c.patient_id
                          left join (select a.patient_id, a.county, a.sub_county, a.ward from kenyaemr_etl.etl_person_address a)a
                            on d.patient_id = a.patient_id
+                           	left join (select r.person_a, mid(min(concat(date(fup.visit_date),fup.encounter_id)),11) as fup_encounter_id	
+                           from kenyaemr_etl.etl_patient_hiv_followup fup inner join openmrs.relationship r on fup.patient_id = r.person_a	
+                           inner join openmrs.relationship_type t on r.relationship = t.relationship_type_id and t.uuid in ('8d91a210-c2cc-11de-8d13-0010c6dffd0f')	
+                           group by r.person_a)r on d.patient_id = r.person_a
                          left join (select e.patient_id as patient_id, e.in_school as in_school from kenyaemr_etl.etl_hiv_enrollment e)e
                            on d.patient_id = e.patient_id
                          inner join (select x.patient_id as patient_id,
@@ -5707,6 +5711,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                                                              join kenyaemr_etl.etl_default_facility_info i
                                                                       where m.patient_id is not null
                                                                          or c.patient_id is not null
+                                                                         or r.person_a is not null
                                                                       group by EncounterId"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651214-9db2-11eb-a8b3-0242ac130003|Mnch Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
        i.siteCode                                                                   as SiteCode,
@@ -7647,7 +7652,23 @@ from kenyaemr_etl.etl_patient_demographics d
                        join kenyaemr_etl.etl_cervical_cancer_screening s on d.patient_id = s.patient_id
                        join kenyaemr_etl.etl_default_facility_info i
               group by s.visit_id"|dwhstage|0|CervicalCancerScreeningExtract|22|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-
+235A64F3-9EA9-4CCC-8C28-AD7EB8209F9C|IIT Risk Scores|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT r.patient_id         as PatientPK,
+                d.unique_patient_no                    PatientID,
+               i.siteCode           as SiteCode,
+               i.FacilityName       as FacilityName,
+               0                    as FacilityId,
+               'KenyaEMR'           as Emr,
+               'Kenya HMIS III'     as Project,
+               r.source_system_uuid as SourceSysUUID,
+               r.risk_score         as RiskScore,
+               r.risk_factors       as RiskFactors,
+               r.description        as RiskDescription,
+               r.evaluation_date    as RiskEvaluationDate,
+               r.date_created       as Date_Created,
+               r.date_changed       as Date_Last_Modified
+        FROM openmrs.kenyaemr_ml_patient_risk_score r
+                 inner join kenyaemr_etl.etl_patient_demographics d on d.patient_id = r.patient_id
+                 join kenyaemr_etl.etl_default_facility_info i"|dwhstage|0|IITRiskScoresExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                  as PatientPK,
                     i.siteCode                                                    as SiteCode,

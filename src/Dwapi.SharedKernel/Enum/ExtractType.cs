@@ -22,6 +22,7 @@
         Covid,
         DefaulterTracing,
         CervicalCancerScreening,
+        IITRiskScores,
 
         PatientMnch,
         AncVisit,

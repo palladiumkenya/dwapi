@@ -667,6 +667,7 @@ namespace Dwapi.Controller
             var idsCovid =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CovidMessageSourceBag()).Result;
             var idsDefaulterTracing =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DefaulterTracingMessageSourceBag()).Result;
             var idsCervicalCancerScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CervicalCancerScreeningMessageSourceBag()).Result;
+            var idsIITRiskScores =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new IITRiskScoresMessageSourceBag()).Result;
 
         }
         public void ExportCovidJobSmartProfiles(SendManifestPackageDTO package)
@@ -674,6 +675,7 @@ namespace Dwapi.Controller
             var idsCovid = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CovidMessageSourceBag()).Result;
             var idsDefaulterTracing = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DefaulterTracingMessageSourceBag()).Result;
             var idsCervicalCancerScreening = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CervicalCancerScreeningMessageSourceBag()).Result;
+            var idsIITRiskScores = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new IITRiskScoresMessageSourceBag()).Result;
 
         }
 
@@ -759,6 +761,7 @@ namespace Dwapi.Controller
             var idsCovid =_ctSendService.SendBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
             var idsDefaulterTracing =_ctSendService.SendBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
             var idsCervicalCancerScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new CervicalCancerScreeningsMessageBag()).Result;
+            var idsIITRiskScores =_ctSendService.SendBatchExtractsAsync(package, 200, new IITRiskScoresMessageBag()).Result;
 
         }
         public void ExportCovidJobProfiles(SendManifestPackageDTO package)
@@ -766,6 +769,7 @@ namespace Dwapi.Controller
             var idsCovid = _ctExportService.ExportBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
             var idsDefaulterTracing = _ctExportService.ExportBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
             var idsCervicalCancerScreening = _ctExportService.ExportBatchExtractsAsync(package, 200, new CervicalCancerScreeningsMessageBag()).Result;
+            var idsIITRiskScores = _ctExportService.ExportBatchExtractsAsync(package, 200, new IITRiskScoresMessageBag()).Result;
 
         }
 
@@ -800,6 +804,7 @@ namespace Dwapi.Controller
             var idsCovid =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
             var idsDefaulterTracing =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
             var idsCervicalCancerScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new CervicalCancerScreeningsMessageBag()).Result;
+            var idsIITRiskScores =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new IITRiskScoresMessageBag()).Result;
 
         }
 
