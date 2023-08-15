@@ -37,7 +37,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 					vTempContactListingExtractError.Date_Created,
 					vTempContactListingExtractError.Date_Last_Modified,
 					vTempContactListingExtractError.ContactPatientPK,
-					vTempContactListingExtractError.PatientUUID
+					vTempContactListingExtractError.RecordUUID
 					 
 					FROM vTempContactListingExtractError INNER JOIN
 							 ValidationError ON vTempContactListingExtractError.Id = ValidationError.RecordId INNER JOIN
@@ -103,7 +103,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 							vTempPatientVisitExtractError.KeyPopulationType,
 							vTempPatientVisitExtractError.PopulationType,
 							vTempPatientVisitExtractError.StabilityAssessment,
-							vTempPatientVisitExtractError.PatientUUID
+							vTempPatientVisitExtractError.RecordUUID
 				FROM            vTempPatientVisitExtractError INNER JOIN
 										 ValidationError ON vTempPatientVisitExtractError.Id = ValidationError.RecordId INNER JOIN
 										 Validator ON ValidationError.ValidatorId = Validator.Id
@@ -158,7 +158,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 						vTempPatientExtractError.PatientPK,
 						vTempPatientExtractError.SiteCode,
 						vTempPatientExtractError.FacilityId,
-						vTempPatientExtractError.PatientUUID
+						vTempPatientExtractError.RecordUUID
 									 
 					FROM            vTempPatientExtractError INNER JOIN
 										 ValidationError ON vTempPatientExtractError.Id = ValidationError.RecordId INNER JOIN
@@ -212,7 +212,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 							 vTempPatientArtExtractError.ExitDate,
 							vTempPatientArtExtractError.Date_Created,
 							vTempPatientArtExtractError.Date_Last_Modified,
-							vTempPatientArtExtractError.PatientUUID
+							vTempPatientArtExtractError.RecordUUID
 	FROM            vTempPatientArtExtractError INNER JOIN
 							 ValidationError ON vTempPatientArtExtractError.Id = ValidationError.RecordId INNER JOIN
 							 Validator ON ValidationError.ValidatorId = Validator.Id
@@ -249,7 +249,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 							 vTempPatientBaselinesExtractError.m6CD4Date,
 							vTempPatientBaselinesExtractError.Date_Created,
 							vTempPatientBaselinesExtractError.Date_Last_Modified,
-							vTempPatientBaselinesExtractError.PatientUUID
+							vTempPatientBaselinesExtractError.RecordUUID
 
 	FROM            vTempPatientBaselinesExtractError INNER JOIN
 							 ValidationError ON vTempPatientBaselinesExtractError.Id = ValidationError.RecordId INNER JOIN
@@ -271,7 +271,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 							vTempPatientLaboratoryExtractError.Reason,
 							vTempPatientLaboratoryExtractError.Date_Created,
 							vTempPatientLaboratoryExtractError.Date_Last_Modified,
-							vTempPatientLaboratoryExtractError.PatientUUID
+							vTempPatientLaboratoryExtractError.RecordUUID
 
 	FROM            vTempPatientLaboratoryExtractError INNER JOIN
 							 ValidationError ON vTempPatientLaboratoryExtractError.Id = ValidationError.RecordId INNER JOIN
@@ -296,7 +296,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 							 vTempPatientPharmacyExtractError.VisitID,
 							vTempPatientPharmacyExtractError.Date_Created,
 							vTempPatientPharmacyExtractError.Date_Last_Modified,
-							vTempPatientPharmacyExtractError.PatientUUID
+							vTempPatientPharmacyExtractError.RecordUUID
 
 	FROM            vTempPatientPharmacyExtractError INNER JOIN
 							 ValidationError ON vTempPatientPharmacyExtractError.Id = ValidationError.RecordId INNER JOIN
@@ -314,7 +314,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 							 vTempPatientStatusExtractError.ExitReason,
 							vTempPatientStatusExtractError.Date_Created,
 							vTempPatientStatusExtractError.Date_Last_Modified,
-							vTempPatientStatusExtractError.PatientUUID
+							vTempPatientStatusExtractError.RecordUUID
 
 	FROM            vTempPatientStatusExtractError INNER JOIN
 							 ValidationError ON vTempPatientStatusExtractError.Id = ValidationError.RecordId INNER JOIN
@@ -337,7 +337,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 									'' AS FacilityName,
 									vTempPatientAdverseEventExtractError.Date_Created,
 									vTempPatientAdverseEventExtractError.Date_Last_Modified,
-									vTempPatientAdverseEventExtractError.PatientUUID
+									vTempPatientAdverseEventExtractError.RecordUUID
 
 
 			FROM            vTempPatientAdverseEventExtractError INNER JOIN
@@ -373,7 +373,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 					        vTempCervicalCancerScreeningExtractError.ReferralReason,
 							vTempCervicalCancerScreeningExtractError.Date_Created,
 							vTempCervicalCancerScreeningExtractError.Date_Last_Modified	,
-							vTempCervicalCancerScreeningExtractError.PatientUUID	
+							vTempCervicalCancerScreeningExtractError.RecordUUID	
 				FROM            vTempCervicalCancerScreeningExtractError INNER JOIN
 										 ValidationError ON vTempCervicalCancerScreeningExtractError.Id = ValidationError.RecordId INNER JOIN
 										 Validator ON ValidationError.ValidatorId = Validator.Id
@@ -406,7 +406,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 							
 							vTempDefaulterTracingExtractError.Date_Created,
 							vTempDefaulterTracingExtractError.Date_Last_Modified,
-							vTempDefaulterTracingExtractError.PatientUUID	
+							vTempDefaulterTracingExtractError.RecordUUID	
 
 			                   
 				FROM            vTempDefaulterTracingExtractError INNER JOIN
@@ -461,7 +461,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 			vTempCovidExtractError.Sequence,
 			vTempCovidExtractError.Date_Created,
 			vTempCovidExtractError.Date_Last_Modified,
-			vTempCovidExtractError.PatientUUID	
+			vTempCovidExtractError.RecordUUID	
 			                        
 				FROM            vTempCovidExtractError INNER JOIN
 										 ValidationError ON vTempCovidExtractError.Id = ValidationError.RecordId INNER JOIN
@@ -496,7 +496,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 				vTempOtzExtractError.OutcomeDate,
 				vTempOtzExtractError.Date_Created,
 				vTempOtzExtractError.Date_Last_Modified,
-			vTempOtzExtractError.PatientUUID	
+			vTempOtzExtractError.RecordUUID	
 					FROM            vTempOtzExtractError INNER JOIN
 											 ValidationError ON vTempOtzExtractError.Id = ValidationError.RecordId INNER JOIN
 							 Validator ON ValidationError.ValidatorId = Validator.Id
@@ -530,7 +530,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 					vTempOvcExtractError.ExitDate,
 					vTempOvcExtractError.Date_Created,
 					vTempOvcExtractError.Date_Last_Modified,
-			vTempOvcExtractError.PatientUUID	
+			vTempOvcExtractError.RecordUUID	
 
 
 				FROM            vTempOvcExtractError INNER JOIN
@@ -578,7 +578,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 					vTempIptExtractError.IndicationForIPT,
 					vTempIptExtractError.Date_Created,
 					vTempIptExtractError.Date_Last_Modified,
-			vTempIptExtractError.PatientUUID	
+			vTempIptExtractError.RecordUUID	
 
 
 						FROM            vTempIptExtractError INNER JOIN
@@ -622,7 +622,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 					vTempAllergiesChronicIllnessExtractError.Genitourinary,
 					vTempAllergiesChronicIllnessExtractError.Date_Created,
 					vTempAllergiesChronicIllnessExtractError.Date_Last_Modified,
-			vTempAllergiesChronicIllnessExtractError.PatientUUID	
+			vTempAllergiesChronicIllnessExtractError.RecordUUID	
 						FROM            vTempAllergiesChronicIllnessExtractError INNER JOIN
 							 ValidationError ON vTempAllergiesChronicIllnessExtractError.Id = ValidationError.RecordId INNER JOIN
 							 Validator ON ValidationError.ValidatorId = Validator.Id
@@ -654,7 +654,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 				vTempGbvScreeningExtractError.IPVRelationship,
 				vTempGbvScreeningExtractError.Date_Created,
 				vTempGbvScreeningExtractError.Date_Last_Modified,
-			vTempGbvScreeningExtractError.PatientUUID	
+			vTempGbvScreeningExtractError.RecordUUID	
 
 
 					FROM            vTempGbvScreeningExtractError INNER JOIN
@@ -724,7 +724,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 			vTempEnhancedAdherenceCounsellingExtractError.EACFollowupDate,
 			vTempEnhancedAdherenceCounsellingExtractError.Date_Created,
 			vTempEnhancedAdherenceCounsellingExtractError.Date_Last_Modified,
-			vTempEnhancedAdherenceCounsellingExtractError.PatientUUID	
+			vTempEnhancedAdherenceCounsellingExtractError.RecordUUID	
 
 
 				FROM            vTempEnhancedAdherenceCounsellingExtractError INNER JOIN
@@ -755,7 +755,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 				vTempDrugAlcoholScreeningExtractError.DrugUse,
 				vTempDrugAlcoholScreeningExtractError.Date_Created,
 				vTempDrugAlcoholScreeningExtractError.Date_Last_Modified,
-			vTempDrugAlcoholScreeningExtractError.PatientUUID	
+			vTempDrugAlcoholScreeningExtractError.RecordUUID	
 
 
 					FROM            vTempDrugAlcoholScreeningExtractError INNER JOIN
@@ -795,7 +795,7 @@ ALTER VIEW vTempPatientVisitExtractErrorSummary
 			vTempDepressionScreeningExtractError.DepressionAssesmentScore,
 			vTempDepressionScreeningExtractError.Date_Created,
 			vTempDepressionScreeningExtractError.Date_Last_Modified,
-			vTempDepressionScreeningExtractError.PatientUUID
+			vTempDepressionScreeningExtractError.RecordUUID
 
 
 				FROM            vTempDepressionScreeningExtractError INNER JOIN

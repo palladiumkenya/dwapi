@@ -8,202 +8,202 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
         {
             
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientVisitExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientStatusExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientPharmacyExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientLaboratoryExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientBaselinesExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientArtExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientAdverseEventExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempOvcExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempOtzExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempIptExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempGbvScreeningExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempEnhancedAdherenceCounsellingExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempDrugAlcoholScreeningExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempDepressionScreeningExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempDefaulterTracingExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempCovidExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempContactListingExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempCervicalCancerScreeningExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempAllergiesChronicIllnessExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientVisitExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientStatusExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientPharmacyExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientLaboratoryExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientBaselinesExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientArtExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientAdverseEventExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "OvcExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "OtzExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "IptExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "GbvScreeningExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "EnhancedAdherenceCounsellingExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "DrugAlcoholScreeningExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "DepressionScreeningExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "DefaulterTracingExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "CovidExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "ContactListingExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "CervicalCancerScreeningExtracts",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "AllergiesChronicIllnessExtracts",
                 nullable: true);
         }
@@ -212,163 +212,163 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
         {
             
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientVisitExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientStatusExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientPharmacyExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientLaboratoryExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientBaselinesExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientArtExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempPatientAdverseEventExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempOvcExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempOtzExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempIptExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempGbvScreeningExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempEnhancedAdherenceCounsellingExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempDrugAlcoholScreeningExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempDepressionScreeningExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempDefaulterTracingExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempCovidExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempContactListingExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempCervicalCancerScreeningExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "TempAllergiesChronicIllnessExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientVisitExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientStatusExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientPharmacyExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientLaboratoryExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientBaselinesExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientArtExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "PatientAdverseEventExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "OvcExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "OtzExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "IptExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "GbvScreeningExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "EnhancedAdherenceCounsellingExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "DrugAlcoholScreeningExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "DepressionScreeningExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "DefaulterTracingExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "CovidExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "ContactListingExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "CervicalCancerScreeningExtracts");
 
             migrationBuilder.DropColumn(
-                name: "PatientUUID",
+                name: "RecordUUID",
                 table: "AllergiesChronicIllnessExtracts");
         }
     }

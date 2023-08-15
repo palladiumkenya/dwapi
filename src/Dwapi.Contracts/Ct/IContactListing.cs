@@ -16,7 +16,7 @@ namespace Dwapi.Contracts.Ct
         string CurrentlyLivingWithIndexClient { get; set; }
         string KnowledgeOfHivStatus { get; set; }
         string PnsApproach { get; set; }
-        string PatientUUID { get; set; }
+        string RecordUUID { get; set; }
 
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }

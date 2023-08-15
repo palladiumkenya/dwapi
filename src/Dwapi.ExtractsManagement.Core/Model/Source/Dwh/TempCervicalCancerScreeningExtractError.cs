@@ -20,7 +20,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PostTreatmentComplicationCause { get; set; }
         public string OtherPostTreatmentComplication { get; set; }
         public string ReferralReason { get; set; }
-        public string PatientUUID { get; set; }
+        public string RecordUUID { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

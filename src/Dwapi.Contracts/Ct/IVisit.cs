@@ -37,7 +37,7 @@ namespace Dwapi.Contracts.Ct
         string PaedsDisclosure { get; set; }
         string ZScore { get; set; }
         int? ZScoreAbsolute { get; set; }
-        string PatientUUID { get; set; }
+        string RecordUUID { get; set; }
 
     }
 }

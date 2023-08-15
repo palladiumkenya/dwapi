@@ -12,7 +12,7 @@ namespace Dwapi.Contracts.Ct
         string DrugUse { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
-        string PatientUUID { get; set; }
+        string RecordUUID { get; set; }
 
     }
 }
