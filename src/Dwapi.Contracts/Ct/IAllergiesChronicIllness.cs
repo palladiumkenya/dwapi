@@ -22,7 +22,7 @@ namespace Dwapi.Contracts.Ct
         string Abdomen { get; set; }
         string CNS { get; set; }
         string Genitourinary { get; set; }
-        string PatientUUID { get; set; }
+        string RecordUUID { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

@@ -44,7 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PatientResidentVillage { get; set; }
         public DateTime? TransferInDate { get; set; }
         public string NUPI { get; set; }
-        public string PatientUUID { get; set; }
+        public string RecordUUID { get; set; }
 
        
 
