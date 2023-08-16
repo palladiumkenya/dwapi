@@ -64,7 +64,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
             }
         }
 
-        public async Task<int> Clear()
+        public async Task<int>Clear()
         {
             var cn = GetConnection();
 
@@ -109,7 +109,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
                 nameof(ExtractsContext.TempDefaulterTracingExtracts),
                 nameof(ExtractsContext.DefaulterTracingExtracts),
                 nameof(ExtractsContext.TempCervicalCancerScreeningExtracts),
-                nameof(ExtractsContext.CervicalCancerScreeningExtracts)
+                nameof(ExtractsContext.CervicalCancerScreeningExtracts),
+                nameof(ExtractsContext.TempIITRiskScoresExtracts),
+                nameof(ExtractsContext.IITRiskScoresExtracts)
+
             };
 
             var deletes = new List<string> { nameof(ExtractsContext.PatientExtracts) };

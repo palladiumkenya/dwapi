@@ -24,6 +24,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string Abdomen { get; set; }
         public string CNS { get; set; }
         public string Genitourinary { get; set; }
+        public string RecordUUID { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

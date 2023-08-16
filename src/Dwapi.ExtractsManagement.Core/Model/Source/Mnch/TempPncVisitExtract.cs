@@ -6,6 +6,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
 {
     public class TempPncVisitExtract : TempExtract, IPncVisit
     {
+        public string FacilityName { get; set; }
         public string PatientMnchID { get; set; }
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }

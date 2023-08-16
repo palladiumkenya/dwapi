@@ -7,6 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
 {
     [Table("vTempHeiExtractErrorSummary")]public class TempHeiExtractErrorSummary:TempMnchExtractErrorSummary,IHei
     {
+        public string FacilityName { get; set; }
         public string PatientMnchID { get; set; }
         public DateTime? DNAPCR1Date { get; set; }
         public DateTime? DNAPCR2Date { get; set; }

@@ -157,6 +157,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempCovidExtract> TempCovidExtracts { get; set; }
         public DbSet<TempDefaulterTracingExtract> TempDefaulterTracingExtracts { get; set; }
         public DbSet<TempCervicalCancerScreeningExtract> TempCervicalCancerScreeningExtracts { get; set; }
+        public DbSet<TempIITRiskScoresExtract> TempIITRiskScoresExtracts { get; set; }
 
 
         public DbSet<AllergiesChronicIllnessExtract> AllergiesChronicIllnessExtracts { get; set; }
@@ -171,6 +172,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<CovidExtract> CovidExtracts { get; set; }
         public DbSet<DefaulterTracingExtract> DefaulterTracingExtracts { get; set; }
         public DbSet<CervicalCancerScreeningExtract> CervicalCancerScreeningExtracts { get; set; }
+        public DbSet<IITRiskScoresExtract> IITRiskScoresExtracts { get; set; }
 
 
 
@@ -199,6 +201,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         public DbSet<TempCovidExtractErrorSummary> TempCovidExtractErrorSummary { get; set; }
         public DbSet<TempDefaulterTracingExtractError> TempDefaulterTracingExtractError { get; set; }
         public DbSet<TempDefaulterTracingExtractErrorSummary> TempDefaulterTracingExtractErrorSummary { get; set; }
+        public DbSet<TempIITRiskScoresExtractError> TempIITRiskScoresExtractError { get; set; }
+        public DbSet<TempIITRiskScoresExtractErrorSummary> TempIITRiskScoresExtractErrorSummary { get; set; }
 
         #region Mnch
         public virtual DbSet<TempPatientMnchExtract> TempPatientMnchExtracts { get; set; }
@@ -465,6 +469,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                 .WithOne()
                 .IsRequired()
                 .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+            modelBuilder.Entity<PatientExtract>()
+                .HasMany(c => c.IITRiskScoresExtracts)
+                .WithOne()
+                .IsRequired()
+                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
 
             modelBuilder.Entity<PatientMnchExtract>()
@@ -656,6 +665,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<TempCovidExtract>().Key(x => x.Id).Table($"{nameof(TempCovidExtracts)}");
             DapperPlusManager.Entity<TempDefaulterTracingExtract>().Key(x => x.Id).Table($"{nameof(TempDefaulterTracingExtracts)}");
             DapperPlusManager.Entity<TempCervicalCancerScreeningExtract>().Key(x => x.Id).Table($"{nameof(TempCervicalCancerScreeningExtracts)}");
+            DapperPlusManager.Entity<TempIITRiskScoresExtract>().Key(x => x.Id).Table($"{nameof(TempIITRiskScoresExtracts)}");
 
 
             DapperPlusManager.Entity<AllergiesChronicIllnessExtract>().Key(x => x.Id).Table($"{nameof(AllergiesChronicIllnessExtracts)}");
@@ -670,6 +680,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
             DapperPlusManager.Entity<CovidExtract>().Key(x => x.Id).Table($"{nameof(CovidExtracts)}");
             DapperPlusManager.Entity<DefaulterTracingExtract>().Key(x => x.Id).Table($"{nameof(DefaulterTracingExtracts)}");
             DapperPlusManager.Entity<CervicalCancerScreeningExtract>().Key(x => x.Id).Table($"{nameof(CervicalCancerScreeningExtracts)}");
+            DapperPlusManager.Entity<IITRiskScoresExtract>().Key(x => x.Id).Table($"{nameof(IITRiskScoresExtracts)}");
 
 
             DapperPlusManager.Entity<TempPatientMnchExtract>().Key(x => x.Id).Table($"{nameof(TempPatientMnchExtracts)}");
@@ -728,6 +739,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
         }
     }
 }
+
+
 
 
 

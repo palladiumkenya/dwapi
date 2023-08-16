@@ -13,6 +13,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string TestName { get; set; }
         public int? EnrollmentTest { get; set; }
         public string TestResult { get; set; }
+        public string RecordUUID { get; set; }
+
 
         /*public override void AddHeader(Row row)
         {

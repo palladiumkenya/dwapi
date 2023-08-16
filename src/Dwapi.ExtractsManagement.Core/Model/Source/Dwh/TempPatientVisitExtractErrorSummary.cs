@@ -6,6 +6,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     [Table("vTempPatientVisitExtractErrorSummary")]
     public class TempPatientVisitExtractErrorSummary: TempExtractErrorSummary
     {
+        public string FacilityName { get; set; }
+
         public DateTime? VisitDate { get; set; }
         public string Service { get; set; }
         public int? VisitId { get; set; }
@@ -41,6 +43,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string ZScore { get; set; }
         public string PaedsDisclosure { get; set; }
         public int? ZScoreAbsolute { get; set; }
+        public string RecordUUID { get; set; }
+
 
 
         /*public override void AddHeader(Row row)

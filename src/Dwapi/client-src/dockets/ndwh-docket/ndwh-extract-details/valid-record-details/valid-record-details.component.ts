@@ -181,6 +181,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             this.getSummaryExtracts('CervicalCancerScreening');
             return;
         }
+        if (this.extract === 'IIT Risk Scores') {
+            this.getSummaryExtracts('IITRiskScores');
+            return;
+        }
     }
 
     private getColumns(): void {
@@ -263,6 +267,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         }
         if (this.extract === 'Cervical Cancer Screening') {
             this.getCervicalCancerScreeningColumns();
+            return;
+        }
+        if (this.extract === 'IIT Risk Scores') {
+            this.getIITRiskScoresColumns();
             return;
         }
     }
@@ -651,6 +659,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
             {field: 'facilityName', header: 'Facility Name'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'gender', header: 'Gender'},
             {field: 'dob', header: 'DOB'},
             {field: 'nupi', header: 'NUPI'},
@@ -692,6 +702,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
             {field: 'facilityName', header: 'Facility Name'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
             {field: 'dob', header: 'DOB'},
@@ -727,6 +739,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'bCD4', header: 'Baseline CD4'},
             {field: 'bCD4Date', header: 'Baseline CD4 Date'},
@@ -765,6 +779,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'checkError', header: 'Check Error'},
             {field: 'facilityName', header: 'Facility Name'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'satelliteName', header: 'Satellite Name'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
@@ -787,6 +803,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
             {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'Visit ID'},
             {field: 'drug', header: 'Drug'},
             {field: 'provider', header: 'Provider'},
@@ -811,6 +829,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'facilityName', header: 'Facility Name'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
             {field: 'exitDescription', header: 'Exit Description'},
@@ -830,6 +850,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'checkError', header: 'Check Error'},
             {field: 'facilityName', header: 'Facility Name'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'emr', header: 'Emr'},
             {field: 'nextAppointmentDate', header: 'NextAppointmentDate'},
             {field: 'project', header: 'Project'},
@@ -870,6 +892,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
             {field: 'dateExtracted', header: 'Date Extracted'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
             {field: 'adverseEvent', header: 'Adverse Event'},
@@ -893,6 +917,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientPK', header: 'patientPK'},
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'chronicIllness', header: 'chronicIllness'},
             {field: 'chronicOnsetDate', header: 'chronicOnsetDate'},
             {field: 'knownAllergies', header: 'knownAllergies'},
@@ -917,6 +943,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'partnerPersonID', header: 'partnerPersonID'},
             {field: 'contactAge', header: 'contactAge'},
             {field: 'contactSex', header: 'contactSex'},
@@ -939,6 +967,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'phQ9_1', header: 'phQ9_1'},
@@ -962,6 +992,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'drinkingAlcohol', header: 'drinkingAlcohol'},
@@ -976,6 +1008,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'sessionNumber', header: 'sessionNumber'},
@@ -1029,6 +1063,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'ipv', header: 'ipv'},
@@ -1046,6 +1082,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'onTBDrugs', header: 'onTBDrugs'},
@@ -1076,6 +1114,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'otzEnrollmentDate', header: 'otzEnrollmentDate'},
@@ -1095,6 +1135,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'ovcEnrollmentDate', header: 'ovcEnrollmentDate'},
@@ -1114,6 +1156,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
 
@@ -1159,6 +1203,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
 
@@ -1182,6 +1228,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'VisitType', header: 'VisitType'},
@@ -1197,6 +1245,18 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
 
         ];
     }
+
+    private getIITRiskScoresColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientID', header: 'patientID'},
+            {field: 'facilityId', header: 'facilityId'},
+            {field: 'facilityName', header: 'facilityName'},
+
+        ];
+    }
+
 
     pageView(event: any) {
         this.pageModel = {
