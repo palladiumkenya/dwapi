@@ -431,7 +431,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public checkIfToResend(): boolean {
-        console.log('test 1 ',this.canResend)
 
         this.errorMessage = [];
         this.notifications = [];
@@ -447,10 +446,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 }
                 return this.canResend;
             })
-
         return this.canResend;
-
-
     }
 
 
@@ -491,6 +487,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         });
                     }
                     this.startedSending=false;
+
+                    this.canResend = true;
                 },
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});
