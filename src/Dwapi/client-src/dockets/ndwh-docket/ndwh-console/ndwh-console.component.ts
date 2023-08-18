@@ -67,6 +67,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public canSend: boolean;
     public canExport: boolean;
     public canSendDiff: boolean = null;
+    public canResend: boolean = null;
+
     public autoload_status: string;
     // public canSendDiff: string;
     // public canSendAll: string;
@@ -144,6 +146,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.liveOnInit();
         this.loadData();
         this.checkWhichToSend();
+        this.checkIfToResend();
+
     }
 
     public loadData(): void {
@@ -424,6 +428,29 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 }
             );
         return this.canSendDiff;
+    }
+
+    public checkIfToResend(): boolean {
+        console.log('test 1 ',this.canResend)
+
+        this.errorMessage = [];
+        this.notifications = [];
+        fetch('https://jsonplaceholder.typicode.com/todos/1')
+            .then(response => response.json())
+            .then(json => {
+                this.canResend = false;
+
+                if (this.canResend){
+                    this.notifications.push({ severity: 'error', summary: 'Upload was incomplete. Please resend' });
+                }else if(!this.canResend){
+                    this.notifications.push({ severity: 'success', summary: 'Upload was complete. No need to resend' });
+                }
+                return this.canResend;
+            })
+
+        return this.canResend;
+
+
     }
 
 

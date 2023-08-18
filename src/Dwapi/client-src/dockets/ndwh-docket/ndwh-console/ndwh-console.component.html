@@ -39,6 +39,9 @@
             <button pButton type="button" label="Export data" [disabled]="!canExport" [hidden]="canSendDiff" (click)="smartexport()"
                     icon="ui-icon-file-download" class="blue-btn"></button>
         </div>
+        <button  pButton type="button" style="float: right;" [disabled]="!canResend"  [hidden]="!canResend" label="Resend"
+                 icon="ui-icon-cloud-upload"
+                 class="btn red-btn"></button>
     </p-toolbar>
 
     <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true" [loading]="loadingData" loadingIcon="fa-spinner fa-pulse"
