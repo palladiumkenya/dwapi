@@ -3,14 +3,16 @@ using System;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20230818084400_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7194,6 +7196,74 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TempMetricMigrationExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Mgs.TempMetricMigrationExtractError", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime?>("CreateDate");
+
+                    b.Property<string>("Dataset");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Metric");
+
+                    b.Property<int?>("MetricId");
+
+                    b.Property<string>("MetricValue");
+
+                    b.Property<string>("Project");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("vTempMetricMigrationExtractError");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Mgs.TempMetricMigrationExtractErrorSummary", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("CreateDate");
+
+                    b.Property<string>("Dataset");
+
+                    b.Property<DateTime?>("DateGenerated");
+
+                    b.Property<string>("Extract");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Field");
+
+                    b.Property<string>("Metric");
+
+                    b.Property<int?>("MetricId");
+
+                    b.Property<string>("MetricValue");
+
+                    b.Property<Guid>("RecordId");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("Summary");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("vTempMetricMigrationExtractErrorSummary");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Mnch.TempAncVisitExtract", b =>
