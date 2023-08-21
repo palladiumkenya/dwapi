@@ -1083,6 +1083,9 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
             {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'tptInitiationDate', header: 'TPTInitiationDate'},
+            {field: 'iptDiscontinuation', header: 'IPTDiscontinuation'},
+            {field: 'dateOfDiscontinuation', header: 'DateOfDiscontinuation'},
 
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
