@@ -23,7 +23,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
             public  string    Setting	 { get; set; }
             public  string    Approach	 { get; set; }
             public  string HtsRiskCategory	 { get; set; }
-            public  decimal? HtsRiskScore	 { get; set; }
+            public  string HtsRiskScore	 { get; set; }
             
             public  string ReferredForServices { get; set; }
             public  string ReferredServices { get; set; }
