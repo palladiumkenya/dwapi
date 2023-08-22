@@ -83,6 +83,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
     }
 
     public getInvalidExtracts(): void {
+
         if (this.extract === 'All Patients') {
             this.getInvalidPatientExtracts();
             return;
@@ -165,9 +166,14 @@ export class InvalidRecordDetailsComponent implements OnInit {
             this.getSummaryInvalidExtracts('CervicalCancerScreening');
             return;
         }
+        if (this.extract === 'IIT Risk Scores') {
+            this.getSummaryInvalidExtracts('IITRiskScores');
+            return;
+        }
     }
 
     private getColumns(): void {
+
         if (this.extract === 'All Patients') {
             this.getPatientColumns();
             return;
@@ -247,6 +253,10 @@ export class InvalidRecordDetailsComponent implements OnInit {
         }
         if (this.extract === 'Cervical Cancer Screening') {
             this.getCervicalCancerScreeningColumns();
+            return;
+        }
+        if (this.extract === 'IIT Risk Scores') {
+            this.getIITRiskScoresColumns();
             return;
         }
     }
@@ -996,6 +1006,17 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'postTreatmentComplicationCause', header: 'PostTreatmentComplicationCause'},
             {field: 'otherPostTreatmentComplication', header: 'OtherPostTreatmentComplication'},
             {field: 'referralReason', header: 'ReferralReason'}
+
+        ];
+    }
+
+    private getIITRiskScoresColumns(): void {
+        this.cols = [
+            {field: 'patientPK', header: 'patientPK'},
+            {field: 'siteCode', header: 'siteCode'},
+            {field: 'patientID', header: 'patientID'},
+            {field: 'facilityId', header: 'facilityId'},
+            {field: 'facilityName', header: 'facilityName'},
 
         ];
     }

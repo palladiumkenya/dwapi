@@ -18,6 +18,8 @@ namespace Dwapi.Contracts.Ct
         string PostTreatmentComplicationCause  { get; set; }
         string OtherPostTreatmentComplication  { get; set; }
         string ReferralReason  { get; set; }
+        string RecordUUID { get; set; }
+
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

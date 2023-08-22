@@ -10,6 +10,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string ExitDescription { get; set; }
         public DateTime? ExitDate { get; set; }
         public string ExitReason { get; set; }
+        public string RecordUUID { get; set; }
+
 
         /*public override void AddHeader(Row row)
         {

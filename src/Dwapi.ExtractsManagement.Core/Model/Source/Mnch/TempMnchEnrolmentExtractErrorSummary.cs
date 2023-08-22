@@ -7,6 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
 {
     [Table("vTempMnchEnrolmentExtractErrorSummary")]public class TempMnchEnrolmentExtractErrorSummary:TempMnchExtractErrorSummary,IMnchEnrolment
     {
+        public string FacilityName { get; set; }
         public string PatientMnchID { get; set; }
         public string ServiceType { get; set; }
         public DateTime? EnrollmentDateAtMnch { get; set; }

@@ -51,5 +51,7 @@ namespace Dwapi.Contracts.Ct
         DateTime? EACFollowupDate { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
+        string RecordUUID { get; set; }
+
     }
 }

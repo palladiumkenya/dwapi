@@ -18,5 +18,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public DateTime? OutcomeDate { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
+        public string RecordUUID { get; set; }
     }
 }

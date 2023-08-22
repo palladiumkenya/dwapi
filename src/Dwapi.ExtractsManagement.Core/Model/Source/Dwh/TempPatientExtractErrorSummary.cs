@@ -6,6 +6,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
     [Table("vTempPatientExtractErrorSummary")]
     public class TempPatientExtractErrorSummary : TempExtractErrorSummary
     {
+        public string FacilityName { get; set; }
+
         [NotMapped]
         public string Gender { get; set; }
         [NotMapped]
@@ -42,6 +44,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PatientResidentVillage { get; set; }
         public DateTime? TransferInDate { get; set; }
         public string NUPI { get; set; }
+        public string RecordUUID { get; set; }
+
        
 
         //public override void AddHeader(Row row)

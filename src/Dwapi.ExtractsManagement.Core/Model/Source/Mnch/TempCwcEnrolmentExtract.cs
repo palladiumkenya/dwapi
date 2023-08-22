@@ -6,6 +6,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
 {
     public class TempCwcEnrolmentExtract : TempExtract, ICwcEnrolment
     {
+        public string FacilityName { get; set; }
         public string Pkv { get; set; }
         public string PatientIDCWC { get; set; }
         public string HEIID { get; set; }
