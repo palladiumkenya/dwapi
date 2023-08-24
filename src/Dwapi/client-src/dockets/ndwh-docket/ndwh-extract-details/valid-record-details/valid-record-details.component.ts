@@ -861,7 +861,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'visitDate', header: 'Visit Date'},
             {field: 'service', header: 'Service'},
             {field: 'visitType', header: 'Visit Type'},
-            {field: 'wHOStage', header: 'WHOS tage'},
+            {field: 'whoStage', header: 'WHO Stage'},
             {field: 'wABStage', header: 'WAB Stage'},
             {field: 'pregnant', header: 'Pregnant'},
             {field: 'lMP', header: 'LMP'},
