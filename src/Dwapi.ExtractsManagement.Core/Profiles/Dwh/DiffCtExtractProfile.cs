@@ -783,7 +783,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIITRiskScoresExtract.Emr))))
                 .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIITRiskScoresExtract.Project))))
                 .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIITRiskScoresExtract.FacilityName))))
-                .ForMember(x => x.RiskScore, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempIITRiskScoresExtract.RiskScore))))
+                .ForMember(x => x.RiskScore, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIITRiskScoresExtract.RiskScore))))
                 .ForMember(x => x.RiskFactors, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempIITRiskScoresExtract.RiskFactors))))
                 .ForMember(x => x.RiskDescription, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempIITRiskScoresExtract.RiskDescription))))
                 .ForMember(x => x.RiskEvaluationDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempIITRiskScoresExtract.RiskEvaluationDate))))
