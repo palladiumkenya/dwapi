@@ -1017,6 +1017,11 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'sourceSysUUID', header: 'SourceSysUUID'},
+            {field: 'riskScore', header: 'RiskScore'},
+            {field: 'riskFactors', header: 'RiskFactors'},
+            {field: 'riskDescription', header: 'RiskDescription'},
+            {field: 'riskEvaluationDate', header: 'RiskEvaluationDate'}
 
         ];
     }
