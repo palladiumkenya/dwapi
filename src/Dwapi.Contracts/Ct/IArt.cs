@@ -6,6 +6,8 @@ namespace Dwapi.Contracts.Ct
     {
          string PreviousARTUse { get; set; }
          string  PreviousARTPurpose { get; set; }
+         string RecordUUID { get; set; }
+
          DateTime?  DateLastUsed { get; set; }
     }
 }

@@ -41,6 +41,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? TransferInDate { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
+        public string RecordUUID { get; set; }
         public string Pkv { get; set; }
         public string Occupation { get; set; }
         public string NUPI { get; set; }

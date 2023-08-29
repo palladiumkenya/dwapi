@@ -28,5 +28,10 @@ namespace Dwapi.Contracts.Ct
         string IndicationForIPT { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
+        string RecordUUID { get; set; }
+        DateTime? TPTInitiationDate { get; set; }
+        string IPTDiscontinuation { get; set; }
+        DateTime? DateOfDiscontinuation { get; set; }
+
     }
 }

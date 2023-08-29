@@ -21,5 +21,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string SpecificDeathReason { get; set; }
         public DateTime? DeathDate { get; set; }
         public DateTime? EffectiveDiscontinuationDate { get; set; }
+        public string RecordUUID { get; set; }
     }
 }

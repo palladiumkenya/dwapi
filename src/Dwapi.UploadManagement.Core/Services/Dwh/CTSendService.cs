@@ -271,7 +271,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     }
                     catch (Exception e)
                     {
-                        Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error");
+                        Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error ");
                         throw;
                     }
 
@@ -405,7 +405,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     }
                     catch (Exception e)
                     {
-                        Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error");
+                        Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error SendSmartBatchExtractsAsync");
                         throw;
                     }
 
@@ -417,7 +417,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             }
             catch (Exception e)
             {
-                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error");
+                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error ");
                 throw;
             }
 
@@ -520,7 +520,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             }
             catch (Exception e)
             {
-                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error");
+                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error ");
                 throw;
             }
 

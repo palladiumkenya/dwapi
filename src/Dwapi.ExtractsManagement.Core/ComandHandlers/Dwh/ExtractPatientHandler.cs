@@ -52,7 +52,26 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
 
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
         {
-          
+            // check if kenyaemr is default then check
+            if (Guid.Parse("a6221856-0e85-11e8-ba89-0ed5f89f718b") != request.DatabaseProtocol.EmrSystemId)
+            {
+                // . = "a6221856-0e85-11e8-ba89-0ed5f89f718b"
+                DateTime etlRefreshDate = (DateTime)_reader.GetEtlTtablesRefreshedDate(request.DatabaseProtocol);
+                
+                if (null != etlRefreshDate)
+                {
+                     DateTime now = DateTime.Now;
+                    var daysBetween = (now - etlRefreshDate).TotalDays;
+        
+                    if (daysBetween > 2)
+                    {
+                        throw new Exception("Last ETL refresh was more than 2 days ago. Refresh first before starting the process.");
+                    }
+                }
+            }
+            
+           
+            
             // refresh the ETL tables
             // _reader.RefreshEtlTtables(request.DatabaseProtocol);
             

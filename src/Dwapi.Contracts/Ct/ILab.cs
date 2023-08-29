@@ -6,5 +6,7 @@ namespace Dwapi.Contracts.Ct
     {
         DateTime? DateSampleTaken { get; set; }
         string SampleType { get; set; }
+        string RecordUUID { get; set; }
+
     }
 }

@@ -298,6 +298,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int>("SiteCode");
 
                     b.Property<string>("Skin");
@@ -351,6 +353,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Project");
 
                     b.Property<string>("QueueId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("ReferralReason");
 
@@ -429,6 +433,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Project");
 
                     b.Property<string>("QueueId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("RelationshipWithPatient");
 
@@ -522,6 +528,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("ReceivedCOVID19Vaccine");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("SecondDoseVaccineAdministered");
 
                     b.Property<string>("Sequence");
@@ -587,6 +595,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Project");
 
                     b.Property<string>("QueueId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<int>("SiteCode");
 
@@ -660,6 +670,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int>("SiteCode");
 
                     b.Property<string>("Status");
@@ -707,6 +719,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Project");
 
                     b.Property<string>("QueueId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<int>("SiteCode");
 
@@ -836,6 +850,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SessionNumber");
 
                     b.Property<int>("SiteCode");
@@ -890,6 +906,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("SexualIPV");
 
                     b.Property<int>("SiteCode");
@@ -909,6 +927,56 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("GbvScreeningExtracts");
                 });
 
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.IITRiskScoresExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<string>("RiskDescription");
+
+                    b.Property<DateTime?>("RiskEvaluationDate");
+
+                    b.Property<string>("RiskFactors");
+
+                    b.Property<decimal?>("RiskScore");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("SourceSysUUID");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SiteCode", "PatientPK");
+
+                    b.ToTable("IITRiskScoresExtracts");
+                });
+
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.IptExtract", b =>
                 {
                     b.Property<Guid>("Id")
@@ -919,6 +987,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Cough");
 
                     b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("DateOfDiscontinuation");
 
                     b.Property<DateTime?>("Date_Created");
 
@@ -939,6 +1009,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("ICFActionTaken");
 
                     b.Property<string>("IPTClientWorkUp");
+
+                    b.Property<string>("IPTDiscontinuation");
 
                     b.Property<string>("IndicationForIPT");
 
@@ -962,6 +1034,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int>("SiteCode");
 
                     b.Property<string>("StartAntiTBs");
@@ -977,6 +1051,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<DateTime?>("TBRxStartDate");
 
                     b.Property<string>("TBScreening");
+
+                    b.Property<DateTime?>("TPTInitiationDate");
 
                     b.Property<string>("TestResult");
 
@@ -1025,6 +1101,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Project");
 
                     b.Property<string>("QueueId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("Remarks");
 
@@ -1090,6 +1168,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("RelationshipToClient");
 
                     b.Property<int>("SiteCode");
@@ -1149,6 +1229,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Project");
 
                     b.Property<string>("QueueId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("Severity");
 
@@ -1234,6 +1316,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<DateTime?>("RegistrationDate");
 
                     b.Property<int>("SiteCode");
@@ -1281,6 +1365,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Project");
 
                     b.Property<string>("QueueId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<int>("SiteCode");
 
@@ -1417,6 +1503,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("Region");
 
                     b.Property<DateTime?>("RegistrationATPMTCT");
@@ -1483,6 +1571,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Reason");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<DateTime?>("ReportedByDate");
 
                     b.Property<string>("SampleType");
@@ -1546,6 +1636,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Provider");
 
                     b.Property<string>("QueueId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("RegimenChangeSwitchReason");
 
@@ -1614,6 +1706,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<DateTime?>("ReEnrollmentDate");
 
                     b.Property<string>("ReasonForDeath");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<int>("SiteCode");
 
@@ -1737,6 +1831,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<DateTime?>("RefillDate");
 
                     b.Property<int?>("RespiratoryRate");
@@ -1794,6 +1890,140 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.HasIndex("SiteCode", "PatientPK");
 
                     b.ToTable("PatientVisitExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.TempIITRiskScoresExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("RiskDescription");
+
+                    b.Property<DateTime?>("RiskEvaluationDate");
+
+                    b.Property<string>("RiskFactors");
+
+                    b.Property<decimal?>("RiskScore");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("SourceSysUUID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempIITRiskScoresExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.TempIITRiskScoresExtractError", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("RiskDescription");
+
+                    b.Property<DateTime?>("RiskEvaluationDate");
+
+                    b.Property<string>("RiskFactors");
+
+                    b.Property<decimal?>("RiskScore");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("SourceSysUUID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("vTempIITRiskScoresExtractError");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.TempIITRiskScoresExtractErrorSummary", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("DateGenerated");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Extract");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Field");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RiskDescription");
+
+                    b.Property<DateTime?>("RiskEvaluationDate");
+
+                    b.Property<string>("RiskFactors");
+
+                    b.Property<decimal?>("RiskScore");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("SourceSysUUID");
+
+                    b.Property<string>("Summary");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("vTempIITRiskScoresExtractErrorSummary");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.EmrMetric", b =>
@@ -2188,7 +2418,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("HtsRiskCategory");
 
-                    b.Property<decimal?>("HtsRiskScore");
+                    b.Property<string>("HtsRiskScore");
 
                     b.Property<int?>("MonthsSinceLastTest");
 
@@ -2356,7 +2586,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber");
 
-                    b.Property<decimal?>("HtsRiskScore");
+                    b.Property<string>("HtsRiskScore");
 
                     b.Property<string>("IsHealthWorker");
 
@@ -4841,6 +5071,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("Skin");
@@ -4909,6 +5141,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("Skin");
@@ -4975,6 +5209,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<Guid>("RecordId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("Skin");
@@ -5026,6 +5262,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("PostTreatmentComplicationCause");
 
                     b.Property<string>("Project");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("ReferralReason");
 
@@ -5098,6 +5336,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("PnsApproach");
 
                     b.Property<string>("Project");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("RelationshipWithPatient");
 
@@ -5185,6 +5425,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("ReceivedCOVID19Vaccine");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("SecondDoseVaccineAdministered");
 
                     b.Property<string>("Sequence");
@@ -5244,6 +5486,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("PatientPK");
 
                     b.Property<string>("Project");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<int?>("SiteCode");
 
@@ -5311,6 +5555,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<DateTime?>("VisitDate");
@@ -5371,6 +5617,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<DateTime?>("VisitDate");
@@ -5429,6 +5677,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<Guid>("RecordId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("Summary");
@@ -5475,6 +5725,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("Smoking");
@@ -5519,6 +5771,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("Smoking");
@@ -5560,6 +5814,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("PatientPK");
 
                     b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<int?>("SiteCode");
 
@@ -5687,6 +5943,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SessionNumber");
 
                     b.Property<int?>("SiteCode");
@@ -5809,6 +6067,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SessionNumber");
 
                     b.Property<int?>("SiteCode");
@@ -5929,6 +6189,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<Guid>("RecordId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SessionNumber");
 
                     b.Property<int?>("SiteCode");
@@ -5981,6 +6243,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("SexualIPV");
 
                     b.Property<int?>("SiteCode");
@@ -6029,6 +6293,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("SexualIPV");
 
                     b.Property<int?>("SiteCode");
@@ -6075,6 +6341,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<Guid>("RecordId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("SexualIPV");
 
                     b.Property<int?>("SiteCode");
@@ -6105,6 +6373,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime>("DateExtracted");
 
+                    b.Property<DateTime?>("DateOfDiscontinuation");
+
                     b.Property<DateTime?>("Date_Created");
 
                     b.Property<DateTime?>("Date_Last_Modified");
@@ -6127,6 +6397,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("IPTClientWorkUp");
 
+                    b.Property<string>("IPTDiscontinuation");
+
                     b.Property<string>("IndicationForIPT");
 
                     b.Property<string>("Lethargy");
@@ -6145,6 +6417,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("StartAntiTBs");
@@ -6156,6 +6430,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<DateTime?>("TBRxStartDate");
 
                     b.Property<string>("TBScreening");
+
+                    b.Property<DateTime?>("TPTInitiationDate");
 
                     b.Property<string>("TestResult");
 
@@ -6181,6 +6457,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime>("DateExtracted");
 
+                    b.Property<DateTime?>("DateOfDiscontinuation");
+
                     b.Property<DateTime?>("Date_Created");
 
                     b.Property<DateTime?>("Date_Last_Modified");
@@ -6203,6 +6481,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("IPTClientWorkUp");
 
+                    b.Property<string>("IPTDiscontinuation");
+
                     b.Property<string>("IndicationForIPT");
 
                     b.Property<string>("Lethargy");
@@ -6221,6 +6501,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("StartAntiTBs");
@@ -6232,6 +6514,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<DateTime?>("TBRxStartDate");
 
                     b.Property<string>("TBScreening");
+
+                    b.Property<DateTime?>("TPTInitiationDate");
 
                     b.Property<string>("TestResult");
 
@@ -6255,6 +6539,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DateGenerated");
 
+                    b.Property<DateTime?>("DateOfDiscontinuation");
+
                     b.Property<DateTime?>("Date_Created");
 
                     b.Property<DateTime?>("Date_Last_Modified");
@@ -6277,6 +6563,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("IPTClientWorkUp");
 
+                    b.Property<string>("IPTDiscontinuation");
+
                     b.Property<string>("IndicationForIPT");
 
                     b.Property<string>("Lethargy");
@@ -6295,6 +6583,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<Guid>("RecordId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("StartAntiTBs");
@@ -6308,6 +6598,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<DateTime?>("TBRxStartDate");
 
                     b.Property<string>("TBScreening");
+
+                    b.Property<DateTime?>("TPTInitiationDate");
 
                     b.Property<string>("TestResult");
 
@@ -6356,6 +6648,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("PatientPK");
 
                     b.Property<string>("Project");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("Remarks");
 
@@ -6411,6 +6705,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("Remarks");
 
                     b.Property<int?>("SiteCode");
@@ -6462,6 +6758,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("PatientPK");
 
                     b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("Remarks");
 
@@ -6525,6 +6823,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("RelationshipToClient");
 
                     b.Property<int?>("SiteCode");
@@ -6577,6 +6877,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("RelationshipToClient");
 
                     b.Property<int?>("SiteCode");
@@ -6626,6 +6928,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("PatientPK");
 
                     b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("RelationshipToClient");
 
@@ -6685,6 +6989,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("Severity");
 
                     b.Property<int?>("SiteCode");
@@ -6723,6 +7029,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("Severity");
 
                     b.Property<int?>("SiteCode");
@@ -6760,6 +7068,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("PatientPK");
 
                     b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("Severity");
 
@@ -6843,6 +7153,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Provider");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<DateTime?>("RegistrationDate");
 
                     b.Property<int?>("SiteCode");
@@ -6917,6 +7229,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Provider");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<DateTime?>("RegistrationDate");
 
                     b.Property<int?>("SiteCode");
@@ -6979,6 +7293,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<Guid>("RecordId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<DateTime?>("RegistrationDate");
 
                     b.Property<int?>("SiteCode");
@@ -7024,6 +7340,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("PatientPK");
 
                     b.Property<string>("Project");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<int?>("SiteCode");
 
@@ -7097,6 +7415,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<int?>("bCD4");
@@ -7166,6 +7486,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("PatientPK");
 
                     b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<int?>("SiteCode");
 
@@ -7299,6 +7621,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("Region");
 
                     b.Property<DateTime?>("RegistrationAtCCC");
@@ -7397,6 +7721,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("Region");
 
                     b.Property<DateTime?>("RegistrationATPMTCT");
@@ -7471,6 +7797,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<Guid>("RecordId");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("Summary");
@@ -7518,6 +7846,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Project");
 
                     b.Property<string>("Reason");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<DateTime?>("ReportedByDate");
 
@@ -7567,6 +7897,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Reason");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<DateTime?>("ReportedByDate");
 
                     b.Property<string>("SatelliteName");
@@ -7610,6 +7942,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Reason");
 
                     b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<DateTime?>("ReportedByDate");
 
@@ -7669,6 +8003,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Provider");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("RegimenChangeSwitchReason");
 
                     b.Property<string>("RegimenChangedSwitched");
@@ -7725,6 +8061,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Provider");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<string>("RegimenLine");
 
                     b.Property<int?>("SiteCode");
@@ -7770,6 +8108,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("Provider");
 
                     b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<string>("RegimenLine");
 
@@ -7829,6 +8169,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("ReasonForDeath");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.Property<string>("SpecificDeathReason");
@@ -7871,6 +8213,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Project");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<int?>("SiteCode");
 
                     b.HasKey("Id");
@@ -7904,6 +8248,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<int?>("PatientPK");
 
                     b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<int?>("SiteCode");
 
@@ -8019,6 +8365,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("PwP");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<DateTime?>("RefillDate");
 
                     b.Property<int?>("RespiratoryRate");
@@ -8129,6 +8477,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("PwP");
 
+                    b.Property<string>("RecordUUID");
+
                     b.Property<DateTime?>("RefillDate");
 
                     b.Property<DateTime?>("SecondlineRegimenChangeDate");
@@ -8224,6 +8574,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("PwP");
 
                     b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RecordUUID");
 
                     b.Property<DateTime?>("RefillDate");
 
@@ -8631,7 +8983,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("HtsRiskCategory");
 
-                    b.Property<decimal?>("HtsRiskScore");
+                    b.Property<string>("HtsRiskScore");
 
                     b.Property<int?>("MonthsSinceLastTest");
 
@@ -8707,7 +9059,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("HtsRiskCategory");
 
-                    b.Property<decimal?>("HtsRiskScore");
+                    b.Property<string>("HtsRiskScore");
 
                     b.Property<int?>("MonthsSinceLastTest");
 
@@ -8783,7 +9135,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("HtsRiskCategory");
 
-                    b.Property<decimal?>("HtsRiskScore");
+                    b.Property<string>("HtsRiskScore");
 
                     b.Property<int?>("MonthsSinceLastTest");
 
@@ -9019,7 +9371,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber");
 
-                    b.Property<decimal?>("HtsRiskScore");
+                    b.Property<string>("HtsRiskScore");
 
                     b.Property<string>("IsHealthWorker");
 
@@ -11930,6 +12282,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
                         .WithMany("GbvScreeningExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.IITRiskScoresExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("IITRiskScoresExtracts")
                         .HasForeignKey("SiteCode", "PatientPK")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
