@@ -53,7 +53,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         public async Task<bool> Handle(ExtractPatient request, CancellationToken cancellationToken)
         {
             // check if kenyaemr is default then check
-            if (Guid.Parse("a6221856-0e85-11e8-ba89-0ed5f89f718b") != request.DatabaseProtocol.EmrSystemId)
+            if (Guid.Parse("a6221856-0e85-11e8-ba89-0ed5f89f718b") == request.DatabaseProtocol.EmrSystemId)
             {
                 // . = "a6221856-0e85-11e8-ba89-0ed5f89f718b"
                 DateTime etlRefreshDate = (DateTime)_reader.GetEtlTtablesRefreshedDate(request.DatabaseProtocol);
