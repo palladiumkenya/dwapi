@@ -34,6 +34,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PreviousARTUse { get; set; }
         public string PreviousARTPurpose { get; set; }
         public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
         public DateTime? DateLastUsed { get; set; }
     }
 }

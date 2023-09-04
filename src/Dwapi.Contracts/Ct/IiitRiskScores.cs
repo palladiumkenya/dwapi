@@ -10,6 +10,8 @@ namespace Dwapi.Contracts.Ct
         string RiskFactors  { get; set; }
         string RiskDescription  { get; set; }
         DateTime? RiskEvaluationDate  { get; set; }
+        bool? Voided { get; set; }
+
         DateTime? Date_Created  { get; set; }
         DateTime? Date_Last_Modified  { get; set; }
     }

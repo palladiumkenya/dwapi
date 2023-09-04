@@ -73,7 +73,8 @@ namespace Dwapi.Contracts.Mnch
         string PresumptiveTreatmentDose { get; set; }
         string MiminumPackageOfCareReceived { get; set; }
         string MiminumPackageOfCareServices { get; set; }
-        
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

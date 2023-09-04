@@ -33,7 +33,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.PatientResidentSubCounty, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.PatientResidentSubCounty))))
                      .ForMember(x => x.PatientResidentWard, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.PatientResidentWard))))
                      .ForMember(x => x.InSchool, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.InSchool))))
-                    .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientMnchExtract.NUPI))));
+                    .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientMnchExtract.NUPI))))
+         .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientMnchExtract.Voided))))
+         .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientMnchExtract.RecordUUID))));
+
 
 
 
@@ -60,7 +63,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.PartnerHIVStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchEnrolmentExtract.PartnerHIVStatus))))
                      .ForMember(x => x.PartnerHIVTestDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempMnchEnrolmentExtract.PartnerHIVTestDate))))
                      .ForMember(x => x.BloodGroup, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchEnrolmentExtract.BloodGroup))))
-                     .ForMember(x => x.StatusAtMnch, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchEnrolmentExtract.StatusAtMnch))));
+                     .ForMember(x => x.StatusAtMnch, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchEnrolmentExtract.StatusAtMnch))))
+                     .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMnchEnrolmentExtract.Voided))))
+                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchEnrolmentExtract.RecordUUID))));
+
 
 
                  CreateMap<IDataRecord, TempMnchArtExtract>().ForMember(x => x.Pkv, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchArtExtract.Pkv))))
@@ -81,7 +87,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.LastARTDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempMnchArtExtract.LastARTDate))))
                      .ForMember(x => x.LastRegimen, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchArtExtract.LastRegimen))))
                      .ForMember(x => x.LastRegimenLine, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchArtExtract.LastRegimenLine))))
-                     .ForMember(x => x.FacilityReceivingARTCare, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchArtExtract.FacilityReceivingARTCare))));
+                     .ForMember(x => x.FacilityReceivingARTCare, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchArtExtract.FacilityReceivingARTCare))))
+                     .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMnchArtExtract.Voided))))
+                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchArtExtract.RecordUUID))));
+
 
 
 
@@ -159,7 +168,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.PresumptiveTreatmentGiven, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.PresumptiveTreatmentGiven))))
                      .ForMember(x => x.PresumptiveTreatmentDose, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.PresumptiveTreatmentDose))))
                      .ForMember(x => x.MiminumPackageOfCareReceived, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.MiminumPackageOfCareReceived))))
-                     .ForMember(x => x.MiminumPackageOfCareServices, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.MiminumPackageOfCareServices))));
+                     .ForMember(x => x.MiminumPackageOfCareServices, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.MiminumPackageOfCareServices))))
+                     .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempAncVisitExtract.Voided))))
+                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempAncVisitExtract.RecordUUID))));
+
 
 
 
@@ -226,7 +238,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                  .ForMember(x => x.EDD, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempMatVisitExtract.EDD))))
                  .ForMember(x => x.MaternalDeathAudited, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMatVisitExtract.MaternalDeathAudited))))
                  .ForMember(x => x.ReferralReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMatVisitExtract.ReferralReason))))
-                 .ForMember(x => x.OnARTMat, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMatVisitExtract.OnARTMat))));
+                 .ForMember(x => x.OnARTMat, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMatVisitExtract.OnARTMat))))
+                 .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMatVisitExtract.Voided))))
+                 .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMatVisitExtract.RecordUUID))));
+
 
 
                  CreateMap<IDataRecord, TempPncVisitExtract>()
@@ -298,7 +313,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.VisitTimingBaby, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPncVisitExtract.VisitTimingBaby))))
                      .ForMember(x => x.MotherCameForHIVTest, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPncVisitExtract.MotherCameForHIVTest))))
                      .ForMember(x => x.InfactCameForHAART, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPncVisitExtract.InfactCameForHAART))))
-                     .ForMember(x => x.MotherGivenHAART, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPncVisitExtract.MotherGivenHAART))));
+                     .ForMember(x => x.MotherGivenHAART, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPncVisitExtract.MotherGivenHAART))))
+                     .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPncVisitExtract.Voided))))
+                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPncVisitExtract.RecordUUID))));
+
 
 
                  CreateMap<IDataRecord, TempMotherBabyPairExtract>()
@@ -311,7 +329,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.MotherPatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMotherBabyPairExtract.MotherPatientPK))))
                      .ForMember(x => x.BabyPatientMncHeiID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMotherBabyPairExtract.BabyPatientMncHeiID))))
                      .ForMember(x => x.MotherPatientMncHeiID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMotherBabyPairExtract.MotherPatientMncHeiID))))
-                     .ForMember(x => x.PatientIDCCC, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMotherBabyPairExtract.PatientIDCCC))));
+                     .ForMember(x => x.PatientIDCCC, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMotherBabyPairExtract.PatientIDCCC))))
+                     .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMotherBabyPairExtract.Voided))))
+                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMotherBabyPairExtract.RecordUUID))));
+
 
 
 
@@ -351,7 +372,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.MothersCCCNo, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcEnrolmentExtract.MothersCCCNo))))
                      .ForMember(x => x.ARTMother, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcEnrolmentExtract.ARTMother))))
                      .ForMember(x => x.ARTRegimenMother, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcEnrolmentExtract.ARTRegimenMother))))
-                     .ForMember(x => x.ARTStartDateMother, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcEnrolmentExtract.ARTStartDateMother))));
+                     .ForMember(x => x.ARTStartDateMother, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcEnrolmentExtract.ARTStartDateMother))))
+                     .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempCwcEnrolmentExtract.Voided))))
+                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcEnrolmentExtract.RecordUUID))));
+
 
 
 
@@ -394,7 +418,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.Refferred, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcVisitExtract.Refferred))))
                      .ForMember(x => x.HeightLength, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempCwcVisitExtract.HeightLength))))
                      .ForMember(x => x.ZScore, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcVisitExtract.ZScore))))
-                     .ForMember(x => x.ZScoreAbsolute, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempCwcVisitExtract.ZScoreAbsolute))));
+                     .ForMember(x => x.ZScoreAbsolute, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempCwcVisitExtract.ZScoreAbsolute))))
+                     .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempCwcVisitExtract.Voided))))
+                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempCwcVisitExtract.RecordUUID))));
+
 
 
 
@@ -424,7 +451,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.HEIHIVStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.HEIHIVStatus))))
                      .ForMember(x => x.HEIExitCritearia, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.HEIExitCritearia))))
                      .ForMember(x => x.PatientHeiId, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.PatientHeiId))))
-                     ;
+                     .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHeiExtract.Voided))))
+                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHeiExtract.RecordUUID))));
+
 
 
 
@@ -444,7 +473,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                      .ForMember(x => x.ReportedbyDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempMnchLabExtract.ReportedbyDate))))
                      .ForMember(x => x.TestName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchLabExtract.TestName))))
                      .ForMember(x => x.TestResult, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchLabExtract.TestResult))))
-                     .ForMember(x => x.LabReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchLabExtract.LabReason))));
+                     .ForMember(x => x.LabReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchLabExtract.LabReason))))
+                     .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMnchLabExtract.Voided))))
+                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchLabExtract.RecordUUID))));
+
 
 
                  CreateMap<IDataRecord, TempMnchImmunizationExtract>()
@@ -482,7 +514,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mnch
                         .ForMember(x => x.VitaminAAt18Months, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempMnchImmunizationExtract.VitaminAAt18Months))))
                         .ForMember(x => x.VitaminAAt2Years, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempMnchImmunizationExtract.VitaminAAt2Years))))
                         .ForMember(x => x.VitaminAAt2To5Years, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempMnchImmunizationExtract.VitaminAAt2To5Years))))
-                        .ForMember(x => x.FullyImmunizedChild, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempMnchImmunizationExtract.FullyImmunizedChild))));
+                        .ForMember(x => x.FullyImmunizedChild, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempMnchImmunizationExtract.FullyImmunizedChild))))
+                     .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempMnchImmunizationExtract.Voided))))
+                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempMnchImmunizationExtract.RecordUUID))));
+
                                                  
 
                  

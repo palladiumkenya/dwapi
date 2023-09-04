@@ -21,6 +21,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PeriodTaken { get; set; }
         public string ProphylaxisType { get; set; }
         public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
 
 
         /*public override void AddHeader(Row row)

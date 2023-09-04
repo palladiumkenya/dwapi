@@ -23,6 +23,7 @@ namespace Dwapi.Contracts.Ct
         string CNS { get; set; }
         string Genitourinary { get; set; }
         string RecordUUID { get; set; }
+         bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

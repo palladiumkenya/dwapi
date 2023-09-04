@@ -21,6 +21,8 @@ namespace Dwapi.Contracts.Mnch
         DateTime? HEIExitDate { get; set; }
         string HEIHIVStatus { get; set; }
         string HEIExitCritearia { get; set; }
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

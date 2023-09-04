@@ -135,6 +135,9 @@ export class PrepValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -147,6 +150,9 @@ export class PrepValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -159,6 +165,9 @@ export class PrepValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -171,6 +180,9 @@ export class PrepValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -183,6 +195,9 @@ export class PrepValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -195,6 +210,9 @@ export class PrepValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -207,6 +225,9 @@ export class PrepValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }

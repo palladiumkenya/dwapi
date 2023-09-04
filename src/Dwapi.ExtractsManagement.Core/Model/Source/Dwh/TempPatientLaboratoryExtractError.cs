@@ -17,6 +17,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public int? EnrollmentTest { get; set; }
         public string TestResult { get; set; }
         public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
 
         [NotMapped]
         public virtual ICollection<TempPatientLaboratoryExtractErrorSummary> TempPatientLaboratoryExtractErrorSummaries { get; set; } = new List<TempPatientLaboratoryExtractErrorSummary>(); 

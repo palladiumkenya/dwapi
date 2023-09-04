@@ -18,6 +18,8 @@ namespace Dwapi.Contracts.Mnch
         string PatientResidentSubCounty { get; set; }
         string PatientResidentWard { get; set; }
         string InSchool { get; set; }
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
         string NUPI { get; set; }

@@ -26,6 +26,8 @@ namespace Dwapi.Contracts.Prep
         string MonthsknownHIVSerodiscordant { get; set; }
         string SexWithoutCondom { get; set; }
         string NumberofchildrenWithPartner { get; set; }
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

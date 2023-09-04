@@ -149,6 +149,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'visitTimingMother', header: 'VisitTimingMother'},
             {field: 'visitTimingBaby', header: 'VisitTimingBaby'},
             {field: 'motherCameForHIVTest', header: 'MotherCameForHIVTest'},
@@ -166,7 +169,10 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
-            {field: 'facilityName', header: 'Facility Name'}
+            {field: 'facilityName', header: 'Facility Name'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
         ]
     }
 
@@ -178,6 +184,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -190,6 +199,8 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -202,6 +213,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -214,6 +228,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityReceivingARTCare', header: 'FacilityReceivingARTCare'},
 
         ]
@@ -225,6 +242,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityName', header: 'Facility Name'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'emr', header: 'EMR'},
             {field: 'lmp', header: 'LMP'},
             {field: 'edd', header: 'EDD'},
@@ -242,6 +262,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -254,6 +277,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'revisitThisYear', header: 'RevisitThisYear'},
             {field: 'refferred', header: 'Refferred'},
             {field: 'heightLength', header: 'HeightLength'},
@@ -270,6 +296,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'facilityName', header: 'Facility Name'}
         ]
     }
@@ -282,6 +311,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'emr', header: 'EMR'},
             {field: 'project', header: 'Project'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field: 'hepatitisBScreening', header: 'HepatitisB Screening'},
             {field: 'treatedHepatitisB', header: 'Treated HepatitisB'},
             {field: 'presumptiveTreatmentGiven', header: 'Presumptive Treatment Given'},
@@ -297,6 +329,9 @@ export class MnchValidComponent implements OnInit, OnDestroy {
             {field:'patientMnchID',header:'PatientMnchID'},
             {field:'bcg',header:'BCG'},
             {field:'opVatBirth',header:'OPVatBirth'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             {field:'opV1',header:'OPV1'},
             {field:'opV2',header:'OPV2'},
             {field:'opV3',header:'OPV3'},

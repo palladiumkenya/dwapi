@@ -68,7 +68,8 @@ namespace Dwapi.Contracts.Mnch
         string MotherCameForHIVTest { get; set; }
         string InfactCameForHAART { get; set; }
         string MotherGivenHAART { get; set; }
-        
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }
