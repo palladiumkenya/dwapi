@@ -1848,141 +1848,165 @@ Ward from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
 on h.PatientPK=p.PatientPK
 order by KeyPopulationType"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
-8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT  distinct d.patient_id as PatientPK,
-                        t.uuid                                                            RecordUUID,
-                                            d.national_unique_patient_identifier                              as NUPI,
-                                            pkv.PKV                                                           as Pkv,                  
-                                            
-                            (select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-                        (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
-                            'KenyaEMR' as Emr,
-                            'Kenya HMIS II' AS Project,
-                            d.openmrs_id AS HtsNumber,
-                            d.hts_recency_id as HtsRecencyId,
-                            d.DOB,
-                            case when d.Gender='M' then 'Male' else 'Female' end as Gender,
-                            d.marital_status as MaritalStatus,
-                            d.occupation as Occupation,
-                            t.population_type as PopulationType,
-                            t.key_population_type as KeyPopulationType,
-                            t.priority_population_type as PriorityPopulationType,
-                            t.disability_type as PatientDisabled,
-                            A.county_district as County,
-                            A.state_province as SubCounty,
-                            A.address4 as Ward,
-                            t.date_created                                                    as Date_Created,	
-                        t.date_last_modified                                              as Date_Last_Modified,
-                        t.voided                                                          as voided
-                        FROM dwapi_etl.etl_hts_test t	
-                       inner join dwapi_etl.etl_patient_demographics d ON d.patient_id = t.patient_id
-                        inner join (select x.patient_id as patient_id,
-                        x.sxFirstName,
-                        x.sxLastname,
-                        x.sxMiddleName,
-                        x.dmFirstName,
-                        x.dmLastName,
-                        x.dmMiddleName,
-                        x.Gender,
-                        x.DOB,
-                        CASE
-                        WHEN locate(';', dmLastName) > 0 THEN CONCAT(
-                        CAST(LEFT(Gender, 1) AS CHAR CHARACTER SET utf8),
-                        CAST(sxFirstName AS CHAR CHARACTER SET utf8), CAST(
-                        SUBSTRING(dmLastName, locate(';', dmLastName) + 1, LENGTH(dmLastName))
-                        AS
-                        CHAR CHARACTER SET utf8),
-                        CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
-                        )
-                        ELSE CONCAT(
-                        CAST(LEFT(Gender, 1)AS CHAR CHARACTER SET utf8),
-                        CAST(sxFirstName AS CHAR CHARACTER SET utf8),
-                        CAST(dmLastName AS CHAR CHARACTER SET utf8),
-                        CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
-                        )
-                        END      AS PKV
-                        from (SELECT patient_id,
-                        SOUNDEX(UPPER(REPLACE(given_name, '0', 'O')))                           AS sxFirstName,
-                        SOUNDEX(UPPER(REPLACE(family_name, '0', 'O')))                          AS sxLastName,
-                        SOUNDEX(UPPER(REPLACE(middle_name, '0', 'O')))                          AS sxMiddleName,
-                        fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name, '0', 'O')))  AS dmFirstName,
-                        fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name, '0', 'O'))) AS dmLastName,
-                        fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name, '0', 'O'))) AS dmMiddleName,
-                        Gender,
-                        DOB
-                            FROM dwapi_etl.etl_patient_demographics) x) pkv on pkv.patient_id = d.patient_id	
-                       LEFT JOIN location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id = 1	
-                       LEFT JOIN location SN ON SN.location_id = t.encounter_location	
-                       LEFT JOIN person_address A ON A.person_id = d.patient_id	
-                       group by t.patient_id	
-                       having min(t.date_created)"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-0ED5F89F718B
+8578ad00-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Clients|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT d.patient_id                                                      as PatientPK,
+                                                                                                  t.uuid                                                            as RecordUUID,
+                                                                                                  d.national_unique_patient_identifier                              as NUPI,
+                                                                                                  pkv.PKV                                                           as Pkv,
+                                                                                                  (select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+                                                                                                  (select siteCode from kenyaemr_etl.etl_default_facility_info)     as SiteCode,
+                                                                                                  'KenyaEMR'                                                        as Emr,
+                                                                                                  'Kenya HMIS II'                                                   AS Project,
+                                                                                                  d.openmrs_id                                                      AS HtsNumber,
+                                                                                                  d.hts_recency_id                                                  as HTSRecencyId,
+                                                                                                  d.DOB,
+                                                                                                  case when d.Gender = 'M' then 'Male' else 'Female' end            as Gender,
+                                                                                                  d.marital_status                                                  as MaritalStatus,
+                                                                                                  d.occupation                                                      as Occupation,
+                                                                                                  t.population_type                                                 as PopulationType,
+                                                                                                  t.key_population_type                                             as KeyPopulationType,
+                                                                                                  t.priority_population_type                                        as PriorityPopulationType,
+                                                                                                  t.patient_disabled                                                as PatientDisabled,
+                                                                                                  t.disability_type                                                 as DisabilityType,
+                                                                                                  A.county_district                                                 as County,
+                                                                                                  A.state_province                                                  as SubCounty,
+                                                                                                  A.address4                                                        as Ward,
+                                                                                                  t.date_created                                                    as Date_Created,
+                                                                                                  t.date_last_modified                                              as Date_Last_Modified,
+                                                                                                  t.voided                                                          as voided
+                                                                                           FROM dwapi_etl.etl_hts_test t
+                                                                                                    inner join dwapi_etl.etl_patient_demographics d ON d.patient_id = t.patient_id
+                                                                                                    inner join (select x.patient_id as patient_id,
+                                                                                                                       x.sxFirstName,
+                                                                                                                       x.sxLastname,
+                                                                                                                       x.sxMiddleName,
+                                                                                                                       x.dmFirstName,
+                                                                                                                       x.dmLastName,
+                                                                                                                       x.dmMiddleName,
+                                                                                                                       x.Gender,
+                                                                                                                       x.DOB,
+                                                                                                                       CASE
+                                                                                                                           WHEN locate(';', dmLastName) > 0 THEN CONCAT(
+                                                                                                                                   CAST(LEFT(Gender, 1) AS CHAR CHARACTER SET utf8),
+                                                                                                                                   CAST(sxFirstName AS CHAR CHARACTER SET utf8), CAST(
+                                                                                                                                           SUBSTRING(dmLastName, locate(';', dmLastName) + 1, LENGTH(dmLastName))
+                                                                                                                                       AS
+                                                                                                                                       CHAR CHARACTER SET utf8),
+                                                                                                                                   CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+                                                                                                                               )
+                                                                                                                           ELSE CONCAT(
+                                                                                                                                   CAST(LEFT(Gender, 1) AS CHAR CHARACTER SET utf8),
+                                                                                                                                   CAST(sxFirstName AS CHAR CHARACTER SET utf8),
+                                                                                                                                   CAST(dmLastName AS CHAR CHARACTER SET utf8),
+                                                                                                                                   CAST(LTRIM(RTRIM(DATE_FORMAT(DOB, '%Y'))) AS CHAR CHARACTER SET utf8)
+                                                                                                                               )
+                                                                                                                           END      AS PKV
+                                                                                                                from (SELECT patient_id,
+                                                                                                                             SOUNDEX(UPPER(REPLACE(given_name, '0', 'O')))                           AS sxFirstName,
+                                                                                                                             SOUNDEX(UPPER(REPLACE(family_name, '0', 'O')))                          AS sxLastName,
+                                                                                                                             SOUNDEX(UPPER(REPLACE(middle_name, '0', 'O')))                          AS sxMiddleName,
+                                                                                                                             fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(given_name, '0', 'O')))  AS dmFirstName,
+                                                                                                                             fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(family_name, '0', 'O'))) AS dmLastName,
+                                                                                                                             fn_getPatientNameDoubleMetaphone(UPPER(REPLACE(middle_name, '0', 'O'))) AS dmMiddleName,
+                                                                                                                             Gender,
+                                                                                                                             DOB
+                                                                                                                      FROM dwapi_etl.etl_patient_demographics) x) pkv on pkv.patient_id = d.patient_id
+                                                                                                    LEFT JOIN location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id = 1
+                                                                                                    LEFT JOIN location SN ON SN.location_id = t.encounter_location
+                                                                                                    LEFT JOIN person_address A ON A.person_id = d.patient_id
+                                                                                           group by t.patient_id
+                                                                                           having min(t.date_created)"|DWHStage|1|HtsClient|1|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+
+8578ae7c-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"select distinct h.PatientPK,
+SiteCode,
+FacilityName,
+'IQCare' as Emr,
+'Kenya HMIS II' as Project,
+p.HTSID as HtsNumber,
+HTSEncounterId as EncounterId,
+VisitDate as TestDate,
+TestedBefore as EverTestedForHiv,
+WhenLastTested as MonthsSinceLastTest,
+ClientTestedAs,
+TestEntryPoint as EntryPoint,
+StrategyHTS as TestStrategy,
+FinalTestOneResult as TestResult1,
+FinalResultTestTwo as TestResult2,
+finalResultHTS as FinalTestResult,
+FinalResultsGiven as PatientGivenResult,
+TBScreeningHTS as TbScreening,
+clientSelfTestesd as ClientSelfTested,
+CoupleDiscordant,
+TestType,
+case when Consent='1' or Consent='Yes' then 'Yes' else 'No' end as Consent from  tmp_HTS_LAB_register h inner join tmp_PatientMaster p
+on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-0ED5F89F718B
 
 8578afbc-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Tests|HTS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT
-                                                                                                                     t.patient_id as PatientPK, 
-                                                                                                	t.uuid                                                                     RecordUUID,					 
-                                                                                                                     (select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
-                                                                                                                     (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
-                                                                                                                     'KenyaEMR' as Emr,
-                                                                                                                     'Kenya HMIS II' AS Project,
-                                                                                                                     demographics.openmrs_id  AS HtsNumber,
-                                                                                                                     t.encounter_id as EncounterId,
-                                                                                                                     t.visit_date as TestDate,
-                                                                                                                     t.ever_tested_for_hiv as EverTestedForHiv,
-                                                                                                                     t.months_since_last_test as MonthsSinceLastTest,
-                                                                                                                     t.client_tested_as as ClientTestedAs,
-                                                                                                                     case t.hts_entry_point
-                                                                                                                     when 5485 then 'In Patient Department(IPD)'
-                                                                                                                     when 160542 then 'Out Patient Department(OPD)'
-                                                                                                                     when 162181 then 'Peadiatric Clinic'
-                                                                                                                     when 160552 then 'Nutrition Clinic'
-                                                                                                                     when 160538 then 'PMTCT ANC'
-                                                                                                                     when 160456 then 'PMTCT MAT'
-                                                                                                                     when 1623 then 'PMTCT PNC'
-                                                                                                                     when 160541 then 'TB'
-                                                                                                                     when 162050 then 'CCC'
-                                                                                                                     when 159940 then 'VCT'
-                                                                                                                     when 159938 then 'Home Based Testing'
-                                                                                                                     when 159939 then 'Mobile Outreach'
-                                                                                                                     when 162223 then 'VMMC'
-                                                                                                                     when 160546 then 'STI Clinic'
-                                                                                                                     when 160522 then 'Emergency'
-                                                                                                                     when 163096 then 'Community Testing'
-                                                                                                                     when 5622 then 'Other' end                                    as EntryPoint,
-                                                                                                                     case t.test_strategy
-                                                                                                                     when 164163 then 'HP: Hospital Patient Testing'
-                                                                                                                     when 164953 then 'NP: HTS for non-patients'
-                                                                                                                     when 164954 then 'VI:Integrated VCT Center'
-                                                                                                                     when 164955 then 'VS:Stand Alone VCT Center'
-                                                                                                                     when 159938 then 'HB:Home Based Testing'
-                                                                                                                     when 159939 then 'MO: Mobile Outreach HTS'
-                                                                                                                     when 161557 then 'Index testing'
-                                                                                                                     when 166606 then 'SNS - Social Networks'
-                                                                                                                     when 5622 then 'O:Other'
-                                                                                                                     end                                                           as TestStrategy,
-                                                                                                                     t.test_1_result                                                   as TestResult1,
-                                                                                                                     t.approach as Approach,
-                                                                                                                     t.setting as Setting,
-                                                                                                                     t.test_2_result                                                   as TestResult2,
-                                                                                                                     t.final_test_result                                               as FinalTestResult,
-                                                                                                                     t.patient_given_result                                            as PatientGivenResult,
-                                                                                                                     t.tb_screening                                                    as TbScreening,
-                                                                                                                     t.patient_had_hiv_self_test                                       as ClientSelfTested,
-                                                                                                                     t.couple_discordant                                               as CoupleDiscordant,
-                                                                                                                     CASE t.test_type
-                                                                                                                     WHEN 1 THEN 'Initial'
-                                                                                                                     WHEN 2 THEN 'Repeat'
-                                                                                                                     END                                                           AS TestType,
-                                                                                                                     t.patient_consented                                               as Consent,
-                                                                                                                     t.hts_risk_category                                               as HtsRiskCategory,
-                                                                                                                     CONCAT('',t.hts_risk_score, '' )                                          as HtsRiskScore,
-                                                                                                                     if(coalesce(t.referral_for, t.neg_referral_for, t.neg_referral_specify) is not null and	
-                                                                                                                     coalesce(t.referral_for, t.neg_referral_for) != '', 'Yes', 'No')        as ReferredForServices,	
-                                                                                                                     concat_ws(',', NULLIF(t.referral_for, ''), NULLIF(t.neg_referral_for, '')) as ReferredServices,	
-                                                                                                                     t.neg_referral_specify                                                     as OtherReferredServices,
-                                                                                                                     	t.date_created                                                             as Date_Created,	
-                                                                                                					t.date_last_modified                                                       as Date_Last_Modified,	
-                                                                                                					t.voided                                                                   as voided
-                                                                                                                     FROM dwapi_etl.etl_hts_test t
-                                                                                                                     inner join dwapi_etl.etl_patient_demographics demographics on t.patient_id = demographics.patient_id"|DWHStage|1|HtsClientTests|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
+                         t.patient_id as PatientPK, 
+        t.uuid                                                                     RecordUUID,					 
+                         (select FacilityName from kenyaemr_etl.etl_default_facility_info) as FacilityName,
+                         (select siteCode from kenyaemr_etl.etl_default_facility_info) as SiteCode,
+                         'KenyaEMR' as Emr,
+                         'Kenya HMIS II' AS Project,
+                         demographics.openmrs_id  AS HtsNumber,
+                         t.encounter_id as EncounterId,
+                         t.visit_date as TestDate,
+                         t.ever_tested_for_hiv as EverTestedForHiv,
+                         t.months_since_last_test as MonthsSinceLastTest,
+                         t.client_tested_as as ClientTestedAs,
+                         case t.hts_entry_point
+                         when 5485 then 'In Patient Department(IPD)'
+                         when 160542 then 'Out Patient Department(OPD)'
+                         when 162181 then 'Peadiatric Clinic'
+                         when 160552 then 'Nutrition Clinic'
+                         when 160538 then 'PMTCT ANC'
+                         when 160456 then 'PMTCT MAT'
+                         when 1623 then 'PMTCT PNC'
+                         when 160541 then 'TB'
+                         when 162050 then 'CCC'
+                         when 159940 then 'VCT'
+                         when 159938 then 'Home Based Testing'
+                         when 159939 then 'Mobile Outreach'
+                         when 162223 then 'VMMC'
+                         when 160546 then 'STI Clinic'
+                         when 160522 then 'Emergency'
+                         when 163096 then 'Community Testing'
+                         when 5622 then 'Other' end                                    as EntryPoint,
+                         case t.test_strategy
+                         when 164163 then 'HP: Hospital Patient Testing'
+                         when 164953 then 'NP: HTS for non-patients'
+                         when 164954 then 'VI:Integrated VCT Center'
+                         when 164955 then 'VS:Stand Alone VCT Center'
+                         when 159938 then 'HB:Home Based Testing'
+                         when 159939 then 'MO: Mobile Outreach HTS'
+                         when 161557 then 'Index testing'
+                         when 166606 then 'SNS - Social Networks'
+                         when 5622 then 'O:Other'
+                         end                                                           as TestStrategy,
+                         t.test_1_result                                                   as TestResult1,
+                         t.approach as Approach,
+                         t.setting as Setting,
+                         t.test_2_result                                                   as TestResult2,
+                         t.final_test_result                                               as FinalTestResult,
+                         t.patient_given_result                                            as PatientGivenResult,
+                         t.tb_screening                                                    as TbScreening,
+                         t.patient_had_hiv_self_test                                       as ClientSelfTested,
+                         t.couple_discordant                                               as CoupleDiscordant,
+                         CASE t.test_type
+                         WHEN 1 THEN 'Initial'
+                         WHEN 2 THEN 'Repeat'
+                         END                                                           AS TestType,
+                         t.patient_consented                                               as Consent,
+                         t.hts_risk_category                                               as HtsRiskCategory,
+                         CONCAT('',t.hts_risk_score, '' )                                          as HtsRiskScore,
+                         if(coalesce(t.referral_for, t.neg_referral_for, t.neg_referral_specify) is not null and	
+                         coalesce(t.referral_for, t.neg_referral_for) != '', 'Yes', 'No')        as ReferredForServices,	
+                         concat_ws(',', NULLIF(t.referral_for, ''), NULLIF(t.neg_referral_for, '')) as ReferredServices,	
+                         t.neg_referral_specify                                                     as OtherReferredServices,
+                            t.date_created                                                             as Date_Created,	
+                        t.date_last_modified                                                       as Date_Last_Modified,	
+                        t.voided                                                                   as voided
+                         FROM dwapi_etl.etl_hts_test t
+                         inner join dwapi_etl.etl_patient_demographics demographics on t.patient_id = demographics.patient_id"|DWHStage|1|HtsClientTests|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
 8578b0f2-c34b-11e9-9cb5-2a2ae2dbcce4|Hts Client Linkage|HTS|A62216EE-0E85-11E8-BA89-0ED5F89F718B|"SELECT distinct r.ptn_pk as PatientPK,SiteCode,
 p.FacilityName,
