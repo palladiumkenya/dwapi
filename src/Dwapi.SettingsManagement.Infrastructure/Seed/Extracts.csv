@@ -204,7 +204,7 @@ FROM
                                     COALESCE(hiv.date_last_modified, prg.date_last_modified, d.date_last_modified),
                                     COALESCE(prg.date_last_modified, d.date_last_modified, hiv.date_last_modified)
                                             ) as Date_Last_Modified,d.occupation as Occupation,	
-             d.voided                                                                    as voided	
+             d.voided                                                                    as Voided	
              from dwapi_etl.etl_hiv_enrollment hiv	
              inner join dwapi_etl.etl_patient_demographics d on hiv.patient_id = d.patient_id	
              left outer join dwapi_etl.etl_mch_enrollment mch on mch.patient_id = d.patient_id	
@@ -315,7 +315,7 @@ FROM
                                          COALESCE(disc.date_last_modified, reg.date_last_modified, hiv.date_last_modified),
                                          COALESCE(reg.date_last_modified, hiv.date_last_modified, disc.date_last_modified)
                                      )                                                                               as Date_Last_Modified,
-                                        hiv.voided                                                                      as voided
+                                        hiv.voided                                                                      as Voided
                           from dwapi_etl.etl_hiv_enrollment hiv
                                   join dwapi_etl.etl_patient_demographics d on d.patient_id = hiv.patient_id
                                   left outer join (select d.patient_id,
@@ -563,7 +563,7 @@ FROM
                                       '' AS LastWaB,NULL AS LastWABDate, 
                                      fup.date_created as date_created,	
                                      fup.date_last_modified as date_last_modified,
-                                   fup.voided                                                                              as voided
+                                   fup.voided                                                                              as Voided
                                      from dwapi_etl.etl_patient_hiv_followup fup
            join dwapi_etl.etl_patient_demographics d on d.patient_id = fup.patient_id
            join (select e.patient_id,
@@ -647,7 +647,7 @@ FROM
                                     mid(max(concat(disc.visit_date, disc.date_died)), 11)                       as DeathDate,
                                     disc.date_created                                                           as Date_Created,
                                     disc.date_last_modified                                                     as Date_Last_Modified,
-                                                        null as voided
+                                                        null as Voided
                                from dwapi_etl.etl_patient_program_discontinuation disc
                                         left join (select e.patient_id                                       as patient_id,
                                                           max(e.visit_date)                                  as latest_enrolment_date,
@@ -745,7 +745,7 @@ FROM
                                        'Kenya HMIS II'                                                                  as Project,
                                        l.date_created                                                                   as Date_Created,
                                        l.date_last_modified                                                             as Date_Last_Modified,	
-         l.voided                                                                         as voided	
+         l.voided                                                                         as Voided	
          from dwapi_etl.etl_laboratory_extract l	
          left join openmrs.kenyaemr_order_entry_lab_manifest_order o on l.order_id = o.order_id	
          join dwapi_etl.etl_patient_demographics d on d.patient_id = l.patient_id	
@@ -781,7 +781,7 @@ FROM
                                   ph.StopRegimenDate                                           as StopRegimenDate,
                                   ph.date_created,
                                   ph.date_last_modified,
-                ph.voided                                                    as voided
+                ph.voided                                                    as Voided
          from (SELECT *
                FROM ((select patient_id,
                              uuid,
@@ -812,7 +812,7 @@ FROM
                              ''                                                               as prev_Regimen,
                              ph.date_created,
                              ph.date_last_modified,
-                             ph.voided                                                        as voided
+                             ph.voided                                                        as Voided
                       from dwapi_etl.etl_pharmacy_extract ph
                       where is_arv = 1
                       group by ph.encounter_id
@@ -873,7 +873,7 @@ FROM
                              @prev_regimen := e.regimen                                                             prev_regimen,
                              e.date_created                                                                      as date_created,
                              e.date_last_modified                                                                as date_last_modified,
-                             e.voided                                                                            as voided
+                             e.voided                                                                            as Voided
                       FROM dwapi_etl.etl_drug_event e,
                            (SELECT @s := 0, @prev_regimen := -1, @x := 0, @prev_regimen_line := -1) s
                       where e.program = 'HIV'
@@ -916,7 +916,7 @@ FROM
                              ''                                                                          as prev_Regimen,
                              do.date_created,
                              do.date_last_modified,
-                             do.voided                                                                   as voided
+                             do.voided                                                                   as Voided
                       from dwapi_etl.etl_drug_order do
                       group by do.order_group_id, do.patient_id, do.encounter_id
                       order by do.patient_id, DispenseDate)) A
@@ -1179,7 +1179,7 @@ FROM
                                                 ''                                                                     as HCWConcern,
                                                 fup.date_created                                                       as Date_Created,
                                                 fup.date_last_modified                                                 as Date_Last_Modified,
-                                     fup.voided                                                             as voided
+                                     fup.voided                                                             as Voided
                               from dwapi_etl.etl_patient_demographics d
                                        join dwapi_etl.etl_patient_hiv_followup fup on fup.patient_id = d.patient_id
                                        join kenyaemr_etl.etl_default_facility_info i
@@ -1580,7 +1580,7 @@ a6226eb4-0e85-11e8-ba89-6fb398c5f449|Patient Adverse Events|NDWH|a6221856-0e85-1
                                    group_concat(case a.action_taken when 1257 then 'CONTINUE REGIMEN' when 1259 then 'SWITCHED REGIMEN'  when 981 then 'CHANGED DOSE'  when 1258 then 'SUBSTITUTED DRUG' when 1107 then 'NONE' when 1260 then 'STOP' when 5622 then 'Other' end SEPARATOR '|') as AdverseEventActionTaken,
                                    '' as AdverseEventClinicalOutcome, '' as AdverseEventIsPregnant, '' as AdverseEventRegimen,
                                    a.date_created as Date_Created, a.date_last_modified as Date_Last_Modified,
-                                  a.voided as voided
+                                  a.voided as Voided
                            from dwapi_etl.etl_adverse_events a
                                     inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date
                                                 from dwapi_etl.etl_hiv_enrollment e
@@ -1872,7 +1872,7 @@ order by KeyPopulationType"|DWHStage|1|HtsClient|1|A6221983-0E85-11E8-BA89-0ED5F
                                                                                                   A.address4                                                        as Ward,
                                                                                                   t.date_created                                                    as Date_Created,
                                                                                                   t.date_last_modified                                              as Date_Last_Modified,
-                                                                                                  t.voided                                                          as voided
+                                                                                                  t.voided                                                          as Voided
                                                                                            FROM dwapi_etl.etl_hts_test t
                                                                                                     inner join dwapi_etl.etl_patient_demographics d ON d.patient_id = t.patient_id
                                                                                                     inner join (select x.patient_id as patient_id,
@@ -2004,7 +2004,7 @@ on h.PatientPK=p.PatientPK"|DWHStage|1|HtsClientTests|2|A6221983-0E85-11E8-BA89-
                          t.neg_referral_specify                                                     as OtherReferredServices,
                             t.date_created                                                             as Date_Created,	
                         t.date_last_modified                                                       as Date_Last_Modified,	
-                        t.voided                                                                   as voided
+                        t.voided                                                                   as Voided
                          FROM dwapi_etl.etl_hts_test t
                          inner join dwapi_etl.etl_patient_demographics demographics on t.patient_id = demographics.patient_id"|DWHStage|1|HtsClientTests|2|A6221AA4-0E85-11E8-BA89-0ED5F89F718B
 
@@ -2047,7 +2047,7 @@ r.ArtStartDate as ReportedStartARTDate
                                                                                                    a.art_start_date as ReportedStartARTDate,
                                                                                                    	a.date_created         as Date_Created,	
                                                                                                   a.date_last_modified   as Date_Last_Modified,	
-                                                                                                  a.voided               as voided
+                                                                                                  a.voided               as Voided
                                                                                                    from (SELECT Distinct patient_id,	
                                                                                                   uuid,	
                                                                                                   encounter_id,	
@@ -2079,7 +2079,7 @@ r.ArtStartDate as ReportedStartARTDate
                                                                                                   encounter_location,	
                                                                                                   htsrl.date_created,	
                                                                                                   htsrl.date_last_modified,	
-                                                                                                  htsrl.voided            as voided	
+                                                                                                  htsrl.voided            as Voided	
                                                                                                   FROM dwapi_etl.etl_hts_referral_and_linkage htsrl	
                                                                                                   inner join dwapi_etl.etl_patient_demographics demo	
                                                                                                   on demo.patient_id = htsrl.patient_id	
@@ -2099,7 +2099,7 @@ r.ArtStartDate as ReportedStartARTDate
                                                                                                   t.encounter_location,	
                                                                                                   t.date_created,	
                                                                                                   t.date_last_modified,	
-                                                                                                  t.voided                  as voided	
+                                                                                                  t.voided                  as Voided	
                                                                                                   FROM dwapi_etl.etl_hts_test t	
                                                                                                   INNER JOIN dwapi_etl.etl_patient_demographics pt	
                                                                                                   ON pt.patient_id = t.patient_id	
@@ -2152,7 +2152,7 @@ on h.PatientPK=p.PatientPK"|DWHStage|1|HtsTestKits|4|A6221983-0E85-11E8-BA89-0ED
                 t.syphillis_test_result as SyphilisResult,
                 t.date_created as Date_Created,
                 t.date_last_modified as Date_Last_Modified,
-                t.voided                                                          as voided
+                t.voided                                                          as Voided
                 FROM dwapi_etl.etl_hts_test t	
                 inner join dwapi_etl.etl_patient_demographics demographics on t.patient_id = demographics.patient_id	
                 LEFT JOIN location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id = 1	
@@ -2192,7 +2192,7 @@ where a.Tpe='Enrolment'"|DWHStage|1|HtsClientTracing|5|A6221983-0E85-11E8-BA89-0
                             htsrl.tracing_status as TracingOutcome,
                                 htsrl.date_created                                                as Date_Created,	
                           htsrl.date_last_modified                                          as Date_Last_Modified,
-                          htsrl.voided                                                      as voided	
+                          htsrl.voided                                                      as Voided	
                           FROM dwapi_etl.etl_hts_test ht	
                           INNER JOIN dwapi_etl.etl_patient_demographics d ON ht.patient_id = d.patient_id	
                           INNER JOIN dwapi_etl.etl_hts_referral_and_linkage htsrl ON ht.patient_id = htsrl.patient_id	
@@ -2234,7 +2234,7 @@ where a.Tpe='Partner'"|DWHStage|1|HtsPartnerTracing|6|A6221983-0E85-11E8-BA89-0E
                                                 tc.appointment_date as BookingDate,
                                                     tc.date_created                                                   as DateCreated,	
                                                tc.date_changed                                                   as DateLastModified,	
-                                               tc.voided                                                         as voided
+                                               convert(tc.voided  , SIGNED)                                      as Voided
                                                 from kenyaemr_hiv_testing_patient_contact pc	
                                                inner join dwapi_etl.etl_hts_test t on pc.patient_related_to = t.patient_id	
                                                inner join kenyaemr_hiv_testing_client_trace tc on pc.id = tc.client_id	
@@ -2308,8 +2308,7 @@ pns.MaritalStatus
                                                   marital.name as  MaritalStatus,
                                                     ohpc.date_created                                                 as DateCreated,	
                                                  ohpc.date_changed                                                 as DateLastModified,	
-                                                 ohpc.voided                                                       as voided
-                                                  
+                                                 convert(ohpc.voided   , SIGNED)                                   as Voided                                                  
                                                   FROM dwapi_etl.etl_hts_test t	
                                                  INNER JOIN kenyaemr_hiv_testing_patient_contact ohpc ON ohpc.patient_related_to = t.patient_id	
                                                  LEFT JOIN location_attribute SC ON SC.location_id = t.encounter_location AND SC.attribute_type_id = 1	
@@ -2462,7 +2461,7 @@ pns.MaritalStatus
                                           t.specific_reason_for_ineligibility                                         as SpecificReasonForIneligibility,	
                                           t.date_created                                                              as DateCreated,
                                           t.date_last_modified                                                        as DateLastModified,
-                                            t.voided                                                                    as voided	
+                                            t.voided                                                                    as Voided	
                                         FROM dwapi_etl.etl_hts_eligibility_screening t	
                                         inner join dwapi_etl.etl_patient_demographics demographics on t.patient_id = demographics.patient_id	
                                         LEFT JOIN openmrs.location_attribute SC ON SC.location_id = t.location_id AND SC.attribute_type_id = 1	
@@ -5399,7 +5398,7 @@ UNION(
                                             ''                                                        AS Genitourinary,
                                             ci.date_created                                           as Date_Created,
                                             max(ci.date_last_modified)                                    as Date_Last_Modified,
-                         ci.voided as voided
+                         ci.voided as Voided
                   from dwapi_etl.etl_allergy_chronic_illness ci
                            left join (select e.patient_id, max(e.visit_date) as latest_enrolment_date,uuid
                                       from dwapi_etl.etl_hiv_enrollment e
@@ -5485,7 +5484,7 @@ UNION(
                             d.Outcome_date                                                             as DateOfDiscontinuation,
                             v.date_created                                                             as Date_Created,
                             v.date_last_modified                                                       as Date_Last_Modified,
-v.voided                                                                                   as voided
+                            v.voided                                            as Voided
 from dwapi_etl.etl_patient_hiv_followup v
 inner join dwapi_etl.etl_patient_demographics de on v.patient_id = de.patient_id
 inner join (select a.patient_id
@@ -5558,7 +5557,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                                                     (case v.PHQ_9_rating when 1115 then 'Depression unlikely' when 157790 then 'Mild depression'
                                                                                                                                                         when 134011 then 'Moderate depression' when 134017 then 'Moderate severe depression' when 126627 then 'Severe depression' end) as PHQ_9_rating,
                                                                     v.date_created as Date_Created, v.date_last_modified as Date_Last_Modified,
-                                v.voided                                       as voided
+                                v.voided                                       as Voided
                          from dwapi_etl.etl_depression_screening v
                                   inner join dwapi_etl.etl_patient_demographics de on v.patient_id = de.patient_id
                                   inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date
@@ -5615,7 +5614,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                 else '' end)                                       as PnsApproach,
                            v.date_created                                          as Date_Created,
                            v.date_last_modified                                    as Date_Last_Modified,
-                                                v.voided                                                as voided
+                                                v.voided                                                as Voided
                     from dwapi_etl.etl_patient_contact v
                              inner join dwapi_etl.etl_patient_demographics de on v.patient_related_to = de.patient_id
                              inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date
@@ -5646,7 +5645,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                             (case v.ipv_relationship when 1582 then 'Yes' when 1066 then 'No' end) as IPVRelationship,
                             v.date_created                                                         as Date_Created,
                             v.date_last_modified                                                   as Date_Last_Modified,
-             v.voided                                                               as voided
+             v.voided                                                               as Voided
       from dwapi_etl.etl_gbv_screening v
                inner join dwapi_etl.etl_patient_demographics de on v.patient_id = de.patient_id
                inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date
@@ -5679,7 +5678,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                                v.patient_adherence_improved as EACReviewImprovement,v.patient_doses_missed as EACReviewMissedDoses,v.review_and_barriers_to_adherence as EACReviewStrategy,v.other_referrals as EACReferral,
                                                v.appointments_honoured as EACReferralApp,v.referral_experience as EACReferralExperience,v.home_visit_benefit as EACHomevisit,v.adherence_plan as EACAdherencePlan,v.next_appointment_date as EACFollowupDate,
                                                v.date_created as Date_Created, v.date_last_modified as Date_Last_Modified,	
-                                       v.voided                                    as voided	
+                                       v.voided                                    as Voided	
                                        from dwapi_etl.etl_enhanced_adherence v	
                                        inner join dwapi_etl.etl_patient_demographics de on v.patient_id = de.patient_id	
                                        inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date	
@@ -5706,7 +5705,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                                                      when 163195 then 'Current heavy tobacco smoker' when 163200 then 'Unknown if ever smoked' end) as Smoking,
                                            (case v.drugs_use_frequency when 1090 then 'Never' when 1091 then 'Monthly or less' when 1092 then '2 to 4 times a month' when 1093 then '2 to 3 times a week' when 1094 then '4 or More Times a Week' end) as DrugUse,
                                            v.date_created as Date_Created, v.date_last_modified as Date_Last_Modified,
-                                          v.voided                                            as voided
+                                          v.voided                                            as Voided
                                    from dwapi_etl.etl_alcohol_drug_abuse_screening v
                                             inner join dwapi_etl.etl_patient_demographics de on v.patient_id = de.patient_id
                                             inner join (select e.patient_id, max(e.visit_date) as latest_enrolment_date
@@ -5729,7 +5728,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                               NULLIF(if(v.ovc_preventive_program='Yes','OVC Preventive',''),'')) as ProgramModel,
                                               d.attrition_reason as OVCExitReason, d.Outcome_date as ExitDate, 
                                               v.date_created as Date_Created, greatest(v.date_last_modified,v.date_last_modified) as Date_Last_Modified,
-                                   v.voided                                                                          as voided
+                                   v.voided                                                                          as Voided
                             from dwapi_etl.etl_ovc_enrolment v
                                      inner join dwapi_etl.etl_patient_demographics de on v.patient_id = de.patient_id
                                      left join (SELECT r.person_b, r.person_a, t.a_is_to_b, t.b_is_to_a
@@ -5760,7 +5759,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                     ,NULLIF(if(a.transition_to_adult_care='Yes','OTZ Transition to Adult care',''),''),NULLIF(if(a.treatment_literacy='Yes','OTZ Treatment literacy',''),''),NULLIF(if(a.srh='Yes','OTZ SRH',''),''),NULLIF(if(a.leadership='Yes','Leadership',''),''),
                                             NULLIF(if(a.beyond_third_ninety='Yes','OTZ Beyond the 3rd 90',null),'')) as ModulesCompletedToday,a.attended_support_group as SupportGroupInvolvement,
                                     a.remarks as Remarks,d.attrition_reason as TransitionAttritionReason, d.Outcome_date as OutcomeDate, a.date_created as Date_Created, 
-                                    greatest(NULLIF(a.date_last_modified,'0000-00-00'),NULLIF(a.date_last_modified,'0000-00-00')) as Date_Last_Modified, a.voided                                                       as voided
+                                    greatest(NULLIF(a.date_last_modified,'0000-00-00'),NULLIF(a.date_last_modified,'0000-00-00')) as Date_Last_Modified, a.voided                                                       as Voided
                             from dwapi_etl.etl_otz_activity a
                                      inner join dwapi_etl.etl_patient_demographics de on a.patient_id = de.patient_id
                                      inner join (select e.patient_id,
@@ -5859,7 +5858,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                    (case e.in_school when 1 then 'Yes' when 2 then 'No' end)       as Inschool,
                                    d.date_created                                                  as Date_Created,
                                    d.date_last_modified                                            as Date_Last_Modified,
-                                  d.voided                                                             as voided	
+                                  d.voided                                                             as Voided	
          from dwapi_etl.etl_patient_demographics d	
          left join (select m.patient_id,	
          min(date(m.visit_date))                                  as mch_enrolment_date,	
@@ -5968,7 +5967,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                            coalesce(m.status_in_mnch, c.status_in_cwc)                                  as StatusAtMnch,
                                             m.date_created                                                               as Date_Created,	
                                            m.date_last_modified                                                         as Date_Last_Modified,	
-                                          if(m.patient_id is not null, m.mvoided, if(c.patient_id is not null, cvoided, null)) as voided	
+                                          if(m.patient_id is not null, m.mvoided, if(c.patient_id is not null, cvoided, null)) as Voided	
                                    from dwapi_etl.etl_patient_demographics d	
                                             left join (select m.patient_id,	
                                                               m.uuid                  as muuid,	
@@ -6055,7 +6054,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                            de.last_regimen_line                                                                as LastRegimenLine,
                                            de.Date_Created                                                                       as Date_Created,
                                            de.Date_Last_Modified                                                                 as Date_Last_Modified,
-                                          de.voided                                                                             as voided
+                                          de.voided                                                                             as Voided
                                           from dwapi_etl.etl_patient_demographics d	
                      left join (select m.patient_id,	
                      m.uuid,	
@@ -6091,7 +6090,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                      mid(max(concat(de.date_started, de.regimen_line)), 11) as last_regimen_line,	
                      de.date_created                                        as Date_Created,	
                      de.date_last_modified                                  as Date_Last_Modified,	
-                     de.voided as voided
+                     de.voided as Voided
                      from dwapi_etl.etl_drug_event de where de.program = 'HIV'	
                      group by de.patient_id) de on d.patient_id = de.patient_id	
                      left join (select p.patient_id,	
@@ -6487,7 +6486,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                            GREATEST(COALESCE(l.date_last_modified, e.date_last_modified, c.date_last_modified),
                                                                                COALESCE(l.date_last_modified, e.date_last_modified,
                                                c.date_last_modified))                                       as Date_Last_Modified,
-                                                l.voided                                                                as voided	
+                                                l.voided                                                                as Voided	
                   from dwapi_etl.etl_patient_demographics d	
                   join dwapi_etl.etl_mchs_delivery l on d.patient_id = l.patient_id	
                   left join dwapi_etl.etl_mchs_discharge c on d.patient_id = c.patient_id	
@@ -6696,7 +6695,7 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                                                                        p.clinical_notes                                                                as ClinicalNotes,
                                                                        p.date_created                                                                     Date_Created,
                                                                        p.date_last_modified                                                            as Date_Last_Modified,
-                                                                        p.voided                                                                        as voided
+                                                                        p.voided                                                                        as Voided
                                                                from dwapi_etl.etl_patient_demographics d
                                                                            inner join dwapi_etl.etl_mch_postnatal_visit p on d.patient_id = p.patient_id
                                                                            inner join (select e.patient_id, mid(max(concat(e.visit_date, e.hiv_status)), 11) as hiv_status
@@ -6757,10 +6756,10 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
                             'KenyaEMR'          as Emr,
                             'Kenya HMIS II'     as Project,
                             i.FacilityName      as FacilityName,
-                            0 as FacilityId,
+                            0                   as FacilityId,
                             r.date_created     as Date_Created,
-                              r.date_changed     as Date_Last_Modified,
-                                    r.voided           as voided
+                            r.date_changed     as Date_Last_Modified,
+                            convert(r.voided, SIGNED)        as Voided
 from dwapi_etl.etl_patient_demographics d
 inner join (select r.person_a as mother,
         r.uuid,
@@ -6863,7 +6862,7 @@ join kenyaemr_etl.etl_default_facility_info i"|TempMotherBabyPairExtract|0|Mothe
                             e.nvp_during_bf           as NVP,
                             e.breast_feeding          as BreastFeeding,
                             e.referred_from           as ReferredFrom,
-                                e.voided                  as voided
+                                e.voided                  as Voided
     from kenyaemr_etl.etl_patient_demographics d
                inner join (select e.patient_id                                                             as patient_id,
              e.uuid                                                                   as uuid,
@@ -6945,7 +6944,7 @@ join kenyaemr_etl.etl_default_facility_info i"|TempMotherBabyPairExtract|0|Mothe
                                md.parent_pid as parent_pid,
                                e.date_created                                                           as Date_Created,	
                                e.date_last_modified                                                     as Date_Last_Modified,
-                                e.voided                                                                 as voided
+                                e.voided                                                                 as Voided
             from dwapi_etl.etl_hei_enrollment e	
                                   left join (select d.patient_id as parent_pid, d.unique_patient_no as parent_ccc	
                                   from dwapi_etl.etl_patient_demographics d) md	
@@ -7030,7 +7029,7 @@ join kenyaemr_etl.etl_default_facility_info i"|TempMotherBabyPairExtract|0|Mothe
                                                                                                                    v.appointment_date     as NextAppointment,
                                                                                                                    v.dna_pcr              as dnapcr,
                                                                                                                    v.dna_pcr_date         as dnapcrdate,
-                                                                                          						v.voided               as voided	
+                                                                                          						v.voided               as Voided	
                                                                                           from dwapi_etl.etl_patient_demographics d	
                                                                                           inner join (select v.patient_id,	
                                                                                           v.uuid                                                                  as uuid,	
@@ -7122,7 +7121,7 @@ join kenyaemr_etl.etl_default_facility_info i"|TempMotherBabyPairExtract|0|Mothe
                                                                                           i.fully_immunized                                                       as FullyImmunizedChild,	
                                                                                           v.date_created                                                          as Date_Created,	
                                                                                           v.date_last_modified                                                    as Date_Last_Modified,	
-                                                                                          v.voided                                                                as voided	
+                                                                                          v.voided                                                                as Voided	
                                                                                           from dwapi_etl.etl_hei_follow_up_visit v	
                                                                                           left join dwapi_etl.etl_patient_triage t	
                                                                                           on v.visit_date = t.visit_date and v.patient_id = t.patient_id	
@@ -7156,7 +7155,7 @@ join kenyaemr_etl.etl_default_facility_info i"|TempMotherBabyPairExtract|0|Mothe
                                                                                      											m.exit_reason                as HEIExitCritearia,
                                                                                      											m.Date_Created               as Date_Created,	
                                                                                                                                  m.Date_Last_Modified         as Date_Last_Modified,
-                                                                                    											 m.voided                     as voided
+                                                                                    											 m.voided                     as Voided
                                                                                      				from dwapi_etl.etl_patient_demographics d
                                                                                      											inner join (select m.patient_id,
                                                                                     											m.uuid                                            as uuid,
@@ -7170,7 +7169,7 @@ join kenyaemr_etl.etl_default_facility_info i"|TempMotherBabyPairExtract|0|Mothe
                                                                                                                                          when 138571 then 'Confirmed HIV Positive' end as exit_reason,
                                                                                                                                  m.date_created as                                  Date_Created,	
                                                                                                                                  m.date_last_modified as                            Date_Last_Modified,	
-                                                                                    											m.voided                                          as voided
+                                                                                    											m.voided                                          as Voided
                                                                                                      from dwapi_etl.etl_hei_enrollment m)m on d.patient_id = m.patient_id
                                                                                      											left join (select t.patient_id,
                                                                                      																													case t.test_result when 664 then 'Negative' when 703 then 'Positive' end as 1st_DNA_PCR_result,
@@ -7251,7 +7250,7 @@ join kenyaemr_etl.etl_default_facility_info i"|TempMotherBabyPairExtract|0|Mothe
                                                             l.order_reason  as LabReason,
                                                             l.date_created       as Date_Created,	
                                                             l.date_last_modified as Date_Last_Modified,	
-                                                            l.voided             as voided	
+                                                            l.voided             as Voided	
                                         from dwapi_etl.etl_patient_demographics d	
                                     inner join (select e.patient_id from dwapi_etl.etl_hiv_enrollment e) e on d.patient_id = e.patient_id	
                                     inner join (select m.patient_id from dwapi_etl.etl_mch_enrollment m) m on d.patient_id = m.patient_id	
@@ -7348,7 +7347,7 @@ join kenyaemr_etl.etl_default_facility_info i"|TempMotherBabyPairExtract|0|Mothe
                                                                     case z.fully_immunized when 1065 then 'Yes' when 1066 then 'No' end as FullyImmunizedChild,
                                                                     z.date_created                                                      as Date_Created,
                                                                     z.date_last_modified                                                as Date_Last_Modified,
-                                                                  z.voided as voided	
+                                                                  z.voided as Voided	
                                                         from dwapi_etl.etl_patient_demographics d	
                                                         inner join dwapi_etl.etl_hei_immunization z on d.patient_id = z.patient_id	
                                                         join kenyaemr_etl.etl_default_facility_info i	
@@ -7842,7 +7841,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                           a.date_last_modified                                                       as Date_Last_Modified,
                           '' as TracingFinalOutcome,
                           '' as CauseOfDeath,
-                         a.voided                                                                   as voided
+                         a.voided                                                                   as Voided
                   from dwapi_etl.etl_patient_demographics d
                            join dwapi_etl.etl_covid19_assessment a on d.patient_id = a.patient_id
                            join kenyaemr_etl.etl_default_facility_info i
@@ -7887,7 +7886,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                                 date(f.booking_date)                                                   as BookingDate,
                                                 f.date_created                                                         as Date_Created,
                                                 f.date_last_modified                                                   as Date_Last_Modified,
-                     f.voided                                                               as voided
+                     f.voided                                                               as Voided
               from dwapi_etl.etl_patient_demographics d
                        join dwapi_etl.etl_ccc_defaulter_tracing f on d.patient_id = f.patient_id
                        join kenyaemr_etl.etl_default_facility_info i
@@ -7915,7 +7914,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                     date(s.next_appointment_date)       as NextAppointmentDate,
                                     s.date_created                      as Date_Created,
                                     s.date_last_modified                as Date_Last_Modified,	
-              s.voided                            as voided	
+              s.voided                            as Voided	
               from dwapi_etl.etl_patient_demographics d	
               join dwapi_etl.etl_cervical_cancer_screening s on d.patient_id = s.patient_id	
               join kenyaemr_etl.etl_default_facility_info i	
@@ -7934,7 +7933,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                                 r.evaluation_date    as RiskEvaluationDate,
                                                 r.date_created       as Date_Created,
                                                 r.date_changed       as Date_Last_Modified,	
-                                       r.voided             as voided	
+                                                convert(r.voided, SIGNED)              as Voided	
                                 FROM openmrs.kenyaemr_ml_patient_risk_score r	
                                          inner join dwapi_etl.etl_patient_demographics d on d.patient_id = r.patient_id	
                                          join kenyaemr_etl.etl_default_facility_info i"|dwhstage|0|IITRiskScoresExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
@@ -7980,7 +7979,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                           e.prep_last_date                                              as DateLastUsedPrev,
                                           e.date_created 												as Date_Created,
                                           e.date_last_modified 											as Date_Last_Modified,
-                                            e.voided                                                          as voided
+                                            e.voided                                                          as Voided
                                           from dwapi_etl.etl_prep_enrolment e
                                           left join dwapi_etl.etl_person_address pa on e.patient_id = pa.patient_id
                                           inner join dwapi_etl.etl_patient_demographics d on e.patient_id = d.patient_id
@@ -8027,7 +8026,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                         h.children_with_hiv_positive_partner                                         as NumberofchildrenWithPartner,
                                         h.date_created 																as Date_Created,
                                         h.date_last_modified 														as Date_Last_Modified,
-                                        h.voided                                                                     as voided
+                                        h.voided                                                                     as Voided
                             from dwapi_etl.etl_prep_behaviour_risk_assessment h
                                                 inner join dwapi_etl.etl_prep_enrolment e on h.patient_id = e.patient_id
                                                 inner join dwapi_etl.etl_patient_demographics d on e.patient_id = d.patient_id
@@ -8093,7 +8092,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                case f.hepatitisC_treated when 1065 then 'Yes' when 1066 then 'No' when 1788 then 'Referred' end as TreatedForHepC,
                                f.date_created 								as Date_Created,
                                f.date_last_modified 			            as Date_Last_Modified,
-                                f.voided                                    as voided
+                                f.voided                                    as Voided
                                	from dwapi_etl.etl_prep_followup f	
                                left join dwapi_etl.etl_patient_triage t on f.patient_id = t.patient_id and f.visit_date = t.visit_date	
                                inner join dwapi_etl.etl_prep_enrolment e on f.patient_id = e.patient_id	
@@ -8123,7 +8122,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                             'Kenya HMIS II' as Project,
                                             l.date_created as Date_Created,
                                             GREATEST(COALESCE(l.date_last_modified, d.date_last_modified), COALESCE(d.date_last_modified, l.date_last_modified)) as Date_Last_Modified,
-                                            l.voided                                                                         as voided
+                                            l.voided                                                                         as Voided
                           from dwapi_etl.etl_laboratory_extract l
                           join dwapi_etl.etl_patient_demographics d on d.patient_id=l.patient_id
                           join concept_name cn on cn.concept_id=l.lab_test and cn.concept_name_type='FULLY_SPECIFIED'and cn.locale='en'
@@ -8146,7 +8145,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                             f.months_prescribed_regimen as Duration,
                                             f.date_created              as Date_Created,
                                             f.date_last_modified        as Date_Last_Modified,
-                                            f.voided                    as voided
+                                            f.voided                    as Voided
                           from dwapi_etl.etl_prep_followup f
                                                     join dwapi_etl.etl_patient_demographics d on d.patient_id = f.patient_id
                                                     join kenyaemr_etl.etl_default_facility_info i
@@ -8246,7 +8245,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                     ''                                                           as AdverseEventRegimen,
                                     a.date_created                                               as Date_Created,
                                     a.date_last_modified                                         as Date_Last_Modified,
-                                        a.voided                                                     as voided
+                                        a.voided                                                     as Voided
                         from dwapi_etl.etl_adverse_events a
                                             left join (select pe.patient_id, max(pe.visit_date) as prep_latest_enrolment_date
                                                                                         from dwapi_etl.etl_prep_enrolment pe
@@ -8272,7 +8271,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                                                             CAST(f.last_prep_dose_date AS DATE) as DateOfLastPrepDose,
                                                                                         f.date_created as DateCreated,
                                                                                         f.date_last_modified as DateModified,
-                                                                                            f.voided                            as voided
+                                                                                            f.voided                            as Voided
                                                             from dwapi_etl.etl_prep_discontinuation f
                                                                 join dwapi_etl.etl_patient_demographics d on d.patient_id = f.patient_id
                                 join kenyaemr_etl.etl_default_facility_info i"|TempPrepCareTerminationExtract|0|PrepCareTerminationExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
