@@ -23,6 +23,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Serilog;
+using X.PagedList;
 
 namespace Dwapi.Controller
 {
@@ -40,11 +41,11 @@ namespace Dwapi.Controller
         private readonly IIndicatorExtractRepository _indicatorExtractRepository;
         private readonly IDiffLogRepository _diffLogRepository;
         private readonly ICTExportService _ctExportService;
-
+        private readonly IAppMetricRepository _appMetricRepository;
 
         private readonly string _version;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository, ICTExportService ctExportService)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository, ICTExportService ctExportService, IAppMetricRepository appMetricRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -57,6 +58,7 @@ namespace Dwapi.Controller
             _ctExportService = ctExportService;
             Startup.HubContext= _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
+            _appMetricRepository = appMetricRepository;
         }
 
         [HttpPost("extract")]
@@ -173,6 +175,15 @@ namespace Dwapi.Controller
 
             try
             {
+                // check if loaded data today
+                DateTime lastLoadDate =  (DateTime)_appMetricRepository.GetCTLastLoadedDate();
+                DateTime now = DateTime.Now;
+                var daysBetween = (now - lastLoadDate).TotalDays;
+                if (daysBetween > 1)
+                {
+                    throw new Exception($"The last time CT was loaded was {Math.Floor(daysBetween)} days ago. Kindly load first before sending to provide up to date data to NDWH.");
+                }
+
                 // check stale
                 if (_indicatorExtractRepository.CheckIfStale())
                 {
@@ -211,6 +222,15 @@ namespace Dwapi.Controller
 
             try
             {
+                // // check if loaded data today
+                DateTime lastLoadDate =  (DateTime)_appMetricRepository.GetCTLastLoadedDate();
+                DateTime now = DateTime.Now;
+                var daysBetween = (now - lastLoadDate).TotalDays;
+                if (daysBetween > 1)
+                {
+                    throw new Exception($"The last time CT was loaded was {Math.Floor(daysBetween)} days ago. Kindly load first before sending to provide up to date data to NDWH.");
+                }
+
                 // check stale
                  if (_indicatorExtractRepository.CheckIfStale())
                  {

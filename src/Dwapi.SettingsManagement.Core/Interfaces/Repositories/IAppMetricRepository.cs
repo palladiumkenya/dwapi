@@ -14,5 +14,7 @@ namespace Dwapi.SettingsManagement.Core.Interfaces.Repositories
         Guid GetSession(string notificationName);
         IEnumerable<ExtractCargoDto> LoadCargo();
         IEnumerable<ExtractCargoDto> LoadDetainedCargo();
+        DateTime? GetCTLastLoadedDate();
+
     }
 }
