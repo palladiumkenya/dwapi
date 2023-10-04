@@ -188,6 +188,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                     o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientBaselinesExtract.m6CD4))))
                 .ForMember(x => x.m6CD4Date,
                     o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientBaselinesExtract.m6CD4Date))))
+                .ForMember(x => x.eWHODate,
+                    o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientBaselinesExtract.eWHODate))))
                 .ForMember(x => x.Date_Created,
                     o => o.MapFrom(
                         s => s.GetOptionalNullDateOrDefault(nameof(TempPatientBaselinesExtract.Date_Created))))

@@ -530,7 +530,7 @@ FROM
                                       when 1206 then 3	
                                       when 1207 then 4	
                                       end as ewho,
-                                        coalesce(p_dates.ewho_date, left(min(concat(date(fup.visit_date), fup.who_stage)), 10))    as ewhodate,
+                                        coalesce(p_dates.ewho_date, left(min(concat(date(fup.visit_date), fup.who_stage)), 10))    as eWHODate,
                                      '' as bCD4,
                                      NULL as bCD4Date,
                                      '' as bWHO,
