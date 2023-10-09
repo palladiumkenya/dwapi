@@ -16,5 +16,7 @@ namespace Dwapi.SharedKernel.Interfaces
         bool CheckDiffSupport(DbProtocol protocol);
         string RefreshEtlTtables(DbProtocol protocol);
         DateTime? GetEtlTtablesRefreshedDate(DbProtocol protocol);
+        void ChangeSQLmode(DbProtocol protocol);
+
     }
 }
