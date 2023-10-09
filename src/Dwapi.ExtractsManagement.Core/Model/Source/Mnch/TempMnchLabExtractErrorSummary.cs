@@ -17,6 +17,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
         public string TestName { get; set; }
         public string TestResult { get; set; }
         public string LabReason { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

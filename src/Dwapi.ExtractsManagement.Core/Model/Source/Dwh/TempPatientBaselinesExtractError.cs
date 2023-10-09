@@ -30,6 +30,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public int? m6CD4 { get; set; }
         public DateTime? m6CD4Date { get; set; }
         public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
 
         [NotMapped]
         public virtual ICollection<TempPatientBaselinesExtractErrorSummary> TempPatientBaselinesExtractErrorSummaries { get; set; } = new List<TempPatientBaselinesExtractErrorSummary>();

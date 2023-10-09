@@ -72,5 +72,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PaedsDisclosure { get; set; }
         public int? ZScoreAbsolute { get; set; }
         public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
     }
 }

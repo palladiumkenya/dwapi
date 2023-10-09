@@ -44,6 +44,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string NUPI { get; set; }
         public DateTime? TransferInDate { get; set; }
         public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
 
         [NotMapped]
         public virtual ICollection<TempPatientExtractErrorSummary> TempPatientExtractErrorSummaries { get; set; } = new List<TempPatientExtractErrorSummary>();

@@ -12,6 +12,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string RiskFactors  { get; set; }
         public string RiskDescription  { get; set; }
         public DateTime? RiskEvaluationDate  { get; set; }
+        public bool? Voided { get; set; }
         public DateTime? Date_Created  { get; set; }
         public DateTime? Date_Last_Modified  { get; set; }
     }

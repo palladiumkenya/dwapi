@@ -444,6 +444,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'htsNumber', header: 'Hts Number' },
             { field: 'doB', header: 'Dob' },
             { field: 'gender', header: 'Gender' },
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             { field: 'maritalStatus', header: 'Marital Status' },
             { field: 'htsRecencyId', header: 'Hts Recency Id' },
             { field: 'occupation', header: 'Occupation' },
@@ -465,6 +468,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'patientPk', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
             { field: 'testDate', header: 'Test Date' },
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             { field: 'referredForServices', header: 'ReferredForServices' },
             { field: 'referredServices', header: 'ReferredServices' },
             { field: 'otherReferredServices', header: 'OtherReferredServices' },
@@ -489,6 +495,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             //{ field: 'Summary', header: 'Summary' },
             { field: 'patientPk', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             { field: 'datePrefferedToBeEnrolled', header: 'Date Preffered To Be Enrolled' },
             { field: 'facilityReferredTo', header: 'Facility Referred To' },
             { field: 'handedOverTo', header: 'Handed Over To' },
@@ -506,6 +515,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             //{ field: 'Summary', header: 'Summary' },
             { field: 'patientPk', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             { field: 'syphilisResult', header: 'Syphilis Result' },
             { field: 'testKitName1', header: 'Test Kit Name 1' },
             { field: 'testKitLotNumber1', header: 'Test Kit Lot Number 1' },
@@ -523,6 +535,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             //{ field: 'Summary', header: 'Summary' },
             { field: 'patientPk', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             { field: 'tracingType', header: 'Tracing Type' },
             { field: 'tracingDate', header: 'Tracing Date' },
             { field: 'tracingOutcome', header: 'Tracing Outcome' },
@@ -534,6 +549,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             //{ field: 'Summary', header: 'Summary' },
             { field: 'patientPk', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             { field: 'traceType', header: 'Trace Type' },
             { field: 'traceDate', header: 'Trace Date' },
             { field: 'traceOutcome', header: 'Trace Outcome' },
@@ -547,6 +565,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             //{ field: 'Summary', header: 'Summary' },
             { field: 'patientPk', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             { field: 'partnerPersonID', header: 'Partner Person ID' },
             { field: 'age', header: 'Age' },
             { field: 'sex', header: 'Sex' },
@@ -564,6 +585,9 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             //{ field: 'Summary', header: 'Summary' },
             { field: 'patientPk', header: 'PatientPK' },
             { field: 'htsNumber', header: 'Hts Number' },
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+
             { field: 'patientType', header: 'Patient Type' },
             { field: 'visitID', header: 'Visit ID' },
             { field: 'visitDate', header: 'Visit Date' },

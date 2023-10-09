@@ -454,13 +454,23 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.canSend=true;
                     this.canExport = true;
 
+                    // let exception = JSON.parse(e, (key, value) => {
+                    //     if (typeof value === 'string') {
+                    //         return value.toUpperCase();
+                    //     }
+                    //     return value;
+                    // });
+                    // console.log("e message ", exception);
+
+                    // console.log("ExceptionMessage ", e.ExceptionMessage);
+
                     if (e && e.ProgressEvent) {
 
                     } else {
                         this.errorMessage = [];
                         this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                         this.notifications = [];
-                        this.notifications.push({severity: 'error',summary: 'Error loading from EMR',detail: <any>e
+                        this.notifications.push({severity: 'error',summary: 'Error sending Smart Manifest',detail: <any>e
                         });
                     }
                     this.startedSending=false;

@@ -271,7 +271,7 @@ export class HtsConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 e => {
                     this.errorMessage = [];
                     this.errorMessage.push({ severity: 'error', summary: 'Error exporting ', detail: <any>e });
-                    
+
                 },
                 () => {
                     //  this.notifications.push({severity: 'success', summary: 'Manifest sent'});

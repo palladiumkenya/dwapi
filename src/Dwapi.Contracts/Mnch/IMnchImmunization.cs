@@ -34,6 +34,8 @@ namespace Dwapi.Contracts.Mnch
          DateTime? VitaminAAt2Years { get; set; }
          DateTime? VitaminAAt2To5Years { get; set; }
          string FullyImmunizedChild { get; set; }
+         string RecordUUID { get; set; }
+         bool? Voided { get; set; }
          DateTime? Date_Created { get; set; }
          DateTime? Date_Last_Modified { get; set; }
       

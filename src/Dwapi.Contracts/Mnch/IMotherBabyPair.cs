@@ -9,6 +9,8 @@ namespace Dwapi.Contracts.Mnch
         string BabyPatientMncHeiID { get; set; }
         string MotherPatientMncHeiID { get; set; }
         string PatientIDCCC { get; set; }
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

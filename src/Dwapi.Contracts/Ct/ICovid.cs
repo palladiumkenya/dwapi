@@ -40,6 +40,7 @@ namespace Dwapi.Contracts.Ct
         string COVID19TestResult { get; set; }
         string Sequence { get; set; }
         string RecordUUID { get; set; }
+         bool? Voided { get; set; }
 
     }
 }
