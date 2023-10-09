@@ -190,6 +190,22 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
             }
             
         }
+        
+        public void ChangeSQLmode(DbProtocol protocol)
+        {
+            var sourceConnection = GetConnection(protocol);
+            if (null == sourceConnection)
+                throw new Exception("Data connection not initialized");
+        
+            using (sourceConnection)
+            {
+                var sql = $@"SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+                sourceConnection.Query(sql);
+            }
+            
+        }
+        
+        
 
     }
 }
