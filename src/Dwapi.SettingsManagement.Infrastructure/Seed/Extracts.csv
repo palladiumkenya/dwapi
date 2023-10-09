@@ -5802,52 +5802,71 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                                 where program_name = 'OVC'
                                                 group by d.patient_id) d on d.patient_id = v.patient_id
                                      join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OvcExtract|18|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id as PatientPK,
-                                    a.uuid     as RecordUUID,
-                                    0 AS FacilityId,
-                                    s.siteCode as SiteCode,
-                                    de.unique_patient_no as PatientID,
-                                    'KenyaEMR' as Emr,
-                                    'Kenya HMIS II' as Project,s.FacilityName as FacilityName,
-                                    a.visit_id as VisitID,a.visit_date as VisitDate,e.OTZEnrollmentDate,e.TransferInStatus, e.ModulesPreviouslyCovered
-                                 ,concat_ws(',',NULLIF(if(a.orientation='Yes','OTZ Orientation',null),''),NULLIF(if(a.participation='Yes','OTZ Participation',''),''),NULLIF(if(a.making_decision_future='Yes','OTZ Making decisions for the future',''),'')
-                                    ,NULLIF(if(a.transition_to_adult_care='Yes','OTZ Transition to Adult care',''),''),NULLIF(if(a.treatment_literacy='Yes','OTZ Treatment literacy',''),''),NULLIF(if(a.srh='Yes','OTZ SRH',''),''),NULLIF(if(a.leadership='Yes','Leadership',''),''),
-                                            NULLIF(if(a.beyond_third_ninety='Yes','OTZ Beyond the 3rd 90',null),'')) as ModulesCompletedToday,a.attended_support_group as SupportGroupInvolvement,
-                                    a.remarks as Remarks,d.attrition_reason as TransitionAttritionReason, d.Outcome_date as OutcomeDate, a.date_created as Date_Created, 
-                                    greatest(NULLIF(a.date_last_modified,'0000-00-00'),NULLIF(a.date_last_modified,'0000-00-00')) as Date_Last_Modified, a.voided                                                       as Voided
-                            from dwapi_etl.etl_otz_activity a
-                                     inner join dwapi_etl.etl_patient_demographics de on a.patient_id = de.patient_id
-                                     inner join (select e.patient_id,
-                                                        greatest(max(e.visit_date), '0000-00-00')         as OTZEnrollmentDate,
-                                                        mid(max(concat(e.visit_date, e.transfer_in)), 11) as TransferInStatus,
-                                                        concat_ws(',', NULLIF(if(e.orientation = 'Yes', 'OTZ Orientation', null), ''),
-                                                                  NULLIF(if(e.participation = 'Yes', 'OTZ Participation', ''), ''), NULLIF(
-                                                                          if(e.making_decision_future = 'Yes',
-                                                                             'OTZ Making decisions for the future', ''), ''),
-                                                                  NULLIF(if(e.transition_to_adult_care = 'Yes', 'OTZ Transition to Adult care', ''),
-                                                                         ''),
-                                                                  NULLIF(if(e.treatment_literacy = 'Yes', 'OTZ Treatment literacy', ''), ''),
-                                                                  NULLIF(if(e.srh = 'Yes', 'OTZ SRH', ''), ''),
-                                                                  NULLIF(if(e.beyond_third_ninety = 'Yes', 'OTZ Beyond the 3rd 90', null),
-                                                                         ''))                             as ModulesPreviouslyCovered,
-                                                        e.date_created                                    as date_created,
-                                                        e.date_last_modified                              as date_last_modified
-                                                 from dwapi_etl.etl_otz_enrollment e
-                                                 group by e.patient_id) e on a.patient_id = e.patient_id
-                                     left join (select d.patient_id,
-                                                       coalesce(max(date(d.effective_discontinuation_date)), date(d.visit_date)) Outcome_date,
-                                                       (case mid(max(concat(date(d.visit_date), d.discontinuation_reason)), 11)
-                                                            when 5240 then 'LTFU'
-                                                            when 159492 then 'Transfer Out'
-                                                            when 160034 then 'Died'
-                                                            when 159836 then 'Opt out of OTZ'
-                                                            when 165363 then 'Transition to Adult Care' end) as                  attrition_reason,
-                                                       d.date_created,
-                                                       d.date_last_modified
-                                                from dwapi_etl.etl_patient_program_discontinuation d
-                                                where program_name = 'OTZ'
-                                                group by d.patient_id) d on d.patient_id = a.patient_id
-                                     join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OtzExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                   as PatientPK,
+                               a.uuid                                                         as uuid,
+                               0                                                              AS FacilityId,
+                               s.siteCode                                                     as SiteCode,
+                               de.unique_patient_no                                           as PatientID,
+                               'KenyaEMR'                                                     as Emr,
+                               'Kenya HMIS II'                                                as Project,
+                               s.FacilityName                                                 as FacilityName,
+                               a.visit_id                                                     as VisitID,
+                               a.visit_date                                                   as VisitDate,
+                               e.OTZEnrollmentDate,
+                               e.TransferInStatus,
+                               e.ModulesPreviouslyCovered,
+                               concat_ws(',', NULLIF(if(a.orientation = 'Yes', 'OTZ Orientation', null), ''),
+                                         NULLIF(if(a.participation = 'Yes', 'OTZ Participation', ''), ''),
+                                         NULLIF(if(a.making_decision_future = 'Yes', 'OTZ Making decisions for the future', ''), '')
+                                   , NULLIF(if(a.transition_to_adult_care = 'Yes', 'OTZ Transition to Adult care', ''), ''),
+                                         NULLIF(if(a.treatment_literacy = 'Yes', 'OTZ Treatment literacy', ''), ''),
+                                         NULLIF(if(a.srh = 'Yes', 'OTZ SRH', ''), ''), NULLIF(if(a.leadership = 'Yes', 'Leadership', ''), ''),
+                                         NULLIF(if(a.beyond_third_ninety = 'Yes', 'OTZ Beyond the 3rd 90', null),
+                                                ''))                                          as ModulesCompletedToday,
+                               a.attended_support_group                                       as SupportGroupInvolvement,
+                               a.remarks                                                      as Remarks,
+                               d.attrition_reason                                             as TransitionAttritionReason,
+                               d.Outcome_date                                                 as OutcomeDate,
+                               a.date_created                                                 as Date_Created,
+                               if(greatest(IFNULL(e.date_last_modified, '1900-01-01'), IFNULL(a.date_last_modified, '1900-01-01'),
+                                           IFNULL(d.date_last_modified, '1900-01-01')) = '1900-01-01',
+                                  NULL, greatest(IFNULL(e.date_last_modified, '1900-01-01'), IFNULL(a.date_last_modified, '1900-01-01'),
+                                                 IFNULL(d.date_last_modified, '1900-01-01'))) as Date_Last_Modified,
+                               a.voided                                                       as voided
+                        from dwapi_etl.etl_otz_activity a
+                                 inner join dwapi_etl.etl_patient_demographics de on a.patient_id = de.patient_id
+                                 inner join (select e.patient_id,
+                                                    greatest(max(e.visit_date), '1900-01-01')         as OTZEnrollmentDate,
+                                                    mid(max(concat(e.visit_date, e.transfer_in)), 11) as TransferInStatus,
+                                                    concat_ws(',', NULLIF(if(e.orientation = 'Yes', 'OTZ Orientation', null), ''),
+                                                              NULLIF(if(e.participation = 'Yes', 'OTZ Participation', ''), ''), NULLIF(
+                                                                      if(e.making_decision_future = 'Yes',
+                                                                         'OTZ Making decisions for the future', ''), ''),
+                                                              NULLIF(if(e.transition_to_adult_care = 'Yes', 'OTZ Transition to Adult care', ''),
+                                                                     ''),
+                                                              NULLIF(if(e.treatment_literacy = 'Yes', 'OTZ Treatment literacy', ''), ''),
+                                                              NULLIF(if(e.srh = 'Yes', 'OTZ SRH', ''), ''),
+                                                              NULLIF(if(e.beyond_third_ninety = 'Yes', 'OTZ Beyond the 3rd 90', null),
+                                                                     ''))                             as ModulesPreviouslyCovered,
+                                                    e.date_created                                    as date_created,
+                                                    e.date_last_modified                              as date_last_modified
+                                             from dwapi_etl.etl_otz_enrollment e
+                                             group by e.patient_id, visit_date, transfer_in, orientation, participation, making_decision_future, transition_to_adult_care,
+                                             treatment_literacy, srh, beyond_third_ninety, date_created, date_last_modified) e on a.patient_id = e.patient_id
+                                 left join (select d.patient_id,
+                                                   coalesce(max(date(d.effective_discontinuation_date)), date(d.visit_date)) Outcome_date,
+                                                   (case mid(max(concat(date(d.visit_date), d.discontinuation_reason)), 11)
+                                                        when 5240 then 'LTFU'
+                                                        when 159492 then 'Transfer Out'
+                                                        when 160034 then 'Died'
+                                                        when 159836 then 'Opt out of OTZ'
+                                                        when 165363 then 'Transition to Adult Care' end) as                  attrition_reason,
+                                                   d.date_created,
+                                                   d.date_last_modified
+                                            from dwapi_etl.etl_patient_program_discontinuation d
+                                            where program_name = 'OTZ'
+                                            group by d.patient_id, effective_discontinuation_date, visit_date, discontinuation_reason, date_created, date_last_modified ) d on d.patient_id = a.patient_id
+                                 join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OtzExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 7c2e4a14-8728-11eb-8dcd-0242ac130003|All Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_Extract"|dwhstage|1|PatientExtract|1|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 7c2e4c44-8728-11eb-8dcd-0242ac130003|ART Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_ART_EXTRACT"|dwhstage|0|PatientArtExtract|2|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
@@ -5977,114 +5996,121 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
          or r.person_a is not null	
          group by EncounterId"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651214-9db2-11eb-a8b3-0242ac130003|Mnch Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
-                                    if(m.patient_id is not null, m.muuid, if(c.patient_id is not null, c.cuuid, null))   RecordUUID,
-                                           i.siteCode                                                                   as SiteCode,
-                                           d.openmrs_id                                                                 as PatientMnchID,
-                                        # d.hei_no                                                                     as PatientHEI_ID,
-                                           'KenyaEMR'                                                                   as Emr,
-                                           'Kenya HMIS II'                                                              as Project,
-                                           i.FacilityName                                                               as FacilityName,
-                                           0 as FacilityId,
-                                           (case m.service_type
-                                              when 1622 then 'ANC'
-                                              when 164835 then 'Delivery'
-                                              when 1623 then 'PNC'
-                                              else '' end)                                                              as ServiceType,
-                                           coalesce(c.hei_enrolment_date, m.mch_enrollment_date)                        as EnrollmentDateAtMnch,
-                                           m.anc_number                                                                 as MnchNumber,
-                                           m.first_anc_visit                                                            as FirstVisitAnc,
-                                           m.parity                                                                     as Parity,
-                                           m.gravida                                                                    as Gravidae,
-                                           m.lmp                                                                        as LMP,
-                                           coalesce(m.edd, date_add(date_add(m.lmp, interval 7 day), interval 9 month)) as EDDFromLMP,
-                                           (case m.hiv_status_before_anc
-                                              when 664 then 'Negative'
-                                              when 703 then 'Positive'
-                                              when 1067 then 'Unknown'
-                                              else '' end)                                                              as HIVStatusBeforeANC,
-                                           m.test_date                                                                  as HIVTestDate,
-                                           (case m.partner_status
-                                              when 664 then 'Negative'
-                                              when 703 then 'Positive'
-                                              when 1067 then 'Unknown'
-                                              else '' end)                                                              as PartnerHIVStatus,
-                                           m.partner_test_date                                                          as PartnerHIVTestDate,
-                                           (case m.blood_group
-                                              when 690 then 'A POSITIVE'
-                                              when 692 then 'A NEGATIVE'
-                                              when 694 then 'B POSITIVE'
-                                              when 696 then 'B NEGATIVE'
-                                              when 699 then 'O POSITIVE'
-                                              when 701 then 'O NEGATIVE'
-                                              when 1230 then 'AB POSITIVE'
-                                              when 1231 then 'AB NEGATIVE'
-                                              else '' end)                                                              as BloodGroup,
-                                           coalesce(m.status_in_mnch, c.status_in_cwc)                                  as StatusAtMnch,
-                                            m.date_created                                                               as Date_Created,	
-                                           m.date_last_modified                                                         as Date_Last_Modified,	
-                                          if(m.patient_id is not null, m.mvoided, if(c.patient_id is not null, cvoided, null)) as Voided	
-                                   from dwapi_etl.etl_patient_demographics d	
-                                            left join (select m.patient_id,	
-                                                              m.uuid                  as muuid,	
-                                                              m.service_type          as service_type,	
-                                                              m.visit_date            as mch_enrollment_date,	
-                                                              m.anc_number            as anc_number,	
-                                                              m.first_anc_visit_date  as first_anc_visit,	
-                                                              m.parity                as parity,	
-                                                              m.gravida               as gravida,	
-                                                              m.lmp,	
-                                                              m.edd_ultrasound        as edd,
-                                                                                     m.hiv_status            as hiv_status_before_anc,	
-                                                              m.hiv_test_date         as test_date,	
-                                                              m.partner_hiv_status    as partner_status,	
-                                                              m.partner_hiv_test_date as partner_test_date,	
-                                                              m.blood_group           as blood_group,	
-                                                              p.status_in_prg         as status_in_mnch,	
-                                                              m.date_created          as date_created,	
-                                                              m.date_last_modified    as date_last_modified,	
-                                                              m.voided                as mvoided	
-                                                       from dwapi_etl.etl_mch_enrollment m	
-                                                                left join (select p.patient_id                                              as prg_patient,	
-                                                                                  p.date_enrolled                                           as date_enrolled,	
-                                                                                  if(p.date_completed is null, 'Active', (case d.discontinuation_reason	
-                                                                                                                              when 160035 then 'Completed'	
-                                                                                                                              when 159492
-                                                                                                                           then 'Transferred Out'	
-                                                                                                                              when 160034 then 'Died'	
-                                                                                                                              when 5240	
-                                                                                                                                  then 'Lost to Follow up'	
-                                                                                                                              else '' end)) as status_in_prg	
-                                                                           from dwapi_etl.etl_patient_program p	
-                                                                                    left join dwapi_etl.etl_patient_program_discontinuation d	
-                                                                                              on p.patient_id = d.patient_id and p.date_completed = date(d.visit_date)	
-                                                                           where p.program = 'MCH-Mother Services') p	
-                                                                          on m.patient_id = p.prg_patient and m.visit_date = p.date_enrolled	
-                                                       group by m.patient_id, m.visit_date) m on d.patient_id = m.patient_id	
-                                            left join (select c.patient_id,
-                                          c.uuid          as cuuid,	
-                                                              c.visit_date    as hei_enrolment_date,	
-                                                              p.status_in_prg as status_in_cwc,	
-                                                              c.voided        as cvoided	
-                                                       from dwapi_etl.etl_hei_enrollment c	
-                                                                left join (select p.patient_id          as prg_patient,	
-                                                                                  p.date_enrolled       as date_enrolled,	
-                                                                                  d.discontinuation_reason,	
-                                                                                  if(p.date_completed is null or p.date_completed = '', 'Active',	
-                                                                                     (case d.discontinuation_reason	
-                                                                                          when 1267 then 'Completed'	
-                                                                                          when 159492 then 'Transferred Out'	
-                                                                                          when 160034 then 'Died'	
-                                                                                          when 5240 then 'Lost to Follow up'	
-                                                                                          else '' end)) as status_in_prg	
-                                                                           from dwapi_etl.etl_patient_program p	
-                                                                                    left join dwapi_etl.etl_patient_program_discontinuation d	
-                                                                                              on p.patient_id = d.patient_id and p.date_completed = date(d.visit_date)	
-                                                                           where p.program = 'MCH-Child Services') p	
-                                                                          on c.patient_id = p.prg_patient and c.visit_date = p.date_enrolled	
-                                                       group by c.patient_id, c.visit_date) c on d.patient_id = c.patient_id	
-                                            join kenyaemr_etl.etl_default_facility_info i	
-                                   where m.patient_id is not null	
-                                      or c.patient_id is not null"|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                            if(m.patient_id is not null, m.muuid, if(c.patient_id is not null, c.cuuid, null))   RecordUUID,
+                                   i.siteCode                                                                   as SiteCode,
+                                   d.openmrs_id                                                                 as PatientMnchID,
+                                # d.hei_no                                                                     as PatientHEI_ID,
+                                   'KenyaEMR'                                                                   as Emr,
+                                   'Kenya HMIS II'                                                              as Project,
+                                   i.FacilityName                                                               as FacilityName,
+                                   0 as FacilityId,
+                                   (case m.service_type
+                                      when 1622 then 'ANC'
+                                      when 164835 then 'Delivery'
+                                      when 1623 then 'PNC'
+                                      else '' end)                                                              as ServiceType,
+                                   coalesce(c.hei_enrolment_date, m.mch_enrollment_date)                        as EnrollmentDateAtMnch,
+                                   m.anc_number                                                                 as MnchNumber,
+                                   m.first_anc_visit                                                            as FirstVisitAnc,
+                                   m.parity                                                                     as Parity,
+                                   m.gravida                                                                    as Gravidae,
+                                   m.lmp                                                                        as LMP,
+                                   coalesce(m.edd, date_add(date_add(m.lmp, interval 7 day), interval 9 month)) as EDDFromLMP,
+                                   (case m.hiv_status_before_anc
+                                      when 664 then 'Negative'
+                                      when 703 then 'Positive'
+                                      when 1067 then 'Unknown'
+                                      else '' end)                                                              as HIVStatusBeforeANC,
+                                   m.test_date                                                                  as HIVTestDate,
+                                   (case m.partner_status
+                                      when 664 then 'Negative'
+                                      when 703 then 'Positive'
+                                      when 1067 then 'Unknown'
+                                      else '' end)                                                              as PartnerHIVStatus,
+                                   m.partner_test_date                                                          as PartnerHIVTestDate,
+                                   (case m.blood_group
+                                      when 690 then 'A POSITIVE'
+                                      when 692 then 'A NEGATIVE'
+                                      when 694 then 'B POSITIVE'
+                                      when 696 then 'B NEGATIVE'
+                                      when 699 then 'O POSITIVE'
+                                      when 701 then 'O NEGATIVE'
+                                      when 1230 then 'AB POSITIVE'
+                                      when 1231 then 'AB NEGATIVE'
+                                      else '' end)                                                              as BloodGroup,
+                                   coalesce(m.status_in_mnch, c.status_in_cwc)                                  as StatusAtMnch,
+                                    m.date_created                                                               as Date_Created,	
+                                   m.date_last_modified                                                         as Date_Last_Modified,	
+                                  if(m.patient_id is not null, m.mvoided, if(c.patient_id is not null, cvoided, null)) as Voided	
+                           from dwapi_etl.etl_patient_demographics d	
+                                    left join (select m.patient_id,	
+m.uuid                  as muuid,	
+m.service_type          as service_type,	
+m.visit_date            as mch_enrollment_date,	
+m.anc_number            as anc_number,	
+m.first_anc_visit_date  as first_anc_visit,	
+m.parity                as parity,	
+m.gravida               as gravida,	
+m.lmp,	
+m.edd_ultrasound        as edd,
+                  m.hiv_status            as hiv_status_before_anc,	
+m.hiv_test_date         as test_date,	
+m.partner_hiv_status    as partner_status,	
+m.partner_hiv_test_date as partner_test_date,	
+m.blood_group           as blood_group,	
+p.status_in_prg         as status_in_mnch,	
+m.date_created          as date_created,	
+m.date_last_modified    as date_last_modified,	
+m.voided                as mvoided	
+from dwapi_etl.etl_mch_enrollment m	
+left join (select p.patient_id                                              as prg_patient,	
+               p.date_enrolled                                           as date_enrolled,	
+               if(p.date_completed is null, 'Active', 
+                  (case d.discontinuation_reason	
+                   when 160035 then 'Completed'	
+                   when 159492
+                then 'Transferred Out'	
+                   when 160034 then 'Died'	
+                   when 5240	
+                       then 'Lost to Follow up'	
+                   else '' end)) as status_in_prg	
+                    from dwapi_etl.etl_patient_program p	
+                             left join dwapi_etl.etl_patient_program_discontinuation d	
+                                       on p.patient_id = d.patient_id and p.date_completed = date(d.visit_date)	
+                    where p.program = 'MCH-Mother Services') p	
+                   on m.patient_id = p.prg_patient and m.visit_date = p.date_enrolled	
+group by m.patient_id, m.visit_date,date_enrolled, discontinuation_reason,
+uuid , service_type, visit_date , anc_number, first_anc_visit_date, parity , gravida, lmp, edd_ultrasound , hiv_status,
+hiv_test_date, partner_hiv_status, partner_hiv_test_date, blood_group, status_in_prg, date_created, date_last_modified,
+    voided) m on d.patient_id = m.patient_id	
+left join (
+select c.patient_id,
+       c.uuid          as cuuid,	
+       c.visit_date    as hei_enrolment_date,	
+       p.status_in_prg as status_in_cwc,	
+       c.voided        as cvoided	
+    from dwapi_etl.etl_hei_enrollment c	
+     left join (select p.patient_id          as prg_patient,	
+               p.date_enrolled       as date_enrolled,	
+               d.discontinuation_reason,	
+               if(p.date_completed is null, 'Active',	
+                  (case d.discontinuation_reason	
+                       when 1267 then 'Completed'	
+                       when 159492 then 'Transferred Out'	
+                       when 160034 then 'Died'	
+                       when 5240 then 'Lost to Follow up'	
+                       else '' end)) as status_in_prg	
+                        from dwapi_etl.etl_patient_program p	
+     left join dwapi_etl.etl_patient_program_discontinuation d	
+                           on p.patient_id = d.patient_id and p.date_completed = date(d.visit_date)	
+        where p.program = 'MCH-Child Services') p	
+       on c.patient_id = p.prg_patient and c.visit_date = p.date_enrolled	
+        group by c.patient_id, c.visit_date, date_enrolled, prg_patient, discontinuation_reason,
+         uuid, status_in_prg, voided
+        ) c on d.patient_id = c.patient_id	
+                                    join kenyaemr_etl.etl_default_facility_info i	
+                           where m.patient_id is not null	
+                              or c.patient_id is not null"|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651386-9db2-11eb-a8b3-0242ac130003|Mnch Art|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                        as PatientPK,
                         de.uuid                                                                               RecordUUID,
                                            i.siteCode                                                                          as SiteCode,
