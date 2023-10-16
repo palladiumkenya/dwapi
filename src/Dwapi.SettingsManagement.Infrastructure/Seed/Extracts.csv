@@ -5803,7 +5803,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                                 group by d.patient_id) d on d.patient_id = v.patient_id
                                      join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OvcExtract|18|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                   as PatientPK,
-                               a.uuid                                                         as uuid,
+                               a.uuid                                                         as RecordUUID,
                                0                                                              AS FacilityId,
                                s.siteCode                                                     as SiteCode,
                                de.unique_patient_no                                           as PatientID,
