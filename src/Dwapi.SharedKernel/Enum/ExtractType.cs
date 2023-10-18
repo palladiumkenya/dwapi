@@ -23,7 +23,8 @@
         DefaulterTracing,
         CervicalCancerScreening,
         IITRiskScores,
-
+        ArtFastTrack,
+        
         PatientMnch,
         AncVisit,
         CwcEnrollment,
@@ -43,6 +44,7 @@
         PrepCareTermination,
         PrepLab,
         PrepPharmacy,
-        PrepVisit
+        PrepVisit,
+        PrepMonthlyRefill
     }
 }

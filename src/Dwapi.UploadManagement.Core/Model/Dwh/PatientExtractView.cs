@@ -123,6 +123,7 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         [NotMapped] public ICollection<DefaulterTracingExtractView> DefaulterTracingExtracts { get; set; } = new List<DefaulterTracingExtractView>();
         [NotMapped] public ICollection<CervicalCancerScreeningExtractView> CervicalCancerScreeningExtracts { get; set; } = new List<CervicalCancerScreeningExtractView>();
         [NotMapped] public ICollection<IITRiskScoresExtractView> IITRiskScoresExtracts { get; set; } = new List<IITRiskScoresExtractView>();
+        [NotMapped] public ICollection<ArtFastTrackExtractView> ArtFastTrackExtracts { get; set; } = new List<ArtFastTrackExtractView>();
 
         [JsonIgnore]
         [NotMapped] public bool HasArt => null != PatientArtExtracts && PatientArtExtracts.Any();

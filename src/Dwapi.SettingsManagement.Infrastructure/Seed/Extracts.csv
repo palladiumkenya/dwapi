@@ -734,11 +734,34 @@ FROM
                                        when 664 then 'Negative'
                                        when 1300 then 'Equivocal'
                                        when 1304 then 'Poor Sample Quality' end),
-                                       if(lab_test = 1619, (case test_result
+                                       if(lab_test in (1619, 167452), (case test_result
                                        when 703 then 'Positive'
                                        when 664 then 'Negative'
                                        when 1067 then 'Unknown' end),
-                                       test_result)))))))))                                  as TestResult,
+                                       if(lab_test = 167459, (case test_result
+                                       when 163747 then 'Absent'
+                                       when 163748 then 'Present' end),
+                                       if(lab_test = 307, (case test_result
+                                       when 1364 then 'Three Plus'
+                                       when 1362 then 'One Plus'
+                                       when 1363 then 'Two Plus'
+                                       when 664 then 'Negative'
+                                       when 159985 then 'Scanty'
+                                       when 703 then 'Positive'
+                                       when 160008 then 'Contaminated specimen'
+                                       when 164369 then 'Results not available'
+                                       when 1118 then 'Not done' end),
+                                       if(lab_test = 162202, (case test_result
+                                       when 664 then 'NEGATIVE'
+                                       when 162203
+                                       then 'Mycobacterium tuberculosis detected with rifampin resistance'
+                                       when 162204
+                                       then 'Mycobacterium tuberculosis detected without rifampin resistance'
+                                       when 164104
+                                       then 'Mycobacterium tuberculosis detected with indeterminate rifampin resistance'
+                                       when 163611 then 'Invalid'
+                                       when 1138 then 'INDETERMINATE' end),
+                                       test_result))))))))))))                                  as TestResult,
                                        NULL                                                                             as EnrollmentTest,
                                        o.sample_type                                                                    as SampleType,
                                        'KenyaEMR'                                                                       as Emr,
@@ -7993,17 +8016,67 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                          inner join dwapi_etl.etl_patient_demographics d on d.patient_id = r.patient_id	
                                          join kenyaemr_etl.etl_default_facility_info i"|dwhstage|0|IITRiskScoresExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
-82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                  as PatientPK,
-                        e.uuid                                                            RecordUUID,
+A47EFA09-28D9-46EC-B2E6-C6244DBDA240|ART Fast Track|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                                           as PatientPK,
+                          s.siteCode                                                                             as SiteCode,
+                          de.unique_patient_no                                                                   as PatientID,
+                          a.uuid                                                                                 as RecordUUID,
+                          'KenyaEMR'                                                                             as Emr,
+                          'Kenya HMIS III'                                                                       as Project,
+                          s.FacilityName                                                                         as FacilityName,
+                          case a.art_refill_model
+                              when 1744 then 'Fast Track'
+                              when 1555 then 'Community ART Distribution - HCW Led'
+                              when 5618 then 'Community ART Distribution - Peer Led'
+                              when 1537 then 'Facility ART Distribution Group' end                               as ARTRefillModel,
+                          a.visit_date                                                                           as VisitDate,
+                          case a.ctx_dispensed when 162229 then 'Yes' end                                        as CTXDispensed,
+                          case a.dapsone_dispensed when 74250 then 'Yes' end                                     as DapsoneDispensed,
+                          case a.condoms_distributed
+                              when 1065 then 'Yes'
+                              when 1066 then 'No' end                                                            as CondomsDistributed,
+                          case a.oral_contraceptives_dispensed when 780 then 'Yes' end                           as OralContraceptivesDispensed,
+                          a.doses_missed                                                                         as MissedDoses,
+                          case a.fatigue when 162626 then 'Yes' when 1066 then 'No' end                          as Fatigue,
+                          case a.cough when 143264 then 'Yes' when 1066 then 'No' end                            as Cough,
+                          case a.fever when 140238 then 'Yes' when 1066 then 'No' end                            as Fever,
+                          case a.rash when 512 then 'Yes' when 1066 then 'No' end                                as Rash,
+                          case a.nausea_vomiting when 5978 then 'Yes' when 1066 then 'No' end                    as NauseaOrVomiting,
+                          case a.genital_sore_discharge
+                              when 135462 then 'Yes'
+                              when 1066 then 'No'
+                              else null end                                                                      as GenitalSoreOrDischarge,
+                          case a.diarrhea when 142412 then 'Yes' when 1066 then 'No' end                         as Diarrhea,
+                          a.other_specific_symptoms                                                              as OtherSymptoms,
+                          case a.pregnant when 1065 then 'Yes' when 1066 then 'No' when 1067 then 'Not sure' end as PregnancyStatus,
+                          case a.family_planning_status
+                              when 965 then 'On Family Planning'
+                              when 160652 then 'Not using Family Planning'
+                              when 1360 then 'Wants Family Planning'
+                              end                                                                                as FPStatus,
+                          a.family_planning_method                                                               as FPMethod,
+                          a.reason_not_on_family_planning                                                        as ReasonNotOnFP,
+                          a.referred_to_clinic                                                                   as ReferredToClinic,
+                          a.return_visit_date                                                                    as ReturnVisitDate,
+                          a.date_created,
+                          a.date_last_modified,
+                          a.voided
+                   from dwapi_etl.etl_art_fast_track a
+                            inner join dwapi_etl.etl_hiv_enrollment e on a.patient_id = e.patient_id
+                            inner join dwapi_etl.etl_patient_demographics de on a.patient_id = de.patient_id
+                            join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|ArtFastTrackExtract|24|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
+82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id 
+                                                 as PatientPK,
+                                        e.uuid                                                            RecordUUID,
                                           i.siteCode                                                    as SiteCode,
                                           i.facilityName                                                as FacilityName,
                                           d.unique_prep_number                                          as PrepNumber,
-                                          d.national_unique_patient_identifier                          as NUPI,
-                                          
+                                          d.national_unique_patient_identifier                          as NUPI,                                          
                                           d.openmrs_id                                                  as HtsNumber,
                                           'KenyaEMR'                                                    as Emr,
                                           'HMIS'                                                        as Project,
-                                          min(date(e.visit_date))                                       as PrepEnrollmentDate,
+                                          e.visit_date                                                 as PrepEnrollmentDate,
+                                          e.prep_type                                                   as TypeOfPrEP
                                           case d.gender when 'M' then 'Male' when 'F' then 'Female' end as Sex,
                                           d.dob                                                         as DateOfBirth,
                                           d.birth_place                                                 as CountyOfBirth,
@@ -8015,12 +8088,12 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                           e.patient_type                                                as ClientType,
                                           e.transfer_in_entry_point                                     as ReferralPoint,
                                           d.marital_status                                              as MaritalStatus,
-                                          case e.in_school when 1 then 'Yes' when 2 then 'No' else null end as Inschool,
+                                          case e.in_school when 1 then 'Yes' when 2 then 'No' end as Inschool,
                                           (case e.population_type
                                           when 164928 then 'General Population'
                                           when 6096 then 'Discordant Couple'
                                           when 164929 then 'Key Population'
-                                          else NULL end)                                           as PopulationType,
+                                           end)                                           as PopulationType,
                                           case e.kp_type when 162277 then 'People in prison and other closed settings' when 165100 then 'Transgender' 
                                           when 105 then 'PWID' when 160578 then 'MSM' when 165084 then 'MSW' when 160579 then 'FSW' end as KeyPopulationType,
                                           e.referred_from                                               as Refferedfrom,
@@ -8039,8 +8112,7 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                           left join dwapi_etl.etl_person_address pa on e.patient_id = pa.patient_id
                                           inner join dwapi_etl.etl_patient_demographics d on e.patient_id = d.patient_id
                                           inner join dwapi_etl.etl_prep_behaviour_risk_assessment r on e.patient_id = r.patient_id
-                                          join kenyaemr_etl.etl_default_facility_info i
-                      group by e.patient_id"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                                          join kenyaemr_etl.etl_default_facility_info i"|TempPatientPrepExtract|1|PatientPrepExtract|30|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 82651f02-9db2-11eb-a8b3-0242ac130003|Prep Behaviour Risk|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
                             h.uuid                                                                       RecordUUID,
@@ -8330,7 +8402,42 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                                             from dwapi_etl.etl_prep_discontinuation f
                                                                 join dwapi_etl.etl_patient_demographics d on d.patient_id = f.patient_id
                                 join kenyaemr_etl.etl_default_facility_info i"|TempPrepCareTerminationExtract|0|PrepCareTerminationExtract|35|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-2F8A4A81-FEFB-49BF-AB07-C9F529F6EA13|Client Registry Service|CRS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT dm.patient_id                                                     AS PatientPK,
+FC9AA929-73D8-4CA7-83EA-7882D6C18D16|Prep Monthly Refill|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id    as PatientPK,
+                           r.uuid                           as RecordUUID,
+                           i.siteCode                       as SiteCode,
+                           d.unique_prep_number             as PrepNumber,
+                           'KenyaEMR'                       as Emr,
+                           'Kenya HMIS III'                 as Project,
+                           r.visit_date                     as VisitDate,
+                           r.assessed_for_behavior_risk     as AssessedForBehaviorRisk,
+                           r.risk_for_hiv_positive_partner  as RiskForHIVPositivePartner,
+                           r.client_assessment              as ClientAssessment,
+                           r.adherence_assessment           as AdherenceAssessment,
+                           r.poor_adherence_reasons         as PoorAdherenceReasons,
+                           r.other_poor_adherence_reasons   as OtherPoorAdherenceReason,
+                           r.adherence_counselling_done     as AdherenceCounsellingDone,
+                           r.prep_status                    as PrepStatus,
+                           r.switching_option               as SwitchingOption,
+                           r.switching_date                 as SwitchingdDate,
+                           r.prep_type                      as PrepType,
+                           r.prescribed_prep_today          as PrescribedPrepToday,
+                           r.prescribed_regimen             as PrescribedRegimen,
+                           r.prescribed_regimen_months      as MonthsPrecribed,
+                           r.number_of_condoms_issued       as NumberOfCondomsIssued,
+                           r.prep_discontinue_reasons       as DiscontinueReason,
+                           r.prep_discontinue_other_reasons as OtherDiscontinueReason,
+                           r.appointment_given              as AppointmentGiven,
+                           r.next_appointment               as NextAppointment,
+                           r.remarks                        as Remarks,
+                           r.voided                         as Voided,
+                           r.date_created                   as Date_Created,
+                           r.date_last_modified             as Date_Last_Modified
+                    from dwapi_etl.etl_prep_monthly_refill r
+                             inner join dwapi_etl.etl_prep_enrolment e on r.patient_id = e.patient_id
+                             inner join dwapi_etl.etl_patient_demographics d on e.patient_id = d.patient_id
+                             join kenyaemr_etl.etl_default_facility_info i"|TempPrepMonthlyRefillExtract|0|PrepMonthlyRefillExtract|36|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
+2F8A4A81-FEFB-49BF-AB07-C9F529F6EA13|Client Registry Service|CRS|A6221856-0E85-11E8-BA89-0ED5F89F718B|"SELECT dm.patient_id  AS PatientPK,
 														dm.unique_patient_no                                              AS CCCNumber,
 														dm.national_id_no                                                 AS NationalId,
 														dm.passport_no                                                    AS Passport,

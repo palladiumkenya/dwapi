@@ -802,6 +802,81 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.SourceSysUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIITRiskScoresExtract.SourceSysUUID))));
 
             CreateMap<TempIITRiskScoresExtract, IITRiskScoresExtract>();
+            
+            
+            //Patient ART Fast TrackExtract
+            CreateMap<IDataRecord, TempArtFastTrackExtract>()
+                       .ForMember(x => x.PatientPK,
+                           o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempArtFastTrackExtract.PatientPK))))
+                       .ForMember(x => x.PatientID,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.PatientID))))
+                       .ForMember(x => x.FacilityId,
+                           o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempArtFastTrackExtract.FacilityId))))
+                       .ForMember(x => x.SiteCode,
+                           o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempArtFastTrackExtract.SiteCode))))
+                       .ForMember(x => x.Emr,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.Emr))))
+                       .ForMember(x => x.Project,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.Project))))
+                       .ForMember(x => x.FacilityName,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.FacilityName))))
+
+                       .ForMember(x => x.ARTRefillModel,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.ARTRefillModel))))
+                       .ForMember(x => x.VisitDate,
+                           o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempArtFastTrackExtract.VisitDate))))
+                       .ForMember(x => x.CTXDispensed,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.CTXDispensed))))
+                       .ForMember(x => x.DapsoneDispensed,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.DapsoneDispensed))))
+                       .ForMember(x => x.CondomsDistributed,
+                           o => o.MapFrom(s =>
+                               s.GetStringOrDefault(nameof(TempArtFastTrackExtract.CondomsDistributed))))
+                       .ForMember(x => x.OralContraceptivesDispensed,
+                           o => o.MapFrom(s =>
+                               s.GetStringOrDefault(nameof(TempArtFastTrackExtract.OralContraceptivesDispensed))))
+                       .ForMember(x => x.MissedDoses,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.MissedDoses))))
+                       .ForMember(x => x.Fatigue,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.Fatigue))))
+                       .ForMember(x => x.Cough,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.Cough))))
+                       .ForMember(x => x.Fever,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.Fever))))
+                       .ForMember(x => x.Rash,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.Rash))))
+                       .ForMember(x => x.NauseaOrVomiting,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.NauseaOrVomiting))))
+                       .ForMember(x => x.GenitalSoreOrDischarge,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.GenitalSoreOrDischarge))))
+                       .ForMember(x => x.Diarrhea,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.Diarrhea))))
+                       .ForMember(x => x.OtherSymptoms,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.OtherSymptoms))))
+                       .ForMember(x => x.PregnancyStatus,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.PregnancyStatus))))
+                       .ForMember(x => x.FPStatus,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.FPStatus))))
+                       .ForMember(x => x.FPMethod,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.FPMethod))))
+                       .ForMember(x => x.ReasonNotOnFP,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.ReasonNotOnFP))))
+                       .ForMember(x => x.ReferredToClinic,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.ReferredToClinic))))
+                       .ForMember(x => x.ReturnVisitDate,
+                           o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempArtFastTrackExtract.ReturnVisitDate))))
+                       .ForMember(x => x.RecordUUID,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempArtFastTrackExtract.RecordUUID))))
+                       .ForMember(x => x.Voided,
+                           o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempArtFastTrackExtract.Voided))))
+                       .ForMember(x => x.Date_Created,
+                           o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempArtFastTrackExtract.Date_Created))))
+                       .ForMember(x => x.Date_Last_Modified,
+                           o => o.MapFrom(s =>
+                               s.GetNullDateOrDefault(nameof(TempArtFastTrackExtract.Date_Last_Modified))));
+            CreateMap<TempArtFastTrackExtract, ArtFastTrackExtract>();
+            
+            
         }
     }
 }

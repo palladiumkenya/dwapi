@@ -405,6 +405,54 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
             return responses;
         }
 
+        public Task<List<SendMpiResponse>> SendPrepMonthlyRefillAsync(SendManifestPackageDTO sendTo)
+        {
+            return SendPrepMonthlyRefillAsync(sendTo, PrepMessageBag.Create(_packager.GeneratePrepMonthlyRefill().ToList()));
+        }
+        public async Task<List<SendMpiResponse>> SendPrepMonthlyRefillAsync(SendManifestPackageDTO sendTo,PrepMessageBag messageBag)
+        {
+              var responses = new List<SendMpiResponse>();
+            var client = Client ?? new HttpClient();
+            int sendCound=0;
+            int count = 0;
+            int total = messageBag.Messages.Count;
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sending));
+            foreach (var message in messageBag.Messages)
+            {
+                count++;
+                try
+                {
+                    var msg = JsonConvert.SerializeObject(message);
+                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepMonthlyRefill"), message);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                        responses.Add(content);
+                        var sentIds = message.PrepMonthlyRefillExtracts.Select(x => x.Id).ToList();
+                        sendCound += sentIds.Count;
+                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
+                    }
+                    else
+                    {
+                        var error = await response.Content.ReadAsStringAsync();
+                        DomainEvents.Dispatch(new PrepExtractSentEvent(message.PrepMonthlyRefillExtracts.Select(x => x.Id).ToList(), SendStatus.Failed,sendTo.ExtractName,error));
+                        throw new Exception(error);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, $"Send Manifest Error");
+                    throw;
+                }
+                DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepMonthlyRefillExtract), Common.GetProgress(count,total),sendCound)));
+            }
+            DomainEvents.Dispatch(new PrepSendNotification(new SendProgress(nameof(PrepMonthlyRefillExtract), Common.GetProgress(count,total),sendCound,true)));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
+            return responses;
+        }
+
+        
+        
         public async Task NotifyPostSending(SendManifestPackageDTO sendTo, string version)
         {
             var notificationend = new HandshakeEnd("PREPSendEnd", version);

@@ -5,6 +5,7 @@ using Dwapi.SharedKernel.Model;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using Dwapi.Contracts.Ct;
 
 namespace Dwapi.ExtractsManagement.Core.Services
 {
@@ -31,8 +32,13 @@ namespace Dwapi.ExtractsManagement.Core.Services
 
         private readonly ICovidExtractRepository _covidExtractRepository;
         private readonly IDefaulterTracingExtractRepository _defaulterTracingExtractRepository;
+        private readonly ICervicalCancerScreeningExtractRepository _cervicalCancerExtractRepository;
+        private readonly IIITRiskScoresExtractRepository _iitriskscoreExtractRepository;
+        // private readonly IArtFastTrack _otzExtractRepository;
 
-        public DwhExtractSentServcie(IPatientExtractRepository patientExtractRepository, IPatientArtExtractRepository artExtractRepository, IPatientBaselinesExtractRepository baselinesExtractRepository, IPatientLaboratoryExtractRepository laboratoryExtractRepository, IPatientPharmacyExtractRepository pharmacyExtractRepository, IPatientStatusExtractRepository statusExtractRepository, IPatientVisitExtractRepository visitExtractRepository, IPatientAdverseEventExtractRepository adverseEventExtractRepository, IAllergiesChronicIllnessExtractRepository allergiesChronicIllnessExtractRepository, IIptExtractRepository iptExtractRepository, IDepressionScreeningExtractRepository depressionScreeningExtractRepository, IContactListingExtractRepository contactListingExtractRepository, IGbvScreeningExtractRepository gbvScreeningExtractRepository, IEnhancedAdherenceCounsellingExtractRepository enhancedAdherenceCounsellingExtractRepository, IDrugAlcoholScreeningExtractRepository drugAlcoholScreeningExtractRepository, IOvcExtractRepository ovcExtractRepository, IOtzExtractRepository otzExtractRepository, ICovidExtractRepository covidExtractRepository, IDefaulterTracingExtractRepository defaulterTracingExtractRepository)
+
+        public DwhExtractSentServcie(IPatientExtractRepository patientExtractRepository, IPatientArtExtractRepository artExtractRepository, IPatientBaselinesExtractRepository baselinesExtractRepository, IPatientLaboratoryExtractRepository laboratoryExtractRepository, IPatientPharmacyExtractRepository pharmacyExtractRepository, IPatientStatusExtractRepository statusExtractRepository, IPatientVisitExtractRepository visitExtractRepository, IPatientAdverseEventExtractRepository adverseEventExtractRepository, IAllergiesChronicIllnessExtractRepository allergiesChronicIllnessExtractRepository, IIptExtractRepository iptExtractRepository, IDepressionScreeningExtractRepository depressionScreeningExtractRepository, IContactListingExtractRepository contactListingExtractRepository, IGbvScreeningExtractRepository gbvScreeningExtractRepository, IEnhancedAdherenceCounsellingExtractRepository enhancedAdherenceCounsellingExtractRepository, IDrugAlcoholScreeningExtractRepository drugAlcoholScreeningExtractRepository, IOvcExtractRepository ovcExtractRepository, IOtzExtractRepository otzExtractRepository, ICovidExtractRepository covidExtractRepository, IDefaulterTracingExtractRepository defaulterTracingExtractRepository,
+            ICervicalCancerScreeningExtractRepository cervicalCancerExtractRepository, IIITRiskScoresExtractRepository iitriskscoreExtractRepository)
         {
             _patientExtractRepository = patientExtractRepository;
             _artExtractRepository = artExtractRepository;
@@ -55,6 +61,8 @@ namespace Dwapi.ExtractsManagement.Core.Services
 
             _covidExtractRepository = covidExtractRepository;
             _defaulterTracingExtractRepository = defaulterTracingExtractRepository;
+            _cervicalCancerExtractRepository = cervicalCancerExtractRepository;
+            _iitriskscoreExtractRepository = iitriskscoreExtractRepository;
         }
 
         public void UpdateSendStatus(ExtractType extractType, List<SentItem> sentItems)
@@ -121,6 +129,12 @@ namespace Dwapi.ExtractsManagement.Core.Services
                         break;
                     case ExtractType.DefaulterTracing:
                         _defaulterTracingExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.CervicalCancerScreening:
+                        _cervicalCancerExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.IITRiskScores:
+                        _iitriskscoreExtractRepository.UpdateSendStatus(sentItems);
                         break;
                 }
             }

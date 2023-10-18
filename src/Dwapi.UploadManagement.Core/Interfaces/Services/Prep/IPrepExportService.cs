@@ -36,6 +36,8 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Prep
 
         Task<List<SendMpiResponse>> ExportPrepVisitsAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> ExportPrepVisitsAsync(SendManifestPackageDTO sendTo, PrepMessageBag messageBag);
+        Task<List<SendMpiResponse>> ExportPrepMonthlyRefillAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> ExportPrepMonthlyRefillAsync(SendManifestPackageDTO sendTo, PrepMessageBag messageBag);
 
         Task<List<SendMpiResponse>> SendPrepFiles(IFormFile file);
 
