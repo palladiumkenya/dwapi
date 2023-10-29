@@ -73,6 +73,8 @@ export class PrepValidComponent implements OnInit, OnDestroy {
         if (this.extract === 'Prep Pharmacy') {this.getSummaryExtracts('PrepPharmacy');return;}
         if (this.extract === 'Prep Labs') {this.getSummaryExtracts('PrepLab');return;}
         if (this.extract === 'Prep Visit') {this.getSummaryExtracts('PrepVisit');return;}
+        if (this.extract === 'Prep Monthly Refill') {this.getSummaryExtracts('PrepMonthlyRefill');return;}
+
     }
 
     private getColumns(): void {
@@ -83,6 +85,8 @@ export class PrepValidComponent implements OnInit, OnDestroy {
         if (this.extract === 'Prep Pharmacy') {this.getPrepPharmacyExtractColumns();return;}
         if (this.extract === 'Prep Labs') {this.getPrepLabExtractColumns();return;}
         if (this.extract === 'Prep Visit') {this.getPrepVisitExtractColumns();return;}
+        if (this.extract === 'Prep Monthly Refill') {this.getPrepMonthlyRefillExtractColumns();return;}
+
     }
 
     private getSummaryExtracts(ex: string): void {
@@ -229,6 +233,34 @@ export class PrepValidComponent implements OnInit, OnDestroy {
             {field: 'voided', header: 'Voided'},
 
             {field: 'facilityName', header: 'Facility Name'}
+        ]
+    }
+
+    private getPrepMonthlyRefillExtractColumns() {
+        this.cols = [
+            {field: 'facilityName', header: 'FacilityName'},
+            {field: 'artRefillModel', header: 'ARTRefillModel'},
+            {field: 'visitDate', header: 'VisitDate'},
+            {field: 'ctxDispensed', header: 'CTXDispensed'},
+            {field: 'dapsoneDispensed', header: 'DapsoneDispensed'},
+            {field: 'condomsDistributed', header: 'CondomsDistributed'},
+            {field: 'oralContraceptivesDispensed', header: 'OralContraceptivesDispensed'},
+            {field: 'missedDoses', header: 'MissedDoses'},
+            {field: 'fatigue', header: 'Fatigue'},
+            {field: 'cough', header: 'Cough'},
+            {field: 'fever', header: 'Fever'},
+            {field: 'rash', header: 'Rash'},
+            {field: 'nauseaOrVomiting', header: 'NauseaOrVomiting'},
+            {field: 'genitalSoreOrDischarge', header: 'GenitalSoreOrDischarge'},
+            {field: 'diarrhea', header: 'Diarrhea'},
+            {field: 'otherSymptoms', header: 'OtherSymptoms'},
+            {field: 'pregnancyStatus', header: 'PregnancyStatus'},
+            {field: 'fpStatus', header: 'FPStatus'},
+            {field: 'fpMethod', header: 'FPMethod'},
+            {field: 'reasonNotOnFP', header: 'ReasonNotOnFP'},
+            {field: 'referredToClinic', header: 'ReferredToClinic'},
+            {field: 'returnVisitDate', header: 'ReturnVisitDate'}
+
         ]
     }
 

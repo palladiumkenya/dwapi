@@ -410,7 +410,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Prep
                     .ForMember(x => x.AppointmentDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPrepMonthlyRefillExtract.AppointmentDate))))
                     .ForMember(x => x.ReasonForFailureToGiveAppointment, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.ReasonForFailureToGiveAppointment))))
                     .ForMember(x => x.DateOfLastPrepDose, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPrepMonthlyRefillExtract.DateOfLastPrepDose))))
-                    .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.Voided))))
+                    .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPrepMonthlyRefillExtract.Voided))))
                     .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.RecordUUID))));
 
                 

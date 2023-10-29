@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Prep;
 using Dwapi.ExtractsManagement.Core.Model.Source.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Source.Prep;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -10,15 +12,15 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Prep.TempExtracts
 {
-    public class TempCervicalCancerScreeningExtractRepository : BaseRepository<TempCervicalCancerScreeningExtract, Guid>, ITempCervicalCancerScreeningExtractRepository
+    public class TempPrepMonthlyRefillExtractRepository : BaseRepository<TempPrepMonthlyRefillExtract, Guid>, ITempPrepMonthlyRefillExtractRepository
     {
-        public TempCervicalCancerScreeningExtractRepository(ExtractsContext context) : base(context)
+        public TempPrepMonthlyRefillExtractRepository(ExtractsContext context) : base(context)
         {
         }
 
-        public bool BatchInsert(IEnumerable<TempCervicalCancerScreeningExtract> extracts)
+        public bool BatchInsert(IEnumerable<TempPrepMonthlyRefillExtract> extracts)
         {
             var cn = GetConnectionString();
             try

@@ -18,13 +18,13 @@ using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 {
-    public class CervicalCancerScreeningSourceExtractor : ICervicalCancerScreeningSourceExtractor
+    public class CancerScreeningSourceExtractor : ICancerScreeningSourceExtractor
     {
         private readonly IDwhExtractSourceReader _reader;
         private readonly IMediator _mediator;
-        private readonly ITempCervicalCancerScreeningExtractRepository _extractRepository;
+        private readonly ITempCancerScreeningExtractRepository _extractRepository;
 
-        public CervicalCancerScreeningSourceExtractor(IDwhExtractSourceReader reader, IMediator mediator, ITempCervicalCancerScreeningExtractRepository extractRepository)
+        public CancerScreeningSourceExtractor(IDwhExtractSourceReader reader, IMediator mediator, ITempCancerScreeningExtractRepository extractRepository)
         {
             _reader = reader;
             _mediator = mediator;
@@ -37,7 +37,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
             int batch = 500;
 
-            var list = new List<TempCervicalCancerScreeningExtract>();
+            var list = new List<TempCancerScreeningExtract>();
 
             int count = 0;
             int loaded = 0;
@@ -48,7 +48,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                     count++;
                     loaded++;
                     // AutoMapper profiles
-                    var extractRecord =   mapper.Map<IDataRecord, TempCervicalCancerScreeningExtract>(rdr);
+                    var extractRecord =   mapper.Map<IDataRecord, TempCancerScreeningExtract>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
                     list.Add(extractRecord);
 
@@ -61,10 +61,10 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
                         DomainEvents.Dispatch(
                             new ExtractActivityNotification(extract.Id, new DwhProgress(
-                                nameof(CervicalCancerScreeningExtract),
+                                nameof(CancerScreeningExtract),
                                 nameof(ExtractStatus.Finding),
                                 loaded, 0, 0, 0, 0)));
-                        list = new List<TempCervicalCancerScreeningExtract>();
+                        list = new List<TempCancerScreeningExtract>();
                     }
                 }
 
@@ -79,7 +79,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
             // TODO: Notify Completed;
             DomainEvents.Dispatch(
                 new ExtractActivityNotification(extract.Id, new DwhProgress(
-                    nameof(CervicalCancerScreeningExtract),
+                    nameof(CancerScreeningExtract),
                     nameof(ExtractStatus.Found),
                     loaded, 0, 0, 0, 0)));
 
@@ -92,7 +92,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
             int batch = 500;
 
-            var list = new List<TempCervicalCancerScreeningExtract>();
+            var list = new List<TempCancerScreeningExtract>();
 
             int count = 0;
             int loaded = 0;
@@ -103,7 +103,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
                     count++;
                     loaded++;
                     // AutoMapper profiles
-                    var extractRecord =   mapper.Map<IDataRecord, TempCervicalCancerScreeningExtract>(rdr);
+                    var extractRecord =   mapper.Map<IDataRecord, TempCancerScreeningExtract>(rdr);
                     extractRecord.Id = LiveGuid.NewGuid();
                     list.Add(extractRecord);
 
@@ -116,10 +116,10 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
 
                         DomainEvents.Dispatch(
                             new ExtractActivityNotification(extract.Id, new DwhProgress(
-                                nameof(CervicalCancerScreeningExtract),
+                                nameof(CancerScreeningExtract),
                                 nameof(ExtractStatus.Finding),
                                 loaded, 0, 0, 0, 0)));
-                        list = new List<TempCervicalCancerScreeningExtract>();
+                        list = new List<TempCancerScreeningExtract>();
                     }
                 }
 
@@ -134,7 +134,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Dwh
             // TODO: Notify Completed;
             DomainEvents.Dispatch(
                 new ExtractActivityNotification(extract.Id, new DwhProgress(
-                    nameof(CervicalCancerScreeningExtract),
+                    nameof(CancerScreeningExtract),
                     nameof(ExtractStatus.Found),
                     loaded, 0, 0, 0, 0)));
 

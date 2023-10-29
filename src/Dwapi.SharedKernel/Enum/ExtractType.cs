@@ -21,7 +21,7 @@
         Otz,
         Covid,
         DefaulterTracing,
-        CervicalCancerScreening,
+        CancerScreening,
         IITRiskScores,
         ArtFastTrack,
         

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
-using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Prep;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Prep;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
@@ -14,15 +14,15 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using Z.Dapper.Plus;
 
-namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
+namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Prep.Extracts
 {
-    public class CervicalCancerScreeningExtractRepository : BaseRepository<CervicalCancerScreeningExtract, Guid>, ICervicalCancerScreeningExtractRepository
+    public class PrepMonthlyRefillExtractRepository : BaseRepository<PrepMonthlyRefillExtract, Guid>, IPrepMonthlyRefillExtractRepository
     {
-        public CervicalCancerScreeningExtractRepository(ExtractsContext context) : base(context)
+        public PrepMonthlyRefillExtractRepository(ExtractsContext context) : base(context)
         {
         }
 
-        public bool BatchInsert(IEnumerable<CervicalCancerScreeningExtract> extracts)
+        public bool BatchInsert(IEnumerable<PrepMonthlyRefillExtract> extracts)
         {
             var cn = GetConnectionString();
             try
@@ -64,13 +64,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
         }
         public void UpdateSendStatus(List<SentItem> sentItems)
         {
-            var sql = $"SELECT * FROM {nameof(ExtractsContext.CervicalCancerScreeningExtracts)} Where Id IN @Ids";
+            var sql = $"SELECT * FROM {nameof(ExtractsContext.PrepMonthlyRefillExtracts)} Where Id IN @Ids";
             var ids = sentItems.Select(x => x.Id).ToArray();
 
             using (var cn = GetNewConnection())
             {
 
-                var mpi = cn.Query<CervicalCancerScreeningExtract>(sql, new { Ids = ids }).ToList()
+                var mpi = cn.Query<PrepMonthlyRefillExtract>(sql, new { Ids = ids }).ToList()
                     .Select(x =>
                     {
                         var sentItem = sentItems.First(s => s.Id == x.Id);
@@ -95,10 +95,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
                 UPDATE
                     {nameof(ExtractsContext.PatientAdverseEventExtracts)}
                 SET
-                    {nameof(CervicalCancerScreeningExtract.Status)}=@Status,{nameof(CervicalCancerScreeningExtract.StatusDate)}=@StatusDate
+                    {nameof(PrepMonthlyRefillExtract.Status)}=@Status,{nameof(PrepMonthlyRefillExtract.StatusDate)}=@StatusDate
                 where
-                    {nameof(CervicalCancerScreeningExtract.PatientPK)} in (select PatientPK from {nameof(ExtractsContext.PatientExtracts)}) AND
-                    {nameof(CervicalCancerScreeningExtract.SiteCode)} in (select SiteCode from {nameof(ExtractsContext.PatientExtracts)})
+                    {nameof(PrepMonthlyRefillExtract.PatientPK)} in (select PatientPK from {nameof(ExtractsContext.PatientExtracts)}) AND
+                    {nameof(PrepMonthlyRefillExtract.SiteCode)} in (select SiteCode from {nameof(ExtractsContext.PatientExtracts)})
                 ";
 
                 totalUpdated = cn.Execute(sql, new {Status = nameof(SendStatus.Sent), StatusDate = DateTime.Now});

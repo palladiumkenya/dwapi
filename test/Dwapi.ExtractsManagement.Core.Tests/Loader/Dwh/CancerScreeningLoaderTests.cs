@@ -15,10 +15,10 @@ using Serilog;
 namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Dwh
 {
     [TestFixture]
-    public class CervicalCancerScreeningsLoaderTests
+    public class CancerScreeningsLoaderTests
     {
-      private ICervicalCancerScreeningLoader _loader;
-        private ICervicalCancerScreeningSourceExtractor _extractor;
+      private ICancerScreeningLoader _loader;
+        private ICancerScreeningSourceExtractor _extractor;
         private List<Extract> _extracts;
         private DbProtocol _protocol;
         private ExtractsContext _extractsContext;
@@ -44,9 +44,9 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Dwh
         [SetUp]
         public void SetUp()
         {
-            _loader = TestInitializer.ServiceProvider.GetService<ICervicalCancerScreeningLoader>();
-            _extractor = TestInitializer.ServiceProvider.GetService<ICervicalCancerScreeningSourceExtractor>();
-            _extract = _extracts.First(x => x.Name.IsSameAs(nameof(CervicalCancerScreeningExtract)));
+            _loader = TestInitializer.ServiceProvider.GetService<ICancerScreeningLoader>();
+            _extractor = TestInitializer.ServiceProvider.GetService<ICancerScreeningSourceExtractor>();
+            _extract = _extracts.First(x => x.Name.IsSameAs(nameof(CancerScreeningExtract)));
             _count = _extractor.Extract(_extract, _protocol).Result;
 
         }
@@ -55,14 +55,14 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Loader.Dwh
         public void should_Load()
         {
             Assert.True(_count > 0);
-            Assert.False(_extractsContext.CervicalCancerScreeningExtracts.Any());
+            Assert.False(_extractsContext.CancerScreeningExtracts.Any());
 
             var count = _loader.Load(_extract.Id,_count, false).Result;
 
             Assert.True(count >0);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
-            Assert.AreEqual(count,_extractsContext.CervicalCancerScreeningExtracts.Count());
-            Log.Debug($"Temp {_count} Main {_extractsContext.CervicalCancerScreeningExtracts.Count()}");
+            Assert.AreEqual(count,_extractsContext.CancerScreeningExtracts.Count());
+            Log.Debug($"Temp {_count} Main {_extractsContext.CancerScreeningExtracts.Count()}");
         }
     }
 }

@@ -19,28 +19,28 @@ using MediatR;
 
 namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
 {
-    public class ExtractCervicalCancerScreeningHandler :IRequestHandler<ExtractCervicalCancerScreening,bool>
+    public class ExtractCancerScreeningHandler :IRequestHandler<ExtractCancerScreening,bool>
     {
-        private readonly ICervicalCancerScreeningSourceExtractor _CervicalCancerScreeningSourceExtractor;
+        private readonly ICancerScreeningSourceExtractor _CancerScreeningSourceExtractor;
         private readonly IExtractValidator _extractValidator;
-        private readonly ICervicalCancerScreeningLoader _CervicalCancerScreeningLoader;
+        private readonly ICancerScreeningLoader _CancerScreeningLoader;
         private readonly IClearDwhExtracts _clearDwhExtracts;
         private readonly IExtractHistoryRepository _extractHistoryRepository;
         private readonly IDiffLogRepository _diffLogRepository;
         private readonly IIndicatorExtractRepository _indicatorExtractRepository;
             
-        public ExtractCervicalCancerScreeningHandler(ICervicalCancerScreeningSourceExtractor CervicalCancerScreeningSourceExtractor, IExtractValidator extractValidator, ICervicalCancerScreeningLoader CervicalCancerScreeningLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
+        public ExtractCancerScreeningHandler(ICancerScreeningSourceExtractor CancerScreeningSourceExtractor, IExtractValidator extractValidator, ICancerScreeningLoader CancerScreeningLoader, IClearDwhExtracts clearDwhExtracts, IExtractHistoryRepository extractHistoryRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
         {
-            _CervicalCancerScreeningSourceExtractor = CervicalCancerScreeningSourceExtractor;
+            _CancerScreeningSourceExtractor = CancerScreeningSourceExtractor;
             _extractValidator = extractValidator;
-            _CervicalCancerScreeningLoader = CervicalCancerScreeningLoader;
+            _CancerScreeningLoader = CancerScreeningLoader;
             _clearDwhExtracts = clearDwhExtracts;
             _extractHistoryRepository = extractHistoryRepository;
             _diffLogRepository = diffLogRepository;
             _indicatorExtractRepository = indicatorExtractRepository;
         }
 
-        public async Task<bool> Handle(ExtractCervicalCancerScreening request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(ExtractCancerScreening request, CancellationToken cancellationToken)
         {
             // differential loading
             // Get current site and docket dates,
@@ -48,32 +48,32 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             var mflcode =   _indicatorExtractRepository.GetMflCode();
 
             var loadChangesOnly = request.LoadChangesOnly;
-            var difflog = _diffLogRepository.GetLog("NDWH", "CervicalCancerScreeningExtract", mflcode);
+            var difflog = _diffLogRepository.GetLog("NDWH", "CancerScreeningExtract", mflcode);
             var changesLoadedStatus= false;
             
             if (null == difflog)
-                found  = await _CervicalCancerScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+                found  = await _CancerScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
             else 
                 if (true == loadChangesOnly)
                 {
                     changesLoadedStatus = true;
-                    found = await _CervicalCancerScreeningSourceExtractor.Extract(request.Extract,
+                    found = await _CancerScreeningSourceExtractor.Extract(request.Extract,
                         request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
                 }
                 else
                 {
-                    found  = await _CervicalCancerScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+                    found  = await _CancerScreeningSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
                 }
             //Extract
-            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "CervicalCancerScreeningExtract", changesLoadedStatus);
+            _diffLogRepository.UpdateExtractsSentStatus("NDWH", "CancerScreeningExtract", changesLoadedStatus);
 
             //Validate
-            await _extractValidator.Validate(request.Extract.Id, found, nameof(CervicalCancerScreeningExtract), 
-                $"{nameof(TempCervicalCancerScreeningExtract)}s");
+            await _extractValidator.Validate(request.Extract.Id, found, nameof(CancerScreeningExtract), 
+                $"{nameof(TempCancerScreeningExtract)}s");
 
             //Load
-            int loaded = await _CervicalCancerScreeningLoader.Load(request.Extract.Id, found, request.DatabaseProtocol.SupportsDifferential);
+            int loaded = await _CancerScreeningLoader.Load(request.Extract.Id, found, request.DatabaseProtocol.SupportsDifferential);
 
             int rejected =
                 _extractHistoryRepository.ProcessRejected(request.Extract.Id, found - loaded, request.Extract);
@@ -84,7 +84,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             //notify loaded
             DomainEvents.Dispatch(
                 new ExtractActivityNotification(request.Extract.Id, new DwhProgress(
-                    nameof(CervicalCancerScreeningExtract),
+                    nameof(CancerScreeningExtract),
                     nameof(ExtractStatus.Loaded),
                     found, loaded, rejected, loaded, 0)));
 

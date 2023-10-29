@@ -18,9 +18,9 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh.Smart
         public ArtFastTrackMessageSourceBag()
         {
         }
-        public ArtFastTrackMessageSourceBag(List<ArtFastTrackExtractView> artFastTrackExtractView)
+        public ArtFastTrackMessageSourceBag(List<ArtFastTrackExtractView> allergiesChronicIllnessExtractView)
         {
-            _ArtFastTrackExtractView = artFastTrackExtractView;
+            _ArtFastTrackExtractView = allergiesChronicIllnessExtractView;
         }
     }
 }

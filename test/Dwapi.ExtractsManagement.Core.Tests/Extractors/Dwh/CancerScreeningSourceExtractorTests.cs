@@ -14,9 +14,9 @@ using Serilog;
 namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
 {
     [TestFixture]
-    public class CervicalCancerScreeningSourceExtractorTests
+    public class CancerScreeningSourceExtractorTests
     {
-        private ICervicalCancerScreeningSourceExtractor _extractor;
+        private ICancerScreeningSourceExtractor _extractor;
         private List<Extract> _extracts;
         private DbProtocol _protocol;
         private ExtractsContext _extractsContext;
@@ -34,21 +34,21 @@ namespace Dwapi.ExtractsManagement.Core.Tests.Extractors.Dwh
         [SetUp]
         public void SetUp()
         {
-            _extractor = TestInitializer.ServiceProvider.GetService<ICervicalCancerScreeningSourceExtractor>();
+            _extractor = TestInitializer.ServiceProvider.GetService<ICancerScreeningSourceExtractor>();
         }
 
-        [TestCase(nameof(CervicalCancerScreeningExtract))]
+        [TestCase(nameof(CancerScreeningExtract))]
         public void should_Extract(string name)
         {
-            Assert.False(_extractsContext.TempCervicalCancerScreeningExtracts.Any());
+            Assert.False(_extractsContext.TempCancerScreeningExtracts.Any());
             var extract = _extracts.First(x => x.Name.IsSameAs(name));
 
             var count = _extractor.Extract(extract, _protocol).Result;
 
             Assert.True(count > 0);
             _extractsContext = TestInitializer.ServiceProvider.GetService<ExtractsContext>();
-            Assert.AreEqual(count,_extractsContext.TempCervicalCancerScreeningExtracts.Count());
-            Log.Debug($"extracted {_extractsContext.TempCervicalCancerScreeningExtracts.Count()}");
+            Assert.AreEqual(count,_extractsContext.TempCancerScreeningExtracts.Count());
+            Log.Debug($"extracted {_extractsContext.TempCancerScreeningExtracts.Count()}");
         }
     }
 }

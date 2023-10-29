@@ -636,7 +636,7 @@ namespace Dwapi
             //DefaulterTracing
             services.AddScoped<ICovidExtractRepository, CovidExtractRepository>();
             services.AddScoped<IDefaulterTracingExtractRepository, DefaulterTracingExtractRepository>();
-            services.AddScoped<ICervicalCancerScreeningExtractRepository, CervicalCancerScreeningExtractRepository>();
+            services.AddScoped<ICancerScreeningExtractRepository, CancerScreeningExtractRepository>();
             services.AddScoped<IIITRiskScoresExtractRepository, IITRiskScoresExtractRepository>();
             services.AddScoped<IArtFastTrackExtractRepository, ArtFastTrackExtractRepository>();
 
@@ -653,7 +653,7 @@ namespace Dwapi
             //DefaulterTracing
             services.AddScoped<ITempDefaulterTracingExtractRepository, TempDefaulterTracingExtractRepository>();
             services.AddScoped<ITempCovidExtractRepository, TempCovidExtractRepository>();
-            services.AddScoped<ITempCervicalCancerScreeningExtractRepository, TempCervicalCancerScreeningExtractRepository>();
+            services.AddScoped<ITempCancerScreeningExtractRepository, TempCancerScreeningExtractRepository>();
             services.AddScoped<ITempIITRiskScoresExtractRepository, TempIITRiskScoresExtractRepository>();
             services.AddScoped<ITempArtFastTrackExtractRepository, TempArtFastTrackExtractRepository>();
 
@@ -672,7 +672,7 @@ namespace Dwapi
             //DefaulterTracing
             services.AddScoped<ITempCovidExtractErrorSummaryRepository, TempCovidExtractErrorSummaryRepository>();
             services.AddScoped<ITempDefaulterTracingExtractErrorSummaryRepository, TempDefaulterTracingExtractErrorSummaryRepository>();
-            services.AddScoped<ITempCervicalCancerScreeningExtractErrorSummaryRepository, TempCervicalCancerScreeningExtractErrorSummaryRepository>();
+            services.AddScoped<ITempCancerScreeningExtractErrorSummaryRepository, TempCancerScreeningExtractErrorSummaryRepository>();
             services.AddScoped<ITempIITRiskScoresExtractErrorSummaryRepository, TempIITRiskScoresExtractErrorSummaryRepository>();
             services.AddScoped<ITempArtFastTrackExtractErrorSummaryRepository, TempArtFastTrackExtractErrorSummaryRepository>();
 
@@ -690,7 +690,7 @@ namespace Dwapi
             //DefaulterTracing
             services.AddScoped<ICovidSourceExtractor, CovidSourceExtractor>();
             services.AddScoped<IDefaulterTracingSourceExtractor, DefaulterTracingSourceExtractor>();
-            services.AddScoped<ICervicalCancerScreeningSourceExtractor, CervicalCancerScreeningSourceExtractor>();
+            services.AddScoped<ICancerScreeningSourceExtractor, CancerScreeningSourceExtractor>();
             services.AddScoped<IIITRiskScoresSourceExtractor, IITRiskScoresSourceExtractor>();
             services.AddScoped<IArtFastTrackSourceExtractor, ArtFastTrackSourceExtractor>();
 
@@ -708,7 +708,7 @@ namespace Dwapi
             //DefaulterTracing
             services.AddScoped<ICovidLoader, CovidLoader>();
             services.AddScoped<IDefaulterTracingLoader, DefaulterTracingLoader>();
-            services.AddScoped<ICervicalCancerScreeningLoader, CervicalCancerScreeningLoader>();
+            services.AddScoped<ICancerScreeningLoader, CancerScreeningLoader>();
             services.AddScoped<IIITRiskScoresLoader, IITRiskScoresLoader>();
             services.AddScoped<IArtFastTrackLoader, ArtFastTrackLoader>();
 
@@ -782,6 +782,7 @@ namespace Dwapi
             services.AddScoped<ITempPrepLabExtractRepository, TempPrepLabExtractRepository>();
             services.AddScoped<ITempPrepPharmacyExtractRepository, TempPrepPharmacyExtractRepository>();
             services.AddScoped<ITempPrepVisitExtractRepository, TempPrepVisitExtractRepository>();
+            services.AddScoped<ITempPrepMonthlyRefillExtractRepository, TempPrepMonthlyRefillExtractRepository>();
 
             services.AddScoped<ITempPatientPrepExtractErrorSummaryRepository, TempPatientPrepExtractErrorSummaryRepository>();
             services.AddScoped<ITempPrepAdverseEventExtractErrorSummaryRepository,TempPrepAdverseEventExtractErrorSummaryRepository >();
@@ -790,6 +791,7 @@ namespace Dwapi
             services.AddScoped<ITempPrepLabExtractErrorSummaryRepository, TempPrepLabExtractErrorSummaryRepository>();
             services.AddScoped<ITempPrepPharmacyExtractErrorSummaryRepository,TempPrepPharmacyExtractErrorSummaryRepository >();
             services.AddScoped<ITempPrepVisitExtractErrorSummaryRepository, TempPrepVisitExtractErrorSummaryRepository>();
+            services.AddScoped<ITempPrepMonthlyRefillExtractErrorSummaryRepository, TempPrepMonthlyRefillExtractErrorSummaryRepository>();
 
             services.AddScoped<IPatientPrepExtractRepository, PatientPrepExtractRepository>();
             services.AddScoped<IPrepAdverseEventExtractRepository, PrepAdverseEventExtractRepository>();
@@ -798,6 +800,7 @@ namespace Dwapi
             services.AddScoped<IPrepLabExtractRepository, PrepLabExtractRepository>();
             services.AddScoped<IPrepPharmacyExtractRepository, PrepPharmacyExtractRepository>();
             services.AddScoped<IPrepVisitExtractRepository, PrepVisitExtractRepository>();
+            services.AddScoped<IPrepMonthlyRefillExtractRepository, PrepMonthlyRefillExtractRepository>();
 
             #endregion
             services.AddScoped<IMnchExtractSourceReader, MnchExtractSourceReader>();
@@ -849,6 +852,7 @@ namespace Dwapi
             services.AddScoped<IPrepLabSourceExtractor, PrepLabSourceExtractor>();
             services.AddScoped<IPrepPharmacySourceExtractor, PrepPharmacySourceExtractor>();
             services.AddScoped<IPrepVisitSourceExtractor, PrepVisitSourceExtractor>();
+            services.AddScoped<IPrepMonthlyRefillSourceExtractor, PrepMonthlyRefillSourceExtractor>();
 
             services.AddScoped<IPatientPrepLoader, PatientPrepLoader>();
             services.AddScoped<IPrepAdverseEventLoader, PrepAdverseEventLoader>();
@@ -857,6 +861,7 @@ namespace Dwapi
             services.AddScoped<IPrepLabLoader, PrepLabLoader>();
             services.AddScoped<IPrepPharmacyLoader, PrepPharmacyLoader>();
             services.AddScoped<IPrepVisitLoader, PrepVisitLoader>();
+            services.AddScoped<IPrepMonthlyRefillLoader, PrepMonthlyRefillLoader>();
 
             services.AddScoped<IPrepExtractReader, PrepExtractReader>();
             services.AddScoped<IPrepPackager, PrepPackager>();

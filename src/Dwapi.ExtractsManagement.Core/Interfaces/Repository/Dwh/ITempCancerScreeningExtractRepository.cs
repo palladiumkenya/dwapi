@@ -5,8 +5,8 @@ using Dwapi.SharedKernel.Interfaces;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh
 {
-    public interface ITempCervicalCancerScreeningExtractRepository: IRepository<TempCervicalCancerScreeningExtract, Guid>
+    public interface ITempCancerScreeningExtractRepository: IRepository<TempCancerScreeningExtract, Guid>
     {
-        bool BatchInsert(IEnumerable<TempCervicalCancerScreeningExtract> extracts);
+        bool BatchInsert(IEnumerable<TempCancerScreeningExtract> extracts);
     }
 }

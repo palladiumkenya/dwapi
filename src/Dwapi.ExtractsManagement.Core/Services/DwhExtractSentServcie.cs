@@ -32,13 +32,13 @@ namespace Dwapi.ExtractsManagement.Core.Services
 
         private readonly ICovidExtractRepository _covidExtractRepository;
         private readonly IDefaulterTracingExtractRepository _defaulterTracingExtractRepository;
-        private readonly ICervicalCancerScreeningExtractRepository _cervicalCancerExtractRepository;
+        private readonly ICancerScreeningExtractRepository _cervicalCancerExtractRepository;
         private readonly IIITRiskScoresExtractRepository _iitriskscoreExtractRepository;
         // private readonly IArtFastTrack _otzExtractRepository;
 
 
         public DwhExtractSentServcie(IPatientExtractRepository patientExtractRepository, IPatientArtExtractRepository artExtractRepository, IPatientBaselinesExtractRepository baselinesExtractRepository, IPatientLaboratoryExtractRepository laboratoryExtractRepository, IPatientPharmacyExtractRepository pharmacyExtractRepository, IPatientStatusExtractRepository statusExtractRepository, IPatientVisitExtractRepository visitExtractRepository, IPatientAdverseEventExtractRepository adverseEventExtractRepository, IAllergiesChronicIllnessExtractRepository allergiesChronicIllnessExtractRepository, IIptExtractRepository iptExtractRepository, IDepressionScreeningExtractRepository depressionScreeningExtractRepository, IContactListingExtractRepository contactListingExtractRepository, IGbvScreeningExtractRepository gbvScreeningExtractRepository, IEnhancedAdherenceCounsellingExtractRepository enhancedAdherenceCounsellingExtractRepository, IDrugAlcoholScreeningExtractRepository drugAlcoholScreeningExtractRepository, IOvcExtractRepository ovcExtractRepository, IOtzExtractRepository otzExtractRepository, ICovidExtractRepository covidExtractRepository, IDefaulterTracingExtractRepository defaulterTracingExtractRepository,
-            ICervicalCancerScreeningExtractRepository cervicalCancerExtractRepository, IIITRiskScoresExtractRepository iitriskscoreExtractRepository)
+            ICancerScreeningExtractRepository cervicalCancerExtractRepository, IIITRiskScoresExtractRepository iitriskscoreExtractRepository)
         {
             _patientExtractRepository = patientExtractRepository;
             _artExtractRepository = artExtractRepository;
@@ -130,7 +130,7 @@ namespace Dwapi.ExtractsManagement.Core.Services
                     case ExtractType.DefaulterTracing:
                         _defaulterTracingExtractRepository.UpdateSendStatus(sentItems);
                         break;
-                    case ExtractType.CervicalCancerScreening:
+                    case ExtractType.CancerScreening:
                         _cervicalCancerExtractRepository.UpdateSendStatus(sentItems);
                         break;
                     case ExtractType.IITRiskScores:

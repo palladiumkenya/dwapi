@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 namespace Dwapi.Controller.ExtractDetails
 {
     [Produces("application/json")]
-    [Route("api/CervicalCancerScreening")]
-    public class CervicalCancerScreeningController : Microsoft.AspNetCore.Mvc.Controller
+    [Route("api/CancerScreening")]
+    public class CancerScreeningController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly ITempCervicalCancerScreeningExtractRepository _tempCervicalCancerScreeningExtractRepository;
-        private readonly ICervicalCancerScreeningExtractRepository _cervicalCancerScreeningExtractRepository;
-        private readonly ITempCervicalCancerScreeningExtractErrorSummaryRepository _errorSummaryRepository;
+        private readonly ITempCancerScreeningExtractRepository _tempCancerScreeningExtractRepository;
+        private readonly ICancerScreeningExtractRepository _CancerScreeningExtractRepository;
+        private readonly ITempCancerScreeningExtractErrorSummaryRepository _errorSummaryRepository;
 
-        public CervicalCancerScreeningController(ITempCervicalCancerScreeningExtractRepository tempCervicalCancerScreeningExtractRepository, ICervicalCancerScreeningExtractRepository CervicalCancerScreeningExtractRepository, ITempCervicalCancerScreeningExtractErrorSummaryRepository errorSummaryRepository)
+        public CancerScreeningController(ITempCancerScreeningExtractRepository tempCancerScreeningExtractRepository, ICancerScreeningExtractRepository CancerScreeningExtractRepository, ITempCancerScreeningExtractErrorSummaryRepository errorSummaryRepository)
         {
-            _tempCervicalCancerScreeningExtractRepository = tempCervicalCancerScreeningExtractRepository;
-            _cervicalCancerScreeningExtractRepository = CervicalCancerScreeningExtractRepository;
+            _tempCancerScreeningExtractRepository = tempCancerScreeningExtractRepository;
+            _CancerScreeningExtractRepository = CancerScreeningExtractRepository;
             _errorSummaryRepository = errorSummaryRepository;
         }
 
@@ -27,7 +27,7 @@ namespace Dwapi.Controller.ExtractDetails
         {
             try
             {
-                var count = await _cervicalCancerScreeningExtractRepository.GetCount();
+                var count = await _CancerScreeningExtractRepository.GetCount();
                 return Ok(count);
             }
             catch (Exception e)
@@ -44,12 +44,12 @@ namespace Dwapi.Controller.ExtractDetails
         {
             try
             {
-                var tempCervicalCancerScreeningExtracts = await _cervicalCancerScreeningExtractRepository.GetAll(page,pageSize);
-                return Ok(tempCervicalCancerScreeningExtracts.ToList());
+                var tempCancerScreeningExtracts = await _CancerScreeningExtractRepository.GetAll(page,pageSize);
+                return Ok(tempCancerScreeningExtracts.ToList());
             }
             catch (Exception e)
             {
-                var msg = $"Error loading valid CervicalCancerScreening Extracts";
+                var msg = $"Error loading valid CancerScreening Extracts";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);
@@ -61,12 +61,12 @@ namespace Dwapi.Controller.ExtractDetails
         {
             try
             {
-                var tempCervicalCancerScreeningExtracts = _tempCervicalCancerScreeningExtractRepository.GetAll().Where(n => n.CheckError).ToList();
-                return Ok(tempCervicalCancerScreeningExtracts);
+                var tempCancerScreeningExtracts = _tempCancerScreeningExtractRepository.GetAll().Where(n => n.CheckError).ToList();
+                return Ok(tempCancerScreeningExtracts);
             }
             catch (Exception e)
             {
-                var msg = $"Error loading CervicalCancerScreening Extracts with errors";
+                var msg = $"Error loading CancerScreening Extracts with errors";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

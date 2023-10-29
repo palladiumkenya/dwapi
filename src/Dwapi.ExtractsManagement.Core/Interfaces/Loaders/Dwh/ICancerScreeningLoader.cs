@@ -2,7 +2,7 @@
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Loaders.Dwh
 {
-    public interface ICervicalCancerScreeningLoader : ILoader<TempCervicalCancerScreeningExtract>
+    public interface ICancerScreeningLoader : ILoader<TempCancerScreeningExtract>
     {
         
     }

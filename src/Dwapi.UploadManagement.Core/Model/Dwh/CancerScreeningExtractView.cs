@@ -3,8 +3,8 @@ using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 
 namespace Dwapi.UploadManagement.Core.Model.Dwh
 {
-    [Table("CervicalCancerScreeningExtracts")]
-    public class CervicalCancerScreeningExtractView : CervicalCancerScreeningExtract
+    [Table("CancerScreeningExtracts")]
+    public class CancerScreeningExtractView : CancerScreeningExtract
     {
         public PatientExtractView PatientExtractView { get; set; }
     }

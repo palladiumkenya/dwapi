@@ -3022,7 +3022,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         }
                     }
                     
-                    else if (archive.Entries[i].Name == "CervicalCancerScreeningExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                    else if (archive.Entries[i].Name == "CancerScreeningExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
                         int total = 0;
                         int count = 0;
@@ -3039,20 +3039,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                                 byte[] base64EncodedBytes = Convert.FromBase64String(text);
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
-                                CervicalCancerScreeningMessageSourceBag messageBag = JsonConvert.DeserializeObject<CervicalCancerScreeningMessageSourceBag>(Extract);
+                                CancerScreeningMessageSourceBag messageBag = JsonConvert.DeserializeObject<CancerScreeningMessageSourceBag>(Extract);
                                 var batchSize = 2000;
                                 var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
-                                var list = new List<CervicalCancerScreeningMessageSourceBag>();
+                                var list = new List<CancerScreeningMessageSourceBag>();
                                 for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    List<CervicalCancerScreeningExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
-                                    list.Add(new CervicalCancerScreeningMessageSourceBag(newList));
+                                    List<CancerScreeningExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new CancerScreeningMessageSourceBag(newList));
                                 }
 
                                 int sendCound = 0;
                                 foreach (var item in list)
                                 {
-                                messageBag.Extracts = item._CervicalCancerScreeningExtractView;
+                                messageBag.Extracts = item._CancerScreeningExtractView;
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 

@@ -3,7 +3,7 @@ using Dwapi.SharedKernel.Interfaces;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh
 {
-    public interface ICervicalCancerScreeningSourceExtractor : ISourceExtractor<TempCervicalCancerScreeningExtract>
+    public interface ICancerScreeningSourceExtractor : ISourceExtractor<TempCancerScreeningExtract>
     {
         
     }

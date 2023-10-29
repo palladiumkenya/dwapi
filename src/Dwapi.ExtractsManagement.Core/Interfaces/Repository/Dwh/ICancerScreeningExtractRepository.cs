@@ -6,9 +6,9 @@ using Dwapi.SharedKernel.Model;
 
 namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh
 {
-    public interface ICervicalCancerScreeningExtractRepository : IRepository<CervicalCancerScreeningExtract, Guid>
+    public interface ICancerScreeningExtractRepository : IRepository<CancerScreeningExtract, Guid>
     {
-        bool BatchInsert(IEnumerable<CervicalCancerScreeningExtract> extracts);
+        bool BatchInsert(IEnumerable<CancerScreeningExtract> extracts);
         void UpdateSendStatus(List<SentItem> sentItems);
         long UpdateDiffSendStatus();
     }

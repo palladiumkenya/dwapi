@@ -5825,52 +5825,71 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                                 where program_name = 'OVC'
                                                 group by d.patient_id) d on d.patient_id = v.patient_id
                                      join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OvcExtract|18|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id as PatientPK,
-                                    a.uuid     as RecordUUID,
-                                    0 AS FacilityId,
-                                    s.siteCode as SiteCode,
-                                    de.unique_patient_no as PatientID,
-                                    'KenyaEMR' as Emr,
-                                    'Kenya HMIS II' as Project,s.FacilityName as FacilityName,
-                                    a.visit_id as VisitID,a.visit_date as VisitDate,e.OTZEnrollmentDate,e.TransferInStatus, e.ModulesPreviouslyCovered
-                                 ,concat_ws(',',NULLIF(if(a.orientation='Yes','OTZ Orientation',null),''),NULLIF(if(a.participation='Yes','OTZ Participation',''),''),NULLIF(if(a.making_decision_future='Yes','OTZ Making decisions for the future',''),'')
-                                    ,NULLIF(if(a.transition_to_adult_care='Yes','OTZ Transition to Adult care',''),''),NULLIF(if(a.treatment_literacy='Yes','OTZ Treatment literacy',''),''),NULLIF(if(a.srh='Yes','OTZ SRH',''),''),NULLIF(if(a.leadership='Yes','Leadership',''),''),
-                                            NULLIF(if(a.beyond_third_ninety='Yes','OTZ Beyond the 3rd 90',null),'')) as ModulesCompletedToday,a.attended_support_group as SupportGroupInvolvement,
-                                    a.remarks as Remarks,d.attrition_reason as TransitionAttritionReason, d.Outcome_date as OutcomeDate, a.date_created as Date_Created, 
-                                    greatest(NULLIF(a.date_last_modified,'0000-00-00'),NULLIF(a.date_last_modified,'0000-00-00')) as Date_Last_Modified, a.voided                                                       as Voided
-                            from dwapi_etl.etl_otz_activity a
-                                     inner join dwapi_etl.etl_patient_demographics de on a.patient_id = de.patient_id
-                                     inner join (select e.patient_id,
-                                                        greatest(max(e.visit_date), '0000-00-00')         as OTZEnrollmentDate,
-                                                        mid(max(concat(e.visit_date, e.transfer_in)), 11) as TransferInStatus,
-                                                        concat_ws(',', NULLIF(if(e.orientation = 'Yes', 'OTZ Orientation', null), ''),
-                                                                  NULLIF(if(e.participation = 'Yes', 'OTZ Participation', ''), ''), NULLIF(
-                                                                          if(e.making_decision_future = 'Yes',
-                                                                             'OTZ Making decisions for the future', ''), ''),
-                                                                  NULLIF(if(e.transition_to_adult_care = 'Yes', 'OTZ Transition to Adult care', ''),
-                                                                         ''),
-                                                                  NULLIF(if(e.treatment_literacy = 'Yes', 'OTZ Treatment literacy', ''), ''),
-                                                                  NULLIF(if(e.srh = 'Yes', 'OTZ SRH', ''), ''),
-                                                                  NULLIF(if(e.beyond_third_ninety = 'Yes', 'OTZ Beyond the 3rd 90', null),
-                                                                         ''))                             as ModulesPreviouslyCovered,
-                                                        e.date_created                                    as date_created,
-                                                        e.date_last_modified                              as date_last_modified
-                                                 from dwapi_etl.etl_otz_enrollment e
-                                                 group by e.patient_id) e on a.patient_id = e.patient_id
-                                     left join (select d.patient_id,
-                                                       coalesce(max(date(d.effective_discontinuation_date)), date(d.visit_date)) Outcome_date,
-                                                       (case mid(max(concat(date(d.visit_date), d.discontinuation_reason)), 11)
-                                                            when 5240 then 'LTFU'
-                                                            when 159492 then 'Transfer Out'
-                                                            when 160034 then 'Died'
-                                                            when 159836 then 'Opt out of OTZ'
-                                                            when 165363 then 'Transition to Adult Care' end) as                  attrition_reason,
-                                                       d.date_created,
-                                                       d.date_last_modified
-                                                from dwapi_etl.etl_patient_program_discontinuation d
-                                                where program_name = 'OTZ'
-                                                group by d.patient_id) d on d.patient_id = a.patient_id
-                                     join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OtzExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                   as PatientPK,
+                                                           a.uuid                                                         as RecordUUID,
+                                                           0                                                              AS FacilityId,
+                                                           s.siteCode                                                     as SiteCode,
+                                                           de.unique_patient_no                                           as PatientID,
+                                                           'KenyaEMR'                                                     as Emr,
+                                                           'Kenya HMIS II'                                                as Project,
+                                                           s.FacilityName                                                 as FacilityName,
+                                                           a.visit_id                                                     as VisitID,
+                                                           a.visit_date                                                   as VisitDate,
+                                                           e.OTZEnrollmentDate,
+                                                           e.TransferInStatus,
+                                                           e.ModulesPreviouslyCovered,
+                                                           concat_ws(',', NULLIF(if(a.orientation = 'Yes', 'OTZ Orientation', null), ''),
+                                                                     NULLIF(if(a.participation = 'Yes', 'OTZ Participation', ''), ''),
+                                                                     NULLIF(if(a.making_decision_future = 'Yes', 'OTZ Making decisions for the future', ''), '')
+                                                               , NULLIF(if(a.transition_to_adult_care = 'Yes', 'OTZ Transition to Adult care', ''), ''),
+                                                                     NULLIF(if(a.treatment_literacy = 'Yes', 'OTZ Treatment literacy', ''), ''),
+                                                                     NULLIF(if(a.srh = 'Yes', 'OTZ SRH', ''), ''), NULLIF(if(a.leadership = 'Yes', 'Leadership', ''), ''),
+                                                                     NULLIF(if(a.beyond_third_ninety = 'Yes', 'OTZ Beyond the 3rd 90', null),
+                                                                            ''))                                          as ModulesCompletedToday,
+                                                           a.attended_support_group                                       as SupportGroupInvolvement,
+                                                           a.remarks                                                      as Remarks,
+                                                           d.attrition_reason                                             as TransitionAttritionReason,
+                                                           d.Outcome_date                                                 as OutcomeDate,
+                                                           a.date_created                                                 as Date_Created,
+                                                           if(greatest(IFNULL(e.date_last_modified, '1900-01-01'), IFNULL(a.date_last_modified, '1900-01-01'),
+                                                                       IFNULL(d.date_last_modified, '1900-01-01')) = '1900-01-01',
+                                                              NULL, greatest(IFNULL(e.date_last_modified, '1900-01-01'), IFNULL(a.date_last_modified, '1900-01-01'),
+                                                                             IFNULL(d.date_last_modified, '1900-01-01'))) as Date_Last_Modified,
+                                                           a.voided                                                       as voided
+                                                    from dwapi_etl.etl_otz_activity a
+                                                             inner join dwapi_etl.etl_patient_demographics de on a.patient_id = de.patient_id
+                                                             inner join (select e.patient_id,
+                                                                                greatest(max(e.visit_date), '1900-01-01')         as OTZEnrollmentDate,
+                                                                                mid(max(concat(e.visit_date, e.transfer_in)), 11) as TransferInStatus,
+                                                                                concat_ws(',', NULLIF(if(e.orientation = 'Yes', 'OTZ Orientation', null), ''),
+                                                                                          NULLIF(if(e.participation = 'Yes', 'OTZ Participation', ''), ''), NULLIF(
+                                                                                                  if(e.making_decision_future = 'Yes',
+                                                                                                     'OTZ Making decisions for the future', ''), ''),
+                                                                                          NULLIF(if(e.transition_to_adult_care = 'Yes', 'OTZ Transition to Adult care', ''),
+                                                                                                 ''),
+                                                                                          NULLIF(if(e.treatment_literacy = 'Yes', 'OTZ Treatment literacy', ''), ''),
+                                                                                          NULLIF(if(e.srh = 'Yes', 'OTZ SRH', ''), ''),
+                                                                                          NULLIF(if(e.beyond_third_ninety = 'Yes', 'OTZ Beyond the 3rd 90', null),
+                                                                                                 ''))                             as ModulesPreviouslyCovered,
+                                                                                e.date_created                                    as date_created,
+                                                                                e.date_last_modified                              as date_last_modified
+                                                                         from dwapi_etl.etl_otz_enrollment e
+                                                                         group by e.patient_id, visit_date, transfer_in, orientation, participation, making_decision_future, transition_to_adult_care,
+                                                                         treatment_literacy, srh, beyond_third_ninety, date_created, date_last_modified) e on a.patient_id = e.patient_id
+                                                             left join (select d.patient_id,
+                                                                               coalesce(max(date(d.effective_discontinuation_date)), date(d.visit_date)) Outcome_date,
+                                                                               (case mid(max(concat(date(d.visit_date), d.discontinuation_reason)), 11)
+                                                                                    when 5240 then 'LTFU'
+                                                                                    when 159492 then 'Transfer Out'
+                                                                                    when 160034 then 'Died'
+                                                                                    when 159836 then 'Opt out of OTZ'
+                                                                                    when 165363 then 'Transition to Adult Care' end) as                  attrition_reason,
+                                                                               d.date_created,
+                                                                               d.date_last_modified
+                                                                        from dwapi_etl.etl_patient_program_discontinuation d
+                                                                        where program_name = 'OTZ'
+                                                                        group by d.patient_id, effective_discontinuation_date, visit_date, discontinuation_reason, date_created, date_last_modified ) d on d.patient_id = a.patient_id
+                                                             join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OtzExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 7c2e4a14-8728-11eb-8dcd-0242ac130003|All Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_Extract"|dwhstage|1|PatientExtract|1|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
 7c2e4c44-8728-11eb-8dcd-0242ac130003|ART Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_ART_EXTRACT"|dwhstage|0|PatientArtExtract|2|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
@@ -7769,7 +7788,7 @@ d569fc28-ae47-11eb-8529-0242ac130003|Defaulter Tracing|NDWH|A6221857-0E85-11E8-B
 								BookingDate
 				FROM
 								ndwr.ndwr_defaulter_tracing_extract"|dwhstage|0|DefaulterTracingExtract|21|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
-5D94B087-01DC-4C4E-8BA6-1027F974B232|Cervical Cancer Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|CervicalCancerScreeningExtract|22|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+5D94B087-01DC-4C4E-8BA6-1027F974B232|Cancer Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|CancerScreeningExtract|22|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 d5640010-ae47-11eb-8529-0242ac130003|Indicators|MTS|A6221857-0E85-11E8-BA89-0ED5F89F718B||Indicator|1|IndicatorExtract|1|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 A7F13D1F-8E82-4414-BB56-BB40A10F01F3|Hei|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempHeiExtract|0|HeiExtract|28.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 C37BE5B9-C518-477D-BDA6-C7FAD68262D2|Mnch Enrolment|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
@@ -7970,33 +7989,91 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                        join kenyaemr_etl.etl_default_facility_info i
               group by f.visit_id"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
-3425F2F6-B9D8-48F1-97F6-8E6E092B0C97|Cervical Cancer Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                           PatientPK,
-                                        s.uuid   as RecordUUID,
-                                    i.siteCode                             SiteCode,
-                                    d.unique_patient_no                    PatientID,
-                                    0                                   as FacilityId,
-                                    'KenyaEMR'                             Emr,
-                                    'Kenya HMIS III'                       Project,
-                                    i.facilityName                         FacilityName,
-                                    s.visit_id                             VisitID,
-                                    s.visit_date                           VisitDate,
-                                    s.visit_type                        as VisitType,
-                                    s.screening_method                  as ScreeningMethod,
-                                    s.treatment_method                  as TreatmentToday,
-                                    s.screening_type                    as ScreeningType,
-                                    s.post_treatment_complication_cause as PostTreatmentComplicationCause,
-                                    s.post_treatment_complication_other as OtherPostTreatmentComplication,
-                                    s.screening_result                  as ScreeningResult,
-                                    s.referred_out                      as ReferredOut,
-                                    s.referral_reason                   as ReferralReason,
-                                    date(s.next_appointment_date)       as NextAppointmentDate,
-                                    s.date_created                      as Date_Created,
-                                    s.date_last_modified                as Date_Last_Modified,	
-              s.voided                            as Voided	
-              from dwapi_etl.etl_patient_demographics d	
-              join dwapi_etl.etl_cervical_cancer_screening s on d.patient_id = s.patient_id	
-              join kenyaemr_etl.etl_default_facility_info i	
-              group by s.visit_id"|dwhstage|0|CervicalCancerScreeningExtract|22|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+3425F2F6-B9D8-48F1-97F6-8E6E092B0C97|Cancer Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                                              PatientPK,
+                                        s.uuid                                        as RecordUUID,
+                                         i.siteCode                                       SiteCode,
+                                         d.unique_patient_no                              PatientID,
+                                         0                                             as FacilityId,
+                                         'KenyaEMR'                                       Emr,
+                                         'Kenya HMIS III'                                 Project,
+                                         i.facilityName                                   FacilityName,
+                                         '' as TreatmentRetinoblastoma,
+                                         '' as RetinoblastomaGene,
+                                         '' as ReferalOrdered,
+                                         '' as BiopsyCINIIandAbove,
+                                         '' as BiopsyCINIIandBelow,
+                                         '' as BiopsyNotAvailable,
+                                         '' as IfTissueDiagnosis,
+                                         '' as DateTissueDiagnosis,
+                                         '' as ReasonNotDone,
+                                         '' as FollowUpDate,
+                                         '' as Referred,
+                                         '' as ReasonForReferral,
+                                         s.visit_id                                       VisitId,
+                                         s.visit_date                                     VisitDate,
+                                         s.visit_type                                  as VisitType,
+                                         s.smoke_cigarattes                            as SmokesCigarette,
+                                         s.number_of_years_smoked                      as NumberYearsSmoked,
+                                         s.number_of_cigarette_per_day                 as NumberCigarettesPerDay,
+                                         s.other_forms_tobacco                         as OtherFormTobacco,
+                                         s.take_alcohol                                as TakesAlcohol,
+                                         s.hiv_status                                  as HIVStatus,
+                                         s.family_history                              as FamilyHistoryOfCa,
+                                         s.previous_treatment                          as PreviousCaTreatment,
+                                         s.signs_symptoms                              as SymptomsCa,
+                                         if(s.cervical_cancer = 'Yes', 'Cervical', if(s.colorectal_cancer = 'Yes', 'Colorectal',
+                             if(s.retinoblastoma_cancer = 'Yes', 'RetinoBlastoma',
+                                if(s.oral_cancer = 'Yes', 'Oral',
+                                   if(s.prostate_cancer = 'Yes', 'Prostate',
+                                      if(s.breast_cancer = 'Yes', 'Breast', NULL)))))) as CancerType,
+                                         s.fecal_occult_screening_results              as FecalOccultBloodTest,
+                                         s.fecal_occult_screening_treatment            as TreatmentOccultBlood,
+                                         s.colonoscopy_method_results                  as Colonoscopy,
+                                         s.colonoscopy_method_treatment                as TreatmentColonoscopy,
+                                         s.retinoblastoma_eua_screening_results        as EUA,
+                                         s.retinoblastoma_eua_treatment                as TreatmentEUA,
+                                         s.digital_rectal_prostate_examination         as DRE,
+                                         s.digital_rectal_prostate_treatment           as TreatmentDRE,
+                                         s.prostatic_specific_antigen_results          as PSA,
+                                         s.prostatic_specific_antigen_treatment        as TreatmentPSA,
+                                         s.oral_cancer_visual_exam_results             as visualExamination,
+                                         s.oral_cancer_visual_exam_treatment           as TreatmentVE,
+                                         s.oral_cancer_cytology_results                as Cytology,
+                                         s.oral_cancer_cytology_treatment              as TreatmentCytology,
+                                         s.oral_cancer_imaging_results                 as Imaging,
+                                         s.oral_cancer_imaging_treatment               as TreatmentImaging,
+                                         s.oral_cancer_biopsy_results                  as Biopsy,
+                                         s.oral_cancer_biopsy_treatment                as TreatmentBiopsy,                                         
+                                         null                                          as ScreeningMethod,
+                                         null                                          as TreatmentToday,
+                                         s.screening_type                              as ScreeningType,
+                                         s.hpv_screening_result                        as HPVScreeningResult,
+                                         s.hpv_treatment_method                        as TreatmentHPV,
+                                         s.via_vili_screening_result                   as VIAVILIScreeningResult,
+                                         s.via_vili_treatment_method                   as VIAVILITreatment,
+                                         ''                                            as VIAScreeningResult,
+                                         ''                                            as VIATreatmentOptions,
+                                         s.colposcopy_screening_result                 as Colposcopy,
+                                         s.colposcopy_treatment_method                 as TreatmentColposcopy,
+                                         s.pap_smear_screening_result                  as PAPSmearScreeningResult,
+                                         s.pap_smear_treatment_method                  as TreatmentPapSmear,
+                                         s.clinical_breast_examination_screening_result    as CBE,
+                                         s.clinical_breast_examination_treatment_method    as TreatmentCBE,
+                                         s.ultrasound_screening_result                 as Ultrasound,
+                                         s.ultrasound_treatment_method                 as TreatmentUltraSound,
+                                         s.post_treatment_complication_cause           as PostTreatmentComplicationCause,
+                                         s.post_treatment_complication_other           as OtherPostTreatmentComplication,
+                                         null                                          as ScreeningResult,
+                                         s.referred_out                                as ReferredOut,
+                                         s.referral_reason                             as ReferralReason,
+                                         date(s.followup_date)                         as NextAppointmentDate,
+                                         s.date_created                                as Date_Created,
+                                         s.date_last_modified                          as Date_Last_Modified,
+                                         s.voided                                      as Voided
+                                  from dwapi_etl.etl_patient_demographics d
+                                           join dwapi_etl.etl_cervical_cancer_screening s on d.patient_id = s.patient_id
+                                           join kenyaemr_etl.etl_default_facility_info i
+                                  group by s.visit_id"|dwhstage|0|CancerScreeningExtract|22|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 235A64F3-9EA9-4CCC-8C28-AD7EB8209F9C|IIT Risk Scores|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT r.patient_id         as PatientPK,
                                                  d.unique_patient_no                    PatientID,
                                                 i.siteCode           as SiteCode,
@@ -8016,13 +8093,14 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                          inner join dwapi_etl.etl_patient_demographics d on d.patient_id = r.patient_id	
                                          join kenyaemr_etl.etl_default_facility_info i"|dwhstage|0|IITRiskScoresExtract|23|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
-A47EFA09-28D9-46EC-B2E6-C6244DBDA240|ART Fast Track|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                                           as PatientPK,
+A47EFA09-28D9-46EC-B2E6-C6244DBDA240|Art Fast Track|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                                           as PatientPK,
                           s.siteCode                                                                             as SiteCode,
                           de.unique_patient_no                                                                   as PatientID,
                           a.uuid                                                                                 as RecordUUID,
                           'KenyaEMR'                                                                             as Emr,
                           'Kenya HMIS III'                                                                       as Project,
                           s.FacilityName                                                                         as FacilityName,
+                          0                                                                                      as FacilityId,
                           case a.art_refill_model
                               when 1744 then 'Fast Track'
                               when 1555 then 'Community ART Distribution - HCW Led'
@@ -8057,9 +8135,9 @@ A47EFA09-28D9-46EC-B2E6-C6244DBDA240|ART Fast Track|NDWH|a6221856-0e85-11e8-ba89
                           a.reason_not_on_family_planning                                                        as ReasonNotOnFP,
                           a.referred_to_clinic                                                                   as ReferredToClinic,
                           a.return_visit_date                                                                    as ReturnVisitDate,
-                          a.date_created,
-                          a.date_last_modified,
-                          a.voided
+                          a.date_created as Date_Created,
+                          a.date_last_modified as Date_Last_Modified,
+                          a.voided as Voided
                    from dwapi_etl.etl_art_fast_track a
                             inner join dwapi_etl.etl_hiv_enrollment e on a.patient_id = e.patient_id
                             inner join dwapi_etl.etl_patient_demographics de on a.patient_id = de.patient_id
@@ -8076,7 +8154,7 @@ A47EFA09-28D9-46EC-B2E6-C6244DBDA240|ART Fast Track|NDWH|a6221856-0e85-11e8-ba89
                                           'KenyaEMR'                                                    as Emr,
                                           'HMIS'                                                        as Project,
                                           e.visit_date                                                 as PrepEnrollmentDate,
-                                          e.prep_type                                                   as TypeOfPrEP
+                                          e.prep_type                                                   as TypeOfPrEP,
                                           case d.gender when 'M' then 'Male' when 'F' then 'Female' end as Sex,
                                           d.dob                                                         as DateOfBirth,
                                           d.birth_place                                                 as CountyOfBirth,
@@ -8409,7 +8487,13 @@ FC9AA929-73D8-4CA7-83EA-7882D6C18D16|Prep Monthly Refill|PREP|a6221856-0e85-11e8
                            'KenyaEMR'                       as Emr,
                            'Kenya HMIS III'                 as Project,
                            r.visit_date                     as VisitDate,
-                           r.assessed_for_behavior_risk     as AssessedForBehaviorRisk,
+                           ''   as SexPartnerHIVStatus,
+                           ''   as SymptomsAcuteHIV,
+                           ''   as ContraIndicationForPrEP,
+                           ''   as CondomsIssued,
+                           ''   as ReasonForFailureToGiveAppointment,
+                           ''   as DateOfLastPrepDose, 
+                           r.assessed_for_behavior_risk     as BehaviorRiskAssessment,
                            r.risk_for_hiv_positive_partner  as RiskForHIVPositivePartner,
                            r.client_assessment              as ClientAssessment,
                            r.adherence_assessment           as AdherenceAssessment,
@@ -8421,13 +8505,13 @@ FC9AA929-73D8-4CA7-83EA-7882D6C18D16|Prep Monthly Refill|PREP|a6221856-0e85-11e8
                            r.switching_date                 as SwitchingdDate,
                            r.prep_type                      as PrepType,
                            r.prescribed_prep_today          as PrescribedPrepToday,
-                           r.prescribed_regimen             as PrescribedRegimen,
-                           r.prescribed_regimen_months      as MonthsPrecribed,
+                           r.prescribed_regimen             as RegimenPrescribed,
+                           r.prescribed_regimen_months      as NumberOfMonths,
                            r.number_of_condoms_issued       as NumberOfCondomsIssued,
                            r.prep_discontinue_reasons       as DiscontinueReason,
                            r.prep_discontinue_other_reasons as OtherDiscontinueReason,
-                           r.appointment_given              as AppointmentGiven,
-                           r.next_appointment               as NextAppointment,
+                           r.appointment_given              as ClientGivenNextAppointment,
+                           r.next_appointment               as AppointmentDate,
                            r.remarks                        as Remarks,
                            r.voided                         as Voided,
                            r.date_created                   as Date_Created,

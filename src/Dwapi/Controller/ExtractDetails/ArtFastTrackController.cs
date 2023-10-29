@@ -83,7 +83,7 @@ namespace Dwapi.Controller.ExtractDetails
             }
             catch (Exception e)
             {
-                var msg = $"Error loading Patient Status error summary";
+                var msg = $"Error loading Patient art fast track error summary";
                 Log.Error(msg);
                 Log.Error($"{e}");
                 return StatusCode(500, msg);

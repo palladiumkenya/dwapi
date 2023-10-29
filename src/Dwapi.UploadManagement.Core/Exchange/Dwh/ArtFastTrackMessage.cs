@@ -27,7 +27,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Dwh
         public List<Guid> SendIds => GetIds();
         public List<Guid> PatientIds { get; }
 
-        [JsonProperty(PropertyName = "PArtFastTrackExtracts")]
+        [JsonProperty(PropertyName = "ArtFastTrackExtracts")]
         public List<ArtFastTrackExtractView> ArtFastTrackExtracts { get; set; } = new List<ArtFastTrackExtractView>();
         public bool HasContents => null != ArtFastTrackExtracts && ArtFastTrackExtracts.Any();
 

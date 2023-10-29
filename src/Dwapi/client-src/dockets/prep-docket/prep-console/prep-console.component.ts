@@ -559,14 +559,15 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 p => {
                     // this.sendResponse = p;
                     this.updateEvent();
+                    this.sendPrepMonthlyRefillExtracts();
                 },
                 e => {
                     this.errorMessage = [];
-                    this.errorMessage.push({severity: 'error', summary: 'Error sending client linkage', detail: <any>e});
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending prep monthly refill', detail: <any>e});
                 },
                 () => {
                     // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
-                    localStorage.setItem('htsSendingComplete', "true");
+                    // localStorage.setItem('htsSendingComplete', "true");
 
                 }
             );
@@ -582,6 +583,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 p => {
                     // this.sendResponse = p;
                     this.updateEvent();
+                    this.exportPrepMonthlyRefillExtracts();
                 },
                 e => {
                     this.errorMessage = [];
@@ -592,6 +594,54 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
                 }
             );
     }
+
+    public sendPrepMonthlyRefillExtracts(): void {
+        this.sendStage = 11;
+        //this.sendEvent = {sentProgress: 0};
+        this.sending = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPrepMonthlyRefillExtractPackage();
+        this.send$ = this._prepSenderService.sendPrepMonthlyRefillExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending client linkage', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                    // localStorage.setItem('htsSendingComplete', "true");
+
+                }
+            );
+    }
+    public exportPrepMonthlyRefillExtracts(): void {
+        this.exportStage = 11;
+        //this.sendEvent = {sentProgress: 0};
+        this.exporting = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPrepMonthlyRefillExtractPackage();
+        this.send$ = this._prepSenderService.exportPrepMonthlyRefillExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({ severity: 'error', summary: 'Error exporting prep monthly refill', detail: <any>e });
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                }
+            );
+    }
+
+
+
     public sendHandshake(): void {
         this.manifestPackage = this.getSendManifestPackage();
         this.send$ = this._prepSenderService.sendHandshake(this.manifestPackage)
@@ -694,6 +744,14 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
             destination: this.centralRegistry,
             extractId: this.extracts.find(x => x.name === 'PrepVisitExtract').id,
             extractName: 'PrepVisitExtract'
+        };
+    }
+
+    private getPrepMonthlyRefillExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'PrepMonthlyRefillExtract').id,
+            extractName: 'PrepMonthlyRefillExtract'
         };
     }
 
@@ -834,6 +892,7 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         this.extractProfiles.push(this.generateExtractPrepLab(currentEmr));
         this.extractProfiles.push(this.generateExtractPrepPharmacy(currentEmr));
         this.extractProfiles.push(this.generateExtractPrepVisit(currentEmr));
+        this.extractProfiles.push(this.generateExtractPrepMonthlyRefill(currentEmr));
 
         this.extractLoadCommand = {
             extracts: this.extractProfiles
@@ -898,6 +957,14 @@ export class PrepConsoleComponent implements OnInit, OnDestroy, OnChanges {
         return {
             databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
             extract: this.extracts.find(x => x.name === 'PrepVisitExtract')
+        };
+    }
+
+    private generateExtractPrepMonthlyRefill(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PrepMonthlyRefillExtract').databaseProtocolId;
+        return {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'PrepMonthlyRefillExtract')
         };
     }
 
