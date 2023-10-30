@@ -3,6 +3,9 @@
 
     <h2>File List</h2>
     <p *ngIf="showProgress"> progress <strong>{{percentage}}%</strong></p>
+    <p class="bg-success text-white" >Please delete any exports from the downloads folder of your computer/device before downloading a new export
+        to ensure the files are suffixed with  CT, HTS, PREP AND HTS e.g 12730-CT.zip not 12730-CT(1).zip</p>
+
     <label class="error" [hidden]="!showDownloadError">error downloading</label>
     <div class="container">
         <ul>
