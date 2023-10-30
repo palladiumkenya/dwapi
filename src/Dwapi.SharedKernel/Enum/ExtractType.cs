@@ -21,9 +21,10 @@
         Otz,
         Covid,
         DefaulterTracing,
-        CervicalCancerScreening,
+        CancerScreening,
         IITRiskScores,
-
+        ArtFastTrack,
+        
         PatientMnch,
         AncVisit,
         CwcEnrollment,
@@ -43,6 +44,7 @@
         PrepCareTermination,
         PrepLab,
         PrepPharmacy,
-        PrepVisit
+        PrepVisit,
+        PrepMonthlyRefill
     }
 }

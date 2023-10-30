@@ -16,6 +16,7 @@ namespace Dwapi.UploadManagement.Core.Exchange.Prep
         public List<PrepLabExtract> PrepLabExtracts { get; set; } = new List<PrepLabExtract>();
         public List<PrepPharmacyExtract> PrepPharmacyExtracts { get; set; } = new List<PrepPharmacyExtract>();
         public List<PrepVisitExtract> PrepVisitExtracts { get; set; } = new List<PrepVisitExtract>();
+        public List<PrepMonthlyRefillExtract> PrepMonthlyRefillExtracts { get; set; } = new List<PrepMonthlyRefillExtract>();
 
         public PrepMessage()
         {
@@ -50,6 +51,11 @@ namespace Dwapi.UploadManagement.Core.Exchange.Prep
         public PrepMessage(List<PrepVisitExtract> extracts)
         {
             PrepVisitExtracts = extracts;
+        }
+        
+        public PrepMessage(List<PrepMonthlyRefillExtract> extracts)
+        {
+            PrepMonthlyRefillExtracts = extracts;
         }
 
         public static List<PrepMessage> Create(List<PatientPrepExtract> extracts)
@@ -134,6 +140,18 @@ namespace Dwapi.UploadManagement.Core.Exchange.Prep
 
             return list;
         }
+        
+        public static List<PrepMessage> Create(List<PrepMonthlyRefillExtract> extracts)
+        {
+            var list = new List<PrepMessage>();
+            var chunks = extracts.ToList().ChunkBy(batch);
+            foreach (var chunk in chunks)
+            {
+                list.Add(new PrepMessage(chunk));
+            }
+
+            return list;
+        }
 
         //BoardRoom Uploads
         public static List<PrepMessage> CreateEx(List<PatientPrepExtract> extracts)
@@ -186,6 +204,15 @@ namespace Dwapi.UploadManagement.Core.Exchange.Prep
             return list;
         }
         public static List<PrepMessage> CreateEx(List<PrepVisitExtract> extracts)
+        {
+            var list = new List<PrepMessage>();
+            var chunks = extracts.ToList();
+            list.Add(new PrepMessage(chunks));
+
+            return list;
+        }
+        
+        public static List<PrepMessage> CreateEx(List<PrepMonthlyRefillExtract> extracts)
         {
             var list = new List<PrepMessage>();
             var chunks = extracts.ToList();

@@ -3022,7 +3022,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         }
                     }
                     
-                    else if (archive.Entries[i].Name == "CervicalCancerScreeningExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                    else if (archive.Entries[i].Name == "CancerScreeningExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                     {
                         int total = 0;
                         int count = 0;
@@ -3039,20 +3039,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                                 byte[] base64EncodedBytes = Convert.FromBase64String(text);
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
-                                CervicalCancerScreeningMessageSourceBag messageBag = JsonConvert.DeserializeObject<CervicalCancerScreeningMessageSourceBag>(Extract);
+                                CancerScreeningMessageSourceBag messageBag = JsonConvert.DeserializeObject<CancerScreeningMessageSourceBag>(Extract);
                                 var batchSize = 2000;
                                 var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
-                                var list = new List<CervicalCancerScreeningMessageSourceBag>();
+                                var list = new List<CancerScreeningMessageSourceBag>();
                                 for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    List<CervicalCancerScreeningExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
-                                    list.Add(new CervicalCancerScreeningMessageSourceBag(newList));
+                                    List<CancerScreeningExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new CancerScreeningMessageSourceBag(newList));
                                 }
 
                                 int sendCound = 0;
                                 foreach (var item in list)
                                 {
-                                messageBag.Extracts = item._CervicalCancerScreeningExtractView;
+                                messageBag.Extracts = item._CancerScreeningExtractView;
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 
@@ -3173,6 +3173,125 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                 foreach (var item in list)
                                 {
                                 messageBag.Extracts = item._IITRiskScoresExtractView;
+                                string jobId = string.Empty; Guid manifestId; Guid facilityId;
+                                var manifest = _transportLogRepository.GetManifest();
+
+                                if (messageBag.ExtractName == nameof(PatientExtract))
+                                {
+                                    var mainExtract = _transportLogRepository.GetMainExtract();
+                                    if (null == mainExtract)
+                                    {
+                                        jobId = manifest.JobId;
+                                        manifestId = manifest.ManifestId;
+                                        facilityId = manifest.FacilityId;
+                                    }
+                                    else
+                                    {
+                                        jobId = mainExtract.JobId;
+                                        manifestId = mainExtract.ManifestId;
+                                        facilityId = mainExtract.FacilityId;
+                                    }
+                                }
+                                else
+                                {
+                                    var mainExtract = _transportLogRepository.GetMainExtract();
+                                    jobId = mainExtract.JobId;
+                                    manifestId = mainExtract.ManifestId;
+                                    facilityId = mainExtract.FacilityId;
+                                }
+
+                                    count++;
+                                    var extracts = messageBag.Extracts;
+                                    recordCount = messageBag.Extracts.Count;
+                                    messageBag.Generate(extracts, manifestId, facilityId, jobId);
+                                    var message = messageBag;
+
+                                    
+                                    try
+                                    {
+                                        int retryCount = 0;
+                                        bool allowSend = true;
+                                        while (allowSend)
+                                        {
+                                            var response = await client.PostAsJsonAsync(
+                                                  sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
+                                            if (response.IsSuccessStatusCode)
+                                            {
+                                                allowSend = false;
+                                                var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
+                                                responses.Add(res);
+
+                                                var tlog = TransportLog.GenerateExtract("NDWH", messageBag.ExtractName, res.JobId);
+                                                _transportLogRepository.CreateLatest(tlog);
+                                            }
+                                            else
+                                            {
+                                                retryCount++;
+                                                if (retryCount == 4)
+                                                {
+                                                    var sentIds = messageBag.SendIds;
+                                                    var error = await response.Content.ReadAsStringAsync();
+                                                    DomainEvents.Dispatch(new CTExtractSentEvent(
+                                                        sentIds, SendStatus.Failed, messageBag.ExtractType,
+                                                        error));
+                                                    throw new Exception(error);
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error");
+                                        throw;
+                                    }
+
+                                   
+
+                                }
+                                _recordsSaved++;
+                                await UpdateProgress();
+                                await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                        }
+                    }
+                    else if (archive.Entries[i].Name == "ArtFastTrackExtract.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                    {
+                        int total = 0;
+                        int count = 0;
+                        long recordCount = 0;
+                       
+                        string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
+                        var filestream = File.OpenRead(destinationPath);
+                        using (StreamReader sr = new StreamReader(filestream))
+                        {
+                            try
+                            {
+                                text = await sr.ReadToEndAsync(); // OK                         
+
+                                byte[] base64EncodedBytes = Convert.FromBase64String(text);
+                                var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
+                                ArtFastTrackMessageSourceBag messageBag = JsonConvert.DeserializeObject<ArtFastTrackMessageSourceBag>(Extract);
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)messageBag.Extracts.Count() / batchSize);
+                                var list = new List<ArtFastTrackMessageSourceBag>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<ArtFastTrackExtractView> newList = messageBag.Extracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new ArtFastTrackMessageSourceBag(newList));
+                                }
+
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                messageBag.Extracts = item._ArtFastTrackExtractView;
                                 string jobId = string.Empty; Guid manifestId; Guid facilityId;
                                 var manifest = _transportLogRepository.GetManifest();
 

@@ -108,10 +108,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
                 nameof(ExtractsContext.CovidExtracts),
                 nameof(ExtractsContext.TempDefaulterTracingExtracts),
                 nameof(ExtractsContext.DefaulterTracingExtracts),
-                nameof(ExtractsContext.TempCervicalCancerScreeningExtracts),
-                nameof(ExtractsContext.CervicalCancerScreeningExtracts),
+                nameof(ExtractsContext.TempCancerScreeningExtracts),
+                nameof(ExtractsContext.CancerScreeningExtracts),
                 nameof(ExtractsContext.TempIITRiskScoresExtracts),
-                nameof(ExtractsContext.IITRiskScoresExtracts)
+                nameof(ExtractsContext.IITRiskScoresExtracts),
+                nameof(ExtractsContext.TempArtFastTrackExtracts),
+                nameof(ExtractsContext.ArtFastTrackExtracts)
 
             };
 

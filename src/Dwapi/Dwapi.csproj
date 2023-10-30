@@ -4,7 +4,7 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <Version>3.1.1.2</Version>
+    <Version>3.1.1.4</Version>
     <Company>Palladium Group</Company>
     <Authors>Davidson Gikandi, Danson Koske, Mwenda Gitonga, Brian Mwasi, Teddy Brian, Mary Kilewe, Margaret Gichuhi</Authors>
     <RepositoryUrl>https://github.com/palladiumkenya/DWAPI</RepositoryUrl>
@@ -121,5 +121,27 @@ Bached sending and await to 50 at a time
     <TypeScriptCompile Include="client-src\dockets\services\upload-service.ts" />
     <TypeScriptCompile Include="client-src\progress-status.model.ts" />
     <TypeScriptCompile Include="client-src\settings\model\export-event.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\AllergiesChronicIllnessExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\CervicalCancerScreeningExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\ContactListingExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\CovidExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\DepressionScreeningExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\DrugAlcoholScreeningExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\EnhancedAdherenceCounsellingExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\GbvScreeningExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\IptExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\OtzExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\PatientAdverseEventExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\PatientArtExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\PatientBaselineExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\PatientExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\PatientLabExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\PatientPharmacyExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\PatientStatusExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\extracts\PatientVisitExtract.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\manifest.dump.json" />
+    <_ContentIncludedByDefault Remove="exports\10419-CT\package.dump.json" />
   </ItemGroup>
 </Project>

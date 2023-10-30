@@ -48,6 +48,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Prep
         public virtual ICollection<PrepPharmacyExtract> PrepPharmacyExtracts { get; set; } = new List<PrepPharmacyExtract>();
         public virtual  ICollection<PrepAdverseEventExtract> PrepAdverseEventExtracts { get; set; } =new List<PrepAdverseEventExtract>();
         public virtual  ICollection<PrepCareTerminationExtract> PrepCareTerminationExtracts { get; set; } =new List<PrepCareTerminationExtract>();
+        public virtual  ICollection<PrepMonthlyRefillExtract> PrepMonthlyRefillExtracts { get; set; } =new List<PrepMonthlyRefillExtract>();
+
     }
 
 }

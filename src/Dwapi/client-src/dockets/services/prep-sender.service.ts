@@ -53,10 +53,15 @@ export class PrepSenderService {
             .catch(this.handleError);
     }
 
+    public sendPrepMonthlyRefillExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/prepmonthlyrefill`, sendPackage)
+            .catch(this.handleError);
+    }
+
     public sendHandshake(sendPackage: SendPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/endsession`, sendPackage)
             .catch(this.handleError);
-    } 
+    }
 
     public zipPrepFiles(sendPackage: SendPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/zipfiles`, sendPackage)
@@ -94,6 +99,10 @@ export class PrepSenderService {
     }
     public exportPrepVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/exportprepvisits`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPrepMonthlyRefillExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportprepmonthlyrefill`, sendPackage)
             .catch(this.handleError);
     }
 

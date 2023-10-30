@@ -323,10 +323,20 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("AllergiesChronicIllnessExtracts");
                 });
 
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.CervicalCancerScreeningExtract", b =>
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.ArtFastTrackExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ARTRefillModel");
+
+                    b.Property<string>("CTXDispensed");
+
+                    b.Property<string>("CondomsDistributed");
+
+                    b.Property<string>("Cough");
+
+                    b.Property<string>("DapsoneDispensed");
 
                     b.Property<DateTime?>("DateExtracted");
 
@@ -334,21 +344,37 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("Date_Last_Modified");
 
+                    b.Property<string>("Diarrhea");
+
                     b.Property<string>("Emr");
+
+                    b.Property<string>("FPMethod");
+
+                    b.Property<string>("FPStatus");
 
                     b.Property<int?>("FacilityId");
 
                     b.Property<string>("FacilityName");
 
-                    b.Property<DateTime?>("NextAppointmentDate");
+                    b.Property<string>("Fatigue");
 
-                    b.Property<string>("OtherPostTreatmentComplication");
+                    b.Property<string>("Fever");
+
+                    b.Property<string>("GenitalSoreOrDischarge");
+
+                    b.Property<string>("MissedDoses");
+
+                    b.Property<string>("NauseaOrVomiting");
+
+                    b.Property<string>("OralContraceptivesDispensed");
+
+                    b.Property<string>("OtherSymptoms");
 
                     b.Property<string>("PatientID");
 
                     b.Property<int>("PatientPK");
 
-                    b.Property<string>("PostTreatmentComplicationCause");
+                    b.Property<string>("PregnancyStatus");
 
                     b.Property<bool?>("Processed");
 
@@ -356,17 +382,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("QueueId");
 
+                    b.Property<string>("Rash");
+
+                    b.Property<string>("ReasonNotOnFP");
+
                     b.Property<string>("RecordUUID");
 
-                    b.Property<string>("ReferralReason");
+                    b.Property<string>("ReferredToClinic");
 
-                    b.Property<string>("ReferredOut");
-
-                    b.Property<string>("ScreeningMethod");
-
-                    b.Property<string>("ScreeningResult");
-
-                    b.Property<string>("ScreeningType");
+                    b.Property<DateTime?>("ReturnVisitDate");
 
                     b.Property<int>("SiteCode");
 
@@ -374,13 +398,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<DateTime?>("StatusDate");
 
-                    b.Property<string>("TreatmentToday");
-
                     b.Property<DateTime?>("VisitDate");
-
-                    b.Property<int?>("VisitID");
-
-                    b.Property<string>("VisitType");
 
                     b.Property<bool?>("Voided");
 
@@ -388,7 +406,179 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasIndex("SiteCode", "PatientPK");
 
-                    b.ToTable("CervicalCancerScreeningExtracts");
+                    b.ToTable("ArtFastTrackExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.CancerScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Biopsy");
+
+                    b.Property<string>("BiopsyCINIIandAbove");
+
+                    b.Property<string>("BiopsyCINIIandBelow");
+
+                    b.Property<string>("BiopsyNotAvailable");
+
+                    b.Property<string>("CBE");
+
+                    b.Property<string>("CancerType");
+
+                    b.Property<string>("Colonoscopy");
+
+                    b.Property<string>("Colposcopy");
+
+                    b.Property<string>("Cytology");
+
+                    b.Property<string>("DRE");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("DateTissueDiagnosis");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("EUA");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("FamilyHistoryOfCa");
+
+                    b.Property<string>("FecalOccultBloodTest");
+
+                    b.Property<DateTime?>("FollowUpDate");
+
+                    b.Property<string>("HIVStatus");
+
+                    b.Property<string>("HPVScreeningResult");
+
+                    b.Property<string>("IfTissueDiagnosis");
+
+                    b.Property<string>("Imaging");
+
+                    b.Property<DateTime?>("NextAppointmentDate");
+
+                    b.Property<int?>("NumberCigarettesPerDay");
+
+                    b.Property<int?>("NumberYearsSmoked");
+
+                    b.Property<string>("OtherFormTobacco");
+
+                    b.Property<string>("OtherPostTreatmentComplication");
+
+                    b.Property<string>("PAPSmearScreeningResult");
+
+                    b.Property<string>("PSA");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<string>("PostTreatmentComplicationCause");
+
+                    b.Property<string>("PreviousCaTreatment");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<string>("ReasonForReferral");
+
+                    b.Property<string>("ReasonNotDone");
+
+                    b.Property<string>("RecordUUID");
+
+                    b.Property<string>("ReferalOrdered");
+
+                    b.Property<string>("ReferralReason");
+
+                    b.Property<string>("Referred");
+
+                    b.Property<string>("ReferredOut");
+
+                    b.Property<string>("RetinoblastomaGene");
+
+                    b.Property<string>("ScreeningMethod");
+
+                    b.Property<string>("ScreeningType");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("SmokesCigarette");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("SymptomsCa");
+
+                    b.Property<string>("TakesAlcohol");
+
+                    b.Property<string>("TreatmentBiopsy");
+
+                    b.Property<string>("TreatmentCBE");
+
+                    b.Property<string>("TreatmentColonoscopy");
+
+                    b.Property<string>("TreatmentColposcopy");
+
+                    b.Property<string>("TreatmentCytology");
+
+                    b.Property<string>("TreatmentDRE");
+
+                    b.Property<string>("TreatmentEUA");
+
+                    b.Property<string>("TreatmentHPV");
+
+                    b.Property<string>("TreatmentImaging");
+
+                    b.Property<string>("TreatmentOccultBlood");
+
+                    b.Property<string>("TreatmentPSA");
+
+                    b.Property<string>("TreatmentPapSmear");
+
+                    b.Property<string>("TreatmentRetinoblastoma");
+
+                    b.Property<string>("TreatmentToday");
+
+                    b.Property<string>("TreatmentUltraSound");
+
+                    b.Property<string>("TreatmentVE");
+
+                    b.Property<string>("Ultrasound");
+
+                    b.Property<string>("VIAScreeningResult");
+
+                    b.Property<string>("VIATreatmentOptions");
+
+                    b.Property<string>("VIAVILIScreeningResult");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<int?>("VisitID");
+
+                    b.Property<string>("VisitType");
+
+                    b.Property<string>("VisualExamination");
+
+                    b.Property<bool?>("Voided");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SiteCode", "PatientPK");
+
+                    b.ToTable("CancerScreeningExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.ContactListingExtract", b =>
@@ -4685,6 +4875,82 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("PrepLabExtracts");
                 });
 
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PrepMonthlyRefillExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AdherenceCounsellingDone");
+
+                    b.Property<DateTime?>("AppointmentDate");
+
+                    b.Property<string>("BehaviorRiskAssessment");
+
+                    b.Property<string>("ClientGivenNextAppointment");
+
+                    b.Property<string>("CondomsIssued");
+
+                    b.Property<string>("ContraIndicationForPrEP");
+
+                    b.Property<DateTime?>("DateExtracted");
+
+                    b.Property<DateTime?>("DateOfLastPrepDose");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<int>("NumberOfCondomsIssued");
+
+                    b.Property<string>("NumberOfMonths");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
+
+                    b.Property<string>("PrepNumber");
+
+                    b.Property<string>("PrescribedPrepToday");
+
+                    b.Property<bool?>("Processed");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("QueueId");
+
+                    b.Property<string>("ReasonForFailureToGiveAppointment");
+
+                    b.Property<string>("RecordUUID");
+
+                    b.Property<string>("RegimenPrescribed");
+
+                    b.Property<string>("SexPartnerHIVStatus");
+
+                    b.Property<int>("SiteCode");
+
+                    b.Property<string>("Status");
+
+                    b.Property<DateTime?>("StatusDate");
+
+                    b.Property<string>("SymptomsAcuteHIV");
+
+                    b.Property<string>("VisitDate");
+
+                    b.Property<bool?>("Voided");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SiteCode", "PatientPK");
+
+                    b.ToTable("PrepMonthlyRefillExtracts");
+                });
+
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PrepPharmacyExtract", b =>
                 {
                     b.Property<Guid>("Id")
@@ -5396,18 +5662,284 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("vTempAllergiesChronicIllnessExtractErrorSummary");
                 });
 
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempCervicalCancerScreeningExtract", b =>
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempArtFastTrackExtract", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("ARTRefillModel");
+
+                    b.Property<string>("CTXDispensed");
+
                     b.Property<bool>("CheckError");
+
+                    b.Property<string>("CondomsDistributed");
+
+                    b.Property<string>("Cough");
+
+                    b.Property<string>("DapsoneDispensed");
 
                     b.Property<DateTime>("DateExtracted");
 
                     b.Property<DateTime?>("Date_Created");
 
                     b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Diarrhea");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("FPMethod");
+
+                    b.Property<string>("FPStatus");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Fatigue");
+
+                    b.Property<string>("Fever");
+
+                    b.Property<string>("GenitalSoreOrDischarge");
+
+                    b.Property<string>("MissedDoses");
+
+                    b.Property<string>("NauseaOrVomiting");
+
+                    b.Property<string>("OralContraceptivesDispensed");
+
+                    b.Property<string>("OtherSymptoms");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("PregnancyStatus");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("Rash");
+
+                    b.Property<string>("ReasonNotOnFP");
+
+                    b.Property<string>("RecordUUID");
+
+                    b.Property<string>("ReferredToClinic");
+
+                    b.Property<DateTime?>("ReturnVisitDate");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<bool?>("Voided");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempArtFastTrackExtracts");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempArtFastTrackExtractError", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ARTRefillModel");
+
+                    b.Property<string>("CTXDispensed");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("CondomsDistributed");
+
+                    b.Property<string>("Cough");
+
+                    b.Property<string>("DapsoneDispensed");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Diarrhea");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<string>("FPMethod");
+
+                    b.Property<string>("FPStatus");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Fatigue");
+
+                    b.Property<string>("Fever");
+
+                    b.Property<string>("GenitalSoreOrDischarge");
+
+                    b.Property<string>("MissedDoses");
+
+                    b.Property<string>("NauseaOrVomiting");
+
+                    b.Property<string>("OralContraceptivesDispensed");
+
+                    b.Property<string>("OtherSymptoms");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("PregnancyStatus");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("Rash");
+
+                    b.Property<string>("ReasonNotOnFP");
+
+                    b.Property<string>("RecordUUID");
+
+                    b.Property<string>("ReferredToClinic");
+
+                    b.Property<DateTime?>("ReturnVisitDate");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<bool?>("Voided");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("vTempArtFastTrackExtractError");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempArtFastTrackExtractErrorSummary", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ARTRefillModel");
+
+                    b.Property<string>("CTXDispensed");
+
+                    b.Property<string>("CondomsDistributed");
+
+                    b.Property<string>("Cough");
+
+                    b.Property<string>("DapsoneDispensed");
+
+                    b.Property<DateTime?>("DateGenerated");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Diarrhea");
+
+                    b.Property<string>("Extract");
+
+                    b.Property<string>("FPMethod");
+
+                    b.Property<string>("FPStatus");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<string>("Fatigue");
+
+                    b.Property<string>("Fever");
+
+                    b.Property<string>("Field");
+
+                    b.Property<string>("GenitalSoreOrDischarge");
+
+                    b.Property<string>("MissedDoses");
+
+                    b.Property<string>("NauseaOrVomiting");
+
+                    b.Property<string>("OralContraceptivesDispensed");
+
+                    b.Property<string>("OtherSymptoms");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("PregnancyStatus");
+
+                    b.Property<string>("Rash");
+
+                    b.Property<string>("ReasonNotOnFP");
+
+                    b.Property<Guid>("RecordId");
+
+                    b.Property<string>("RecordUUID");
+
+                    b.Property<string>("ReferredToClinic");
+
+                    b.Property<DateTime?>("ReturnVisitDate");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("Summary");
+
+                    b.Property<string>("Type");
+
+                    b.Property<DateTime?>("VisitDate");
+
+                    b.Property<bool?>("Voided");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("vTempArtFastTrackExtractErrorSummary");
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempCancerScreeningExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Biopsy");
+
+                    b.Property<string>("BiopsyCINIIandAbove");
+
+                    b.Property<string>("BiopsyCINIIandBelow");
+
+                    b.Property<string>("BiopsyNotAvailable");
+
+                    b.Property<string>("CBE");
+
+                    b.Property<string>("CancerType");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("Colonoscopy");
+
+                    b.Property<string>("Colposcopy");
+
+                    b.Property<string>("Cytology");
+
+                    b.Property<string>("DRE");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("DateTissueDiagnosis");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("EUA");
 
                     b.Property<string>("Emr");
 
@@ -5417,9 +5949,33 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("FacilityName");
 
+                    b.Property<string>("FamilyHistoryOfCa");
+
+                    b.Property<string>("FecalOccultBloodTest");
+
+                    b.Property<DateTime?>("FollowUpDate");
+
+                    b.Property<string>("HIVStatus");
+
+                    b.Property<string>("HPVScreeningResult");
+
+                    b.Property<string>("IfTissueDiagnosis");
+
+                    b.Property<string>("Imaging");
+
                     b.Property<DateTime?>("NextAppointmentDate");
 
+                    b.Property<int?>("NumberCigarettesPerDay");
+
+                    b.Property<int?>("NumberYearsSmoked");
+
+                    b.Property<string>("OtherFormTobacco");
+
                     b.Property<string>("OtherPostTreatmentComplication");
+
+                    b.Property<string>("PAPSmearScreeningResult");
+
+                    b.Property<string>("PSA");
 
                     b.Property<string>("PatientID");
 
@@ -5427,23 +5983,77 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("PostTreatmentComplicationCause");
 
+                    b.Property<string>("PreviousCaTreatment");
+
                     b.Property<string>("Project");
+
+                    b.Property<string>("ReasonForReferral");
+
+                    b.Property<string>("ReasonNotDone");
 
                     b.Property<string>("RecordUUID");
 
+                    b.Property<string>("ReferalOrdered");
+
                     b.Property<string>("ReferralReason");
+
+                    b.Property<string>("Referred");
 
                     b.Property<string>("ReferredOut");
 
-                    b.Property<string>("ScreeningMethod");
+                    b.Property<string>("RetinoblastomaGene");
 
-                    b.Property<string>("ScreeningResult");
+                    b.Property<string>("ScreeningMethod");
 
                     b.Property<string>("ScreeningType");
 
                     b.Property<int?>("SiteCode");
 
+                    b.Property<string>("SmokesCigarette");
+
+                    b.Property<string>("SymptomsCa");
+
+                    b.Property<string>("TakesAlcohol");
+
+                    b.Property<string>("TreatmentBiopsy");
+
+                    b.Property<string>("TreatmentCBE");
+
+                    b.Property<string>("TreatmentColonoscopy");
+
+                    b.Property<string>("TreatmentColposcopy");
+
+                    b.Property<string>("TreatmentCytology");
+
+                    b.Property<string>("TreatmentDRE");
+
+                    b.Property<string>("TreatmentEUA");
+
+                    b.Property<string>("TreatmentHPV");
+
+                    b.Property<string>("TreatmentImaging");
+
+                    b.Property<string>("TreatmentOccultBlood");
+
+                    b.Property<string>("TreatmentPSA");
+
+                    b.Property<string>("TreatmentPapSmear");
+
+                    b.Property<string>("TreatmentRetinoblastoma");
+
                     b.Property<string>("TreatmentToday");
+
+                    b.Property<string>("TreatmentUltraSound");
+
+                    b.Property<string>("TreatmentVE");
+
+                    b.Property<string>("Ultrasound");
+
+                    b.Property<string>("VIAScreeningResult");
+
+                    b.Property<string>("VIATreatmentOptions");
+
+                    b.Property<string>("VIAVILIScreeningResult");
 
                     b.Property<DateTime?>("VisitDate");
 
@@ -5451,11 +6061,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("VisitType");
 
+                    b.Property<string>("VisualExamination");
+
                     b.Property<bool?>("Voided");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempCervicalCancerScreeningExtracts");
+                    b.ToTable("TempCancerScreeningExtracts");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Dwh.TempContactListingExtract", b =>
@@ -12416,6 +13028,76 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.ToTable("TempPrepLabExtracts");
                 });
 
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Prep.TempPrepMonthlyRefillExtract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AdherenceCounsellingDone");
+
+                    b.Property<DateTime?>("AppointmentDate");
+
+                    b.Property<string>("BehaviorRiskAssessment");
+
+                    b.Property<bool>("CheckError");
+
+                    b.Property<string>("ClientGivenNextAppointment");
+
+                    b.Property<string>("CondomsIssued");
+
+                    b.Property<string>("ContraIndicationForPrEP");
+
+                    b.Property<DateTime>("DateExtracted");
+
+                    b.Property<DateTime?>("DateOfLastPrepDose");
+
+                    b.Property<DateTime?>("Date_Created");
+
+                    b.Property<DateTime?>("Date_Last_Modified");
+
+                    b.Property<string>("Emr");
+
+                    b.Property<int>("ErrorType");
+
+                    b.Property<int?>("FacilityId");
+
+                    b.Property<string>("FacilityName");
+
+                    b.Property<int>("NumberOfCondomsIssued");
+
+                    b.Property<string>("NumberOfMonths");
+
+                    b.Property<string>("PatientID");
+
+                    b.Property<int?>("PatientPK");
+
+                    b.Property<string>("PrepNumber");
+
+                    b.Property<string>("PrescribedPrepToday");
+
+                    b.Property<string>("Project");
+
+                    b.Property<string>("ReasonForFailureToGiveAppointment");
+
+                    b.Property<string>("RecordUUID");
+
+                    b.Property<string>("RegimenPrescribed");
+
+                    b.Property<string>("SexPartnerHIVStatus");
+
+                    b.Property<int?>("SiteCode");
+
+                    b.Property<string>("SymptomsAcuteHIV");
+
+                    b.Property<string>("VisitDate");
+
+                    b.Property<bool?>("Voided");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TempPrepMonthlyRefillExtracts");
+                });
+
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Source.Prep.TempPrepPharmacyExtract", b =>
                 {
                     b.Property<Guid>("Id")
@@ -12646,10 +13328,18 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.CervicalCancerScreeningExtract", b =>
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.ArtFastTrackExtract", b =>
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
-                        .WithMany("CervicalCancerScreeningExtracts")
+                        .WithMany("ArtFastTrackExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.CancerScreeningExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Dwh.PatientExtract")
+                        .WithMany("CancerScreeningExtracts")
                         .HasForeignKey("SiteCode", "PatientPK")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -12970,6 +13660,14 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PatientPrepExtract")
                         .WithMany("PrepLabExtracts")
+                        .HasForeignKey("SiteCode", "PatientPK")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PrepMonthlyRefillExtract", b =>
+                {
+                    b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PatientPrepExtract")
+                        .WithMany("PrepMonthlyRefillExtracts")
                         .HasForeignKey("SiteCode", "PatientPK")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

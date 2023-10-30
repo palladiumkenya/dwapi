@@ -384,6 +384,36 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Prep
                 //    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepCareTerminationExtract.FacilityName))));
                 
                 
+                CreateMap<IDataRecord, TempPrepMonthlyRefillExtract>()
+                    .ForMember(x => x.PatientPK,
+                        o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.PatientPK))))
+                    .ForMember(x => x.SiteCode,
+                        o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.SiteCode))))
+                    .ForMember(x => x.PrepNumber,
+                        o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.PrepNumber))))
+                    .ForMember(x => x.Emr,
+                        o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.Emr))))
+                    .ForMember(x => x.Project,
+                        o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.Project))))
+                                     .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.VisitDate))))
+                    .ForMember(x => x.BehaviorRiskAssessment, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.BehaviorRiskAssessment))))
+                    .ForMember(x => x.SexPartnerHIVStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.SexPartnerHIVStatus))))
+                    .ForMember(x => x.SymptomsAcuteHIV, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.SymptomsAcuteHIV))))
+                    .ForMember(x => x.AdherenceCounsellingDone, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.AdherenceCounsellingDone))))
+                    .ForMember(x => x.ContraIndicationForPrEP, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.ContraIndicationForPrEP))))
+                    .ForMember(x => x.PrescribedPrepToday, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.PrescribedPrepToday))))
+                    .ForMember(x => x.RegimenPrescribed, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.RegimenPrescribed))))
+                    .ForMember(x => x.NumberOfMonths, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.NumberOfMonths))))
+                    .ForMember(x => x.CondomsIssued, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.CondomsIssued))))
+                    .ForMember(x => x.NumberOfCondomsIssued, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPrepMonthlyRefillExtract.NumberOfCondomsIssued))))
+                    .ForMember(x => x.ClientGivenNextAppointment, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.ClientGivenNextAppointment))))
+                    .ForMember(x => x.AppointmentDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPrepMonthlyRefillExtract.AppointmentDate))))
+                    .ForMember(x => x.ReasonForFailureToGiveAppointment, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.ReasonForFailureToGiveAppointment))))
+                    .ForMember(x => x.DateOfLastPrepDose, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPrepMonthlyRefillExtract.DateOfLastPrepDose))))
+                    .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPrepMonthlyRefillExtract.Voided))))
+                    .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPrepMonthlyRefillExtract.RecordUUID))));
+
+                
 
                  CreateMap<TempPatientPrepExtract, PatientPrepExtract>();
                  CreateMap<TempPrepAdverseEventExtract, PrepAdverseEventExtract>();
@@ -392,6 +422,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Prep
                  CreateMap<TempPrepLabExtract, PrepLabExtract>();
                  CreateMap<TempPrepPharmacyExtract, PrepPharmacyExtract>();
                  CreateMap<TempPrepVisitExtract, PrepVisitExtract>();
+                 CreateMap<TempPrepMonthlyRefillExtract, PrepMonthlyRefillExtract>();
+
         }
     }
 }

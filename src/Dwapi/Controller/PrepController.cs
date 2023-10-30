@@ -377,6 +377,41 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+        [HttpPost("PrepMonthlyRefill")]
+        public IActionResult SendPrepMonthlyRefillExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _prepSendService.SendPrepMonthlyRefillAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpPost("exportPrepMonthlyRefill")]
+        public IActionResult ExportPrepMonthlyRefillExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid()) return BadRequest();
+            try
+            {
+                _prepExportService.ExportPrepMonthlyRefillAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting MonthlyRefill Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
         // POST: api/DwhExtracts/patients
         [HttpPost("endsession")]
         public IActionResult SendEndSession([FromBody] SendManifestPackageDTO packageDto)
@@ -415,6 +450,6 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
-        
+
     }
 }

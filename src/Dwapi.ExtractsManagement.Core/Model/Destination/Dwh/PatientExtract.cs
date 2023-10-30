@@ -66,8 +66,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
 
         public virtual ICollection<CovidExtract> CovidExtracts { get; set; } = new List<CovidExtract>();
         public virtual ICollection<DefaulterTracingExtract> DefaulterTracingExtracts { get; set; } = new List<DefaulterTracingExtract>();
-        public virtual ICollection<CervicalCancerScreeningExtract> CervicalCancerScreeningExtracts { get; set; } = new List<CervicalCancerScreeningExtract>();
+        public virtual ICollection<CancerScreeningExtract> CancerScreeningExtracts { get; set; } = new List<CancerScreeningExtract>();
         public virtual ICollection<IITRiskScoresExtract> IITRiskScoresExtracts { get; set; } = new List<IITRiskScoresExtract>();
+        public virtual ICollection<ArtFastTrackExtract> ArtFastTrackExtracts { get; set; } = new List<ArtFastTrackExtract>();
 
     }
 }
