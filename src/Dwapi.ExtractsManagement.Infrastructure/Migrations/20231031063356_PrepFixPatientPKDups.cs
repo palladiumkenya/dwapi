@@ -21,7 +21,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                         ADD PRIMARY KEY (`SiteCode`, `Id`);
                         ");
             }
-
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

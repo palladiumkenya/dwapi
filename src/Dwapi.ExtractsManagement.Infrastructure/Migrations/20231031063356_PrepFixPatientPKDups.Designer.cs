@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20231030212813_PrepFixPatientPKDups")]
+    [Migration("20231031063356_PrepFixPatientPKDups")]
     partial class PrepFixPatientPKDups
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
