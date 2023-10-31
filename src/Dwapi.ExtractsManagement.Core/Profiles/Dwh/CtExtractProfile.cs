@@ -876,15 +876,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                             .ForMember(x => x.ReferralReason,
                                 o => o.MapFrom(s =>
                                     s.GetStringOrDefault(nameof(TempCancerScreeningExtract.ReferralReason))))
-                            .ForMember(x => x.ScreeningMethod,
-                                o => o.MapFrom(s =>
-                                    s.GetStringOrDefault(nameof(TempCancerScreeningExtract.ScreeningMethod))))
-                            .ForMember(x => x.TreatmentToday,
-                                o => o.MapFrom(s =>
-                                    s.GetStringOrDefault(nameof(TempCancerScreeningExtract.TreatmentToday))))
-                            .ForMember(x => x.ReferredOut,
-                                o => o.MapFrom(s =>
-                                    s.GetStringOrDefault(nameof(TempCancerScreeningExtract.ReferredOut))))
+                            
+                           
                             .ForMember(x => x.NextAppointmentDate,
                                 o => o.MapFrom(s =>
                                     s.GetNullDateOrDefault(nameof(TempCancerScreeningExtract.NextAppointmentDate))))
@@ -897,15 +890,11 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                             .ForMember(x => x.TreatmentHPV,
                                 o => o.MapFrom(s =>
                                     s.GetStringOrDefault(nameof(TempCancerScreeningExtract.TreatmentHPV))))
-                            .ForMember(x => x.VIAScreeningResult,
-                                o => o.MapFrom(s =>
-                                    s.GetStringOrDefault(nameof(TempCancerScreeningExtract.VIAScreeningResult))))
+                            
                             .ForMember(x => x.VIAVILIScreeningResult,
                                 o => o.MapFrom(s =>
                                     s.GetStringOrDefault(nameof(TempCancerScreeningExtract.VIAVILIScreeningResult))))
-                            .ForMember(x => x.VIATreatmentOptions,
-                                o => o.MapFrom(s =>
-                                    s.GetStringOrDefault(nameof(TempCancerScreeningExtract.VIATreatmentOptions))))
+                            
                             .ForMember(x => x.PAPSmearScreeningResult,
                                 o => o.MapFrom(s =>
                                     s.GetStringOrDefault(nameof(TempCancerScreeningExtract.PAPSmearScreeningResult))))
@@ -921,15 +910,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                             .ForMember(x => x.TreatmentColposcopy,
                                 o => o.MapFrom(s =>
                                     s.GetStringOrDefault(nameof(TempCancerScreeningExtract.TreatmentColposcopy))))
-                            .ForMember(x => x.BiopsyCINIIandAbove,
-                                o => o.MapFrom(s =>
-                                    s.GetStringOrDefault(nameof(TempCancerScreeningExtract.BiopsyCINIIandAbove))))
-                            .ForMember(x => x.BiopsyCINIIandBelow,
-                                o => o.MapFrom(s =>
-                                    s.GetStringOrDefault(nameof(TempCancerScreeningExtract.BiopsyCINIIandBelow))))
-                            .ForMember(x => x.BiopsyNotAvailable,
-                                o => o.MapFrom(s =>
-                                    s.GetStringOrDefault(nameof(TempCancerScreeningExtract.BiopsyNotAvailable))))
+                            
                             .ForMember(x => x.CBE,
                                 o => o.MapFrom(s =>
                                     s.GetStringOrDefault(nameof(TempCancerScreeningExtract.CBE))))
@@ -951,9 +932,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                             .ForMember(x => x.ReasonNotDone,
                                 o => o.MapFrom(s =>
                                     s.GetStringOrDefault(nameof(TempCancerScreeningExtract.ReasonNotDone))))
-                            .ForMember(x => x.FollowUpDate,
-                                o => o.MapFrom(s =>
-                                    s.GetNullDateOrDefault(nameof(TempCancerScreeningExtract.FollowUpDate))))
+                            
                             .ForMember(x => x.Referred,
                                 o => o.MapFrom(s =>
                                     s.GetStringOrDefault(nameof(TempCancerScreeningExtract.Referred))))

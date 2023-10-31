@@ -42,24 +42,17 @@ namespace Dwapi.Contracts.Ct
         string PostTreatmentComplicationCause { get; set; }
         string OtherPostTreatmentComplication { get; set; }
         string ReferralReason { get; set; }
-        string ScreeningMethod { get; set; }
-        string TreatmentToday { get; set; }
-        string ReferredOut { get; set; }
         DateTime? NextAppointmentDate { get; set; }
         string ScreeningType { get; set; }
         string HPVScreeningResult { get; set; }
         string TreatmentHPV { get; set; }
-        string VIAScreeningResult { get; set; }
         string VIAVILIScreeningResult { get; set; }
-        string VIATreatmentOptions { get; set; }
         string PAPSmearScreeningResult { get; set; }
         string TreatmentPapSmear { get; set; }
         string ReferalOrdered { get; set; }
         string Colposcopy { get; set; }
         string TreatmentColposcopy { get; set; }
-        string BiopsyCINIIandAbove { get; set; }
-        string BiopsyCINIIandBelow { get; set; }
-        string BiopsyNotAvailable { get; set; }
+        
         string CBE { get; set; }
         string TreatmentCBE { get; set; }
         string Ultrasound { get; set; }
@@ -67,7 +60,6 @@ namespace Dwapi.Contracts.Ct
         string IfTissueDiagnosis { get; set; }
         DateTime? DateTissueDiagnosis { get; set; }
         string ReasonNotDone { get; set; }
-        DateTime? FollowUpDate { get; set; }
         string Referred { get; set; }
         string ReasonForReferral { get; set; }
 

@@ -44,24 +44,18 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PostTreatmentComplicationCause { get; set; }
         public string OtherPostTreatmentComplication { get; set; }
         public string ReferralReason { get; set; }
-        public string ScreeningMethod { get; set; }
-        public string TreatmentToday { get; set; }
-        public string ReferredOut { get; set; }
+        
         public DateTime? NextAppointmentDate { get; set; }
         public string ScreeningType { get; set; }
         public string HPVScreeningResult { get; set; }
         public string TreatmentHPV { get; set; }
-        public string VIAScreeningResult { get; set; }
         public string VIAVILIScreeningResult { get; set; }
-        public string VIATreatmentOptions { get; set; }
         public string PAPSmearScreeningResult { get; set; }
         public string TreatmentPapSmear { get; set; }
         public string ReferalOrdered { get; set; }
         public string Colposcopy { get; set; }
         public string TreatmentColposcopy { get; set; }
-        public string BiopsyCINIIandAbove { get; set; }
-        public string BiopsyCINIIandBelow { get; set; }
-        public string BiopsyNotAvailable { get; set; }
+        
         public string CBE { get; set; }
         public string TreatmentCBE { get; set; }
         public string Ultrasound { get; set; }
@@ -69,7 +63,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string IfTissueDiagnosis { get; set; }
         public DateTime? DateTissueDiagnosis { get; set; }
         public string ReasonNotDone { get; set; }
-        public DateTime? FollowUpDate { get; set; }
         public string Referred { get; set; }
         public string ReasonForReferral { get; set; }
         public string RecordUUID { get; set; }

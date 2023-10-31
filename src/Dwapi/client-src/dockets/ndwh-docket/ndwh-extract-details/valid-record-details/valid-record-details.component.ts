@@ -1257,8 +1257,7 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'numberYearsSmoked', header: 'NumberYearsSmoked'},
             {field: 'viaScreeningResult', header: 'VIAScreeningResult'},
             {field: 'viaViLiScreeningResult', header: 'VIAVILIScreeningResult'},
-            {field: 'biopsyCINIIandAbove', header: 'BiopsyCINIIandAbove'},
-            {field: 'biopsyCINIIandBelow', header: 'BiopsyCINIIandBelow'},
+
             {field: 'numberCigarettesPerDay', header: 'NumberCigarettesPerDay'},
             {field: 'otherFormTobacco', header: 'OtherFormTobacco'},
             {field: 'takesAlcohol', header: 'TakesAlcohol'},
@@ -1291,13 +1290,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'otherPostTreatmentComplication', header: 'OtherPostTreatmentComplication'},
             {field: 'referralReason', header: 'ReferralReason'},
             {field: 'screeningMethod', header: 'ScreeningMethod'},
-            {field: 'treatmentToday', header: 'TreatmentToday'},
-            {field: 'referredOut', header: 'ReferredOut'},
             {field: 'nextAppointmentDate', header: 'NextAppointmentDate'},
             {field: 'screeningType', header: 'ScreeningType'},
             {field: 'hpvScreeningResult', header: 'HPVScreeningResult'},
             {field: 'treatmentHPV', header: 'TreatmentHPV'},
-            {field: 'viaTreatmentOptions', header: 'VIATreatmentOptions'},
             {field: 'papSmearScreeningResult', header: 'PAPSmearScreeningResult'},
             {field: 'treatmentPapSmear', header: 'TreatmentPapSmear'},
             {field: 'referalOrdered', header: 'ReferalOrdered'},
@@ -1311,7 +1307,6 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'ifTissueDiagnosis', header: 'IfTissueDiagnosis'},
             {field: 'dateTissueDiagnosis', header: 'DateTissueDiagnosis'},
             {field: 'reasonNotDone', header: 'ReasonNotDone'},
-            {field: 'followUpDate', header: 'FollowUpDate'},
             {field: 'referred', header: 'Referred'},
             {field: 'reasonForReferral', header: 'ReasonForReferral'}
         ];
