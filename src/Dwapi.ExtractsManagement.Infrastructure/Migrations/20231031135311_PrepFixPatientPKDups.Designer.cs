@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    [Migration("20231031063356_PrepFixPatientPKDups")]
+    [Migration("20231031135311_PrepFixPatientPKDups")]
     partial class PrepFixPatientPKDups
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -4516,9 +4516,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PatientPrepExtract", b =>
                 {
-                    b.Property<int>("SiteCode");
-
-                    b.Property<int>("PatientPK");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClientPreviouslyonPrep");
 
@@ -4550,8 +4549,6 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("HtsNumber");
 
-                    b.Property<Guid>("Id");
-
                     b.Property<string>("Inschool");
 
                     b.Property<string>("KeyPopulationType");
@@ -4565,6 +4562,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("NUPI");
 
                     b.Property<string>("PatientID");
+
+                    b.Property<int>("PatientPK");
 
                     b.Property<string>("PopulationType");
 
@@ -4588,6 +4587,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Sex");
 
+                    b.Property<int>("SiteCode");
+
                     b.Property<string>("Status");
 
                     b.Property<DateTime?>("StatusDate");
@@ -4604,9 +4605,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Ward");
 
-                    b.HasKey("SiteCode", "PatientPK");
-
-                    b.HasAlternateKey("Id");
+                    b.HasKey("Id");
 
                     b.ToTable("PatientPrepExtracts");
                 });
@@ -4648,6 +4647,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int>("PatientPK");
 
+                    b.Property<Guid?>("PatientPrepExtractId");
+
                     b.Property<string>("PrepNumber");
 
                     b.Property<bool?>("Processed");
@@ -4672,7 +4673,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteCode", "PatientPK");
+                    b.HasIndex("PatientPrepExtractId");
 
                     b.ToTable("PrepAdverseEventExtracts");
                 });
@@ -4724,6 +4725,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int>("PatientPK");
 
+                    b.Property<Guid?>("PatientPrepExtractId");
+
                     b.Property<string>("PrEPDeclineReason");
 
                     b.Property<string>("PrepNumber");
@@ -4758,7 +4761,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteCode", "PatientPK");
+                    b.HasIndex("PatientPrepExtractId");
 
                     b.ToTable("PrepBehaviourRiskExtracts");
                 });
@@ -4792,6 +4795,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int>("PatientPK");
 
+                    b.Property<Guid?>("PatientPrepExtractId");
+
                     b.Property<string>("PrepNumber");
 
                     b.Property<bool?>("Processed");
@@ -4812,7 +4817,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteCode", "PatientPK");
+                    b.HasIndex("PatientPrepExtractId");
 
                     b.ToTable("PrepCareTerminationExtracts");
                 });
@@ -4839,6 +4844,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("PatientID");
 
                     b.Property<int>("PatientPK");
+
+                    b.Property<Guid?>("PatientPrepExtractId");
 
                     b.Property<string>("PrepNumber");
 
@@ -4872,7 +4879,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteCode", "PatientPK");
+                    b.HasIndex("PatientPrepExtractId");
 
                     b.ToTable("PrepLabExtracts");
                 });
@@ -4916,6 +4923,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int>("PatientPK");
 
+                    b.Property<Guid?>("PatientPrepExtractId");
+
                     b.Property<string>("PrepNumber");
 
                     b.Property<string>("PrescribedPrepToday");
@@ -4948,7 +4957,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteCode", "PatientPK");
+                    b.HasIndex("PatientPrepExtractId");
 
                     b.ToTable("PrepMonthlyRefillExtracts");
                 });
@@ -4980,6 +4989,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int>("PatientPK");
 
+                    b.Property<Guid?>("PatientPrepExtractId");
+
                     b.Property<string>("PrepNumber");
 
                     b.Property<bool?>("Processed");
@@ -5004,7 +5015,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteCode", "PatientPK");
+                    b.HasIndex("PatientPrepExtractId");
 
                     b.ToTable("PrepPharmacyExtracts");
                 });
@@ -5076,6 +5087,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<int>("PatientPK");
 
+                    b.Property<Guid?>("PatientPrepExtractId");
+
                     b.Property<string>("PlanningToGetPregnant");
 
                     b.Property<DateTime?>("PregnancyEndDate");
@@ -5144,7 +5157,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteCode", "PatientPK");
+                    b.HasIndex("PatientPrepExtractId");
 
                     b.ToTable("PrepVisitExtracts");
                 });
@@ -13638,56 +13651,49 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PatientPrepExtract")
                         .WithMany("PrepAdverseEventExtracts")
-                        .HasForeignKey("SiteCode", "PatientPK")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PatientPrepExtractId");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PrepBehaviourRiskExtract", b =>
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PatientPrepExtract")
                         .WithMany("PrepBehaviourRiskExtracts")
-                        .HasForeignKey("SiteCode", "PatientPK")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PatientPrepExtractId");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PrepCareTerminationExtract", b =>
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PatientPrepExtract")
                         .WithMany("PrepCareTerminationExtracts")
-                        .HasForeignKey("SiteCode", "PatientPK")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PatientPrepExtractId");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PrepLabExtract", b =>
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PatientPrepExtract")
                         .WithMany("PrepLabExtracts")
-                        .HasForeignKey("SiteCode", "PatientPK")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PatientPrepExtractId");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PrepMonthlyRefillExtract", b =>
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PatientPrepExtract")
                         .WithMany("PrepMonthlyRefillExtracts")
-                        .HasForeignKey("SiteCode", "PatientPK")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PatientPrepExtractId");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PrepPharmacyExtract", b =>
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PatientPrepExtract")
                         .WithMany("PrepPharmacyExtracts")
-                        .HasForeignKey("SiteCode", "PatientPK")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PatientPrepExtractId");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PrepVisitExtract", b =>
                 {
                     b.HasOne("Dwapi.ExtractsManagement.Core.Model.Destination.Prep.PatientPrepExtract")
                         .WithMany("PrepVisitExtracts")
-                        .HasForeignKey("SiteCode", "PatientPK")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PatientPrepExtractId");
                 });
 
             modelBuilder.Entity("Dwapi.ExtractsManagement.Core.Model.ValidationError", b =>
