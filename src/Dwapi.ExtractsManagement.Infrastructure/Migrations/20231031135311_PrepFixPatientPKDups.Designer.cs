@@ -3,14 +3,16 @@ using System;
 using Dwapi.ExtractsManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ExtractsContext))]
-    partial class ExtractsContextModelSnapshot : ModelSnapshot
+    [Migration("20231031135311_PrepFixPatientPKDups")]
+    partial class PrepFixPatientPKDups
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -416,6 +418,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Biopsy");
 
+                    b.Property<string>("BiopsyCINIIandAbove");
+
+                    b.Property<string>("BiopsyCINIIandBelow");
+
+                    b.Property<string>("BiopsyNotAvailable");
+
                     b.Property<string>("CBE");
 
                     b.Property<string>("CancerType");
@@ -447,6 +455,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("FamilyHistoryOfCa");
 
                     b.Property<string>("FecalOccultBloodTest");
+
+                    b.Property<DateTime?>("FollowUpDate");
 
                     b.Property<string>("HIVStatus");
 
@@ -496,7 +506,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Referred");
 
+                    b.Property<string>("ReferredOut");
+
                     b.Property<string>("RetinoblastomaGene");
+
+                    b.Property<string>("ScreeningMethod");
 
                     b.Property<string>("ScreeningType");
 
@@ -538,11 +552,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("TreatmentRetinoblastoma");
 
+                    b.Property<string>("TreatmentToday");
+
                     b.Property<string>("TreatmentUltraSound");
 
                     b.Property<string>("TreatmentVE");
 
                     b.Property<string>("Ultrasound");
+
+                    b.Property<string>("VIAScreeningResult");
+
+                    b.Property<string>("VIATreatmentOptions");
 
                     b.Property<string>("VIAVILIScreeningResult");
 
@@ -5906,6 +5926,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Biopsy");
 
+                    b.Property<string>("BiopsyCINIIandAbove");
+
+                    b.Property<string>("BiopsyCINIIandBelow");
+
+                    b.Property<string>("BiopsyNotAvailable");
+
                     b.Property<string>("CBE");
 
                     b.Property<string>("CancerType");
@@ -5941,6 +5967,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                     b.Property<string>("FamilyHistoryOfCa");
 
                     b.Property<string>("FecalOccultBloodTest");
+
+                    b.Property<DateTime?>("FollowUpDate");
 
                     b.Property<string>("HIVStatus");
 
@@ -5986,7 +6014,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("Referred");
 
+                    b.Property<string>("ReferredOut");
+
                     b.Property<string>("RetinoblastomaGene");
+
+                    b.Property<string>("ScreeningMethod");
 
                     b.Property<string>("ScreeningType");
 
@@ -6024,11 +6056,17 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
 
                     b.Property<string>("TreatmentRetinoblastoma");
 
+                    b.Property<string>("TreatmentToday");
+
                     b.Property<string>("TreatmentUltraSound");
 
                     b.Property<string>("TreatmentVE");
 
                     b.Property<string>("Ultrasound");
+
+                    b.Property<string>("VIAScreeningResult");
+
+                    b.Property<string>("VIATreatmentOptions");
 
                     b.Property<string>("VIAVILIScreeningResult");
 

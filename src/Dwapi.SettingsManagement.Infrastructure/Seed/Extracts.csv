@@ -674,6 +674,8 @@ FROM
                                        when 730 then 'CD4 Percent'
                                        when 654 then 'ALT'
                                        when 790 then 'Serum creatinine (umol/L)'
+                                       when 167452 then 'Serum Cryptococcal Ag'
+                                       when 167459 then 'TB LAM'
                                        when 856 then 'HIV Viral Load'
                                        when 1305 then 'HIV Viral Load'
                                        when 21 then 'Hemoglobin (HGB)'
@@ -5745,8 +5747,15 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                                'Kenya HMIS II' as Project,
                                                0 AS FacilityId,
                                                s.FacilityName as FacilityName,
-                                               v.visit_id as VisitID,v.visit_date as VisitDate,v.session_number as SessionNumber,v.first_session_date as DateOfFirstSession,v.pill_count as PillCountAdherence,
-                                               '' as MMAS4_1,'' as MMAS4_2,'' as MMAS4_3,'' as MMAS4_4,'' as MMSA8_1,'' as MMSA8_2,'' as MMSA8_3,'' as MMSA8_4,
+                                               v.visit_id as VisitID,v.visit_date as VisitDate,v.session_number as SessionNumber,v.first_session_date as DateOfFirstSession,v.pill_count as PillCountAdherence,                                               
+                                                v.MMAS4_1_forgets_to_take_meds                as MMAS4_1,
+                                                v.MMAS4_2_careless_taking_meds                as MMAS4_2,
+                                                v.MMAS4_3_stops_on_reactive_meds              as MMAS4_3,
+                                                v.MMAS4_4_stops_meds_on_feeling_good          as MMAS4_4,
+                                                v.MMSA8_1_took_meds_yesterday                 as MMSA8_1,
+                                                v.MMSA8_2_stops_meds_on_controlled_symptoms   as MMSA8_2,
+                                                v.MMSA8_3_struggles_to_comply_tx_plan         as MMSA8_3,
+                                                v.MMSA8_4_struggles_remembering_taking_meds   as MMSA8_4,                                               
                                                v.arv_adherence as MMSAScore ,v.has_vl_results as EACRecievedVL, v.vl_results_suppressed as EACVL,v.vl_results_feeling as EACVLConcerns,
                                                v.cause_of_high_vl as EACVLThoughts,v.way_forward as EACWayForward,v.patient_hiv_knowledge as EACCognitiveBarrier,v.patient_drugs_uptake as EACBehaviouralBarrier_1,
                                                v.patient_drugs_reminder_tools as EACBehaviouralBarrier_2,v.patient_drugs_uptake_during_travels as EACBehaviouralBarrier_3,v.patient_drugs_side_effects_response as EACBehaviouralBarrier_4,
@@ -5825,41 +5834,39 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                                 where program_name = 'OVC'
                                                 group by d.patient_id) d on d.patient_id = v.patient_id
                                      join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OvcExtract|18|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select a.patient_id                                                   as PatientPK,
-                                                           a.uuid                                                         as RecordUUID,
+2bbeec28-7754-11eb-9439-0242ac130002|OTZ|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select e.patient_id                                                   as PatientPK,
+                                                           e.uuid                                                         as RecordUUID,
                                                            0                                                              AS FacilityId,
                                                            s.siteCode                                                     as SiteCode,
                                                            de.unique_patient_no                                           as PatientID,
                                                            'KenyaEMR'                                                     as Emr,
                                                            'Kenya HMIS II'                                                as Project,
                                                            s.FacilityName                                                 as FacilityName,
-                                                           a.visit_id                                                     as VisitID,
-                                                           a.visit_date                                                   as VisitDate,
+                                                           e.visit_id                                                     as VisitID,
+                                                           e.visit_date                                                   as VisitDate,
                                                            e.OTZEnrollmentDate,
                                                            e.TransferInStatus,
                                                            e.ModulesPreviouslyCovered,
-                                                           concat_ws(',', NULLIF(if(a.orientation = 'Yes', 'OTZ Orientation', null), ''),
-                                                                     NULLIF(if(a.participation = 'Yes', 'OTZ Participation', ''), ''),
-                                                                     NULLIF(if(a.making_decision_future = 'Yes', 'OTZ Making decisions for the future', ''), '')
-                                                               , NULLIF(if(a.transition_to_adult_care = 'Yes', 'OTZ Transition to Adult care', ''), ''),
-                                                                     NULLIF(if(a.treatment_literacy = 'Yes', 'OTZ Treatment literacy', ''), ''),
-                                                                     NULLIF(if(a.srh = 'Yes', 'OTZ SRH', ''), ''), NULLIF(if(a.leadership = 'Yes', 'Leadership', ''), ''),
-                                                                     NULLIF(if(a.beyond_third_ninety = 'Yes', 'OTZ Beyond the 3rd 90', null),
-                                                                            ''))                                          as ModulesCompletedToday,
-                                                           a.attended_support_group                                       as SupportGroupInvolvement,
-                                                           a.remarks                                                      as Remarks,
+                                                           e.modules_attended_today                                       as ModulesCompletedToday,
+                                                           e.attended_support_group                                       as SupportGroupInvolvement,
+                                                           e.remarks                                                      as Remarks,
                                                            d.attrition_reason                                             as TransitionAttritionReason,
                                                            d.Outcome_date                                                 as OutcomeDate,
-                                                           a.date_created                                                 as Date_Created,
-                                                           if(greatest(IFNULL(e.date_last_modified, '1900-01-01'), IFNULL(a.date_last_modified, '1900-01-01'),
-                                                                       IFNULL(d.date_last_modified, '1900-01-01')) = '1900-01-01',
-                                                              NULL, greatest(IFNULL(e.date_last_modified, '1900-01-01'), IFNULL(a.date_last_modified, '1900-01-01'),
-                                                                             IFNULL(d.date_last_modified, '1900-01-01'))) as Date_Last_Modified,
-                                                           a.voided                                                       as voided
-                                                    from dwapi_etl.etl_otz_activity a
-                                                             inner join dwapi_etl.etl_patient_demographics de on a.patient_id = de.patient_id
+                                                           e.date_created                                                 as Date_Created,                                                           
+                                                            if(greatest(IFNULL(e.date_last_modified, '0000-00-00'), IFNULL(e.activity_date_last_modified, '0000-00-00'),
+                                                            IFNULL(d.date_last_modified, '0000-00-00')) = '0000-00-00',
+                                                            NULL,
+                                                            greatest(IFNULL(e.date_last_modified, '0000-00-00'), IFNULL(e.activity_date_last_modified, '0000-00-00'),
+                                                            IFNULL(d.date_last_modified, '0000-00-00'))) as Date_Last_Modified,
+                                                           e.voided                                                       as voided
+                                                    from dwapi_etl.etl_patient_demographics de
                                                              inner join (select e.patient_id,
-                                                                                greatest(max(e.visit_date), '1900-01-01')         as OTZEnrollmentDate,
+                                                                                e.uuid,
+                                                                                e.visit_date,
+                                                                                a.visit_id,
+                                                                                a.attended_support_group,
+                                                                                a.remarks,
+                                                                                greatest(max(e.visit_date), '0000-00-00')         as OTZEnrollmentDate,
                                                                                 mid(max(concat(e.visit_date, e.transfer_in)), 11) as TransferInStatus,
                                                                                 concat_ws(',', NULLIF(if(e.orientation = 'Yes', 'OTZ Orientation', null), ''),
                                                                                           NULLIF(if(e.participation = 'Yes', 'OTZ Participation', ''), ''), NULLIF(
@@ -5871,11 +5878,24 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                                                                           NULLIF(if(e.srh = 'Yes', 'OTZ SRH', ''), ''),
                                                                                           NULLIF(if(e.beyond_third_ninety = 'Yes', 'OTZ Beyond the 3rd 90', null),
                                                                                                  ''))                             as ModulesPreviouslyCovered,
+                                                                                concat_ws(',', NULLIF(if(a.orientation = 'Yes', 'OTZ Orientation', null), ''),
+                                                                                          NULLIF(if(a.participation = 'Yes', 'OTZ Participation', ''), ''),
+                                                                                          NULLIF(if(a.making_decision_future = 'Yes', 'OTZ Making decisions for the future',
+                                                                                                    ''), '')
+                                                                                    , NULLIF(if(a.transition_to_adult_care = 'Yes', 'OTZ Transition to Adult care', ''),
+                                                                                             ''),
+                                                                                          NULLIF(if(a.treatment_literacy = 'Yes', 'OTZ Treatment literacy', ''), ''),
+                                                                                          NULLIF(if(a.srh = 'Yes', 'OTZ SRH', ''), ''),
+                                                                                          NULLIF(if(a.leadership = 'Yes', 'Leadership', ''), ''),
+                                                                                          NULLIF(if(a.beyond_third_ninety = 'Yes', 'OTZ Beyond the 3rd 90', null),
+                                                                                                 ''))                             as modules_attended_today,
+                                                                                e.voided                                          as voided,
                                                                                 e.date_created                                    as date_created,
-                                                                                e.date_last_modified                              as date_last_modified
+                                                                                e.date_last_modified                              as date_last_modified,
+                                                                                a.date_last_modified                              as activity_date_last_modified
                                                                          from dwapi_etl.etl_otz_enrollment e
-                                                                         group by e.patient_id, visit_date, transfer_in, orientation, participation, making_decision_future, transition_to_adult_care,
-                                                                         treatment_literacy, srh, beyond_third_ninety, date_created, date_last_modified) e on a.patient_id = e.patient_id
+                                                                                  left join dwapi_etl.etl_otz_activity a on e.patient_id = a.patient_id
+                                                                         group by e.patient_id) e on de.patient_id = e.patient_id
                                                              left join (select d.patient_id,
                                                                                coalesce(max(date(d.effective_discontinuation_date)), date(d.visit_date)) Outcome_date,
                                                                                (case mid(max(concat(date(d.visit_date), d.discontinuation_reason)), 11)
@@ -5888,7 +5908,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                                                                d.date_last_modified
                                                                         from dwapi_etl.etl_patient_program_discontinuation d
                                                                         where program_name = 'OTZ'
-                                                                        group by d.patient_id, effective_discontinuation_date, visit_date, discontinuation_reason, date_created, date_last_modified ) d on d.patient_id = a.patient_id
+                                                                        group by d.patient_id) d on d.patient_id = e.patient_id
                                                              join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|OtzExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 7c2e4a14-8728-11eb-8dcd-0242ac130003|All Patients|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|"select * from NDWH_Patients_Extract"|dwhstage|1|PatientExtract|1|a6221aa7-0E85-11E8-BA89-0ED5F89F718B
@@ -7999,14 +8019,10 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                                          i.facilityName                                   FacilityName,
                                          '' as TreatmentRetinoblastoma,
                                          '' as RetinoblastomaGene,
-                                         '' as ReferalOrdered,
-                                         '' as BiopsyCINIIandAbove,
-                                         '' as BiopsyCINIIandBelow,
-                                         '' as BiopsyNotAvailable,
+                                         '' as ReferalOrdered,                                         
                                          '' as IfTissueDiagnosis,
                                          '' as DateTissueDiagnosis,
                                          '' as ReasonNotDone,
-                                         '' as FollowUpDate,
                                          '' as Referred,
                                          '' as ReasonForReferral,
                                          s.visit_id                                       VisitId,

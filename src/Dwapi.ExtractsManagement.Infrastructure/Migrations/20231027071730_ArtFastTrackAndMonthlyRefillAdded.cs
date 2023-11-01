@@ -206,7 +206,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_PrepMonthlyRefillExtracts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrepMonthlyRefillExtracts_PatientPrepExtracts_SiteCode_Patie~",
+                        name: "FK_PrepMonthlyRefillExtracts_PatientPrepExtracts_SiteCode_PatientPK",
                         columns: x => new { x.SiteCode, x.PatientPK },
                         principalTable: "PatientPrepExtracts",
                         principalColumns: new[] { "SiteCode", "PatientPK" },
