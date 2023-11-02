@@ -5,5 +5,5 @@ a6223bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae01bbebc|https:
 a6224bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-1a96-30e9-adc0-fa7ae01bbebc|https://auth.kenyahmis.org:7773|HTS Registry|DWAPI|HTS
 a6225bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://auth.kenyahmis.org:6763|MGS Registry|DWAPI|MGS
 a6226bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://auth.kenyahmis.org/mnch|MNCH Registry|DWAPI|MNCH
-a6227bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|http://localhost:9797|PREP Registry|DWAPI|PREP
+a6227bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://auth.kenyahmis.org/prep|PREP Registry|DWAPI|PREP
 a6228bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://auth.kenyahmis.org/crs|Client Registry Service|DWAPI|CRS
