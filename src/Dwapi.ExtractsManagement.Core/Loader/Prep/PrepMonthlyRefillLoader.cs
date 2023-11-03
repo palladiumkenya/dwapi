@@ -47,9 +47,9 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Prep
 
                 StringBuilder query = new StringBuilder();
                 query.Append($" SELECT s.* FROM {nameof(TempPrepMonthlyRefillExtract)}s s");
-                query.Append($" INNER JOIN PatientPrepExtracts p ON ");
-                query.Append($" s.PatientPK = p.PatientPK AND ");
-                query.Append($" s.SiteCode = p.SiteCode ");
+                // query.Append($" INNER JOIN PatientPrepExtracts p ON ");
+                // query.Append($" s.PatientPK = p.PatientPK AND ");
+                // query.Append($" s.SiteCode = p.SiteCode ");
 
                 const int take = 1000;
                 var eCount = await  _tempPrepMonthlyRefillExtractRepository.GetCount(query.ToString());

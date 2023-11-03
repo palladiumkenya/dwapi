@@ -63,9 +63,9 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 name: "IX_PrepAdverseEventExtracts_SiteCode_PatientPK",
                 table: "PrepAdverseEventExtracts");
 
-            migrationBuilder.DropUniqueConstraint(
-                name: "AK_PatientPrepExtracts_Id",
-                table: "PatientPrepExtracts");
+            //migrationBuilder.DropUniqueConstraint(
+               // name: "AK_PatientPrepExtracts_Id",
+               // table: "PatientPrepExtracts");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_PatientPrepExtracts",
@@ -293,10 +293,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Migrations
                 name: "PatientPrepExtractId",
                 table: "PrepAdverseEventExtracts");
 
-            migrationBuilder.AddUniqueConstraint(
-                name: "AK_PatientPrepExtracts_Id",
-                table: "PatientPrepExtracts",
-                column: "Id");
+            //migrationBuilder.AddUniqueConstraint(
+              //  name: "AK_PatientPrepExtracts_Id",
+                //table: "PatientPrepExtracts",
+               // column: "Id");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_PatientPrepExtracts",
