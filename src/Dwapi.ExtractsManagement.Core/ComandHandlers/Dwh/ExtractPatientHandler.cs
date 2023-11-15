@@ -67,7 +67,7 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
         
                     if (daysBetween > 2)
                     {
-                        throw new Exception("Last ETL refresh was more than 2 days ago. Refresh first before starting the process.");
+                        // throw new Exception("Last ETL refresh was more than 2 days ago. Refresh first before starting the process.");
                     }
                 }
             }

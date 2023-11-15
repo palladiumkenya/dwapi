@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto;
@@ -12,15 +13,21 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
 {
     public class IndicatorExtractRepository: BaseRepository<IndicatorExtract, Guid>,IIndicatorExtractRepository
     {
-        public IndicatorExtractRepository(ExtractsContext context) : base(context)
+        private readonly IPatientExtractRepository _repository;
+
+        public IndicatorExtractRepository(ExtractsContext context,IPatientExtractRepository repository) : base(context)
         {
+            _repository = repository;
+
         }
 
         public IEnumerable<IndicatorExtractDto> Load()
         {
+            int sitecode = _repository.GetSiteCode();
+
             var sql = $@"
                 select e.*,k.Description,k.Rank
-                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id
+                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id where SiteCode={sitecode}
             ";
             return Context.Database.GetDbConnection().Query<IndicatorExtractDto>(sql).ToList();
         }

@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Source.Mgs;
@@ -16,8 +17,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.TempExtracts
 {
     public class TempIndicatorExtractRepository: BaseRepository<TempIndicatorExtract, Guid>, ITempIndicatorExtractRepository
     {
-        public TempIndicatorExtractRepository(ExtractsContext context) : base(context)
+        private readonly IPatientExtractRepository _repository;
+
+        public TempIndicatorExtractRepository(ExtractsContext context,IPatientExtractRepository repository) : base(context)
         {
+            _repository = repository;
+
         }
 
         public async Task Clear()
@@ -30,7 +35,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.TempExtracts
                 nameof(ExtractsContext.IndicatorExtracts)
             };
 
-            var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"TRUNCATE TABLE {x};"));
+            int sitecode = _repository.GetSiteCode();
+            var truncateCommands = truncates.Select(x => GetSqlCommand(cn, $"DELETE FROM {x} where SiteCode={sitecode} or SiteCode=0;"));
 
             foreach (var truncateCommand in truncateCommands)
             {

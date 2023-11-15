@@ -12,5 +12,7 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh
         void UpdateSendStatus(List<SentItem> sentItems);
         int GetSent(Guid domainEventPatientExtractId);
         long UpdateDiffSendStatus();
+        int GetSiteCode();
+
     }
 }
