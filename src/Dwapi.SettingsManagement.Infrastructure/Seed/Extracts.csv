@@ -5395,7 +5395,7 @@ UNION(
                                                              when 117855 then 'Epilepsy'
                                                              when 117789 then 'Glaucoma'
                                                              when 139071 then 'Heart Disease'
-                                                             when 115728 then 'Hyperlipidaemia's
+                                                             when 115728 then 'Hyperlipidaemia'
                                                              when 117399 then 'Hypertension'
                                                              when 117321 then 'Hypothyroidism'
                                                              when 151342 then 'Mental illness'
