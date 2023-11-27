@@ -1,2 +1,2 @@
-docker build -t kenyahmis/dwapi:uuid .
-docker push kenyahmis/dwapi:uuid
+docker build -t kenyahmis/dwapi:v3114 .
+docker push kenyahmis/dwapi:v3114
