@@ -1,9 +1,9 @@
 Id|AuthToken|Url|Name|SubscriberId|DocketId
 a6221bc6-0e85-11e8-ba89-0ed5f89f718b|268DFA3EB92BC53FAE94A048E23112A1|http://52.178.24.227:8026|Card Registry|DWAPI|PSMART
-a6222bc6-0e85-11e8-ba89-0ed5f89f718b|1ba47c2a-6e05-11e8-adc0-fa7ae01bbebc|https://auth.kenyahmis.org/dwapi|NDWH Registry|DWAPI|NDWH
-a6223bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae01bbebc|https://auth.kenyahmis.org:6763|CBS Registry|DWAPI|CBS
-a6224bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-1a96-30e9-adc0-fa7ae01bbebc|https://auth.kenyahmis.org:7773|HTS Registry|DWAPI|HTS
-a6225bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://auth.kenyahmis.org:6763|MGS Registry|DWAPI|MGS
-a6226bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://auth.kenyahmis.org/mnch|MNCH Registry|DWAPI|MNCH
-a6227bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://auth.kenyahmis.org/prep|PREP Registry|DWAPI|PREP
-a6228bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://auth.kenyahmis.org/crs|Client Registry Service|DWAPI|CRS
+a6222bc6-0e85-11e8-ba89-0ed5f89f718b|1ba47c2a-6e05-11e8-adc0-fa7ae01bbebc|https://data.kenyahmis.org:444/dwapi|NDWH Registry|DWAPI|NDWH
+a6223bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae01bbebc|https://data.kenyahmis.org:6763|CBS Registry|DWAPI|CBS
+a6224bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-1a96-30e9-adc0-fa7ae01bbebc|https://data.kenyahmis.org:7773|HTS Registry|DWAPI|HTS
+a6225bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://data.kenyahmis.org:6763|MGS Registry|DWAPI|MGS
+a6226bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://data.kenyahmis.org:444/mnch|MNCH Registry|DWAPI|MNCH
+a6227bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://data.kenyahmis.org:444/prep|PREP Registry|DWAPI|PREP
+a6228bc6-0e85-11e8-ba89-0ed5f89f718b|1983aeda-6a96-11e8-adc0-fa7ae02bbebc|https://data.kenyahmis.org:444/crs|Client Registry Service|DWAPI|CRS
