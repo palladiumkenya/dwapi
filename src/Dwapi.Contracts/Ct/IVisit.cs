@@ -38,6 +38,7 @@ namespace Dwapi.Contracts.Ct
         string ZScore { get; set; }
         int? ZScoreAbsolute { get; set; }
         string RecordUUID { get; set; }
+         bool? Voided { get; set; }
 
     }
 }

@@ -10,6 +10,7 @@ using Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.ExtractsManagement.Core.Profiles;
 using Dwapi.ExtractsManagement.Infrastructure.Repository.Hts.TempExtracts;
+using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Model;
 using Dwapi.SharedKernel.Utility;
@@ -30,7 +31,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
             _tempHtsEligibilityExtractRepository = tempHtsEligibilityExtractRepository;
         }
 
-        public async Task<int> Load(bool diffSupport)
+        public async Task<int> Load(bool diffSupport,Guid extractId)
         {
             var mapper = diffSupport ? ExtractDiffMapper.Instance : ExtractMapper.Instance;
             int count = 0;
@@ -66,6 +67,8 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
                     page++;
                 }
                 DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsEligibilityExtract), "Loading...", Found, 0, 0, 0, 0)));
+                DomainEvents.Dispatch(new HtsStatusNotification(extractId, ExtractStatus.Loaded, count));
+
                 return count;
             }
             catch (Exception e)
@@ -79,7 +82,7 @@ namespace Dwapi.ExtractsManagement.Core.Loader.Hts
         {
             Found = found;
             ExtractId = extractId;
-            return Load(diffSupport);
+            return Load(diffSupport, extractId);
         }
     }
 }

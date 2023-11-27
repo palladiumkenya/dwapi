@@ -38,6 +38,8 @@ namespace Dwapi.Contracts.Mnch
         decimal? HeightLength { get; set; }
         string ZScore { get; set; }
         int? ZScoreAbsolute { get; set; }
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

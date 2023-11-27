@@ -86,7 +86,11 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Prep
             return _context.Database.GetDbConnection().Query<PrepVisitExtractView>("Select * From PrepVisitExtracts")
                 .ToList().Where(x => !x.IsSent);
         }
-
+        public IEnumerable<PrepMonthlyRefillExtractView> ReadAllPrepMonthlyRefill()
+        {
+            return _context.Database.GetDbConnection().Query<PrepMonthlyRefillExtractView>("Select * From PrepMonthlyRefillExtracts")
+                .ToList().Where(x => !x.IsSent);
+        }
 
 
     }

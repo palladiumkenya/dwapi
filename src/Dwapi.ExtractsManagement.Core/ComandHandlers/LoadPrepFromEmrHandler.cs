@@ -128,6 +128,19 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 };
                 ts4.Add( _mediator.Send(depressionScreeningCommand, cancellationToken));
             }
+            
+            // ExtractPrepMonthlyRefillExtract
+            var prepMonthlyRefillProfile =
+                request.Extracts.FirstOrDefault(x => x.Extract.Name == "PrepMonthlyRefillExtract");
+            if (null != prepMonthlyRefillProfile)
+            {
+                var prepMonthlyRefillCommand = new ExtractPrepMonthlyRefill()
+                {
+                    Extract = prepMonthlyRefillProfile?.Extract,
+                    DatabaseProtocol = prepMonthlyRefillProfile?.DatabaseProtocol
+                };
+                ts4.Add( _mediator.Send(prepMonthlyRefillCommand, cancellationToken));
+            }
 
 
 

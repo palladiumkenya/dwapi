@@ -78,6 +78,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
         public string ReasonRefferredForTesting   { get; set; }
         public string ReasonNotReffered { get; set; }
         public  string HtsRiskScore	 { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
 
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }

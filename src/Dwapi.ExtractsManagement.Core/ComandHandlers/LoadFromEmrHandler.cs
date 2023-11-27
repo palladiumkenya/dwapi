@@ -357,17 +357,17 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 ts8.Add( _mediator.Send(defaulterTracingCommand, cancellationToken));
             }
             
-            // ExtractCervicalCancerScreening
-            var cervicalCancerScreeningProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "CervicalCancerScreeningExtract");
-            if (null != cervicalCancerScreeningProfile)
+            // ExtractCancerScreening
+            var CancerScreeningProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "CancerScreeningExtract");
+            if (null != CancerScreeningProfile)
             {
-                var cervicalCancerScreeningCommand = new ExtractCervicalCancerScreening()
+                var CancerScreeningCommand = new ExtractCancerScreening()
                 {
-                    Extract = cervicalCancerScreeningProfile?.Extract,
-                    DatabaseProtocol = cervicalCancerScreeningProfile?.DatabaseProtocol,
+                    Extract = CancerScreeningProfile?.Extract,
+                    DatabaseProtocol = CancerScreeningProfile?.DatabaseProtocol,
                     LoadChangesOnly = request.LoadChangesOnly
                 };
-                ts8.Add( _mediator.Send(cervicalCancerScreeningCommand, cancellationToken));
+                ts8.Add( _mediator.Send(CancerScreeningCommand, cancellationToken));
             }
             
             // ExtractIITRiskScores
@@ -382,6 +382,20 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 };
                 ts8.Add( _mediator.Send(iitRiskScoresCommand, cancellationToken));
             }
+            
+            // ExtractArtFastTrack
+            var artFastTrackProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "ArtFastTrackExtract");
+            if (null != artFastTrackProfile)
+            {
+                var artFastTrackCommand = new ExtractArtFastTrack()
+                {
+                    Extract = artFastTrackProfile?.Extract,
+                    DatabaseProtocol = artFastTrackProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
+                };
+                ts8.Add( _mediator.Send(artFastTrackCommand, cancellationToken));
+            }
+
 
             var result1 = await Task.WhenAll(ts1);
             var result2 = await Task.WhenAll(ts2);

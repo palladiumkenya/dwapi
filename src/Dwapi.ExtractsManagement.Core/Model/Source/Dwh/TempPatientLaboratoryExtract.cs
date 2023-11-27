@@ -20,5 +20,6 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? DateSampleTaken { get; set; }
         public string SampleType { get; set; }
         public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
     }
 }

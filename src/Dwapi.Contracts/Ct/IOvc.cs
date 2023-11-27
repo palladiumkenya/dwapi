@@ -17,6 +17,7 @@ namespace Dwapi.Contracts.Ct
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
         string RecordUUID { get; set; }
+         bool? Voided { get; set; }
 
     }
 }

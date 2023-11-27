@@ -162,12 +162,16 @@ export class InvalidRecordDetailsComponent implements OnInit {
             this.getSummaryInvalidExtracts('DefaulterTracing');
             return;
         }
-        if (this.extract === 'Cervical Cancer Screening') {
-            this.getSummaryInvalidExtracts('CervicalCancerScreening');
+        if (this.extract === 'Cancer Screening') {
+            this.getSummaryInvalidExtracts('CancerScreening');
             return;
         }
         if (this.extract === 'IIT Risk Scores') {
             this.getSummaryInvalidExtracts('IITRiskScores');
+            return;
+        }
+        if (this.extract === 'Art Fast Track') {
+            this.getSummaryInvalidExtracts('ArtFastTrack');
             return;
         }
     }
@@ -251,12 +255,16 @@ export class InvalidRecordDetailsComponent implements OnInit {
             this.getDefaulterTracingColumns();
             return;
         }
-        if (this.extract === 'Cervical Cancer Screening') {
+        if (this.extract === 'Cancer Screening') {
             this.getCervicalCancerScreeningColumns();
             return;
         }
         if (this.extract === 'IIT Risk Scores') {
             this.getIITRiskScoresColumns();
+            return;
+        }
+        if (this.extract === 'Art Fast Track') {
+            this.getArtFastTrackColumns();
             return;
         }
     }
@@ -449,6 +457,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'Extract', header: 'Extract'},
             {field: 'Field', header: 'Field'},
             {field: 'Type', header: 'Type'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'DOB', header: 'DOB'},
             {field: 'Gender', header: 'Gender'},
             {field: 'LastVisit', header: 'Last Visit'},
@@ -468,6 +478,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'Extract', header: 'Extract'},
             {field: 'Field', header: 'Field'},
             {field: 'Type', header: 'Type'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'StartRegimen', header: 'Start Regimen'},
             {field: 'StartARTDate', header: 'Start ART Date'},
             {field: 'StartRegimenLine', header: 'Start Regimen Line'},
@@ -504,6 +516,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'field', header: 'Field'},
             {field: 'type', header: 'Type'},
             {field: 'summary', header: 'Summary'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'dateGenerated', header: 'Date Generated'},
             {field: 'patientPK', header: 'Patient PK'},
             {field: 'facilityId', header: 'Facility Id'},
@@ -544,6 +558,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'field', header: 'Field'},
             {field: 'type', header: 'Type'},
             {field: 'summary', header: 'Summary'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'orderedByDate', header: 'Ordered By Date'},
             {field: 'reportedByDate', header: 'Reported By Date'},
             {field: 'testName', header: 'Test Name'},
@@ -566,6 +582,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'extract', header: 'Extract'},
             {field: 'field', header: 'Field'},
             {field: 'type', header: 'Type'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'summary', header: 'Summary'},
             {field: 'drug', header: 'Drug'},
             {field: 'dispenseDate', header: 'Dispense Date'},
@@ -592,6 +610,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'extract', header: 'Extract'},
             {field: 'field', header: 'Field'},
             {field: 'type', header: 'Type'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'summary', header: 'Summary'},
             {field: 'exitDescription', header: 'Exit Description'},
             {field: 'exitDate', header: 'Exit Date'},
@@ -613,6 +633,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'extract', header: 'Extract'},
             {field: 'field', header: 'Field'},
             {field: 'type', header: 'Type'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'summary', header: 'Summary'},
             {field: 'visitDate', header: 'Visit Date'},
             {field: 'dateGenerated', header: 'Date Generated'},
@@ -680,6 +702,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'}, {field: 'visitID', header: 'visitID'},
@@ -709,6 +733,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
@@ -733,6 +759,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
@@ -759,6 +787,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
@@ -776,6 +806,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
@@ -832,6 +864,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
@@ -852,6 +886,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
@@ -885,6 +921,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
@@ -907,6 +945,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'Patient ID'},
             {field: 'facilityId', header: 'Facility Id'},
             {field: 'siteCode', header: 'Site Code'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'},
@@ -929,6 +969,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'siteCode', header: 'siteCode'},
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'covid19AssessmentDate', header: 'covid19AssessmentDate'},
@@ -972,6 +1014,8 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'siteCode', header: 'siteCode'},
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'visitID', header: 'visitID'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'encounterId', header: 'encounterId'},
@@ -989,24 +1033,66 @@ export class InvalidRecordDetailsComponent implements OnInit {
 
     private getCervicalCancerScreeningColumns(): void {
         this.cols = [
-            {field: 'patientPK', header: 'patientPK'},
-            {field: 'siteCode', header: 'siteCode'},
-            {field: 'patientID', header: 'patientID'},
-            {field: 'facilityId', header: 'facilityId'},
-            {field: 'facilityName', header: 'facilityName'},
-            {field: 'visitID', header: 'visitID'},
-            {field: 'visitDate', header: 'visitDate'},
-            {field: 'VisitType', header: 'VisitType'},
-            {field: 'screeningMethod', header: 'ScreeningMethod'},
-            {field: 'treatmentToday', header: 'TreatmentToday'},
-            {field: 'referredOut', header: 'ReferredOut'},
-            {field: 'nextAppointmentDate', header: 'NextAppointmentDate'},
-            {field: 'screeningType', header: 'ScreeningType'},
-            {field: 'screeningResult', header: 'ScreeningResult'},
+            {field: 'facilityName', header: 'FacilityName'},
+            {field: 'visitType', header: 'VisitType'},
+            {field: 'visitID', header: 'VisitID'},
+            {field: 'visitDate', header: 'VisitDate'},
+            {field: 'smokesCigarette', header: 'SmokesCigarette'},
+            {field: 'numberYearsSmoked', header: 'NumberYearsSmoked'},
+            {field: 'numberCigarettesPerDay', header: 'NumberCigarettesPerDay'},
+            {field: 'otherFormTobacco', header: 'OtherFormTobacco'},
+            {field: 'takesAlcohol', header: 'TakesAlcohol'},
+            {field: 'hivStatus', header: 'HIVStatus'},
+            {field: 'familyHistoryOfCa', header: 'FamilyHistoryOfCa'},
+            {field: 'freviousCaTreatment', header: 'PreviousCaTreatment'},
+            {field: 'symptomsCa', header: 'SymptomsCa'},
+            {field: 'cancerType', header: 'CancerType'},
+            {field: 'fecalOccultBloodTest', header: 'FecalOccultBloodTest'},
+            {field: 'treatmentOccultBlood', header: 'TreatmentOccultBlood'},
+            {field: 'colonoscopy', header: 'Colonoscopy'},
+            {field: 'treatmentColonoscopy', header: 'TreatmentColonoscopy'},
+            {field: 'eua', header: 'EUA'},
+            {field: 'treatmentRetinoblastoma    ', header: 'TreatmentRetinoblastoma    '},
+            {field: 'retinoblastomaGene ', header: 'RetinoblastomaGene '},
+            {field: 'treatmentEUA', header: 'TreatmentEUA'},
+            {field: 'dre', header: 'DRE'},
+            {field: 'treatmentDRE', header: 'TreatmentDRE'},
+            {field: 'psa', header: 'PSA'},
+            {field: 'treatmentPSA', header: 'TreatmentPSA'},
+            {field: 'visualExamination', header: 'VisualExamination'},
+            {field: 'treatmentVE', header: 'TreatmentVE'},
+            {field: 'cytology', header: 'Cytology'},
+            {field: 'treatmentCytology', header: 'TreatmentCytology'},
+            {field: 'imaging', header: 'Imaging'},
+            {field: 'treatmentImaging', header: 'TreatmentImaging'},
+            {field: 'biopsy', header: 'Biopsy'},
+            {field: 'treatmentBiopsy', header: 'TreatmentBiopsy'},
             {field: 'postTreatmentComplicationCause', header: 'PostTreatmentComplicationCause'},
             {field: 'otherPostTreatmentComplication', header: 'OtherPostTreatmentComplication'},
-            {field: 'referralReason', header: 'ReferralReason'}
+            {field: 'referralReason', header: 'ReferralReason'},
 
+            {field: 'nextAppointmentDate', header: 'NextAppointmentDate'},
+            {field: 'screeningType', header: 'ScreeningType'},
+            {field: 'hpvScreeningResult', header: 'HPVScreeningResult'},
+            {field: 'treatmentHPV', header: 'TreatmentHPV'},
+            {field: 'viaViliScreeningResult', header: 'VIAVILIScreeningResult'},
+            {field: 'papSmearScreeningResult', header: 'PAPSmearScreeningResult'},
+            {field: 'treatmentPapSmear', header: 'TreatmentPapSmear'},
+            {field: 'referalOrdered', header: 'ReferalOrdered'},
+            {field: 'colposcopy', header: 'Colposcopy'},
+            {field: 'treatmentColposcopy', header: 'TreatmentColposcopy'},
+
+            {field: 'cbeE', header: 'CBE'},
+            {field: 'treatmentCBE', header: 'TreatmentCBE'},
+            {field: 'ultrasound', header: 'Ultrasound'},
+            {field: 'treatmentUltraSound', header: 'TreatmentUltraSound'},
+            {field: 'ifTissueDiagnosis', header: 'IfTissueDiagnosis'},
+            {field: 'dateTissueDiagnosis', header: 'DateTissueDiagnosis'},
+            {field: 'reasonNotDone', header: 'ReasonNotDone'},
+            {field: 'referred', header: 'Referred'},
+            {field: 'reasonForReferral', header: 'ReasonForReferral'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'}
         ];
     }
 
@@ -1017,11 +1103,43 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'patientID', header: 'patientID'},
             {field: 'facilityId', header: 'facilityId'},
             {field: 'facilityName', header: 'facilityName'},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
             {field: 'sourceSysUUID', header: 'SourceSysUUID'},
             {field: 'riskScore', header: 'RiskScore'},
             {field: 'riskFactors', header: 'RiskFactors'},
             {field: 'riskDescription', header: 'RiskDescription'},
             {field: 'riskEvaluationDate', header: 'RiskEvaluationDate'}
+
+        ];
+    }
+
+    private getArtFastTrackColumns(): void {
+        this.cols = [
+            {field: 'facilityName', header: 'FacilityName'},
+            {field: 'artRefillModel', header: 'ARTRefillModel '},
+            {field: 'visitDate', header: 'VisitDate '},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'},
+            {field: 'ctxDispensed', header: 'CTXDispensed '},
+            {field: 'dapsoneDispensed', header: 'DapsoneDispensed '},
+            {field: 'condomsDistributed', header: 'CondomsDistributed '},
+            {field: 'oralContraceptivesDispensed', header: 'OralContraceptivesDispensed '},
+            {field: 'missedDoses', header: 'MissedDoses '},
+            {field: 'fatigue', header: 'Fatigue '},
+            {field: 'cough', header: 'Cough '},
+            {field: 'fever', header: 'Fever '},
+            {field: 'rash', header: 'Rash '},
+            {field: 'nauseaOrVomiting', header: 'NauseaOrVomiting'},
+            {field: 'genitalSoreOrDischarge', header: 'GenitalSoreOrDischarge '},
+            {field: 'diarrhea', header: 'Diarrhea '},
+            {field: 'otherSymptoms', header: 'OtherSymptoms '},
+            {field: 'pregnancyStatus', header: 'PregnancyStatus '},
+            {field: 'fpStatus', header: 'FPStatus '},
+            {field: 'fpMethod', header: 'FPMethod '},
+            {field: 'reasonNotOnFP', header: 'ReasonNotOnFP '},
+            {field: 'referredToClinic', header: 'ReferredToClinic '},
+            {field: 'returnVisitDate', header: 'ReturnVisitDate '}
 
         ];
     }

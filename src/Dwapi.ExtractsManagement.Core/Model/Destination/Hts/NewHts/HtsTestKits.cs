@@ -15,6 +15,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
         public  string TestKitExpiry2{ get; set; }
         public  string TestResult2 { get; set; } 
         public  string SyphilisResult { get; set; } 
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+        
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
 

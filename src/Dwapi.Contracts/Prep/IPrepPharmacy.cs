@@ -11,6 +11,8 @@ namespace Dwapi.Contracts.Prep
         string RegimenPrescribed { get; set; }
         DateTime? DispenseDate { get; set; }
         decimal? Duration { get; set; }
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

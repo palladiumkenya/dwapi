@@ -13,6 +13,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string Severity { get; set; }
         public DateTime VisitDate { get; set; }
         public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
 
         [NotMapped]
         public virtual ICollection<TempPatientAdverseEventExtractErrorSummary> TempPatientAdverseEventExtractErrorSummaries { get; set; } = new List<TempPatientAdverseEventExtractErrorSummary>();

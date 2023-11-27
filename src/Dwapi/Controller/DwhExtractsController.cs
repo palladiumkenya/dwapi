@@ -23,6 +23,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Serilog;
+using X.PagedList;
 
 namespace Dwapi.Controller
 {
@@ -40,11 +41,11 @@ namespace Dwapi.Controller
         private readonly IIndicatorExtractRepository _indicatorExtractRepository;
         private readonly IDiffLogRepository _diffLogRepository;
         private readonly ICTExportService _ctExportService;
-
+        private readonly IAppMetricRepository _appMetricRepository;
 
         private readonly string _version;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository, ICTExportService ctExportService)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository, ICTExportService ctExportService, IAppMetricRepository appMetricRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -57,6 +58,7 @@ namespace Dwapi.Controller
             _ctExportService = ctExportService;
             Startup.HubContext= _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
+            _appMetricRepository = appMetricRepository;
         }
 
         [HttpPost("extract")]
@@ -173,6 +175,15 @@ namespace Dwapi.Controller
 
             try
             {
+                // check if loaded data today
+                DateTime lastLoadDate =  (DateTime)_appMetricRepository.GetCTLastLoadedDate();
+                DateTime now = DateTime.Now;
+                var daysBetween = (now - lastLoadDate).TotalDays;
+                if (daysBetween > 1)
+                {
+                    throw new Exception($"The last time CT was loaded was {Math.Floor(daysBetween)} days ago. Kindly load first before sending to provide up to date data to NDWH.");
+                }
+
                 // check stale
                 if (_indicatorExtractRepository.CheckIfStale())
                 {
@@ -211,6 +222,15 @@ namespace Dwapi.Controller
 
             try
             {
+                // // check if loaded data today
+                DateTime lastLoadDate =  (DateTime)_appMetricRepository.GetCTLastLoadedDate();
+                DateTime now = DateTime.Now;
+                var daysBetween = (now - lastLoadDate).TotalDays;
+                if (daysBetween > 1)
+                {
+                    throw new Exception($"The last time CT was loaded was {Math.Floor(daysBetween)} days ago. Kindly load first before sending to provide up to date data to NDWH.");
+                }
+
                 // check stale
                  if (_indicatorExtractRepository.CheckIfStale())
                  {
@@ -666,16 +686,18 @@ namespace Dwapi.Controller
         {
             var idsCovid =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CovidMessageSourceBag()).Result;
             var idsDefaulterTracing =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DefaulterTracingMessageSourceBag()).Result;
-            var idsCervicalCancerScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CervicalCancerScreeningMessageSourceBag()).Result;
+            var idsCancerScreening =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CancerScreeningMessageSourceBag()).Result;
             var idsIITRiskScores =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new IITRiskScoresMessageSourceBag()).Result;
+            var idsArtFastTrack =_ctSendService.SendSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new ArtFastTrackMessageSourceBag()).Result;
 
         }
         public void ExportCovidJobSmartProfiles(SendManifestPackageDTO package)
         {
             var idsCovid = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CovidMessageSourceBag()).Result;
             var idsDefaulterTracing = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new DefaulterTracingMessageSourceBag()).Result;
-            var idsCervicalCancerScreening = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CervicalCancerScreeningMessageSourceBag()).Result;
+            var idsCancerScreening = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new CancerScreeningMessageSourceBag()).Result;
             var idsIITRiskScores = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new IITRiskScoresMessageSourceBag()).Result;
+            var idsArtFastTrack = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Extracts, new ArtFastTrackMessageSourceBag()).Result;
 
         }
 
@@ -760,16 +782,18 @@ namespace Dwapi.Controller
         {
             var idsCovid =_ctSendService.SendBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
             var idsDefaulterTracing =_ctSendService.SendBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
-            var idsCervicalCancerScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new CervicalCancerScreeningsMessageBag()).Result;
+            var idsCancerScreening =_ctSendService.SendBatchExtractsAsync(package, 200, new CancerScreeningsMessageBag()).Result;
             var idsIITRiskScores =_ctSendService.SendBatchExtractsAsync(package, 200, new IITRiskScoresMessageBag()).Result;
+            var idsArtFastTrack =_ctSendService.SendBatchExtractsAsync(package, 200, new ArtFastTrackMessageBag()).Result;
 
         }
         public void ExportCovidJobProfiles(SendManifestPackageDTO package)
         {
             var idsCovid = _ctExportService.ExportBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
             var idsDefaulterTracing = _ctExportService.ExportBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
-            var idsCervicalCancerScreening = _ctExportService.ExportBatchExtractsAsync(package, 200, new CervicalCancerScreeningsMessageBag()).Result;
+            var idsCancerScreening = _ctExportService.ExportBatchExtractsAsync(package, 200, new CancerScreeningsMessageBag()).Result;
             var idsIITRiskScores = _ctExportService.ExportBatchExtractsAsync(package, 200, new IITRiskScoresMessageBag()).Result;
+            var idsArtFastTrack = _ctExportService.ExportBatchExtractsAsync(package, 200, new ArtFastTrackMessageBag()).Result;
 
         }
 
@@ -803,8 +827,10 @@ namespace Dwapi.Controller
         {
             var idsCovid =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new CovidsMessageBag()).Result;
             var idsDefaulterTracing =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new DefaulterTracingsMessageBag()).Result;
-            var idsCervicalCancerScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new CervicalCancerScreeningsMessageBag()).Result;
+            var idsCancerScreening =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new CancerScreeningsMessageBag()).Result;
             var idsIITRiskScores =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new IITRiskScoresMessageBag()).Result;
+            var idsArtFastTrack =_ctSendService.SendDiffBatchExtractsAsync(package, 200, new ArtFastTrackMessageBag()).Result;
+
 
         }
 

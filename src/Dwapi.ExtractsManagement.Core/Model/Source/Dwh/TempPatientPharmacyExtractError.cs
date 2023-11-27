@@ -18,6 +18,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string PeriodTaken { get; set; }
         public string ProphylaxisType { get; set; }
         public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
 
         [NotMapped]
         public virtual ICollection<TempPatientPharmacyExtractErrorSummary> TempPatientPharmacyExtractErrorSummaries { get; set; } = new List<TempPatientPharmacyExtractErrorSummary>();

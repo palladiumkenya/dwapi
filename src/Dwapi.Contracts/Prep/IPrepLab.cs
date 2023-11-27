@@ -13,6 +13,8 @@ namespace Dwapi.Contracts.Prep
         DateTime? SampleDate { get; set; }
         DateTime? TestResultDate { get; set; }
         string Reason { get; set; }
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

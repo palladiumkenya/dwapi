@@ -16,5 +16,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
             public  DateTime? DateEnrolled { get; set; }
             public  string ReportedCCCNumber { get; set; }
             public  DateTime? ReportedStartARTDate { get; set; }
+            public string RecordUUID { get; set; }
+            public bool? Voided { get; set; }
         }
 }

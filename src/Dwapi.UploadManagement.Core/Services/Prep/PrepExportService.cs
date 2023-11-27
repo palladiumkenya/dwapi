@@ -446,10 +446,6 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                         var sentIds = message.PrepVisitExtracts.Select(x => x.Id).ToList();
                         sendCound += sentIds.Count;
                         DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
-                        
-
-
-
                     }
                     catch (Exception e)
                     {
@@ -459,15 +455,62 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                 }
                 DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepVisitExtract), Common.GetProgress(count, total), sendCound)));
 
-
-
-            }       
-
-
+            }    
+            
             DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepVisitExtract), Common.GetProgress(count, total), sendCound, true)));
             DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
             return responses;
         }
+        
+        public Task<List<SendMpiResponse>> ExportPrepMonthlyRefillAsync(SendManifestPackageDTO sendTo)
+        {
+            return ExportPrepMonthlyRefillAsync(sendTo, PrepMessageBag.CreateEx(_packager.GeneratePrepMonthlyRefill().ToList()));
+        }
+        public async Task<List<SendMpiResponse>> ExportPrepMonthlyRefillAsync(SendManifestPackageDTO sendTo, PrepMessageBag messageBag)
+        {
+            var responses = new List<SendMpiResponse>();
+            var client = Client ?? new HttpClient();
+            int sendCound = 0;
+            int count = 0;
+            int total = messageBag.Messages.Count;
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.Exporting));
+            foreach (var message in messageBag.Messages)
+            {
+
+                if (message.PrepMonthlyRefillExtracts.Count > 0)
+                {
+                    count++;
+                    try
+                    {
+                        var msg = JsonConvert.SerializeObject(message);
+                        var plainTextBytes = Encoding.UTF8.GetBytes(msg);
+                        var Base64Extract = Convert.ToBase64String(plainTextBytes);
+                        string projectPath ="exports";
+                        string folderName = Path.Combine(projectPath, message.PrepMonthlyRefillExtracts[0].SiteCode + "-Prep" + "\\extracts").HasToEndsWith(@"\").ToOsStyle();
+                        if (!Directory.Exists(folderName))
+                            Directory.CreateDirectory(folderName);
+
+                        string fileName = folderName  + "PrepMonthlyRefillExtracts.dump" + ".json";
+
+                        File.WriteAllText(fileName, Base64Extract);
+                        var sentIds = message.PrepMonthlyRefillExtracts.Select(x => x.Id).ToList();
+                        sendCound += sentIds.Count;
+                        DomainEvents.Dispatch(new PrepExtractSentEvent(sentIds, SendStatus.Exported, sendTo.ExtractName));
+                       
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e, $"Export PrepMonthlyRefillExtracts Error");
+                        throw;
+                    }
+                }
+                DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepMonthlyRefillExtract), Common.GetProgress(count, total), sendCound)));
+            }
+            DomainEvents.Dispatch(new PrepExportNotification(new SendProgress(nameof(PrepMonthlyRefillExtract), Common.GetProgress(count, total), sendCound, true)));
+            DomainEvents.Dispatch(new PrepStatusNotification(sendTo.ExtractId, ExtractStatus.exported, sendCound));
+            return responses;
+        }
+        
 
         public async Task NotifyPostSending(SendManifestPackageDTO sendTo, string version)
         {
@@ -971,6 +1014,58 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                     catch (Exception e)
                                     {
                                         Log.Error(e, $"Send PrepCareTerminationExtracts Extracts Error");
+                                        throw;
+                                    }
+
+                                
+                                
+                            }
+                            catch (Exception e)
+                            {
+                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+                            _recordsSaved++;
+                            await UpdateProgress();
+                           
+                        }
+                    }
+                    else if (archive.Entries[i].Name == "PrepMonthlyRefillExtracts.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                    {
+                        string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
+                        var filestream = File.OpenRead(destinationPath);
+                        using (StreamReader sr = new StreamReader(filestream))
+                        {
+                            try
+                            {
+                                text = await sr.ReadToEndAsync(); // OK                         
+
+                                byte[] base64EncodedBytes = Convert.FromBase64String(text);
+                                var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
+                                int count = 0;
+                                PrepMessage message = JsonConvert.DeserializeObject<PrepMessage>(Extract);
+                               
+                             
+                                    try
+                                    {
+                                        var msg = JsonConvert.SerializeObject(message);
+                                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepMonthlyRefill"), message);
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                            responses.Add(content);
+
+                                        }
+                                        else
+                                        {
+                                            var error = await response.Content.ReadAsStringAsync();
+                                            throw new Exception(error);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Error(e, $"Send PrepMonthlyRefillExtracts Extracts Error");
                                         throw;
                                     }
 

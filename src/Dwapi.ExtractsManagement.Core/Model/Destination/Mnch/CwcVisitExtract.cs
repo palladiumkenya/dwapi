@@ -41,6 +41,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         
         public string ZScore { get; set; }
         public int? ZScoreAbsolute { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
 
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
