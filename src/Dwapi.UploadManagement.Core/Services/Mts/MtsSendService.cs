@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using CSharpFunctionalExtensions;
 using Dwapi.ExtractsManagement.Core.Notifications;
+using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Events;
@@ -25,6 +28,9 @@ namespace Dwapi.UploadManagement.Core.Services.Mts
     {
         private readonly string _endPoint;
         private readonly IMgsPackager _packager;
+        private readonly HttpClient _httpClient;
+        private readonly JsonSerializerSettings _serializerSettings;
+
 
         public HttpClient Client { get; set; }
 
@@ -124,6 +130,32 @@ namespace Dwapi.UploadManagement.Core.Services.Mts
             DomainEvents.Dispatch(new MgsStatusNotification(sendTo.ExtractId, ExtractStatus.Sent, sendCound));
 
             return responses;
+        }
+        
+        
+        // public async Task<Result> Handle(SendToSpot request, CancellationToken cancellationToken)
+        public async Task SendMetrics(List<MetricDto> metrics)
+        {
+            try
+            {
+                string requestEndpoint = "metric";
+               
+                Log.Debug("posting metrics to SPOT...");
+                var content = JsonConvert.SerializeObject(metrics, _serializerSettings);
+
+                var toSend = new StringContent(content, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(requestEndpoint, toSend
+                );
+                response.EnsureSuccessStatusCode();
+                
+                // DomainEvents.Dispatch(new MgsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
+            }
+            catch (Exception e)
+            {
+                Log.Error("Send to SPOT Error", e);
+                Log.Error(e, $"Send Manifest Error");
+                throw;
+            }
         }
 
     }

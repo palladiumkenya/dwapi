@@ -487,7 +487,7 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.indicators = p;
-                    console.log(p)
+                    // console.log(p)
                 },
                 e => {
                     this.metricMessages = [];
