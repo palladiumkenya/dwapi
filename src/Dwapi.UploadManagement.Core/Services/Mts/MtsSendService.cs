@@ -134,29 +134,29 @@ namespace Dwapi.UploadManagement.Core.Services.Mts
         
         
         // public async Task<Result> Handle(SendToSpot request, CancellationToken cancellationToken)
-        public async Task SendMetrics(List<MetricDto> metrics)
-        {
-            try
-            {
-                string requestEndpoint = "metric";
-               
-                Log.Debug("posting metrics to SPOT...");
-                var content = JsonConvert.SerializeObject(metrics, _serializerSettings);
-
-                var toSend = new StringContent(content, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync(requestEndpoint, toSend
-                );
-                response.EnsureSuccessStatusCode();
-                
-                // DomainEvents.Dispatch(new MgsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
-            }
-            catch (Exception e)
-            {
-                Log.Error("Send to SPOT Error", e);
-                Log.Error(e, $"Send Manifest Error");
-                throw;
-            }
-        }
+        // public async Task SendMetrics(List<MetricDto> metrics)
+        // {
+        //     try
+        //     {
+        //         string requestEndpoint = "metric";
+        //        
+        //         Log.Debug("posting metrics to SPOT...");
+        //         var content = JsonConvert.SerializeObject(metrics, _serializerSettings);
+        //
+        //         var toSend = new StringContent(content, Encoding.UTF8, "application/json");
+        //         var response = await _httpClient.PostAsync(requestEndpoint, toSend
+        //         );
+        //         response.EnsureSuccessStatusCode();
+        //         
+        //         // DomainEvents.Dispatch(new MgsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         Log.Error("Send to SPOT Error", e);
+        //         Log.Error(e, $"Send Manifest Error");
+        //         throw;
+        //     }
+        // }
 
     }
 }
