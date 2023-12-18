@@ -120,6 +120,9 @@ Bached sending and await to 50 at a time
   <ItemGroup>
     <TypeScriptCompile Include="client-src\dockets\mts-docket\mts-docket.component.ts" />
     <TypeScriptCompile Include="client-src\dockets\services\mts.service.ts" />
+    <Version>3.1.1.7</Version>
+    <TypeScriptCompile Include="client-src\dockets\mts-docket\mts-docket.component.ts" />
+    <TypeScriptCompile Include="client-src\dockets\services\mts.service.ts" />
     <TypeScriptCompile Include="client-src\dockets\services\upload-service.ts" />
     <TypeScriptCompile Include="client-src\progress-status.model.ts" />
     <TypeScriptCompile Include="client-src\settings\model\export-event.ts" />
