@@ -8,10 +8,12 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto;
 using Dwapi.Hubs.Mgs;
+using Dwapi.Hubs.Mts;
 using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Application.Checks.Commands;
 using Dwapi.SettingsManagement.Core.Application.Checks.Queries;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
+using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SettingsManagement.Core.Interfaces.Services;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
@@ -35,8 +37,11 @@ namespace Dwapi.Controller
         private readonly IEmrManagerService _emrManagerService;
         private string _version;
         private readonly IIndicatorExtractRepository _extractRepository;
+        private readonly IHubContext<MtsActivity> _hubContext;
+        private readonly IHubContext<MtsSendActivity> _hubSendContext;
 
-        public MtsController(IMediator mediator, IMtsSendService mtsSendService, IEmrManagerService emrManagerService, IIndicatorExtractRepository extractRepository)
+        public MtsController(IMediator mediator, IMtsSendService mtsSendService, IEmrManagerService emrManagerService, IIndicatorExtractRepository extractRepository,
+            IHubContext<MtsActivity> hubContext,IHubContext<MtsSendActivity> hubSendContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mtsSendService = mtsSendService;
@@ -44,6 +49,8 @@ namespace Dwapi.Controller
             _extractRepository = extractRepository;
             var ver = GetType().Assembly.GetName().Version;
             _version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            Startup.MtsSendHubContext = _hubSendContext = hubSendContext;
+            Startup.MtsHubContext = _hubContext = hubContext;
         }
 
         [HttpGet("load")]
@@ -88,6 +95,22 @@ namespace Dwapi.Controller
             var list = IndicatorExtractDto.GenerateValidations(_extractRepository.Load().ToList());
 
             return Ok(list.OrderBy(x=>x.Rank));
+        }
+
+        [HttpPost("sendMetrics")]
+        public IActionResult sendMetrics([FromBody] List<IndicatorExtractDto> indicatorDto)
+        {
+            try
+            {
+                _mtsSendService.SendIndicators(indicatorDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
         }
     }
 }

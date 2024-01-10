@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
+using Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto;
 using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SharedKernel.DTOs;
@@ -20,6 +22,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Packager.Mgs;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Mts;
 using Dwapi.UploadManagement.Core.Notifications.Mgs;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Dwapi.UploadManagement.Core.Services.Mts
@@ -28,16 +31,18 @@ namespace Dwapi.UploadManagement.Core.Services.Mts
     {
         private readonly string _endPoint;
         private readonly IMgsPackager _packager;
-        private readonly HttpClient _httpClient;
+        // private readonly HttpClient _httpClient;
         private readonly JsonSerializerSettings _serializerSettings;
+        private readonly IPatientExtractRepository _repository;
 
 
         public HttpClient Client { get; set; }
 
-        public MtsSendService(IMgsPackager packager)
+        public MtsSendService(IMgsPackager packager,IPatientExtractRepository repository)
         {
             _packager = packager;
             _endPoint = "api/mgs/";
+            _repository = repository;
         }
 
         public Task<List<SendManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
@@ -134,29 +139,55 @@ namespace Dwapi.UploadManagement.Core.Services.Mts
         
         
         // public async Task<Result> Handle(SendToSpot request, CancellationToken cancellationToken)
-        // public async Task SendMetrics(List<MetricDto> metrics)
-        // {
-        //     try
-        //     {
-        //         string requestEndpoint = "metric";
-        //        
-        //         Log.Debug("posting metrics to SPOT...");
-        //         var content = JsonConvert.SerializeObject(metrics, _serializerSettings);
-        //
-        //         var toSend = new StringContent(content, Encoding.UTF8, "application/json");
-        //         var response = await _httpClient.PostAsync(requestEndpoint, toSend
-        //         );
-        //         response.EnsureSuccessStatusCode();
-        //         
-        //         // DomainEvents.Dispatch(new MgsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         Log.Error("Send to SPOT Error", e);
-        //         Log.Error(e, $"Send Manifest Error");
-        //         throw;
-        //     }
-        // }
+        public async Task SendIndicators(List<IndicatorExtractDto> indicators)
+        {
+            var client = Client ?? new HttpClient();
+
+            try
+            {
+                List<JObject> ModifiedIndicators = new List<JObject>();
+                
+                int sitecode = _repository.GetSiteCode();
+                string facilityname = _repository.GetFacilityName();
+
+                foreach (var indicator in indicators)
+                {
+                    // Create a sample JObject
+                    JObject ind = new JObject();
+                    ind["facilityManifestId"] = null;
+                    ind["facilityCode"] = sitecode;
+                    ind["facilityName"] = facilityname;
+                    ind["name"] = indicator.Indicator;
+                    ind["statusInfo"] = null;
+                    ind["value"] = indicator.IndicatorValue;
+                    ind["indicatorDate"] = indicator.IndicatorDate;
+                    ind["stage"] = "DWH";
+                    ind["status"] = "SENT";
+                    ind["statusDate"] = DateTime.Now;     
+                    
+                    ModifiedIndicators.Add(ind);
+                }
+                
+                string requestEndpoint = "metric";
+               
+                Log.Debug("posting metrics to Livesync...");
+                // var content = JsonConvert.SerializeObject(indicators, _serializerSettings);
+                
+                string content = JsonConvert.SerializeObject(ModifiedIndicators);
+                StringContent toSend = new StringContent(content, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("https://localhost:7157/api/LivesyncIndicators/SyncLivesyncIndicators", toSend
+                );
+                response.EnsureSuccessStatusCode();
+                
+                // DomainEvents.Dispatch(new MgsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
+            }
+            catch (Exception e)
+            {
+                Log.Error("Send to SPOT Error", e);
+                Log.Error(e, $"Send Manifest Error");
+                throw;
+            }
+        }
 
     }
 }

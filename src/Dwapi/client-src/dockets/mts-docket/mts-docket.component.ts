@@ -89,7 +89,7 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
     public colorMappings: any[] = [];
     rowStyleMap: { [key: string]: string };
     public centralRegistry: CentralRegistry;
-    private _ndwhSenderService: NdwhSenderService;
+    private _mtsService: MtsService;
     public dwhManifestPackage: SendPackage = null;
     @Input() emr: EmrSystem;
 
@@ -101,7 +101,7 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
 
     public constructor(public breadcrumbService: BreadcrumbService,
                        confirmationService: ConfirmationService, emrConfigService: EmrConfigService, private MtsService: MtsService,private service: MetricsService,
-                       private _registryConfigService: RegistryConfigService, psmartSenderService: NdwhSenderService,
+                       private _registryConfigService: RegistryConfigService, _mtsService: MtsService,
     ) {
         this.breadcrumbService.setItems([
             {label: 'Dockets'},
@@ -109,7 +109,7 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
         ]);
         this._confirmationService = confirmationService;
         this._emrConfigService = emrConfigService;
-        this._ndwhSenderService = psmartSenderService;
+        this._mtsService = MtsService;
     }
 
     public ngOnInit() {
@@ -364,13 +364,13 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
         this.sendingManifest = true;
         this.notifications = [];
         this.canSendPatients = false;
-        this.manifestPackage = this.getSendManifestPackage();
-        console.log("this.manifestPackage===> ",this.manifestPackage)
-        this.sendManifest$ = this._ndwhSenderService.sendSmartManifest(this.manifestPackage)
+        // this.manifestPackage = this.getSendManifestPackage();
+        console.log("sending mts===> ",this.manifestPackage)
+        this.sendManifest$ = this._mtsService.sendMts(this.indicators)
             .subscribe(
                 p => {
                     this.canSendPatients = true;
-                    this.manifestResponse = p;
+                    this.sendResponse = p;
                 },
                 e => {
                     this.canSend=true;
@@ -381,13 +381,13 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
                         this.mtsmessages = [];
                         this.mtsmessages.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                         this.notifications = [];
-                        this.notifications.push({severity: 'error',summary: 'Error sending Smart Manifest',detail: <any>e
+                        this.notifications.push({severity: 'error',summary: 'Error sending Metrics',detail: <any>e
                         });
                     }
                     this.startedSending=false;
                 },
                 () => {
-                    this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+                    this.notifications.push({severity: 'success', summary: 'Metrics sent'});
                     this.sendingManifest = false;
                     this.updateEvent();
                     this.canSend=true;
@@ -487,7 +487,7 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.indicators = p;
-                    // console.log(p)
+                     // console.log(p)
                 },
                 e => {
                     this.metricMessages = [];

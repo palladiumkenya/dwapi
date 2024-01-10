@@ -13,6 +13,8 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh
         int GetSent(Guid domainEventPatientExtractId);
         long UpdateDiffSendStatus();
         int GetSiteCode();
+        string GetFacilityName();
+
 
     }
 }

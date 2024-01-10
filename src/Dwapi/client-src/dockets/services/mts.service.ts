@@ -61,8 +61,8 @@ export class MtsService {
     //         .catch(this.handleError);
     // }
 
-    public sendMts(sendPackage: SendPackage): Observable<SendResponse> {
-        return this._http.post<boolean>(`${this._url}/mts`, sendPackage)
+    public sendMts(metrics: any): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/sendMetrics`, metrics)
             .catch(this.handleError);
     }
 

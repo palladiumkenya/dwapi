@@ -124,5 +124,13 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
             return sitecode;
         }
         
+        
+        public string GetFacilityName()
+        {
+            string name  = Get(x => x.FacilityName!=null).FacilityName;
+            
+            return name;
+        }
+        
     }
 }

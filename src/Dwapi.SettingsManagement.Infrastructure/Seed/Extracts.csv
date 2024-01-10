@@ -5360,6 +5360,24 @@ UNION
 )
 UNION
 (
+        select 'SITECODE' as 'INDICATOR', li.value_reference   as 'INDICATORVALUE', date_format(min(pi.date_created),'%Y%b%d') as 'INDICATORDATE',
+          def.siteCode SiteCode
+        from openmrs.patient_identifier pi inner join openmrs.location_attribute li on pi.location_id = li.location_id left join location l on pi.location_id=l.location_id
+          join kenyaemr_etl.etl_default_facility_info def
+          where pi.voided=0
+        group by li.value_reference
+)
+UNION
+(
+        select 'SITENAME' as 'INDICATOR', l.name   as 'INDICATORVALUE', date_format(min(pi.date_created),'%Y%b%d') as 'INDICATORDATE',
+          def.siteCode SiteCode
+        from openmrs.patient_identifier pi inner join openmrs.location_attribute li on pi.location_id = li.location_id left join location l on pi.location_id=l.location_id
+          join kenyaemr_etl.etl_default_facility_info def
+          where pi.voided=0
+        group by li.value_reference
+)
+UNION
+(
   SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
          stop_time                        as 'INDICATORVALUE',
          DATE_FORMAT(stop_time, '%Y%b%d') as 'INDICATORMONTH',
