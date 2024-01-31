@@ -183,7 +183,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mts
             }
             catch (Exception e)
             {
-                Log.Error("Send to SPOT Error", e);
+                Log.Error("Send to Livesync Error", e);
                 Log.Error(e, $"Send Manifest Error");
                 throw;
             }

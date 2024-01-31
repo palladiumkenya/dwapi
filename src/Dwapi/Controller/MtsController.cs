@@ -112,5 +112,23 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+        [HttpGet("count")]
+        public IActionResult GetExtractCount()
+        {
+            try
+            {
+                var count = _extractRepository.CountMetrics();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(Extract)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
     }
 }

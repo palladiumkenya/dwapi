@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts.Dto;
@@ -13,21 +13,15 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
 {
     public class IndicatorExtractRepository: BaseRepository<IndicatorExtract, Guid>,IIndicatorExtractRepository
     {
-        private readonly IPatientExtractRepository _repository;
-
-        public IndicatorExtractRepository(ExtractsContext context,IPatientExtractRepository repository) : base(context)
+        public IndicatorExtractRepository(ExtractsContext context) : base(context)
         {
-            _repository = repository;
-
         }
 
         public IEnumerable<IndicatorExtractDto> Load()
         {
-            int sitecode = _repository.GetSiteCode();
-
             var sql = $@"
                 select e.*,k.Description,k.Rank
-                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id where SiteCode={sitecode}
+                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id
             ";
             return Context.Database.GetDbConnection().Query<IndicatorExtractDto>(sql).ToList();
         }
@@ -71,6 +65,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
         public IndicatorExtract GetIndicatorValue(string name)
         {
             return Get(x => x.Indicator.ToLower() == name.ToLower());
+        }
+        
+        public Task<int> CountMetrics()
+        {
+            return GetCount();
         }
         
     }

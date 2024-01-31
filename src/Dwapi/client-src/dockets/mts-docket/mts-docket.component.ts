@@ -141,9 +141,9 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
 
             if (this.extract) {
                 this.extractEvent = {
-                    lastStatus: `${dwhProgress.status}`, found: dwhProgress.found, loaded: dwhProgress.loaded,
-                    rejected: dwhProgress.rejected, queued: dwhProgress.queued, sent: dwhProgress.sent
+                    lastStatus: `${dwhProgress.status}`,  loaded: dwhProgress.loaded, sent: dwhProgress.sent
                 };
+
                 this.extract.extractEvent = {};
                 this.extract.extractEvent = this.extractEvent;
                 const newWithoutPatientExtract = this.extracts.filter(x => x.name !== 'IndicatorExtract');
@@ -282,18 +282,18 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // this.getCount$ = this.MtsService.getDetailCount()
-        //     .subscribe(
-        //         p => {
-        //             this.recordCount = p;
-        //         },
-        //         e => {
-        //             this.mtsmessages = [];
-        //             this.mtsmessages.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
-        //         },
-        //         () => {
-        //         }
-        //     );
+        this.getCount$ = this.MtsService.getDetailCount()
+            .subscribe(
+                p => {
+                    this.recordCount = p;
+                },
+                e => {
+                    this.mtsmessages = [];
+                    this.mtsmessages.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
+                },
+                () => {
+                }
+            );
 
         // this.getallCount$ = this.MtsService.getAllDetailCount()
         //     .subscribe(
