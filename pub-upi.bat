@@ -1,2 +1,2 @@
-docker build -t kenyahmis/dwapi:v3110 .
-docker push kenyahmis/dwapi:v3110
+docker build -t kenyahmis/dwapi:dwapiUnified .
+docker push kenyahmis/dwapi:dwapiUnified
