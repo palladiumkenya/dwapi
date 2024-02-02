@@ -181,7 +181,7 @@ namespace Dwapi.Controller
                 var daysBetween = (now - lastLoadDate).TotalDays;
                 if (daysBetween > 1)
                 {
-                    throw new Exception($"The last time CT was loaded was {Math.Floor(daysBetween)} days ago. Kindly load first before sending to provide up to date data to NDWH.");
+                    // throw new Exception($"The last time CT was loaded was {Math.Floor(daysBetween)} days ago. Kindly load first before sending to provide up to date data to NDWH.");
                 }
 
                 // check stale
@@ -228,7 +228,7 @@ namespace Dwapi.Controller
                 var daysBetween = (now - lastLoadDate).TotalDays;
                 if (daysBetween > 1)
                 {
-                    throw new Exception($"The last time CT was loaded was {Math.Floor(daysBetween)} days ago. Kindly load first before sending to provide up to date data to NDWH.");
+                    // throw new Exception($"The last time CT was loaded was {Math.Floor(daysBetween)} days ago. Kindly load first before sending to provide up to date data to NDWH.");
                 }
 
                 // check stale

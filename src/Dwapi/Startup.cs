@@ -133,6 +133,7 @@ using Dwapi.Hubs.Dwh;
 using Dwapi.Hubs.Hts;
 using Dwapi.Hubs.Mgs;
 using Dwapi.Hubs.Mnch;
+using Dwapi.Hubs.Mts;
 using Dwapi.Hubs.Prep;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Interfaces.Repositories;
@@ -234,6 +235,8 @@ namespace Dwapi
         public static IHubContext<MgsActivity> MgsHubContext;
         public static IHubContext<MnchActivity> MnchHubContext;
         public static IHubContext<PrepActivity> PrepHubContext;
+        public static IHubContext<MtsSendActivity> MtsSendHubContext;
+        public static IHubContext<MtsActivity> MtsHubContext;
         public static AppFeature AppFeature;
         private IHostingEnvironment CurrrentEnv;
         public static List<string> StartupErrors = new List<string>();

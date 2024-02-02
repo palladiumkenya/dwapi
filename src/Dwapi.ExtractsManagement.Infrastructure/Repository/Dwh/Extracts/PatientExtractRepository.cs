@@ -105,5 +105,32 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.Extracts
 
             return totalUpdated;
         }
+        
+        public int GetSiteCode()
+        {
+            int sitecode  = Get(x => x.SiteCode!=null).SiteCode;
+
+            // using (var cn = GetNewConnection())
+            // {
+            //
+            //     var sql = $@"
+            //             select SiteCode from {nameof(ExtractsContext.PatientExtracts)}
+            //         {nameof(ExtractsContext.PatientExtracts)}                
+            //     ";
+            //
+            //     totalUpdated = cn.Execute(sql, new {Status = nameof(SendStatus.Sent), StatusDate = DateTime.Now});
+            // }
+
+            return sitecode;
+        }
+        
+        
+        public string GetFacilityName()
+        {
+            string name  = Get(x => x.FacilityName!=null).FacilityName;
+            
+            return name;
+        }
+        
     }
 }

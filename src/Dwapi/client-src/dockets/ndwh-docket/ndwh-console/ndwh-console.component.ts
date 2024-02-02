@@ -314,10 +314,15 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
 
                 },
                 e => {
+                    this.notifications = [];
+                    this.notifications.push({severity: 'error', summary: 'Error loading stats. Navigate to Metrics services on the left dashboard menu and load' +
+                            ' Metrics manually there. Once done return back to this page and send'});
+
                     this.errorMessage = [];
                     this.errorMessage.push({
                         severity: 'error',
-                        summary: 'Error loading stats ',
+                        summary: 'Error loading stats. Navigate to Metrics services on the left dashboard menu and load' +
+                            ' Metrics manually there. Once done return back to this page and send ',
                         detail: <any>e
                     });
                     this.isLoadingMet=false;

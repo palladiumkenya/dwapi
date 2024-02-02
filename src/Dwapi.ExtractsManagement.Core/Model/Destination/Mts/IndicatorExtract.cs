@@ -16,6 +16,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mts
         public  string Status { get; set; }
         public  DateTime? StatusDate { get; set; }
         public DateTime? DateExtracted { get; set; } = DateTime.Now;
+        public int SiteCode { get; set; }
 
 
         [NotMapped]
