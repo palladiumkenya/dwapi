@@ -642,6 +642,7 @@ namespace Dwapi
             services.AddScoped<ICancerScreeningExtractRepository, CancerScreeningExtractRepository>();
             services.AddScoped<IIITRiskScoresExtractRepository, IITRiskScoresExtractRepository>();
             services.AddScoped<IArtFastTrackExtractRepository, ArtFastTrackExtractRepository>();
+            services.AddScoped<IRelationshipsExtractRepository, RelationshipsExtractRepository>();
 
             services.AddScoped<ITempAllergiesChronicIllnessExtractRepository, TempAllergiesChronicIllnessExtractRepository>();
             services.AddScoped<ITempContactListingExtractRepository, TempContactListingExtractRepository>();
@@ -659,6 +660,7 @@ namespace Dwapi
             services.AddScoped<ITempCancerScreeningExtractRepository, TempCancerScreeningExtractRepository>();
             services.AddScoped<ITempIITRiskScoresExtractRepository, TempIITRiskScoresExtractRepository>();
             services.AddScoped<ITempArtFastTrackExtractRepository, TempArtFastTrackExtractRepository>();
+            services.AddScoped<ITempRelationshipsExtractRepository, TempRelationshipsExtractRepository>();
 
 
             services.AddScoped<ITempAllergiesChronicIllnessExtractErrorSummaryRepository, TempAllergiesChronicIllnessExtractErrorSummaryRepository>();
@@ -678,6 +680,7 @@ namespace Dwapi
             services.AddScoped<ITempCancerScreeningExtractErrorSummaryRepository, TempCancerScreeningExtractErrorSummaryRepository>();
             services.AddScoped<ITempIITRiskScoresExtractErrorSummaryRepository, TempIITRiskScoresExtractErrorSummaryRepository>();
             services.AddScoped<ITempArtFastTrackExtractErrorSummaryRepository, TempArtFastTrackExtractErrorSummaryRepository>();
+            services.AddScoped<ITempRelationshipsExtractErrorSummaryRepository, TempRelationshipsExtractErrorSummaryRepository>();
 
 
             services.AddScoped<IAllergiesChronicIllnessSourceExtractor, AllergiesChronicIllnessSourceExtractor>();
@@ -696,6 +699,7 @@ namespace Dwapi
             services.AddScoped<ICancerScreeningSourceExtractor, CancerScreeningSourceExtractor>();
             services.AddScoped<IIITRiskScoresSourceExtractor, IITRiskScoresSourceExtractor>();
             services.AddScoped<IArtFastTrackSourceExtractor, ArtFastTrackSourceExtractor>();
+            services.AddScoped<IRelationshipsSourceExtractor, RelationshipsSourceExtractor>();
 
 
             services.AddScoped<IAllergiesChronicIllnessLoader, AllergiesChronicIllnessLoader>();
@@ -714,6 +718,8 @@ namespace Dwapi
             services.AddScoped<ICancerScreeningLoader, CancerScreeningLoader>();
             services.AddScoped<IIITRiskScoresLoader, IITRiskScoresLoader>();
             services.AddScoped<IArtFastTrackLoader, ArtFastTrackLoader>();
+            services.AddScoped<IRelationshipsLoader, RelationshipsLoader>();
+
 
             #endregion
 

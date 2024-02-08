@@ -24,6 +24,8 @@
         CancerScreening,
         IITRiskScores,
         ArtFastTrack,
+        Relationships,
+
         
         PatientMnch,
         AncVisit,
