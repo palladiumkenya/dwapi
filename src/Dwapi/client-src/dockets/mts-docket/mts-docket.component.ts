@@ -388,6 +388,8 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
                 },
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Metrics sent'});
+                    this.mtsmessages = [];
+                    this.mtsmessages.push({severity: 'success', summary: 'Metrics sent'});
                     this.sendingManifest = false;
                     this.updateEvent();
                     this.canSend=true;

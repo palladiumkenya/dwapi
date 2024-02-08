@@ -189,6 +189,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             this.getSummaryExtracts('ArtFastTrack');
             return;
         }
+        if (this.extract === 'Relationships') {
+            this.getSummaryExtracts('Relationships');
+            return;
+        }
     }
 
     private getColumns(): void {
@@ -279,6 +283,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
         }
         if (this.extract === 'Art Fast Track') {
             this.getArtFastTrackColumns();
+            return;
+        }
+        if (this.extract === 'Relationships') {
+            this.getRelationshipsColumns();
             return;
         }
     }
@@ -877,6 +885,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'service', header: 'Service'},
             {field: 'visitType', header: 'Visit Type'},
             {field: 'whoStage', header: 'WHO Stage'},
+            {field: 'whoStagingOI', header: 'WHO Staging OI'},
+
             {field: 'wABStage', header: 'WAB Stage'},
             {field: 'pregnant', header: 'Pregnant'},
             {field: 'lMP', header: 'LMP'},
@@ -1359,6 +1369,19 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
 
         ];
     }
+
+    private getRelationshipsColumns(): void {
+        this.cols = [
+            {field: 'facilityName', header: 'FacilityName'},
+            {field: 'relationshipToPatient', header: 'RelationshipToPatient '},
+            {field: 'startDate', header: 'StartDate '},
+            {field: 'endDate', header: 'EndDate '},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'}
+
+        ];
+    }
+
 
 
     pageView(event: any) {

@@ -59,6 +59,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Data
         public virtual DbSet<CancerScreeningExtractView> ClientCancerScreeningExtracts { get; set; }
         public virtual DbSet<IITRiskScoresExtractView> ClientIITRiskScoresExtracts { get; set; }
         public virtual DbSet<ArtFastTrackExtractView> ClientArtFastTrackExtracts { get; set; }
+        public virtual DbSet<RelationshipsExtractView> ClientRelationshipsExtracts { get; set; }
 
         public virtual DbSet<PatientMnchExtractView> ClientPatientMnchExtracts { get; set; }
         public virtual DbSet<MnchEnrolmentExtractView> ClientMnchEnrolmentExtracts { get; set; }

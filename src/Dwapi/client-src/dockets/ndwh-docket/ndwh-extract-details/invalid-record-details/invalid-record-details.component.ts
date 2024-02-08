@@ -174,6 +174,10 @@ export class InvalidRecordDetailsComponent implements OnInit {
             this.getSummaryInvalidExtracts('ArtFastTrack');
             return;
         }
+        if (this.extract === 'Relationships') {
+            this.getSummaryInvalidExtracts('Relationships');
+            return;
+        }
     }
 
     private getColumns(): void {
@@ -265,6 +269,10 @@ export class InvalidRecordDetailsComponent implements OnInit {
         }
         if (this.extract === 'Art Fast Track') {
             this.getArtFastTrackColumns();
+            return;
+        }
+        if (this.extract === 'Relationships') {
+            this.getRelationshipsColumns();
             return;
         }
     }
@@ -1140,6 +1148,18 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'reasonNotOnFP', header: 'ReasonNotOnFP '},
             {field: 'referredToClinic', header: 'ReferredToClinic '},
             {field: 'returnVisitDate', header: 'ReturnVisitDate '}
+
+        ];
+    }
+
+    private getRelationshipsColumns(): void {
+        this.cols = [
+            {field: 'facilityName', header: 'FacilityName'},
+            {field: 'relationshipToPatient', header: 'RelationshipToPatient '},
+            {field: 'startDate', header: 'StartDate '},
+            {field: 'endDate', header: 'EndDate '},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'}
 
         ];
     }
