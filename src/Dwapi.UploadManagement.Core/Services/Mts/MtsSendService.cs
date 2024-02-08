@@ -175,7 +175,7 @@ namespace Dwapi.UploadManagement.Core.Services.Mts
                 
                 string content = JsonConvert.SerializeObject(ModifiedIndicators);
                 StringContent toSend = new StringContent(content, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync("https://localhost:7157/api/LivesyncIndicators/SyncLivesyncIndicators", toSend
+                var response = await client.PostAsync("https://ndwh.kenyahmis.org/metrics/api/LivesyncIndicators/SyncLivesyncIndicators", toSend
                 );
                 response.EnsureSuccessStatusCode();
                 

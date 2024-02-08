@@ -303,7 +303,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.DateElicited, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsPartnerNotificationServices.DateElicited))))
                 .ForMember(x => x.MaritalStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.MaritalStatus))))
                 .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsPartnerNotificationServices.Voided))))
-                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.RecordUUID))));
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.RecordUUID))))
+                .ForMember(x => x.IndexPatientPk, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsPartnerNotificationServices.IndexPatientPk))))
+                ;
             CreateMap<TempHtsPartnerNotificationServices, HtsPartnerNotificationServices>();
             
             //hts eligibility screening

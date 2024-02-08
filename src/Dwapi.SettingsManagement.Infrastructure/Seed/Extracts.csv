@@ -989,6 +989,7 @@ FROM
                                                    when 1207 then 4
                                                     else ''
                                                     end                                                                as WHOStage,
+                                               fup.who_stage_associated_oi                                              as WHOStagingOI,
                                                 null                                                                   as WABStage,
                                                 case fup.pregnancy_status
                                                     when 1065 then 'Yes'
@@ -2298,6 +2299,7 @@ pns.MaritalStatus
                                                                  'Kenya HMIS II' AS Project,
                                                                  id.identifier AS HtsNumber,
                                                                  ohpc.patient_id AS PartnerPatientPk,
+                                                                 ohpc.patient_related_to 		AS IndexPatientPk,
                                                                  ohpc.id AS PartnerPersonId,
                                                       YEAR(ohpc.date_created)-YEAR(ohpc.birth_date)  AS Age,
                                                                  ohpc.sex,
@@ -8212,6 +8214,28 @@ A47EFA09-28D9-46EC-B2E6-C6244DBDA240|Art Fast Track|NDWH|a6221856-0e85-11e8-ba89
                             inner join dwapi_etl.etl_hiv_enrollment e on a.patient_id = e.patient_id
                             inner join dwapi_etl.etl_patient_demographics de on a.patient_id = de.patient_id
                             join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|ArtFastTrackExtract|24|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
+75E1A1A7-A840-4743-9F21-91F863A43737|Relationships|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT r.person_a PatientPK,
+                 r.uuid                                                                     as RecordUUID,
+                 convert(r.voided  , SIGNED)  												as Voided,
+                 i.siteCode                                                                    SiteCode,
+                 d.unique_patient_no                                                           PatientID,
+                 'KenyaEMR'                                                                    Emr,
+                 'Kenya HMIS III'                                                               Project,
+                 i.facilityName                                                                FacilityName,
+                 0                                                                                      as FacilityId,
+                  t.a_is_to_b as patient_relation_to_other,
+                 r.person_b as person_pk_related_to_patient,
+                 t.b_is_to_a                                          as RelationshipToPatient,
+                 r.start_date                                         as EndDate,
+                 r.end_date                                           as StartDate,
+                 r.date_created                                       as Date_Created,
+                 r.date_changed                                       as Date_Last_Modified
+              FROM relationship r 
+              INNER JOIN relationship_type t ON r.relationship = t.relationship_type_id
+              join dwapi_etl.etl_patient_demographics d ON r.person_a = d.patient_id
+              join kenyaemr_etl.etl_default_facility_info i"|dwhstage|0|RelationshipsExtract|25|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
 
 82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id 
                                                  as PatientPK,
