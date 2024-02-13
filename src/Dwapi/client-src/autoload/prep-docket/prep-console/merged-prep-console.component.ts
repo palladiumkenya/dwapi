@@ -109,6 +109,8 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
 
     public loadData(): void {
         this.canLoadFromEmr = this.canSend = false;
+        localStorage.setItem('canSendPrep', "false");
+        localStorage.setItem('prepSendingComplete', "false");
 
         if (this.emr) {
             this.canLoadFromEmr = true;
@@ -166,7 +168,9 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
                     this.updateEvent();
 
                     this.actionType = "Sending";
+                    // localStorage.setItem('canSendPrep', "true");
                     localStorage.setItem('canSendPrep', "true");
+
                 }
             );
     }
@@ -199,16 +203,15 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
                         extract.extractEvent = p;
                         if (extract.extractEvent) {
                             this.canSend = extract.extractEvent.queued > 0;
-                            if (extract.extractEvent.queued > 0){
-                                localStorage.setItem('canSendPrep', "true");
-                                this.actionType = "Sent";
-
-                            }else{
-                                localStorage.setItem('canSendPrep', "false");
-                                this.actionType = "NoRecords";
-
-                            }
-                            console.log('get the value here',extract.extractEvent.queued > 0,JSON.parse(localStorage.getItem('canSendPrep')))
+                            // if (extract.extractEvent.queued > 0){
+                            //     // localStorage.setItem('canSendPrep', "true");
+                            //     // this.actionType = "Sent";
+                            //
+                            // }else{
+                            //     // localStorage.setItem('canSendPrep', "false");
+                            //     // this.actionType = "NoRecords";
+                            //
+                            // }
                         }
                     },
                     e => {
@@ -411,6 +414,7 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
                 p => {
                     // this.sendResponse = p;
                     this.updateEvent();
+                    this.sendPrepMonthlyRefillExtracts();
                 },
                 e => {
                     this.errorMessage = [];
@@ -423,7 +427,29 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
                 }
             );
     }
+    public sendPrepMonthlyRefillExtracts(): void {
+        this.sendStage = 11;
+        //this.sendEvent = {sentProgress: 0};
+        this.sending = true;
+        this.errorMessage = [];
+        const patientPackage = this.getPrepMonthlyRefillExtractPackage();
+        this.send$ = this._prepSenderService.sendPrepMonthlyRefillExtracts(patientPackage)
+            .subscribe(
+                p => {
+                    // this.sendResponse = p;
+                    this.updateEvent();
+                },
+                e => {
+                    this.errorMessage = [];
+                    this.errorMessage.push({severity: 'error', summary: 'Error sending client linkage', detail: <any>e});
+                },
+                () => {
+                    // this.errorMessage.push({severity: 'success', summary: 'sent Clients successfully '});
+                    // localStorage.setItem('htsSendingComplete', "true");
 
+                }
+            );
+    }
     public sendHandshake(): void {
         this.manifestPackage = this.getSendManifestPackage();
         this.send$ = this._prepSenderService.sendHandshake(this.manifestPackage)
@@ -508,6 +534,14 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
             destination: this.centralRegistry,
             extractId: this.extracts.find(x => x.name === 'PrepVisitExtract').id,
             extractName: 'PrepVisitExtract'
+        };
+    }
+
+    private getPrepMonthlyRefillExtractPackage(): SendPackage {
+        return {
+            destination: this.centralRegistry,
+            extractId: this.extracts.find(x => x.name === 'PrepMonthlyRefillExtract').id,
+            extractName: 'PrepMonthlyRefillExtract'
         };
     }
 
@@ -630,6 +664,7 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
         this.extractProfiles.push(this.generateExtractPrepLab(currentEmr));
         this.extractProfiles.push(this.generateExtractPrepPharmacy(currentEmr));
         this.extractProfiles.push(this.generateExtractPrepVisit(currentEmr));
+        this.extractProfiles.push(this.generateExtractPrepMonthlyRefill(currentEmr));
 
         this.extractLoadCommand = {
             extracts: this.extractProfiles
@@ -696,6 +731,15 @@ export class MergedPrepConsoleComponent implements OnInit, OnDestroy, OnChanges 
             extract: this.extracts.find(x => x.name === 'PrepVisitExtract')
         };
     }
+
+    private generateExtractPrepMonthlyRefill(currentEmr: EmrSystem): ExtractProfile {
+        const selectedProtocal = this.extracts.find(x => x.name === 'PrepMonthlyRefillExtract').databaseProtocolId;
+        return {
+            databaseProtocol: currentEmr.databaseProtocols.filter(x => x.id === selectedProtocal)[0],
+            extract: this.extracts.find(x => x.name === 'PrepMonthlyRefillExtract')
+        };
+    }
+
 
     private getSendPackage(docketId: string): SendPackage {
         return {
