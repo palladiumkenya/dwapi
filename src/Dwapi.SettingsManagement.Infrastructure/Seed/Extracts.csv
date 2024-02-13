@@ -910,7 +910,24 @@ FROM
                              visit_id,
                              visit_date,
                              encounter_id,
-                             drug_short_name                                                             as drug,
+                             CASE
+                              WHEN do.drug_concept_id = '84797' THEN 'TDF'
+                              WHEN do.drug_concept_id LIKE '84797|%' THEN CONCAT('TDF+', do.drug_short_name)
+                              WHEN do.drug_concept_id LIKE '%|84797|%' THEN INSERT(do.drug_short_name,
+                              LOCATE('+', do.drug_short_name) + 1, 0,
+                              'TDF+')
+                              WHEN do.drug_concept_id LIKE '%|84797' THEN CONCAT(do.drug_short_name, '+TDF')
+                              WHEN do.drug_concept_id LIKE '70057|%' THEN CONCAT('ABC+', do.drug_short_name)
+                              WHEN do.drug_concept_id LIKE '%|70057|%' THEN INSERT(do.drug_short_name,
+                              LOCATE('+', do.drug_short_name) + 1, 0,
+                              'ABC+')
+                              WHEN do.drug_concept_id LIKE '%|70057' THEN CONCAT(do.drug_short_name, '+ABC')
+                              WHEN do.drug_concept_id = '70057' THEN 'ABC'
+                              WHEN do.drug_concept_id = '105281' THEN 'CTX'
+                              WHEN do.drug_concept_id = '71648' THEN 'ATV/r'
+                              WHEN do.drug_concept_id = '70246' THEN 'ACYCLOVIR SODIUM'
+                              ELSE do.drug_short_name
+                              END                                                              as drug,
                              1                                                                           as is_arv,
                              ''                                                                          as is_ctx,
                              ''                                                                          as is_dapsone,
