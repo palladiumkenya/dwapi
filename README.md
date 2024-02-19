@@ -38,9 +38,14 @@ Change line bind-address = 127.0.0.1 to #bind-address = 127.0.0.1
 ```sh
  create user 'dwapi'@'%' identified by 'dwapi';
 ```
-3. Assign privileges to the DWAPI database user for MySQL
+3. Assign privileges to the DWAPI database user for MySQL version 5.6
 ```sh
 GRANT ALL PRIVILEGES ON *.* TO 'dwapi'@'%' IDENTIFIED BY 'dwapi' WITH GRANT OPTION; 
+FLUSH PRIVILEGES;
+```
+if using mysql version 8
+```sh
+GRANT ALL PRIVILEGES ON *.* TO 'dwapi'@'%' WITH GRANT OPTION; 
 FLUSH PRIVILEGES;
 ```
 
