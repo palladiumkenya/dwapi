@@ -910,7 +910,24 @@ FROM
                              visit_id,
                              visit_date,
                              encounter_id,
-                             drug_short_name                                                             as drug,
+                             CASE
+                              WHEN do.drug_concept_id = '84797' THEN 'TDF'
+                              WHEN do.drug_concept_id LIKE '84797|%' THEN CONCAT('TDF+', do.drug_short_name)
+                              WHEN do.drug_concept_id LIKE '%|84797|%' THEN INSERT(do.drug_short_name,
+                              LOCATE('+', do.drug_short_name) + 1, 0,
+                              'TDF+')
+                              WHEN do.drug_concept_id LIKE '%|84797' THEN CONCAT(do.drug_short_name, '+TDF')
+                              WHEN do.drug_concept_id LIKE '70057|%' THEN CONCAT('ABC+', do.drug_short_name)
+                              WHEN do.drug_concept_id LIKE '%|70057|%' THEN INSERT(do.drug_short_name,
+                              LOCATE('+', do.drug_short_name) + 1, 0,
+                              'ABC+')
+                              WHEN do.drug_concept_id LIKE '%|70057' THEN CONCAT(do.drug_short_name, '+ABC')
+                              WHEN do.drug_concept_id = '70057' THEN 'ABC'
+                              WHEN do.drug_concept_id = '105281' THEN 'CTX'
+                              WHEN do.drug_concept_id = '71648' THEN 'ATV/r'
+                              WHEN do.drug_concept_id = '70246' THEN 'ACYCLOVIR SODIUM'
+                              ELSE do.drug_short_name
+                              END                                                              as drug,
                              1                                                                           as is_arv,
                              ''                                                                          as is_ctx,
                              ''                                                                          as is_dapsone,
@@ -5393,7 +5410,7 @@ UNION
 )
 UNION(
         select 'DB_STATE' as INDICATOR,
-        if(c.current_visits > floor(c.avg_visits/2), 'UP_TO_DATE', 'OUTDATED') as INDICATORVALUE,
+        if(c.current_visits > floor(c.avg_visits/2), 'DATA_ALIGNED', 'MISALIGNED') as INDICATORVALUE,
         date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as INDICATORDATE,
         def.siteCode SiteCode
         from (select a.current_visits, b.avg_visits, b.followup_enc_since_April, b.months_since_april
@@ -5459,7 +5476,14 @@ UNION(
                                                              when 141623 then 'Dyslipidemia'
                                                              end SEPARATOR
                                                          '|')                                         as ChronicIllness,
-                                            group_concat(ci.chronic_illness_onset_date SEPARATOR '|') as ChronicOnsetDate,
+                                            group_concat(CASE ci.is_chronic_illness_controlled 
+                                                 when 1065 then 'Yes'
+                                                 when 1066 then 'No'  
+                                                 else 'N/A'
+                                                 end SEPARATOR '|' )			                    as Controlled,
+                                         group_concat(case ci.chronic_illness_onset_date 
+                                                 when ci.chronic_illness_onset_date then ci.chronic_illness_onset_date
+                                                 else 'N/A' end SEPARATOR '|')                      as ChronicOnsetDate,
                                             (case coalesce(v.has_known_allergies, p.known_allergies)
                                                  when 1 then 'Yes'
                                                  when 2
@@ -8020,50 +8044,70 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                            join kenyaemr_etl.etl_default_facility_info i
                   group by a.visit_id"|dwhstage|0|CovidExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec31-7754-11eb-9439-0242ac130002|Defaulter Tracing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                              PatientPK,
-                                                  f.uuid   as RecordUUID,
-                                                  i.siteCode                                                                SiteCode,
-                                                d.unique_patient_no                                                       PatientID,
-                                                'KenyaEMR'                                                                Emr,
-                                                'Kenya HMIS II'                                                           Project,
-                                                i.facilityName                                                            FacilityName,
-                                                0 as                                                                          FacilityId,
-                                                f.visit_id                                                                VisitID,
-                                                f.visit_date                                                              VisitDate,
-                                                f.encounter_id                                                         as EncounterId,
-                                                (case f.tracing_type
-                                                                    when 1650 then 'Client Called'
-                                                                    when 164965 then 'Physical Tracing'
-                                                                    when 161642 then 'Treatment supporter' end)                         as TracingType,
-                                                (case f.tracing_outcome
-                                                                    when 1267 then 'Contact'
-                                                                    when 1118 then 'No contact' end)                                    as TracingOutcome,
-                                                f.attempt_number                                                       as AttemptNumber,
-                                                (case f.is_final_trace when 1267 then 'Yes' when 163339 then 'No' end) as IsFinalTrace,
-                                                (case f.tracing_outcome
-                                                                    when 165610 then 'COVID19 Positive'
-                                                                    when 160432 then 'Dead'
-                                                                    when 1693 then 'Receiving ART from another clinic/Transferred'
-                                                                    when 160037 then 'Still in care at CCC'
-                                                                    when 5240 then 'Lost to follow up'
-                                                                    when 164435 then 'Stopped treatment' end)                           as TrueStatus,
-                                                (case f.cause_of_death
-                                                                    when 165609 then 'Infection due to COVID-19'
-                                                                    when 162574 then 'Death related to HIV infection'
-                                                                    when 116030 then 'Cancer'
-                                                                    when 164500 then 'TB'
-                                                                    when 151522 then 'Other infectious and parasitic diseases'
-                                                                    when 133481 then 'Natural cause'
-                                                                    when 1603 then 'Unnatural Cause'
-                                                                    when 5622 then 'Unknown cause' end)                                 as CauseOfDeath,
-                                                f.comments                                                             as Comments,
-                                                date(f.booking_date)                                                   as BookingDate,
-                                                f.date_created                                                         as Date_Created,
-                                                f.date_last_modified                                                   as Date_Last_Modified,
-                     f.voided                                                               as Voided
-              from dwapi_etl.etl_patient_demographics d
-                       join dwapi_etl.etl_ccc_defaulter_tracing f on d.patient_id = f.patient_id
-                       join kenyaemr_etl.etl_default_facility_info i
-              group by f.visit_id"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                         f.uuid   as RecordUUID,
+                         i.siteCode                                                                SiteCode,
+                       d.unique_patient_no                                                       PatientID,
+                       'KenyaEMR'                                                                Emr,
+                       'Kenya HMIS II'                                                           Project,
+                       i.facilityName                                                            FacilityName,
+                       0 as                                                                          FacilityId,
+                       f.visit_id                                                                VisitID,
+                       f.visit_date                                                              VisitDate,
+                       f.encounter_id                                                         as EncounterId,
+                       (case f.tracing_type
+                                           when 1650 then 'Client Called'
+                                           when 164965 then 'Physical Tracing'
+                                           when 161642 then 'Treatment supporter' end)                         as TracingType,
+                       (case f.tracing_outcome
+                                           when 1267 then 'Contact'
+                                           when 1118 then 'No contact' end)                                    as TracingOutcome,
+                       f.attempt_number                                                       as AttemptNumber,
+                       (case f.is_final_trace when 1267 then 'Yes' when 163339 then 'No' end) as IsFinalTrace,
+                       (case f.tracing_outcome
+                                           when 165610 then 'COVID19 Positive'
+                                           when 160432 then 'Dead'
+                                           when 1693 then 'Receiving ART from another clinic/Transferred'
+                                           when 160037 then 'Still in care at CCC'
+                                           when 5240 then 'Lost to follow up'
+                                           when 164435 then 'Stopped treatment' end)                           as TrueStatus,
+                    (case f.reason_for_missed_appointment
+                        when 165609 then 'Client has covid-19 infection'
+                        when 165610 then 'COVID-19 restrictions'
+                        when 164407 then 'Client refilled drugs from another facility'
+                        when 159367 then 'Client has enough drugs'
+                        when
+                            162619 then 'Client travelled'
+                        when 126240 then 'Client could not get an off from work/school'
+                        when 160583
+                            then 'Client is sharing drugs with partner'
+                        when 162192 then 'Client forgot clinic dates'
+                        when 164349
+                            then 'Client stopped medications'
+                        when 1654 then 'Client sick at home/admitted'
+                        when 5622 then 'Other' end)                                       as ReasonForMissedAppointment,
+                    case
+                        when fup.next_appointment_date < '1990-01-01' then null
+                        else CAST(fup.next_appointment_date AS DATE) end                     AS DatePromisedToCome,
+                    f.missed_appointment_date                                               as DateOfMissedAppointment,  
+                       (case f.cause_of_death
+                                           when 165609 then 'Infection due to COVID-19'
+                                           when 162574 then 'Death related to HIV infection'
+                                           when 116030 then 'Cancer'
+                                           when 164500 then 'TB'
+                                           when 151522 then 'Other infectious and parasitic diseases'
+                                           when 133481 then 'Natural cause'
+                                           when 1603 then 'Unnatural Cause'
+                                           when 5622 then 'Unknown cause' end)                                 as CauseOfDeath,                                                 
+                       f.comments                                                             as Comments,
+                       date(f.booking_date)                                                   as BookingDate,
+                       f.date_created                                                         as Date_Created,
+                       f.date_last_modified                                                   as Date_Last_Modified,
+f.voided                                                               as Voided
+from dwapi_etl.etl_patient_demographics d
+join dwapi_etl.etl_ccc_defaulter_tracing f on d.patient_id = f.patient_id
+join dwapi_etl.etl_patient_hiv_followup fup on fup.patient_id = d.patient_id
+join kenyaemr_etl.etl_default_facility_info i
+group by f.visit_id"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 3425F2F6-B9D8-48F1-97F6-8E6E092B0C97|Cancer Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                                              PatientPK,
                                         s.uuid                                        as RecordUUID,
