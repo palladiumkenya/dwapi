@@ -4,7 +4,7 @@ namespace Dwapi.SharedKernel.DTOs
 {
     public class FacMetric
     {
-        public CargoType CargoType { get; set;}
+        public CargoType CargoType { get; set; }
         public string Metric { get; set; }
 
         public FacMetric()

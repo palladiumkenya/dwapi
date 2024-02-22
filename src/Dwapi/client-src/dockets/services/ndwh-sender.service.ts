@@ -62,6 +62,7 @@ export class NdwhSenderService {
             .catch(this.handleError);
     }
     public exportSmartPatientExtracts(sendPackage: CombinedPackage): Observable<SendResponse> {
+        console.log("sendPackage  ===> ",sendPackage)
         return this._http.post<boolean>(`${this._url}/smart/exportpatients`, sendPackage)
             .catch(this.handleError);
     }
