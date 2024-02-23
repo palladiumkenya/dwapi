@@ -372,7 +372,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                         s.GetStringOrDefault(nameof(TempAllergiesChronicIllnessExtract.ChronicIllness))))
                 .ForMember(x => x.ChronicOnsetDate,
                     o => o.MapFrom(s =>
-                        s.GetNullDateOrDefault(nameof(TempAllergiesChronicIllnessExtract.ChronicOnsetDate))))
+                        s.GetStringOrDefault(nameof(TempAllergiesChronicIllnessExtract.ChronicOnsetDate))))
                 .ForMember(x => x.knownAllergies,
                     o => o.MapFrom(s =>
                         s.GetStringOrDefault(nameof(TempAllergiesChronicIllnessExtract.knownAllergies))))
