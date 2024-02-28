@@ -179,6 +179,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
        public DbSet<TempCancerScreeningExtract> TempCancerScreeningExtracts { get; set; }
        public DbSet<TempIITRiskScoresExtract> TempIITRiskScoresExtracts { get; set; }
        public DbSet<TempArtFastTrackExtract> TempArtFastTrackExtracts { get; set; }
+       public DbSet<TempRelationshipsExtract> TempRelationshipsExtracts { get; set; }
 
 
 
@@ -197,6 +198,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
        public DbSet<CancerScreeningExtract> CancerScreeningExtracts { get; set; }
        public DbSet<IITRiskScoresExtract> IITRiskScoresExtracts { get; set; }
        public DbSet<ArtFastTrackExtract> ArtFastTrackExtracts { get; set; }
+       public DbSet<RelationshipsExtract> RelationshipsExtracts { get; set; }
 
 
 
@@ -233,7 +235,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure
        public DbSet<TempIITRiskScoresExtractErrorSummary> TempIITRiskScoresExtractErrorSummary { get; set; }
        public DbSet<TempArtFastTrackExtractError> TempArtFastTrackExtractError { get; set; }
        public DbSet<TempArtFastTrackExtractErrorSummary> TempArtFastTrackExtractErrorSummary { get; set; }
-
+       public DbSet<TempRelationshipsExtractError> TempRelationshipsExtractError { get; set; }
+       public DbSet<TempRelationshipsExtractErrorSummary> TempRelationshipsExtractErrorSummary { get; set; }
 
        #region Mnch
        public virtual DbSet<TempPatientMnchExtract> TempPatientMnchExtracts { get; set; }
@@ -545,6 +548,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure
                .WithOne()
                .IsRequired()
                .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
+           modelBuilder.Entity<PatientExtract>()
+               .HasMany(c => c.RelationshipsExtracts)
+               .WithOne()
+               .IsRequired()
+               .HasForeignKey(f => new {f.SiteCode, f.PatientPK});
 
 
            modelBuilder.Entity<PatientMnchExtract>()
@@ -770,6 +778,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
            DapperPlusManager.Entity<TempCancerScreeningExtract>().Key(x => x.Id).Table($"{nameof(TempCancerScreeningExtracts)}");
            DapperPlusManager.Entity<TempIITRiskScoresExtract>().Key(x => x.Id).Table($"{nameof(TempIITRiskScoresExtracts)}");
            DapperPlusManager.Entity<TempArtFastTrackExtract>().Key(x => x.Id).Table($"{nameof(TempArtFastTrackExtracts)}");
+           DapperPlusManager.Entity<TempRelationshipsExtract>().Key(x => x.Id).Table($"{nameof(TempRelationshipsExtracts)}");
 
 
 
@@ -788,6 +797,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure
            DapperPlusManager.Entity<CancerScreeningExtract>().Key(x => x.Id).Table($"{nameof(CancerScreeningExtracts)}");
            DapperPlusManager.Entity<IITRiskScoresExtract>().Key(x => x.Id).Table($"{nameof(IITRiskScoresExtracts)}");
            DapperPlusManager.Entity<ArtFastTrackExtract>().Key(x => x.Id).Table($"{nameof(ArtFastTrackExtracts)}");
+           DapperPlusManager.Entity<RelationshipsExtract>().Key(x => x.Id).Table($"{nameof(RelationshipsExtracts)}");
 
 
 

@@ -21,7 +21,10 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Mts
                 .ForMember(x => x.IndicatorValue,
                     o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIndicatorExtract.IndicatorValue))))
                 .ForMember(x => x.IndicatorDate,
-                    o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempIndicatorExtract.IndicatorDate))));
+                    o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempIndicatorExtract.IndicatorDate))))
+                .ForMember(x => x.SiteCode,
+                o => o.MapFrom(s => s.GetOptionalNullIntOrDefault(nameof(TempIndicatorExtract.SiteCode))));
+            
             CreateMap<TempIndicatorExtract, IndicatorExtract>();
 
             CreateMap<IndicatorExtract,IndicatorExtractDto>();

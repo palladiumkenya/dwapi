@@ -567,6 +567,7 @@ export class HtsValidComponent implements OnInit, OnDestroy {
             { field: 'htsNumber', header: 'Hts Number' },
             {field: 'recordUUID', header: 'RecordUUID'},
             {field: 'voided', header: 'Voided'},
+            { field: 'indexPatientPk', header: 'IndexPatientPK' },
 
             { field: 'partnerPersonID', header: 'Partner Person ID' },
             { field: 'age', header: 'Age' },

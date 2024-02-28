@@ -843,12 +843,12 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                             _recordsSaved++;
                             await UpdateProgress();
 
-
+                            break;
                         }
 
                     }
 
-                    break;
+                  
 
                 }
                 for (int i = 1; i < archive.Entries.Count; i++)
@@ -869,20 +869,35 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PatientMnch"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.PatientMnchExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-
+                                    List<PatientMnchExtract> newList =
+                                        message.PatientMnchExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
+
+                                int sendCound = 0;
+                                foreach (var item in list)
                                 {
-                                    var error = await response.Content.ReadAsStringAsync();
-                                    throw new Exception(error);
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response = await client.PostAsJsonAsync(
+                                        sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PatientMnch"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -914,21 +929,36 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MnchEnrolment"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.MnchEnrolmentExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-                                   
+                                    List<MnchEnrolmentExtract> newList =
+                                        message.MnchEnrolmentExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
+
+                                int sendCound = 0;
+                                foreach (var item in list)
                                 {
-                                    var error = await response.Content.ReadAsStringAsync();
-                                   
-                                    throw new Exception(error);
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response = await client.PostAsJsonAsync(
+                                        sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MnchEnrolment"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -960,21 +990,37 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MnchArt"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.MnchArtExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-
+                                    List<MnchArtExtract> newList =
+                                        message.MnchArtExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
-                                {
-                                    var error = await response.Content.ReadAsStringAsync();
 
-                                    throw new Exception(error);
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response =
+                                        await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MnchArt"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -1006,21 +1052,37 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}AncVisit"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.AncVisitExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-
+                                    List<AncVisitExtract> newList =
+                                        message.AncVisitExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
-                                {
-                                    var error = await response.Content.ReadAsStringAsync();
 
-                                    throw new Exception(error);
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response =
+                                        await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}AncVisit"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -1052,21 +1114,37 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MatVisit"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.MatVisitExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-
+                                    List<MatVisitExtract> newList =
+                                        message.MatVisitExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
-                                {
-                                    var error = await response.Content.ReadAsStringAsync();
 
-                                    throw new Exception(error);
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response =
+                                        await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MatVisit"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -1098,21 +1176,37 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PncVisit"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.PncVisitExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-
+                                    List<PncVisitExtract> newList =
+                                        message.PncVisitExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
-                                {
-                                    var error = await response.Content.ReadAsStringAsync();
 
-                                    throw new Exception(error);
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response =
+                                        await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PncVisit"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -1144,21 +1238,36 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MotherBabyPair"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.MotherBabyPairExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-
+                                    List<MotherBabyPairExtract> newList =
+                                        message.MotherBabyPairExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
-                                {
-                                    var error = await response.Content.ReadAsStringAsync();
 
-                                    throw new Exception(error);
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response = await client.PostAsJsonAsync(
+                                        sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MotherBabyPair"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -1190,21 +1299,36 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}CwcEnrolment"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.CwcEnrolmentExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-
+                                    List<CwcEnrolmentExtract> newList =
+                                        message.CwcEnrolmentExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
-                                {
-                                    var error = await response.Content.ReadAsStringAsync();
 
-                                    throw new Exception(error);
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response = await client.PostAsJsonAsync(
+                                        sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}CwcEnrolment"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -1236,21 +1360,37 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}CwcVisit"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.CwcVisitExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-
+                                    List<CwcVisitExtract> newList =
+                                        message.CwcVisitExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
-                                {
-                                    var error = await response.Content.ReadAsStringAsync();
 
-                                    throw new Exception(error);
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response =
+                                        await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}CwcVisit"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -1282,21 +1422,37 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Hei"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.HeiExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-
+                                    List<HeiExtract> newList =
+                                        message.HeiExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
-                                {
-                                    var error = await response.Content.ReadAsStringAsync();
 
-                                    throw new Exception(error);
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response =
+                                        await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Hei"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -1328,21 +1484,37 @@ namespace Dwapi.UploadManagement.Core.Services.Mnch
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 MnchMessage message = JsonConvert.DeserializeObject<MnchMessage>(Extract);
-
-                                count++;
-                                var msg = JsonConvert.SerializeObject(message);
-                                var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MnchLab"), message);
-                                if (response.IsSuccessStatusCode)
+                                var batchSize = 2000;
+                                var numberOfBatches =
+                                    (int)Math.Ceiling((double)message.MnchLabExtracts.Count() / batchSize);
+                                var list = new List<MnchMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                    responses.Add(content);
-
+                                    List<MnchLabExtract> newList =
+                                        message.MnchLabExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new MnchMessage(newList));
                                 }
-                                else
-                                {
-                                    var error = await response.Content.ReadAsStringAsync();
 
-                                    throw new Exception(error);
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    var msg = JsonConvert.SerializeObject(message);
+                                    var response =
+                                        await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}MnchLab"), item);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
+
+                                    }
+                                    else
+                                    {
+                                        var error = await response.Content.ReadAsStringAsync();
+
+                                        throw new Exception(error);
+                                    }
                                 }
                             }
                             catch (Exception e)

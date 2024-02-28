@@ -96,7 +96,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
         {
             if (entity.Any())
             {
-                Context.Database.GetDbConnection().BulkInsert(entity);
+                Context.Database.GetDbConnection().BulkMerge(entity);
             }
         }
 

@@ -620,31 +620,29 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
 
                                 ManifestMessage manifest = JsonConvert.DeserializeObject<ManifestMessage>(Extract);
                                 manifest.GenerateId();
-                                
-                               
-                                
-  try
+                                try
+                                {
+                                    var msg = JsonConvert.SerializeObject(manifest);
+                                    var response =
+                                        await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}manifest"), manifest);
+                                    if (response.IsSuccessStatusCode)
                                     {
-                                        var msg = JsonConvert.SerializeObject(manifest);
-                                        var response =
-                                            await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}manifest"), manifest);
-                                        if (response.IsSuccessStatusCode)
-                                        {
-                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                            responses.Add(content);
-                                        }
-                                        else
-                                        {
-                                            var error = await response.Content.ReadAsStringAsync();
-                                            throw new Exception(error);
-                                        }
+                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                        responses.Add(content);
                                     }
-                                    catch (Exception e)
+                                    else
                                     {
-                                        Log.Error(e, $"Send Manifest Error");
-                                        throw;
+                                        var error = await response.Content.ReadAsStringAsync();
+                                        throw new Exception(error);
                                     }
-                                
+                                }
+                                catch (Exception e)
+                                {
+                                    Log.Error(e, $"Send Manifest Error");
+                                    throw;
+                                }
+
 
                             }
                             catch (Exception ex)
@@ -655,13 +653,14 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                             }
                             _recordsSaved++;
                             await UpdateProgress();
-
+                            
+                            break;
 
                         }
 
                     }
 
-                    break;
+                   
 
                 }               
                 for (int i = 1; i < archive.Entries.Count; i++)
@@ -683,31 +682,46 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                 int count = 0;
                                 PrepMessage message = JsonConvert.DeserializeObject<PrepMessage>(Extract);
                                
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.PatientPrepExtracts.Count() / batchSize);
+                                var list = new List<PrepMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PatientPrepExtract> newList =
+                                        message.PatientPrepExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new PrepMessage(newList));
+                                }
+
+                                foreach (var item in list)
+                                {
+
                                     count++;
                                     try
                                     {
                                         var msg = JsonConvert.SerializeObject(message);
-                                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PatientPrep"), message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PatientPrep"), item);
                                         if (response.IsSuccessStatusCode)
                                         {
                                             var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
                                             responses.Add(content);
-                                           
-                                            
+
+
                                         }
                                         else
                                         {
-                                            var error = await response.Content.ReadAsStringAsync();                                            
+                                            var error = await response.Content.ReadAsStringAsync();
                                             throw new Exception(error);
                                         }
                                     }
+
                                     catch (Exception e)
                                     {
                                         Log.Error(e, $"Send PatientPrep Extracts Error");
                                         throw;
                                     }
-                                   
-                                
+                                }
+
                             }
                             catch (Exception e)
                             {
@@ -735,17 +749,30 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 PrepMessage message = JsonConvert.DeserializeObject<PrepMessage>(Extract);
-                              
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.PrepBehaviourRiskExtracts.Count() / batchSize);
+                                var list = new List<PrepMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PrepBehaviourRiskExtract> newList =
+                                        message.PrepBehaviourRiskExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new PrepMessage(newList));
+                                }
+
+                                foreach (var item in list)
+                                {
+
                                     count++;
                                     try
                                     {
                                         var msg = JsonConvert.SerializeObject(message);
-                                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepBehaviourRisk"), message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepBehaviourRisk"), item);
                                         if (response.IsSuccessStatusCode)
                                         {
                                             var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
                                             responses.Add(content);
-                                            
+
 
                                         }
                                         else
@@ -759,8 +786,8 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                         Log.Error(e, $"Send PatientPrep Extracts Error");
                                         throw;
                                     }
-                                
-                              
+                                }
+
                             }
                             catch (Exception e)
                             {
@@ -786,12 +813,24 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 PrepMessage message = JsonConvert.DeserializeObject<PrepMessage>(Extract);
-                               
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.PrepVisitExtracts.Count() / batchSize);
+                                var list = new List<PrepMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PrepVisitExtract> newList =
+                                        message.PrepVisitExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new PrepMessage(newList));
+                                }
+
+                                foreach (var item in list)
+                                {
                                     count++;
                                     try
                                     {
                                         var msg = JsonConvert.SerializeObject(message);
-                                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepVisit"), message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepVisit"), item);
                                         if (response.IsSuccessStatusCode)
                                         {
                                             var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
@@ -809,9 +848,8 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                         Log.Error(e, $"Send PatientPrep Extracts Error");
                                         throw;
                                     }
+                                }
 
-                                
-                        
                             }
                             catch (Exception e)
                             {
@@ -837,17 +875,29 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 PrepMessage message = JsonConvert.DeserializeObject<PrepMessage>(Extract);
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.PrepLabExtracts.Count() / batchSize);
+                                var list = new List<PrepMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PrepLabExtract> newList =
+                                        message.PrepLabExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new PrepMessage(newList));
+                                }
 
+                                foreach (var item in list)
+                                {
                                     count++;
                                     try
                                     {
                                         var msg = JsonConvert.SerializeObject(message);
-                                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepLab"), message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepLab"), item);
                                         if (response.IsSuccessStatusCode)
                                         {
                                             var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
                                             responses.Add(content);
-                                            
+
 
                                         }
                                         else
@@ -861,9 +911,9 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                         Log.Error(e, $"Send PatientPrep Extracts Error");
                                         throw;
                                     }
+                                }
 
-                                
-                                
+
                             }
                             catch (Exception e)
                             {
@@ -889,17 +939,29 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 PrepMessage message = JsonConvert.DeserializeObject<PrepMessage>(Extract);
-                              
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.PrepPharmacyExtracts.Count() / batchSize);
+                                var list = new List<PrepMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PrepPharmacyExtract> newList =
+                                        message.PrepPharmacyExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new PrepMessage(newList));
+                                }
+
+                                foreach (var item in list)
+                                {
                                     count++;
                                     try
                                     {
                                         var msg = JsonConvert.SerializeObject(message);
-                                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepPharmacy"), message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepPharmacy"), item);
                                         if (response.IsSuccessStatusCode)
                                         {
                                             var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
                                             responses.Add(content);
-                                            
+
 
                                         }
                                         else
@@ -913,9 +975,9 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                         Log.Error(e, $"Send PrepPharmacy Extracts Error");
                                         throw;
                                     }
+                                }
 
-                                
-                          
+
                             }
                             catch (Exception e)
                             {
@@ -942,11 +1004,23 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 PrepMessage message = JsonConvert.DeserializeObject<PrepMessage>(Extract);
-                                
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.PrepAdverseEventExtracts.Count() / batchSize);
+                                var list = new List<PrepMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PrepAdverseEventExtract> newList =
+                                        message.PrepAdverseEventExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new PrepMessage(newList));
+                                }
+
+                                foreach (var item in list)
+                                {
                                     try
                                     {
                                         var msg = JsonConvert.SerializeObject(message);
-                                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepAdverseEvent"), message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepAdverseEvent"), item);
                                         if (response.IsSuccessStatusCode)
                                         {
                                             var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
@@ -964,8 +1038,8 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                         Log.Error(e, $"Send PrepAdverseEvent Extracts Error");
                                         throw;
                                     }
+                                }
 
-                                
                             }
                             catch (Exception e)
                             {
@@ -993,12 +1067,24 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 PrepMessage message = JsonConvert.DeserializeObject<PrepMessage>(Extract);
-                               
-                             
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.PrepCareTerminationExtracts.Count() / batchSize);
+                                var list = new List<PrepMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PrepCareTerminationExtract> newList =
+                                        message.PrepCareTerminationExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new PrepMessage(newList));
+                                }
+
+                                foreach (var item in list)
+                                {
+
                                     try
                                     {
                                         var msg = JsonConvert.SerializeObject(message);
-                                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepCareTermination"), message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepCareTermination"), item);
                                         if (response.IsSuccessStatusCode)
                                         {
                                             var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
@@ -1017,8 +1103,8 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                         throw;
                                     }
 
-                                
-                                
+                                }
+
                             }
                             catch (Exception e)
                             {
@@ -1045,12 +1131,24 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 PrepMessage message = JsonConvert.DeserializeObject<PrepMessage>(Extract);
-                               
-                             
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.PrepMonthlyRefillExtracts.Count() / batchSize);
+                                var list = new List<PrepMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
+                                {
+                                    List<PrepMonthlyRefillExtract> newList =
+                                        message.PrepMonthlyRefillExtracts.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new PrepMessage(newList));
+                                }
+
+                                foreach (var item in list)
+                                {
+
                                     try
                                     {
                                         var msg = JsonConvert.SerializeObject(message);
-                                        var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepMonthlyRefill"), message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}PrepMonthlyRefill"), item);
                                         if (response.IsSuccessStatusCode)
                                         {
                                             var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
@@ -1069,8 +1167,8 @@ namespace Dwapi.UploadManagement.Core.Services.Prep
                                         throw;
                                     }
 
-                                
-                                
+                                }
+
                             }
                             catch (Exception e)
                             {

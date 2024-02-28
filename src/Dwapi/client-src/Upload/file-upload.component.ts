@@ -32,7 +32,7 @@ export class UploadComponent implements OnInit {
     public errorMessage: Message[];
     public messages: Message[];
     public currentExtract: Extract;
-    private extractEvent: ExtractEvent;   
+    private extractEvent: ExtractEvent;
     public otherMessage: Message[];
     private progressSubject = new Subject<number>();
     public progress$ = this.progressSubject.asObservable();
@@ -42,12 +42,12 @@ export class UploadComponent implements OnInit {
     progressMnch = 0;
     files = [];
 
-    
+
     public warningMessage: Message[];
     uploadSuccessCT: boolean = false;
     uploadSuccessPrep: boolean = false;
     uploadSuccessMnch: boolean = false;
-    uploadSuccessHts: boolean = false; 
+    uploadSuccessHts: boolean = false;
     smartMode = false;
 
     //get progress: get overall progress
@@ -79,14 +79,14 @@ export class UploadComponent implements OnInit {
     }
 
     public ngOnInit() {
-        
+
         this.liveOnInit();
-        
+
     }
 
 
     onFileInvalids(fileList: Array<File>) {
-        //TODO handle invalid files here  
+        //TODO handle invalid files here
     }
 
     onSelectChange(event: EventTarget) {
@@ -113,7 +113,7 @@ export class UploadComponent implements OnInit {
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
 
-       
+
 
         this._hubConnection.on("ReceiveProgress", (progress: number) => {
             this.sending = true;
@@ -130,15 +130,15 @@ export class UploadComponent implements OnInit {
         this._hubConnection.on("ReceiveProgressPrep", (progress: number) => {
             this.sendingPrep = true;
             this.progressPrep = progress;
-            
+
             this.progressSubject.next(progress);
-            if (progress == 100) {                     
+            if (progress == 100) {
                 this.uploadSuccessPrep = true;
                 this.uploadSuccessCT = false;
                 this.uploadSuccessHts = false;
                 this.uploadSuccessMnch = false;
 
-                }               
+                }
         });
         this._hubConnection.on("ReceiveProgressHts", (progress: number) => {
             this.sendingHts = true;
@@ -150,7 +150,7 @@ export class UploadComponent implements OnInit {
                 this.uploadSuccessCT = false;
                 this.uploadSuccessPrep = false;
                 this.uploadSuccessMnch = false;
-               
+
 
             }
         });
@@ -168,7 +168,7 @@ export class UploadComponent implements OnInit {
             }
         });
     }
-   
+
 
     private getCurrrentProgress(extract: string, progress: string) {
         let overallProgress = 0;
@@ -198,36 +198,39 @@ export class UploadComponent implements OnInit {
         }
     }
 
-    removeFile(id) {      
-        
+    removeFile(id) {
+
         this.uploader.queue.splice(id, 1)
         this.cd.detectChanges();
-       
-    } 
+
+    }
 
 
-    // upload   
+    // upload
     upload(id) {
         if (id == null)
             return;
 
+        console.log("upload  ===> ",id)
+
+
         let selectedFile = this.uploader.queue.find(s => s.id == id);
         this.sendEvent = { sentProgress: 0 };
-        
-        this.errorMessage = [];        
+
+        this.errorMessage = [];
         if (selectedFile) {
             const formData = new FormData();
             formData.append(selectedFile.file.name, selectedFile.file);
 
             const uploadReq = new HttpRequest('POST', `api/upload`, formData, {
                 reportProgress: true,
-                
+
             });
 
             this.http.request(uploadReq).subscribe(
                 p => {
                     // this.sendResponse = p;
-                },            
+                },
                 e => {
                     this.notifications = [];
                     console.error('SEND ERROR', e);
@@ -236,11 +239,11 @@ export class UploadComponent implements OnInit {
                     } else {
                         this.errorMessage = [];
                         this.errorMessage.push({ severity: 'error', summary: 'Error sending: '+e.error, detail: <any>e.message,});
-                    }                    
+                    }
                 },
                 () => {
                     this.notifications = [];
-                    this.errorMessage.push({ severity: 'success', summary: 'Sending Extracts Completed' });                    
+                    this.errorMessage.push({ severity: 'success', summary: 'Sending Extracts Completed' });
                     this.sending = false;
                     this.sendingPrep = false;
                     this.sendingHts = false;
@@ -250,9 +253,9 @@ export class UploadComponent implements OnInit {
 
         }
     }
-    //upload all selected files to server  
+    //upload all selected files to server
     uploadAll() {
-        //find the remaning files to upload  
+        //find the remaning files to upload
         let remainingFiles = this.uploader.queue.filter(s => !s.isSuccess);
         for (let item of remainingFiles) {
             this.upload(item.id);
@@ -262,8 +265,8 @@ export class UploadComponent implements OnInit {
         }
     }
 
-    // cancel all   
- 
+    // cancel all
+
 }
 
 

@@ -73,5 +73,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public int? ZScoreAbsolute { get; set; }
         public string RecordUUID { get; set; }
         public bool? Voided { get; set; }
+        public string WHOStagingOI  { get; set; }
+
     }
 }

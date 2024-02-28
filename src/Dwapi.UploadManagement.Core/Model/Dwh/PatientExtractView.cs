@@ -124,6 +124,7 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         [NotMapped] public ICollection<CancerScreeningExtractView> CancerScreeningExtracts { get; set; } = new List<CancerScreeningExtractView>();
         [NotMapped] public ICollection<IITRiskScoresExtractView> IITRiskScoresExtracts { get; set; } = new List<IITRiskScoresExtractView>();
         [NotMapped] public ICollection<ArtFastTrackExtractView> ArtFastTrackExtracts { get; set; } = new List<ArtFastTrackExtractView>();
+        [NotMapped] public ICollection<RelationshipsExtractView> RelationshipsExtracts { get; set; } = new List<RelationshipsExtractView>();
 
         [JsonIgnore]
         [NotMapped] public bool HasArt => null != PatientArtExtracts && PatientArtExtracts.Any();
@@ -143,6 +144,7 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         [NotMapped] public bool HasCancer => null != CancerScreeningExtracts && CancerScreeningExtracts.Any();
         [NotMapped] public bool HasIIT => null != IITRiskScoresExtracts && IITRiskScoresExtracts.Any();
         [NotMapped] public bool HasArtFastTrack => null != ArtFastTrackExtracts && ArtFastTrackExtracts.Any();
+        [NotMapped] public bool HasRelationships => null != RelationshipsExtracts && RelationshipsExtracts.Any();
 
         public Facility GetFacility()
         {

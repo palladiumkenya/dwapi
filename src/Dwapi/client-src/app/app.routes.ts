@@ -16,6 +16,7 @@ import { exportComponent } from "../exports/file-exports.component";
 import { UploadComponent } from "../upload/file-upload.component";
 
 import {AutoloadComponent} from '../autoload/autoload.component';
+import {MtsDocketComponent} from "../dockets/mts-docket/mts-docket.component";
 
 export const routes: Routes = [
     {path: 'dashboard', component: DashboardComponent},
@@ -32,7 +33,7 @@ export const routes: Routes = [
     { path: 'crs', component: CrsDocketComponent },
     { path: 'exports', component: exportComponent },
     { path: 'upload', component: UploadComponent },
-    {path: 'crs', component: CrsDocketComponent},
+    {path: 'mts', component: MtsDocketComponent},
     {path: 'autoload', component: AutoloadComponent },
     {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
     {path: '**', component: DashboardComponent }

@@ -8,7 +8,7 @@ namespace Dwapi.Contracts.Ct
         int? VisitID { get; set; }
         DateTime? VisitDate { get; set; }
         string ChronicIllness { get; set; }
-        DateTime? ChronicOnsetDate { get; set; }
+        string ChronicOnsetDate { get; set; }
         string knownAllergies { get; set; }
         string AllergyCausativeAgent { get; set; }
         string AllergicReaction { get; set; }
@@ -26,5 +26,7 @@ namespace Dwapi.Contracts.Ct
          bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
+        string Controlled { get; set; }
+
     }
 }

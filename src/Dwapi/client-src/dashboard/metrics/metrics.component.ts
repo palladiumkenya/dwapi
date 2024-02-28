@@ -81,6 +81,7 @@ export class MetricsComponent implements OnInit, OnDestroy {
             .subscribe(
                 p => {
                     this.indicators = p;
+                    console.log(p)
                 },
                 e => {
                     this.sysMessages = [];

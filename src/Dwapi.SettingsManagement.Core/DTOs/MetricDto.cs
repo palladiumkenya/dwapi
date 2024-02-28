@@ -10,4 +10,6 @@ namespace Dwapi.SettingsManagement.Core.DTOs
         public DateTime? LastMoH731RunDate { get; set; }
         public DateTime DateExtracted { get; set; }
     }
+    
+    
 }

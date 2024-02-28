@@ -704,12 +704,12 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                             _recordsSaved++;
                             await UpdateProgress();
 
-
+                            break;
                         }
 
                     }
 
-                    break;
+                    
 
                 }
                 for (int i = 1; i < archive.Entries.Count; i++)
@@ -730,40 +730,56 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 HtsMessage message = JsonConvert.DeserializeObject<HtsMessage>(Extract);
-
-                                count++;
-                                try
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.Clients.Count() / batchSize);
+                                var list = new List<HtsMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var msg = JsonConvert.SerializeObject(message);
-                                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Clients"), message);
-                                    if (response.IsSuccessStatusCode)
-                                    {
-                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                        responses.Add(content);
+                                    List<HtsClients> newList =
+                                        message.Clients.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new HtsMessage(newList));
+                                }
 
-                                    }
-                                    else
+                                int sendCound = 0;
+                                foreach (var item in list)
+                                {
+                                    message.Clients = item.Clients;
+
+                                    count++;
+                                    try
                                     {
-                                        var error = await response.Content.ReadAsStringAsync();
-                                        throw new Exception(error);
+                                        var msg = JsonConvert.SerializeObject(message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Clients"), item);
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                            responses.Add(content);
+
+                                        }
+                                        else
+                                        {
+                                            var error = await response.Content.ReadAsStringAsync();
+                                            throw new Exception(error);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Error(e, $"Send PatientPrep Extracts Error");
+                                        throw;
                                     }
                                 }
+
+                            }
                                 catch (Exception e)
                                 {
-                                    Log.Error(e, $"Send PatientPrep Extracts Error");
+                                    Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
                                     throw;
                                 }
 
-
-                            }
-                            catch (Exception e)
-                            {
-                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
-                                throw;
-                            }
-
-                            _recordsSaved++;
-                            await UpdateProgress();
+                                _recordsSaved++;
+                                await UpdateProgress();
+                            
 
                         }
                     }
@@ -782,30 +798,44 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 HtsMessage message = JsonConvert.DeserializeObject<HtsMessage>(Extract);
-
-                                count++;
-                                try
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.ClientLinkage.Count() / batchSize);
+                                var list = new List<HtsMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var msg = JsonConvert.SerializeObject(message);
-                                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Linkages"), message);
-                                    if (response.IsSuccessStatusCode)
-                                    {
-                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                        responses.Add(content);
-
-
-                                    }
-                                    else
-                                    {
-                                        var error = await response.Content.ReadAsStringAsync();
-
-                                        throw new Exception(error);
-                                    }
+                                    List<HtsClientLinkage> newList =
+                                        message.ClientLinkage.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new HtsMessage(newList));
                                 }
-                                catch (Exception e)
+
+                                foreach (var item in list)
                                 {
-                                    Log.Error(e, $"Send PatientPrep Extracts Error");
-                                    throw;
+                                    int sendCound = 0;
+                                    count++;
+                                    try
+                                    {
+                                        var msg = JsonConvert.SerializeObject(message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Linkages"), item);
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                            responses.Add(content);
+
+
+                                        }
+                                        else
+                                        {
+                                            var error = await response.Content.ReadAsStringAsync();
+
+                                            throw new Exception(error);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Error(e, $"Send PatientPrep Extracts Error");
+                                        throw;
+                                    }
                                 }
 
 
@@ -836,29 +866,42 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 HtsMessage message = JsonConvert.DeserializeObject<HtsMessage>(Extract);
-
-                                count++;
-                                try
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.ClientTests.Count() / batchSize);
+                                var list = new List<HtsMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var msg = JsonConvert.SerializeObject(message);
-                                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsClientTests"), message);
-                                    if (response.IsSuccessStatusCode)
-                                    {
-                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                        responses.Add(content);
-
-                                    }
-                                    else
-                                    {
-                                        var error = await response.Content.ReadAsStringAsync();
-
-                                        throw new Exception(error);
-                                    }
+                                    List<HtsClientTests> newList =
+                                        message.ClientTests.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new HtsMessage(newList));
                                 }
-                                catch (Exception e)
+
+                                foreach (var item in list)
                                 {
-                                    Log.Error(e, $"Send PatientPrep Extracts Error");
-                                    throw;
+                                    count++;
+                                    try
+                                    {
+                                        var msg = JsonConvert.SerializeObject(message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsClientTests"), item);
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                            responses.Add(content);
+
+                                        }
+                                        else
+                                        {
+                                            var error = await response.Content.ReadAsStringAsync();
+
+                                            throw new Exception(error);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Error(e, $"Send PatientPrep Extracts Error");
+                                        throw;
+                                    }
                                 }
 
 
@@ -889,82 +932,42 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 HtsMessage message = JsonConvert.DeserializeObject<HtsMessage>(Extract);
-
-                                count++;
-                                try
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.TestKits.Count() / batchSize);
+                                var list = new List<HtsMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var msg = JsonConvert.SerializeObject(message);
-                                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsTestKits"), message);
-                                    if (response.IsSuccessStatusCode)
-                                    {
-                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                        responses.Add(content);
-
-                                    }
-                                    else
-                                    {
-                                        var error = await response.Content.ReadAsStringAsync();
-
-                                        throw new Exception(error);
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    Log.Error(e, $"Send PatientPrep Extracts Error");
-                                    throw;
+                                    List<HtsTestKits> newList =
+                                        message.TestKits.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new HtsMessage(newList));
                                 }
 
-
-                            }
-                            catch (Exception e)
-                            {
-                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
-                                throw;
-                            }
-
-                            _recordsSaved++;
-                            await UpdateProgress();
-
-                        }
-                    }
-                    else if (archive.Entries[i].Name == "ClientTracing.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                    {
-                        string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
-                        archive.Entries[i].ExtractToFile(destinationPath, true);
-                        var filestream = File.OpenRead(destinationPath);
-                        using (StreamReader sr = new StreamReader(filestream))
-                        {
-                            try
-                            {
-                                text = await sr.ReadToEndAsync(); // OK                         
-
-                                byte[] base64EncodedBytes = Convert.FromBase64String(text);
-                                var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
-                                int count = 0;
-                                HtsMessage message = JsonConvert.DeserializeObject<HtsMessage>(Extract);
-
-                                count++;
-                                try
+                                foreach (var item in list)
                                 {
-                                    var msg = JsonConvert.SerializeObject(message);
-                                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsClientTracings"), message);
-                                    if (response.IsSuccessStatusCode)
+                                    count++;
+                                    try
                                     {
-                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                        responses.Add(content);
+                                        var msg = JsonConvert.SerializeObject(message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsTestKits"), item);
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                            responses.Add(content);
 
+                                        }
+                                        else
+                                        {
+                                            var error = await response.Content.ReadAsStringAsync();
+
+                                            throw new Exception(error);
+                                        }
                                     }
-                                    else
+                                    catch (Exception e)
                                     {
-                                        var error = await response.Content.ReadAsStringAsync();
-
-                                        throw new Exception(error);
+                                        Log.Error(e, $"Send PatientPrep Extracts Error");
+                                        throw;
                                     }
-                                }
-                                catch (Exception e)
-                                {
-                                    Log.Error(e, $"Send PatientPrep Extracts Error");
-                                    throw;
                                 }
 
 
@@ -995,29 +998,108 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 HtsMessage message = JsonConvert.DeserializeObject<HtsMessage>(Extract);
-
-                                count++;
-                                try
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.ClientTracing.Count() / batchSize);
+                                var list = new List<HtsMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var msg = JsonConvert.SerializeObject(message);
-                                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsClientTracings"), message);
-                                    if (response.IsSuccessStatusCode)
-                                    {
-                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                        responses.Add(content);
+                                    List<HtsClientTracing> newList =
+                                        message.ClientTracing.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new HtsMessage(newList));
+                                }
 
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    try
+                                    {
+                                        var msg = JsonConvert.SerializeObject(message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsClientTracings"), item);
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                            responses.Add(content);
+
+                                        }
+                                        else
+                                        {
+                                            var error = await response.Content.ReadAsStringAsync();
+
+                                            throw new Exception(error);
+                                        }
                                     }
-                                    else
+                                    catch (Exception e)
                                     {
-                                        var error = await response.Content.ReadAsStringAsync();
-
-                                        throw new Exception(error);
+                                        Log.Error(e, $"Send PatientPrep Extracts Error");
+                                        throw;
                                     }
                                 }
-                                catch (Exception e)
+
+
+                            }
+                            catch (Exception e)
+                            {
+                                Log.Error(e, $"Send Extracts {archive.Entries[i].Name} Error");
+                                throw;
+                            }
+
+                            _recordsSaved++;
+                            await UpdateProgress();
+
+                        }
+                    }
+                    else if (archive.Entries[i].Name == "ClientTracing.dump.json" && archive.Entries[i].FullName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                    {
+                        string destinationPath = Path.GetFullPath(Path.Combine(tempFullPath, archive.Entries[i].Name));
+                        archive.Entries[i].ExtractToFile(destinationPath, true);
+                        var filestream = File.OpenRead(destinationPath);
+                        using (StreamReader sr = new StreamReader(filestream))
+                        {
+                            try
+                            {
+                                text = await sr.ReadToEndAsync(); // OK                         
+
+                                byte[] base64EncodedBytes = Convert.FromBase64String(text);
+                                var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
+                                int count = 0;
+                                HtsMessage message = JsonConvert.DeserializeObject<HtsMessage>(Extract);
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.ClientTracing.Count() / batchSize);
+                                var list = new List<HtsMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    Log.Error(e, $"Send PatientPrep Extracts Error");
-                                    throw;
+                                    List<HtsClientTracing> newList =
+                                        message.ClientTracing.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new HtsMessage(newList));
+                                }
+
+                                foreach (var item in list)
+                                {
+                                    count++;
+                                    try
+                                    {
+                                        var msg = JsonConvert.SerializeObject(message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsClientTracings"), item);
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                            responses.Add(content);
+
+                                        }
+                                        else
+                                        {
+                                            var error = await response.Content.ReadAsStringAsync();
+
+                                            throw new Exception(error);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Error(e, $"Send PatientPrep Extracts Error");
+                                        throw;
+                                    }
                                 }
 
 
@@ -1048,29 +1130,43 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 HtsMessage message = JsonConvert.DeserializeObject<HtsMessage>(Extract);
-
-                                count++;
-                                try
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.PartnerTracing.Count() / batchSize);
+                                var list = new List<HtsMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var msg = JsonConvert.SerializeObject(message);
-                                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsPartnerTracings"), message);
-                                    if (response.IsSuccessStatusCode)
-                                    {
-                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                        responses.Add(content);
-
-                                    }
-                                    else
-                                    {
-                                        var error = await response.Content.ReadAsStringAsync();
-
-                                        throw new Exception(error);
-                                    }
+                                    List<HtsPartnerTracing> newList =
+                                        message.PartnerTracing.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new HtsMessage(newList));
                                 }
-                                catch (Exception e)
+
+                                foreach (var item in list)
                                 {
-                                    Log.Error(e, $"Send PatientPrep Extracts Error");
-                                    throw;
+                                    count++;
+                                    try
+                                    {
+                                        var msg = JsonConvert.SerializeObject(message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsPartnerTracings"),
+                                            item);
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                            responses.Add(content);
+
+                                        }
+                                        else
+                                        {
+                                            var error = await response.Content.ReadAsStringAsync();
+
+                                            throw new Exception(error);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Error(e, $"Send PatientPrep Extracts Error");
+                                        throw;
+                                    }
                                 }
 
 
@@ -1101,29 +1197,43 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 HtsMessage message = JsonConvert.DeserializeObject<HtsMessage>(Extract);
-
-                                count++;
-                                try
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.PartnerNotificationServices.Count() / batchSize);
+                                var list = new List<HtsMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var msg = JsonConvert.SerializeObject(message);
-                                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Pns"), message);
-                                    if (response.IsSuccessStatusCode)
-                                    {
-                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                        responses.Add(content);
-
-                                    }
-                                    else
-                                    {
-                                        var error = await response.Content.ReadAsStringAsync();
-
-                                        throw new Exception(error);
-                                    }
+                                    List<HtsPartnerNotificationServices> newList =
+                                        message.PartnerNotificationServices.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new HtsMessage(newList));
                                 }
-                                catch (Exception e)
+
+                                foreach (var item in list)
                                 {
-                                    Log.Error(e, $"Send PatientPrep Extracts Error");
-                                    throw;
+                                    count++;
+                                    try
+                                    {
+                                        var msg = JsonConvert.SerializeObject(message);
+                                        var response =
+                                            await client.PostAsJsonAsync(
+                                                sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}Pns"), item);
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                            responses.Add(content);
+
+                                        }
+                                        else
+                                        {
+                                            var error = await response.Content.ReadAsStringAsync();
+
+                                            throw new Exception(error);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Error(e, $"Send PatientPrep Extracts Error");
+                                        throw;
+                                    }
                                 }
 
 
@@ -1154,29 +1264,43 @@ namespace Dwapi.UploadManagement.Core.Services.Hts
                                 var Extract = Encoding.UTF8.GetString(base64EncodedBytes);
                                 int count = 0;
                                 HtsMessage message = JsonConvert.DeserializeObject<HtsMessage>(Extract);
-
-                                count++;
-                                try
+                                var batchSize = 2000;
+                                var numberOfBatches = (int)Math.Ceiling((double)message.HTSEligibility.Count() / batchSize);
+                                var list = new List<HtsMessage>();
+                                for (int x = 0; x < numberOfBatches; x++)
                                 {
-                                    var msg = JsonConvert.SerializeObject(message);
-                                    var response = await client.PostAsJsonAsync(sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsEligibilityScreening"), message);
-                                    if (response.IsSuccessStatusCode)
-                                    {
-                                        var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
-                                        responses.Add(content);
-
-                                    }
-                                    else
-                                    {
-                                        var error = await response.Content.ReadAsStringAsync();
-
-                                        throw new Exception(error);
-                                    }
+                                    List<HtsEligibilityExtract> newList =
+                                        message.HTSEligibility.Skip(x * batchSize).Take(batchSize).ToList();
+                                    list.Add(new HtsMessage(newList));
                                 }
-                                catch (Exception e)
+
+                                foreach (var item in list)
                                 {
-                                    Log.Error(e, $"Send PatientPrep Extracts Error");
-                                    throw;
+                                    count++;
+                                    try
+                                    {
+                                        var msg = JsonConvert.SerializeObject(message);
+                                        var response = await client.PostAsJsonAsync(
+                                            sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}HtsEligibilityScreening"),
+                                            item);
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            var content = await response.Content.ReadAsJsonAsync<SendMpiResponse>();
+                                            responses.Add(content);
+
+                                        }
+                                        else
+                                        {
+                                            var error = await response.Content.ReadAsStringAsync();
+
+                                            throw new Exception(error);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Log.Error(e, $"Send PatientPrep Extracts Error");
+                                        throw;
+                                    }
                                 }
 
 

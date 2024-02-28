@@ -9,5 +9,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mts
         public string IndicatorValue { get; set; }
         public DateTime? IndicatorDate { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.Now;
+        public int SiteCode { get; set; }
+
     }
 }
