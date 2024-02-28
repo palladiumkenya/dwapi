@@ -19,5 +19,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Mts
         Task<List<SendMpiResponse>> SendMigrationsAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> SendMigrationsAsync(SendManifestPackageDTO sendTo, MgsMessageBag messageBag);
         Task SendIndicators(List<IndicatorExtractDto> indicators);
+        Task<dynamic> VerifyMtsApi();
+
     }
 }

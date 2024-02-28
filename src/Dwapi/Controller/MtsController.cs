@@ -97,6 +97,23 @@ namespace Dwapi.Controller
             return Ok(list.OrderBy(x=>x.Rank));
         }
 
+        [HttpGet("count")]
+        public IActionResult GetExtractCount()
+        {
+            try
+            {
+                var count = _extractRepository.CountMetrics();
+                return Ok(count);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error loading {nameof(Extract)}(s)";
+                Log.Error(msg);
+                Log.Error($"{e}");
+                return StatusCode(500, msg);
+            }
+        }
+
         [HttpPost("sendMetrics")]
         public IActionResult sendMetrics([FromBody] List<IndicatorExtractDto> indicatorDto)
         {
@@ -113,19 +130,19 @@ namespace Dwapi.Controller
             }
         }
 
-        [HttpGet("count")]
-        public IActionResult GetExtractCount()
+        [HttpGet("verify")]
+        public IActionResult verifyApi()
         {
             try
             {
-                var count = _extractRepository.CountMetrics();
-                return Ok(count);
+                var res =_mtsSendService.VerifyMtsApi();
+                return Ok(res.Result);
             }
             catch (Exception e)
             {
-                var msg = $"Error loading {nameof(Extract)}(s)";
-                Log.Error(msg);
-                Log.Error($"{e}");
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                // throw new Exception(msg);
                 return StatusCode(500, msg);
             }
         }

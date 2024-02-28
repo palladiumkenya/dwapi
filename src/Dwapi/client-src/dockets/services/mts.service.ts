@@ -66,6 +66,12 @@ export class MtsService {
             .catch(this.handleError);
     }
 
+    public verifyMtsApi(): Observable<SendResponse> {
+        console.log(this._url + '/verify')
+        return this._http.get(this._url + '/verify')
+            .catch(this.handleError);
+    }
+
 
 
     private handleError(err: HttpErrorResponse) {

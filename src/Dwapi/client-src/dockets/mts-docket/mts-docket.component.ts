@@ -295,68 +295,11 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
                 }
             );
 
-        // this.getallCount$ = this.MtsService.getAllDetailCount()
-        //     .subscribe(
-        //         p => {
-        //             this.allrecordCount = p;
-        //         },
-        //         e => {
-        //             this.mtsmessages = [];
-        //             this.mtsmessages.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
-        //         },
-        //         () => {
-        //
-        //         }
-        //     );
-
-        // this.getStatus$ = this.MtsService.getStatus(this.extract.id)
-        //     .subscribe(
-        //         p => {
-        //             this.extract.extractEvent = p;
-        //             if (this.extract) {
-        //                 if (this.extract.extractEvent) {
-        //                     this.canSend = this.extract.extractEvent.queued > 0;
-        //                 }
-        //             }
-        //         },
-        //         e => {
-        //             this.mtsmessages = [];
-        //             this.mtsmessages.push({severity: 'error', summary: 'Error loading status ', detail: <any>e});
-        //         },
-        //         () => {
-        //
-        //         }
-        //     );
-
     }
 
-    //
-    // public send(): void {
-    //     this.sendingManifest = true;
-    //
-    //     this.mtsmessages = [];
-    //     this.notifications = [];
-    //     this.canSendMts = false;
-    //     this.manifestPackage = this.getSendManifestPackage();
-    //     this.sendManifest$ = this.MtsService.sendManifest(this.manifestPackage)
-    //         .subscribe(
-    //             p => {
-    //                 this.canSendMts = true;
-    //             },
-    //             e => {
-    //                 this.mtsmessages = [];
-    //                 this.mtsmessages.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
-    //             },
-    //             () => {
-    //                 //  this.notifications.push({severity: 'success', summary: 'Manifest sent'});
-    //                 this.sendMts();
-    //                 this.sendingManifest = false;
-    //                 this.updateEvent();
-    //             }
-    //         );
-    // }
-
     public sendMts(): void {
+        // this.verifyMtsApi();
+
         this.startedSending=true;
         this.canSend=false;
 
@@ -365,7 +308,6 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
         this.notifications = [];
         this.canSendPatients = false;
         // this.manifestPackage = this.getSendManifestPackage();
-        console.log("sending mts===> ",this.manifestPackage)
         this.sendManifest$ = this._mtsService.sendMts(this.indicators)
             .subscribe(
                 p => {
@@ -397,6 +339,39 @@ export class MtsDocketComponent implements OnInit, OnDestroy {
                 }
             );
     }
+
+
+    public verifyMtsApi(): void {
+
+        this.notifications = [];
+        // this.manifestPackage = this.getSendManifestPackage();
+        this._mtsService.verifyMtsApi()
+            .subscribe(
+                p => {
+                    console.log(p)
+                },
+                e => {
+                    console.log(e)
+
+                        this.mtsmessages = [];
+                        this.mtsmessages.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+                        this.notifications = [];
+                        this.notifications.push({severity: 'error',summary: 'Error sending Metrics',detail: <any>e
+                        });
+
+                },
+                () => {
+                    this.notifications.push({severity: 'success', summary: 'Metrics started sending'});
+                    this.mtsmessages = [];
+                    this.mtsmessages.push({severity: 'success', summary: 'Metrics started sending'});
+                    this.sendMts()
+                }
+            );
+    }
+
+
+
+
 
     private getSendManifestPackage(): CombinedPackage {
         return this.manifestPackage = this.manifestPackage = {
