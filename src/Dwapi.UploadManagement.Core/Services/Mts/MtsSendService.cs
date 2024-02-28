@@ -177,6 +177,8 @@ namespace Dwapi.UploadManagement.Core.Services.Mts
                 StringContent toSend = new StringContent(content, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("https://ndwh.kenyahmis.org/metrics/api/LivesyncIndicators/SyncLivesyncIndicators", toSend
                 );
+                // var response = await client.PostAsync("https://localhost:7157/api/LivesyncIndicators/SyncLivesyncIndicators", toSend
+                // );
                 response.EnsureSuccessStatusCode();
                 
                 // DomainEvents.Dispatch(new MgsExtractSentEvent(sentIds, SendStatus.Sent,sendTo.ExtractName));
@@ -186,6 +188,30 @@ namespace Dwapi.UploadManagement.Core.Services.Mts
                 Log.Error("Send to Livesync Error", e);
                 Log.Error(e, $"Send Manifest Error");
                 throw;
+            }
+        }
+        
+        
+        public async Task<dynamic> VerifyMtsApi()
+        {
+            var client = Client ?? new HttpClient();
+
+            try
+            {
+                var getresponse =
+                    await client.GetAsync(
+                        "https://ndwh.kenyahmis.org/metrics/api/LivesyncIndicators/api/verify");
+                
+                getresponse.EnsureSuccessStatusCode(); 
+                return getresponse;
+
+            }
+            catch (Exception e)
+            {
+                Log.Error("MetricsAPI Error", e);
+                Log.Error(e, $"Send Manifest Error");
+                throw new Exception($"======> Metrics API is not reachable. Error Message: {e.Message}");
+                // return e.Message;
             }
         }
 
