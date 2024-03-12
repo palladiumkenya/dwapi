@@ -1,2 +1,2 @@
-docker build -t kenyahmis/dwapi:boardroom .
-docker push kenyahmis/dwapi:boardroom
+docker build -t kenyahmis/dwapi:dwapiUnified .
+docker push kenyahmis/dwapi:dwapiUnified
