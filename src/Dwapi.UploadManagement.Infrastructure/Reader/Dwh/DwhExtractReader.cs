@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using Dapper;
@@ -10,6 +11,7 @@ using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Model.Dwh;
 using Dwapi.UploadManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 
 namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
 {
@@ -155,6 +157,17 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 .Skip((page - 1) * pageSize).Take(pageSize)
                 .OrderBy(x => x.Id)
                 .AsNoTracking().ToList();
+        }
+
+        public IDataReader GetSmartReader(string extractName)
+        {
+            var connectionString = _context.Database.GetDbConnection().ConnectionString;
+            var cn = new MySqlConnection(connectionString);
+            cn.Open();
+            var sql = $"select * from {extractName}s";
+            var cmd = new MySqlCommand(sql, cn);
+            var reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            return reader;
         }
 
         public long GetTotalRecords<T, TId>() where T : Entity<TId>
