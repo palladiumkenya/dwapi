@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Utility;
 using Newtonsoft.Json;
 
 namespace Dwapi.UploadManagement.Core.Interfaces.Exchange.Ct
@@ -56,6 +57,29 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Exchange.Ct
 
             var percentageStake=  ((float)count / (float)total) * Stake;
             return (int) percentageStake;
+        }
+
+        public string GetTableName()
+        {
+            if (ExtractName.IsSameAs("PatientBaselineExtract"))
+                return "PatientBaselinesExtract";
+
+            if (ExtractName.IsSameAs("PatientLabExtract"))
+                return "PatientLaboratoryExtract";
+
+            if (ExtractName.IsSameAs("HTSClientExtract"))
+                return "HtsClientsExtract";
+
+            if (ExtractName.IsSameAs("HTSClientLinkageExtract"))
+                return "HtsClientLinkageExtract";
+
+            if (ExtractName.IsSameAs("HTSClientPartnerExtract"))
+                return "HtsClientPartnerExtract";
+
+            if (ExtractName.IsSameAs("HtsClient"))
+                return "HtsClientsExtract";
+            
+            return ExtractName;
         }
     }
 }

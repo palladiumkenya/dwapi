@@ -487,19 +487,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     facilityId = mainExtract.FacilityId;
                 }
 
-                var smartReader = _dwhExtractReader.GetSmartReader(messageBag.ExtractName);
+                var smartReader = _dwhExtractReader.GetSmartReader(messageBag.GetTableName());
                 
                 var extracts = new List<T>();
                 
                 while (smartReader.Read())
                 {
-                    page++;
+                    
                     // int page = 1; page <= packageInfo.PageCount; page++)
                     
                     // map row to Extract
 
                     if (count == batchSize)
                     {
+                        page++;
                         // send.
                         
                         #region SEND EXTRACTS
@@ -574,6 +575,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                 if (count > 0)
                 {
+                    page++;
                     #region SEND REMAINING EXTRACTS
                         
                         recordCount += count;
