@@ -649,6 +649,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         #endregion
                 }
                 
+                smartReader.Close();
+                
                 DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
                     messageBag.GetProgress(page, total), recordCount)));
                 DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
