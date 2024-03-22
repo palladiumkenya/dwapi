@@ -1087,8 +1087,13 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                        .ForMember(x => x.Date_Created,
                            o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempRelationshipsExtract.Date_Created))))
                        .ForMember(x => x.Date_Last_Modified,
-                           o => o.MapFrom(s =>
-                               s.GetNullDateOrDefault(nameof(TempRelationshipsExtract.Date_Last_Modified))));
+                           o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempRelationshipsExtract.Date_Last_Modified))))
+                       .ForMember(x => x.PatientRelationshipToOther,
+                           o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempRelationshipsExtract.PatientRelationshipToOther))))
+                       .ForMember(x => x.PersonAPatientPk,
+                           o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempRelationshipsExtract.PersonAPatientPk))))
+                       .ForMember(x => x.PersonBPatientPk,
+                           o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempRelationshipsExtract.PersonBPatientPk))));
             CreateMap<TempRelationshipsExtract, RelationshipsExtract>();
             
         }

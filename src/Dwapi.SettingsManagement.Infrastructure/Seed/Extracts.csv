@@ -682,7 +682,10 @@ FROM
                                        when 1029 then 'VDRL Titre'
                                        when 1031 then 'Treponema Pallidum Hemagglutination Assay'
                                        when 1619 then 'Rapid Plasma Reagin'
-                                       when 1032 then 'Treponema Pallidum Hemagglutination Assay, Qualitative'
+                                       when 1032 then 'Treponema Pallidum Hemagglutination Assay, Qualitative'                                       
+                                        when 307 then 'Sputum for Acid Fast Bacilli'
+                                        when 162202 then 'GeneXpert'
+                                        when 160914 then 'Post-prandial blood glucose measurement (mg/dL)'
                                        else '' end)                                                                as TestName,
                                        date(l.visit_date)                                                               as DateSampleTaken,
                                        (case l.order_reason
@@ -6007,6 +6010,11 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
 7c2e60c0-8728-11eb-8dcd-0242ac130003|OTZ|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_OTZ|dwhstage|0|OtzExtract|19.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
 7c2e61c0-8728-11eb-8dcd-0242ac130003|Covid|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_COVID|dwhstage|0|CovidExtract|20.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
 7c2e62c0-8728-11eb-8dcd-0242ac130003|Defaulter Tracing|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_DefaulterTracing|dwhstage|0|DefaulterTracingExtract|21.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e63c0-8728-11eb-8dcd-0242ac130003|Cancer Screening|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_CancerScreening|dwhstage|0|CancerScreeningExtract|22.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e64c0-8728-11eb-8dcd-0242ac130003|Art Fast Track|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_ArtFastTrack|dwhstage|0|ArtFastTrackExtract|23.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e65c0-8728-11eb-8dcd-0242ac130003|IIT Risk Scores|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_IITRiskScores|dwhstage|0|IITRiskScoresExtract|24.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e66c0-8728-11eb-8dcd-0242ac130003|Relationships|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_Relationships|dwhstage|0|RelationshipsExtract|25.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+
 A926B327-D042-4459-963B-523879C47347|Hts Clients|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClient|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 0C82AA9F-C58D-4BEA-996B-00EE33286CAD|Hts Test Kits|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsTestKits|4.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 EEE41260-E92F-47CB-8AC8-E47281B8A8C4|Hts Client Linkage|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientLinkage|3.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
@@ -6014,6 +6022,8 @@ A72B9001-7109-4D66-8938-9F41D1779D95|Hts Partner Notification Services|HTS|A6221
 79527CF5-6DA1-439E-B32C-49F7677E0A0F|Hts Client Tracing|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientTracing|5.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 838E36EF-812D-4953-88E6-3F1DD5EC4531|Hts Partner Tracing|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsPartnerTracing|6.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 88C4C1CF-703F-473B-8A4C-44B94A8DD17C|Hts Client Tests|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientTests|2.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+6b23f800-dec5-4736-80f0-a3fee13bc994|Hts Eligibility|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsEligibilityExtract|8.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+
 3B3894F4-04B0-4141-896D-FA9F206C0DD1|Migration|MGS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|MgsStage|1|MetricMigrationExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 4B7B10F2-FF7E-452C-A67D-76A37E16B3EB|Hei|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempHeiExtract|0|HeiExtract|28.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 F14362A9-C5EF-4BAE-91B6-67D4AA808EBC|Mnch Enrolment|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
@@ -6026,6 +6036,7 @@ A91D30FB-40C1-4453-903D-4E687FF5E20D|Mnch Patient|MNCH|A6221861-0E85-11E8-BA89-0
 2D5489D0-2721-4D03-A869-5A10700ABD19|Cwc Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempCwcVisitExtract|0|CwcVisitExtract|27.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 5FF64729-FDA7-4065-A909-E059B8DD5A1A|Mnch Labs|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchLabExtract|0|MnchLabExtract|29.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 830568D9-2C97-46F4-B5FB-3AA83480BFBF|Mat Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMatVisitExtract|0|MatVisitExtract|23.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+AFDED747-46BF-4ADF-9E36-E40B750DFD7C|Mat Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchImmunizationExtract|0|Mnch Immunization|30.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|Indicator|1|IndicatorExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 
 82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select pkv.pkv as PKV,
@@ -7895,6 +7906,7 @@ d569fc28-ae47-11eb-8529-0242ac130003|Defaulter Tracing|NDWH|A6221857-0E85-11E8-B
 5D94B087-01DC-4C4E-8BA6-1027F974B232|Cancer Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|CancerScreeningExtract|22|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 7C612ECF-4468-42A0-90FC-DBEB6FD68096|Art Fast Track|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|ArtFastTrackExtract|23|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 056F9D4A-1A24-4524-95B8-6A0670CEAFDD|IIT Risk Scores|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|IITRiskScoresExtract|24|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+78B56727-43DF-422A-A8E0-83B3775AE3B2|Relationships|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|RelationshipsExtract|25|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 
 d5640010-ae47-11eb-8529-0242ac130003|Indicators|MTS|A6221857-0E85-11E8-BA89-0ED5F89F718B||Indicator|1|IndicatorExtract|1|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 A7F13D1F-8E82-4414-BB56-BB40A10F01F3|Hei|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempHeiExtract|0|HeiExtract|28.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
@@ -8267,25 +8279,26 @@ A47EFA09-28D9-46EC-B2E6-C6244DBDA240|Art Fast Track|NDWH|a6221856-0e85-11e8-ba89
                             join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|ArtFastTrackExtract|24|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 75E1A1A7-A840-4743-9F21-91F863A43737|Relationships|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT r.person_a PatientPK,
-                 r.uuid                                                                     as RecordUUID,
-                 convert(r.voided  , SIGNED)  												as Voided,
-                 i.siteCode                                                                    SiteCode,
-                 d.unique_patient_no                                                           PatientID,
-                 'KenyaEMR'                                                                    Emr,
-                 'Kenya HMIS III'                                                               Project,
-                 i.facilityName                                                                FacilityName,
-                 0                                                                                      as FacilityId,
-                  t.a_is_to_b as patient_relation_to_other,
-                 r.person_b as person_pk_related_to_patient,
-                 t.b_is_to_a                                          as RelationshipToPatient,
-                 r.start_date                                         as EndDate,
-                 r.end_date                                           as StartDate,
-                 r.date_created                                       as Date_Created,
-                 r.date_changed                                       as Date_Last_Modified
-              FROM relationship r 
-              INNER JOIN relationship_type t ON r.relationship = t.relationship_type_id
-              join dwapi_etl.etl_patient_demographics d ON r.person_a = d.patient_id
-              join kenyaemr_etl.etl_default_facility_info i"|dwhstage|0|RelationshipsExtract|25|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                   r.uuid                         as RecordUUID,
+                   convert(r.voided  , SIGNED)    as Voided,
+                   i.siteCode                     SiteCode,
+                   d.unique_patient_no            PatientID,
+                   'KenyaEMR'                     Emr,
+                   'Kenya HMIS III'               Project,
+                   i.facilityName                 FacilityName,
+                   0                              as FacilityId,
+                   t.a_is_to_b 					as PatientRelationshipToOther,
+                   r.person_a 					as  PersonAPatientPk,
+                   r.person_b 					as  PersonBPatientPk,
+                   t.b_is_to_a                    as RelationshipToPatient,
+                   r.start_date                   as EndDate,
+                   r.end_date                     as StartDate,
+                   r.date_created                 as Date_Created,
+                   r.date_changed                 as Date_Last_Modified
+                  FROM relationship r 
+                  INNER JOIN relationship_type t ON r.relationship = t.relationship_type_id
+                  join dwapi_etl.etl_patient_demographics d ON r.person_a = d.patient_id
+                  join kenyaemr_etl.etl_default_facility_info i"|dwhstage|0|RelationshipsExtract|25|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 
 82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id 
