@@ -6010,7 +6010,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
 7c2e60c0-8728-11eb-8dcd-0242ac130003|OTZ|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_OTZ|dwhstage|0|OtzExtract|19.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
 7c2e61c0-8728-11eb-8dcd-0242ac130003|Covid|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_COVID|dwhstage|0|CovidExtract|20.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
 7c2e62c0-8728-11eb-8dcd-0242ac130003|Defaulter Tracing|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_DefaulterTracing|dwhstage|0|DefaulterTracingExtract|21.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
-7c2e63c0-8728-11eb-8dcd-0242ac130003|Cancer Screening|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_CancerScreening|dwhstage|0|CancerScreeningExtract|22.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+BD586669-F75A-4916-925F-47FFD45B86B4|Cancer Screening|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_CancerScreening|dwhstage|0|CancerScreeningExtract|22.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
 7c2e64c0-8728-11eb-8dcd-0242ac130003|Art Fast Track|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_ArtFastTrack|dwhstage|0|ArtFastTrackExtract|23.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
 7c2e65c0-8728-11eb-8dcd-0242ac130003|IIT Risk Scores|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_IITRiskScores|dwhstage|0|IITRiskScoresExtract|24.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
 7c2e66c0-8728-11eb-8dcd-0242ac130003|Relationships|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_Relationships|dwhstage|0|RelationshipsExtract|25.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
