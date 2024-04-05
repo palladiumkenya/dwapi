@@ -16,6 +16,9 @@ namespace Dwapi.Contracts.Mnch
         DateTime? LastARTDate { get; set; }
         string LastRegimen { get; set; }
         string LastRegimenLine { get; set; }
+        string FacilityReceivingARTCare { get; set; }
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

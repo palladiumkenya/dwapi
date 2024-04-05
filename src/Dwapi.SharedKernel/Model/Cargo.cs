@@ -17,5 +17,6 @@ namespace Dwapi.SharedKernel.Model
             Items = items;
             ManifestId = manifestId;
         }
+       
     }
 }

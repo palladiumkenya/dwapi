@@ -10,7 +10,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }
         public string ChronicIllness { get; set; }
-        public DateTime? ChronicOnsetDate { get; set; }
+        public string ChronicOnsetDate { get; set; }
         public string knownAllergies { get; set; }
         public string AllergyCausativeAgent { get; set; }
         public string AllergicReaction { get; set; }
@@ -24,6 +24,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string Abdomen { get; set; }
         public string CNS { get; set; }
         public string Genitourinary { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+        public string Controlled { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

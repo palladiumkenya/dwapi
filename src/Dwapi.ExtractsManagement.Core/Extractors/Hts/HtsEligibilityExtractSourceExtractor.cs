@@ -91,7 +91,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 
                 DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsEligibilityExtract), "extracted", totalCount, 0, 0, 0, 0)));
                 DomainEvents.Dispatch(new HtsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
-                DomainEvents.Dispatch(new HtsStatusNotification(extract.Id, ExtractStatus.Loaded, totalCount));
+                // DomainEvents.Dispatch(new HtsStatusNotification(extract.Id, ExtractStatus.Loaded, totalCount));
             }
             catch (Exception e)
             {
@@ -161,7 +161,7 @@ namespace Dwapi.ExtractsManagement.Core.Extractors.Hts
 
                 DomainEvents.Dispatch(new HtsNotification(new ExtractProgress(nameof(HtsEligibilityExtract), "extracted", totalCount, 0, 0, 0, 0)));
                 DomainEvents.Dispatch(new HtsStatusNotification(extract.Id, ExtractStatus.Found, totalCount));
-                DomainEvents.Dispatch(new HtsStatusNotification(extract.Id, ExtractStatus.Loaded, totalCount));
+                // DomainEvents.Dispatch(new HtsStatusNotification(extract.Id, ExtractStatus.Loaded, totalCount));
             }
             catch (Exception e)
             {

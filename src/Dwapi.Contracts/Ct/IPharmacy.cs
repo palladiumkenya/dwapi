@@ -8,5 +8,8 @@ namespace Dwapi.Contracts.Ct
         string RegimenChangeSwitchReason { get; set; }
         string StopRegimenReason { get; set; }
         DateTime? StopRegimenDate { get; set; }
+        string RecordUUID { get; set; }
+         bool? Voided { get; set; }
+
     }
 }

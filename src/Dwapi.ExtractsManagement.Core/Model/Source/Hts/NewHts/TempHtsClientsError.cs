@@ -34,7 +34,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public string Occupation { get; set; }
         public string PriorityPopulationType { get; set; }
         public string HtsRecencyId { get; set; }
-
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
 
     }
 }

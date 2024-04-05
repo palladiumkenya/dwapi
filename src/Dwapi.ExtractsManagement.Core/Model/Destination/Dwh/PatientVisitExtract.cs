@@ -62,10 +62,16 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
         public string ENT { get; set; }
         public string Chest { get; set; }
         public string CVS { get; set; }
-        public string Abdomen { get; set; }
+        public string Abdomen { get; set; }                           
         public string CNS { get; set; }
         public string Genitourinary { get; set; }
         public DateTime? RefillDate { get; set; }
+        public string ZScore { get; set; }
+        public string PaedsDisclosure { get; set; }
+        public int? ZScoreAbsolute { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+        public string WHOStagingOI  { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

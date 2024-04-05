@@ -21,7 +21,12 @@
         Otz,
         Covid,
         DefaulterTracing,
+        CancerScreening,
+        IITRiskScores,
+        ArtFastTrack,
+        Relationships,
 
+        
         PatientMnch,
         AncVisit,
         CwcEnrollment,
@@ -33,6 +38,7 @@
         MnchLab,
         MotherBabyPair,
         PncVisit,
+        MnchImmunization,
 
         PatientPrep,
         PrepAdverseEvent,
@@ -40,6 +46,7 @@
         PrepCareTermination,
         PrepLab,
         PrepPharmacy,
-        PrepVisit
+        PrepVisit,
+        PrepMonthlyRefill
     }
 }

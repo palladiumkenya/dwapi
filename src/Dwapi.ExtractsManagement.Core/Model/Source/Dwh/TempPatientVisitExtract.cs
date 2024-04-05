@@ -68,5 +68,12 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string CNS { get; set; }
         public string Genitourinary { get; set; }
         public DateTime? RefillDate { get; set; }
+        public string ZScore { get; set; }
+        public string PaedsDisclosure { get; set; }
+        public int? ZScoreAbsolute { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+        public string WHOStagingOI  { get; set; }
+
     }
 }

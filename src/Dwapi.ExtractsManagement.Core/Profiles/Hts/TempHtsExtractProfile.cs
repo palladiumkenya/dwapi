@@ -15,41 +15,74 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
             // HTS Client Extract
 
             CreateMap<IDataRecord, TempHTSClientExtract>()
-                .ForMember(x => x.PatientPk, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHTSClientExtract.PatientPk))))
-                .ForMember(x => x.EncounterId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHTSClientExtract.EncounterId))))
-                .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHTSClientExtract.VisitDate))))
-                .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.FacilityName))))
+                .ForMember(x => x.PatientPk,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHTSClientExtract.PatientPk))))
+                .ForMember(x => x.EncounterId,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHTSClientExtract.EncounterId))))
+                .ForMember(x => x.VisitDate,
+                    o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHTSClientExtract.VisitDate))))
+                .ForMember(x => x.FacilityName,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.FacilityName))))
                 .ForMember(x => x.Dob, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHTSClientExtract.Dob))))
-                .ForMember(x => x.HtsNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.HtsNumber))))
-                .ForMember(x => x.Gender, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.Gender))))
-                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHTSClientExtract.SiteCode))))
-                .ForMember(x => x.MaritalStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.MaritalStatus))))
-                .ForMember(x => x.TestedBefore, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestedBefore))))
-                .ForMember(x => x.MonthsLastTested, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHTSClientExtract.MonthsLastTested))))
+                .ForMember(x => x.HtsNumber,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.HtsNumber))))
+                .ForMember(x => x.Gender,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.Gender))))
+                .ForMember(x => x.SiteCode,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHTSClientExtract.SiteCode))))
+                .ForMember(x => x.MaritalStatus,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.MaritalStatus))))
+                .ForMember(x => x.TestedBefore,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestedBefore))))
+                .ForMember(x => x.MonthsLastTested,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHTSClientExtract.MonthsLastTested))))
                 .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.Emr))))
-                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.Project))))
-                .ForMember(x => x.ClientTestedAs, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.ClientTestedAs))))
-                .ForMember(x => x.StrategyHTS, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.StrategyHTS))))
-                .ForMember(x => x.TestKitName1, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitName1))))
-                .ForMember(x => x.TestKitLotNumber1, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitLotNumber1))))
-                .ForMember(x => x.TestKitExpiryDate1, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitExpiryDate1))))
-                .ForMember(x => x.TestResultsHTS1, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestResultsHTS1))))
-                .ForMember(x => x.TestKitName2, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitName2))))
-                .ForMember(x => x.TestKitLotNumber2, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitLotNumber2))))
-                .ForMember(x => x.TestKitExpiryDate2, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitExpiryDate2))))
-                .ForMember(x => x.TestResultsHTS2, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestResultsHTS2))))
-                .ForMember(x => x.FinalResultHTS, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.FinalResultHTS))))
-                .ForMember(x => x.FinalResultsGiven, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.FinalResultsGiven))))
-                .ForMember(x => x.TBScreeningHTS, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TBScreeningHTS))))
-                .ForMember(x => x.ClientSelfTested, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.ClientSelfTested))))
-                .ForMember(x => x.CoupleDiscordant, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.CoupleDiscordant))))
-                .ForMember(x => x.TestType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestType))))
-                .ForMember(x => x.KeyPopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.KeyPopulationType))))
-                .ForMember(x => x.PopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.PopulationType))))
-                .ForMember(x => x.PatientDisabled, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.PatientDisabled))))
-                .ForMember(x => x.DisabilityType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.DisabilityType))))
-                .ForMember(x => x.PatientConsented, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.PatientConsented))))
-                .ForMember(x => x.NUPI, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHTSClientExtract.NUPI))));
+                .ForMember(x => x.Project,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.Project))))
+                .ForMember(x => x.ClientTestedAs,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.ClientTestedAs))))
+                .ForMember(x => x.StrategyHTS,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.StrategyHTS))))
+                .ForMember(x => x.TestKitName1,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitName1))))
+                .ForMember(x => x.TestKitLotNumber1,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitLotNumber1))))
+                .ForMember(x => x.TestKitExpiryDate1,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitExpiryDate1))))
+                .ForMember(x => x.TestResultsHTS1,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestResultsHTS1))))
+                .ForMember(x => x.TestKitName2,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitName2))))
+                .ForMember(x => x.TestKitLotNumber2,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitLotNumber2))))
+                .ForMember(x => x.TestKitExpiryDate2,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestKitExpiryDate2))))
+                .ForMember(x => x.TestResultsHTS2,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestResultsHTS2))))
+                .ForMember(x => x.FinalResultHTS,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.FinalResultHTS))))
+                .ForMember(x => x.FinalResultsGiven,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.FinalResultsGiven))))
+                .ForMember(x => x.TBScreeningHTS,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TBScreeningHTS))))
+                .ForMember(x => x.ClientSelfTested,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.ClientSelfTested))))
+                .ForMember(x => x.CoupleDiscordant,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.CoupleDiscordant))))
+                .ForMember(x => x.TestType,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.TestType))))
+                .ForMember(x => x.KeyPopulationType,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.KeyPopulationType))))
+                .ForMember(x => x.PopulationType,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.PopulationType))))
+                .ForMember(x => x.PatientDisabled,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.PatientDisabled))))
+                .ForMember(x => x.DisabilityType,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.DisabilityType))))
+                .ForMember(x => x.PatientConsented,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientExtract.PatientConsented))))
+                .ForMember(x => x.NUPI,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHTSClientExtract.NUPI))));
             CreateMap<TempHTSClientExtract, HTSClientExtract>();
 
             // HTS Client Linkage Extract
@@ -102,6 +135,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.CccNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientPartnerExtract.CccNumber))))
                 .ForMember(x => x.Sex, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHTSClientPartnerExtract.Sex))))
                 .ForMember(x => x.Age, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHTSClientPartnerExtract.Age))));
+
               CreateMap<TempHTSClientPartnerExtract, HTSClientPartnerExtract>();
 
             //hts clients
@@ -116,7 +150,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.Gender, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.Gender))))
                 .ForMember(x => x.MaritalStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.MaritalStatus))))
                 .ForMember(x => x.PopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.PopulationType))))
-                .ForMember(x => x.KeyPopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.KeyPopulationType))))
+                .ForMember(x => x.KeyPopulationType, o =>  o.UseValue(string.Empty))
                 .ForMember(x => x.PatientDisabled, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.PatientDisabled))))
                 .ForMember(x => x.County, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.County))))
                 .ForMember(x => x.SubCounty, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.SubCounty))))
@@ -126,7 +160,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.Occupation, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.Occupation))))
                 .ForMember(x => x.PriorityPopulationType, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.PriorityPopulationType))))
                 .ForMember(x => x.HtsRecencyId, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempHtsClients.HtsRecencyId))))
-                ;
+                .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsClients.Voided))))
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.RecordUUID))));
+                
 
             CreateMap<TempHtsClients, HtsClients>();
 
@@ -157,7 +193,12 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.Setting, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.Setting))))
                 .ForMember(x => x.Approach, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.Approach))))
                 .ForMember(x => x.HtsRiskCategory, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.HtsRiskCategory))))
-                .ForMember(x => x.HtsRiskScore, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempHtsClientTests.HtsRiskScore))));
+                .ForMember(x => x.HtsRiskScore, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.HtsRiskScore))))
+                .ForMember(x => x.ReferredForServices, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.ReferredForServices))))
+                .ForMember(x => x.ReferredServices, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.ReferredServices))))
+                .ForMember(x => x.OtherReferredServices, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.OtherReferredServices))))
+                .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsClientTests.Voided))))
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTests.RecordUUID))));
             CreateMap<TempHtsClientTests, HtsClientTests>();
 
             //hts client linkages
@@ -176,7 +217,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.ReferralDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsClientLinkage.ReferralDate))))
                 .ForMember(x => x.DateEnrolled, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsClientLinkage.DateEnrolled))))
                 .ForMember(x => x.ReportedCCCNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientLinkage.ReportedCCCNumber))))
-                .ForMember(x => x.ReportedStartARTDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsClientLinkage.ReportedStartARTDate))));
+                .ForMember(x => x.ReportedStartARTDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsClientLinkage.ReportedStartARTDate))))
+                .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsClientLinkage.Voided))))
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientLinkage.RecordUUID))));
             CreateMap<TempHtsClientLinkage, HtsClientLinkage>();
 
             //hts test kits
@@ -196,7 +239,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.TestKitLotNumber2, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsTestKits.TestKitLotNumber2))))
                 .ForMember(x => x.TestKitExpiry2, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsTestKits.TestKitExpiry2))))
                 .ForMember(x => x.TestResult2, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsTestKits.TestResult2))))
-                .ForMember(x => x.SyphilisResult, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsTestKits.SyphilisResult))));
+                .ForMember(x => x.SyphilisResult, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsTestKits.SyphilisResult))))
+                .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsTestKits.Voided))))
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsTestKits.RecordUUID))));
             CreateMap<TempHtsTestKits, HtsTestKits>();
 
             //hts client trace
@@ -209,7 +254,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.HtsNumber, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTracing.HtsNumber))))
                 .ForMember(x => x.TracingType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTracing.TracingType))))
                 .ForMember(x => x.TracingDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsClientTracing.TracingDate))))
-                .ForMember(x => x.TracingOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTracing.TracingOutcome))));
+                .ForMember(x => x.TracingOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTracing.TracingOutcome))))
+                .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsClientTracing.Voided))))
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClientTracing.RecordUUID))));
             CreateMap<TempHtsClientTracing, HtsClientTracing>();
 
             //hts partner trace
@@ -224,7 +271,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerTracing.Project))))
                 .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsPartnerTracing.SiteCode))))
                 .ForMember(x => x.BookingDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsPartnerTracing.BookingDate))))
-                .ForMember(x => x.TraceOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerTracing.TraceOutcome))));
+                .ForMember(x => x.TraceOutcome, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerTracing.TraceOutcome))))
+                .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsPartnerTracing.Voided))))
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerTracing.RecordUUID))));
             CreateMap<TempHtsPartnerTracing, HtsPartnerTracing>();
 
             //hts client trace
@@ -252,7 +301,11 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.FacilityLinkedTo, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.FacilityLinkedTo))))
                 .ForMember(x => x.Dob, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsPartnerNotificationServices.Dob))))
                 .ForMember(x => x.DateElicited, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsPartnerNotificationServices.DateElicited))))
-                .ForMember(x => x.MaritalStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.MaritalStatus))));
+                .ForMember(x => x.MaritalStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.MaritalStatus))))
+                .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsPartnerNotificationServices.Voided))))
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsPartnerNotificationServices.RecordUUID))))
+                .ForMember(x => x.IndexPatientPk, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsPartnerNotificationServices.IndexPatientPk))))
+                ;
             CreateMap<TempHtsPartnerNotificationServices, HtsPartnerNotificationServices>();
             
             //hts eligibility screening
@@ -304,7 +357,6 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.EligibleForTest, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.EligibleForTest))))
                 .ForMember(x => x.ReasonsForIneligibility, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ReasonsForIneligibility))))
                 .ForMember(x => x.SpecificReasonForIneligibility, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsEligibilityExtract.SpecificReasonForIneligibility))))
-                
                 .ForMember(x => x.MothersStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.MothersStatus))))
                 .ForMember(x => x.ResultOfHIVSelf, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ResultOfHIVSelf))))
                 .ForMember(x => x.DateTestedProvider, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateTestedProvider))))
@@ -320,10 +372,20 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.TypeGBV, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.TypeGBV))))
                 .ForMember(x => x.ForcedSex, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ForcedSex))))
                 .ForMember(x => x.ReceivedServices, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ReceivedServices))))
+                .ForMember(x => x.Disability, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.Disability))))
+                .ForMember(x => x.DisabilityType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.DisabilityType))))
+                .ForMember(x => x.HTSStrategy, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.HTSStrategy))))
+                .ForMember(x => x.HTSEntryPoint, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.HTSEntryPoint))))
+                .ForMember(x => x.HIVRiskCategory, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.HIVRiskCategory))))
+                .ForMember(x => x.ReasonRefferredForTesting, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ReasonRefferredForTesting))))
+                .ForMember(x => x.ReasonNotReffered, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ReasonNotReffered))))
+
                 .ForMember(x => x.DateCreated, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateCreated))))
                 .ForMember(x => x.DateLastModified, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempHtsEligibilityExtract.DateLastModified))))
                 .ForMember(x => x.ContactWithTBCase, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ContactWithTBCase ))))
-
+                .ForMember(x => x.HtsRiskScore, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.HtsRiskScore))))
+                .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsEligibilityExtract.Voided))))
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.RecordUUID))));
                 ;
             CreateMap<TempHtsEligibilityExtract, HtsEligibilityExtract>();
             

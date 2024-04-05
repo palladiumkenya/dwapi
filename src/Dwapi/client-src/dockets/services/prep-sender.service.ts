@@ -53,8 +53,56 @@ export class PrepSenderService {
             .catch(this.handleError);
     }
 
+    public sendPrepMonthlyRefillExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/prepmonthlyrefill`, sendPackage)
+            .catch(this.handleError);
+    }
+
     public sendHandshake(sendPackage: SendPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/endsession`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public zipPrepFiles(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/zipfiles`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportManifest(sendPackage: SendPackage): Observable<boolean> {
+        return this._http.post<boolean>(`${this._url}/manifestExport`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPatientPrepExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportpatientpreps`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPrepAdverseEventExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportPrepAdverseEvents`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPrepBehaviourRiskExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportPrepBehaviourRisks`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPrepCareTerminationExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportPrepCareTerminations`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public exportPrepLabExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportpreplabs`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPrepPharmacyExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportpreppharmacys`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPrepVisitExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportprepvisits`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPrepMonthlyRefillExtracts(sendPackage: SendPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportprepmonthlyrefill`, sendPackage)
             .catch(this.handleError);
     }
 

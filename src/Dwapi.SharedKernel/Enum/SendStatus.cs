@@ -3,6 +3,7 @@
     public enum SendStatus
     {
         Sent,
+        Exported,
         Failed
     }
 }

@@ -53,6 +53,8 @@ namespace Dwapi.Contracts.Prep
         string TreatedForHepC { get; set; }
         DateTime? NextAppointment { get; set; }
         string ClinicalNotes { get; set; }
+        string RecordUUID { get; set; }
+        bool? Voided { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
     }

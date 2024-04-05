@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Extratcors.Dwh;
@@ -50,27 +51,20 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             var difflog = _diffLogRepository.GetLog("NDWH", "AllergiesChronicIllnessExtract", mflcode);
             var changesLoadedStatus= false;
             
-            if (request.DatabaseProtocol.SupportsDifferential)
-            {
-                if (null == difflog)
-                    found  = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-                else 
-                    if (true == loadChangesOnly)
-                    {
-                        changesLoadedStatus = true;
-                        found = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract,
-                                request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
-                    }
-                    else
-                    {
-                        found  = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-
-                    }
-            }
-            else
-            {
+            if (null == difflog)
                 found  = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-            }
+            else 
+                if (true == loadChangesOnly)
+                {
+                    changesLoadedStatus = true;
+                    found = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract,
+                        request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                }
+                else
+                {
+                    found  = await _AllergiesChronicIllnessSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
+
+                }
             //Extract
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "AllergiesChronicIllnessExtract", changesLoadedStatus);
 

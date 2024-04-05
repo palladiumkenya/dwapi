@@ -70,6 +70,17 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
         public string ReceivedServices { get; set; }
         public string ContactWithTBCase { get; set; }
         
+        public string Disability { get; set; }
+        public string DisabilityType { get; set; }
+        public string HTSStrategy { get; set; }
+        public string HTSEntryPoint { get; set; }
+        public string HIVRiskCategory { get; set; }
+        public string ReasonRefferredForTesting   { get; set; }
+        public string ReasonNotReffered { get; set; }
+        public  string HtsRiskScore	 { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         

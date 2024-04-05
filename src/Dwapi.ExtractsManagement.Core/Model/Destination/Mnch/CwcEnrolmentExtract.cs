@@ -34,7 +34,11 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         public string ARTMother { get; set; }
         public string ARTRegimenMother { get; set; }
         public DateTime? ARTStartDateMother { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+        
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
+        
     }
 }

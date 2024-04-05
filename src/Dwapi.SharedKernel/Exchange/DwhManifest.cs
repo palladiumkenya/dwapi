@@ -105,5 +105,10 @@ namespace Dwapi.SharedKernel.Exchange
             Start = start;
             Tag = tag;
         }
+
+        public void GenerateID()
+        {
+            Id =LiveGuid.NewGuid();
+        }
     }
 }

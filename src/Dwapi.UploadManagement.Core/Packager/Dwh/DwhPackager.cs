@@ -83,7 +83,7 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
 
             foreach (var dwhManifest in manifests)
             {
-                dwhManifest.UploadMode = UploadMode.Differential;
+                dwhManifest.UploadMode = UploadMode.DifferentialLoad;
             }
 
             return manifests;
@@ -158,8 +158,6 @@ namespace Dwapi.UploadManagement.Core.Packager.Dwh
         public IEnumerable<T> GenerateDiffBatchMainExtracts<T>(int page, int batchSize, string docket, string extract)
             where T : ClientExtract
         {
-            // return _reader.ReadMainExtract<T, Guid>(page, batchSize);
-
             var allDifflogs = _diffLogReader.ReadAll().ToList();
 
             var diffLog = allDifflogs.FirstOrDefault(x =>

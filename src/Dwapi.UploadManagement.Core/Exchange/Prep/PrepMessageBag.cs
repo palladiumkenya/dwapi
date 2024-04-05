@@ -42,5 +42,44 @@ namespace Dwapi.UploadManagement.Core.Exchange.Prep
         {
             return new PrepMessageBag(PrepMessage.Create(extracts));
         }
+        public static PrepMessageBag Create(List<PrepMonthlyRefillExtract> extracts)
+        {
+            return new PrepMessageBag(PrepMessage.Create(extracts));
+        }
+
+
+        //BoardRoom
+        public static PrepMessageBag CreateEx(List<PatientPrepExtract> extracts)
+        {
+            return new PrepMessageBag(PrepMessage.CreateEx(extracts));
+        }
+        public static PrepMessageBag CreateEx(List<PrepAdverseEventExtract> extracts)
+        {
+            return new PrepMessageBag(PrepMessage.CreateEx(extracts));
+        }
+        public static PrepMessageBag CreateEx(List<PrepBehaviourRiskExtract> extracts)
+        {
+            return new PrepMessageBag(PrepMessage.CreateEx(extracts));
+        }
+        public static PrepMessageBag CreateEx(List<PrepCareTerminationExtract> extracts)
+        {
+            return new PrepMessageBag(PrepMessage.CreateEx(extracts));
+        }
+        public static PrepMessageBag CreateEx(List<PrepLabExtract> extracts)
+        {
+            return new PrepMessageBag(PrepMessage.CreateEx(extracts));
+        }
+        public static PrepMessageBag CreateEx(List<PrepPharmacyExtract> extracts)
+        {
+            return new PrepMessageBag(PrepMessage.CreateEx(extracts));
+        }
+        public static PrepMessageBag CreateEx(List<PrepVisitExtract> extracts)
+        {
+            return new PrepMessageBag(PrepMessage.CreateEx(extracts));
+        }
+        public static PrepMessageBag CreateEx(List<PrepMonthlyRefillExtract> extracts)
+        {
+            return new PrepMessageBag(PrepMessage.CreateEx(extracts));
+        }
     }
 }

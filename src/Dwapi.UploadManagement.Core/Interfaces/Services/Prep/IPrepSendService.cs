@@ -35,6 +35,9 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Prep
         Task<List<SendMpiResponse>> SendPrepVisitsAsync(SendManifestPackageDTO sendTo);
         Task<List<SendMpiResponse>> SendPrepVisitsAsync(SendManifestPackageDTO sendTo, PrepMessageBag messageBag);
 
+        Task<List<SendMpiResponse>> SendPrepMonthlyRefillAsync(SendManifestPackageDTO sendTo);
+        Task<List<SendMpiResponse>> SendPrepMonthlyRefillAsync(SendManifestPackageDTO sendTo, PrepMessageBag messageBag);
+
         Task NotifyPostSending(SendManifestPackageDTO sendTo, string version);
     }
 }

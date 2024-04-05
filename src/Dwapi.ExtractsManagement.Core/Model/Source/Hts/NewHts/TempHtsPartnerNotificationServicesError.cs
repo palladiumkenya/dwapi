@@ -38,6 +38,10 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         [NotMapped]
         public virtual bool HasError { get; set; }
         public Guid Id { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+        public int? IndexPatientPk { get; set; }
+
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

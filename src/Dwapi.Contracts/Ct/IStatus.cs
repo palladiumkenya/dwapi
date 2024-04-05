@@ -13,5 +13,8 @@ namespace Dwapi.Contracts.Ct
         string SpecificDeathReason { get; set; }
         DateTime? DeathDate { get; set; }
         DateTime? EffectiveDiscontinuationDate { get; set; }
+        string RecordUUID { get; set; }
+         bool? Voided { get; set; }
+
     }
 }

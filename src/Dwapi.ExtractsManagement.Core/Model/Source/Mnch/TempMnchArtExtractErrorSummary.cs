@@ -7,6 +7,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
 {
     [Table("vTempMnchArtExtractErrorSummary")]public class TempMnchArtExtractErrorSummary:TempMnchExtractErrorSummary,IMnchArt
     {
+        public string FacilityName { get; set; }
+
         public string Pkv { get; set; }
         public string PatientMnchID { get; set; }
         public string PatientHeiID { get; set; }
@@ -18,6 +20,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
         public DateTime? LastARTDate { get; set; }
         public string LastRegimen { get; set; }
         public string LastRegimenLine { get; set; }
+        public string FacilityReceivingARTCare { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

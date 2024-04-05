@@ -19,7 +19,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         public int? RespiratoryRate { get; set; }
         public decimal? OxygenSaturation { get; set; }
         public int? MUAC { get; set; }
-        public int? BP { get; set; }
+        public string BP { get; set; }
         public string BreastExam { get; set; }
         public string AntenatalExercises { get; set; }
         public string FGM { get; set; }
@@ -67,7 +67,17 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         public string ReferralReasons { get; set; }
         public DateTime? NextAppointmentANC { get; set; }
         public string ClinicalNotes { get; set; }
+        public string HepatitisBScreening { get; set; }
+        public string TreatedHepatitisB { get; set; }
+        public string PresumptiveTreatmentGiven { get; set; }
+        public string PresumptiveTreatmentDose { get; set; }
+        public string MiminumPackageOfCareReceived { get; set; }
+        public string MiminumPackageOfCareServices { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+        
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
+        
     }
 }

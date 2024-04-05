@@ -24,13 +24,16 @@ namespace Dwapi.Controller
         private readonly IHubContext<HtsActivity> _hubContext;
         private readonly IHubContext<HtsSendActivity> _hubSendContext;
         private readonly IHtsSendService _htsSendService;
+        private readonly IHtsExportService _htsExportService;
+
         public HtsController(IMediator mediator, IExtractStatusService extractStatusService,
-            IHubContext<HtsActivity> hubContext, IHtsSendService htsSendService,
+            IHubContext<HtsActivity> hubContext, IHtsSendService htsSendService, IHtsExportService htsExportService,
             IHubContext<HtsSendActivity> hubSendContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _htsSendService = htsSendService;
+            _htsExportService = htsExportService;
             Startup.HtsSendHubContext = _hubSendContext = hubSendContext;
             Startup.HtsHubContext = _hubContext = hubContext;
         }
@@ -90,6 +93,28 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+        [HttpPost("exportmanifest")]
+        public async Task<IActionResult> ExportManifest([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+
+            string version = GetType().Assembly.GetName().Version.ToString();
+            await _mediator.Publish(new ExtractSent("HivTestingService", version));
+
+            try
+            {
+                var result = await _htsExportService.ExportManifestAsync(packageDto, version);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting  Manifest {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
 
 
         // POST: api/DwhExtracts/patients
@@ -106,6 +131,23 @@ namespace Dwapi.Controller
             catch (Exception e)
             {
                 var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+        [HttpPost("exportclients")]
+        public IActionResult exportClientsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsExportService.ExportClientsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
             }
@@ -129,6 +171,23 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+        [HttpPost("exportclienttests")]
+        public IActionResult exportClientTestsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsExportService.ExportClientTestsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
 
         // POST: api/DwhExtracts/patients
         [HttpPost("testkits")]
@@ -148,6 +207,24 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+        [HttpPost("exporttestkits")]
+        public IActionResult exportTestKitsExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsExportService.ExportTestKitsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
 
         // POST: api/DwhExtracts/patients
         [HttpPost("clienttracing")]
@@ -167,6 +244,25 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+        // POST: api/DwhExtracts/patients
+        [HttpPost("exportclienttracing")]
+        public IActionResult exportClientTracingExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsExportService.ExportClientTracingAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
 
         // POST: api/DwhExtracts/patients
         [HttpPost("partnertracing")]
@@ -182,6 +278,23 @@ namespace Dwapi.Controller
             catch (Exception e)
             {
                 var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+        [HttpPost("exportpartnertracing")]
+        public IActionResult exportPartnerTracingExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsExportService.ExportPartnerTracingAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
             }
@@ -205,6 +318,23 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+        [HttpPost("exportpartnernotificationservices")]
+        public IActionResult exportPartnerNotificationServicesExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsExportService.ExportPartnerNotificationServicesAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
 
         // POST: api/DwhExtracts/patients
         [HttpPost("clientslinkage")]
@@ -224,6 +354,23 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+        [HttpPost("exportclientslinkage")]
+        public IActionResult ExportClientLinkageExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsExportService.ExportClientsLinkagesAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
 
 
         // POST: api/DwhExtracts/patients
@@ -235,6 +382,42 @@ namespace Dwapi.Controller
             try
             {
                 _htsSendService.SendHtsEligibilityExtractsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error sending Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+        [HttpPost("exporthtseligibilityextract")]
+        public IActionResult ExportHtsEligibilityExtracts([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                _htsExportService.ExportHtsEligibilityExtractsAsync(packageDto);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                var msg = $"Error exporting Extracts {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpPost("zipfiles")]
+        public IActionResult ZipFiles([FromBody] SendManifestPackageDTO packageDto)
+        {
+            if (!packageDto.IsValid())
+                return BadRequest();
+            try
+            {
+                string version = GetType().Assembly.GetName().Version.ToString();
+                _htsExportService.ZipExtractsAsync(packageDto, version);
                 return Ok();
             }
             catch (Exception e)

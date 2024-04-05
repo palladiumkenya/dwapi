@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
 using Dwapi.ExtractsManagement.Core.Application.Events;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
@@ -28,6 +29,7 @@ using Dwapi.UploadManagement.Core.Exchange.Dwh.Smart;
 using Dwapi.UploadManagement.Core.Interfaces.Exchange;
 using Dwapi.UploadManagement.Core.Interfaces.Packager.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Reader;
+using Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Dwh;
 using Dwapi.UploadManagement.Core.Notifications.Dwh;
 using Humanizer;
@@ -45,11 +47,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private readonly ITransportLogRepository _transportLogRepository;
         private readonly IDiffLogRepository _diffLogRepository;
         private readonly IIndicatorExtractRepository _indicatorExtractRepository;
+        private readonly IDwhExtractReader _dwhExtractReader;
 
 
         public HttpClient Client { get; set; }
 
-        public CTSendService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository)
+        public CTSendService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository, IDwhExtractReader dwhExtractReader)
         {
             _packager = packager;
             _mediator = mediator;
@@ -58,7 +61,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             _endPoint = "api/";
             _diffLogRepository = diffLogRepository;
             _indicatorExtractRepository = indicatorExtractRepository;
-
+            _dwhExtractReader = dwhExtractReader;
         }
 
         public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
@@ -218,8 +221,31 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         bool allowSend = true;
                         while (allowSend)
                         {
-                            var response = await client.PostAsJsonAsync(
+                            var mflcode =   _indicatorExtractRepository.GetMflCode();
+                            if (0 == mflcode)
+                            {
+                                // throw error
+                                throw new Exception("First Time loading? Please load all first.");
+                            }
+
+                            var response = new HttpResponseMessage();
+                            
+                            var changesLoadedDifflog = _diffLogRepository.GetIfChangesHasBeenLoadedAlreadyLog("NDWH", "PatientExtract",mflcode);
+
+                            if (null != changesLoadedDifflog)
+                            {
+                                response = await client.PostAsJsonAsync(
+                                    sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
+
+                            }
+                            else
+                            {
+                                response = await client.PostAsJsonAsync(
                                     sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
+
+                            }
+                            // var response = await client.PostAsJsonAsync(
+                            //     sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v2/{messageBag.EndPoint}"), message);
                             if (response.IsSuccessStatusCode)
                             {
                                 allowSend = false;
@@ -248,7 +274,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     }
                     catch (Exception e)
                     {
-                        Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error");
+                        Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error ");
                         throw;
                     }
 
@@ -291,15 +317,6 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             int total = packageInfo.PageCount;
             int overall = 0;
 
-            var siteCode = _indicatorExtractRepository.GetMflCode();
-            
-            var diffLogs = _diffLogRepository.GetAllDocketLogs("NDWH");
-            
-            foreach (var log in diffLogs)
-            {
-                _diffLogRepository.UpdateMaxDates("NDWH", log.Extract, siteCode);
-            }
-            
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sending));
             long recordCount = 0;
 
@@ -345,9 +362,10 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     var extracts = _packager.GenerateSmartBatchExtracts<T>(page, packageInfo.PageSize).ToList();
                     recordCount = recordCount + extracts.Count;
                     messageBag.Generate(extracts, manifestId, facilityId,jobId);
+                    //messageBag = messageBag.Generate(extracts);
                     var message = messageBag;
 
-                    Log.Debug(
+                   Log.Debug(
                         $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords}  Pks:[{messageBag.MinPk}-{messageBag.MaxPk}] Page:{page} of {packageInfo.PageCount}");
 
                     try
@@ -390,7 +408,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     }
                     catch (Exception e)
                     {
-                        Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error");
+                        Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error SendSmartBatchExtractsAsync");
                         throw;
                     }
 
@@ -402,12 +420,11 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             }
             catch (Exception e)
             {
-                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error");
+                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error ");
                 throw;
             }
 
-            DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
-                messageBag.GetProgress(count, total), recordCount,true)));
+            DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total), recordCount,true)));
 
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
                 {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
@@ -419,6 +436,249 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             return responses;
         }
 
+        public async Task<List<SendCTResponse>> SendSmartBatchExtractsFromReaderAsync<T>(SendManifestPackageDTO sendTo, int batchSize,
+            IMessageSourceBag<T> messageBag) where T : ClientExtract
+        {
+             Stopwatch stopWatch = Stopwatch.StartNew();
+
+            HttpClientHandler handler = new HttpClientHandler()
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
+            var client = Client ?? new HttpClient(handler);
+
+            var responses = new List<SendCTResponse>();
+            var packageInfo = _packager.GetPackageInfo<T>(batchSize);
+            int sendCound = 0;
+            int count = 0;
+            int page = 0;
+            int total = packageInfo.PageCount;
+            int overall = 0;
+
+            DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId, sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sending));
+            long recordCount = 0; 
+            
+            try
+            {
+                string jobId=string.Empty;Guid manifestId;Guid facilityId;
+                var manifest = _transportLogRepository.GetManifest();
+
+                if (messageBag.ExtractName == nameof(PatientExtract))
+                {
+                    var mainExtract = _transportLogRepository.GetMainExtract();
+                    if (null == mainExtract)
+                    {
+                        jobId = manifest.JobId;
+                        manifestId = manifest.ManifestId;
+                        facilityId = manifest.FacilityId;
+                    }
+                    else
+                    {
+                        jobId = mainExtract.JobId;
+                        manifestId = mainExtract.ManifestId;
+                        facilityId = mainExtract.FacilityId;
+                    }
+                }
+                else
+                {
+                    var mainExtract = _transportLogRepository.GetMainExtract();
+                    jobId = mainExtract.JobId;
+                    manifestId = mainExtract.ManifestId;
+                    facilityId = mainExtract.FacilityId;
+                }
+
+                var smartReader = _dwhExtractReader.GetSmartReader(messageBag.GetTableName());
+                
+                var extracts = new List<T>();
+                
+                while (smartReader.Read())
+                {
+                    
+                    // int page = 1; page <= packageInfo.PageCount; page++)
+                    
+                    // map row to Extract
+
+                    if (count == batchSize)
+                    {
+                        page++;
+                        // send.
+                        
+                        #region SEND EXTRACTS
+                        
+                        recordCount += count;
+                        messageBag.Generate(extracts, manifestId, facilityId, jobId);
+                        //messageBag = messageBag.Generate(extracts);
+                        var message = messageBag;
+
+                        Log.Debug(
+                            $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords}  Pks:[{messageBag.MinPk}-{messageBag.MaxPk}] Page:{page} of {packageInfo.PageCount}");
+                        
+                         try
+                        {
+                            int retryCount = 0;
+                            bool allowSend = true;
+                            while (allowSend)
+                            {
+                                var response = await client.PostAsJsonAsync(
+                                    sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    allowSend = false;
+                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
+                                    responses.Add(res);
+
+                                    var sentIds = messageBag.SendIds;
+                                    sendCound += sentIds.Count;
+                                    DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
+                                        messageBag.ExtractType));
+
+                                    var tlog = TransportLog.GenerateExtract("NDWH", messageBag.ExtractName, res.JobId);
+                                    _transportLogRepository.CreateLatest(tlog);
+                                }
+                                else
+                                {
+                                    retryCount++;
+                                    if (retryCount == 4)
+                                    {
+                                        var sentIds = messageBag.SendIds;
+                                        var error = await response.Content.ReadAsStringAsync();
+                                        DomainEvents.Dispatch(new CTExtractSentEvent(
+                                            sentIds, SendStatus.Failed, messageBag.ExtractType,
+                                            error));
+                                        throw new Exception(error);
+                                    }
+                                }
+                            }
+                            
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error SendSmartBatchExtractsAsync");
+                            throw;
+                        }
+                         
+                         // original
+                        // DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                        //     messageBag.GetProgress(count, total), recordCount)));
+                        DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                            messageBag.GetProgress(page, total), recordCount)));
+                        DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
+                            {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
+                        );
+                        
+                        #endregion
+                        
+                        count = 0;
+                        extracts = new List<T>(); 
+                    }
+                    
+                    var parser = smartReader.GetRowParser<T>(typeof(T));
+                    var extract = parser(smartReader);
+                    extracts.Add(extract);
+                    count++;
+                }
+                
+                // DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                //     messageBag.GetProgress(count, total), recordCount)));
+
+                if (count > 0)
+                {
+                    page++;
+                    #region SEND REMAINING EXTRACTS
+                        
+                        recordCount += count;
+                        messageBag.Generate(extracts, manifestId, facilityId, jobId);
+                        //messageBag = messageBag.Generate(extracts);
+                        var message = messageBag;
+
+                        Log.Debug(
+                            $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords}  Pks:[{messageBag.MinPk}-{messageBag.MaxPk}] Page:{page} of {packageInfo.PageCount}");
+
+                         try
+                        {
+                            int retryCount = 0;
+                            bool allowSend = true;
+                            while (allowSend)
+                            {
+                                var response = await client.PostAsJsonAsync(
+                                    sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    allowSend = false;
+                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
+                                    responses.Add(res);
+
+                                    var sentIds = messageBag.SendIds;
+                                    sendCound += sentIds.Count;
+                                    DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
+                                        messageBag.ExtractType));
+
+                                    var tlog = TransportLog.GenerateExtract("NDWH", messageBag.ExtractName, res.JobId);
+                                    _transportLogRepository.CreateLatest(tlog);
+                                }
+                                else
+                                {
+                                    retryCount++;
+                                    if (retryCount == 4)
+                                    {
+                                        var sentIds = messageBag.SendIds;
+                                        var error = await response.Content.ReadAsStringAsync();
+                                        DomainEvents.Dispatch(new CTExtractSentEvent(
+                                            sentIds, SendStatus.Failed, messageBag.ExtractType,
+                                            error));
+                                        throw new Exception(error);
+                                    }
+                                }
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error SendSmartBatchExtractsAsync");
+                            throw;
+                        }
+                         
+                         DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                             messageBag.GetProgress(page, total), recordCount)));
+                         DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
+                             {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
+                         );
+                         
+                         // DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                         //    messageBag.GetProgress(count, total), recordCount)));
+                        #endregion
+                }
+                
+                smartReader.Close();
+                
+                DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                    messageBag.GetProgress(page, total), recordCount)));
+                DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
+                    {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
+                );
+                
+                 await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error ");
+                throw;
+            }
+
+            // DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total), recordCount,true)));
+            DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                messageBag.GetProgress(page, total), recordCount)));
+            DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
+                {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
+            );
+            stopWatch.Stop();
+            Log.Debug(new string('*',40));
+            Log.Debug($"Sent {recordCount} | {messageBag.ExtractName} in [{stopWatch.ElapsedMilliseconds/1000}] s");
+            Log.Debug(new string('*',40));
+            return responses;
+        }
+
+        
         public async Task<List<SendCTResponse>> SendDiffBatchExtractsAsync<T>(SendManifestPackageDTO sendTo, int batchSize, IMessageBag<T> messageBag) where T : ClientExtract
         {
           HttpClientHandler handler = new HttpClientHandler()
@@ -506,7 +766,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             }
             catch (Exception e)
             {
-                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error");
+                Log.Error(e, $"Send Extracts {messageBag.ExtractName} Error ");
                 throw;
             }
 

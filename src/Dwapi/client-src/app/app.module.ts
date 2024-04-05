@@ -54,6 +54,7 @@ import {PanelMenuModule} from 'primeng/primeng';
 import {PasswordModule} from 'primeng/primeng';
 import {PickListModule} from 'primeng/primeng';
 import {ProgressBarModule} from 'primeng/primeng';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {RadioButtonModule} from 'primeng/primeng';
 import {RatingModule} from 'primeng/primeng';
 import {ScheduleModule} from 'primeng/primeng';
@@ -110,6 +111,17 @@ import {CbsDocketComponent} from '../dockets/cbs-docket/cbs-docket.component';
 import {NdwhExtractDetailsComponent} from '../dockets/ndwh-docket/ndwh-extract-details/ndwh-extract-details.component';
 import {NdwhPatientsExtractService} from '../dockets/services/ndwh-patients-extract.service';
 import {DbProtocolComponent} from '../settings/db-protocol/db-protocol.component';
+
+import {AutoloadService} from '../settings/services/autoload.service';
+import {MergedNdwhConsoleComponent} from '../autoload/ndwh-docket/ndwh-console/merged-ndwh-console.component';
+import {MergedNdwhDocketComponent} from '../autoload/ndwh-docket/ndwh-docket.component';
+import {MergedHtsConsoleComponent} from '../autoload/hts-docket/hts-console/merged-hts-console.component';
+import {MergedHtsDocketComponent} from '../autoload/hts-docket/hts-docket.component';
+import {MergedMnchConsoleComponent} from '../autoload/mnch-docket/mnch-console/merged-mnch-console.component';
+import {MergedMnchDocketComponent} from '../autoload/mnch-docket/mnch-docket.component';
+import {MergedPrepConsoleComponent} from '../autoload/prep-docket/prep-console/merged-prep-console.component';
+import {MergedPrepDocketComponent} from '../autoload/prep-docket/prep-docket.component';
+
 // tslint:disable-next-line:max-line-length
 import {ValidRecordDetailsComponent} from
         '../dockets/ndwh-docket/ndwh-extract-details/valid-record-details/valid-record-details.component';
@@ -185,7 +197,17 @@ import {PrepSummaryService} from "../dockets/services/prep-summary.service";
 import {PrepClientService} from "../dockets/services/prep-client.service";
 import {PrepSenderService} from "../dockets/services/prep-sender.service";
 import {CrsService} from "../dockets/services/crs.service";
-import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
+import { CrsDocketComponent } from "../dockets/crs-docket/crs-docket.component";
+import { MtsDocketComponent } from "../dockets/mts-docket/mts-docket.component";
+
+import { exportComponent } from "../exports/file-exports.component";
+import { UploadComponent } from "../upload/file-upload.component";
+import { DownloadComponent } from '../download/download.component';
+import { UploadService } from '../dockets/services/upload-service';
+import { DndDirective } from "../upload/upload.directive";
+
+import {AutoloadComponent} from "../autoload/autoload.component";
+import {MtsService} from "../dockets/services/mts.service";
 
 @NgModule({
     imports: [
@@ -245,6 +267,7 @@ import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
         PasswordModule,
         PickListModule,
         ProgressBarModule,
+        ProgressSpinnerModule,
         RadioButtonModule,
         RatingModule,
         ScheduleModule,
@@ -319,7 +342,21 @@ import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
         PrepExtractDetailsComponent,
         PrepInvalidComponent,
         PrepValidComponent,
-        CrsDocketComponent
+        DownloadComponent,
+        exportComponent,
+        UploadComponent,
+        DndDirective,
+        CrsDocketComponent,
+        MtsDocketComponent,
+        AutoloadComponent,
+        MergedNdwhConsoleComponent,
+        MergedNdwhDocketComponent,
+        MergedHtsConsoleComponent,
+        MergedHtsDocketComponent,
+        MergedMnchConsoleComponent,
+        MergedMnchDocketComponent,
+        MergedPrepConsoleComponent,
+        MergedPrepDocketComponent
 ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy}, BreadcrumbService,
@@ -333,7 +370,7 @@ import {CrsDocketComponent} from "../dockets/crs-docket/crs-docket.component";
         MetricsService, MgsService, MgsSenderService, MetricMigrationService, NdwhSummaryService,
         MnchService, MnchSenderService, MnchClientService, MnchClientLinkageService, MnchSummaryService,
         PrepService, PrepSenderService, PrepClientService, PrepClientLinkageService, PrepSummaryService,
-        CrsService, HtsEligibilityScreeningService
+        CrsService, HtsEligibilityScreeningService,AutoloadService, MtsService
 
     ],
     bootstrap: [AppComponent]

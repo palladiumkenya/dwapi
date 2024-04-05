@@ -24,6 +24,10 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
             public DateTime? Dob { get; set; }
             public DateTime? DateElicited { get; set; }
             public string MaritalStatus { get; set; }
+            public string RecordUUID { get; set; }
+            public bool? Voided { get; set; }
+            public int? IndexPatientPk { get; set; }
+            
             public DateTime? Date_Created { get; set; }
             public DateTime? Date_Last_Modified { get; set; }
         }

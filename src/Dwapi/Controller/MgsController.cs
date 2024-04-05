@@ -1,13 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
 using Dwapi.Hubs.Mgs;
 using Dwapi.Models;
 using Dwapi.SettingsManagement.Core.Application.Metrics.Events;
+using Dwapi.SettingsManagement.Core.DTOs;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.DTOs;
 using Dwapi.SharedKernel.Utility;
 using Dwapi.UploadManagement.Core.Interfaces.Services.Mgs;
+using Dwapi.UploadManagement.Core.Interfaces.Services.Mts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -24,14 +27,16 @@ namespace Dwapi.Controller
         private readonly IHubContext<MgsActivity> _hubContext;
         private readonly IHubContext<MgsSendActivity> _hubSendContext;
         private readonly IMgsSendService _mgsSendService;
+        private readonly IMtsSendService _mtsSendService;
 
         public MgsController(IMediator mediator, IExtractStatusService extractStatusService,
-            IHubContext<MgsActivity> hubContext, IMgsSendService mgsSendService,
+            IHubContext<MgsActivity> hubContext, IMgsSendService mgsSendService,IMtsSendService mtsSendService,
             IHubContext<MgsSendActivity> hubSendContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
             _mgsSendService = mgsSendService;
+            _mtsSendService = mtsSendService;
             Startup.MgsSendHubContext = _hubSendContext = hubSendContext;
             Startup.MgsHubContext = _hubContext = hubContext;
         }
@@ -113,5 +118,22 @@ namespace Dwapi.Controller
                 return StatusCode(500, msg);
             }
         }
+
+
+        // [HttpPost("sendMetrics")]
+        // public IActionResult sendMetrics([FromBody] List<IndicatorDto> indicatorDto)
+        // {
+        //     try
+        //     {
+        //         _mtsSendService.SendIndicators(indicatorDto);
+        //         return Ok();
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         var msg = $"Error sending Extracts {e.Message}";
+        //         Log.Error(e, msg);
+        //         return StatusCode(500, msg);
+        //     }
+        // }
     }
 }
