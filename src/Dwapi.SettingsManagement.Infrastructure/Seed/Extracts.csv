@@ -682,7 +682,10 @@ FROM
                                        when 1029 then 'VDRL Titre'
                                        when 1031 then 'Treponema Pallidum Hemagglutination Assay'
                                        when 1619 then 'Rapid Plasma Reagin'
-                                       when 1032 then 'Treponema Pallidum Hemagglutination Assay, Qualitative'
+                                       when 1032 then 'Treponema Pallidum Hemagglutination Assay, Qualitative'                                       
+                                        when 307 then 'Sputum for Acid Fast Bacilli'
+                                        when 162202 then 'GeneXpert'
+                                        when 160914 then 'Post-prandial blood glucose measurement (mg/dL)'
                                        else '' end)                                                                as TestName,
                                        date(l.visit_date)                                                               as DateSampleTaken,
                                        (case l.order_reason
@@ -910,7 +913,24 @@ FROM
                              visit_id,
                              visit_date,
                              encounter_id,
-                             drug_short_name                                                             as drug,
+                             CASE
+                              WHEN do.drug_concept_id = '84797' THEN 'TDF'
+                              WHEN do.drug_concept_id LIKE '84797|%' THEN CONCAT('TDF+', do.drug_short_name)
+                              WHEN do.drug_concept_id LIKE '%|84797|%' THEN INSERT(do.drug_short_name,
+                              LOCATE('+', do.drug_short_name) + 1, 0,
+                              'TDF+')
+                              WHEN do.drug_concept_id LIKE '%|84797' THEN CONCAT(do.drug_short_name, '+TDF')
+                              WHEN do.drug_concept_id LIKE '70057|%' THEN CONCAT('ABC+', do.drug_short_name)
+                              WHEN do.drug_concept_id LIKE '%|70057|%' THEN INSERT(do.drug_short_name,
+                              LOCATE('+', do.drug_short_name) + 1, 0,
+                              'ABC+')
+                              WHEN do.drug_concept_id LIKE '%|70057' THEN CONCAT(do.drug_short_name, '+ABC')
+                              WHEN do.drug_concept_id = '70057' THEN 'ABC'
+                              WHEN do.drug_concept_id = '105281' THEN 'CTX'
+                              WHEN do.drug_concept_id = '71648' THEN 'ATV/r'
+                              WHEN do.drug_concept_id = '70246' THEN 'ACYCLOVIR SODIUM'
+                              ELSE do.drug_short_name
+                              END                                                              as drug,
                              1                                                                           as is_arv,
                              ''                                                                          as is_ctx,
                              ''                                                                          as is_dapsone,
@@ -989,6 +1009,7 @@ FROM
                                                    when 1207 then 4
                                                     else ''
                                                     end                                                                as WHOStage,
+                                               fup.who_stage_associated_oi                                              as WHOStagingOI,
                                                 null                                                                   as WABStage,
                                                 case fup.pregnancy_status
                                                     when 1065 then 'Yes'
@@ -2298,6 +2319,7 @@ pns.MaritalStatus
                                                                  'Kenya HMIS II' AS Project,
                                                                  id.identifier AS HtsNumber,
                                                                  ohpc.patient_id AS PartnerPatientPk,
+                                                                 ohpc.patient_related_to 		AS IndexPatientPk,
                                                                  ohpc.id AS PartnerPersonId,
                                                       YEAR(ohpc.date_created)-YEAR(ohpc.birth_date)  AS Age,
                                                                  ohpc.sex,
@@ -4933,438 +4955,488 @@ left join concept_name pnsApprocah ON pnsApprocah.concept_id = ohpc.pns_approach
  "|DWHStage|1|HtsPartnerNotificationServices|7|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
 ec3d7e40-bb10-11ea-b3de-0242ac130004|Migration|MGS|a6221860-0e85-11e8-ba89-0ed5f89f718b|"SELECT ID as MetricId,Dataset,Metric,MetricValue,Stage,SiteCode,Emr,FacilityName,'KenyaHMIS' as Project,CreateDate FROM DWAPI_Migration_Metrics"|MgsStage|1|MetricMigrationExtract|1|a6221aa6-0e85-11e8-ba89-0ed5f89f718b
 
-ec3d7e41-bb10-11ea-b3de-0242ac130004|Indicators|MTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select INDICATOR,CONVERT(INDICATORVALUE USING utf8) as 'INDICATORVALUE',INDICATORDATE from (
+ec3d7e41-bb10-11ea-b3de-0242ac130004|Indicators|MTS|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select INDICATOR,CONVERT(INDICATORVALUE USING utf8) as 'INDICATORVALUE',INDICATORDATE, SiteCode from (
 (
-        select 'TX_CURR'                                                                   AS 'INDICATOR',
-               count(distinct t.patient_id)                                                as 'INDICATORVALUE',
-               date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATORDATE'
-        from(
-            select fup.visit_date,fup.patient_id, max(e.visit_date) as enroll_date,
-                   greatest(max(e.visit_date), ifnull(max(date(e.transfer_in_date)),'0000-00-00')) as latest_enrolment_date,
-                   greatest(max(fup.visit_date), ifnull(max(d.visit_date),'0000-00-00')) as latest_vis_date,
-                   greatest(mid(max(concat(fup.visit_date,fup.next_appointment_date)),11), ifnull(max(d.visit_date),'0000-00-00')) as latest_tca,
-                   d.patient_id as disc_patient,
-                   d.effective_disc_date as effective_disc_date,
-                   max(d.visit_date) as date_discontinued,
-                   de.patient_id as started_on_drugs
-            from dwapi_etl.etl_patient_hiv_followup fup
-                   join dwapi_etl.etl_patient_demographics p on p.patient_id=fup.patient_id
-                   join dwapi_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id
-                   left outer join dwapi_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program='HIV' and date(date_started) <= date(date(last_day(date_sub(current_date(),interval 1 MONTH))))
-                   left outer JOIN
-                     (select patient_id, coalesce(date(effective_discontinuation_date),visit_date) visit_date,max(date(effective_discontinuation_date)) as effective_disc_date from dwapi_etl.etl_patient_program_discontinuation
-                      where date(visit_date) <= date(date(last_day(date_sub(current_date(),interval 1 MONTH))))
-                        and program_name='HIV' and patient_id
-                      group by patient_id
-                     ) d on d.patient_id = fup.patient_id
-            where fup.visit_date <= date(date(last_day(date_sub(current_date(),interval 1 MONTH))))
-            group by patient_id
-            having (started_on_drugs is not null and started_on_drugs <> '')
-               and
-                   (
-                       ((timestampdiff(DAY,date(latest_tca),date(date(last_day(date_sub(current_date(),interval 1 MONTH))))) <= 30 or timestampdiff(DAY,date(latest_tca),date(curdate())) <= 30) and
-                        ((date(d.effective_disc_date) > date(date(last_day(date_sub(current_date(),interval 1 MONTH)))) or date(enroll_date) > date(d.effective_disc_date)) or d.effective_disc_date is null))
-                         and
-                       (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or disc_patient is null)
-                       )
-            )t
+      select 'TX_CURR'                                                                   AS 'INDICATOR',
+             count(distinct t.patient_id)                                                as 'INDICATORVALUE',
+             date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATORDATE',
+             def.siteCode SiteCode
+      from(
+          select fup.visit_date,fup.patient_id, max(e.visit_date) as enroll_date,
+                 greatest(max(e.visit_date), ifnull(max(date(e.transfer_in_date)),'0000-00-00')) as latest_enrolment_date,
+                 greatest(max(fup.visit_date), ifnull(max(d.visit_date),'0000-00-00')) as latest_vis_date,
+                 greatest(mid(max(concat(fup.visit_date,fup.next_appointment_date)),11), ifnull(max(d.visit_date),'0000-00-00')) as latest_tca,
+                 d.patient_id as disc_patient,
+                 d.effective_disc_date as effective_disc_date,
+                 max(d.visit_date) as date_discontinued,
+                 de.patient_id as started_on_drugs
+          from dwapi_etl.etl_patient_hiv_followup fup
+                 join dwapi_etl.etl_patient_demographics p on p.patient_id=fup.patient_id
+                 join dwapi_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id
+                 left outer join dwapi_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program='HIV' and date(date_started) <= date(date(last_day(date_sub(current_date(),interval 1 MONTH))))
+                 left outer JOIN
+                   (select patient_id, coalesce(date(effective_discontinuation_date),visit_date) visit_date,max(date(effective_discontinuation_date)) as effective_disc_date from dwapi_etl.etl_patient_program_discontinuation
+                    where date(visit_date) <= date(date(last_day(date_sub(current_date(),interval 1 MONTH))))
+                      and program_name='HIV' and patient_id
+                    group by patient_id
+                   ) d on d.patient_id = fup.patient_id
+          where fup.visit_date <= date(date(last_day(date_sub(current_date(),interval 1 MONTH))))
+          group by patient_id
+          having (started_on_drugs is not null and started_on_drugs <> '')
+             and
+                 (
+                     ((timestampdiff(DAY,date(latest_tca),date(date(last_day(date_sub(current_date(),interval 1 MONTH))))) <= 30 or timestampdiff(DAY,date(latest_tca),date(curdate())) <= 30) and
+                      ((date(d.effective_disc_date) > date(date(last_day(date_sub(current_date(),interval 1 MONTH)))) or date(enroll_date) > date(d.effective_disc_date)) or d.effective_disc_date is null))
+                       and
+                     (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or disc_patient is null)
+                     )
+          )t
+            join kenyaemr_etl.etl_default_facility_info def
 )
 UNION
 (
-    select 'TX_NEW' as INDICATOR,count(net.patient_id) as INDICATORVALUE,date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATORDATE'
-    from (
-             select e.patient_id,e.date_started,
-                    d.visit_date as dis_date,
-                    if(d.visit_date is not null, 1, 0) as TOut,
-                    e.regimen, e.regimen_line, e.alternative_regimen,
-                    mid(max(concat(fup.visit_date,fup.next_appointment_date)),11) as latest_tca,
-                    max(if(enr.date_started_art_at_transferring_facility is not null and enr.facility_transferred_from is not null, 1, 0)) as TI_on_art,
-                    max(if(enr.transfer_in_date is not null, 1, 0)) as TIn,
-                    max(fup.visit_date) as latest_vis_date
-             from (select e.patient_id, min(e.date_started) as date_started,
-                          mid(min(concat(e.date_started,e.regimen_name)),11) as regimen,
-                          mid(min(concat(e.date_started,e.regimen_line)),11) as regimen_line,
-                          max(if(discontinued,1,0))as alternative_regimen
-                   from kenyaemr_etl.etl_drug_event e
-                            join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id
-                   where e.program = 'HIV'
-                   group by e.patient_id) e
-                      left outer join kenyaemr_etl.etl_patient_program_discontinuation d on d.patient_id=e.patient_id
-                      left outer join kenyaemr_etl.etl_hiv_enrollment enr on enr.patient_id=e.patient_id
-                      left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=e.patient_id
-             where date(e.date_started) between DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -1 MONTH) and date(last_day(date_sub(current_date(),interval 1 MONTH)))
-             group by e.patient_id
-             having TI_on_art=0
-         )net
+  select 'TX_NEW' as INDICATOR,count(net.patient_id) as INDICATORVALUE,date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATORDATE',
+  def.siteCode SiteCode
+  from (
+           select e.patient_id,e.date_started,
+                  d.visit_date as dis_date,
+                  if(d.visit_date is not null, 1, 0) as TOut,
+                  e.regimen, e.regimen_line, e.alternative_regimen,
+                  mid(max(concat(fup.visit_date,fup.next_appointment_date)),11) as latest_tca,
+                  max(if(enr.date_started_art_at_transferring_facility is not null and enr.facility_transferred_from is not null, 1, 0)) as TI_on_art,
+                  max(if(enr.transfer_in_date is not null, 1, 0)) as TIn,
+                  max(fup.visit_date) as latest_vis_date
+           from (select e.patient_id, min(e.date_started) as date_started,
+                        mid(min(concat(e.date_started,e.regimen_name)),11) as regimen,
+                        mid(min(concat(e.date_started,e.regimen_line)),11) as regimen_line,
+                        max(if(discontinued,1,0))as alternative_regimen
+                 from kenyaemr_etl.etl_drug_event e
+                          join kenyaemr_etl.etl_patient_demographics p on p.patient_id=e.patient_id
+                 where e.program = 'HIV'
+                 group by e.patient_id) e
+                    left outer join kenyaemr_etl.etl_patient_program_discontinuation d on d.patient_id=e.patient_id
+                    left outer join kenyaemr_etl.etl_hiv_enrollment enr on enr.patient_id=e.patient_id
+                    left outer join kenyaemr_etl.etl_patient_hiv_followup fup on fup.patient_id=e.patient_id
+           where date(e.date_started) between DATE_ADD(DATE_SUB(current_date(),INTERVAL DAYOFMONTH(current_date())-1 DAY),INTERVAL -1 MONTH) and date(last_day(date_sub(current_date(),interval 1 MONTH)))
+           group by e.patient_id
+           having TI_on_art=0
+       )net
+         join kenyaemr_etl.etl_default_facility_info def
 )
 UNION
 (
-    select 'HTS_TESTED'                                                                as 'INDICATOR',
-           count(distinct t.patient_id)                                                AS INDICATOR_VALUE,
-           date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'
-    from dwapi_etl.etl_hts_test t
-             inner join dwapi_etl.etl_patient_demographics d on d.patient_id = t.patient_id
-    where test_type = 1
-      and t.voided = 0
-      and t.visit_date between DATE_ADD(DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
-                                        MONTH)
-        and date(last_day(date_sub(current_date(), interval 1 MONTH)))
+  select 'HTS_TESTED'                                                                as 'INDICATOR',
+         count(distinct t.patient_id)                                                AS INDICATOR_VALUE,
+         date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE',
+         def.siteCode SiteCode
+  from dwapi_etl.etl_hts_test t
+           inner join dwapi_etl.etl_patient_demographics d on d.patient_id = t.patient_id
+             join kenyaemr_etl.etl_default_facility_info def
+  where test_type = 1
+    and t.voided = 0
+    and t.visit_date between DATE_ADD(DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
+                                      MONTH)
+      and date(last_day(date_sub(current_date(), interval 1 MONTH)))
 )
 UNION
 (
-        select 'HTS_TESTED_POS'                                                               AS 'INDICATOR',
-               count(distinct t.patient_id)                                                as 'INDICATOR_VALUE',
-               date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'
-        from dwapi_etl.etl_hts_test t
-                 inner join dwapi_etl.etl_patient_demographics d on d.patient_id = t.patient_id
-        where t.voided = 0
-          and date(t.visit_date) between DATE_ADD(DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY),
-                                                  INTERVAL -1
-                                                  MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))
-          and t.test_type = 1
-          and t.patient_given_result = 'Yes'
-          and t.final_test_result = 'Positive'
+      select 'HTS_TESTED_POS'                                                               AS 'INDICATOR',
+             count(distinct t.patient_id)                                                as 'INDICATOR_VALUE',
+             date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE',
+             def.siteCode SiteCode
+      from dwapi_etl.etl_hts_test t
+               inner join dwapi_etl.etl_patient_demographics d on d.patient_id = t.patient_id
+                 join kenyaemr_etl.etl_default_facility_info def
+      where t.voided = 0
+        and date(t.visit_date) between DATE_ADD(DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY),
+                                                INTERVAL -1
+                                                MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))
+        and t.test_type = 1
+        and t.patient_given_result = 'Yes'
+        and t.final_test_result = 'Positive'
 )
 UNION
 (
-    select 'HTS_LINKED'                                                                AS 'INDICATOR',
-           count(distinct t.patient_id)                                                as 'INDICATOR_VALUE',
-           date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'
-    from dwapi_etl.etl_hts_referral_and_linkage r
-             inner join dwapi_etl.etl_hts_test t on r.patient_id = t.patient_id and t.final_test_result = 'Positive'
-    where (r.ccc_number != '' or r.ccc_number IS NOT NULL)
-      and (r.facility_linked_to != '' or r.facility_linked_to IS NOT NULL)
-      and t.visit_date between DATE_ADD(DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
-                                        MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))
+  select 'HTS_LINKED'                                                                AS 'INDICATOR',
+         count(distinct t.patient_id)                                                as 'INDICATOR_VALUE',
+         date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE',
+         def.siteCode SiteCode
+  from dwapi_etl.etl_hts_referral_and_linkage r
+           inner join dwapi_etl.etl_hts_test t on r.patient_id = t.patient_id and t.final_test_result = 'Positive'
+             join kenyaemr_etl.etl_default_facility_info def
+  where (r.ccc_number != '' or r.ccc_number IS NOT NULL)
+    and (r.facility_linked_to != '' or r.facility_linked_to IS NOT NULL)
+    and t.visit_date between DATE_ADD(DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
+                                      MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))
 )
 UNION
 (
-    select  'RETENTION_ON_ART_12_MONTHS' as 'INDICATOR',count(net.patient_id) AS INDICATOR_VALUE,date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE'
-    from (select e.patient_id,
-                 e.date_started,
-                 d.visit_date                                                                      as dis_date,
-                 if(d.visit_date is not null and d.discontinuation_reason = 159492, 1, 0)          as TOut,
-                 d.date_died,
-                 mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11)                   as latest_tca,
-                 if(enr.transfer_in_date is not null, 1, 0)                                        as TIn,
-                 max(fup.visit_date)                                                               as latest_vis_date,
-                 DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                          day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1
-                          DAY)                                                                     as first_day_of_prev_month,
-                 date(last_day(date_sub(current_date(), interval 1 MONTH)))                        as last_day_of_prev_month,
-                 DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                                   day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY), INTERVAL -12
-                          MONTH)                                                                   as cohort_start_date,
-                 date(last_day(DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                                                 day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY),
-                                        INTERVAL -12 MONTH)))                                      as cohort_end_date
-          from (select e.patient_id, p.dob, p.Gender, min(e.date_started) as date_started
-                from dwapi_etl.etl_drug_event e
-                         join dwapi_etl.etl_patient_demographics p on p.patient_id = e.patient_id
-                where e.program = 'HIV'
-                group by e.patient_id) e
-                   left outer join dwapi_etl.etl_patient_program_discontinuation d on d.patient_id = e.patient_id and
-                                                                                      d.program_uuid =
-                                                                                      '2bdada65-4c72-4a48-8730-859890e25cee'
-                   left outer join dwapi_etl.etl_hiv_enrollment enr on enr.patient_id = e.patient_id
-                   left outer join dwapi_etl.etl_patient_hiv_followup fup on fup.patient_id = e.patient_id
-          where date(e.date_started) between DATE_ADD(
-                  DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                           day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY), INTERVAL -12 MONTH) and
-                    date(last_day(DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                                                    day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1
-                                                    DAY), INTERVAL -12 MONTH)))
-          group by e.patient_id
-          having (dis_date > date(last_day(date_sub(current_date(), interval 1 MONTH))) or dis_date is null or TOut = 0)
-             and (
-                  (date(latest_tca) > date(last_day(date_sub(current_date(), interval 1 MONTH))) and
-                   (date(latest_tca) > date(dis_date) or dis_date is null)) or
-                  (((date(latest_tca) between DATE_ADD(
-                          DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
-                          MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))) and
-                    (date(latest_tca) >= date(latest_vis_date)))) or
-                  (((date(latest_tca) between DATE_ADD(
-                          DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
-                          MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))) and
-                    (date(latest_vis_date) >= date(latest_tca)) or date(latest_tca) > curdate())) and
-                  (date(latest_tca) > date(dis_date) or dis_date is null)
-              )) net
-)
-UNION
-(
-    select  'RETENTION_ON_ART_VL_1000_12_MONTHS' as 'INDICATOR',count(net.patient_id) AS INDICATOR_VALUE,date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE'
-    from (select e.patient_id,
-                 e.date_started,
-                 d.visit_date                                                                      as dis_date,
-                 if(d.visit_date is not null and d.discontinuation_reason = 159492, 1, 0)          as TOut,
-                 d.date_died,
-                 mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11)                   as latest_tca,
-                 if(enr.transfer_in_date is not null, 1, 0)                                        as TIn,
-                 max(fup.visit_date)                                                               as latest_vis_date,
-                 DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                          day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1
-                          DAY)                                                                     as first_day_of_prev_month,
-                 DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                                   day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY), INTERVAL -12
-                          MONTH)                                                                   as cohort_start_date,
-                 date(last_day(DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                                                 day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY),
-                                        INTERVAL -12 MONTH)))                                      as cohort_end_date
-          from (select e.patient_id, p.dob, p.Gender, min(e.date_started) as date_started
-                from dwapi_etl.etl_drug_event e
-                         join dwapi_etl.etl_patient_demographics p on p.patient_id = e.patient_id
-                where e.program = 'HIV'
-                group by e.patient_id) e
-                   left outer join dwapi_etl.etl_patient_program_discontinuation d on d.patient_id = e.patient_id and
-                                                                                      d.program_uuid =
-                                                                                      '2bdada65-4c72-4a48-8730-859890e25cee'
-                   left outer join dwapi_etl.etl_hiv_enrollment enr on enr.patient_id = e.patient_id
-                   left outer join dwapi_etl.etl_patient_hiv_followup fup on fup.patient_id = e.patient_id
-                   inner join(select patient_id,
-                                     max(visit_date)                                                                      as vl_date,
-                                     if(mid(max(concat(visit_date, lab_test)), 11) = 856,
-                                        mid(max(concat(visit_date, test_result)), 11), if(
-                                                        mid(max(concat(visit_date, lab_test)), 11) = 1305 and
-                                                        mid(max(concat(visit_date, test_result)), 11) = 1302, 'LDL',
-                                                        ''))                                                              as vl_result,
-                                     mid(max(concat(visit_date, urgency)), 11)                                            as urgency,
-                                     DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                                                       day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1
-                                                       DAY), INTERVAL -12 MONTH),
-                                     date(date(last_day(date_sub(current_date(), interval 1 MONTH))))
-                              from dwapi_etl.etl_laboratory_extract
-                              where lab_test in (1305, 856)
-                                and visit_date between DATE_ADD(
-                                      DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+  select  'RETENTION_ON_ART_12_MONTHS' as 'INDICATOR',count(net.patient_id) AS INDICATOR_VALUE,date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE',
+  def.siteCode SiteCode
+  from (select e.patient_id,
+               e.date_started,
+               d.visit_date                                                                      as dis_date,
+               if(d.visit_date is not null and d.discontinuation_reason = 159492, 1, 0)          as TOut,
+               d.date_died,
+               mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11)                   as latest_tca,
+               if(enr.transfer_in_date is not null, 1, 0)                                        as TIn,
+               max(fup.visit_date)                                                               as latest_vis_date,
+               DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                        day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1
+                        DAY)                                                                     as first_day_of_prev_month,
+               date(last_day(date_sub(current_date(), interval 1 MONTH)))                        as last_day_of_prev_month,
+               DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                 day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY), INTERVAL -12
+                        MONTH)                                                                   as cohort_start_date,
+               date(last_day(DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
                                                day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY),
-                                      INTERVAL -12 MONTH)
-                                  and date(date(last_day(date_sub(current_date(), interval 1 MONTH))))
-                              group by patient_id
-                              having mid(max(concat(visit_date, test_result)), 11) is not null
-                                  or mid(max(concat(visit_date, test_result)), 11) <> '') vl on e.patient_id = vl.patient_id
-          where date(e.date_started) between DATE_ADD(
-                  DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                           day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY), INTERVAL -12 MONTH) and
-              date(last_day(DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                                              day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY),
-                                     INTERVAL -12 MONTH)))
-            and (vl.vl_result < 1000 or vl.vl_result = 'LDL')
-          group by e.patient_id
-          having (dis_date > date(last_day(date_sub(current_date(), interval 1 MONTH))) or dis_date is null or TOut = 0)
-             and (
-                  (date(latest_tca) > date(last_day(date_sub(current_date(), interval 1 MONTH))) and
-                   (date(latest_tca) > date(dis_date) or dis_date is null)) or
-                  (((date(latest_tca) between DATE_ADD(
-                          DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
-                          MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))) and
-                    (date(latest_tca) >= date(latest_vis_date)))) or
-                  (((date(latest_tca) between DATE_ADD(
-                          DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
-                          MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))) and
-                    (date(latest_vis_date) >= date(latest_tca)) or date(latest_tca) > curdate())) and
-                  (date(latest_tca) > date(dis_date) or dis_date is null)
-              )) net
+                                      INTERVAL -12 MONTH)))                                      as cohort_end_date
+        from (select e.patient_id, p.dob, p.Gender, min(e.date_started) as date_started
+              from dwapi_etl.etl_drug_event e
+                       join dwapi_etl.etl_patient_demographics p on p.patient_id = e.patient_id
+              where e.program = 'HIV'
+              group by e.patient_id) e
+                 left outer join dwapi_etl.etl_patient_program_discontinuation d on d.patient_id = e.patient_id and
+                                                                                    d.program_uuid =
+                                                                                    '2bdada65-4c72-4a48-8730-859890e25cee'
+                 left outer join dwapi_etl.etl_hiv_enrollment enr on enr.patient_id = e.patient_id
+                 left outer join dwapi_etl.etl_patient_hiv_followup fup on fup.patient_id = e.patient_id
+        where date(e.date_started) between DATE_ADD(
+                DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                         day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY), INTERVAL -12 MONTH) and
+                  date(last_day(DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                                  day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1
+                                                  DAY), INTERVAL -12 MONTH)))
+        group by e.patient_id
+        having (dis_date > date(last_day(date_sub(current_date(), interval 1 MONTH))) or dis_date is null or TOut = 0)
+           and (
+                (date(latest_tca) > date(last_day(date_sub(current_date(), interval 1 MONTH))) and
+                 (date(latest_tca) > date(dis_date) or dis_date is null)) or
+                (((date(latest_tca) between DATE_ADD(
+                        DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
+                        MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))) and
+                  (date(latest_tca) >= date(latest_vis_date)))) or
+                (((date(latest_tca) between DATE_ADD(
+                        DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
+                        MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))) and
+                  (date(latest_vis_date) >= date(latest_tca)) or date(latest_tca) > curdate())) and
+                (date(latest_tca) > date(dis_date) or dis_date is null)
+            )) net
+              join kenyaemr_etl.etl_default_facility_info def
+)
+UNION
+(
+  select  'RETENTION_ON_ART_VL_1000_12_MONTHS' as 'INDICATOR',count(net.patient_id) AS INDICATOR_VALUE,date_format(last_day(date_sub(current_date(),interval 1 MONTH)),'%Y%b%d') as 'INDICATOR_DATE',
+  def.siteCode SiteCode
+  from (select e.patient_id,
+               e.date_started,
+               d.visit_date                                                                      as dis_date,
+               if(d.visit_date is not null and d.discontinuation_reason = 159492, 1, 0)          as TOut,
+               d.date_died,
+               mid(max(concat(fup.visit_date, fup.next_appointment_date)), 11)                   as latest_tca,
+               if(enr.transfer_in_date is not null, 1, 0)                                        as TIn,
+               max(fup.visit_date)                                                               as latest_vis_date,
+               DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                        day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1
+                        DAY)                                                                     as first_day_of_prev_month,
+               DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                 day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY), INTERVAL -12
+                        MONTH)                                                                   as cohort_start_date,
+               date(last_day(DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                               day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY),
+                                      INTERVAL -12 MONTH)))                                      as cohort_end_date
+        from (select e.patient_id, p.dob, p.Gender, min(e.date_started) as date_started
+              from dwapi_etl.etl_drug_event e
+                       join dwapi_etl.etl_patient_demographics p on p.patient_id = e.patient_id
+              where e.program = 'HIV'
+              group by e.patient_id) e
+                 left outer join dwapi_etl.etl_patient_program_discontinuation d on d.patient_id = e.patient_id and
+                                                                                    d.program_uuid =
+                                                                                    '2bdada65-4c72-4a48-8730-859890e25cee'
+                 left outer join dwapi_etl.etl_hiv_enrollment enr on enr.patient_id = e.patient_id
+                 left outer join dwapi_etl.etl_patient_hiv_followup fup on fup.patient_id = e.patient_id
+                 inner join(select patient_id,
+                                   max(visit_date)                                                                      as vl_date,
+                                   if(mid(max(concat(visit_date, lab_test)), 11) = 856,
+                                      mid(max(concat(visit_date, test_result)), 11), if(
+                                                      mid(max(concat(visit_date, lab_test)), 11) = 1305 and
+                                                      mid(max(concat(visit_date, test_result)), 11) = 1302, 'LDL',
+                                                      ''))                                                              as vl_result,
+                                   mid(max(concat(visit_date, urgency)), 11)                                            as urgency,
+                                   DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                                     day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1
+                                                     DAY), INTERVAL -12 MONTH),
+                                   date(date(last_day(date_sub(current_date(), interval 1 MONTH))))
+                            from dwapi_etl.etl_laboratory_extract
+                            where lab_test in (1305, 856)
+                              and visit_date between DATE_ADD(
+                                    DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                             day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY),
+                                    INTERVAL -12 MONTH)
+                                and date(date(last_day(date_sub(current_date(), interval 1 MONTH))))
+                            group by patient_id
+                            having mid(max(concat(visit_date, test_result)), 11) is not null
+                                or mid(max(concat(visit_date, test_result)), 11) <> '') vl on e.patient_id = vl.patient_id
+        where date(e.date_started) between DATE_ADD(
+                DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                         day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY), INTERVAL -12 MONTH) and
+            date(last_day(DATE_ADD(DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                            day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY),
+                                   INTERVAL -12 MONTH)))
+          and (vl.vl_result < 1000 or vl.vl_result = 'LDL')
+        group by e.patient_id
+        having (dis_date > date(last_day(date_sub(current_date(), interval 1 MONTH))) or dis_date is null or TOut = 0)
+           and (
+                (date(latest_tca) > date(last_day(date_sub(current_date(), interval 1 MONTH))) and
+                 (date(latest_tca) > date(dis_date) or dis_date is null)) or
+                (((date(latest_tca) between DATE_ADD(
+                        DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
+                        MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))) and
+                  (date(latest_tca) >= date(latest_vis_date)))) or
+                (((date(latest_tca) between DATE_ADD(
+                        DATE_SUB(current_date(), INTERVAL DAYOFMONTH(current_date()) - 1 DAY), INTERVAL -1
+                        MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))) and
+                  (date(latest_vis_date) >= date(latest_tca)) or date(latest_tca) > curdate())) and
+                (date(latest_tca) > date(dis_date) or dis_date is null)
+            )) net
+              join kenyaemr_etl.etl_default_facility_info def
 
 )
 UNION
 (
-  select 'MMD' AS 'INDICATOR', -99 as 'INDICATORVALUE',date_format(current_date(),'%Y%b%d') as 'INDICATORDATE'
+select 'MMD' AS 'INDICATOR', -99 as 'INDICATORVALUE',date_format(current_date(),'%Y%b%d') as 'INDICATORDATE', def.siteCode SiteCode
+  from kenyaemr_etl.etl_default_facility_info def
 )
 UNION
 (
-        select 'HTS_INDEX'                                                                 AS 'INDICATOR',
-               count(distinct a.patient_id)                                                as 'INDICATOR_VALUE',
-               date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'
-        from (select hts.patient_id,
-                     hts.final_test_result,
-                     hts.visit_date,
-                     hts.test_type,
-                     pc.patient_id as contact,
-                     r.person_a,
-                     r.person_b
-              from (select hts.patient_id, hts.final_test_result, hts.visit_date, hts.test_type
-                    from dwapi_etl.etl_hts_test hts
-                    where hts.test_strategy = 161557
-                      and hts.patient_given_result = 'Yes'
-                      and hts.voided = 0
-                      and hts.visit_date
-                        between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                                         day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY)
-                        and date(last_day(date_sub(current_date(), interval 1 MONTH)))
-                    group by hts.patient_id) hts
-                       left JOIN
-                   (select patient_id, id
-                    from dwapi_etl.etl_patient_contact c
-                    where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
-                      and c.patient_id is not NULL
-                      and c.voided = 0
-                    group by c.patient_id) pc on hts.patient_id = pc.patient_id
-                       left join (select r.person_a, r.person_b
-                                  from openmrs.relationship r
-                                           inner join openmrs.relationship_type t
-                                                      on r.relationship = t.relationship_type_id and t.uuid in
-                                                                                                     ('8d91a01c-c2cc-11de-8d13-0010c6dffd0f',
-                                                                                                      '8d91a210-c2cc-11de-8d13-0010c6dffd0f',
-                                                                                                      'd6895098-5d8d-11e3-94ee-b35a4132a5e3',
-                                                                                                      '007b765f-6725-4ae9-afee-9966302bace4',
-                                                                                                      '2ac0d501-eadc-4624-b982-563c70035d46'
-                                                                                                         )) r
-                                 on hts.patient_id = r.person_a or hts.patient_id = r.person_b
-              where r.person_a is not null
-                 or pc.patient_id
-                 or r.person_b is not null is not null) a
+      select 'HTS_INDEX'                                                                 AS 'INDICATOR',
+             count(distinct a.patient_id)                                                as 'INDICATOR_VALUE',
+             date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE',
+             def.siteCode SiteCode
+      from (select hts.patient_id,
+                   hts.final_test_result,
+                   hts.visit_date,
+                   hts.test_type,
+                   pc.patient_id as contact,
+                   r.person_a,
+                   r.person_b
+            from (select hts.patient_id, hts.final_test_result, hts.visit_date, hts.test_type
+                  from dwapi_etl.etl_hts_test hts
+                  where hts.test_strategy = 161557
+                    and hts.patient_given_result = 'Yes'
+                    and hts.voided = 0
+                    and hts.visit_date
+                      between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                       day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY)
+                      and date(last_day(date_sub(current_date(), interval 1 MONTH)))
+                  group by hts.patient_id) hts
+                     left JOIN
+                 (select patient_id, id
+                  from dwapi_etl.etl_patient_contact c
+                  where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
+                    and c.patient_id is not NULL
+                    and c.voided = 0
+                  group by c.patient_id) pc on hts.patient_id = pc.patient_id
+                     left join (select r.person_a, r.person_b
+                                from openmrs.relationship r
+                                         inner join openmrs.relationship_type t
+                                                    on r.relationship = t.relationship_type_id and t.uuid in
+                                                                                                   ('8d91a01c-c2cc-11de-8d13-0010c6dffd0f',
+                                                                                                    '8d91a210-c2cc-11de-8d13-0010c6dffd0f',
+                                                                                                    'd6895098-5d8d-11e3-94ee-b35a4132a5e3',
+                                                                                                    '007b765f-6725-4ae9-afee-9966302bace4',
+                                                                                                    '2ac0d501-eadc-4624-b982-563c70035d46'
+                                                                                                       )) r
+                               on hts.patient_id = r.person_a or hts.patient_id = r.person_b
+            where r.person_a is not null
+               or pc.patient_id
+               or r.person_b is not null is not null) a
+                 join kenyaemr_etl.etl_default_facility_info def
 )
 UNION
 (
-        select 'TX_PVLS'                                                                   AS 'INDICATOR',
-               count(distinct a.patient_id)                                                as 'INDICATOR_VALUE',
-               date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'
-                       from(select t.patient_id,vl.vl_date,vl.vl_result,vl.urgency from (
-                                      select fup.visit_date,fup.patient_id, max(e.visit_date) as enroll_date,
-                                             greatest(max(e.visit_date), ifnull(max(date(e.transfer_in_date)),'0000-00-00')) as latest_enrolment_date,
-                                             greatest(max(fup.visit_date), ifnull(max(d.visit_date),'0000-00-00')) as latest_vis_date,
-                                             greatest(mid(max(concat(fup.visit_date,fup.next_appointment_date)),11), ifnull(max(d.visit_date),'0000-00-00')) as latest_tca,
-                                             d.patient_id as disc_patient,
-                                             d.effective_disc_date as effective_disc_date,
-                                             max(d.visit_date) as date_discontinued,
-                                             de.patient_id as started_on_drugs,
-                                             de.date_started
-                                      from dwapi_etl.etl_patient_hiv_followup fup
-                                             join dwapi_etl.etl_patient_demographics p on p.patient_id=fup.patient_id
-                                             join dwapi_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id
-                                             left outer join dwapi_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program='HIV' and date(date_started) <= date(last_day(date_sub(current_date(), interval 1 MONTH)))
-                                             left outer JOIN
-                                               (select patient_id, coalesce(date(effective_discontinuation_date),visit_date) visit_date,max(date(effective_discontinuation_date)) as effective_disc_date from dwapi_etl.etl_patient_program_discontinuation
-                                                where date(visit_date) <= date(last_day(date_sub(current_date(), interval 1 MONTH))) and program_name='HIV'
-                                                group by patient_id
-                                               ) d on d.patient_id = fup.patient_id
-                                      where fup.visit_date <= date(last_day(date_sub(current_date(), interval 1 MONTH)))
-                                      group by patient_id
-                                      having (started_on_drugs is not null and started_on_drugs <> '') and (
-                                          (
-                                              ((timestampdiff(DAY,date(latest_tca),date(last_day(date_sub(current_date(), interval 1 MONTH)))) <= 30 or timestampdiff(DAY,date(latest_tca),date(curdate())) <= 30) and ((date(d.effective_disc_date) > date(last_day(date_sub(current_date(), interval 1 MONTH))) or date(enroll_date) > date(d.effective_disc_date)) or d.effective_disc_date is null))
-                                                and (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or disc_patient is null)
-                                              )
-                                          ) order by date_started desc
-                                      ) t
-                                        inner join (
-                                                   select
-                                                          b.patient_id,
-                                                          max(b.visit_date) as vl_date,
-                                                          date_sub(date(last_day(date_sub(current_date(), interval 1 MONTH))) , interval 12 MONTH),
-                                                          mid(max(concat(b.visit_date,b.lab_test)),11) as lab_test,
-                                                          if(mid(max(concat(b.visit_date,b.lab_test)),11) = 856, mid(max(concat(b.visit_date,b.test_result)),11), if(mid(max(concat(b.visit_date,b.lab_test)),11)=1305 and mid(max(concat(visit_date,test_result)),11) = 1302, 'LDL','')) as vl_result,
-                                                          mid(max(concat(b.visit_date,b.urgency)),11) as urgency
-                                                   from (select x.patient_id as patient_id,x.visit_date as visit_date,x.lab_test as lab_test, x.test_result as test_result,urgency as urgency
-                                                         from dwapi_etl.etl_laboratory_extract x where x.lab_test in (1305,856)
-                                                         group by x.patient_id,x.visit_date order by visit_date desc)b
-                                                   group by patient_id
-                                                   having max(visit_date) between
-                                                              date_sub(date(last_day(date_sub(current_date(), interval 1 MONTH))), interval 12
-                                                                       MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))
-                                                   )vl
-                                          on t.patient_id = vl.patient_id  where (vl_result < 1000 or vl_result='LDL'))a
+      select 'TX_PVLS'                                                                   AS 'INDICATOR',
+             count(distinct a.patient_id)                                                as 'INDICATOR_VALUE',
+             date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE',
+             def.siteCode SiteCode
+                     from(select t.patient_id,vl.vl_date,vl.vl_result,vl.urgency from (
+                                    select fup.visit_date,fup.patient_id, max(e.visit_date) as enroll_date,
+                                           greatest(max(e.visit_date), ifnull(max(date(e.transfer_in_date)),'0000-00-00')) as latest_enrolment_date,
+                                           greatest(max(fup.visit_date), ifnull(max(d.visit_date),'0000-00-00')) as latest_vis_date,
+                                           greatest(mid(max(concat(fup.visit_date,fup.next_appointment_date)),11), ifnull(max(d.visit_date),'0000-00-00')) as latest_tca,
+                                           d.patient_id as disc_patient,
+                                           d.effective_disc_date as effective_disc_date,
+                                           max(d.visit_date) as date_discontinued,
+                                           de.patient_id as started_on_drugs,
+                                           de.date_started
+                                    from dwapi_etl.etl_patient_hiv_followup fup
+                                           join dwapi_etl.etl_patient_demographics p on p.patient_id=fup.patient_id
+                                           join dwapi_etl.etl_hiv_enrollment e on fup.patient_id=e.patient_id
+                                           left outer join dwapi_etl.etl_drug_event de on e.patient_id = de.patient_id and de.program='HIV' and date(date_started) <= date(last_day(date_sub(current_date(), interval 1 MONTH)))
+                                           left outer JOIN
+                                             (select patient_id, coalesce(date(effective_discontinuation_date),visit_date) visit_date,max(date(effective_discontinuation_date)) as effective_disc_date from dwapi_etl.etl_patient_program_discontinuation
+                                              where date(visit_date) <= date(last_day(date_sub(current_date(), interval 1 MONTH))) and program_name='HIV'
+                                              group by patient_id
+                                             ) d on d.patient_id = fup.patient_id
+                                    where fup.visit_date <= date(last_day(date_sub(current_date(), interval 1 MONTH)))
+                                    group by patient_id
+                                    having (started_on_drugs is not null and started_on_drugs <> '') and (
+                                        (
+                                            ((timestampdiff(DAY,date(latest_tca),date(last_day(date_sub(current_date(), interval 1 MONTH)))) <= 30 or timestampdiff(DAY,date(latest_tca),date(curdate())) <= 30) and ((date(d.effective_disc_date) > date(last_day(date_sub(current_date(), interval 1 MONTH))) or date(enroll_date) > date(d.effective_disc_date)) or d.effective_disc_date is null))
+                                              and (date(latest_vis_date) >= date(date_discontinued) or date(latest_tca) >= date(date_discontinued) or disc_patient is null)
+                                            )
+                                        ) order by date_started desc
+                                    ) t
+                                      inner join (
+                                                 select
+                                                        b.patient_id,
+                                                        max(b.visit_date) as vl_date,
+                                                        date_sub(date(last_day(date_sub(current_date(), interval 1 MONTH))) , interval 12 MONTH),
+                                                        mid(max(concat(b.visit_date,b.lab_test)),11) as lab_test,
+                                                        if(mid(max(concat(b.visit_date,b.lab_test)),11) = 856, mid(max(concat(b.visit_date,b.test_result)),11), if(mid(max(concat(b.visit_date,b.lab_test)),11)=1305 and mid(max(concat(visit_date,test_result)),11) = 1302, 'LDL','')) as vl_result,
+                                                        mid(max(concat(b.visit_date,b.urgency)),11) as urgency
+                                                 from (select x.patient_id as patient_id,x.visit_date as visit_date,x.lab_test as lab_test, x.test_result as test_result,urgency as urgency
+                                                       from dwapi_etl.etl_laboratory_extract x where x.lab_test in (1305,856)
+                                                       group by x.patient_id,x.visit_date order by visit_date desc)b
+                                                 group by patient_id
+                                                 having max(visit_date) between
+                                                            date_sub(date(last_day(date_sub(current_date(), interval 1 MONTH))), interval 12
+                                                                     MONTH) and date(last_day(date_sub(current_date(), interval 1 MONTH)))
+                                                 )vl
+                                        on t.patient_id = vl.patient_id  where (vl_result < 1000 or vl_result='LDL'))a
+                                          join kenyaemr_etl.etl_default_facility_info def
 )
 UNION
 (
-        select 'HTS_INDEX_POS'                                                             AS 'INDICATOR',
-               count(distinct a.patient_id)                                                as 'INDICATOR_VALUE',
-               date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE'
-        from (select hts.patient_id,
-                     hts.final_test_result,
-                     hts.visit_date,
-                     hts.test_type,
-                     pc.patient_id as contact,
-                     r.person_a,
-                     r.person_b
-              from (select hts.patient_id, hts.final_test_result, hts.visit_date, hts.test_type
-                    from dwapi_etl.etl_hts_test hts
-                    where hts.test_strategy = 161557
-                      and hts.final_test_result = 'Positive'
-                      and hts.patient_given_result = 'Yes'
-                      and hts.patient_given_result = 'Yes'
-                      and hts.voided = 0
-                      and hts.visit_date
-                        between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-                                         day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY)
-                        and date(last_day(date_sub(current_date(), interval 1 MONTH)))
-                    group by hts.patient_id) hts
-                       left JOIN
-                   (select patient_id, id
-                    from dwapi_etl.etl_patient_contact c
-                    where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
-                      and c.patient_id is not NULL
-                      and c.voided = 0
-                    group by c.patient_id) pc on hts.patient_id = pc.patient_id
-                       left join (select r.person_a, r.person_b
-                                  from openmrs.relationship r
-                                           inner join openmrs.relationship_type t
-                                                      on r.relationship = t.relationship_type_id and t.uuid in
-                                                                                                     ('8d91a01c-c2cc-11de-8d13-0010c6dffd0f',
-                                                                                                      '8d91a210-c2cc-11de-8d13-0010c6dffd0f',
-                                                                                                      'd6895098-5d8d-11e3-94ee-b35a4132a5e3',
-                                                                                                      '007b765f-6725-4ae9-afee-9966302bace4',
-                                                                                                      '2ac0d501-eadc-4624-b982-563c70035d46'
-                                                                                                         )) r
-                                 on hts.patient_id = r.person_a or hts.patient_id = r.person_b
-              where r.person_a is not null
-                 or pc.patient_id
-                 or r.person_b is not null is not null) a
+      select 'HTS_INDEX_POS'                                                             AS 'INDICATOR',
+             count(distinct a.patient_id)                                                as 'INDICATOR_VALUE',
+             date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as 'INDICATOR_DATE',
+             def.siteCode SiteCode
+      from (select hts.patient_id,
+                   hts.final_test_result,
+                   hts.visit_date,
+                   hts.test_type,
+                   pc.patient_id as contact,
+                   r.person_a,
+                   r.person_b
+            from (select hts.patient_id, hts.final_test_result, hts.visit_date, hts.test_type
+                  from dwapi_etl.etl_hts_test hts
+                  where hts.test_strategy = 161557
+                    and hts.final_test_result = 'Positive'
+                    and hts.patient_given_result = 'Yes'
+                    and hts.patient_given_result = 'Yes'
+                    and hts.voided = 0
+                    and hts.visit_date
+                      between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+                                       day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY)
+                      and date(last_day(date_sub(current_date(), interval 1 MONTH)))
+                  group by hts.patient_id) hts
+                     left JOIN
+                 (select patient_id, id
+                  from dwapi_etl.etl_patient_contact c
+                  where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
+                    and c.patient_id is not NULL
+                    and c.voided = 0
+                  group by c.patient_id) pc on hts.patient_id = pc.patient_id
+                     left join (select r.person_a, r.person_b
+                                from openmrs.relationship r
+                                         inner join openmrs.relationship_type t
+                                                    on r.relationship = t.relationship_type_id and t.uuid in
+                                                                                                   ('8d91a01c-c2cc-11de-8d13-0010c6dffd0f',
+                                                                                                    '8d91a210-c2cc-11de-8d13-0010c6dffd0f',
+                                                                                                    'd6895098-5d8d-11e3-94ee-b35a4132a5e3',
+                                                                                                    '007b765f-6725-4ae9-afee-9966302bace4',
+                                                                                                    '2ac0d501-eadc-4624-b982-563c70035d46'
+                                                                                                       )) r
+                               on hts.patient_id = r.person_a or hts.patient_id = r.person_b
+            where r.person_a is not null
+               or pc.patient_id
+               or r.person_b is not null is not null) a
+                 join kenyaemr_etl.etl_default_facility_info def
 )
 UNION
 (
-			select 'TX_RTT' AS 'INDICATOR', -99 as 'INDICATORVALUE',date_format(current_date(),'%Y%b%d') as 'INDICATORDATE'
+        select 'TX_RTT' AS 'INDICATOR', -99 as 'INDICATORVALUE',date_format(current_date(),'%Y%b%d') as 'INDICATORDATE',def.siteCode SiteCode
+            from kenyaemr_etl.etl_default_facility_info def
 )
 UNION
 (
-   	select 'TX_ML' AS 'INDICATOR', -99 as 'INDICATORVALUE',date_format(current_date(),'%Y%b%d') as 'INDICATORDATE'
+    select 'TX_ML' AS 'INDICATOR', -99 as 'INDICATORVALUE',date_format(current_date(),'%Y%b%d') as 'INDICATORDATE', def.siteCode SiteCode
+    from kenyaemr_etl.etl_default_facility_info def
 )
 UNION
 (
-			select 'LAST_ENCOUNTER_CREATE_DATE' AS 'INDICATOR', max(e.date_created) as 'INDICATORVALUE',date_format(current_date(),'%Y%b%d') as 'INDICATORDATE'
-			from openmrs.encounter e
+        select 'LAST_ENCOUNTER_CREATE_DATE' AS 'INDICATOR', max(e.date_created) as 'INDICATORVALUE',date_format(current_date(),'%Y%b%d') as 'INDICATORDATE',
+          def.siteCode SiteCode
+        from openmrs.encounter e
+            join kenyaemr_etl.etl_default_facility_info def
 )
 UNION
 (
-			select 'MFL_CODE' as 'INDICATOR',CONCAT(li.value_reference,' | ',l.name)   as 'INDICATORVALUE', date_format(min(pi.date_created),'%Y%b%d') as 'INDICATORDATE'
-			from openmrs.patient_identifier pi inner join openmrs.location_attribute li on pi.location_id = li.location_id left join location l on pi.location_id=l.location_id
-			where pi.voided=0
-			group by li.value_reference
+        select 'MFL_CODE' as 'INDICATOR',CONCAT(li.value_reference,' | ',l.name)   as 'INDICATORVALUE', date_format(min(pi.date_created),'%Y%b%d') as 'INDICATORDATE',
+          def.siteCode SiteCode
+        from openmrs.patient_identifier pi inner join openmrs.location_attribute li on pi.location_id = li.location_id left join location l on pi.location_id=l.location_id
+          join kenyaemr_etl.etl_default_facility_info def
+          where pi.voided=0
+        group by li.value_reference
 )
 UNION
 (
-    SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
-           stop_time                        as 'INDICATORVALUE',
-           DATE_FORMAT(stop_time, '%Y%b%d') as 'INDICATORMONTH'
-    FROM kenyaemr_etl.etl_script_status s
-    where s.error is null
-      and script_name = 'population_of_dwapi_tables'
-    order by INDICATORVALUE desc
-    limit 1
+        select 'SITECODE' as 'INDICATOR', li.value_reference   as 'INDICATORVALUE', date_format(min(pi.date_created),'%Y%b%d') as 'INDICATORDATE',
+          def.siteCode SiteCode
+        from openmrs.patient_identifier pi inner join openmrs.location_attribute li on pi.location_id = li.location_id left join location l on pi.location_id=l.location_id
+          join kenyaemr_etl.etl_default_facility_info def
+          where pi.voided=0
+        group by li.value_reference
+)
+UNION
+(
+        select 'SITENAME' as 'INDICATOR', l.name   as 'INDICATORVALUE', date_format(min(pi.date_created),'%Y%b%d') as 'INDICATORDATE',
+          def.siteCode SiteCode
+        from openmrs.patient_identifier pi inner join openmrs.location_attribute li on pi.location_id = li.location_id left join location l on pi.location_id=l.location_id
+          join kenyaemr_etl.etl_default_facility_info def
+          where pi.voided=0
+        group by li.value_reference
+)
+UNION
+(
+  SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
+         stop_time                        as 'INDICATORVALUE',
+         DATE_FORMAT(stop_time, '%Y%b%d') as 'INDICATORMONTH',
+         def.siteCode SiteCode
+  FROM kenyaemr_etl.etl_script_status s
+  join kenyaemr_etl.etl_default_facility_info def
+  where s.error is null
+    and script_name = 'population_of_dwapi_tables'
+  order by INDICATORVALUE desc
+  limit 1
 )
 UNION(
-          select 'DB_STATE' as INDICATOR,
-          if(c.current_visits > floor(c.avg_visits/2), 'UP_TO_DATE', 'OUTDATED') as INDICATORVALUE,
-          date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as INDICATORDATE
-          from (select a.current_visits, b.avg_visits, b.followup_enc_since_April, b.months_since_april
-          from (select count(hv.encounter_id) as current_visits
-          from kenyaemr_etl.etl_patient_hiv_followup hv
-          where hv.visit_date between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-          day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) and date(date(last_day(date_sub(current_date(),interval 1 MONTH)))) ) a
-          join
-          (select count(hv.encounter_id) as followup_enc_since_April,
-          timestampdiff(MONTH, '2022-04-01', DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-          day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) )  months_since_april,
-          floor(count(hv.encounter_id) /
-          (timestampdiff(MONTH, '2022-04-01', DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-          day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) ) +
-          1)) as avg_visits,
-          last_day(date_sub(CURRENT_DATE, interval 1 MONTH))
-          from kenyaemr_etl.etl_patient_hiv_followup hv
-          where hv.visit_date between '2022-04-01' and
-          DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
-          day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) ) b) c
-)
+        select 'DB_STATE' as INDICATOR,
+        if(c.current_visits > floor(c.avg_visits/2), 'DATA_ALIGNED', 'MISALIGNED') as INDICATORVALUE,
+        date_format(last_day(date_sub(current_date(), interval 1 MONTH)), '%Y%b%d') as INDICATORDATE,
+        def.siteCode SiteCode
+        from (select a.current_visits, b.avg_visits, b.followup_enc_since_April, b.months_since_april
+        from (select count(hv.encounter_id) as current_visits
+        from kenyaemr_etl.etl_patient_hiv_followup hv
+        where hv.visit_date between DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+        day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) and date(date(last_day(date_sub(current_date(),interval 1 MONTH)))) ) a
+        join
+        (select count(hv.encounter_id) as followup_enc_since_April,
+        timestampdiff(MONTH, '2022-04-01', DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+        day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) )  months_since_april,
+        floor(count(hv.encounter_id) /
+        (timestampdiff(MONTH, '2022-04-01', DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+        day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) ) +
+        1)) as avg_visits,
+        last_day(date_sub(CURRENT_DATE, interval 1 MONTH))
+        from kenyaemr_etl.etl_patient_hiv_followup hv
+        where hv.visit_date between '2022-04-01' and
+        DATE_SUB(date(last_day(date_sub(current_date(), interval 1 MONTH))), INTERVAL
+        day(date(last_day(date_sub(current_date(), interval 1 MONTH)))) - 1 DAY) ) b) c
+                            join kenyaemr_etl.etl_default_facility_info def
+
+        )
 )x"|Indicator|1|IndicatorExtract|1|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 
@@ -5407,7 +5479,14 @@ UNION(
                                                              when 141623 then 'Dyslipidemia'
                                                              end SEPARATOR
                                                          '|')                                         as ChronicIllness,
-                                            group_concat(ci.chronic_illness_onset_date SEPARATOR '|') as ChronicOnsetDate,
+                                            group_concat(CASE ci.is_chronic_illness_controlled 
+                                                 when 1065 then 'Yes'
+                                                 when 1066 then 'No'  
+                                                 else 'N/A'
+                                                 end SEPARATOR '|' )			                    as Controlled,
+                                         group_concat(case ci.chronic_illness_onset_date 
+                                                 when ci.chronic_illness_onset_date then ci.chronic_illness_onset_date
+                                                 else 'N/A' end SEPARATOR '|')                      as ChronicOnsetDate,
                                             (case coalesce(v.has_known_allergies, p.known_allergies)
                                                  when 1 then 'Yes'
                                                  when 2
@@ -5931,6 +6010,11 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
 7c2e60c0-8728-11eb-8dcd-0242ac130003|OTZ|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_OTZ|dwhstage|0|OtzExtract|19.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
 7c2e61c0-8728-11eb-8dcd-0242ac130003|Covid|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_COVID|dwhstage|0|CovidExtract|20.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
 7c2e62c0-8728-11eb-8dcd-0242ac130003|Defaulter Tracing|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_DefaulterTracing|dwhstage|0|DefaulterTracingExtract|21.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+BD586669-F75A-4916-925F-47FFD45B86B4|Cancer Screening|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_CancerScreening|dwhstage|0|CancerScreeningExtract|22.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e64c0-8728-11eb-8dcd-0242ac130003|Art Fast Track|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_ArtFastTrack|dwhstage|0|ArtFastTrackExtract|23.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e65c0-8728-11eb-8dcd-0242ac130003|IIT Risk Scores|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_IITRiskScores|dwhstage|0|IITRiskScoresExtract|24.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+7c2e66c0-8728-11eb-8dcd-0242ac130003|Relationships|NDWH|a6221861-0e85-11e8-ba89-0ed5f89f718b|SELECT * from NDWH_Relationships|dwhstage|0|RelationshipsExtract|25.0|a6221aa7-0e85-11e8-ba89-0ed5f89f718b
+
 A926B327-D042-4459-963B-523879C47347|Hts Clients|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClient|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 0C82AA9F-C58D-4BEA-996B-00EE33286CAD|Hts Test Kits|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsTestKits|4.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 EEE41260-E92F-47CB-8AC8-E47281B8A8C4|Hts Client Linkage|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientLinkage|3.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
@@ -5938,6 +6022,8 @@ A72B9001-7109-4D66-8938-9F41D1779D95|Hts Partner Notification Services|HTS|A6221
 79527CF5-6DA1-439E-B32C-49F7677E0A0F|Hts Client Tracing|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientTracing|5.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 838E36EF-812D-4953-88E6-3F1DD5EC4531|Hts Partner Tracing|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsPartnerTracing|6.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 88C4C1CF-703F-473B-8A4C-44B94A8DD17C|Hts Client Tests|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsClientTests|2.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+6b23f800-dec5-4736-80f0-a3fee13bc994|Hts Eligibility|HTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|DWHStage|1|HtsEligibilityExtract|8.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+
 3B3894F4-04B0-4141-896D-FA9F206C0DD1|Migration|MGS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|MgsStage|1|MetricMigrationExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 4B7B10F2-FF7E-452C-A67D-76A37E16B3EB|Hei|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempHeiExtract|0|HeiExtract|28.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 F14362A9-C5EF-4BAE-91B6-67D4AA808EBC|Mnch Enrolment|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
@@ -5950,6 +6036,7 @@ A91D30FB-40C1-4453-903D-4E687FF5E20D|Mnch Patient|MNCH|A6221861-0E85-11E8-BA89-0
 2D5489D0-2721-4D03-A869-5A10700ABD19|Cwc Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempCwcVisitExtract|0|CwcVisitExtract|27.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 5FF64729-FDA7-4065-A909-E059B8DD5A1A|Mnch Labs|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchLabExtract|0|MnchLabExtract|29.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 830568D9-2C97-46F4-B5FB-3AA83480BFBF|Mat Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMatVisitExtract|0|MatVisitExtract|23.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
+AFDED747-46BF-4ADF-9E36-E40B750DFD7C|Mat Visit|MNCH|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|TempMnchImmunizationExtract|0|Mnch Immunization|30.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5F89F718B|""|Indicator|1|IndicatorExtract|1.00|A6221AA7-0E85-11E8-BA89-0ED5F89F718B
 
 82650e9a-9db2-11eb-a8b3-0242ac130003|Mnch Patient|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select pkv.pkv as PKV,
@@ -6039,115 +6126,122 @@ DD2E320D-D68F-4F81-819E-2D6E32836105|Indicators|MTS|A6221861-0E85-11E8-BA89-0ED5
          or c.patient_id is not null	
          or r.person_a is not null	
          group by EncounterId"|TempPatientMnchExtract|1|PatientMnchExtract|19|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-82651214-9db2-11eb-a8b3-0242ac130003|Mnch Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                 as PatientPK,
-                                    if(m.patient_id is not null, m.muuid, if(c.patient_id is not null, c.cuuid, null))   RecordUUID,
-                                           i.siteCode                                                                   as SiteCode,
-                                           d.openmrs_id                                                                 as PatientMnchID,
-                                        # d.hei_no                                                                     as PatientHEI_ID,
-                                           'KenyaEMR'                                                                   as Emr,
-                                           'Kenya HMIS II'                                                              as Project,
-                                           i.FacilityName                                                               as FacilityName,
-                                           0 as FacilityId,
-                                           (case m.service_type
-                                              when 1622 then 'ANC'
-                                              when 164835 then 'Delivery'
-                                              when 1623 then 'PNC'
-                                              else '' end)                                                              as ServiceType,
-                                           coalesce(c.hei_enrolment_date, m.mch_enrollment_date)                        as EnrollmentDateAtMnch,
-                                           m.anc_number                                                                 as MnchNumber,
-                                           m.first_anc_visit                                                            as FirstVisitAnc,
-                                           m.parity                                                                     as Parity,
-                                           m.gravida                                                                    as Gravidae,
-                                           m.lmp                                                                        as LMP,
-                                           coalesce(m.edd, date_add(date_add(m.lmp, interval 7 day), interval 9 month)) as EDDFromLMP,
-                                           (case m.hiv_status_before_anc
-                                              when 664 then 'Negative'
-                                              when 703 then 'Positive'
-                                              when 1067 then 'Unknown'
-                                              else '' end)                                                              as HIVStatusBeforeANC,
-                                           m.test_date                                                                  as HIVTestDate,
-                                           (case m.partner_status
-                                              when 664 then 'Negative'
-                                              when 703 then 'Positive'
-                                              when 1067 then 'Unknown'
-                                              else '' end)                                                              as PartnerHIVStatus,
-                                           m.partner_test_date                                                          as PartnerHIVTestDate,
-                                           (case m.blood_group
-                                              when 690 then 'A POSITIVE'
-                                              when 692 then 'A NEGATIVE'
-                                              when 694 then 'B POSITIVE'
-                                              when 696 then 'B NEGATIVE'
-                                              when 699 then 'O POSITIVE'
-                                              when 701 then 'O NEGATIVE'
-                                              when 1230 then 'AB POSITIVE'
-                                              when 1231 then 'AB NEGATIVE'
-                                              else '' end)                                                              as BloodGroup,
-                                           coalesce(m.status_in_mnch, c.status_in_cwc)                                  as StatusAtMnch,
-                                            m.date_created                                                               as Date_Created,	
-                                           m.date_last_modified                                                         as Date_Last_Modified,	
-                                          if(m.patient_id is not null, m.mvoided, if(c.patient_id is not null, cvoided, null)) as Voided	
-                                   from dwapi_etl.etl_patient_demographics d	
-                                            left join (select m.patient_id,	
-                                                              m.uuid                  as muuid,	
-                                                              m.service_type          as service_type,	
-                                                              m.visit_date            as mch_enrollment_date,	
-                                                              m.anc_number            as anc_number,	
-                                                              m.first_anc_visit_date  as first_anc_visit,	
-                                                              m.parity                as parity,	
-                                                              m.gravida               as gravida,	
-                                                              m.lmp,	
-                                                              m.edd_ultrasound        as edd,
-                                                                                     m.hiv_status            as hiv_status_before_anc,	
-                                                              m.hiv_test_date         as test_date,	
-                                                              m.partner_hiv_status    as partner_status,	
-                                                              m.partner_hiv_test_date as partner_test_date,	
-                                                              m.blood_group           as blood_group,	
-                                                              p.status_in_prg         as status_in_mnch,	
-                                                              m.date_created          as date_created,	
-                                                              m.date_last_modified    as date_last_modified,	
-                                                              m.voided                as mvoided	
-                                                       from dwapi_etl.etl_mch_enrollment m	
-                                                                left join (select p.patient_id                                              as prg_patient,	
-                                                                                  p.date_enrolled                                           as date_enrolled,	
-                                                                                  if(p.date_completed is null, 'Active', (case d.discontinuation_reason	
-                                                                                                                              when 160035 then 'Completed'	
-                                                                                                                              when 159492
-                                                                                                                           then 'Transferred Out'	
-                                                                                                                              when 160034 then 'Died'	
-                                                                                                                              when 5240	
-                                                                                                                                  then 'Lost to Follow up'	
-                                                                                                                              else '' end)) as status_in_prg	
-                                                                           from dwapi_etl.etl_patient_program p	
-                                                                                    left join dwapi_etl.etl_patient_program_discontinuation d	
-                                                                                              on p.patient_id = d.patient_id and p.date_completed = date(d.visit_date)	
-                                                                           where p.program = 'MCH-Mother Services') p	
-                                                                          on m.patient_id = p.prg_patient and m.visit_date = p.date_enrolled	
-                                                       group by m.patient_id, m.visit_date) m on d.patient_id = m.patient_id	
-                                            left join (select c.patient_id,
-                                          c.uuid          as cuuid,	
-                                                              c.visit_date    as hei_enrolment_date,	
-                                                              p.status_in_prg as status_in_cwc,	
-                                                              c.voided        as cvoided	
-                                                       from dwapi_etl.etl_hei_enrollment c	
-                                                                left join (select p.patient_id          as prg_patient,	
-                                                                                  p.date_enrolled       as date_enrolled,	
-                                                                                  d.discontinuation_reason,	
-                                                                                  if(p.date_completed is null or p.date_completed = '', 'Active',	
-                                                                                     (case d.discontinuation_reason	
-                                                                                          when 1267 then 'Completed'	
-                                                                                          when 159492 then 'Transferred Out'	
-                                                                                          when 160034 then 'Died'	
-                                                                                          when 5240 then 'Lost to Follow up'	
-                                                                                          else '' end)) as status_in_prg	
-                                                                           from dwapi_etl.etl_patient_program p	
-                                                                                    left join dwapi_etl.etl_patient_program_discontinuation d	
-                                                                                              on p.patient_id = d.patient_id and p.date_completed = date(d.visit_date)	
-                                                                           where p.program = 'MCH-Child Services') p	
-                                                                          on c.patient_id = p.prg_patient and c.visit_date = p.date_enrolled	
-                                                       group by c.patient_id, c.visit_date) c on d.patient_id = c.patient_id	
-                                            join kenyaemr_etl.etl_default_facility_info i	
-                                   where m.patient_id is not null	
-                                      or c.patient_id is not null"|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+82651214-9db2-11eb-a8b3-0242ac130003|Mnch Enrolment|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select distinct d.patient_id            as PatientPK,
+                                                       if(m.patient_id is not null, m.muuid, if(c.patient_id is not null, c.cuuid, null))   RecordUUID,
+                                                              i.siteCode                                                                   as SiteCode,
+                                                              d.openmrs_id                                                                 as PatientMnchID,
+                                                           # d.hei_no                                                                     as PatientHEI_ID,
+                                                              'KenyaEMR'                                                                   as Emr,
+                                                              'Kenya HMIS II'                                                              as Project,
+                                                              i.FacilityName                                                               as FacilityName,
+                                                              0 as FacilityId,
+                                                              (case m.service_type
+                                                                 when 1622 then 'ANC'
+                                                                 when 164835 then 'Delivery'
+                                                                 when 1623 then 'PNC'
+                                                                 else '' end)                                                              as ServiceType,
+                                                              coalesce(c.hei_enrolment_date, m.mch_enrollment_date)                        as EnrollmentDateAtMnch,
+                                                              m.anc_number                                                                 as MnchNumber,
+                                                              m.first_anc_visit                                                            as FirstVisitAnc,
+                                                              m.parity                                                                     as Parity,
+                                                              m.gravida                                                                    as Gravidae,
+                                                              m.lmp                                                                        as LMP,
+                                                              coalesce(m.edd, date_add(date_add(m.lmp, interval 7 day), interval 9 month)) as EDDFromLMP,
+                                                              (case m.hiv_status_before_anc
+                                                                 when 664 then 'Negative'
+                                                                 when 703 then 'Positive'
+                                                                 when 1067 then 'Unknown'
+                                                                 else '' end)                                                              as HIVStatusBeforeANC,
+                                                              m.test_date                                                                  as HIVTestDate,
+                                                              (case m.partner_status
+                                                                 when 664 then 'Negative'
+                                                                 when 703 then 'Positive'
+                                                                 when 1067 then 'Unknown'
+                                                                 else '' end)                                                              as PartnerHIVStatus,
+                                                              m.partner_test_date                                                          as PartnerHIVTestDate,
+                                                              (case m.blood_group
+                                                                 when 690 then 'A POSITIVE'
+                                                                 when 692 then 'A NEGATIVE'
+                                                                 when 694 then 'B POSITIVE'
+                                                                 when 696 then 'B NEGATIVE'
+                                                                 when 699 then 'O POSITIVE'
+                                                                 when 701 then 'O NEGATIVE'
+                                                                 when 1230 then 'AB POSITIVE'
+                                                                 when 1231 then 'AB NEGATIVE'
+                                                                 else '' end)                                                              as BloodGroup,
+                                                              coalesce(m.status_in_mnch, c.status_in_cwc)                                  as StatusAtMnch,
+                                                               m.date_created                                                               as Date_Created,	
+                                                              m.date_last_modified                                                         as Date_Last_Modified,	
+                                                             if(m.patient_id is not null, m.mvoided, if(c.patient_id is not null, cvoided, null)) as Voided	
+                                                      from dwapi_etl.etl_patient_demographics d	
+                                                               left join (select m.patient_id,	
+                           m.uuid                  as muuid,	
+                           m.service_type          as service_type,	
+                           m.visit_date            as mch_enrollment_date,	
+                           m.anc_number            as anc_number,	
+                           m.first_anc_visit_date  as first_anc_visit,	
+                           m.parity                as parity,	
+                           m.gravida               as gravida,	
+                           m.lmp,	
+                           m.edd_ultrasound        as edd,
+                                             m.hiv_status            as hiv_status_before_anc,	
+                           m.hiv_test_date         as test_date,	
+                           m.partner_hiv_status    as partner_status,	
+                           m.partner_hiv_test_date as partner_test_date,	
+                           m.blood_group           as blood_group,	
+                           p.status_in_prg         as status_in_mnch,	
+                           m.date_created          as date_created,	
+                           m.date_last_modified    as date_last_modified,	
+                           m.voided                as mvoided	
+                           from dwapi_etl.etl_mch_enrollment m	
+                           left join (select p.patient_id                                              as prg_patient,	
+                                          p.date_enrolled                                           as date_enrolled,	
+                                          if(p.date_completed is null, 'Active', 
+                                             (case d.discontinuation_reason	
+                                              when 160035 then 'Completed'	
+                                              when 159492
+                                           then 'Transferred Out'	
+                                              when 160034 then 'Died'	
+                                              when 5240	
+                                                  then 'Lost to Follow up'	
+                                              else '' end)) as status_in_prg	
+                                               from dwapi_etl.etl_patient_program p	
+                                                        left join dwapi_etl.etl_patient_program_discontinuation d	
+                                                                  on p.patient_id = d.patient_id and p.date_completed = date(d.visit_date)	
+                                               where p.program = 'MCH-Mother Services') p	
+                                              on m.patient_id = p.prg_patient and m.visit_date = p.date_enrolled	
+                           group by m.patient_id, m.visit_date,date_enrolled, discontinuation_reason,
+                           uuid , service_type, visit_date , anc_number, first_anc_visit_date, parity , gravida, lmp, edd_ultrasound , hiv_status,
+                           hiv_test_date, partner_hiv_status, partner_hiv_test_date, blood_group, status_in_prg, date_created, date_last_modified,
+                               voided) m on d.patient_id = m.patient_id	
+                           left join (
+                           select c.patient_id,
+                                  c.uuid          as cuuid,	
+                                  c.visit_date    as hei_enrolment_date,	
+                                  p.status_in_prg as status_in_cwc,	
+                                  c.voided        as cvoided	
+                               from dwapi_etl.etl_hei_enrollment c	
+                                left join (select p.patient_id          as prg_patient,	
+                                          p.date_enrolled       as date_enrolled,	
+                                          d.discontinuation_reason,	
+                                          if(p.date_completed is null, 'Active',	
+                                             (case d.discontinuation_reason	
+                                                  when 1267 then 'Completed'	
+                                                  when 159492 then 'Transferred Out'	
+                                                  when 160034 then 'Died'	
+                                                  when 5240 then 'Lost to Follow up'	
+                                                  else '' end)) as status_in_prg	
+                                                   from dwapi_etl.etl_patient_program p	
+                                left join dwapi_etl.etl_patient_program_discontinuation d	
+                                                      on p.patient_id = d.patient_id and p.date_completed = date(d.visit_date)	
+                                   where p.program = 'MCH-Child Services') p	
+                                  on c.patient_id = p.prg_patient and c.visit_date = p.date_enrolled	
+                                   group by c.patient_id, c.visit_date, date_enrolled, prg_patient, discontinuation_reason,
+                                    uuid, status_in_prg, voided
+                                   ) c on d.patient_id = c.patient_id	
+                                                               join kenyaemr_etl.etl_default_facility_info i	
+                                                      where m.patient_id is not null	
+                                                         or c.patient_id is not null"|TempMnchEnrolmentExtract|0|MnchEnrolmentExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 82651386-9db2-11eb-a8b3-0242ac130003|Mnch Art|MNCH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                        as PatientPK,
                         de.uuid                                                                               RecordUUID,
                                            i.siteCode                                                                          as SiteCode,
@@ -7812,6 +7906,7 @@ d569fc28-ae47-11eb-8529-0242ac130003|Defaulter Tracing|NDWH|A6221857-0E85-11E8-B
 5D94B087-01DC-4C4E-8BA6-1027F974B232|Cancer Screening|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|CancerScreeningExtract|22|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 7C612ECF-4468-42A0-90FC-DBEB6FD68096|Art Fast Track|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|ArtFastTrackExtract|23|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 056F9D4A-1A24-4524-95B8-6A0670CEAFDD|IIT Risk Scores|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|IITRiskScoresExtract|24|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
+78B56727-43DF-422A-A8E0-83B3775AE3B2|Relationships|NDWH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|dwhstage|0|RelationshipsExtract|25|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 
 d5640010-ae47-11eb-8529-0242ac130003|Indicators|MTS|A6221857-0E85-11E8-BA89-0ED5F89F718B||Indicator|1|IndicatorExtract|1|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
 A7F13D1F-8E82-4414-BB56-BB40A10F01F3|Hei|MNCH|A6221857-0E85-11E8-BA89-0ED5F89F718B|""|TempHeiExtract|0|HeiExtract|28.00|A6221AA5-0E85-11E8-BA89-0ED5F89F718B
@@ -7968,50 +8063,70 @@ CF1F7642-C5B2-456D-975A-8BC83F86F8E5|Smart Card|PSMART|a6221858-0e85-11e8-ba89-0
                            join kenyaemr_etl.etl_default_facility_info i
                   group by a.visit_id"|dwhstage|0|CovidExtract|20|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec31-7754-11eb-9439-0242ac130002|Defaulter Tracing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                              PatientPK,
-                                                  f.uuid   as RecordUUID,
-                                                  i.siteCode                                                                SiteCode,
-                                                d.unique_patient_no                                                       PatientID,
-                                                'KenyaEMR'                                                                Emr,
-                                                'Kenya HMIS II'                                                           Project,
-                                                i.facilityName                                                            FacilityName,
-                                                0 as                                                                          FacilityId,
-                                                f.visit_id                                                                VisitID,
-                                                f.visit_date                                                              VisitDate,
-                                                f.encounter_id                                                         as EncounterId,
-                                                (case f.tracing_type
-                                                                    when 1650 then 'Client Called'
-                                                                    when 164965 then 'Physical Tracing'
-                                                                    when 161642 then 'Treatment supporter' end)                         as TracingType,
-                                                (case f.tracing_outcome
-                                                                    when 1267 then 'Contact'
-                                                                    when 1118 then 'No contact' end)                                    as TracingOutcome,
-                                                f.attempt_number                                                       as AttemptNumber,
-                                                (case f.is_final_trace when 1267 then 'Yes' when 163339 then 'No' end) as IsFinalTrace,
-                                                (case f.tracing_outcome
-                                                                    when 165610 then 'COVID19 Positive'
-                                                                    when 160432 then 'Dead'
-                                                                    when 1693 then 'Receiving ART from another clinic/Transferred'
-                                                                    when 160037 then 'Still in care at CCC'
-                                                                    when 5240 then 'Lost to follow up'
-                                                                    when 164435 then 'Stopped treatment' end)                           as TrueStatus,
-                                                (case f.cause_of_death
-                                                                    when 165609 then 'Infection due to COVID-19'
-                                                                    when 162574 then 'Death related to HIV infection'
-                                                                    when 116030 then 'Cancer'
-                                                                    when 164500 then 'TB'
-                                                                    when 151522 then 'Other infectious and parasitic diseases'
-                                                                    when 133481 then 'Natural cause'
-                                                                    when 1603 then 'Unnatural Cause'
-                                                                    when 5622 then 'Unknown cause' end)                                 as CauseOfDeath,
-                                                f.comments                                                             as Comments,
-                                                date(f.booking_date)                                                   as BookingDate,
-                                                f.date_created                                                         as Date_Created,
-                                                f.date_last_modified                                                   as Date_Last_Modified,
-                     f.voided                                                               as Voided
-              from dwapi_etl.etl_patient_demographics d
-                       join dwapi_etl.etl_ccc_defaulter_tracing f on d.patient_id = f.patient_id
-                       join kenyaemr_etl.etl_default_facility_info i
-              group by f.visit_id"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                         f.uuid   as RecordUUID,
+                         i.siteCode                                                                SiteCode,
+                       d.unique_patient_no                                                       PatientID,
+                       'KenyaEMR'                                                                Emr,
+                       'Kenya HMIS II'                                                           Project,
+                       i.facilityName                                                            FacilityName,
+                       0 as                                                                          FacilityId,
+                       f.visit_id                                                                VisitID,
+                       f.visit_date                                                              VisitDate,
+                       f.encounter_id                                                         as EncounterId,
+                       (case f.tracing_type
+                                           when 1650 then 'Client Called'
+                                           when 164965 then 'Physical Tracing'
+                                           when 161642 then 'Treatment supporter' end)                         as TracingType,
+                       (case f.tracing_outcome
+                                           when 1267 then 'Contact'
+                                           when 1118 then 'No contact' end)                                    as TracingOutcome,
+                       f.attempt_number                                                       as AttemptNumber,
+                       (case f.is_final_trace when 1267 then 'Yes' when 163339 then 'No' end) as IsFinalTrace,
+                       (case f.tracing_outcome
+                                           when 165610 then 'COVID19 Positive'
+                                           when 160432 then 'Dead'
+                                           when 1693 then 'Receiving ART from another clinic/Transferred'
+                                           when 160037 then 'Still in care at CCC'
+                                           when 5240 then 'Lost to follow up'
+                                           when 164435 then 'Stopped treatment' end)                           as TrueStatus,
+                    (case f.reason_for_missed_appointment
+                        when 165609 then 'Client has covid-19 infection'
+                        when 165610 then 'COVID-19 restrictions'
+                        when 164407 then 'Client refilled drugs from another facility'
+                        when 159367 then 'Client has enough drugs'
+                        when
+                            162619 then 'Client travelled'
+                        when 126240 then 'Client could not get an off from work/school'
+                        when 160583
+                            then 'Client is sharing drugs with partner'
+                        when 162192 then 'Client forgot clinic dates'
+                        when 164349
+                            then 'Client stopped medications'
+                        when 1654 then 'Client sick at home/admitted'
+                        when 5622 then 'Other' end)                                       as ReasonForMissedAppointment,
+                    case
+                        when fup.next_appointment_date < '1990-01-01' then null
+                        else CAST(fup.next_appointment_date AS DATE) end                     AS DatePromisedToCome,
+                    f.missed_appointment_date                                               as DateOfMissedAppointment,  
+                       (case f.cause_of_death
+                                           when 165609 then 'Infection due to COVID-19'
+                                           when 162574 then 'Death related to HIV infection'
+                                           when 116030 then 'Cancer'
+                                           when 164500 then 'TB'
+                                           when 151522 then 'Other infectious and parasitic diseases'
+                                           when 133481 then 'Natural cause'
+                                           when 1603 then 'Unnatural Cause'
+                                           when 5622 then 'Unknown cause' end)                                 as CauseOfDeath,                                                 
+                       f.comments                                                             as Comments,
+                       date(f.booking_date)                                                   as BookingDate,
+                       f.date_created                                                         as Date_Created,
+                       f.date_last_modified                                                   as Date_Last_Modified,
+f.voided                                                               as Voided
+from dwapi_etl.etl_patient_demographics d
+join dwapi_etl.etl_ccc_defaulter_tracing f on d.patient_id = f.patient_id
+join dwapi_etl.etl_patient_hiv_followup fup on fup.patient_id = d.patient_id
+join kenyaemr_etl.etl_default_facility_info i
+group by f.visit_id"|dwhstage|0|DefaulterTracingExtract|21|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 
 3425F2F6-B9D8-48F1-97F6-8E6E092B0C97|Cancer Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id                                                                                              PatientPK,
                                         s.uuid                                        as RecordUUID,
@@ -8162,6 +8277,29 @@ A47EFA09-28D9-46EC-B2E6-C6244DBDA240|Art Fast Track|NDWH|a6221856-0e85-11e8-ba89
                             inner join dwapi_etl.etl_hiv_enrollment e on a.patient_id = e.patient_id
                             inner join dwapi_etl.etl_patient_demographics de on a.patient_id = de.patient_id
                             join kenyaemr_etl.etl_default_facility_info s"|dwhstage|0|ArtFastTrackExtract|24|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
+75E1A1A7-A840-4743-9F21-91F863A43737|Relationships|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"SELECT r.person_a PatientPK,
+                   r.uuid                         as RecordUUID,
+                   convert(r.voided  , SIGNED)    as Voided,
+                   i.siteCode                     SiteCode,
+                   d.unique_patient_no            PatientID,
+                   'KenyaEMR'                     Emr,
+                   'Kenya HMIS III'               Project,
+                   i.facilityName                 FacilityName,
+                   0                              as FacilityId,
+                   t.a_is_to_b 					as PatientRelationshipToOther,
+                   r.person_a 					as  PersonAPatientPk,
+                   r.person_b 					as  PersonBPatientPk,
+                   t.b_is_to_a                    as RelationshipToPatient,
+                   r.start_date                   as EndDate,
+                   r.end_date                     as StartDate,
+                   r.date_created                 as Date_Created,
+                   r.date_changed                 as Date_Last_Modified
+                  FROM relationship r 
+                  INNER JOIN relationship_type t ON r.relationship = t.relationship_type_id
+                  join dwapi_etl.etl_patient_demographics d ON r.person_a = d.patient_id
+                  join kenyaemr_etl.etl_default_facility_info i"|dwhstage|0|RelationshipsExtract|25|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+
 
 82651dea-9db2-11eb-a8b3-0242ac130003|Patient Prep|PREP|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select d.patient_id 
                                                  as PatientPK,

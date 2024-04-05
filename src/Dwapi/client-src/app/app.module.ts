@@ -198,6 +198,8 @@ import {PrepClientService} from "../dockets/services/prep-client.service";
 import {PrepSenderService} from "../dockets/services/prep-sender.service";
 import {CrsService} from "../dockets/services/crs.service";
 import { CrsDocketComponent } from "../dockets/crs-docket/crs-docket.component";
+import { MtsDocketComponent } from "../dockets/mts-docket/mts-docket.component";
+
 import { exportComponent } from "../exports/file-exports.component";
 import { UploadComponent } from "../upload/file-upload.component";
 import { DownloadComponent } from '../download/download.component';
@@ -205,6 +207,7 @@ import { UploadService } from '../dockets/services/upload-service';
 import { DndDirective } from "../upload/upload.directive";
 
 import {AutoloadComponent} from "../autoload/autoload.component";
+import {MtsService} from "../dockets/services/mts.service";
 
 @NgModule({
     imports: [
@@ -344,6 +347,7 @@ import {AutoloadComponent} from "../autoload/autoload.component";
         UploadComponent,
         DndDirective,
         CrsDocketComponent,
+        MtsDocketComponent,
         AutoloadComponent,
         MergedNdwhConsoleComponent,
         MergedNdwhDocketComponent,
@@ -366,7 +370,7 @@ import {AutoloadComponent} from "../autoload/autoload.component";
         MetricsService, MgsService, MgsSenderService, MetricMigrationService, NdwhSummaryService,
         MnchService, MnchSenderService, MnchClientService, MnchClientLinkageService, MnchSummaryService,
         PrepService, PrepSenderService, PrepClientService, PrepClientLinkageService, PrepSummaryService,
-        CrsService, HtsEligibilityScreeningService,AutoloadService
+        CrsService, HtsEligibilityScreeningService,AutoloadService, MtsService
 
     ],
     bootstrap: [AppComponent]

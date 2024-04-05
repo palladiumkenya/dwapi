@@ -174,6 +174,10 @@ export class InvalidRecordDetailsComponent implements OnInit {
             this.getSummaryInvalidExtracts('ArtFastTrack');
             return;
         }
+        if (this.extract === 'Relationships') {
+            this.getSummaryInvalidExtracts('Relationships');
+            return;
+        }
     }
 
     private getColumns(): void {
@@ -265,6 +269,10 @@ export class InvalidRecordDetailsComponent implements OnInit {
         }
         if (this.extract === 'Art Fast Track') {
             this.getArtFastTrackColumns();
+            return;
+        }
+        if (this.extract === 'Relationships') {
+            this.getRelationshipsColumns();
             return;
         }
     }
@@ -704,6 +712,7 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'siteCode', header: 'Site Code'},
             {field: 'recordUUID', header: 'RecordUUID'},
             {field: 'voided', header: 'Voided'},
+            {field: 'controlled', header: 'Controlled'},
             {field: 'dateExtracted', header: 'Date Extracted'},
             {field: 'emr', header: 'Emr'},
             {field: 'project', header: 'Project'}, {field: 'visitID', header: 'visitID'},
@@ -1017,6 +1026,9 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'recordUUID', header: 'RecordUUID'},
             {field: 'voided', header: 'Voided'},
             {field: 'visitID', header: 'visitID'},
+            {field: 'datePromisedToCome', header: 'DatePromisedToCome'},
+            {field: 'reasonForMissedAppointment', header: 'ReasonForMissedAppointment'},
+            {field: 'dateOfMissedAppointment', header: 'DateOfMissedAppointment'},
             {field: 'visitDate', header: 'visitDate'},
             {field: 'encounterId', header: 'encounterId'},
             {field: 'tracingType', header: 'tracingType'},
@@ -1140,6 +1152,22 @@ export class InvalidRecordDetailsComponent implements OnInit {
             {field: 'reasonNotOnFP', header: 'ReasonNotOnFP '},
             {field: 'referredToClinic', header: 'ReferredToClinic '},
             {field: 'returnVisitDate', header: 'ReturnVisitDate '}
+
+        ];
+    }
+
+    private getRelationshipsColumns(): void {
+        this.cols = [
+            {field: 'siteCode', header: 'SiteCode'},
+            {field: 'facilityName', header: 'FacilityName'},
+            {field: 'relationshipToPatient', header: 'RelationshipToPatient '},
+            {field: 'patientRelationshipToOther', header: 'PatientRelationshipToOther'},
+            {field: 'personAPatientPk', header: 'PersonAPatientPk'},
+            {field: 'personBPatientPk', header: 'PersonBPatientPk'},
+            {field: 'startDate', header: 'StartDate '},
+            {field: 'endDate', header: 'EndDate '},
+            {field: 'recordUUID', header: 'RecordUUID'},
+            {field: 'voided', header: 'Voided'}
 
         ];
     }

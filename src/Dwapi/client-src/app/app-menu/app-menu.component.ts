@@ -29,7 +29,9 @@ export class AppMenuComponent implements OnInit {
                             {label: 'HIV Testing Services', icon: 'local_hospital', routerLink: ['/registry', 'HTS']},
                             // {label: 'Migration Services', icon: 'flight_takeoff', routerLink: ['/registry', 'MGS']}
                             {label: 'MNCH Services', icon: 'pregnant_woman', routerLink: ['/registry', 'MNCH']},
-                            {label: 'PrEP Services', icon: 'crop_square', routerLink: ['/registry', 'PREP']}
+                            {label: 'PrEP Services', icon: 'crop_square', routerLink: ['/registry', 'PREP']},
+                            {label: 'Metrics Services', icon: 'crop_square', routerLink: ['/registry', 'MTS']}
+
                             // {label: 'Client Registry Services', icon: 'credit_card', routerLink: ['/registry', 'CRS']}
                         ]
                     },
@@ -45,7 +47,9 @@ export class AppMenuComponent implements OnInit {
                     {label: 'HIV Testing Services', icon: 'local_hospital', routerLink: ['/hts']},
                     // {label: 'Migration Services', icon: 'flight_takeoff', routerLink: ['/mgs']}
                     {label: 'MNCH Services', icon: 'pregnant_woman', routerLink: ['/mnch']},
-                    {label: 'PrEP Services', icon: 'crop_square', routerLink: ['/prep']}
+                    {label: 'PrEP Services', icon: 'crop_square', routerLink: ['/prep']},
+                    {label: 'Metrics Services', icon: 'insert_chart', routerLink: ['/mts']}
+
                     // {label: 'Client Registry Services', icon: 'credit_card', routerLink: ['/crs']}
                 ]
             },

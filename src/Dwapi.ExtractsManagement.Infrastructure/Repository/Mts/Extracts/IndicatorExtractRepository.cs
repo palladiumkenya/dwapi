@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mts;
@@ -29,7 +30,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
         {
             var sql = $@"
                 select e.*,k.Description,k.Rank
-                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id where e.IndicatorValue='OUTDATED'
+                from IndicatorExtracts e left outer join IndicatorKeys k on e.Indicator=k.Id where e.IndicatorValue='MISALIGNED'
             ";
             var result = Context.Database.GetDbConnection().Query(sql).ToList();
 
@@ -64,6 +65,11 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Mts.Extracts
         public IndicatorExtract GetIndicatorValue(string name)
         {
             return Get(x => x.Indicator.ToLower() == name.ToLower());
+        }
+        
+        public Task<int> CountMetrics()
+        {
+            return GetCount();
         }
         
     }

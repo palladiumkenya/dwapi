@@ -395,6 +395,20 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 };
                 ts8.Add( _mediator.Send(artFastTrackCommand, cancellationToken));
             }
+            
+            // ExtractRelationships
+            var relationshipsProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "RelationshipsExtract");
+            if (null != relationshipsProfile)
+            {
+                var relationshipsCommand = new ExtractRelationships()
+                {
+                    Extract = relationshipsProfile?.Extract,
+                    DatabaseProtocol = relationshipsProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
+                };
+                ts8.Add( _mediator.Send(relationshipsCommand, cancellationToken));
+            }
+
 
 
             var result1 = await Task.WhenAll(ts1);
