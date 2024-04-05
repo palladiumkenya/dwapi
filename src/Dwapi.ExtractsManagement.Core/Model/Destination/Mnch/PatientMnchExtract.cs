@@ -21,9 +21,13 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         public string PatientResidentSubCounty { get; set; }
         public string PatientResidentWard { get; set; }
         public string InSchool { get; set; }
+        public string NUPI { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+        
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
-        public string NUPI { get; set; }
+        
 
         public virtual ICollection<MnchEnrolmentExtract> MnchEnrolmentExtracts { get; set; } = new List<MnchEnrolmentExtract>();
         public virtual ICollection<MnchArtExtract> MnchArtExtracts { get; set; } = new List<MnchArtExtract>();
@@ -35,5 +39,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Mnch
         public virtual ICollection<CwcVisitExtract> CwcVisitExtracts { get; set; } = new List<CwcVisitExtract>();
         public virtual ICollection<HeiExtract> HeiExtracts { get; set; } = new List<HeiExtract>();
         public virtual ICollection<MnchLabExtract> MnchLabExtracts { get; set; } = new List<MnchLabExtract>();
+        public virtual ICollection<MnchImmunizationExtract> MnchImmunizationExtracts { get; set; } = new List<MnchImmunizationExtract>();
+
     }
 }

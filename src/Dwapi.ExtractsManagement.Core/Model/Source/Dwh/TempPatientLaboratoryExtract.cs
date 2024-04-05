@@ -19,5 +19,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public DateTime? Date_Last_Modified { get; set; }
         public DateTime? DateSampleTaken { get; set; }
         public string SampleType { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
     }
 }

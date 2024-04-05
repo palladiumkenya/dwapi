@@ -22,5 +22,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string RegimenChangeSwitchReason { get; set; }
         public string StopRegimenReason { get; set; }
         public DateTime? StopRegimenDate { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
     }
 }

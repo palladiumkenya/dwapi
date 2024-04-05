@@ -17,8 +17,9 @@ namespace Dwapi.ExtractsManagement.Core.Services
         private readonly IPrepLabExtractRepository _prepLabExtractRepository;
         private readonly IPrepPharmacyExtractRepository _prepPharmacyExtractRepository;
         private readonly IPrepVisitExtractRepository _prepVisitExtractRepository;
+        private readonly IPrepMonthlyRefillExtractRepository _prepMonthlyRefillExtractRepository;
 
-        public PrepExtractSentServcie(IPatientPrepExtractRepository patientPrepExtractRepository, IPrepAdverseEventExtractRepository prepAdverseEventExtractRepository, IPrepBehaviourRiskExtractRepository prepBehaviourRiskExtractRepository, IPrepCareTerminationExtractRepository prepCareTerminationExtractRepository, IPrepLabExtractRepository prepLabExtractRepository, IPrepPharmacyExtractRepository prepPharmacyExtractRepository, IPrepVisitExtractRepository prepVisitExtractRepository)
+        public PrepExtractSentServcie(IPatientPrepExtractRepository patientPrepExtractRepository, IPrepAdverseEventExtractRepository prepAdverseEventExtractRepository, IPrepBehaviourRiskExtractRepository prepBehaviourRiskExtractRepository, IPrepCareTerminationExtractRepository prepCareTerminationExtractRepository, IPrepLabExtractRepository prepLabExtractRepository, IPrepPharmacyExtractRepository prepPharmacyExtractRepository, IPrepVisitExtractRepository prepVisitExtractRepository,IPrepMonthlyRefillExtractRepository prepMonthlyRefillExtractRepository)
         {
             _patientPrepExtractRepository = patientPrepExtractRepository;
             _prepAdverseEventExtractRepository = prepAdverseEventExtractRepository;
@@ -27,6 +28,7 @@ namespace Dwapi.ExtractsManagement.Core.Services
             _prepLabExtractRepository = prepLabExtractRepository;
             _prepPharmacyExtractRepository = prepPharmacyExtractRepository;
             _prepVisitExtractRepository = prepVisitExtractRepository;
+            _prepMonthlyRefillExtractRepository = prepMonthlyRefillExtractRepository;
         }
 
         public void UpdateSendStatus(ExtractType extractType, List<SentItem> sentItems)
@@ -55,6 +57,9 @@ namespace Dwapi.ExtractsManagement.Core.Services
                         break;
                     case ExtractType.PrepVisit:
                         _prepVisitExtractRepository.UpdateSendStatus(sentItems);
+                        break;
+                    case ExtractType.PrepMonthlyRefill:
+                        _prepMonthlyRefillExtractRepository.UpdateSendStatus(sentItems);
                         break;
                 }
             }

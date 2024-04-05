@@ -26,7 +26,13 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Hts.NewHts
             public  string    Setting	 { get; set; }
             public  string    Approach	 { get; set; }
             public  string HtsRiskCategory	 { get; set; }
-            public  decimal? HtsRiskScore	 { get; set; }
+            public  string HtsRiskScore	 { get; set; }
+            public  string ReferredForServices { get; set; }
+            public  string ReferredServices { get; set; }
+            public  string OtherReferredServices { get; set; }
+            public string RecordUUID { get; set; }
+            public bool? Voided { get; set; }
+            
             public DateTime? Date_Created { get; set; }
             public DateTime? Date_Last_Modified { get; set; }
 

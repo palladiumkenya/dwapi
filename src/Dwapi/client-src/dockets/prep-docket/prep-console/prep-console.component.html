@@ -1,27 +1,33 @@
 <div class="card card-w-title">
-    <h1>PrEP Services <span style="color: lightgray">|</span> {{emrName}} <span style="font-size:13px ">{{emrVersion}}</span>
-    <span style="font-size:13px; color: red">{{minEMRVersion}}</span></h1>
+    <h1>
+        PrEP Services <span style="color: lightgray">|</span> {{emrName}} <span style="font-size:13px ">{{emrVersion}}</span>
+        <span style="font-size:13px; color: red">{{minEMRVersion}}</span>
+    </h1>
     <p-growl [(value)]="notifications"></p-growl>
 
     <p-toolbar>
         <div class="ui-toolbar-group-left">
-            <button pButton type="button" [disabled]="!canLoadFromEmr" (click)="loadFromEmr()" label="Load from EMR"
+            <button pButton type="button" [disabled]="!canLoadFromEmr"  (click)="loadFromEmr()" label="Load from EMR"
                     icon="ui-icon-file-download" class="green-btn"></button>
         </div>
 
         <div class="ui-toolbar-group-right">
-            <button pButton type="button" [disabled]="!canSend" (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
+            <button pButton type="button" [disabled]="!canSend"  (click)="send()" label="Send to Warehouse" icon="ui-icon-cloud-upload"
                     class="blue-btn"></button>
+        </div>
+        <div class="ui-toolbar-group-right">
+            <button pButton type="button" label="Export data" [disabled]="!canExport" (click)="export()"
+                    icon="ui-icon-file-download" class="blue-btn"></button>
         </div>
     </p-toolbar>
 
     <p-dataTable [value]="extracts" selectionMode="single" [scrollable]="true" autoLayout="true" resizableColumns="true" columnResizeMode="expand">
         <p-column field="display" [style]="{'width': '220.985px'}" header="Extract"></p-column>
-        <p-column field="extractEvent.lastStatus" header="Status" ></p-column>
+        <p-column field="extractEvent.lastStatus" header="Status"></p-column>
         <p-column field="extractEvent.found" header="(A) Found"></p-column>
         <p-column field="extractEvent.loaded" header="Loaded" [style]="{'background-color': 'ligprepkyblue'}"></p-column>
         <p-column field="extractEvent.excluded" header="(B) Flagged " [style]="{'background-color': 'lightgray'}"></p-column>
-        <p-column field="extractEvent.rejected" header="(C) Rejected "[style]="{'background-color': 'tomato'}"></p-column>
+        <p-column field="extractEvent.rejected" header="(C) Rejected " [style]="{'background-color': 'tomato'}"></p-column>
         <p-column field="extractEvent.queued" header="(D) Queued (A - C)" [style]="{'background-color': 'orange'}"></p-column>
         <p-column field="extractEvent.sent" header="Sent" [style]="{'background-color': 'lightgreen'}"></p-column>
     </p-dataTable>
@@ -36,6 +42,18 @@
         <div class="ui-g-12">
             Stage 2 of 2: Sending Extracts, please wait ...
             <p-progressBar showValue="true" [value]="sendEvent?.sentProgress"></p-progressBar>
+        </div>
+    </div>
+    <div class="ui-g" *ngIf="exportingManifest">
+        <div class="ui-g-12">
+            Stage 1 of 2: Exporting manifest...
+            <p-progressBar mode="indeterminate"></p-progressBar>
+        </div>
+    </div>
+    <div class="ui-g" *ngIf="exporting">
+        <div class="ui-g-12">
+            Stage 2 of 2: Exporting Extracts, please wait ...
+            <p-progressBar [value]="exportEvent?.exportProgress"></p-progressBar>
         </div>
     </div>
     <p-messages [(value)]="errorMessage"></p-messages>

@@ -49,6 +49,24 @@ export class NdwhSenderService {
             .catch(this.handleError);
     }
 
+    public exportManifest(sendPackage: CombinedPackage): Observable<ManifestResponse> {
+        return this._http.post<boolean>(`${this._url}/exportmanifest`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportSmartManifest(sendPackage: CombinedPackage): Observable<ManifestResponse> {
+        return this._http.post<boolean>(`${this._url}/smart/exportmanifest`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportPatientCTExtracts(sendPackage: CombinedPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/exportpatientsCT`, sendPackage)
+            .catch(this.handleError);
+    }
+    public exportSmartPatientExtracts(sendPackage: CombinedPackage): Observable<SendResponse> {
+        console.log("sendPackage  ===> ",sendPackage)
+        return this._http.post<boolean>(`${this._url}/smart/exportpatients`, sendPackage)
+            .catch(this.handleError);
+    }
+
     private handleError(err: HttpErrorResponse) {
         if (err.status === 404) {
             return Observable.throw('no record(s) found');

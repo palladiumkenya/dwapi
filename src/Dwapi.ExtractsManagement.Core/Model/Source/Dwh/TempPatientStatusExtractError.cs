@@ -12,6 +12,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string ExitDescription { get; set; }
         public DateTime? ExitDate { get; set; }
         public string ExitReason { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+
         [NotMapped]
         public virtual ICollection<TempPatientStatusExtractErrorSummary> TempPatientStatusExtractErrorSummaries { get; set; } = new List<TempPatientStatusExtractErrorSummary>();
     }

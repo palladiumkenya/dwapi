@@ -1,0 +1,80 @@
+<div class="card card-w-title">
+        <div class="ui-g">
+            <h1>
+                Indicator Metrics Service
+                <span style="color: lightgray">|</span> {{emrSystem?.name}}
+<!--                <span style="font-size:13px ">{{emrVersion}}</span>-->
+                <span style="font-size:13px; color: red">{{minEMRVersion}}</span>
+            </h1>
+            <p-messages [(value)]="metricMessages"></p-messages>
+    </div>
+
+    <div class="ui-g">
+        <p class="bg-success text-white" >Once load is complete, proceed to send care and treatment as usual</p>
+    </div>
+
+    <p-toolbar>
+        <div class="ui-toolbar-group-left">
+            <button pButton type="button" [disabled]="!canLoad" (click)="loadFromEmr()" label="Load from EMR" icon="ui-icon-file-download"
+                class="green-btn"></button>
+        </div>
+        <div class="ui-toolbar-group-right">
+            <button pButton type="button" [disabled]="!canSend" (click)="verifyMtsApi()" label="Send Warehouse"
+                    icon="ui-icon-cloud-upload" class="blue-btn"></button>
+        </div>
+    </p-toolbar>
+    <p-dataTable [value]="extracts" selectionMode="single" resizableColumns="true">
+        <p-column field="display" header="Extract"></p-column>
+        <p-column field="extractEvent.lastStatus" header="Status"></p-column>
+        <p-column field="extractEvent.loaded" header="Loaded"></p-column>
+        <p-column field="extractEvent.sent" header="Sent"></p-column>
+    </p-dataTable>
+    <h1  [hidden]="!loadingStarted"><b>Loading...</b> <p-progressSpinner class="Loading"  [style]="{ width: '40px', height: '40px'}" ></p-progressSpinner></h1>
+
+    <div class="ui-g" *ngIf="sendingManifest">
+        <div class="ui-g-12">
+            Stage 1 of 2: Sending manifest...
+            <p-progressBar mode="indeterminate"></p-progressBar>
+        </div>
+    </div>
+
+    <div class="ui-g" *ngIf="sending">
+        <div class="ui-g-12">
+            Stage 2 of 2: Sending Extracts, please wait ...
+            <p-progressBar [value]="sendEvent?.sentProgress"></p-progressBar>
+        </div>
+    </div>
+
+    <p-messages [(value)]="mtsmessages"></p-messages>
+    <p-growl [(value)]="notifications"></p-growl>
+
+
+</div>
+<div class="ui-g-12">
+    <div class="card card-w-title">
+        <h1>EMR Indicators</h1>
+        <p-dataTable [value]="indicators">
+            <p-column field="indicator" header="Indicator" [headerStyle]="{'font-weight':'bold'}"></p-column>
+            <p-column field="indicatorValue" header="Value" [headerStyle]="{'font-weight':'bold'}"></p-column>
+            <p-column field="description" header="Description" [headerStyle]="{'font-weight':'bold'}"></p-column>
+            <p-column field="status" header="Status" [headerStyle]="{'font-weight':'bold'}">
+                <ng-template let-col let-check="rowData" pTemplate="body">
+                    <span [style.color]="check.status==='Checked'?'Green':'Red'">{{check[col.field]}}</span>
+                </ng-template>
+            </p-column>
+            <p-column field="indicatorDate" header="Period" [headerStyle]="{'font-weight':'bold'}">
+                <ng-template let-col let-detail="rowData" pTemplate="body">
+                    {{detail.indicatorDate| date: 'mediumDate'}}
+                </ng-template>
+            </p-column>
+            <!--
+            <p-column field="runDate" header="Date">
+                <ng-template let-col let-detail="rowData" pTemplate="body">
+                    {{detail.timeAgo ? (detail.runDate | date: 'medium') :''}}
+                </ng-template>
+            </p-column>
+            <p-column field="timeAgo" header=""></p-column>
+            -->
+        </p-dataTable>
+    </div>
+</div>

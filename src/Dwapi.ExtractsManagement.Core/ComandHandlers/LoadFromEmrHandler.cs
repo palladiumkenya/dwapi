@@ -356,6 +356,60 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers
                 };
                 ts8.Add( _mediator.Send(defaulterTracingCommand, cancellationToken));
             }
+            
+            // ExtractCancerScreening
+            var CancerScreeningProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "CancerScreeningExtract");
+            if (null != CancerScreeningProfile)
+            {
+                var CancerScreeningCommand = new ExtractCancerScreening()
+                {
+                    Extract = CancerScreeningProfile?.Extract,
+                    DatabaseProtocol = CancerScreeningProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
+                };
+                ts8.Add( _mediator.Send(CancerScreeningCommand, cancellationToken));
+            }
+            
+            // ExtractIITRiskScores
+            var iitRiskScoresProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "IITRiskScoresExtract");
+            if (null != iitRiskScoresProfile)
+            {
+                var iitRiskScoresCommand = new ExtractIITRiskScores()
+                {
+                    Extract = iitRiskScoresProfile?.Extract,
+                    DatabaseProtocol = iitRiskScoresProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
+                };
+                ts8.Add( _mediator.Send(iitRiskScoresCommand, cancellationToken));
+            }
+            
+            // ExtractArtFastTrack
+            var artFastTrackProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "ArtFastTrackExtract");
+            if (null != artFastTrackProfile)
+            {
+                var artFastTrackCommand = new ExtractArtFastTrack()
+                {
+                    Extract = artFastTrackProfile?.Extract,
+                    DatabaseProtocol = artFastTrackProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
+                };
+                ts8.Add( _mediator.Send(artFastTrackCommand, cancellationToken));
+            }
+            
+            // ExtractRelationships
+            var relationshipsProfile = request.Extracts.FirstOrDefault(x => x.Extract.Name == "RelationshipsExtract");
+            if (null != relationshipsProfile)
+            {
+                var relationshipsCommand = new ExtractRelationships()
+                {
+                    Extract = relationshipsProfile?.Extract,
+                    DatabaseProtocol = relationshipsProfile?.DatabaseProtocol,
+                    LoadChangesOnly = request.LoadChangesOnly
+                };
+                ts8.Add( _mediator.Send(relationshipsCommand, cancellationToken));
+            }
+
+
 
             var result1 = await Task.WhenAll(ts1);
             var result2 = await Task.WhenAll(ts2);

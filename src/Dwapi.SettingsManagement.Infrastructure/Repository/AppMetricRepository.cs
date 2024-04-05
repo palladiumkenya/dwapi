@@ -204,5 +204,23 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 
             return Context.Database.GetDbConnection().Query<ExtractCargoDto>(sql).ToList();
         }
+
+        public DateTime? GetCTLastLoadedDate()
+        {
+            //CareTreatment
+
+            var ctLoaded = DbSet.AsNoTracking().Where(x => x.Name == "CareTreatment" && x.LogValue.Contains("NoLoaded"))
+                .OrderByDescending(x => x.LogDate).FirstOrDefault();
+            // if (null != ctLoaded)
+            //     list.Add(ctLoaded);
+            // else
+            // {
+            //     var ap = new AppMetric();
+            //     ap.CreatCt("NoLoaded");
+            //     list.Add(ap);
+            // }
+            return ctLoaded.LogDate;
+        }
+
     }
 }

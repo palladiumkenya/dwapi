@@ -36,6 +36,13 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
             int batchSize,
             IMessageSourceBag<T> messageBag)
             where T : ClientExtract;
+        
+        Task<List<SendCTResponse>> SendSmartBatchExtractsFromReaderAsync<T>(
+            SendManifestPackageDTO sendTo,
+            int batchSize,
+            IMessageSourceBag<T> messageBag)
+            where T : ClientExtract;
+
 
         Task<List<SendCTResponse>> SendDiffBatchExtractsAsync<T>(
             SendManifestPackageDTO sendTo,

@@ -15,5 +15,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Prep
         IEnumerable<PrepLabExtractView> ReadAllPrepLabs();
         IEnumerable<PrepPharmacyExtractView> ReadAllPrepPharmacys();
         IEnumerable<PrepVisitExtractView> ReadAllPrepVisits();
+        IEnumerable<PrepMonthlyRefillExtractView> ReadAllPrepMonthlyRefill();
+
     }
 }

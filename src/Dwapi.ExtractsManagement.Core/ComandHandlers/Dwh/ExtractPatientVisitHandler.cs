@@ -51,28 +51,20 @@ namespace Dwapi.ExtractsManagement.Core.ComandHandlers.Dwh
             var difflog = _diffLogRepository.GetLog("NDWH", "PatientVisitExtract", mflcode);
             var changesLoadedStatus= false;
 
-            if (request.DatabaseProtocol.SupportsDifferential)
-            {
-                if(null==difflog)
-                    found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-                else
-                    if (true == loadChangesOnly)
-                    {
-                        changesLoadedStatus = true;
-                        found = await _patientVisitSourceExtractor.Extract(request.Extract,
-                            request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
-                    }
-                    else
-                    {
-                        found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-
-                    }
-            }
-            else
-            {
+            if(null==difflog)
                 found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
-            }
+            else
+                if (true == loadChangesOnly)
+                {
+                    changesLoadedStatus = true;
+                    found = await _patientVisitSourceExtractor.Extract(request.Extract,
+                        request.DatabaseProtocol, difflog.MaxCreated, difflog.MaxModified, difflog.SiteCode);
+                }
+                else
+                {
+                    found  = await _patientVisitSourceExtractor.Extract(request.Extract, request.DatabaseProtocol);
 
+                }
             //update status
             _diffLogRepository.UpdateExtractsSentStatus("NDWH", "PatientVisitExtract", changesLoadedStatus);
 

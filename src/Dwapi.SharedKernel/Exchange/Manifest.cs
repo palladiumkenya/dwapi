@@ -141,5 +141,10 @@ namespace Dwapi.SharedKernel.Exchange
             Start = sessionStart;
             Tag = tag;
         }
+
+        public static void GenerateID()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

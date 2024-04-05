@@ -7,6 +7,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2"><PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
 <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
 </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />

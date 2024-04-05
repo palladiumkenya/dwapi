@@ -7,6 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
 {
     [Table("vTempMnchEnrolmentExtractErrorSummary")]public class TempMnchEnrolmentExtractErrorSummary:TempMnchExtractErrorSummary,IMnchEnrolment
     {
+        public string FacilityName { get; set; }
         public string PatientMnchID { get; set; }
         public string ServiceType { get; set; }
         public DateTime? EnrollmentDateAtMnch { get; set; }
@@ -22,6 +23,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
         public DateTime? PartnerHIVTestDate { get; set; }
         public string BloodGroup { get; set; }
         public string StatusAtMnch { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

@@ -18,5 +18,12 @@ namespace Dwapi.Contracts.Ct
         DateTime? BookingDate { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
+        string RecordUUID { get; set; }
+         bool? Voided { get; set; }
+         DateTime? DatePromisedToCome { get; set; }
+         string ReasonForMissedAppointment { get; set; }
+         DateTime? DateOfMissedAppointment { get; set; }
+
     }
 }
+

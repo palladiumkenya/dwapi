@@ -9,6 +9,8 @@ namespace Dwapi.Hubs.Prep
         public async Task ShowProgress(PrepExtractActivityNotification extractActivityNotification)
         {
             await Clients.All.SendAsync("ShowPrepProgress", extractActivityNotification);
+
+            
         }
     }
 }

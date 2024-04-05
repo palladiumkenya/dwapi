@@ -21,5 +21,8 @@ namespace Dwapi.Contracts.Ct
         int? DepressionAssesmentScore { get; set; }
         DateTime? Date_Created { get; set; }
         DateTime? Date_Last_Modified { get; set; }
+        string RecordUUID { get; set; }
+         bool? Voided { get; set; }
+
     }
 }

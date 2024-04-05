@@ -20,5 +20,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Packager.Mnch
         IEnumerable<CwcVisitExtract> GenerateCwcVisits();
         IEnumerable<HeiExtract> GenerateHeis();
         IEnumerable<MnchLabExtract> GenerateMnchLabs();
+        IEnumerable<MnchImmunizationExtract> GenerateMnchImmunizations();
+
     }
 }

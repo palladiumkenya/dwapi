@@ -30,7 +30,9 @@ export class AppMenuComponent implements OnInit {
                             // {label: 'Migration Services', icon: 'flight_takeoff', routerLink: ['/registry', 'MGS']}
                             {label: 'MNCH Services', icon: 'pregnant_woman', routerLink: ['/registry', 'MNCH']},
                             {label: 'PrEP Services', icon: 'crop_square', routerLink: ['/registry', 'PREP']},
-                            {label: 'Client Registry Services', icon: 'credit_card', routerLink: ['/registry', 'CRS']}
+                            {label: 'Metrics Services', icon: 'crop_square', routerLink: ['/registry', 'MTS']}
+
+                            // {label: 'Client Registry Services', icon: 'credit_card', routerLink: ['/registry', 'CRS']}
                         ]
                     },
                     {label: 'EMR Settings', icon: 'dvr', routerLink: ['/emrconfig']}
@@ -46,9 +48,18 @@ export class AppMenuComponent implements OnInit {
                     // {label: 'Migration Services', icon: 'flight_takeoff', routerLink: ['/mgs']}
                     {label: 'MNCH Services', icon: 'pregnant_woman', routerLink: ['/mnch']},
                     {label: 'PrEP Services', icon: 'crop_square', routerLink: ['/prep']},
-                    {label: 'Client Registry Services', icon: 'credit_card', routerLink: ['/crs']}
+                    {label: 'Metrics Services', icon: 'insert_chart', routerLink: ['/mts']}
+
+                    // {label: 'Client Registry Services', icon: 'credit_card', routerLink: ['/crs']}
                 ]
-            }
+            },
+            {
+                label: 'Merged Dockets', icon: 'cloud', routerLink: ['/autoload']
+            },
+            { label: 'Exports', icon: 'folder', routerLink: ['/exports'] },
+            { label: 'Upload', icon: 'folder', routerLink: ['/upload'] }
+
+
         ];
     }
 }

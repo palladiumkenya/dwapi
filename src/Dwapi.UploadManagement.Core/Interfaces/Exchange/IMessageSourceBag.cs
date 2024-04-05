@@ -22,5 +22,6 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Exchange
         int MaxPk { get; }
         void Generate(List<T> extracts,Guid manifestId,Guid facilityId,string jobId);
         int GetProgress(int count, int total);
+        string GetTableName();
     }
 }

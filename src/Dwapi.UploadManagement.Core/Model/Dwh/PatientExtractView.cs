@@ -47,6 +47,9 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         public DateTime? TransferInDate { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
+
         public string Pkv { get; set; }
         public string Occupation { get; set; }
         public string NUPI { get; set; }
@@ -118,6 +121,10 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         [NotMapped] public ICollection<CovidExtractView> CovidExtracts { get; set; } = new List<CovidExtractView>();
         [JsonIgnore]
         [NotMapped] public ICollection<DefaulterTracingExtractView> DefaulterTracingExtracts { get; set; } = new List<DefaulterTracingExtractView>();
+        [NotMapped] public ICollection<CancerScreeningExtractView> CancerScreeningExtracts { get; set; } = new List<CancerScreeningExtractView>();
+        [NotMapped] public ICollection<IITRiskScoresExtractView> IITRiskScoresExtracts { get; set; } = new List<IITRiskScoresExtractView>();
+        [NotMapped] public ICollection<ArtFastTrackExtractView> ArtFastTrackExtracts { get; set; } = new List<ArtFastTrackExtractView>();
+        [NotMapped] public ICollection<RelationshipsExtractView> RelationshipsExtracts { get; set; } = new List<RelationshipsExtractView>();
 
         [JsonIgnore]
         [NotMapped] public bool HasArt => null != PatientArtExtracts && PatientArtExtracts.Any();
@@ -133,6 +140,11 @@ namespace Dwapi.UploadManagement.Core.Model.Dwh
         [NotMapped] public bool HasVisit => null != PatientVisitExtracts && PatientVisitExtracts.Any();
         [JsonIgnore]
         [NotMapped] public bool HasAdverse => null != PatientAdverseEventExtracts && PatientAdverseEventExtracts.Any();
+        [JsonIgnore]
+        [NotMapped] public bool HasCancer => null != CancerScreeningExtracts && CancerScreeningExtracts.Any();
+        [NotMapped] public bool HasIIT => null != IITRiskScoresExtracts && IITRiskScoresExtracts.Any();
+        [NotMapped] public bool HasArtFastTrack => null != ArtFastTrackExtracts && ArtFastTrackExtracts.Any();
+        [NotMapped] public bool HasRelationships => null != RelationshipsExtracts && RelationshipsExtracts.Any();
 
         public Facility GetFacility()
         {

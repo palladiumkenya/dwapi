@@ -7,6 +7,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
 {
     [Table("vTempPncVisitExtractError")]public class TempPncVisitExtractError:TempExtract,IPncVisit
     {
+        public string FacilityName { get; set; }
         public string PatientMnchID { get; set; }
         public int? VisitID { get; set; }
         public DateTime? VisitDate { get; set; }
@@ -65,6 +66,13 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Mnch
         public string ReferredTo { get; set; }
         public DateTime? NextAppointmentPNC { get; set; }
         public string ClinicalNotes { get; set; }
+        public string VisitTimingMother { get; set; }
+        public string VisitTimingBaby { get; set; }
+        public string MotherCameForHIVTest { get; set; }
+        public string InfactCameForHAART { get; set; }
+        public string MotherGivenHAART { get; set; }
+        public string RecordUUID { get; set; }
+        public bool? Voided { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
     }

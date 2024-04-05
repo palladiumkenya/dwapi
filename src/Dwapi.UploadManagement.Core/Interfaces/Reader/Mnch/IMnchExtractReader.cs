@@ -19,5 +19,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Mnch
         IEnumerable<CwcVisitExtractView> ReadAllCwcVisits();
         IEnumerable<HeiExtractView> ReadAllHeis();
         IEnumerable<MnchLabExtractView> ReadAllMnchLabs();
+        IEnumerable<MnchImmunizationExtractView> ReadAllMnchImmunizations();
+
     }
 }

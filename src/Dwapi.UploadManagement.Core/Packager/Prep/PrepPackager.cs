@@ -77,5 +77,9 @@ namespace Dwapi.UploadManagement.Core.Packager.Prep
         {
             return _prepExtractReader.ReadAllPrepVisits();
         }
+        public IEnumerable<PrepMonthlyRefillExtract> GeneratePrepMonthlyRefill()
+        {
+            return _prepExtractReader.ReadAllPrepMonthlyRefill();
+        }
     }
 }
