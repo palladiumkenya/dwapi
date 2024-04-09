@@ -535,7 +535,7 @@ export class MergedNdwhConsoleComponent implements OnInit, OnChanges, OnDestroy 
         }
         console.log(', this.emr.databaseProtocols', this.emr.databaseProtocols[0].databaseTypeName)
 
-        this.send$ = this._ndwhSenderService.sendSmartReaderPatientExtracts(this.extractPackage, this.emr.databaseProtocols[0].databaseTypeName)
+        this.send$ = this._ndwhSenderService.sendPatientExtracts(this.extractPackage)
             .subscribe(
                 p => {
                     // this.sendResponse = p;
