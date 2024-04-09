@@ -27,8 +27,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Reader.Dwh
         IEnumerable<T> ReadMainExtract<T, TId>(int page, int pageSize, Expression<Func<T, bool>> predicate) where T : Entity<TId>;
         IEnumerable<T> ReadMainExtract<T, TId>(int page, int pageSize) where T : Entity<TId>;
 
-        IDataReader GetSmartReader(string extractName);
-        
+        IDataReader GetSmartReader(string extractName, string dbProtocol);
         long GetTotalRecords<T, TId>() where T : Entity<TId>;
     }
 }

@@ -533,7 +533,9 @@ export class MergedNdwhConsoleComponent implements OnInit, OnChanges, OnDestroy 
         if(this.manifestResponse) {
             this.extractPackage.jobId = this.manifestResponse.jobId;
         }
-        this.send$ = this._ndwhSenderService.sendSmartPatientExtracts(this.extractPackage)
+        console.log(', this.emr.databaseProtocols', this.emr.databaseProtocols[0].databaseTypeName)
+
+        this.send$ = this._ndwhSenderService.sendSmartReaderPatientExtracts(this.extractPackage, this.emr.databaseProtocols[0].databaseTypeName)
             .subscribe(
                 p => {
                     // this.sendResponse = p;

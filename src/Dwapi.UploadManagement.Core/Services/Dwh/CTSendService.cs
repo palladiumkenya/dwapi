@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Application.Events;
+using Dwapi.ExtractsManagement.Core.Interfaces.Reader.Dwh;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
@@ -48,11 +49,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         private readonly IDiffLogRepository _diffLogRepository;
         private readonly IIndicatorExtractRepository _indicatorExtractRepository;
         private readonly IDwhExtractReader _dwhExtractReader;
+        private readonly IDwhExtractSourceReader _sourceReader;
 
 
         public HttpClient Client { get; set; }
 
-        public CTSendService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository, IDwhExtractReader dwhExtractReader)
+        public CTSendService(IDwhPackager packager, IMediator mediator, IEmrMetricReader reader, ITransportLogRepository transportLogRepository, IDiffLogRepository diffLogRepository,IIndicatorExtractRepository indicatorExtractRepository, IDwhExtractReader dwhExtractReader, IDwhExtractSourceReader sourceReader)
         {
             _packager = packager;
             _mediator = mediator;
@@ -62,6 +64,8 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             _diffLogRepository = diffLogRepository;
             _indicatorExtractRepository = indicatorExtractRepository;
             _dwhExtractReader = dwhExtractReader;
+            _sourceReader = sourceReader;
+
         }
 
         public Task<List<SendDhwManifestResponse>> SendManifestAsync(SendManifestPackageDTO sendTo)
@@ -437,7 +441,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
         }
 
         public async Task<List<SendCTResponse>> SendSmartBatchExtractsFromReaderAsync<T>(SendManifestPackageDTO sendTo, int batchSize,
-            IMessageSourceBag<T> messageBag) where T : ClientExtract
+            IMessageSourceBag<T> messageBag, string dbProtocol) where T : ClientExtract
         {
              Stopwatch stopWatch = Stopwatch.StartNew();
 
@@ -487,7 +491,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     facilityId = mainExtract.FacilityId;
                 }
 
-                var smartReader = _dwhExtractReader.GetSmartReader(messageBag.GetTableName());
+                var smartReader = _dwhExtractReader.GetSmartReader(messageBag.GetTableName(), dbProtocol.ToLower());
                 
                 var extracts = new List<T>();
                 

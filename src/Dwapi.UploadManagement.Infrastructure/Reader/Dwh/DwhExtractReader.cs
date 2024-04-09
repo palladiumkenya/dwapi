@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using Dapper;
@@ -159,16 +160,31 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
                 .AsNoTracking().ToList();
         }
 
-        public IDataReader GetSmartReader(string extractName)
+        public IDataReader GetSmartReader(string extractName, string dbProtocol)
         {
             var connectionString = _context.Database.GetDbConnection().ConnectionString;
-            var cn = new MySqlConnection(connectionString);
-            cn.Open();
             var sql = $"select * from {extractName}s";
-            var cmd = new MySqlCommand(sql, cn);
-            var reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            return reader;
+            if (dbProtocol.Contains("MySql".ToLower()))
+            {
+                var cn = new MySqlConnection(connectionString);
+                cn.Open();
+                var cmd = new MySqlCommand(sql, cn);
+                var reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                return reader;
+
+            }
+            else 
+            {
+                var cn = new SqlConnection(connectionString);
+                cn.Open();
+                var cmd = new SqlCommand(sql, cn);
+                var reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                return reader;
+
+            }
+
         }
+       
 
         public long GetTotalRecords<T, TId>() where T : Entity<TId>
         {

@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {SendResponse} from '../../settings/model/send-response';
-import { CombinedPackage } from '../../settings/model/combined-package';
+import {CombinedPackage} from '../../settings/model/combined-package';
+import {CombinedSmartReaderPackage} from '../../settings/model/combined-datareader-package';
+
 import {ManifestResponse} from "../models/manifest-response";
 
 @Injectable()
@@ -24,10 +26,12 @@ export class NdwhSenderService {
         return this._http.post<boolean>(`${this._url}/manifest`, sendPackage)
             .catch(this.handleError);
     }
+
     public sendSmartManifest(sendPackage: CombinedPackage): Observable<ManifestResponse> {
-        return this._http.post<boolean>(`${this._url}/smart/manifest`, sendPackage)
+        return this._http.post<boolean>(`${this._url}/smart/manifest`,  sendPackage)
             .catch(this.handleError);
     }
+
     public sendDiffManifest(sendPackage: CombinedPackage): Observable<boolean> {
         return this._http.post<boolean>(`${this._url}/diffmanifest`, sendPackage)
             .catch(this.handleError);
@@ -41,6 +45,11 @@ export class NdwhSenderService {
 
     public sendSmartPatientExtracts(sendPackage: CombinedPackage): Observable<SendResponse> {
         return this._http.post<boolean>(`${this._url}/smart/patients`, sendPackage)
+            .catch(this.handleError);
+    }
+
+    public sendSmartReaderPatientExtracts(sendPackage: CombinedSmartReaderPackage): Observable<SendResponse> {
+        return this._http.post<boolean>(`${this._url}/smartreader/patients`, {sendPackage:sendPackage})
             .catch(this.handleError);
     }
 

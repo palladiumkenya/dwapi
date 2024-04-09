@@ -40,7 +40,7 @@ namespace Dwapi.UploadManagement.Core.Interfaces.Services.Dwh
         Task<List<SendCTResponse>> SendSmartBatchExtractsFromReaderAsync<T>(
             SendManifestPackageDTO sendTo,
             int batchSize,
-            IMessageSourceBag<T> messageBag)
+            IMessageSourceBag<T> messageBag, string dbProtocol)
             where T : ClientExtract;
 
 

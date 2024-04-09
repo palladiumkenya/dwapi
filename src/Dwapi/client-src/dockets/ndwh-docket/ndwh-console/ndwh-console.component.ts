@@ -24,6 +24,7 @@ import {environment} from '../../../environments/environment';
 import {ManifestResponse} from "../../models/manifest-response";
 import {EmrSetup} from "../../../settings/model/emr-setup";
 import {el} from "@angular/platform-browser/testing/src/browser_util";
+import {CombinedSmartReaderPackage} from "../../../settings/model/combined-datareader-package";
 
 @Component({
     selector: 'liveapp-ndwh-console',
@@ -76,6 +77,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public canSendPatients: boolean = false;
     public manifestPackage: CombinedPackage;
     public extractPackage: CombinedPackage;
+    public extractDataReaderPackage: CombinedSmartReaderPackage;
+
     public dwhManifestPackage: SendPackage = null;
     public dwhExtractPackage: SendPackage = null;
     public cbsManifestPackage: SendPackage = null;
@@ -642,9 +645,13 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         this.errorMessage = [];
         this.extractPackage = this.getExtractsPackage();
         if(this.manifestResponse) {
-            this.extractPackage.jobId = this.manifestResponse.jobId;
+            this.extractDataReaderPackage.jobId = this.manifestResponse.jobId;
+            this.extractDataReaderPackage.dbProtocol = this.emr.databaseProtocols[0].databaseTypeName;
         }
-        this.send$ = this._ndwhSenderService.sendSmartPatientExtracts(this.extractPackage)
+        console.log(', this.emr.databaseProtocols',this.extractDataReaderPackage,  this.emr.databaseProtocols[0].databaseTypeName)
+
+        // this.send$ = this._ndwhSenderService.sendSmartReaderPatientExtracts(this.extractPackage, this.emr.databaseProtocols[0].databaseTypeName)
+        this.send$ = this._ndwhSenderService.sendSmartReaderPatientExtracts(this.extractDataReaderPackage)
             .subscribe(
                 p => {
                     // this.sendResponse = p;
