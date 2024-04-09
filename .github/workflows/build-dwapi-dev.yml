@@ -1,0 +1,42 @@
+name: deploy to qa
+on:
+  push:
+    branches:
+      - dev  # Change this to your main branch name if different
+  pull_request:
+    branches:
+      - dev  # Change this to your main branch name if different
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '2.1.x'  # Change this to the .NET Core SDK version you're using
+
+    - name: Build the ASP.NET app
+      run: dotnet build --configuration Release
+      
+    - name: Build the angular UI
+      run: npm run build
+
+    - name: Publish the ASP.NET app
+      run: dotnet publish -c Release -o ./publish
+
+    - name: Build Docker image
+      run: docker build -t kenyahmis/dwapi:qa .
+      
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Push Docker image
+      run: docker push kenyahmis/dwapi:qa
