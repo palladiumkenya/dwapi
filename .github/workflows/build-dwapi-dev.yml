@@ -22,7 +22,12 @@ jobs:
 
     - name: Build the ASP.NET app
       run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release
-
+      
+    - name: Install Node.js and npm
+      uses: actions/setup-node@v2
+      with:
+          node-version: '14.17.6'
+          
     - name: Install dependencies
       run: npm install
       working-directory: src/Dwapi
