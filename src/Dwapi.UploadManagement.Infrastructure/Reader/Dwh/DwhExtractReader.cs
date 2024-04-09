@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Dapper;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
 using Dwapi.ExtractsManagement.Core.Model.Diff;
@@ -169,7 +171,7 @@ namespace Dwapi.UploadManagement.Infrastructure.Reader.Dwh
             var reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             return reader;
         }
-
+        
         public long GetTotalRecords<T, TId>() where T : Entity<TId>
         {
             return _context.Set<T>()
