@@ -13,7 +13,7 @@ import {MnchDocketComponent} from '../dockets/mnch-docket/mnch-docket.component'
 import {PrepDocketComponent} from "../dockets/prep-docket/prep-docket.component";
 import { CrsDocketComponent } from "../dockets/crs-docket/crs-docket.component";
 import { exportComponent } from "../exports/file-exports.component";
-import { UploadComponent } from "../upload/file-upload.component";
+import { UploadComponent } from "../Upload/file-upload.component";
 
 import {AutoloadComponent} from '../autoload/autoload.component';
 import {MtsDocketComponent} from "../dockets/mts-docket/mts-docket.component";
