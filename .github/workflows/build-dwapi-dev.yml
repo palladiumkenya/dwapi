@@ -21,7 +21,7 @@ jobs:
         dotnet-version: '2.1.x'  # Change this to the .NET Core SDK version you're using
 
     - name: Build the ASP.NET app
-      run: dotnet build --configuration Release
+      run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release
       
     - name: Build the angular UI
       run: npm run build
