@@ -678,7 +678,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             return responses;
         }
 
-        
+
         public async Task<List<SendCTResponse>> SendDiffBatchExtractsAsync<T>(SendManifestPackageDTO sendTo, int batchSize, IMessageBag<T> messageBag) where T : ClientExtract
         {
           HttpClientHandler handler = new HttpClientHandler()
