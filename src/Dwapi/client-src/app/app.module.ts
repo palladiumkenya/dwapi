@@ -201,10 +201,10 @@ import { CrsDocketComponent } from "../dockets/crs-docket/crs-docket.component";
 import { MtsDocketComponent } from "../dockets/mts-docket/mts-docket.component";
 
 import { exportComponent } from "../exports/file-exports.component";
-import { UploadComponent } from "../upload/file-upload.component";
+import { UploadComponent } from "../Upload/file-upload.component";
 import { DownloadComponent } from '../download/download.component';
 import { UploadService } from '../dockets/services/upload-service';
-import { DndDirective } from "../upload/upload.directive";
+import { DndDirective } from "../Upload/upload.directive";
 
 import {AutoloadComponent} from "../autoload/autoload.component";
 import {MtsService} from "../dockets/services/mts.service";
