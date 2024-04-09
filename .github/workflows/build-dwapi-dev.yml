@@ -19,9 +19,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '2.1.x'  # Change this to the .NET Core SDK version you're using
-
-    - name: Build the ASP.NET app
-      run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release
       
     - name: Install Node.js and npm
       uses: actions/setup-node@v2
@@ -31,7 +28,10 @@ jobs:
     - name: Install dependencies
       run: npm install
       working-directory: src/Dwapi
-
+      
+    - name: Build the ASP.NET app
+      run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release
+      
     - name: Build the angular UI
       run: npm run build
       working-directory: src/Dwapi
