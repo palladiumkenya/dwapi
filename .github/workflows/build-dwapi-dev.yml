@@ -43,9 +43,9 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.CICD_SECRET }}
+        ssh_port: ${{ secrets.PORT }}
+        ssh_username: ${{ secrets.USERNAME }}
+        ssh_key: ${{ secrets.CICD_SECRET }}
         source_dir: ./publish
         destination_dir: /apps/dwapi-build/publish
         rm: true
