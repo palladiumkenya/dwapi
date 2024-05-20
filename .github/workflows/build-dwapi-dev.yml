@@ -41,13 +41,34 @@ jobs:
 
     - name: Build Docker image
       run: docker build -t kenyahmis/dwapi:qa .
+
+    - name: Copy Build files
+      run: scp  ./publish ${{ secrets.USERNAME }}@${{ secrets.IP }}:/apps/dwapi-build/
+
+    - name: Copy to Remote Server
+      uses: pierrickdelrieu/scp-action@v0.1.0
+      with:
+        host: ${{ secrets.HOST }}
+        port: ${{ secrets.PORT }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.CICD_SECRET }}
+        source_dir: ${{ secrets.SOURCE_FOLDER }}
+        destination_dir: /apps/dwapi-build/publish
+        rm: true
       
-    - name: Login to Docker Hub     
-      run: |
-        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKERUSERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKERPASSWORD }}
-     
-    - name: Push Docker image
-      run: docker push kenyahmis/dwapi:qa
+    - name: executing remote connection
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.CICD_SECRET }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /apps/dwapi-build/publish
+          sudo docker-compose down
+          sudo docker-compose rm -f
+          sudo docker-compose up --build -d 
+          sudo docker push kenyahmis/dwapi:qa
+    
+      
+      
