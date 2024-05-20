@@ -52,7 +52,7 @@ jobs:
         port: ${{ secrets.PORT }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.CICD_SECRET }}
-        source_dir: ${{ secrets.SOURCE_FOLDER }}
+        source_dir: ./publish
         destination_dir: /apps/dwapi-build/publish
         rm: true
       
