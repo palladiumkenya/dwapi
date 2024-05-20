@@ -40,15 +40,14 @@ jobs:
       run: dotnet publish src/Dwapi/Dwapi.csproj -c Release -o ./publish
 
     - name: Copy to Remote Server
-      uses: appleboy/ssh-action@master
+      uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.HOST }}
-        ssh_port: ${{ secrets.PORT }}
-        ssh_username: ${{ secrets.USERNAME }}
-        ssh_key: ${{ secrets.CICD_SECRET }}
-        source_dir: ./publish
-        destination_dir: /apps/dwapi-build/publish
-        rm: true
+        port: ${{ secrets.PORT }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.CICD_SECRET }}
+        source: ./publish
+        target: /apps/dwapi-build/publish
       
     - name: executing remote connection
       uses: appleboy/ssh-action@master
