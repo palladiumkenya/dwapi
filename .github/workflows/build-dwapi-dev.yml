@@ -39,12 +39,6 @@ jobs:
     - name: Publish the ASP.NET app
       run: dotnet publish src/Dwapi/Dwapi.csproj -c Release -o ./publish
 
-    - name: Build Docker image
-      run: docker build -t kenyahmis/dwapi:qa .
-
-    - name: Copy Build files
-      run: scp  ./publish ${{ secrets.USERNAME }}@${{ secrets.IP }}:/apps/dwapi-build/
-
     - name: Copy to Remote Server
       uses: appleboy/ssh-action@master
       with:
