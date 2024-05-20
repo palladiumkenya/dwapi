@@ -1,30 +1,55 @@
 name: deploy to qa
 on:
   push:
-    branches: [ dev ]
-jobs:
+    branches:
+      - dev  # Change this to your main branch name if different
+  pull_request:
+    branches:
+      - dev  # Change this to your main branch name if different
 
+jobs:
   build:
-    name: Deploy
     runs-on: ubuntu-latest
+    
     steps:
-    - name: executing remote connection
-      uses: appleboy/ssh-action@master
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up .NET Core SDK
+      uses: actions/setup-dotnet@v1
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.CICD_SECRET }}
-        port: ${{ secrets.PORT }}
-        script: |
-          cd /apps/github-workflows/
-          sudo rm -rf dwapi
-          sudo mkdir dwapi
-          sudo chown -R cicd2:cicd2 dwapi
-          git config --global --add safe.directory /apps/github-workflows/dwapi 
-          git clone -b dev https://user:${{secrets.TOKEN}}@github.com//palladiumkenya/dwapi.git
-          cd /apps/github-workflows/dwapi
-          git status         
-          sudo docker-compose down
-          sudo docker-compose rm -f
-          sudo docker-compose up --build -d 
-          sudo docker push kenyahmis/dwapi:qa
+        dotnet-version: '2.1.x'  # Change this to the .NET Core SDK version you're using
+      
+    - name: Install Node.js and npm
+      uses: actions/setup-node@v2
+      with:
+          node-version: '14.17.6'
+          
+    - name: Install dependencies
+      run: npm install
+      working-directory: src/Dwapi
+      
+    - name: Build the ASP.NET app
+      run: dotnet build src/Dwapi/Dwapi.csproj --configuration Release
+      
+    - name: Build the angular UI
+      run: npm run build
+      working-directory: src/Dwapi
+
+    - name: Publish the ASP.NET app
+      run: dotnet publish src/Dwapi/Dwapi.csproj -c Release -o ./publish
+
+    - name: Build Docker image
+      run: docker build -t kenyahmis/dwapi:qa .
+      
+    - name: Login to Docker Hub     
+      run: |
+        echo "$DOCKERPASSWORD" | docker login -u "$DOCKERUSERNAME" --password-stdin
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKERUSERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKERPASSWORD }}
+     
+    - name: Push Docker image
+      run: docker push kenyahmis/dwapi:qa
+    
+    
