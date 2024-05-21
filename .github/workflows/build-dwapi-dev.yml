@@ -18,9 +18,6 @@ jobs:
       with:
         dotnet-version: '2.1.x'  # Use the appropriate version for your project
 
-    - name: Restore dependencies
-      run: dotnet restore
-
     - name: Install Node.js and npm
       uses: actions/setup-node@v2
       with:
