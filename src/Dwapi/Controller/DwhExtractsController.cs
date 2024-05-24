@@ -430,13 +430,36 @@ namespace Dwapi.Controller
 
         }
 
-        // [HttpGet("getExtractIds")]
-        // public async Task<IActionResult> getExtractIds()
+        [HttpGet("checkWhichWasNotSent")]
+        public async Task<IActionResult> checkWhichWasNotSent([FromBody] List<Guid> extractIds)
+        {
+            Console.WriteLine("notSentExtracts extractIds =>",extractIds);
+
+            try
+            {
+                var notSentExtracts = _historyRepository.CheckWhichWasNotSent(extractIds);
+                Console.WriteLine("notSentExtracts =>",notSentExtracts);
+                return Ok(notSentExtracts);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("notSentExtracts error=>",e.Message);
+
+                var msg = $"Error clearing sending history {e.Message}";
+                Log.Error(e, msg);
+                return StatusCode(500, msg);
+
+            }
+
+        }
+
+        // [HttpGet("clearSendingStatus")]
+        // public async Task<IActionResult> clearSendingStatus([FromBody] List<Guid> extractIds)
         // {
         //     try
         //     {
-        //         List<Guid> ids = _extractRepository.GetAllRelatedExtractIds();
-        //         var clearSending = _historyRepository.ClearSendingHistory();
+        //         var clearSending = _historyRepository.ClearSendingHistory(extractIds);
         //
         //         return Ok(clearSending);
         //
@@ -450,26 +473,6 @@ namespace Dwapi.Controller
         //     }
         //
         // }
-
-        [HttpGet("clearSendingStatus")]
-        public async Task<IActionResult> clearSendingStatus([FromBody] List<Guid> extractIds)
-        {
-            try
-            {
-                var clearSending = _historyRepository.ClearSendingHistory(extractIds);
-
-                return Ok(clearSending);
-
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error clearing sending history {e.Message}";
-                Log.Error(e, msg);
-                return StatusCode(500, msg);
-
-            }
-
-        }
 
         [AutomaticRetry(Attempts = 0)]
         private void QueueDwh(SendManifestPackageDTO package)

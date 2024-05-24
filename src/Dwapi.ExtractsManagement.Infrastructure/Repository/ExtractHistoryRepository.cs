@@ -4,10 +4,13 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Dapper;
+using Dwapi.ExtractsManagement.Core.DTOs;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Model;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Dwh;
+using Dwapi.ExtractsManagement.Core.Notifications;
 using Dwapi.SharedKernel.Enum;
+using Dwapi.SharedKernel.Events;
 using Dwapi.SharedKernel.Infrastructure.Repository;
 using Dwapi.SharedKernel.Model;
 using Serilog;
@@ -17,8 +20,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
 {
     public class ExtractHistoryRepository :BaseRepository<ExtractHistory,Guid>, IExtractHistoryRepository
     {
+        private readonly ExtractEventDTO _ctExtractStatus;
         public ExtractHistoryRepository(ExtractsContext context) : base(context)
         {
+            
         }
 
         public  void ClearHistory(Guid extractId)
@@ -38,6 +43,50 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository
             }
 
             return count;
+        }
+        
+        // public async Task<int> ClearSendingHistory(List<Guid> extractIds)
+        // {
+        //     
+        //     foreach (var Id in extractIds)
+        //     {
+        //         DomainEvents.Dispatch(new ExtractActivityNotification(Id,
+        //             new DwhProgress(nameof(PatientExtract), nameof(ExtractStatus.Loaded),
+        //                 (int)_ctExtractStatus.Found,
+        //                 (int)_ctExtractStatus.Loaded, (int)_ctExtractStatus.Rejected,
+        //                 (int)_ctExtractStatus.Loaded,
+        //                 0)));
+        //     }
+        //     
+        //     var count = 0;
+        //     // var histories = DbSet
+        //     //     .Where(x => extractIds.Contains(x.ExtractId)).ToList();
+        //     // if (histories.Any())
+        //     // {
+        //     //     DbSet.RemoveRange(histories);
+        //     //     count= await SaveChangesAsync();
+        //     // }
+        //
+        //     return count;
+        // }
+        
+        
+        public IEnumerable<ExtractHistory> CheckWhichWasNotSent(List<Guid> extractIds)
+        {
+            List<ExtractHistory> histories = new List<ExtractHistory>();
+            foreach (var Id in extractIds)
+            {
+                var sql = $"SELECT * FROM {nameof(ExtractsContext.ExtractHistory)} Where ExtractId = @Id and Status=10 or Status=9";
+
+                using (var cn = GetNewConnection())
+                {
+                    var extractSending = cn.Query<ExtractHistory>(sql, new {ExtractId = Id}).FirstOrDefault();
+                    histories.Add(extractSending);
+
+                }
+
+            }
+            return histories;
         }
 
         public ExtractHistory GetLatest(Guid extractId)

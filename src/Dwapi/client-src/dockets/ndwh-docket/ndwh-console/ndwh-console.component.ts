@@ -24,6 +24,7 @@ import {environment} from '../../../environments/environment';
 import {ManifestResponse} from "../../models/manifest-response";
 import {EmrSetup} from "../../../settings/model/emr-setup";
 import {el} from "@angular/platform-browser/testing/src/browser_util";
+import {Guid} from "../../../entities/guid";
 
 @Component({
     selector: 'liveapp-ndwh-console',
@@ -67,10 +68,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public canSend: boolean;
     public canExport: boolean;
     public canSendDiff: boolean = null;
-    public canResend: boolean = false;
+    public canResend: boolean = null;
+
     public autoload_status: string;
     // public canSendDiff: string;
     // public canSendAll: string;
+    public extractIds = [];
 
 
     public canSendMpi: boolean;
@@ -433,6 +436,9 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     }
 
 
+
+
+
     public sendSmart(): void {
         this.startedSending=true;
         this.canSend=false;
@@ -460,16 +466,6 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                     this.canSend=true;
                     this.canExport = true;
 
-                    // let exception = JSON.parse(e, (key, value) => {
-                    //     if (typeof value === 'string') {
-                    //         return value.toUpperCase();
-                    //     }
-                    //     return value;
-                    // });
-                    // console.log("e message ", exception);
-
-                    // console.log("ExceptionMessage ", e.ExceptionMessage);
-
                     if (e && e.ProgressEvent) {
 
                     } else {
@@ -480,6 +476,8 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         });
                     }
                     this.startedSending=false;
+
+                    this.canResend = true;
                 },
                 () => {
                     this.notifications.push({severity: 'success', summary: 'Manifest sent'});
@@ -492,6 +490,83 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 }
             );
     }
+
+
+    public checkWhichWasNotSent(): boolean {
+        const ids = this.generateExtractIds(this.emr.databaseProtocols[0].emrSystemId)
+        console.log('checkWhichWasNotSent', ids)
+        this._ndwhSenderService.checkWhichWasNotSent(ids)
+            .subscribe(
+            p => {
+                console.log("checkWhichWasNotSent next", p)
+
+            },
+            e => {
+                console.log("checkWhichWasNotSent error,", e)
+
+            },
+            () => {
+                console.log("checkWhichWasNotSent complete")
+            }
+        );
+        return this.canSendDiff;
+    }
+
+
+    public resendSmart(): void {
+        this.startedSending=true;
+        this.canSend=false;
+        this.canExport = false;
+
+        this.checkWhichWasNotSent()
+
+        // if(this.emr.emrSetup==EmrSetup.MultiFacility) {
+        //     this.smartMode = false;
+        //     this.send();
+        //     return;
+        // }
+        // this.smartMode=true;
+        // localStorage.clear();
+        // this.sendingManifest = true;
+        // this.errorMessage = [];
+        // this.notifications = [];
+        // this.canSendPatients = false;
+        // this.manifestPackage = this.getSendManifestPackage();
+        // this.sendManifest$ = this._ndwhSenderService.sendSmartManifest(this.manifestPackage)
+        //     .subscribe(
+        //         p => {
+        //             this.canSendPatients = true;
+        //             this.manifestResponse = p;
+        //         },
+        //         e => {
+        //             this.canSend=true;
+        //             this.canExport = true;
+        //
+        //             if (e && e.ProgressEvent) {
+        //
+        //             } else {
+        //                 this.errorMessage = [];
+        //                 this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
+        //                 this.notifications = [];
+        //                 this.notifications.push({severity: 'error',summary: 'Error sending Smart Manifest',detail: <any>e
+        //                 });
+        //             }
+        //             this.startedSending=false;
+        //
+        //             this.canResend = true;
+        //         },
+        //         () => {
+        //             this.notifications.push({severity: 'success', summary: 'Manifest sent'});
+        //             this.sendSmartExtracts();
+        //             this.sendingManifest = false;
+        //             this.updateEvent();
+        //             this.canSend=true;
+        //             this.canExport = true;
+        //             this.startedSending=false;
+        //         }
+        //     );
+    }
+
     public smartexport(): void {
         this.startedSending = true;
         this.canExport = false;
@@ -659,13 +734,12 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         this.errorMessage = [];
                         this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                     }
-                    this.canResend=true;
-                    this.canResend=true;
+                    this.canResend = true;
 
                 },
                 () => {
                     this.notifications = [];
-                    this.errorMessage.push({severity: 'success', summary: 'Sending Extracts Completed '});
+                    // this.errorMessage.push({severity: 'success', summary: 'Sending Extracts Completed '});
                     this.updateEvent();
                 }
             );
@@ -1010,6 +1084,13 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
         return this.loadExtractsCommand;
     }
 
+    private generateExtractIds(currentEmrSystemId: string): string[] {
+        const extracts = this.extracts.filter(x => x.emrSystemId === currentEmrSystemId);
+        extracts.map(item =>{
+            this.extractIds.push(item.id);
+            })
+        return this.extractIds;
+    }
     private generateExtractPatient(currentEmr: EmrSystem): ExtractProfile {
         const selectedProtocal = this.extracts.find(x => x.name === 'PatientExtract').databaseProtocolId;
         this.extractPatient = {

@@ -13,6 +13,9 @@ namespace Dwapi.ExtractsManagement.Core.Interfaces.Repository
     {
         void ClearHistory(Guid extractId);
         Task<int> ClearHistory(List<Guid> extractIds);
+        // Task<int> ClearSendingHistory(List<Guid> extractIds);
+        IEnumerable<ExtractHistory> CheckWhichWasNotSent(List<Guid> extractIds);
+
         ExtractHistory GetLatest(Guid extractId);
         ExtractHistory GetLatest(Guid extractId,ExtractStatus status,ExtractStatus otherStatus);
         IEnumerable<ExtractHistory> GetAllExtractStatus(Guid extractId);

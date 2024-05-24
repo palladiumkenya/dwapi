@@ -519,29 +519,33 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             bool allowSend = true;
                             while (allowSend)
                             {
-                                var response = await client.PostAsJsonAsync(
-                                    sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"), message);
-                                if (response.IsSuccessStatusCode)
+                                try
                                 {
-                                    allowSend = false;
-                                    var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
-                                    responses.Add(res);
+                                    var response = await client.PostAsJsonAsync(
+                                        sendTo.GetUrl($"{_endPoint.HasToEndsWith("/")}v3/{messageBag.EndPoint}"),
+                                        message);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        allowSend = false;
+                                        var res = await response.Content.ReadAsJsonAsync<SendCTResponse>();
+                                        responses.Add(res);
 
-                                    var sentIds = messageBag.SendIds;
-                                    sendCound += sentIds.Count;
-                                    DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
-                                        messageBag.ExtractType));
+                                        var sentIds = messageBag.SendIds;
+                                        sendCound += sentIds.Count;
+                                        DomainEvents.Dispatch(new CTExtractSentEvent(sentIds, SendStatus.Sent,
+                                            messageBag.ExtractType));
 
-                                    var tlog = TransportLog.GenerateExtract("NDWH", messageBag.ExtractName, res.JobId);
-                                    _transportLogRepository.CreateLatest(tlog);
-                                }
-                                else
+                                        var tlog = TransportLog.GenerateExtract("NDWH", messageBag.ExtractName,
+                                            res.JobId);
+                                        _transportLogRepository.CreateLatest(tlog);
+                                    }
+                                }catch (HttpRequestException  apiException)
                                 {
                                     retryCount++;
                                     if (retryCount == 4)
                                     {
                                         var sentIds = messageBag.SendIds;
-                                        var error = await response.Content.ReadAsStringAsync();
+                                        var error = apiException.Message;
                                         DomainEvents.Dispatch(new CTExtractSentEvent(
                                             sentIds, SendStatus.Failed, messageBag.ExtractType,
                                             error));
@@ -554,7 +558,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         catch (Exception e)
                         {
                             Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error SendSmartBatchExtractsAsync");
-                            throw;
+                            var sentIds = messageBag.SendIds;
+                            var error = e.Message;
+                            DomainEvents.Dispatch(new CTExtractSentEvent(
+                                sentIds, SendStatus.Failed, messageBag.ExtractType,
+                                error));
+                            throw new Exception(error);
                         }
                          
                          // original
@@ -635,7 +644,12 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                         catch (Exception e)
                         {
                             Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error SendSmartBatchExtractsAsync");
-                            throw;
+                            var sentIds = messageBag.SendIds;
+                            var error = e.Message;
+                            DomainEvents.Dispatch(new CTExtractSentEvent(
+                                sentIds, SendStatus.Failed, messageBag.ExtractType,
+                                error));
+                            throw new Exception(error);
                         }
                          
                          DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
@@ -671,6 +685,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
                 {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
             );
+            
             stopWatch.Stop();
             Log.Debug(new string('*',40));
             Log.Debug($"Sent {recordCount} | {messageBag.ExtractName} in [{stopWatch.ElapsedMilliseconds/1000}] s");

@@ -19,6 +19,15 @@ export class NdwhSenderService {
         return this._http.get<boolean>(`${this._url}/checkWhichToSend`)
             .catch(this.handleError);
     }
+    // public clearSendingStatus(ids: any): Observable<ManifestResponse> {
+    //     return this._http.get<boolean>(`${this._url}/clearSendingStatus`, ids)
+    //         .catch(this.handleError);
+    // }
+
+    public checkWhichWasNotSent(ids): Observable<ManifestResponse> {
+        return this._http.get<boolean>(`${this._url}/checkWhichWasNotSent`, ids)
+            .catch(this.handleError);
+    }
 
     public sendManifest(sendPackage: CombinedPackage): Observable<ManifestResponse> {
         return this._http.post<boolean>(`${this._url}/manifest`, sendPackage)
