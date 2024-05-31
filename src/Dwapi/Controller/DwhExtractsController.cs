@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dwapi.ExtractsManagement.Core.Commands.Dwh;
-using Dwapi.ExtractsManagement.Core.Interfaces.Repository;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Diff;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mts;
 using Dwapi.ExtractsManagement.Core.Interfaces.Services;
@@ -43,12 +42,10 @@ namespace Dwapi.Controller
         private readonly IDiffLogRepository _diffLogRepository;
         private readonly ICTExportService _ctExportService;
         private readonly IAppMetricRepository _appMetricRepository;
-        private readonly IExtractHistoryRepository _historyRepository;
-
 
         private readonly string _version;
 
-        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository, ICTExportService ctExportService, IAppMetricRepository appMetricRepository,IExtractHistoryRepository historyRepository)
+        public DwhExtractsController(IMediator mediator, IExtractStatusService extractStatusService, IHubContext<ExtractActivity> hubContext, IDwhSendService dwhSendService,  ICbsSendService cbsSendService, ICTSendService ctSendService, IExtractRepository extractRepository, IIndicatorExtractRepository indicatorExtractRepository,IDiffLogRepository diffLogRepository, ICTExportService ctExportService, IAppMetricRepository appMetricRepository)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _extractStatusService = extractStatusService;
@@ -62,8 +59,6 @@ namespace Dwapi.Controller
             Startup.HubContext= _hubContext = hubContext;
             _version = GetType().Assembly.GetName().Version.ToString();
             _appMetricRepository = appMetricRepository;
-            _historyRepository = historyRepository;
-
         }
 
         [HttpPost("extract")]
@@ -192,7 +187,7 @@ namespace Dwapi.Controller
                 // check stale
                 if (_indicatorExtractRepository.CheckIfStale())
                 {
-                    // throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date. Refresh or Recreate EMR ETL tables.");
+                    throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date. Refresh or Recreate EMR ETL tables.");
                 }
 
                 if (!packageDto.SendMpi)
@@ -239,7 +234,7 @@ namespace Dwapi.Controller
                 // check stale
                  if (_indicatorExtractRepository.CheckIfStale())
                  {
-                     // throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
+                     throw new Exception(" ---> Error sending Extracts. Database is stale. Please make sure your Database is up to date");
                  }
 
                 var result = await _ctSendService.SendSmartManifestAsync(packageDto.DwhPackage, _version, "3");
@@ -423,47 +418,6 @@ namespace Dwapi.Controller
             catch (Exception e)
             {
                 var msg = $"Error checking send {e.Message}";
-                Log.Error(e, msg);
-                return StatusCode(500, msg);
-
-            }
-
-        }
-
-        // [HttpGet("getExtractIds")]
-        // public async Task<IActionResult> getExtractIds()
-        // {
-        //     try
-        //     {
-        //         List<Guid> ids = _extractRepository.GetAllRelatedExtractIds();
-        //         var clearSending = _historyRepository.ClearSendingHistory();
-        //
-        //         return Ok(clearSending);
-        //
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         var msg = $"Error clearing sending history {e.Message}";
-        //         Log.Error(e, msg);
-        //         return StatusCode(500, msg);
-        //
-        //     }
-        //
-        // }
-
-        [HttpGet("clearSendingStatus")]
-        public async Task<IActionResult> clearSendingStatus([FromBody] List<Guid> extractIds)
-        {
-            try
-            {
-                var clearSending = _historyRepository.ClearSendingHistory(extractIds);
-
-                return Ok(clearSending);
-
-            }
-            catch (Exception e)
-            {
-                var msg = $"Error clearing sending history {e.Message}";
                 Log.Error(e, msg);
                 return StatusCode(500, msg);
 
@@ -684,23 +638,11 @@ namespace Dwapi.Controller
 
         public void SendJobSmartBaselines(SendManifestPackageDTO package)
         {
-            // try
-            // {
-            var idsA = _ctSendService.SendSmartBatchExtractsFromReaderAsync(package,
-                Startup.AppFeature.BatchSize.Patients, new ArtMessageSourceBag()).Result;
-            var idsB = _ctSendService.SendSmartBatchExtractsFromReaderAsync(package,
-                Startup.AppFeature.BatchSize.Patients, new BaselineMessageSourceBag()).Result;
-            var idsC = _ctSendService.SendSmartBatchExtractsFromReaderAsync(package,
-                Startup.AppFeature.BatchSize.Patients, new StatusMessageSourceBag()).Result;
-            var idsD = _ctSendService.SendSmartBatchExtractsFromReaderAsync(package,
-                Startup.AppFeature.BatchSize.Extracts, new AdverseEventMessageSourceBag()).Result;
-            // }
-            // catch (Exception e)
-            // {
-            //     throw new Exception($"Error sending job smart baselines {e}");
-            // }
+            var idsA =_ctSendService.SendSmartBatchExtractsFromReaderAsync(package, Startup.AppFeature.BatchSize.Patients, new ArtMessageSourceBag()).Result;
+            var idsB=_ctSendService.SendSmartBatchExtractsFromReaderAsync(package, Startup.AppFeature.BatchSize.Patients, new BaselineMessageSourceBag()).Result;
+            var idsC= _ctSendService.SendSmartBatchExtractsFromReaderAsync(package, Startup.AppFeature.BatchSize.Patients, new StatusMessageSourceBag()).Result;
+            var idsD=_ctSendService.SendSmartBatchExtractsFromReaderAsync(package, Startup.AppFeature.BatchSize.Extracts, new AdverseEventMessageSourceBag()).Result;
         }
-
         public void ExportJobSmartBaselines(SendManifestPackageDTO package)
         {
             var idsA = _ctExportService.ExportSmartBatchExtractsAsync(package, Startup.AppFeature.BatchSize.Patients, new ArtMessageSourceBag()).Result;
