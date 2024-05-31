@@ -171,15 +171,16 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
         
             using (sourceConnection)
             {
-                var sql = $@"SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
-                                   stop_time                        as 'INDICATORVALUE',
-                                   DATE_FORMAT(stop_time, '%Y%b%d') as 'INDICATORMONTH'
-                            FROM kenyaemr_etl.etl_script_status s
-                            where s.error is null
-                              and script_name in ('scheduled_updates','initial_population_of_tables')
-                           
-                            order by INDICATORVALUE desc
-                            limit 1";
+                var sql = $@"  SELECT 'EMR_ETL_Refresh' as 'INDICATORNAME',
+                                 stop_time                        as 'INDICATORVALUE',
+                                 DATE_FORMAT(stop_time, '%Y%b%d') as 'INDICATORMONTH',
+                                 def.siteCode SiteCode
+                          FROM kenyaemr_etl.etl_script_status s
+                          join kenyaemr_etl.etl_default_facility_info def
+                          where s.error is null
+                            and script_name = 'population_of_dwapi_tables'
+                          order by INDICATORVALUE desc
+                          limit 1";
         
                 // var getRefreshDates = sourceConnection.Execute(sql);FirstOrDefault
                 // var getRefreshDates = sourceConnection.from(sql).ToString().FirstOrDefault();
