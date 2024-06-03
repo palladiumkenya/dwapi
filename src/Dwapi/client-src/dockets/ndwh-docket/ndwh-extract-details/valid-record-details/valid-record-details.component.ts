@@ -1376,8 +1376,12 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
 
     private getRelationshipsColumns(): void {
         this.cols = [
+            {field: 'siteCode', header: 'SiteCode'},
             {field: 'facilityName', header: 'FacilityName'},
             {field: 'relationshipToPatient', header: 'RelationshipToPatient '},
+            {field: 'patientRelationshipToOther', header: 'PatientRelationshipToOther'},
+            {field: 'personAPatientPk', header: 'PersonAPatientPk'},
+            {field: 'personBPatientPk', header: 'PersonBPatientPk'},
             {field: 'startDate', header: 'StartDate '},
             {field: 'endDate', header: 'EndDate '},
             {field: 'recordUUID', header: 'RecordUUID'},

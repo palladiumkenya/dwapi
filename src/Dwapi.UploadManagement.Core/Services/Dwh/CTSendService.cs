@@ -487,19 +487,20 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     facilityId = mainExtract.FacilityId;
                 }
 
-                var smartReader = _dwhExtractReader.GetSmartReader(messageBag.ExtractName);
+                var smartReader = _dwhExtractReader.GetSmartReader(messageBag.GetTableName());
                 
                 var extracts = new List<T>();
                 
                 while (smartReader.Read())
                 {
-                    page++;
+                    
                     // int page = 1; page <= packageInfo.PageCount; page++)
                     
                     // map row to Extract
 
                     if (count == batchSize)
                     {
+                        page++;
                         // send.
                         
                         #region SEND EXTRACTS
@@ -511,7 +512,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
 
                         Log.Debug(
                             $">>>> Sending {messageBag.ExtractName} {recordCount}/{packageInfo.TotalRecords}  Pks:[{messageBag.MinPk}-{messageBag.MaxPk}] Page:{page} of {packageInfo.PageCount}");
-
+                        
                          try
                         {
                             int retryCount = 0;
@@ -548,18 +549,23 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                                     }
                                 }
                             }
-
+                            
                         }
                         catch (Exception e)
                         {
                             Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error SendSmartBatchExtractsAsync");
                             throw;
                         }
-
-                      
-                        
+                         
+                         // original
+                        // DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                        //     messageBag.GetProgress(count, total), recordCount)));
                         DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
-                            messageBag.GetProgress(count, total), recordCount)));
+                            messageBag.GetProgress(page, total), recordCount)));
+                        DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
+                            {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
+                        );
+                        
                         #endregion
                         
                         count = 0;
@@ -571,9 +577,13 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                     extracts.Add(extract);
                     count++;
                 }
+                
+                // DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                //     messageBag.GetProgress(count, total), recordCount)));
 
                 if (count > 0)
                 {
+                    page++;
                     #region SEND REMAINING EXTRACTS
                         
                         recordCount += count;
@@ -627,15 +637,25 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                             Log.Error(e, $"Send Extracts{messageBag.ExtractName} Error SendSmartBatchExtractsAsync");
                             throw;
                         }
-
-                      
-                        
-                        DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
-                            messageBag.GetProgress(count, total), recordCount)));
+                         
+                         DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                             messageBag.GetProgress(page, total), recordCount)));
+                         DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
+                             {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
+                         );
+                         
+                         // DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                         //    messageBag.GetProgress(count, total), recordCount)));
                         #endregion
                 }
                 
+                smartReader.Close();
                 
+                DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                    messageBag.GetProgress(page, total), recordCount)));
+                DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
+                    {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
+                );
                 
                  await _mediator.Publish(new DocketExtractSent(messageBag.Docket, messageBag.DocketExtract));
             }
@@ -645,8 +665,9 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
                 throw;
             }
 
-            DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total), recordCount,true)));
-
+            // DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,messageBag.GetProgress(count, total), recordCount,true)));
+            DomainEvents.Dispatch(new CTSendNotification(new SendProgress(messageBag.ExtractName,
+                messageBag.GetProgress(page, total), recordCount)));
             DomainEvents.Dispatch(new CTStatusNotification(sendTo.ExtractId,sendTo.GetExtractId(messageBag.ExtractName), ExtractStatus.Sent, sendCound)
                 {UpdatePatient = (messageBag is ArtMessageSourceBag || messageBag is BaselineMessageSourceBag || messageBag is StatusMessageSourceBag)}
             );
@@ -656,6 +677,7 @@ namespace Dwapi.UploadManagement.Core.Services.Dwh
             Log.Debug(new string('*',40));
             return responses;
         }
+
 
         public async Task<List<SendCTResponse>> SendDiffBatchExtractsAsync<T>(SendManifestPackageDTO sendTo, int batchSize, IMessageBag<T> messageBag) where T : ClientExtract
         {

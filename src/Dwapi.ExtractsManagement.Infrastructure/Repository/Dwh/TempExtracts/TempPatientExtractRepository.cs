@@ -113,7 +113,10 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Dwh.TempExtracts
                 nameof(ExtractsContext.TempIITRiskScoresExtracts),
                 nameof(ExtractsContext.IITRiskScoresExtracts),
                 nameof(ExtractsContext.TempArtFastTrackExtracts),
-                nameof(ExtractsContext.ArtFastTrackExtracts)
+                nameof(ExtractsContext.ArtFastTrackExtracts),
+                nameof(ExtractsContext.TempRelationshipsExtracts),
+                nameof(ExtractsContext.RelationshipsExtracts)
+
 
             };
 

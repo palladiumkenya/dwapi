@@ -8,6 +8,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Destination.Dwh
     {
         public string FacilityName { get; set; }
         public string RelationshipToPatient { get; set; }
+        public int PersonAPatientPk { get; set; }
+        public int PersonBPatientPk { get; set; }
+        public string PatientRelationshipToOther { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string RecordUUID { get; set; }
