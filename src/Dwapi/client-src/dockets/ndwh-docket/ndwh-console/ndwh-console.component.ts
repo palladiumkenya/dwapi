@@ -67,6 +67,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
     public canSend: boolean;
     public canExport: boolean;
     public canSendDiff: boolean = null;
+    public canResend: boolean = false;
     public autoload_status: string;
     // public canSendDiff: string;
     // public canSendAll: string;
@@ -600,7 +601,7 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                 },
                 () => {
                     this.notifications = [];
-                    this.errorMessage.push({severity: 'success', summary: 'Sending Extracts Completed '});
+                    // this.errorMessage.push({severity: 'success', summary: 'Sending Extracts Completed '});
                     this.updateEvent();
                 }
             );
@@ -658,10 +659,13 @@ export class NdwhConsoleComponent implements OnInit, OnChanges, OnDestroy {
                         this.errorMessage = [];
                         this.errorMessage.push({severity: 'error', summary: 'Error sending ', detail: <any>e});
                     }
+                    this.canResend=true;
+                    this.canResend=true;
+
                 },
                 () => {
                     this.notifications = [];
-                    this.errorMessage.push({severity: 'success', summary: 'Sending Extracts Completed '});
+                    // this.errorMessage.push({severity: 'success', summary: 'Sending Extracts Completed '});
                     this.updateEvent();
                 }
             );

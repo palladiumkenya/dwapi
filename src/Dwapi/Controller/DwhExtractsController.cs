@@ -554,13 +554,9 @@ namespace Dwapi.Controller
 
             _ctSendService.NotifyPreSending();
 
-            var job0 =
-                BatchJob.StartNew(x => { SendJobSmartPateints(package); });
+            var job0 = BatchJob.StartNew(x => { x.Enqueue(() => SendJobSmartPateints(package)); });
 
-
-            var id1 = BatchJob.StartNew(x => { x.Enqueue(() => SendJobSmartPateints(package)); });
-
-            var id2 = BatchJob.StartNew(x =>
+            var job1 = BatchJob.StartNew(x =>
             {
                 x.Enqueue(() => SendJobSmartBaselines(package));
                 x.Enqueue(() => SendJobSmartProfiles(package));
@@ -568,9 +564,14 @@ namespace Dwapi.Controller
                 x.Enqueue(() => SendNewOtherJobSmartProfiles(package));
                 x.Enqueue(() => SendCovidJobSmartProfiles(package));
             });
-            var jobEnd =
-                BatchJob.ContinueBatchWith(id2, x => { _ctSendService.NotifyPostSending(package, _version); });
 
+            var jobEnd =
+                BatchJob.ContinueBatchWith(job1,x => { x.Enqueue( ()=>_ctSendService.NotifyPostSending(package, _version));});
+
+
+            // var job0 =
+            //     BatchJob.StartNew(x => { SendJobSmartPateints(package); });
+            //
             // var job1 =
             //     BatchJob.ContinueBatchWith(job0, x => { SendJobSmartBaselines(package); });
             // var job2 =
@@ -584,7 +585,7 @@ namespace Dwapi.Controller
             //
             // var job5 =
             //     BatchJob.ContinueBatchWith(job4, x => { SendCovidJobSmartProfiles(package); });
-
+            //
             // var jobEnd =
             //     BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package,_version); });
         }
