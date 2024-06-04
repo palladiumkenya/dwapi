@@ -40,6 +40,9 @@ namespace Dwapi.Contracts.Ct
         string RecordUUID { get; set; }
         bool? Voided { get; set; }
         string WHOStagingOI  { get; set; }
+        string WantsToGetPregnant  { get; set; }
+        string AppointmentReminderWillingness  { get; set; }
+
 
     }
 }
