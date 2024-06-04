@@ -874,6 +874,8 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'facilityName', header: 'Facility Name'},
             {field: 'recordUUID', header: 'RecordUUID'},
             {field: 'voided', header: 'Voided'},
+            {field: 'appointmentReminderWillingness', header: 'AppointmentReminderWillingness'},
+            {field: 'wantsToGetPregnant', header: 'WantsToGetPregnant'},
 
             {field: 'emr', header: 'Emr'},
             {field: 'nextAppointmentDate', header: 'NextAppointmentDate'},
@@ -1116,6 +1118,10 @@ export class ValidRecordDetailsComponent implements OnInit, OnDestroy {
             {field: 'facilityName', header: 'facilityName'},
             {field: 'recordUUID', header: 'RecordUUID'},
             {field: 'voided', header: 'Voided'},
+            {field: 'adherence', header: 'Adherence'},
+            {field: 'hepatoxicity', header: 'Hepatoxicity'},
+            {field: 'peripheralNeuropathy', header: 'PeripheralNeuropathy'},
+            {field: 'rash', header: 'Rash'},
 
             {field: 'tptInitiationDate', header: 'TPTInitiationDate'},
             {field: 'iptDiscontinuation', header: 'IPTDiscontinuation'},

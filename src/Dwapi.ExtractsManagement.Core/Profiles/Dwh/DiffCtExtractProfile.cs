@@ -225,74 +225,140 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
 
             // Patient Visit Extract
             CreateMap<IDataRecord, TempPatientVisitExtract>()
-                .ForMember(x => x.PatientPK, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.PatientPK))))
-                .ForMember(x => x.FacilityName, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.FacilityName))))
-                .ForMember(x => x.PatientID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.PatientID))))
-                .ForMember(x => x.FacilityId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.FacilityId))))
-                .ForMember(x => x.SiteCode, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.SiteCode))))
-                .ForMember(x => x.VisitId, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.VisitId))))
-                .ForMember(x => x.VisitDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.VisitDate))))
-                .ForMember(x => x.Service, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.Service))))
-                .ForMember(x => x.VisitType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.VisitType))))
-                .ForMember(x => x.WHOStage, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.WHOStage))))
+                .ForMember(x => x.PatientPK,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.PatientPK))))
+                .ForMember(x => x.FacilityName,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.FacilityName))))
+                .ForMember(x => x.PatientID,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.PatientID))))
+                .ForMember(x => x.FacilityId,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.FacilityId))))
+                .ForMember(x => x.SiteCode,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.SiteCode))))
+                .ForMember(x => x.VisitId,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.VisitId))))
+                .ForMember(x => x.VisitDate,
+                    o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.VisitDate))))
+                .ForMember(x => x.Service,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.Service))))
+                .ForMember(x => x.VisitType,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.VisitType))))
+                .ForMember(x => x.WHOStage,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.WHOStage))))
                 .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.Emr))))
-                .ForMember(x => x.Project, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.Project))))
-                .ForMember(x => x.WABStage, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.WABStage))))
-                .ForMember(x => x.Pregnant, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.Pregnant))))
+                .ForMember(x => x.Project,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.Project))))
+                .ForMember(x => x.WABStage,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.WABStage))))
+                .ForMember(x => x.Pregnant,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.Pregnant))))
                 .ForMember(x => x.LMP, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.LMP))))
                 .ForMember(x => x.EDD, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.EDD))))
-                .ForMember(x => x.Height, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.Height))))
-                .ForMember(x => x.Weight, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.Weight))))
+                .ForMember(x => x.Height,
+                    o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.Height))))
+                .ForMember(x => x.Weight,
+                    o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.Weight))))
                 .ForMember(x => x.BP, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.BP))))
                 .ForMember(x => x.OI, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.OI))))
-                .ForMember(x => x.OIDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.OIDate))))
-                .ForMember(x => x.Adherence, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.Adherence))))
-                .ForMember(x => x.AdherenceCategory, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.AdherenceCategory))))
-                .ForMember(x => x.SubstitutionFirstlineRegimenDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.SubstitutionFirstlineRegimenDate))))
-                .ForMember(x => x.SubstitutionFirstlineRegimenReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.SubstitutionFirstlineRegimenReason))))
-                .ForMember(x => x.SubstitutionSecondlineRegimenDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.SubstitutionSecondlineRegimenDate))))
-                .ForMember(x => x.SubstitutionSecondlineRegimenReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.SubstitutionSecondlineRegimenReason))))
-                .ForMember(x => x.SecondlineRegimenChangeDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.SecondlineRegimenChangeDate))))
-                .ForMember(x => x.SecondlineRegimenChangeReason, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.SecondlineRegimenChangeReason))))
-                .ForMember(x => x.FamilyPlanningMethod, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.FamilyPlanningMethod))))
+                .ForMember(x => x.OIDate,
+                    o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.OIDate))))
+                .ForMember(x => x.Adherence,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.Adherence))))
+                .ForMember(x => x.AdherenceCategory,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.AdherenceCategory))))
+                .ForMember(x => x.SubstitutionFirstlineRegimenDate,
+                    o => o.MapFrom(s =>
+                        s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.SubstitutionFirstlineRegimenDate))))
+                .ForMember(x => x.SubstitutionFirstlineRegimenReason,
+                    o => o.MapFrom(s =>
+                        s.GetStringOrDefault(nameof(TempPatientVisitExtract.SubstitutionFirstlineRegimenReason))))
+                .ForMember(x => x.SubstitutionSecondlineRegimenDate,
+                    o => o.MapFrom(s =>
+                        s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.SubstitutionSecondlineRegimenDate))))
+                .ForMember(x => x.SubstitutionSecondlineRegimenReason,
+                    o => o.MapFrom(s =>
+                        s.GetStringOrDefault(nameof(TempPatientVisitExtract.SubstitutionSecondlineRegimenReason))))
+                .ForMember(x => x.SecondlineRegimenChangeDate,
+                    o => o.MapFrom(s =>
+                        s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.SecondlineRegimenChangeDate))))
+                .ForMember(x => x.SecondlineRegimenChangeReason,
+                    o => o.MapFrom(s =>
+                        s.GetStringOrDefault(nameof(TempPatientVisitExtract.SecondlineRegimenChangeReason))))
+                .ForMember(x => x.FamilyPlanningMethod,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.FamilyPlanningMethod))))
                 .ForMember(x => x.PwP, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.PwP))))
-                .ForMember(x => x.GestationAge, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.GestationAge))))
+                .ForMember(x => x.GestationAge,
+                    o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.GestationAge))))
 
-                .ForMember(x => x.DifferentiatedCare, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.DifferentiatedCare))))
-                .ForMember(x => x.KeyPopulationType, o =>  o.UseValue(string.Empty))
-                .ForMember(x => x.PopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.PopulationType))))
-                .ForMember(x => x.StabilityAssessment, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.StabilityAssessment))))
+                .ForMember(x => x.DifferentiatedCare,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.DifferentiatedCare))))
+                .ForMember(x => x.KeyPopulationType, o => o.UseValue(string.Empty))
+                .ForMember(x => x.PopulationType,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.PopulationType))))
+                .ForMember(x => x.StabilityAssessment,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.StabilityAssessment))))
 
-                .ForMember(x => x.NextAppointmentDate, o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.NextAppointmentDate))))
-                .ForMember(x => x.Date_Created, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientVisitExtract.Date_Created))))
-                .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientVisitExtract.Date_Last_Modified))))
+                .ForMember(x => x.NextAppointmentDate,
+                    o => o.MapFrom(s => s.GetNullDateOrDefault(nameof(TempPatientVisitExtract.NextAppointmentDate))))
+                .ForMember(x => x.Date_Created,
+                    o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientVisitExtract.Date_Created))))
+                .ForMember(x => x.Date_Last_Modified,
+                    o => o.MapFrom(s =>
+                        s.GetOptionalNullDateOrDefault(nameof(TempPatientVisitExtract.Date_Last_Modified))))
 
-                .ForMember(x => x.VisitBy, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.VisitBy))))
-                .ForMember(x => x.Temp, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.Temp))))
-                .ForMember(x => x.PulseRate, o => o.MapFrom(s => s.GetOptionalNullIntOrDefault(nameof(TempPatientVisitExtract.PulseRate))))
-                .ForMember(x => x.RespiratoryRate, o => o.MapFrom(s => s.GetOptionalNullIntOrDefault(nameof(TempPatientVisitExtract.RespiratoryRate))))
-                .ForMember(x => x.OxygenSaturation, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.OxygenSaturation))))
-                .ForMember(x => x.Muac, o => o.MapFrom(s => s.GetOptionalNullIntOrDefault(nameof(TempPatientVisitExtract.Muac))))
-                .ForMember(x => x.NutritionalStatus, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.NutritionalStatus))))
-                .ForMember(x => x.EverHadMenses, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.EverHadMenses))))
-                .ForMember(x => x.Breastfeeding, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.Breastfeeding))))
-                .ForMember(x => x.Menopausal, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.Menopausal))))
-                .ForMember(x => x.NoFPReason, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.NoFPReason))))
-                .ForMember(x => x.ProphylaxisUsed, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.ProphylaxisUsed))))
-                .ForMember(x => x.CTXAdherence, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.CTXAdherence))))
-                .ForMember(x => x.CurrentRegimen, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.CurrentRegimen))))
-                .ForMember(x => x.HCWConcern, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.HCWConcern))))
-                .ForMember(x => x.TCAReason, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.TCAReason))))
-                .ForMember(x => x.RefillDate, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientVisitExtract.RefillDate))))
-                .ForMember(x => x.ZScore, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.ZScore))))
-                .ForMember(x => x.ZScoreAbsolute, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.ZScoreAbsolute))))
-                .ForMember(x => x.PaedsDisclosure, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.PaedsDisclosure))))
-                .ForMember(x => x.ClinicalNotes, o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.ClinicalNotes))))
-                .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.Voided))))
-                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.RecordUUID))))
-                .ForMember(x => x.WHOStagingOI, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.WHOStagingOI))));
-
-
+                .ForMember(x => x.VisitBy,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.VisitBy))))
+                .ForMember(x => x.Temp,
+                    o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.Temp))))
+                .ForMember(x => x.PulseRate,
+                    o => o.MapFrom(s => s.GetOptionalNullIntOrDefault(nameof(TempPatientVisitExtract.PulseRate))))
+                .ForMember(x => x.RespiratoryRate,
+                    o => o.MapFrom(s => s.GetOptionalNullIntOrDefault(nameof(TempPatientVisitExtract.RespiratoryRate))))
+                .ForMember(x => x.OxygenSaturation,
+                    o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.OxygenSaturation))))
+                .ForMember(x => x.Muac,
+                    o => o.MapFrom(s => s.GetOptionalNullIntOrDefault(nameof(TempPatientVisitExtract.Muac))))
+                .ForMember(x => x.NutritionalStatus,
+                    o => o.MapFrom(s =>
+                        s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.NutritionalStatus))))
+                .ForMember(x => x.EverHadMenses,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.EverHadMenses))))
+                .ForMember(x => x.Breastfeeding,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.Breastfeeding))))
+                .ForMember(x => x.Menopausal,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.Menopausal))))
+                .ForMember(x => x.NoFPReason,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.NoFPReason))))
+                .ForMember(x => x.ProphylaxisUsed,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.ProphylaxisUsed))))
+                .ForMember(x => x.CTXAdherence,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.CTXAdherence))))
+                .ForMember(x => x.CurrentRegimen,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.CurrentRegimen))))
+                .ForMember(x => x.HCWConcern,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.HCWConcern))))
+                .ForMember(x => x.TCAReason,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.TCAReason))))
+                .ForMember(x => x.RefillDate,
+                    o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientVisitExtract.RefillDate))))
+                .ForMember(x => x.ZScore,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.ZScore))))
+                .ForMember(x => x.ZScoreAbsolute,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.ZScoreAbsolute))))
+                .ForMember(x => x.PaedsDisclosure,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.PaedsDisclosure))))
+                .ForMember(x => x.ClinicalNotes,
+                    o => o.MapFrom(s => s.GetOptionalStringOrDefault(nameof(TempPatientVisitExtract.ClinicalNotes))))
+                .ForMember(x => x.Voided,
+                    o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.Voided))))
+                .ForMember(x => x.RecordUUID,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.RecordUUID))))
+                .ForMember(x => x.WHOStagingOI,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.WHOStagingOI))))
+                .ForMember(x => x.WantsToGetPregnant,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.WantsToGetPregnant))))
+                .ForMember(x => x.AppointmentReminderWillingness,
+                    o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.AppointmentReminderWillingness))));
             CreateMap<TempPatientVisitExtract, PatientVisitExtract>();
 
             //Patient Adverse Event Extract
@@ -635,7 +701,12 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.DateOfDiscontinuation,
                     o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempIptExtract.DateOfDiscontinuation))))
                 .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempIptExtract.Voided))))
-                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.RecordUUID))));
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.RecordUUID))))
+                .ForMember(x => x.Hepatoxicity, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.Hepatoxicity))))
+                .ForMember(x => x.PeripheralNeuropathy, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.PeripheralNeuropathy))))
+                .ForMember(x => x.Rash, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.Rash))))
+                .ForMember(x => x.Adherence, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.Adherence))));
+
             CreateMap<TempIptExtract,IptExtract>();
 
 

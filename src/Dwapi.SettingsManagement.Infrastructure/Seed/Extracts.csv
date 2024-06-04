@@ -1028,7 +1028,8 @@ FROM
                                                 case fup.pregnancy_status
                                                     when 1065 then 'Yes'
                                                     when 1066 then 'No'
-                                                    end                                                                as Pregnant,
+                                                    end                                                                as Pregnant,                                                
+                                                case fup.wants_pregnancy when 1065 then 'Yes' when 1066 then 'No' end as WantsToGetPregnant,
                                                 CAST(fup.last_menstrual_period AS DATE)                                as LMP,
                                                 CAST(fup.expected_delivery_date AS DATE)                               as EDD,
                                                 t.height                                                               as Height,
@@ -1206,6 +1207,7 @@ FROM
                                                     else CAST(fup.next_appointment_date AS DATE) end                     AS NextAppointmentDate,
                                                 case when fup.refill_date < '1990-01-01' then null
                                                                       else CAST(fup.refill_date AS DATE) end                   AS RefillDate,
+                                                case fup.appointment_consent when 1065 then 'Yes' when 1066 then 'No' end as AppointmentReminderWillingness,                      
                                                 'KenyaEMR'                                                             as Emr,
                                                 'Kenya HMIS II'                                                        as Project,
                                                 CAST(fup.substitution_first_line_regimen_date AS DATE)                 AS SubstitutionFirstlineRegimenDate,
@@ -5625,6 +5627,10 @@ UNION(
                             concat_ws('|', case v.spatum_smear_ordered when 307 then 'Sputum smear' end,
                                       case v.chest_xray_ordered when 12 then 'Chest Xray' end,
                                       case v.genexpert_ordered when 162202 then 'GeneXpert' end)         as ICFActionTaken,
+                            f.hepatotoxity                                                          as Hepatoxicity,
+                            f.peripheral_neuropathy                                                 as PeripheralNeuropathy,
+                            f.rash                                                                  as Rash,
+                            f.adherence                                                             as Adherence,
                             concat_ws('|', case v.spatum_smear_result
                                                when 703 then 'Positive'
                                                when 664 then 'Negative' end, case v.chest_xray_result
@@ -5694,6 +5700,7 @@ left join (select s.patient_id                                                  
                                                      when 1066 then 'No' end)) as IPTClientWorkUp
 from dwapi_etl.etl_ipt_screening s) s
 on v.patient_id = s.patient_id and v.visit_date = s.visit_date
+left join dwapi_etl.etl_ipt_follow_up f on v.patient_id = f.patient_id and v.visit_date = f.visit_date
 left join (select i.patient_id                                         as isStarted,
        i.visit_date                                         as TPT_Initiation_date,
        (case i.ipt_indication
