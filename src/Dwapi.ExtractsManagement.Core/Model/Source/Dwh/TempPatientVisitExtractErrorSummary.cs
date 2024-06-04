@@ -46,6 +46,9 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string RecordUUID { get; set; }
         public bool? Voided { get; set; }
         public string WHOStagingOI  { get; set; }
+        
+        public string WantsToGetPregnant { get; set; }
+        public string AppointmentReminderWillingness { get; set; }
 
 
 
