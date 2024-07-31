@@ -2480,6 +2480,8 @@ pns.MaritalStatus
                                              when 1 then 'Yes'	
                                              when 0 then 'No'	
                                              end                                                                     as EverHadSex,
+                                          case t.child_defiled when 1065 then 'Yes' when 1066 then 'No' 
+                                          when 162570 then 'Declined to answer' end                                  as ChildDefiled,
                                           t.sexually_active 													        as SexuallyActive,
                                           t.new_partner 															    as NewPartner,
                                           t.partner_hiv_status														as PartnerHIVStatus,
@@ -5465,7 +5467,9 @@ UNION(
                                             'Kenya HMIS II'                                           as Project,
                                             s.FacilityName                                            as FacilityName,
                                             ci.visit_date                                             as VisitDate,
-                                            ci.visit_id                                               as VisitID,
+                                            ci.visit_id                                               as VisitID,                                            
+                                            if(ci.chronic_illness in (149019,148432,153754,159351,119270,120637,145438,1295,120576,119692,120291,119481,118631,117855,117789,
+                                            139071,115728,117399,117321,151342,133687,115115,114662,117703,118976,141623),'Yes', 'No') as PatientHasChronicIllness,
                                             group_concat(case ci.chronic_illness
                                                              when 149019 then 'Alzheimers Disease and other Dementias'
                                                              when 148432 then 'Arthritis'
@@ -5595,10 +5599,10 @@ UNION(
                                       group by d.patient_id) pd on pd.PrEP_disc_patient = ci.patient_id
                            inner join dwapi_etl.etl_patient_demographics de on ci.patient_id = de.patient_id
                            join kenyaemr_etl.etl_default_facility_info s
-                  where (d.hiv_disc_patient is null
-                      or d.hiv_outcome_date < e.latest_enrolment_date)
-                     or (pd.PrEP_disc_patient is null or pd.PrEP_Outcome_date < pe.prep_latest_enrolment_date)
-                  group by ci.patient_id, ci.visit_date"|dwhstage|0|AllergiesChronicIllnessExtract|11|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                  where ((d.hiv_disc_patient is null                        
+                        or d.hiv_outcome_date < e.latest_enrolment_date)                        
+                        or (pd.PrEP_disc_patient is null or pd.PrEP_Outcome_date < pe.prep_latest_enrolment_date)) and ci.complaint is null                        
+                        group by ci.patient_id, ci.visit_date"|dwhstage|0|AllergiesChronicIllnessExtract|11|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec21-7754-11eb-9439-0242ac130002|IPT|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id                                                               as PatientPK,
                             v.uuid   as RecordUUID,
                             site.siteCode                                                              as SiteCode,

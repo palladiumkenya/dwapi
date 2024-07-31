@@ -81,6 +81,8 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Hts.NewHts
         public  string HtsRiskScore	 { get; set; }
         public string RecordUUID { get; set; }
         public bool? Voided { get; set; }
+        public string ChildDefiled { get; set; }
+       
         public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
         
