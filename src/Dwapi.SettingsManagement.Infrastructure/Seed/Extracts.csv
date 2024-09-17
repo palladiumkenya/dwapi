@@ -5753,7 +5753,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                          where d.disc_patient is null
                             or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|DepressionScreeningExtract|13|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec23-7754-11eb-9439-0242ac130002|Contact Listing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
-                         v.uuid  as RecordUUID,
+                         v.uuid                                                 as RecordUUID,
                          v.patient_id                                            as ContactPatientPK,
                            s.siteCode                                              as SiteCode,
                            de.unique_patient_no                                    as PatientID,
@@ -5762,23 +5762,18 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                            0                                                       AS FacilityId,
                            s.FacilityName                                          as FacilityName,
                            v.patient_id                                            as PartnerPersonID,
-                           timestampdiff(YEAR, date(v.birth_date), current_date()) as ContactAge,
-                           v.sex                                                   as ContactSex,
-                           (case v.marital_status
-                                when 1057 then 'Single'
-                                when 5555 then 'Married Monogamous'
-                                when 159715 then 'Married Polygamous'
-                                when 1058 then 'Divorced'
-                                when 1059 then 'Widowed' end)                      as ContactMaritalStatus,
-                           (case v.relationship_type
-                                when 970 then 'Mother'
-                                when 971 then 'Father'
-                                when 972 then 'Sibling'
-                                when 1528 then 'Child'
-                                when 5617 then 'Spouse'
-                                when 163565 then 'Partner'
-                                when 162221 then 'Co-wife'
-                                when 157351 then 'Injectable drug user' end)       as RelationshipWithPatient,
+                           timestampdiff(YEAR, date(de.DOB), current_date())       as ContactAge,
+                           de.gender                                                   as ContactSex,
+                           de.marital_status                                      as ContactMaritalStatus,                           
+                            (case v.relationship_type                            
+                                when 2 then 'Sibling'                            
+                                when 3 then 'Child'                            
+                                when 5 then 'Dependant'                            
+                                when 6 then 'Spouse'                            
+                                when 7 then 'Partner'                            
+                                when 8 then 'Co-wife'                            
+                                when 9 then 'Injectable drug user'                            
+                                when 12 then 'SNS' end)                             as RelationshipWithPatient,
                            if(v.ipv_outcome is not null, 'Yes', 'No')              as ScreenedForIpv,
                            ''                                                      as IpvScreening,
                            v.ipv_outcome                                           as IPVScreeningOutcome,
@@ -5808,7 +5803,8 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                         group by d.patient_id) d on d.disc_patient = v.patient_id
                              join kenyaemr_etl.etl_default_facility_info s
                     where d.disc_patient is null
-                       or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|ContactListingExtract|14|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                       or d.Outcome_date < e.latest_enrolment_date)                                                                  
+                    and v.relationship_type in (2, 3, 5, 6, 7, 8, 9, 12)"|dwhstage|0|ContactListingExtract|14|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec24-7754-11eb-9439-0242ac130002|GBV Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id                                                           as PatientPK,
                             v.uuid  as RecordUUID,
                             s.siteCode                                                             as SiteCode,
