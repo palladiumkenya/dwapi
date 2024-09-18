@@ -5247,7 +5247,7 @@ UNION
                       and date(last_day(date_sub(current_date(), interval 1 MONTH)))
                   group by hts.patient_id) hts
                      left JOIN
-                 (select patient_id, id
+                 (select patient_id
                   from dwapi_etl.etl_patient_contact c
                   where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
                     and c.patient_id is not NULL
@@ -5348,7 +5348,7 @@ UNION
                       and date(last_day(date_sub(current_date(), interval 1 MONTH)))
                   group by hts.patient_id) hts
                      left JOIN
-                 (select patient_id, id
+                 (select patient_id
                   from dwapi_etl.etl_patient_contact c
                   where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
                     and c.patient_id is not NULL
@@ -5752,7 +5752,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                   join kenyaemr_etl.etl_default_facility_info s
                          where d.disc_patient is null
                             or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|DepressionScreeningExtract|13|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-2bbeec23-7754-11eb-9439-0242ac130002|Contact Listing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
+2bbeec23-7754-11eb-9439-0242ac130002|Contact Listing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_related_to  as PatientPK,
                          v.uuid                                                 as RecordUUID,
                          v.patient_id                                            as ContactPatientPK,
                            s.siteCode                                              as SiteCode,
@@ -5802,7 +5802,7 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                         where program_name = 'HIV'
                                         group by d.patient_id) d on d.disc_patient = v.patient_id
                              join kenyaemr_etl.etl_default_facility_info s
-                    where d.disc_patient is null
+                    where (d.disc_patient is null
                        or d.Outcome_date < e.latest_enrolment_date)                                                                  
                     and v.relationship_type in (2, 3, 5, 6, 7, 8, 9, 12)"|dwhstage|0|ContactListingExtract|14|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec24-7754-11eb-9439-0242ac130002|GBV Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id                                                           as PatientPK,
