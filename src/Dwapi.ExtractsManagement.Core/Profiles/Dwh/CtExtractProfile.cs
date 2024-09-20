@@ -327,8 +327,9 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.Date_Last_Modified, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientVisitExtract.Date_Last_Modified))))
                 .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempPatientVisitExtract.Voided))))
                 .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.RecordUUID))))
-                .ForMember(x => x.WHOStagingOI, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.WHOStagingOI))));
-
+                .ForMember(x => x.WHOStagingOI, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.WHOStagingOI))))
+                .ForMember(x => x.WantsToGetPregnant, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.WantsToGetPregnant))))
+                .ForMember(x => x.AppointmentReminderWillingness, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.AppointmentReminderWillingness))));
             CreateMap<TempPatientVisitExtract, PatientVisitExtract>();
 
             //Patient Adverse Event Extract
@@ -622,7 +623,11 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.RecordUUID))))
                 .ForMember(x => x.TPTInitiationDate, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempIptExtract.TPTInitiationDate))))
                 .ForMember(x => x.IPTDiscontinuation, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.IPTDiscontinuation))))
-                .ForMember(x => x.DateOfDiscontinuation, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempIptExtract.DateOfDiscontinuation))));
+                .ForMember(x => x.DateOfDiscontinuation, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempIptExtract.DateOfDiscontinuation))))
+                .ForMember(x => x.Hepatoxicity, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.Hepatoxicity))))
+                .ForMember(x => x.PeripheralNeuropathy, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.PeripheralNeuropathy))))
+                .ForMember(x => x.Rash, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.Rash))))
+                .ForMember(x => x.Adherence, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempIptExtract.Adherence))));
             CreateMap<TempIptExtract,IptExtract>();
 
 

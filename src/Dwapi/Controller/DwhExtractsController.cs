@@ -554,26 +554,40 @@ namespace Dwapi.Controller
 
             _ctSendService.NotifyPreSending();
 
-            var job0 =
-                BatchJob.StartNew(x => { SendJobSmartPateints(package); });
+            var job0 = BatchJob.StartNew(x => { x.Enqueue(() => SendJobSmartPateints(package)); });
 
-            var job1 =
-                BatchJob.ContinueBatchWith(job0, x => { SendJobSmartBaselines(package); });
-
-            var job2 =
-                BatchJob.ContinueBatchWith(job1, x => { SendJobSmartProfiles(package); });
-
-            var job3 =
-                BatchJob.ContinueBatchWith(job2, x => { SendNewJobSmartProfiles(package); });
-
-            var job4 =
-                BatchJob.ContinueBatchWith(job3, x => { SendNewOtherJobSmartProfiles(package); });
-
-            var job5 =
-                BatchJob.ContinueBatchWith(job4, x => { SendCovidJobSmartProfiles(package); });
+            var job1 = BatchJob.StartNew(x =>
+            {
+                x.Enqueue(() => SendJobSmartBaselines(package));
+                x.Enqueue(() => SendJobSmartProfiles(package));
+                x.Enqueue(() => SendNewJobSmartProfiles(package));
+                x.Enqueue(() => SendNewOtherJobSmartProfiles(package));
+                x.Enqueue(() => SendCovidJobSmartProfiles(package));
+            });
 
             var jobEnd =
-                BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package,_version); });
+                BatchJob.ContinueBatchWith(job1,x => { x.Enqueue( ()=>_ctSendService.NotifyPostSending(package, _version));});
+
+
+            // var job0 =
+            //     BatchJob.StartNew(x => { SendJobSmartPateints(package); });
+            //
+            // var job1 =
+            //     BatchJob.ContinueBatchWith(job0, x => { SendJobSmartBaselines(package); });
+            // var job2 =
+            //     BatchJob.ContinueBatchWith(job1, x => { SendJobSmartProfiles(package); });
+            //
+            // var job3 =
+            //     BatchJob.ContinueBatchWith(job2, x => { SendNewJobSmartProfiles(package); });
+            //
+            // var job4 =
+            //     BatchJob.ContinueBatchWith(job3, x => { SendNewOtherJobSmartProfiles(package); });
+            //
+            // var job5 =
+            //     BatchJob.ContinueBatchWith(job4, x => { SendCovidJobSmartProfiles(package); });
+            //
+            // var jobEnd =
+            //     BatchJob.ContinueBatchWith(job5, x => { _ctSendService.NotifyPostSending(package,_version); });
         }
 
         [AutomaticRetry(Attempts = 0)]
