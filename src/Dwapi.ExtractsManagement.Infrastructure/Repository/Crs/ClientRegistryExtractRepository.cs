@@ -40,7 +40,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Repository.Crs
         public IEnumerable<ClientRegistryExtract> GetView()
         {
             var ctx = Context as ExtractsContext;
-            return ctx.ClientRegistryExtracts.FromSql("select * from ClientRegistryExtracts");
+            return ctx.ClientRegistryExtracts.FromSql($"select * from ClientRegistryExtracts");
         }
 
         public void UpdateSendStatus(List<SentItem> sentItems)

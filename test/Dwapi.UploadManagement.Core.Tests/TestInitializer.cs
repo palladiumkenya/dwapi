@@ -654,9 +654,11 @@ namespace Dwapi.UploadManagement.Core.Tests
                 services.AddDbContext<SettingsContext>(x => x.UseSqlServer(MsSqlConnectionString));
                 services.AddDbContext<ExtractsContext>(x => x.UseSqlServer(MsSqlConnectionString));
                 */
-                services.AddDbContext<UploadContext>(x => x.UseMySql(MySqlConnectionString));
-                services.AddDbContext<SettingsContext>(x => x.UseMySql(MySqlConnectionString));
-                services.AddDbContext<ExtractsContext>(x => x.UseMySql(MySqlConnectionString));
+                var serverVersion = new MySqlServerVersion(new Version(8, 0, 25)); // Change to your specific MySQL version
+
+                services.AddDbContext<UploadContext>(x => x.UseMySql(MySqlConnectionString, serverVersion));
+                services.AddDbContext<SettingsContext>(x => x.UseMySql(MySqlConnectionString, serverVersion));
+                services.AddDbContext<ExtractsContext>(x => x.UseMySql(MySqlConnectionString, serverVersion));
                 return;
 
                 return;

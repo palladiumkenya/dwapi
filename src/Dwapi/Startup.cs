@@ -206,7 +206,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -264,7 +263,7 @@ namespace Dwapi
                 assemblies.Add(Assembly.Load(assemblyName));
             }
 
-            services.AddMediatR(assemblies);
+            // services.AddMediatR(assemblies);
 
             services.AddResponseCompression(options =>
             {
@@ -308,10 +307,29 @@ namespace Dwapi
 
             services.AddHangfire(_ => _.UseMemoryStorage());
             JobStorage.Current = new MemoryStorage();
-            services.AddMvc()
-                .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()))
-                .AddJsonOptions(o =>
-                    o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            // services.AddMvc()
+            //     .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()))
+            //     .AddJsonOptions(o =>
+            //         o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            // services.AddControllers(options =>
+            // {
+            //     // If you need to add formatters, such as XML
+            //     options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+            // })
+                // .AddNewtonsoftJson(options =>
+                // {
+                //     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                // });
+
+
+
+               // .AddJsonOptions(o =>
+               //  {
+               //      // System.Text.Json configuration example
+               //      o.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+               //  })
+
 
             services.ConfigureWritable<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             var connectionString = Startup.Configuration["ConnectionStrings:DwapiConnection"];
@@ -321,9 +339,10 @@ namespace Dwapi
             {
                 if (provider == DatabaseProvider.MySql)
                 {
+                    var serverVersion = new MySqlServerVersion(new Version(8, 0, 25)); // Change to your specific MySQL version
                     services.AddDbContext<SettingsContext>(o =>
                         {
-                            o.UseMySql(connectionString,
+                            o.UseMySql(connectionString, serverVersion,
                                 x => x.MigrationsAssembly(typeof(SettingsContext).GetTypeInfo().Assembly.GetName()
                                     .Name));
                             o.EnableSensitiveDataLogging(CurrrentEnv.IsDevelopment());
@@ -331,13 +350,13 @@ namespace Dwapi
                     );
                     services.AddDbContext<ExtractsContext>(o =>
                     {
-                        o.UseMySql(connectionString,
+                        o.UseMySql(connectionString,serverVersion,
                             x => x.MigrationsAssembly(typeof(ExtractsContext).GetTypeInfo().Assembly.GetName().Name));
                         o.EnableSensitiveDataLogging(CurrrentEnv.IsDevelopment());
                     });
                     services.AddDbContext<UploadContext>(o =>
                     {
-                        o.UseMySql(connectionString,
+                        o.UseMySql(connectionString,serverVersion,
                             x => x.MigrationsAssembly(typeof(UploadContext).GetTypeInfo().Assembly.GetName().Name));
                         o.EnableSensitiveDataLogging(CurrrentEnv.IsDevelopment());
                     });
@@ -943,8 +962,8 @@ namespace Dwapi
                 }
             });
 
-
-            app.UseMvcWithDefaultRoute();
+            app.UseRouting();
+            // app.UseMvcWithDefaultRoute();
             app.UseDefaultFiles();
 
             app.UseStaticFiles()
@@ -988,26 +1007,42 @@ namespace Dwapi
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);
             EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
 
-            app.UseSignalR(
-                routes =>
+            // replaced app.UseSignalR(routes => in newer dotney
+            app.UseEndpoints(
+                endpoints  =>
                 {
-                    routes.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}");
-                    routes.MapHub<CbsActivity>($"/{nameof(CbsActivity).ToLower()}");
-                    routes.MapHub<CrsActivity>($"/{nameof(CrsActivity).ToLower()}");
-                    routes.MapHub<HtsActivity>($"/{nameof(HtsActivity).ToLower()}");
-                    routes.MapHub<MgsActivity>($"/{nameof(MgsActivity).ToLower()}");
-                    routes.MapHub<DwhSendActivity>($"/{nameof(DwhSendActivity).ToLower()}");
-                    routes.MapHub<CbsSendActivity>($"/{nameof(CbsSendActivity).ToLower()}");
-                    routes.MapHub<CrsSendActivity>($"/{nameof(CrsSendActivity).ToLower()}");
-                    routes.MapHub<HtsSendActivity>($"/{nameof(HtsSendActivity).ToLower()}");
-                    routes.MapHub<MgsSendActivity>($"/{nameof(MgsSendActivity).ToLower()}");
-                    routes.MapHub<MnchActivity>($"/{nameof(MnchActivity).ToLower()}");
-                    routes.MapHub<MnchSendActivity>($"/{nameof(MnchSendActivity).ToLower()}");
-                    routes.MapHub<PrepActivity>($"/{nameof(PrepActivity).ToLower()}");
-                    routes.MapHub<PrepSendActivity>($"/{nameof(PrepSendActivity).ToLower()}");
-                    routes.MapHub<ProgressHub>("/progressHub");
+                    endpoints.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}");
+                    endpoints.MapHub<CbsActivity>($"/{nameof(CbsActivity).ToLower()}");
+                    endpoints.MapHub<CrsActivity>($"/{nameof(CrsActivity).ToLower()}");
+                    endpoints.MapHub<HtsActivity>($"/{nameof(HtsActivity).ToLower()}");
+                    endpoints.MapHub<MgsActivity>($"/{nameof(MgsActivity).ToLower()}");
+                    endpoints.MapHub<DwhSendActivity>($"/{nameof(DwhSendActivity).ToLower()}");
+                    endpoints.MapHub<CbsSendActivity>($"/{nameof(CbsSendActivity).ToLower()}");
+                    endpoints.MapHub<CrsSendActivity>($"/{nameof(CrsSendActivity).ToLower()}");
+                    endpoints.MapHub<HtsSendActivity>($"/{nameof(HtsSendActivity).ToLower()}");
+                    endpoints.MapHub<MgsSendActivity>($"/{nameof(MgsSendActivity).ToLower()}");
+                    endpoints.MapHub<MnchActivity>($"/{nameof(MnchActivity).ToLower()}");
+                    endpoints.MapHub<MnchSendActivity>($"/{nameof(MnchSendActivity).ToLower()}");
+                    endpoints.MapHub<PrepActivity>($"/{nameof(PrepActivity).ToLower()}");
+                    endpoints.MapHub<PrepSendActivity>($"/{nameof(PrepSendActivity).ToLower()}");
+                    endpoints.MapHub<ProgressHub>("/progressHub");
                 }
             );
+            // app.MapHub<ExtractActivity>($"/{nameof(ExtractActivity).ToLower()}");
+            // app.MapHub<CbsActivity>($"/{nameof(CbsActivity).ToLower()}");
+            // app.MapHub<CrsActivity>($"/{nameof(CrsActivity).ToLower()}");
+            // app.MapHub<HtsActivity>($"/{nameof(HtsActivity).ToLower()}");
+            // app.MapHub<MgsActivity>($"/{nameof(MgsActivity).ToLower()}");
+            // app.MapHub<DwhSendActivity>($"/{nameof(DwhSendActivity).ToLower()}");
+            // app.MapHub<CbsSendActivity>($"/{nameof(CbsSendActivity).ToLower()}");
+            // app.MapHub<CrsSendActivity>($"/{nameof(CrsSendActivity).ToLower()}");
+            // app.MapHub<HtsSendActivity>($"/{nameof(HtsSendActivity).ToLower()}");
+            // app.MapHub<MgsSendActivity>($"/{nameof(MgsSendActivity).ToLower()}");
+            // app.MapHub<MnchActivity>($"/{nameof(MnchActivity).ToLower()}");
+            // app.MapHub<MnchSendActivity>($"/{nameof(MnchSendActivity).ToLower()}");
+            // app.MapHub<PrepActivity>($"/{nameof(PrepActivity).ToLower()}");
+            // app.MapHub<PrepSendActivity>($"/{nameof(PrepSendActivity).ToLower()}");
+            // app.MapHub<ProgressHub>("/progressHub");
 
             // Mapper.Initialize(cfg =>
             //     {

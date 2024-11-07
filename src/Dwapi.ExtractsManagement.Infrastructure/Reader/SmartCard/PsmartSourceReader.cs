@@ -150,7 +150,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard
                 return new SqliteConnection(connectionString);
 
             if (databaseProtocol.DatabaseType == DatabaseType.MicrosoftSQL)
-                return new System.Data.SqlClient.SqlConnection(connectionString);
+                return new Microsoft.Data.SqlClient.SqlConnection(connectionString);
 
             if (databaseProtocol.DatabaseType == DatabaseType.MySQL)
                 return new MySqlConnection(connectionString);
@@ -163,12 +163,12 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader.SmartCard
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddDataReaderMapping();
-                cfg.CreateMissingTypeMaps = false;
+                // cfg.CreateMissingTypeMaps = false;
                 cfg.AllowNullCollections = true;
                 cfg.CreateMap<IDataReader, PsmartSource>()
                     .ForMember(x=>x.Uuid,opt => opt.MapFrom(src =>src.GetValue(src.GetOrdinal("uuid")).ToString()))
                     .ForMember(x => x.EId, opt => opt.Ignore())
-                    .ForMember(x => x.Emr, opt => opt.UseValue(emr))
+                    .ForMember(x => x.Emr, opt => opt.MapFrom(src => emr))
                     .ForMember(x => x.DateExtracted, opt => opt.Ignore());
             });
             return new Mapper(config);

@@ -55,7 +55,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Prep
                 .ForMember(x => x.PopulationType,
                     o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientPrepExtract.PopulationType))))
                 .ForMember(x => x.KeyPopulationType,
-                    o =>  o.UseValue(string.Empty))
+                    o =>  o.MapFrom(s => string.Empty))
                 .ForMember(x => x.Refferedfrom,
                     o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientPrepExtract.Refferedfrom))))
                 .ForMember(x => x.TransferIn,

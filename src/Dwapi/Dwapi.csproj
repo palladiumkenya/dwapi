@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
@@ -17,7 +17,8 @@ Bached sending and await to 50 at a time
     <SignAssembly>false</SignAssembly>
     <Description>Data Warehouse API Client. Transmit data from EMRs (IQCare, KenyaEMR, AMRS, ECARE) to NASCOP</Description>
     <Copyright>Palladium Group</Copyright>
-    <StartupObject></StartupObject>
+    <StartupObject>
+    </StartupObject>
     <UserSecretsId>47ead4ab-2f08-494a-bdda-b469ec020a8c</UserSecretsId>
     <!--<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>-->
   </PropertyGroup>
@@ -42,28 +43,30 @@ Bached sending and await to 50 at a time
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.14.1" />
     <PackageReference Include="Hangfire.Core" Version="1.7.28" />
     <PackageReference Include="Hangfire.MemoryStorage.Core" Version="1.4.0" />
-    <PackageReference Include="Humanizer.Core" Version="2.7.9" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2">
-        <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
-        <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
-    </PackageReference>
-    <PackageReference Include="MediatR" Version="5.1.0" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+    <PackageReference Include="LiveSeeder" Version="1.0.0-CI-20200427-182214" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <!--    <PackageReference Include="Microsoft.AspNetCore.App" Version="6.0.0">-->
+    <!--        <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>-->
+    <!--        <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>-->
+    <!--    </PackageReference>-->
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0">
+          <ExcludeAssets>All</ExcludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.9.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.1" />
+    <PackageReference Include="MySql.Data" Version="9.0.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.2" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
@@ -87,26 +90,26 @@ Bached sending and await to 50 at a time
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-      <Content Update="mssql-appsettings.json">
-          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
-      <Content Update="implementation.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
-      <Content Update="implementation.Development.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
-      <Content Update="appsettings.Development.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
+    <Content Update="mssql-appsettings.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="implementation.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="implementation.Development.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="appsettings.Development.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Hangfire.Pro, Version=2.2.2.0, Culture=neutral, PublicKeyToken=null">

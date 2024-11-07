@@ -556,7 +556,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Tests
                     databaseCreator.CreateTables();
                     if (context is ExtractsContext)
                     {
-                        context.Database.ExecuteSqlCommand(@"
+                        context.Database.ExecuteSqlRaw (@"
                         CREATE VIEW vMasterPatientIndicesJaro
                         AS
                         SELECT 

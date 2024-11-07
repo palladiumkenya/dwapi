@@ -139,7 +139,7 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
                 return new SqliteConnection(connectionString);
 
             if (databaseProtocol.DatabaseType == DatabaseType.MicrosoftSQL)
-                return new System.Data.SqlClient.SqlConnection(connectionString);
+                return new Microsoft.Data.SqlClient.SqlConnection(connectionString);
 
             if (databaseProtocol.DatabaseType == DatabaseType.MySQL)
                 return new MySqlConnection(connectionString);

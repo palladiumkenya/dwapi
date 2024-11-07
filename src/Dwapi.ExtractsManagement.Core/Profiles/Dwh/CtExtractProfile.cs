@@ -40,7 +40,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.StatusAtTBClinic, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.StatusAtTBClinic))))
                 .ForMember(x => x.Emr, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.Emr))))
                 .ForMember(x => x.Inschool, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.Inschool))))
-                .ForMember(x => x.KeyPopulationType, o =>  o.UseValue(string.Empty))
+                .ForMember(x => x.KeyPopulationType, o =>  o.MapFrom(s => string.Empty))
                 .ForMember(x => x.Orphan, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.Orphan))))
                 .ForMember(x => x.PatientResidentCounty, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PatientResidentCounty))))
                 .ForMember(x => x.PatientResidentLocation, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientExtract.PatientResidentLocation))))
@@ -314,7 +314,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Dwh
                 .ForMember(x => x.GestationAge, o => o.MapFrom(s => s.GetNullDecimalOrDefault(nameof(TempPatientVisitExtract.GestationAge))))
 
                 .ForMember(x => x.DifferentiatedCare, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.DifferentiatedCare))))
-                .ForMember(x => x.KeyPopulationType, o =>  o.UseValue(string.Empty))
+                .ForMember(x => x.KeyPopulationType, o =>  o.MapFrom(s => string.Empty))
                 .ForMember(x => x.PopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.PopulationType))))
                 .ForMember(x => x.StabilityAssessment, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempPatientVisitExtract.StabilityAssessment))))
                 .ForMember(x => x.RefillDate, o => o.MapFrom(s => s.GetOptionalNullDateOrDefault(nameof(TempPatientVisitExtract.RefillDate))))

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Mgs;
 using Dwapi.ExtractsManagement.Core.Model.Destination.Mgs;

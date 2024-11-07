@@ -196,7 +196,8 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
 
             foreach (var i in list) exlist.Add($"select distinct PatientPK,SiteCode from {i}");
 
-            builder.AppendLine(exlist.Join(" union "));
+            // builder.AppendLine(exlist.Join(" union "));
+            builder.AppendLine(string.Join(" UNION ", exlist));
             builder.AppendLine(@" )x on p.SiteCode=x.SiteCode and p.PatientPK=x.PatientPK
                 where x.PatientPK is null
                 GROUP BY p.SiteCode");

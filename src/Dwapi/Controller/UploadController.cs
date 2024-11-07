@@ -47,7 +47,7 @@ namespace Dwapi.Controller
     [Route("api/Upload")]
     public class UploadController : Microsoft.AspNetCore.Mvc.Controller
     {
-       
+
         public HttpClient Client { get; set; }
         private IHostingEnvironment _hostingEnvironment;
         private readonly ICTExportService _ctExportService;
@@ -60,15 +60,15 @@ namespace Dwapi.Controller
         public UploadController(IHostingEnvironment hostingEnvironment, ICTExportService ctExportService,
            IHtsExportService htsExportService, IMnchExportService mnchExportService, IPrepExportService prepExportService)
         {
-           
+
             _ctExportService = ctExportService;
             _prepExportService = prepExportService;
-            _hostingEnvironment = hostingEnvironment;           
+            _hostingEnvironment = hostingEnvironment;
             _htsExportService= htsExportService;
             _mnchExportService= mnchExportService;
-            
+
             var ver = GetType().Assembly.GetName().Version;
-           
+
         }
 
         [HttpPost]
@@ -81,7 +81,7 @@ namespace Dwapi.Controller
             string newPath = Path.Combine(webRootPath, folderName);
             try
             {
-                
+
                 if (!Directory.Exists(newPath))
                 {
                     Directory.CreateDirectory(newPath);
@@ -90,9 +90,9 @@ namespace Dwapi.Controller
                 {
                     string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
                     String partToExtract = fileName.Split('-', '.')[1];
-                    
+
                     if (partToExtract != null)
-                    {                       
+                    {
                         if (partToExtract == "Prep")
                         {
 
@@ -106,7 +106,7 @@ namespace Dwapi.Controller
                                 }
                                 var result = await _prepExportService.SendPrepFiles(file);
                                 return Ok(result);
-                                
+
                             }
                             catch (Exception e)
                             {
@@ -162,8 +162,8 @@ namespace Dwapi.Controller
                         }
                         if (partToExtract == "CT")
                         {
-                           
-                            
+
+
                             try
                             {
                                 string fullPath = Path.Combine(newPath, fileName);
@@ -172,7 +172,7 @@ namespace Dwapi.Controller
                                     await file.CopyToAsync(stream);
                                 }
 
-                                var result = _ctExportService.SendFileManifest(file, "3").Result;                             
+                                var result = _ctExportService.SendFileManifest(file, "3").Result;
 
                                 return Ok(result);
                             }
@@ -187,15 +187,17 @@ namespace Dwapi.Controller
 
                     }
                 }
-               
 
-                return Json("Upload Successful.");
+
+                // return Json("Upload Successful.");
+                return new JsonResult(new { message = "Upload Successful." });
             }
             catch (Exception ex)
             {
-                return Json("Upload Failed: " + ex.Message);
+                // return Json("Upload Failed: " + ex.Message);
+                return new JsonResult(new { message = "Upload Failed: " + ex.Message });
             }
         }
-        
+
     }
 }

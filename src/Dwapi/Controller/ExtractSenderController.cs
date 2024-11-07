@@ -92,7 +92,7 @@ namespace Dwapi.Controller
                         var bag = new SmartMessageBag(psmartDTO);
                         _extractHistoryRepository.UpdateStatus(packageDTO.ExtractId.Value, ExtractStatus.Sending);
                         var response = await _psmartSendService.SendAsync(packageDTO, bag);
-                   
+
                         if (null != response)
                         {
                             if (response.IsValid())
@@ -115,7 +115,7 @@ namespace Dwapi.Controller
 
                                 return Ok(response);
                             }
-                                
+
                         }
                     }
                 }

@@ -1,8 +1,8 @@
 using System.Data;
-using System.Data.SqlClient;
 using Dwapi.SettingsManagement.Core.Interfaces;
 using Dwapi.SettingsManagement.Core.Model;
 using Dwapi.SharedKernel.Enum;
+using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
 

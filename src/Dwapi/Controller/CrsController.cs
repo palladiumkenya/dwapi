@@ -275,7 +275,7 @@ namespace Dwapi.Controller
             string extension = ".zip";
             if (Directory.Exists(uploads))
             {
-                
+
                 foreach (string fileName in Directory.GetFiles(uploads))
                 {
                     if (Path.GetExtension(fileName) == extension)
@@ -285,7 +285,7 @@ namespace Dwapi.Controller
                         result.Add(fileInfo);
                     }
 
-                    
+
                 }
             }
             return Ok(result);

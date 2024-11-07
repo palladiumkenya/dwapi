@@ -21,9 +21,9 @@ namespace Dwapi.UploadManagement.Core.Profiles
                     .ForMember(d => d.National_ID, o => o.UseValue(string.Empty))
                     .ForMember(d => d.Birth_Certificate, o => o.UseValue(string.Empty));
                 */
-                .ForMember(d => d.ContactAddress, o => o.UseValue(string.Empty))
-                .ForMember(d => d.ContactPhoneNumber, o => o.UseValue(string.Empty))
-                .ForMember(d => d.ContactName, o => o.UseValue(string.Empty));
+                .ForMember(d => d.ContactAddress, o => o.MapFrom(s => string.Empty))
+                .ForMember(d => d.ContactPhoneNumber, o => o.MapFrom(s => string.Empty))
+                .ForMember(d => d.ContactName, o => o.MapFrom(s => string.Empty));
         }
     }
 }

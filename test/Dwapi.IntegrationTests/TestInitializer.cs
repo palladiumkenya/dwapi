@@ -35,6 +35,7 @@ namespace Dwapi.IntegrationTests
 
             MsSqlConnectionString = config.GetConnectionString("mssqlConnection");
             MySqlConnectionString = config.GetConnectionString("mysqlConnection");
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 25)); // Change to your specific MySQL version
 
             var mssqlServices = new ServiceCollection();
             mssqlServices.AddDbContext<SettingsContext>(x => x.UseSqlServer(MsSqlConnectionString));
@@ -42,8 +43,8 @@ namespace Dwapi.IntegrationTests
             MsSqlServiceProvider = mssqlServices.BuildServiceProvider();
 
             var mysqlServices = new ServiceCollection();
-            mysqlServices.AddDbContext<SettingsContext>(x => x.UseMySql(MySqlConnectionString));
-            mysqlServices.AddDbContext<ExtractsContext>(x => x.UseMySql(MySqlConnectionString));
+            mysqlServices.AddDbContext<SettingsContext>(x => x.UseMySql(MySqlConnectionString, serverVersion));
+            mysqlServices.AddDbContext<ExtractsContext>(x => x.UseMySql(MySqlConnectionString, serverVersion));
             MySqlServiceProvider = mysqlServices.BuildServiceProvider();
         }
 

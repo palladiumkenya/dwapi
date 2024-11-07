@@ -4,12 +4,13 @@ using Dwapi.SharedKernel.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Dwapi.SharedKernel.Enum;
+using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using X.PagedList;
@@ -61,7 +62,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public Task<IPagedList<T>> GetAll(string sql, int? page, int pageSize)
         {
-            var entities = DbSet.AsNoTracking().FromSql(sql)
+            var entities = Context.Set<T>().FromSqlRaw(sql)
                 .OrderBy(x => x.Id);
 
             return entities.ToPagedListAsync(page ?? 1, pageSize);
@@ -284,7 +285,7 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public Task<int> GetCount(string sql)
         {
-            return DbSet.AsNoTracking().FromSql(sql).Select(x => x.Id).CountAsync();
+            return Context.Set<T>().FromSqlRaw(sql).Select(x => x.Id).CountAsync();
         }
 
         public int PageCount(int batchSize, long totalRecords)
@@ -330,15 +331,26 @@ namespace Dwapi.SharedKernel.Infrastructure.Repository
 
         public string GetTableName()
         {
-            var mapping = Context.Model.FindEntityType(typeof(T)).Relational();
-            return mapping.TableName;
+            // var mapping = Context.Model.FindEntityType(typeof(T)).GetTableName();
+            var entityType = Context.Model.FindEntityType(typeof(T));
+            var mapping = entityType?.GetSchema() + "." + entityType?.GetTableName();
+            return mapping;
         }
+        // public string GetTableName<T>(this DbContext dbContext) where T : class
+        // {
+        //     var entityType = dbContext.Model.FindEntityType(typeof(T));
+        //     return entityType?.GetSchema() + "." + entityType?.GetTableName();
+        // }
 
         public T GetSiteCode(string sql)
         {
-            return  DbSet.AsNoTracking()
-                .FromSql(sql)
-                .ToList().FirstOrDefault();;
+            // return  DbSet.AsNoTracking()
+            //     .FromSql(sql)
+            //     .ToList().FirstOrDefault();
+            return Context.Set<T>()
+                .FromSqlRaw(sql)                
+                .ToList()                       
+                .FirstOrDefault();
             // return DbSet.AsNoTracking().Select(x => x.Id).CountAsync();
         }
     }

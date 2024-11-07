@@ -1,9 +1,10 @@
-FROM mcr.microsoft.com/dotnet/aspnet:2.1 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 ENV DWAPI_RUNNING_IN_CONTAINER=true
 WORKDIR /app
 EXPOSE 5757 5753
 
-FROM mcr.microsoft.com/dotnet/sdk:2.1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
 WORKDIR /src
 COPY src/Dwapi/Dwapi.csproj src/Dwapi/
 COPY src/Dwapi.SharedKernel/Dwapi.SharedKernel.csproj src/Dwapi.SharedKernel/

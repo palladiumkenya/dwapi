@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -9,6 +9,7 @@ using Dwapi.ExtractsManagement.Core.Interfaces.Repository.Cbs;
 using Dwapi.ExtractsManagement.Core.Model.Source.Cbs;
 using Dwapi.SharedKernel.Enum;
 using Dwapi.SharedKernel.Infrastructure.Repository;
+using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using Serilog;

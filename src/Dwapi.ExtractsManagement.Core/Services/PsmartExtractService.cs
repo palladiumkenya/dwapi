@@ -31,7 +31,7 @@ namespace Dwapi.ExtractsManagement.Core.Services
             _extractHistoryRepository = extractHistoryRepository;
 
             var config = new MapperConfiguration(cfg => {
-                cfg.CreateMissingTypeMaps = false;
+                // cfg.CreateMissingTypeMaps = false;
                 cfg.AllowNullCollections = true;
                 cfg.CreateMap<PsmartSource, PsmartStage>();
             });

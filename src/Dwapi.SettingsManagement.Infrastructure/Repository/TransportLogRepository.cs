@@ -17,7 +17,7 @@ namespace Dwapi.SettingsManagement.Infrastructure.Repository
         {
             var sql = $@"DELETE FROM {nameof(TransportLog)}s WHERE {nameof(TransportLog.Docket)}='{docket}'";
             Context.Database
-                .ExecuteSqlCommand(sql);
+                .ExecuteSqlRaw(sql);
         }
 
         public void CreateLatest(TransportLog transportLog)

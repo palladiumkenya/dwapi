@@ -150,7 +150,7 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.Gender, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.Gender))))
                 .ForMember(x => x.MaritalStatus, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.MaritalStatus))))
                 .ForMember(x => x.PopulationType, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.PopulationType))))
-                .ForMember(x => x.KeyPopulationType, o =>  o.UseValue(string.Empty))
+                .ForMember(x => x.KeyPopulationType, o =>  o.MapFrom(s => string.Empty))
                 .ForMember(x => x.PatientDisabled, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.PatientDisabled))))
                 .ForMember(x => x.County, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.County))))
                 .ForMember(x => x.SubCounty, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsClients.SubCounty))))

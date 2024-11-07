@@ -1,3 +1,4 @@
+using AutoMapper;
 using AutoMapper.Configuration;
 
 namespace Dwapi.UploadManagement.Core.Profiles

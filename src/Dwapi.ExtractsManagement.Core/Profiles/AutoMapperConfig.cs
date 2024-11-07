@@ -1,4 +1,5 @@
 using System;
+using AutoMapper;
 using AutoMapper.Configuration;
 using AutoMapper.Data;
 using Dwapi.ExtractsManagement.Core.Profiles.Cbs;

@@ -81,7 +81,7 @@ namespace Dwapi.SettingsManagement.Infrastructure
             managedEmrs.ForEach(x =>
             {
                 var sql = $"DELETE FROM {nameof(Extracts)} WHERE {nameof(Extract.EmrSystemId)} = '{x}'";
-                Database.ExecuteSqlCommand(sql);
+                Database.ExecuteSqlRaw(sql);
             });
 
             this.SeedNewOnly<Extract>(typeof(SettingsContext).Assembly, "|", "Seed", $"{nameof(Extracts)}").Wait();
