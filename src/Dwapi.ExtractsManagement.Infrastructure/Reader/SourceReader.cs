@@ -201,6 +201,8 @@ namespace Dwapi.ExtractsManagement.Infrastructure.Reader
             using (sourceConnection)
             {
                 var sql = $@"SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+                //var sql = $@"SET SESSION sql_mode = (SELECT REPLACE(@@SESSION.sql_mode, 'ONLY_FULL_GROUP_BY', ''))";
+
                 sourceConnection.Query(sql);
             }
             

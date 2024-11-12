@@ -6,9 +6,9 @@
             "Key": "MAUN-ECC5-11EA"
         },
         "BatchSize": {
-            "Patients": 2000,
-            "Visits": 2000,
-            "Extracts": 2000
+            "Patients": 1000,
+            "Visits": 1000,
+            "Extracts": 1000
         }
     }
 }

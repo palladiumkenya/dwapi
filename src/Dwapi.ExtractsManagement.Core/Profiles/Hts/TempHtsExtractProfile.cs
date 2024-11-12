@@ -385,8 +385,8 @@ namespace Dwapi.ExtractsManagement.Core.Profiles.Hts
                 .ForMember(x => x.ContactWithTBCase, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ContactWithTBCase ))))
                 .ForMember(x => x.HtsRiskScore, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.HtsRiskScore))))
                 .ForMember(x => x.Voided, o => o.MapFrom(s => s.GetNullIntOrDefault(nameof(TempHtsEligibilityExtract.Voided))))
-                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.RecordUUID))));
-                ;
+                .ForMember(x => x.RecordUUID, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.RecordUUID))))
+                .ForMember(x => x.ChildDefiled, o => o.MapFrom(s => s.GetStringOrDefault(nameof(TempHtsEligibilityExtract.ChildDefiled))));
             CreateMap<TempHtsEligibilityExtract, HtsEligibilityExtract>();
             
         }
