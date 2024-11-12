@@ -1005,7 +1005,7 @@ namespace Dwapi
             Log.Debug(@"initializing Database...");
 
             EnsureMigrationOfContext<SettingsContext>(serviceProvider);
-            EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
+            // EnsureMigrationOfContext<ExtractsContext>(serviceProvider);
 
             // replaced app.UseSignalR(routes => in newer dotney
             app.UseEndpoints(
