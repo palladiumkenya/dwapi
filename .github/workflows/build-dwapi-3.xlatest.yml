@@ -3,7 +3,7 @@ name: Build and Deploy to 3.xLatest
 on:
   push:
     branches:
-      - dev
+      - DwapiKenyaemr3.xLatest
 
 jobs:
   build-and-push:
