@@ -38,8 +38,10 @@ Change line bind-address = 127.0.0.1 to #bind-address = 127.0.0.1
 ```sh
 sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf    or sudo gedit /etc/mysql/mysql.conf.d/mysqld.cnf
 
-update this two lines  : -     bind-address             = 127.0.0.1                                                                                                                                                       		mysqlx-bind-address     = 127.0.0.1
-to this   : -     bind-address           = 0.0.0.0                                                                                                                                                          	  mysqlx-bind-address    = 0.0.0.0       
+update this two lines  : -     bind-address  = 127.0.0.1
+mysqlx-bind-address     = 127.0.0.1
+to this   : -     bind-address  = 0.0.0.0
+ mysqlx-bind-address    = 0.0.0.0       
 restart mysql
 ```
 
