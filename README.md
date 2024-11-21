@@ -34,6 +34,17 @@ Change line bind-address = 127.0.0.1 to #bind-address = 127.0.0.1
 #### b)  MySQL 5.6 - add the line if it does not exists
 		bind-address = *
 
+#### b)  MySQL 8 - add the line if it does not exists
+		bind-address = 0.0.0.0
+Incase there are some issues binding addred in mysql version 8, try the steps below
+```sh
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf    or sudo gedit /etc/mysql/mysql.conf.d/mysqld.cnf
+
+update this two lines  : -     bind-address             = 127.0.0.1                                                                                                                                                       		mysqlx-bind-address     = 127.0.0.1
+to this   : -     bind-address           = 0.0.0.0                                                                                                                                                          	  mysqlx-bind-address    = 0.0.0.0       
+restart mysql
+```
+
 2. Create a DWAPI database user for MySQL
 ```sh
  create user 'dwapi'@'%' identified by 'dwapi';
