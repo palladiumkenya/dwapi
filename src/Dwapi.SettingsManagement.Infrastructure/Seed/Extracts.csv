@@ -710,6 +710,16 @@ FROM
                                        when 159882 then 'Breastfeeding'
                                        when 163523 then 'Clinical failure'
                                        when 161236 then 'Routine'
+                                       when 160566 then 'Immunologic failure'                                       
+                                       when 160569 then 'Virologic failure'                                       
+                                       when 1040 then 'Initial PCR (6week or first contact)'                                       
+                                       when 1326 then '2nd PCR (6 months)'                                       
+                                       when 164860 then '3rd PCR (12months)'                                       
+                                       when 162082 then 'Confirmatory PCR and Baseline VL'                                       
+                                       when 164460 then 'Ab test 6 weeks after cessation of breastfeeding'                                       
+                                       when 164860 then 'Ab test at 18 months (1.5 years)'                                       
+                                       when 162081 then 'Repeat'                                       
+                                       when 167389 then 'Recency assay'
                                        when 160032 then 'Confirmation of persistent low level Viremia (PLLV)' end) as Reason,
                                        if(lab_test = 299, (case test_result
                                        when 1228 then 'REACTIVE'
@@ -2480,6 +2490,7 @@ pns.MaritalStatus
                                              when 1 then 'Yes'	
                                              when 0 then 'No'	
                                              end                                                                     as EverHadSex,
+                                          case t.child_defiled when 1065 then 'Yes' when 1066 then 'No' when 162570 then 'Declined to answer' end as ChildDefiled,
                                           t.sexually_active 													        as SexuallyActive,
                                           t.new_partner 															    as NewPartner,
                                           t.partner_hiv_status														as PartnerHIVStatus,
@@ -5247,7 +5258,7 @@ UNION
                       and date(last_day(date_sub(current_date(), interval 1 MONTH)))
                   group by hts.patient_id) hts
                      left JOIN
-                 (select patient_id, id
+                 (select patient_id
                   from dwapi_etl.etl_patient_contact c
                   where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
                     and c.patient_id is not NULL
@@ -5348,7 +5359,7 @@ UNION
                       and date(last_day(date_sub(current_date(), interval 1 MONTH)))
                   group by hts.patient_id) hts
                      left JOIN
-                 (select patient_id, id
+                 (select patient_id
                   from dwapi_etl.etl_patient_contact c
                   where (c.relationship_type in (971, 972, 1528, 162221, 163565, 970, 5617))
                     and c.patient_id is not NULL
@@ -5465,7 +5476,10 @@ UNION(
                                             'Kenya HMIS II'                                           as Project,
                                             s.FacilityName                                            as FacilityName,
                                             ci.visit_date                                             as VisitDate,
-                                            ci.visit_id                                               as VisitID,
+                                            ci.visit_id                                               as VisitID,                                            
+                                            if(ci.chronic_illness in (149019,148432,153754,159351,119270,120637,145438,1295,120576,
+                                            119692,120291,119481,118631,117855,117789,139071,115728,117399,117321,151342,133687,115115,
+                                            114662,117703,118976,141623),'Yes', 'No') as PatientHasChronicIllness,
                                             group_concat(case ci.chronic_illness
                                                              when 149019 then 'Alzheimers Disease and other Dementias'
                                                              when 148432 then 'Arthritis'
@@ -5499,10 +5513,8 @@ UNION(
                                                  when 1065 then 'Yes'
                                                  when 1066 then 'No'  
                                                  else 'N/A'
-                                                 end SEPARATOR '|' )			                    as Controlled,
-                                         group_concat(case ci.chronic_illness_onset_date 
-                                                 when ci.chronic_illness_onset_date then ci.chronic_illness_onset_date
-                                                 else 'N/A' end SEPARATOR '|')                      as ChronicOnsetDate,
+                                                 end SEPARATOR '|' )			                    as Controlled,                                         
+                                            group_concat(ci.chronic_illness_onset_date SEPARATOR '|')              as ChronicOnsetDate,
                                             (case coalesce(v.has_known_allergies, p.known_allergies)
                                                  when 1 then 'Yes'
                                                  when 2
@@ -5595,9 +5607,9 @@ UNION(
                                       group by d.patient_id) pd on pd.PrEP_disc_patient = ci.patient_id
                            inner join dwapi_etl.etl_patient_demographics de on ci.patient_id = de.patient_id
                            join kenyaemr_etl.etl_default_facility_info s
-                  where (d.hiv_disc_patient is null
+                  where ((d.hiv_disc_patient is null
                       or d.hiv_outcome_date < e.latest_enrolment_date)
-                     or (pd.PrEP_disc_patient is null or pd.PrEP_Outcome_date < pe.prep_latest_enrolment_date)
+                     or (pd.PrEP_disc_patient is null or pd.PrEP_Outcome_date < pe.prep_latest_enrolment_date)) and ci.complaint is null
                   group by ci.patient_id, ci.visit_date"|dwhstage|0|AllergiesChronicIllnessExtract|11|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec21-7754-11eb-9439-0242ac130002|IPT|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id                                                               as PatientPK,
                             v.uuid   as RecordUUID,
@@ -5752,8 +5764,8 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                   join kenyaemr_etl.etl_default_facility_info s
                          where d.disc_patient is null
                             or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|DepressionScreeningExtract|13|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
-2bbeec23-7754-11eb-9439-0242ac130002|Contact Listing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id as PatientPK,
-                         v.uuid  as RecordUUID,
+2bbeec23-7754-11eb-9439-0242ac130002|Contact Listing|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_related_to  as PatientPK,
+                         v.uuid                                                 as RecordUUID,
                          v.patient_id                                            as ContactPatientPK,
                            s.siteCode                                              as SiteCode,
                            de.unique_patient_no                                    as PatientID,
@@ -5762,23 +5774,18 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                            0                                                       AS FacilityId,
                            s.FacilityName                                          as FacilityName,
                            v.patient_id                                            as PartnerPersonID,
-                           timestampdiff(YEAR, date(v.birth_date), current_date()) as ContactAge,
-                           v.sex                                                   as ContactSex,
-                           (case v.marital_status
-                                when 1057 then 'Single'
-                                when 5555 then 'Married Monogamous'
-                                when 159715 then 'Married Polygamous'
-                                when 1058 then 'Divorced'
-                                when 1059 then 'Widowed' end)                      as ContactMaritalStatus,
-                           (case v.relationship_type
-                                when 970 then 'Mother'
-                                when 971 then 'Father'
-                                when 972 then 'Sibling'
-                                when 1528 then 'Child'
-                                when 5617 then 'Spouse'
-                                when 163565 then 'Partner'
-                                when 162221 then 'Co-wife'
-                                when 157351 then 'Injectable drug user' end)       as RelationshipWithPatient,
+                           timestampdiff(YEAR, date(de.DOB), current_date())       as ContactAge,
+                           de.gender                                                   as ContactSex,
+                           de.marital_status                                      as ContactMaritalStatus,                           
+                            (case v.relationship_type                            
+                                when 2 then 'Sibling'                            
+                                when 3 then 'Child'                            
+                                when 5 then 'Dependant'                            
+                                when 6 then 'Spouse'                            
+                                when 7 then 'Partner'                            
+                                when 8 then 'Co-wife'                            
+                                when 9 then 'Injectable drug user'                            
+                                when 12 then 'SNS' end)                             as RelationshipWithPatient,
                            if(v.ipv_outcome is not null, 'Yes', 'No')              as ScreenedForIpv,
                            ''                                                      as IpvScreening,
                            v.ipv_outcome                                           as IPVScreeningOutcome,
@@ -5807,8 +5814,9 @@ group by v.encounter_id"|dwhstage|0|IptExtract|12|a6221aa4-0e85-11e8-ba89-0ed5f8
                                         where program_name = 'HIV'
                                         group by d.patient_id) d on d.disc_patient = v.patient_id
                              join kenyaemr_etl.etl_default_facility_info s
-                    where d.disc_patient is null
-                       or d.Outcome_date < e.latest_enrolment_date"|dwhstage|0|ContactListingExtract|14|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
+                    where (d.disc_patient is null
+                       or d.Outcome_date < e.latest_enrolment_date)                                                                  
+                    and v.relationship_type in (2, 3, 5, 6, 7, 8, 9, 12)"|dwhstage|0|ContactListingExtract|14|a6221aa4-0e85-11e8-ba89-0ed5f89f718b
 2bbeec24-7754-11eb-9439-0242ac130002|GBV Screening|NDWH|a6221856-0e85-11e8-ba89-0ed5f89f718b|"select v.patient_id                                                           as PatientPK,
                             v.uuid  as RecordUUID,
                             s.siteCode                                                             as SiteCode,

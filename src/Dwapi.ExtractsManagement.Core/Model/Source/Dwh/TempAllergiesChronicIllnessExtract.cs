@@ -26,6 +26,7 @@ namespace Dwapi.ExtractsManagement.Core.Model.Source.Dwh
         public string RecordUUID { get; set; }
         public bool? Voided { get; set; }
         public string Controlled { get; set; }
+        public string PatientHasChronicIllness { get; set; }
         public DateTime? Date_Created { get; set; }
         public DateTime? Date_Last_Modified { get; set; }
         
