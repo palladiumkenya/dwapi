@@ -1,4 +1,4 @@
-name: Build and Deploy to 3.xLatest
+name: Build and Deploy to 3.xLatest branch
 
 on:
   push:
