@@ -57,4 +57,4 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: kenyahmis/dwapi:3.xLatest
+        tags: kenyahmis/dwapi:latest
